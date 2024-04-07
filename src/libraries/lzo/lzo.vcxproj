@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Release_COC|Win32">
-      <Configuration>Release_COC</Configuration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -13,7 +13,7 @@
     <ProjectGuid>{040C386C-FF76-4F9B-BF3B-BBB1AB0E250C}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -25,7 +25,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(SolutionDir)Common.props" />
   </ImportGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(xrIntDir)$(ProjectName)\</IntDir>
     <OutDir>$(xrLibDir)</OutDir>
   </PropertyGroup>
@@ -34,14 +34,14 @@
       <AdditionalIncludeDirectories>src;$(xrSdkDir)include;</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level2</WarningLevel>
-      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'">stdcpp17</LanguageStandard>
-      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'">false</MinimalRebuild>
-      <EnableModules Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'">
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdcpp17</LanguageStandard>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</MinimalRebuild>
+      <EnableModules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </EnableModules>
     </ClCompile>
     <Lib>
-      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'">$(OutDir)$(ProjectName).lib</OutputFile>
-      <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'">$(xrLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)$(ProjectName).lib</OutputFile>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(xrLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>

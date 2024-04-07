@@ -4,12 +4,12 @@ if %CONFIGURATION%==Debug if %PLATFORM%==x86 goto :DX86
 if %CONFIGURATION%==Debug if %PLATFORM%==x64 goto :DX64 
 if %CONFIGURATION%==Mixed if %PLATFORM%==x86 goto :MX86 
 if %CONFIGURATION%==Mixed if %PLATFORM%==x64 goto :MX64 
-if %CONFIGURATION%==Mixed_COC if %PLATFORM%==x86 goto :MX_CoC86 
-if %CONFIGURATION%==Mixed_COC if %PLATFORM%==x64 goto :MX_CoC64 
+if %CONFIGURATION%==Mixed if %PLATFORM%==x86 goto :MX_CoC86 
+if %CONFIGURATION%==Mixed if %PLATFORM%==x64 goto :MX_CoC64 
 if %CONFIGURATION%==Release if %PLATFORM%==x86 goto :RX86 
 if %CONFIGURATION%==Release if %PLATFORM%==x64 goto :RX64 
-if %CONFIGURATION%==Release_COC if %PLATFORM%==x86 goto :RX_CoC86 
-if %CONFIGURATION%==Release_COC if %PLATFORM%==x64 goto :RX_CoC64 
+if %CONFIGURATION%==Release if %PLATFORM%==x86 goto :RX_CoC86 
+if %CONFIGURATION%==Release if %PLATFORM%==x64 goto :RX_CoC64 
 
 echo FAIL
 goto :END 
@@ -71,7 +71,7 @@ rd /s /q gamedata_COC
 goto :END 
 
 :MX_CoC86 
-cd _build\bin\Win32\Mixed_COC 
+cd _build\bin\Win32\Mixed 
 copy *.dll ..\..\..\..\res\bins\ 
 copy *.exe ..\..\..\..\res\bins\ 
 cd ..\ 
@@ -86,7 +86,7 @@ ren gamedata_COC gamedata
 goto :END 
 
 :MX_CoC64 
-cd _build\bin\Win64\Mixed_COC 
+cd _build\bin\Win64\Mixed 
 copy *.dll ..\..\..\..\res\bins\ 
 copy *.exe ..\..\..\..\res\bins\ 
 cd ..\ 
@@ -129,7 +129,7 @@ rd /s /q gamedata_COC
 goto :END 
 
 :RX_CoC86 
-cd _build\bin\Win32\Release_COC 
+cd _build\bin\Win32\Release 
 copy *.dll ..\..\..\..\res\bins\ 
 copy *.exe ..\..\..\..\res\bins\ 
 cd ..\ 
@@ -144,7 +144,7 @@ ren gamedata_COC gamedata
 goto :END 
 
 :RX_CoC64 
-cd _build\bin\Win64\Release_COC 
+cd _build\bin\Win64\Release 
 copy *.dll ..\..\..\..\res\bins\ 
 copy *.exe ..\..\..\..\res\bins\ 
 cd ..\ 

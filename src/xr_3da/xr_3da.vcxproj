@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Mixed_COC|Win32">
-      <Configuration>Mixed_COC</Configuration>
+    <ProjectConfiguration Include="Mixed|Win32">
+      <Configuration>Mixed</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Mixed_COC|x64">
-      <Configuration>Mixed_COC</Configuration>
+    <ProjectConfiguration Include="Mixed|x64">
+      <Configuration>Mixed</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_COC|Win32">
-      <Configuration>Release_COC</Configuration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_COC|x64">
-      <Configuration>Release_COC</Configuration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -26,28 +26,28 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(SolutionDir)Common.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed_COC|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_COC|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed_COC|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -70,21 +70,21 @@
     <ClCompile>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'">None</DebugInformationFormat>
-      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release_COC|x64'">None</DebugInformationFormat>
-      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Mixed_COC|x64'">false</BufferSecurityCheck>
-      <ControlFlowGuard Condition="'$(Configuration)|$(Platform)'=='Mixed_COC|x64'">false</ControlFlowGuard>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Mixed_COC|x64'">NotSet</EnableEnhancedInstructionSet>
-      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Release_COC|x64'">false</BufferSecurityCheck>
-      <ControlFlowGuard Condition="'$(Configuration)|$(Platform)'=='Release_COC|x64'">false</ControlFlowGuard>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'">false</BufferSecurityCheck>
-      <ControlFlowGuard Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'">false</ControlFlowGuard>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">None</DebugInformationFormat>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release|x64'">None</DebugInformationFormat>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">false</BufferSecurityCheck>
+      <ControlFlowGuard Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">false</ControlFlowGuard>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">NotSet</EnableEnhancedInstructionSet>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</BufferSecurityCheck>
+      <ControlFlowGuard Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ControlFlowGuard>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</BufferSecurityCheck>
+      <ControlFlowGuard Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ControlFlowGuard>
     </ClCompile>
     <Link>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
-      <GenerateDebugInformation Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'">false</GenerateDebugInformation>
-      <GenerateDebugInformation Condition="'$(Configuration)|$(Platform)'=='Release_COC|x64'">false</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</GenerateDebugInformation>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>as-invoker-manifest-part.xml %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -114,10 +114,10 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Mixed_COC|Win32'">IS_CoC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_COC|Win32'">IS_CoC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Mixed_COC|x64'">IS_CoC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_COC|x64'">IS_CoC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">IS_CoC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">IS_CoC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">IS_CoC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">IS_CoC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>

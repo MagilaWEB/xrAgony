@@ -5,8 +5,8 @@ skip_tags: true
 image:
 - Visual Studio 2017
 configuration:
-- Release_COC
-- Mixed_COC
+- Release
+- Mixed
 platform:
 - x64
 - x86

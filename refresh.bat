@@ -12,6 +12,6 @@ rem ______________________________________________________________________
 rem ______________________________________________________________________
 rem ______________________________________________________________________
 rem robocopy опасная утилита. Если что-то нужно поменять, то нужно быть осторожным
-robocopy "%PathToRepo%\_build\bin\Win64\Release_COC" "%PathToGame%\bins" *.exe /MIR /Z /NJH /NJS
-robocopy "%PathToRepo%\_build\bin\Win64\Release_COC" "%PathToGame%\bins" *.dll /MIR /Z /NJH /NJS
+robocopy "%PathToRepo%\_build\bin\Win64\Release" "%PathToGame%\bins" *.exe /MIR /Z /NJH /NJS
+robocopy "%PathToRepo%\_build\bin\Win64\Release" "%PathToGame%\bins" *.dll /MIR /Z /NJH /NJS
 Pause
