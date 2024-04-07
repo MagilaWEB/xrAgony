@@ -1,0 +1,20 @@
+# exclude all dot files except .git files
+.*
+!.git*
+
+# exclude binaries and temporary files
+__vs_gr_dbg_sessions/
+_build/
+bin/
+bin_plugs/
+intermediate/
+intermediate_plugs/
+lib/
+*.aps
+*.user
+*.PVS-Studio.*
+res/gamedata_COC/.gitattributes
+res/gamedata_COC/.gitignore
+res/gamedata_COC/changelog_legend.txt
+Externals/LuaJIT-proj/lj_vm_x64.obj
+*.bak
