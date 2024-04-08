@@ -2,7 +2,7 @@
 #include "DockPanelSerializer.h"
 
 #define COMPANY_NAME "GSC Game World"
-#define PRODUCT_NAME "OpenXRay"
+#define PRODUCT_NAME "AGONY"
 
 using Microsoft::Win32::Registry;
 using Microsoft::Win32::RegistryKey;

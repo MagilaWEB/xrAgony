@@ -171,7 +171,7 @@ ENGINE_API int RunApplication()
 #ifdef NO_MULTI_INSTANCES
     if (!GEnv.isDedicatedServer)
     {
-        CreateMutex(nullptr, TRUE, "Local\\STALKER-COP");
+        CreateMutex(nullptr, TRUE, "Local\\stalker_agony");
         if (GetLastError() == ERROR_ALREADY_EXISTS)
         {
             splash::hide();

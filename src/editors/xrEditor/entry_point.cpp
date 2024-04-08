@@ -22,7 +22,7 @@ void UIThreadProc(void*)
 
     auto windowIDE = gcnew WindowIDE();
 
-    Core.Initialize("OpenXRayEditor", LogCallback(ELogCallback, windowIDE->Log().Handle.ToPointer()), true);
+    Core.Initialize("AgonyEditor", LogCallback(ELogCallback, windowIDE->Log().Handle.ToPointer()), true);
 
 #ifdef XR_X64
     Device.m_hWnd = (HWND)windowIDE->View().GetViewHandle().ToInt64();
@@ -46,7 +46,7 @@ int entry_point(pcstr commandLine)
     xrDebug::Initialize(false);
 
     splash->SetStatus("Loading Core...");
-    ThreadUtil::CreateThread(UIThreadProc, "OpenXRay Editor UI Thread", 0, nullptr);
+    ThreadUtil::CreateThread(UIThreadProc, "xrAgony Editor UI Thread", 0, nullptr);
 
     UICreated.Wait();
     ReadyToShowUI.Set();

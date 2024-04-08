@@ -37,7 +37,6 @@ To build X-Ray Engine you'll need following libraries:
 * Autodesk Maya 2008/2009 SDK: https://github.com/OpenXRay/maya
 * Autodesk 3DS Max 6.0 SDK: https://github.com/OpenXRay/3dsmax
 * NVAPI: https://developer.nvidia.com/nvapi
-* OpenAutomate: https://developer.nvidia.com/openautomate
 * pugixml: https://github.com/zeux/pugixml/
 * zlib: http://zlib.net
 All mentioned libraries are already in repository as submodules!

@@ -61,6 +61,9 @@
       <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</BufferSecurityCheck>
       <ControlFlowGuard Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ControlFlowGuard>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="Flobbster.Windows.Forms.PropertyGrid">
