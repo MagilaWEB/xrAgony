@@ -20,9 +20,7 @@ function main_menu:__init() super()
     self:InitControls()
     self:InitCallBacks()
 	SendScriptCallback("main_menu_on_init",self)
-	if not (level.present()) then
-		xrs_debug_tools.on_game_start()
-	end
+	
 end
 
 function main_menu:__finalize()

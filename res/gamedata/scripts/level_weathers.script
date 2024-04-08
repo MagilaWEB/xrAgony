@@ -469,9 +469,9 @@ function WeatherManager:get_moon_phase()
 	local moon = atmosfear_options.config:r_value("atmosfear_current_parameters","opt_moon_phase",0,"8days")
 	local phase
 	if moon=="28days" then
-		phase = math.floor(math.mod(day,28)/3.5)
+		phase = math.floor(math.modf(day,28)/3.5)
 	elseif moon == "8days" then
-		phase = math.mod(day,8)
+		phase = math.modf(day,8)
 	else
 		phase = string.sub(moon,5)
 	end

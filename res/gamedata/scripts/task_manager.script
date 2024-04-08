@@ -187,7 +187,7 @@ function task_callback(tsk, state)
 	end 
 	
 	--printf("task_callback %s state=%s",id,state == task.fail and "fail" or state == task.completed and "complete" or state)
-	if (state == task.fail) then
+	if (state == rtask.fail) then
 		news_manager.send_task(db.actor, "fail", tsk)
 		
 		rtask.status = "fail"
@@ -213,7 +213,7 @@ function task_callback(tsk, state)
 		else
 			tm.task_info[id] = nil
 		end
-	elseif (state == task.completed) then 
+	elseif (state == rtask.completed) then 
 		if (rtask.on_complete) then
 			xr_logic.pick_section_from_condlist(db.actor, db.actor, rtask.on_complete)
 		end
@@ -230,7 +230,7 @@ function task_callback(tsk, state)
  		else 
  			tm.task_info[id] = nil
  		end
-	elseif (state == task.reversed) then
+	elseif (state == rtask.reversed) then
 		if (rtask.on_reversed) then
 			xr_logic.pick_section_from_condlist(db.actor, db.actor, rtask.on_reversed)
 		end
