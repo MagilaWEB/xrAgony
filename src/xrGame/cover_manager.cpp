@@ -7,8 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "tbb/parallel_for.h"
-#include "tbb/blocked_range.h"
+#include <tbb.h>
 #include "xrAICore/Navigation/level_graph.h"
 #include "cover_manager.h"
 #include "ai_space.h"

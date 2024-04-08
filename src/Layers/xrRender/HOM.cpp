@@ -4,8 +4,7 @@
 
 #include "stdafx.h"
 
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
+#include <tbb.h>
 
 #include "HOM.h"
 #include "occRasterizer.h"

@@ -1,7 +1,4 @@
 #include "stdafx.h"
-
-#include <tbb/parallel_for_each.h>
-
 #include "TextureDescrManager.h"
 #include "ETextureParams.h"
 

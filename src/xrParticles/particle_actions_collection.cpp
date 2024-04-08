@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "particle_actions_collection.h"
 #include "particle_effect.h"
-#include "tbb/parallel_for.h" 
-#include "tbb/blocked_range.h"
 
 using namespace PAPI;
 

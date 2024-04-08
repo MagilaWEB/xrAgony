@@ -162,6 +162,7 @@ private:
     shared_str m_sect_name;
 
     Fmatrix m_attach_offset;
+    Fvector m_default{0,0,0};	//pos,rot
 
     Fmatrix m_transform;
     IKinematicsAnimated* m_model;

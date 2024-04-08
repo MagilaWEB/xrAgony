@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "ParticleEffect.h"
-#include "tbb/parallel_for.h"
-#include "tbb/blocked_range.h"
 
 #ifndef _EDITOR
 #include <xmmintrin.h>

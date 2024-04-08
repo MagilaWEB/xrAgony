@@ -18,7 +18,6 @@
 #include <shellapi.h>
 #pragma comment(lib, "shell32.lib")
 
-#include <tbb/parallel_for_each.h>
 
 #include "Common/object_broker.h"
 
