@@ -17,7 +17,7 @@
 #include "r_backend_tree.h"
 
 #ifdef USE_DX11
-#include "Layers/xrRenderPC_R4/r_backend_lod.h"
+#include "Layers/xrRenderDX11/r_backend_lod.h"
 #endif
 
 #include "FVF.h"

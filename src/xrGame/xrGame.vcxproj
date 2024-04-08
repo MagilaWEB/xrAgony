@@ -115,7 +115,7 @@
     <Link>
       <LinkTimeCodeGeneration>
       </LinkTimeCodeGeneration>
-      <AdditionalDependencies>LuaJIT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

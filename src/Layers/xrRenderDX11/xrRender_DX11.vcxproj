@@ -435,6 +435,7 @@
     <ClCompile Include="..\xrRender\Utils\dxHashHelper.cpp" />
     <ClCompile Include="..\xrRender\VertexCache.cpp" />
     <ClCompile Include="..\xrRender\WallmarksEngine.cpp" />
+    <ClCompile Include="..\xrRender\xrRender.cpp" />
     <ClCompile Include="..\xrRender\xrRender_console.cpp" />
     <ClCompile Include="..\xrRender\xrStripify.cpp" />
     <ClCompile Include="..\xrRender\xr_effgamma.cpp" />
@@ -503,7 +504,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="xrRender_R4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)xrCore\xrCore.vcxproj">
