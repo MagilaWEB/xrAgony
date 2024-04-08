@@ -19,6 +19,7 @@
 
 // integer math on floats
 #ifdef _M_AMD64
+#include <math.h>
 IC bool negative(const float f) { return f < 0; }
 IC bool positive(const float f) { return f >= 0; }
 IC void set_negative(float& f) { f = -fabsf(f); }

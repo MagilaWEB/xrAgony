@@ -1,4 +1,4 @@
- once
+#pragma once
 
 namespace XRay
 {
@@ -21,7 +21,7 @@ namespace Windows
 {
 using namespace System;
 using namespace System::Windows::Forms;
-using namespace System::Data;#pragma
+using namespace System::Data;
 using namespace System::Drawing;
 
 public ref class WindowIDE : public System::Windows::Forms::Form
