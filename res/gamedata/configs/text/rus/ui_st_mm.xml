@@ -45,23 +45,17 @@
 	<string id="map">
 		<text>КАРТА</text>
 	</string>
-	<string id="renderer_r1">
-		<text>Статичное освещение DX8</text>
+	<string id="renderer_DX9Basic">
+		<text>DirectX 9 (Базовый)</text>
 	</string>
-	<string id="renderer_r2a">
-		<text>Динамическое освещение DX9</text>
+	<string id="renderer_DX9Normal">
+		<text>DirectX 9 (Стандартный)</text>
 	</string>
-	<string id="renderer_r2">
-		<text>Полное динам.освещение DX9</text>
+	<string id="renderer_DX9Enhanced">
+		<text>DirectX 9 (Улучшенный)</text>
 	</string>
-	<string id="renderer_r2.5">
-		<text>Улучш.динамич.освещение DX9</text>
-	</string>
-	<string id="renderer_r3">
-		<text>Улуч.динамич.освещение DX10</text>
-	</string>
-	<string id="renderer_r4">
-		<text>Улуч.динамич.освещение DX11</text>
+	<string id="renderer_DX11">
+		<text>DirectX 11 (Базовый)</text>
 	</string>
 	<string id="st_opt_high">
 		<text>высоко</text>

@@ -35,10 +35,8 @@ enum
 
     rsCameraPos = (1ul << 18ul),
 
-    rsR1 = (1ul << 19ul),
-    rsR2 = (1ul << 20ul),
-    rsR3 = (1ul << 21ul),
-    rsR4 = (1ul << 22ul), // 22 was reserved for editor
+    rsDX9 = (1ul << 19ul),
+    rsDX11 = (1ul << 20ul),
     rsShowFPS = (1ul << 23ul), // 23 was reserved for editor
     // 24-32 bit - reserved to Editor
 };
