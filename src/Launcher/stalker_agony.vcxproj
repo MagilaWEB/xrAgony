@@ -73,7 +73,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(xrBinRootDir)$(xrPlatform)\</OutDir>
+    <OutDir>$(xrGameDir)</OutDir>
     <IntDir>$(xrIntDir)$(ProjectName)\</IntDir>
     <TargetName>AGONY</TargetName>
   </PropertyGroup>
@@ -83,7 +83,7 @@
     <TargetName>AGONY</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(xrBinRootDir)$(xrPlatform)\</OutDir>
+    <OutDir>$(xrGameDir)</OutDir>
     <IntDir>$(xrIntDir)$(ProjectName)\</IntDir>
     <TargetName>AGONY</TargetName>
   </PropertyGroup>

@@ -247,7 +247,7 @@
     <ClCompile Include="xrT_Junction.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(xrLibraries)MagicFM.vcxproj">
+    <ProjectReference Include="$(xrLibraries)FreeMagic\MagicFM.vcxproj">
       <Project>{848e8ab3-9962-4c04-b813-5690399c8a3e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\xrCDB\xrCDB.vcxproj">

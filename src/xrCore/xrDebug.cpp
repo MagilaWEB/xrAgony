@@ -20,10 +20,7 @@
 
 extern bool shared_str_initialized;
 
-
 static BOOL bException = FALSE;
-
-
 
 #include <exception>
 
@@ -355,18 +352,7 @@ void xrDebug::Fail(bool& ignoreAlways, const ErrorLocation& loc, const char* exp
 #endif
     lock.Enter();
     ErrorAfterDialog = true;
-    // clang-format off
-    constexpr char managedFail[] =""
-"___  ___                                 _______    _ _ \n"
-"|  \\/  |                                | |  ___|  (_) |\n"
-"| .  . | __ _ _ __   __ _  __ _  ___  __| | |_ __ _ _| |\n"
-"| |\\/| |/ _` | '_ \\ / _` |/ _` |/ _ \\/ _` |  _/ _` | | |\n"
-"| |  | | (_| | | | | (_| | (_| |  __/ (_| | || (_| | | |\n"
-"\\_|  |_/\\__,_|_| |_|\\__,_|\\__, |\\___|\\__,_\\_| \\__,_|_|_|\n"
-"                           __/ |                        \n"
-"                          |___/                         ";
-    // clang-format on
-    Log(managedFail);
+
     string4096 assertionInfo;
     GatherInfo(assertionInfo, loc, expr, desc, arg1, arg2);
 
@@ -503,19 +489,11 @@ LONG WINAPI xrDebug::UnhandledFilter(EXCEPTION_POINTERS* exPtrs)
         xr_vector<xr_string> stackTrace = BuildStackTrace(exPtrs->ContextRecord, 1024);
         *exPtrs->ContextRecord = save;
         // clang-format off
-        constexpr char unhandledText[] = ""
-        " _   _       _                     _ _          _   _____                   _   _             \n"
-        "| | | |     | |                   | | |        | | |  ___|                 | | (_)            \n"
-        "| | | |_ __ | |__   __ _ _ __   __| | | ___  __| | | |____  _____ ___ _ __ | |_ _  ___  _ __  \n"
-        "| | | | '_ \\| '_ \\ / _` | '_ \\ / _` | |/ _ \\/ _` | |  __\\ \\/ / __/ _ \\ '_ \\| __| |/ _ \\| '_ \\ \n"
-        "| |_| | | | | | | | (_| | | | | (_| | |  __/ (_| | | |___>  < (_|  __/ |_) | |_| | (_) | | | |\n"
-        " \\___/|_| |_|_| |_|\\__,_|_| |_|\\__,_|_|\\___|\\__,_| \\____/_/\\_\\___\\___| .__/ \\__|_|\\___/|_| |_|\n"
-        "                                                                     | |                      \n"
-        "                                                                     |_|                      \n"
-        "stack trace:\n\n";
+        constexpr char unhandledText[] = "stack trace:\n\n";
         // clang-format on
         if (shared_str_initialized)
             Msg(unhandledText);
+
         if (!IsDebuggerPresent())
             os_clipboard::copy_to_clipboard(unhandledText);
         string4096 buffer;

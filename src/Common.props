@@ -24,17 +24,15 @@
   </ItemGroup>
 
   <PropertyGroup Label="UserMacros">
+    <xrGameDir>D:AGONY\</xrGameDir>
     <xrBinRootDir>$(SolutionDir)..\_build\bin\</xrBinRootDir>
-    <xrLibRootDir>$(SolutionDir)..\_build\lib\</xrLibRootDir>
-    <xrBinDir>$(SolutionDir)..\_build\bin\$(xrPlatform)\$(Configuration)\</xrBinDir>
-    <xrPlugBinDir>$(SolutionDir)..\_build\bin\$(xrPlatform)\$(Configuration)\plugins\</xrPlugBinDir>
+    <xrBinDir>$(xrGameDir)bin\$(xrPlatform)\</xrBinDir>
     <xrLibDir>$(SolutionDir)..\_build\lib\$(xrPlatform)\$(Configuration)\</xrLibDir>
     <xrIntDir>$(SolutionDir)..\_build\intermediate\$(xrPlatform)\$(Configuration)\</xrIntDir>
     <xrSdkDir>$(SolutionDir)..\sdk\</xrSdkDir>
     <xrLibraries>$(SolutionDir)Libraries\</xrLibraries>
     <xrLuaJit>$(xrLibraries)luajit\</xrLuaJit>
     <xrLuaDir>$(xrLuaJit)src\</xrLuaDir>
-    <xrLuaLib>$(xrLuaJit)bin\$(PlatformShortName)</xrLuaLib>
   </PropertyGroup>
 
   <PropertyGroup Label="OutputDirectories">
@@ -81,13 +79,13 @@
       <WarningLevel>Level1</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(xrLuaLib);$(xrSdkDir)libraries;$(xrSdkDir)libraries/$(PlatformShortName);$(xrLibDir);$(xrSdkDir)DXSDK/Lib/$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrSdkDir)libraries;$(xrSdkDir)libraries/$(PlatformShortName);$(xrLibDir);$(xrSdkDir)DXSDK/Lib/$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>$(xrLibDir)$(TargetName).lib</ImportLibrary>
       <LargeAddressAware>true</LargeAddressAware>
       <SubSystem>Windows</SubSystem>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(xrLuaLib);$(xrSdkDir)libraries;$(xrSdkDir)libraries/$(PlatformShortName);$(xrLibDir);$(xrSdkDir)DXSDK/Lib/$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrSdkDir)libraries;$(xrSdkDir)libraries/$(PlatformShortName);$(xrLibDir);$(xrSdkDir)DXSDK/Lib/$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(xrLibDir)$(TargetName).lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
