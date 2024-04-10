@@ -16,3 +16,7 @@ res/gamedata_COC/.gitattributes
 res/gamedata_COC/.gitignore
 res/gamedata_COC/changelog_legend.txt
 *.bak
+buildvm.exp
+buildvm.lib
+minilua.exp
+minilua.lib
