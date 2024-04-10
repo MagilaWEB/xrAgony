@@ -12,55 +12,55 @@
 struct pureFrame
 {
     virtual void OnFrame() = 0;
-    ICF void __fastcall OnPure() { OnFrame(); }
+    ICF void __stdcall OnPure() { OnFrame(); }
 };
 
 struct pureFrameEnd
 {
     virtual void OnFrameEnd() = 0;
-    ICF void __fastcall OnPure() { OnFrameEnd(); }
+    ICF void __stdcall OnPure() { OnFrameEnd(); }
 };
 
 struct pureRender
 {
     virtual void OnRender() = 0;
-    ICF void __fastcall OnPure() { OnRender(); }
+    ICF void __stdcall OnPure() { OnRender(); }
 };
 
 struct pureAppActivate
 {
     virtual void OnAppActivate() = 0;
-    ICF void __fastcall OnPure() { OnAppActivate(); }
+    ICF void __stdcall OnPure() { OnAppActivate(); }
 };
 
 struct pureAppDeactivate
 {
     virtual void OnAppDeactivate() = 0;
-    ICF void __fastcall OnPure() { OnAppDeactivate(); }
+    ICF void __stdcall OnPure() { OnAppDeactivate(); }
 };
 
 struct pureAppStart
 {
     virtual void OnAppStart() = 0;
-    ICF void __fastcall OnPure() { OnAppStart(); }
+    ICF void __stdcall OnPure() { OnAppStart(); }
 };
 
 struct pureAppEnd
 {
     virtual void OnAppEnd() = 0;
-    ICF void __fastcall OnPure() { OnAppEnd(); }
+    ICF void __stdcall OnPure() { OnAppEnd(); }
 };
 
 struct pureDeviceReset
 {
     virtual void OnDeviceReset() = 0;
-    ICF void __fastcall OnPure() { OnDeviceReset(); }
+    ICF void __stdcall OnPure() { OnDeviceReset(); }
 };
 
 struct pureScreenResolutionChanged
 {
     virtual void OnScreenResolutionChanged() = 0;
-    ICF void __fastcall OnPure() { OnScreenResolutionChanged(); }
+    ICF void __stdcall OnPure() { OnScreenResolutionChanged(); }
 };
 
 template<class T>

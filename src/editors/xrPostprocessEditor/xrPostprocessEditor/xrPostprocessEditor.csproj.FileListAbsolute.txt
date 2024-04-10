@@ -1,0 +1,12 @@
+I:\xrAgony\src\editors\xrPostprocessEditor\bin\Win32\Release\xrPostprocessEditor.exe
+I:\xrAgony\src\editors\xrPostprocessEditor\bin\Win32\Release\xrManagedApi.dll
+I:\xrAgony\src\editors\xrPostprocessEditor\bin\Win32\Release\xrSdkControls.dll
+I:\xrAgony\src\editors\xrPostprocessEditor\bin\Win32\Release\xrManagedApi.pdb
+I:\xrAgony\src\editors\xrPostprocessEditor\xrPostprocessEditor\xrPostprocessEditor.csproj.AssemblyReference.cache
+I:\xrAgony\src\editors\xrPostprocessEditor\xrPostprocessEditor\xrPostprocessEditor.MainDialog.resources
+I:\xrAgony\src\editors\xrPostprocessEditor\xrPostprocessEditor\xrPostprocessEditor.KeyFrameBox.resources
+I:\xrAgony\src\editors\xrPostprocessEditor\xrPostprocessEditor\xrPostprocessEditor.Properties.Resources.resources
+I:\xrAgony\src\editors\xrPostprocessEditor\xrPostprocessEditor\xrPostprocessEditor.csproj.GenerateResource.cache
+I:\xrAgony\src\editors\xrPostprocessEditor\xrPostprocessEditor\xrPostprocessEditor.csproj.CoreCompileInputs.cache
+I:\xrAgony\src\editors\xrPostprocessEditor\xrPostprocessEditor\xrPostpr.1B752C49.Up2Date
+I:\xrAgony\src\editors\xrPostprocessEditor\xrPostprocessEditor\xrPostprocessEditor.exe

@@ -10,7 +10,7 @@ enum class MessageType
     Custom
 };
 
-ref class EditorLog
+class EditorLog
 {
 public:
     bool in_use;
@@ -80,4 +80,4 @@ public: System::Windows::Forms::DialogResult DlgMsg(MessageType type, System::St
 
 void XRECORE_API ELogCallback(void* context, pcstr message);
 
-extern XRECORE_API gcroot<EditorLog^> ELog;
+extern gcroot<EditorLog> ELog;

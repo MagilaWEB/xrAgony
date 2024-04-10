@@ -164,7 +164,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)3dsmax/ver-6.0/include;$(xrExternals)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)3dsmax/ver-6.0/include;$(xrLibraries)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;UTILITY_EXPORTS;_MAX_EXPORT;_MAX_PLUGIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
@@ -173,7 +173,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>mesh.lib;geom.lib;gfx.lib;maxutil.lib;core.lib;paramblk2.lib;comctl32.lib;odbc32.lib;odbccp32.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(xrExternals)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrLibraries)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Export\Utility.def</ModuleDefinitionFile>
       <BaseAddress>0x08970000</BaseAddress>
     </Link>
@@ -184,7 +184,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)3dsmax/ver-6.0/include;$(xrExternals)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)3dsmax/ver-6.0/include;$(xrLibraries)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;UTILITY_EXPORTS;_MAX_EXPORT;_MAX_PLUGIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
@@ -193,7 +193,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>mesh.lib;geom.lib;gfx.lib;maxutil.lib;core.lib;paramblk2.lib;comctl32.lib;odbc32.lib;odbccp32.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(xrExternals)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrLibraries)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Export\Utility.def</ModuleDefinitionFile>
       <BaseAddress>0x08970000</BaseAddress>
     </Link>
@@ -204,7 +204,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)3dsmax/ver-6.0/include;$(xrExternals)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)3dsmax/ver-6.0/include;$(xrLibraries)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;UTILITY_EXPORTS;_MAX_EXPORT;_MAX_PLUGIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
@@ -213,7 +213,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>mesh.lib;geom.lib;gfx.lib;maxutil.lib;core.lib;paramblk2.lib;comctl32.lib;odbc32.lib;odbccp32.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(xrExternals)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrLibraries)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Export\Utility.def</ModuleDefinitionFile>
       <BaseAddress>0x08970000</BaseAddress>
     </Link>
@@ -224,7 +224,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)3dsmax/ver-6.0/include;$(xrExternals)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)3dsmax/ver-6.0/include;$(xrLibraries)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;UTILITY_EXPORTS;_MAX_EXPORT;_MAX_PLUGIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
@@ -233,7 +233,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>mesh.lib;geom.lib;gfx.lib;maxutil.lib;core.lib;paramblk2.lib;comctl32.lib;odbc32.lib;odbccp32.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(xrExternals)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrLibraries)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Export\Utility.def</ModuleDefinitionFile>
       <BaseAddress>0x08970000</BaseAddress>
     </Link>
@@ -244,7 +244,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)3dsmax/ver-6.0/include;$(xrExternals)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)3dsmax/ver-6.0/include;$(xrLibraries)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;UTILITY_EXPORTS;_MAX_EXPORT;_MAX_PLUGIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
@@ -253,7 +253,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>mesh.lib;geom.lib;gfx.lib;maxutil.lib;core.lib;paramblk2.lib;comctl32.lib;odbc32.lib;odbccp32.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(xrExternals)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrLibraries)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Export\Utility.def</ModuleDefinitionFile>
       <BaseAddress>0x08970000</BaseAddress>
     </Link>
@@ -264,7 +264,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)3dsmax/ver-6.0/include;$(xrExternals)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)3dsmax/ver-6.0/include;$(xrLibraries)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;UTILITY_EXPORTS;_MAX_EXPORT;_MAX_PLUGIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
@@ -273,7 +273,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>mesh.lib;geom.lib;gfx.lib;maxutil.lib;core.lib;paramblk2.lib;comctl32.lib;odbc32.lib;odbccp32.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(xrExternals)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrLibraries)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Export\Utility.def</ModuleDefinitionFile>
       <BaseAddress>0x08970000</BaseAddress>
     </Link>
@@ -284,7 +284,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)3dsmax/ver-6.0/include;$(xrExternals)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)3dsmax/ver-6.0/include;$(xrLibraries)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;UTILITY_EXPORTS;_MAX_EXPORT;_MAX_PLUGIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
@@ -293,7 +293,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>mesh.lib;geom.lib;gfx.lib;maxutil.lib;core.lib;paramblk2.lib;comctl32.lib;odbc32.lib;odbccp32.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(xrExternals)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrLibraries)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Export\Utility.def</ModuleDefinitionFile>
       <BaseAddress>0x08970000</BaseAddress>
     </Link>
@@ -304,7 +304,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)3dsmax/ver-6.0/include;$(xrExternals)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)3dsmax/ver-6.0/include;$(xrLibraries)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;UTILITY_EXPORTS;_MAX_EXPORT;_MAX_PLUGIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
@@ -313,7 +313,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>mesh.lib;geom.lib;gfx.lib;maxutil.lib;core.lib;paramblk2.lib;comctl32.lib;odbc32.lib;odbccp32.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(xrExternals)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrLibraries)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Export\Utility.def</ModuleDefinitionFile>
       <BaseAddress>0x08970000</BaseAddress>
     </Link>
@@ -324,7 +324,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)3dsmax/ver-6.0/include;$(xrExternals)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)3dsmax/ver-6.0/include;$(xrLibraries)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;UTILITY_EXPORTS;_MAX_EXPORT;_MAX_PLUGIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
@@ -333,7 +333,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>mesh.lib;geom.lib;gfx.lib;maxutil.lib;core.lib;paramblk2.lib;comctl32.lib;odbc32.lib;odbccp32.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(xrExternals)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrLibraries)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Export\Utility.def</ModuleDefinitionFile>
       <BaseAddress>0x08970000</BaseAddress>
     </Link>
@@ -344,7 +344,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)3dsmax/ver-6.0/include;$(xrExternals)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)3dsmax/ver-6.0/include;$(xrLibraries)3dsmax/ver-6.0/cssdk/include;$(SolutionDir)plugins\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;UTILITY_EXPORTS;_MAX_EXPORT;_MAX_PLUGIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
@@ -353,7 +353,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>mesh.lib;geom.lib;gfx.lib;maxutil.lib;core.lib;paramblk2.lib;comctl32.lib;odbc32.lib;odbccp32.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(xrExternals)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrLibraries)3dsmax/ver-6.0/lib;$(xrLibDir);$(xrSdkDir)libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Export\Utility.def</ModuleDefinitionFile>
       <BaseAddress>0x08970000</BaseAddress>
     </Link>

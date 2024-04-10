@@ -159,7 +159,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)lightwave/ver-8.0/include;$(xrExternals)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)lightwave/ver-8.0/include;$(xrLibraries)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;_X86_;_LW_PLUGIN;_LW_SHADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FloatingPointModel>Precise</FloatingPointModel>
     </ClCompile>
@@ -178,7 +178,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)lightwave/ver-8.0/include;$(xrExternals)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)lightwave/ver-8.0/include;$(xrLibraries)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;_X86_;_LW_PLUGIN;_LW_SHADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FloatingPointModel>Precise</FloatingPointModel>
     </ClCompile>
@@ -197,7 +197,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)lightwave/ver-8.0/include;$(xrExternals)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)lightwave/ver-8.0/include;$(xrLibraries)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;_X64_;_LW_PLUGIN;_LW_SHADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FloatingPointModel>Precise</FloatingPointModel>
     </ClCompile>
@@ -216,7 +216,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)lightwave/ver-8.0/include;$(xrExternals)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)lightwave/ver-8.0/include;$(xrLibraries)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;_X64_;_LW_PLUGIN;_LW_SHADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FloatingPointModel>Precise</FloatingPointModel>
     </ClCompile>
@@ -235,7 +235,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)lightwave/ver-8.0/include;$(xrExternals)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)lightwave/ver-8.0/include;$(xrLibraries)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;_X86_;_LW_PLUGIN;_LW_SHADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FloatingPointModel>Precise</FloatingPointModel>
     </ClCompile>
@@ -254,7 +254,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)lightwave/ver-8.0/include;$(xrExternals)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)lightwave/ver-8.0/include;$(xrLibraries)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;_X86_;_LW_PLUGIN;_LW_SHADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FloatingPointModel>Precise</FloatingPointModel>
     </ClCompile>
@@ -273,7 +273,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)lightwave/ver-8.0/include;$(xrExternals)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)lightwave/ver-8.0/include;$(xrLibraries)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;_X64_;_LW_PLUGIN;_LW_SHADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FloatingPointModel>Precise</FloatingPointModel>
     </ClCompile>
@@ -292,7 +292,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)lightwave/ver-8.0/include;$(xrExternals)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)lightwave/ver-8.0/include;$(xrLibraries)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;_X64_;_LW_PLUGIN;_LW_SHADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FloatingPointModel>Precise</FloatingPointModel>
     </ClCompile>
@@ -311,7 +311,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)lightwave/ver-8.0/include;$(xrExternals)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)lightwave/ver-8.0/include;$(xrLibraries)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;_X86_;_LW_PLUGIN;_LW_SHADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>
@@ -329,7 +329,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(xrExternals)lightwave/ver-8.0/include;$(xrExternals)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrLibraries)lightwave/ver-8.0/include;$(xrLibraries)lightwave/ver-8.0/include/lwsdk;../Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;_X64_;_LW_PLUGIN;_LW_SHADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ResourceCompile>

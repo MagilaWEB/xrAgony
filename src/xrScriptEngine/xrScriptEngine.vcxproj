@@ -101,7 +101,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
@@ -166,7 +166,7 @@
     <ProjectReference Include="$(SolutionDir)xrCore\xrCore.vcxproj">
       <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Externals\lua-extensions\lua_extensions.vcxproj">
+    <ProjectReference Include="$(xrLibraries)lua-extensions\lua_extensions.vcxproj">
       <Project>{44f716e7-05bd-4390-ab02-5f7daf7fefde}</Project>
     </ProjectReference>
   </ItemGroup>

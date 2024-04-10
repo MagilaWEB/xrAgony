@@ -103,16 +103,16 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
   </ItemDefinitionGroup>
-    <ItemGroup>
+  <ItemGroup>
     <ClCompile Include="OpenAutomate.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OpenAutomate.h" />
     <ClInclude Include="OpenAutomate_Internal.h" />
   </ItemGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

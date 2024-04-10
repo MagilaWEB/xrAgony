@@ -1,18 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace XRay.SdkControls
 {
     public partial class NumericSpinner : UserControl
     {
-        private bool ignoreOnChanged;
-
         public NumericSpinner()
         {
             InitializeComponent();
@@ -73,8 +66,6 @@ namespace XRay.SdkControls
             base.OnLoad(e);
             numSpinner.ValueChanged += (obj, args) =>
             {
-                if (ignoreOnChanged)
-                    return;
                 OnValueChanged();
             };
         }

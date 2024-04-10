@@ -67,7 +67,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)utils\xrQSlim\src;$(xrExternals)libvorbis\include;$(xrExternals)libogg\include;$(xrExternals)libtheora\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)utils\xrQSlim\src;$(xrLibraries)libvorbis\include;$(xrLibraries)libogg\include;$(xrLibraries)libtheora\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ETOOLS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -77,7 +77,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)utils\xrQSlim\src;$(xrExternals)libvorbis\include;$(xrExternals)libogg\include;$(xrExternals)libtheora\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)utils\xrQSlim\src;$(xrLibraries)libvorbis\include;$(xrLibraries)libogg\include;$(xrLibraries)libtheora\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ETOOLS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -86,13 +86,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)utils\xrQSlim\src;$(xrExternals)libvorbis\include;$(xrExternals)libogg\include;$(xrExternals)libtheora\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)utils\xrQSlim\src;$(xrLibraries)libvorbis\include;$(xrLibraries)libogg\include;$(xrLibraries)libtheora\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ETOOLS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)utils\xrQSlim\src;$(xrExternals)libvorbis\include;$(xrExternals)libogg\include;$(xrExternals)libtheora\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)utils\xrQSlim\src;$(xrLibraries)libvorbis\include;$(xrLibraries)libogg\include;$(xrLibraries)libtheora\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ETOOLS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -149,13 +149,13 @@
     <ProjectReference Include="$(SolutionDir)xrCore\xrCore.vcxproj">
       <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Externals\libogg_static.vcxproj">
+    <ProjectReference Include="$(xrLibraries)libogg_static.vcxproj">
       <Project>{15cbfeff-7965-41f5-b4e2-21e8795c9159}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Externals\libvorbisfile_static.vcxproj">
+    <ProjectReference Include="$(xrLibraries)libvorbisfile_static.vcxproj">
       <Project>{cebde98b-a6aa-46e6-bc79-faaf823db9ec}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Externals\libvorbis_static.vcxproj">
+    <ProjectReference Include="$(xrLibraries)libvorbis_static.vcxproj">
       <Project>{3a214e06-b95e-4d61-a291-1f8df2ec10fd}</Project>
     </ProjectReference>
     <ProjectReference Include="..\xrMiscMath\xrMiscMath.vcxproj">

@@ -184,7 +184,7 @@ void CRender::level_Unload()
     //*** Shaders
     Shaders.clear();
 
-    if (ps_clear_models_on_unload == true)
+    if (ps_clear_models_on_unload == TRUE)
     {
         Models->ClearPool(true);
         Visuals.clear();

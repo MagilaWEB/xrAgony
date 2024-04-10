@@ -31,10 +31,7 @@
     <xrLibDir>$(SolutionDir)..\_build\lib\$(xrPlatform)\$(Configuration)\</xrLibDir>
     <xrIntDir>$(SolutionDir)..\_build\intermediate\$(xrPlatform)\$(Configuration)\</xrIntDir>
     <xrSdkDir>$(SolutionDir)..\sdk\</xrSdkDir>
-    <xrExternals>$(SolutionDir)..\Externals\</xrExternals>
-
-    
-    <xrLibraries>$(SolutionDir)libraries\</xrLibraries>
+    <xrLibraries>$(SolutionDir)Libraries\</xrLibraries>
     <xrLuaJit>$(xrLibraries)luajit\</xrLuaJit>
     <xrLuaDir>$(xrLuaJit)src\</xrLuaDir>
     <xrLuaLib>$(xrLuaJit)bin\$(PlatformShortName)</xrLuaLib>
@@ -59,7 +56,7 @@
 
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrExternals);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)include\oneapi;$(xrSdkDir)DXSDK/Include;$(xrLuaDir);$(xrLibraries)luabind;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrLibraries);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)include\oneapi;$(xrSdkDir)DXSDK/Include;$(xrLuaDir);$(xrLibraries)luabind;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <!-- MultiProcessorCompilation don't compatible with LinkIncremental and UseDebugLibraries -->
       <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Debug'  ))">false</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Mixed'  ))">true</MultiProcessorCompilation>

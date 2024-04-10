@@ -1,102 +1,69 @@
 #include "stdafx.h"
 #include "ModuleLookup.hpp"
 
-#ifdef LINUX
-#include <dlfcn.h>
-#endif
-
 namespace XRay
 {
-ModuleHandle::ModuleHandle(const bool dontUnload) : handle(nullptr), dontUnload(dontUnload) {}
+	ModuleHandle::ModuleHandle(const bool dontUnload) : handle(nullptr), dontUnload(dontUnload) {}
 
-ModuleHandle::ModuleHandle(pcstr moduleName, bool dontUnload /*= false*/) : handle(nullptr), dontUnload(dontUnload)
-{
-    this->Open(moduleName);
-}
+	ModuleHandle::ModuleHandle(pcstr moduleName, bool dontUnload /*= false*/) : handle(nullptr), dontUnload(dontUnload)
+	{
+		this->Open(moduleName);
+	}
 
-ModuleHandle::~ModuleHandle()
-{
-    Close();
-}
+	ModuleHandle::~ModuleHandle()
+	{
+		Close();
+	}
 
-void* ModuleHandle::Open(pcstr moduleName)
-{
-    if (IsLoaded())
-        Close();
-    
-    Log("Loading DLL:", moduleName);
+	void* ModuleHandle::Open(pcstr moduleName)
+	{
+		if (IsLoaded())
+			Close();
 
-#ifdef WINDOWS
-    handle = LoadLibraryA(moduleName);
-#elif defined(LINUX)
-    handle = dlopen(moduleName, RTLD_LAZY);
-#endif
-    if (handle == nullptr)
-    {
-#ifdef WINDOWS
-        Msg("! Failed to load DLL: %s", xrDebug::ErrorToString(GetLastError()));
-#elif defined(LINUX)
-        Msg("! Failed to load DLL: 0x%d", dlerror());
-#endif
-    }
+		Log("Loading DLL:", moduleName);
 
-    return handle;
-}
+		handle = LoadLibraryA(moduleName);
 
-void ModuleHandle::Close()
-{
-    if (dontUnload || !IsLoaded())
-        return;
+		if (handle == nullptr)
+			Msg("! Failed to load DLL: %s", xrDebug::ErrorToString(GetLastError()));
 
-    bool closed = false;
+		return handle;
+	}
 
-#ifdef WINDOWS
-    closed = FreeLibrary(static_cast<HMODULE>(handle)) != 0;
-#elif defined(LINUX)
-    closed = dlclose(handle) == 0;
-#endif
+	void ModuleHandle::Close()
+	{
+		if (dontUnload || !IsLoaded())
+			return;
 
-    if (closed == false)
-    {
-#ifdef WINDOWS
-        Msg("! Failed to close DLL: %s", xrDebug::ErrorToString(GetLastError()));
-#elif defined(LINUX)
-        Msg("! Failed to close DLL: 0x%d", dlerror());
-#endif
-    }
+		bool closed = false;
 
-    handle = nullptr;
-}
+		closed = FreeLibrary(static_cast<HMODULE>(handle)) != 0;
 
-bool ModuleHandle::IsLoaded() const
-{
-    return handle != nullptr;
-}
+		if (closed == false)
+			Msg("! Failed to close DLL: %s", xrDebug::ErrorToString(GetLastError()));
 
-void* ModuleHandle::operator()() const
-{
-    return handle;
-}
+		handle = nullptr;
+	}
 
-void* ModuleHandle::GetProcAddress(pcstr procName) const
-{
-    void* proc = nullptr;
+	bool ModuleHandle::IsLoaded() const
+	{
+		return handle != nullptr;
+	}
 
-#ifdef WINDOWS
-    proc = ::GetProcAddress(static_cast<HMODULE>(handle), procName);
-#elif defined(LINUX)
-    proc = dlsym(handle, procName);
-#endif
+	void* ModuleHandle::operator()() const
+	{
+		return handle;
+	}
 
-    if (proc == nullptr)
-    {
-#ifdef WINDOWS
-        Msg("! Failed to load procedure [%s]: %s", xrDebug::ErrorToString(GetLastError()));
-#elif defined(LINUX)
-        Msg("! Failed to load procedure [%s]: 0x%d", procName, dlerror());
-#endif
-    }
+	void* ModuleHandle::GetProcAddress(pcstr procName) const
+	{
+		void* proc = nullptr;
 
-    return proc;
-}
+		proc = ::GetProcAddress(static_cast<HMODULE>(handle), procName);
+
+		if (proc == nullptr)
+			Msg("! Failed to load procedure [%s]: %s", xrDebug::ErrorToString(GetLastError()));
+
+		return proc;
+	}
 } // namespace XRay

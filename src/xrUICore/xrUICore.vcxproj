@@ -70,7 +70,7 @@
     <ClCompile>
       <PreprocessorDefinitions>XRUICORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrExternals);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)DXSDK/Include;$(xrExternals)luajit\src;$(xrExternals)luabind;$(xrExternals)pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrLibraries);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)DXSDK/Include;$(xrLibraries)luajit\src;$(xrLibraries)luabind;$(xrLibraries)pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -81,17 +81,18 @@
     <ClCompile>
       <PreprocessorDefinitions>XRUICORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrExternals);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)DXSDK/Include;$(xrExternals)luajit\src;$(xrExternals)luabind;$(xrExternals)pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrLibraries);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)DXSDK/Include;$(xrLibraries)luajit\src;$(xrLibraries)luabind;$(xrLibraries)pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>XRUICORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrExternals);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)DXSDK/Include;$(xrExternals)luajit\src;$(xrExternals)luabind;$(xrExternals)pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrLibraries);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)DXSDK/Include;$(xrLibraries)luajit\src;$(xrLibraries)luabind;$(xrLibraries)pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -99,7 +100,7 @@
     <ClCompile>
       <PreprocessorDefinitions>XRUICORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrExternals);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)DXSDK/Include;$(xrExternals)luajit\src;$(xrExternals)luabind;$(xrExternals)pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrLibraries);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)DXSDK/Include;$(xrLibraries)luajit\src;$(xrLibraries)luabind;$(xrLibraries)pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
@@ -240,7 +241,7 @@
     <ProjectReference Include="$(SolutionDir)xrScriptEngine\xrScriptEngine.vcxproj">
       <Project>{132c62de-de85-4978-9675-c78ed4da46f0}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(xrExternals)pugixml_vs2017_static.vcxproj">
+    <ProjectReference Include="$(xrLibraries)pugixml.vcxproj">
       <Project>{07cf01c0-b887-499d-ad9c-799cb6a9fe64}</Project>
     </ProjectReference>
     <ProjectReference Include="$(SolutionDir)xrEngine\xrEngine.vcxproj">

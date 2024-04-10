@@ -2,7 +2,7 @@
 #include "ELog.h"
 #include "Windows/WindowLog.h"
 
-gcroot<EditorLog^> ELog;
+gcroot<EditorLog> ELog;
 
 using namespace XRay::Editor::Windows;
 
