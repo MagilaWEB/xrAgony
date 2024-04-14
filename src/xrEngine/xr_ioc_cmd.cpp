@@ -679,7 +679,7 @@ void CCC_Register()
 #endif
 	CMD3(CCC_Mask, "mt_particles", &psDeviceFlags, mtParticles);
 	CMD3(CCC_Mask, "mt_sound", &psDeviceFlags, mtSound);
-	CMD3(CCC_Mask, "mt_physics", &psDeviceFlags, mtPhysics);
+	//CMD3(CCC_Mask, "mt_physics", &psDeviceFlags, mtPhysics);
 	CMD3(CCC_Mask, "mt_network", &psDeviceFlags, mtNetwork);
 
 	CMD3(CCC_Token, "r_fps_lock", &g_dwFPSlimit, FpsLockToken);

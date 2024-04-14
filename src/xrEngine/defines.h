@@ -29,7 +29,7 @@ enum
     rsOcclusionStats = (1ul << 13ul),
 
     mtSound = (1ul << 14ul),
-    mtPhysics = (1ul << 15ul),
+    //mtPhysics = (1ul << 15ul),
     mtNetwork = (1ul << 16ul),
     mtParticles = (1ul << 17ul),
 

@@ -64,7 +64,7 @@ private:
     CObjectSpace* m_object_space;
     CObjectList* m_level_objects;
     CRenderDeviceBase* m_device;
-    ;
+    xrThread mt_PHWorld{"CPHWorld", true, true};
 
 public:
     xr_vector<ISpatial*> r_spatial;
@@ -95,7 +95,7 @@ public:
 
     // IC	dSpaceID					GetSpace						()			{return Space;}	;
     IC bool Exist() { return b_exist; }
-    void Create(bool mt, CObjectSpace* os, CObjectList* lo, CRenderDeviceBase* dv);
+    void Create(CObjectSpace* os, CObjectList* lo, CRenderDeviceBase* dv);
     void SetGravity(float g);
     IC float Gravity() { return m_gravity; }
     void AddObject(CPHObject* object);

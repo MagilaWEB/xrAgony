@@ -632,12 +632,6 @@
     <ClInclude Include="FileCRC32.h">
       <Filter>FS</Filter>
     </ClInclude>
-    <ClInclude Include="Memory\xalloc.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\XRayAllocator.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
     <ClInclude Include="Containers\FixedMap.h">
       <Filter>Containers</Filter>
     </ClInclude>

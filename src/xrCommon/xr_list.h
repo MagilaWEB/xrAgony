@@ -1,8 +1,7 @@
 #pragma once
 #include <list>
-#include "xrCore/Memory/XRayAllocator.h"
 
-template <typename T, typename allocator = XRay::xray_allocator<T>>
+template <typename T, typename allocator = std::allocator<T>>
 class xr_list : public std::list<T, allocator>
 {
 private:

@@ -696,11 +696,8 @@ void CGamePersistent::OnFrame()
 	}
 	super::OnFrame();
 
-	if (!Device.Paused())
-	{
-		Engine.Sheduler.Update();
-	}
-
+	//Device.add_parallel(&Engine.Sheduler, &CSheduler::Update);
+	Engine.Sheduler.Update();
 	// update weathers ambient
 	if (!Device.Paused())
 		WeathersUpdate();

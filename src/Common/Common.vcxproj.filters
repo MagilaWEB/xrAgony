@@ -91,6 +91,9 @@
     <ClInclude Include="..\xrCommon\xr_smart_pointers.h">
       <Filter>xrCommon</Filter>
     </ClInclude>
+    <ClInclude Include="xr_allocator.h">
+      <Filter>xrCommon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="NvMender2003">
