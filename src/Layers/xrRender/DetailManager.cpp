@@ -409,7 +409,7 @@ void CDetailManager::Render()
         m_shadowsStage = false;
 }
 
-void __stdcall CDetailManager::MT_CALC()
+void CDetailManager::MT_CALC()
 {
 #ifndef _EDITOR
     if (nullptr == RImplementation.Details)

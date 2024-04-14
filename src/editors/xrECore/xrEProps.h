@@ -6,9 +6,9 @@ using Fvector = _vector3<float>;
 struct WaveForm;
 struct GameTypeChooser;
 
-using TOnApplyClick = fastdelegate::FastDelegate1<pcstr, bool>;
-using TOnCloseClick = fastdelegate::FastDelegate0<bool>;
-using TOnCodeInsight = fastdelegate::FastDelegate3<const xr_string&, xr_string&, bool&>;
+using TOnApplyClick = fastdelegate::FastDelegate<bool(pcstr)>;
+using TOnCloseClick = fastdelegate::FastDelegate<bool()>;
+using TOnCodeInsight = fastdelegate::FastDelegate< void(const xr_string&, xr_string&, bool&)>;
 
 namespace XRay::Editor::Controls
 {

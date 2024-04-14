@@ -93,11 +93,11 @@ CBulletManager::CBulletManager()
 #if 0 // def CONFIG_PROFILE_LOCKS
 	: m_Lock(MUTEX_PROFILE_ID(CBulletManager))
 #ifdef DEBUG
-		,m_thread_id(ThreadUtil::GetCurrThreadId())
+		,m_thread_id(xrThread::get_main_id())
 #endif // #ifdef DEBUG
 #else // #ifdef CONFIG_PROFILE_LOCKS
 #ifdef DEBUG
-    : m_thread_id(ThreadUtil::GetCurrThreadId())
+    : m_thread_id(xrThread::get_main_id())
 #endif // #ifdef DEBUG
 #endif // #ifdef CONFIG_PROFILE_LOCKS
 {
@@ -187,7 +187,7 @@ void CBulletManager::AddBullet(const Fvector& position, const Fvector& direction
     const CCartridge& cartridge, float const air_resistance_factor, bool SendHit, bool AimBullet, int iShotNum)
 {
 #ifdef DEBUG
-    VERIFY(m_thread_id == ThreadUtil::GetCurrThreadId());
+    VERIFY(m_thread_id == xrThread::get_main_id());
 #endif
 
     VERIFY(u16(-1) != cartridge.bullet_material_idx);
@@ -891,14 +891,11 @@ void CBulletManager::CommitRenderSet() // @ the end of frame
 {
     m_BulletsRendered = m_Bullets;
     if (g_mt_config.test(mtBullets))
-    {
-        Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CBulletManager::UpdateWorkload));
-    }
+        Device.add_parallel2(this, &CBulletManager::UpdateWorkload);
     else
-    {
         UpdateWorkload();
-    }
 }
+
 void CBulletManager::CommitEvents() // @ the start of frame
 {
     if (m_Events.size() > 1000)

@@ -3,7 +3,7 @@
 using namespace System;
 using namespace System::Windows::Forms;
 
-using TFindObjectByName = fastdelegate::FastDelegate2<pcstr, bool&>;
+using TFindObjectByName = fastdelegate::FastDelegate<void(pcstr, bool&)>;
 
 class CFolderHelper
 {

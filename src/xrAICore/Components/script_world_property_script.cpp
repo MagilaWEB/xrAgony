@@ -11,8 +11,6 @@
 #include "operator_abstract.h"
 #include "xrScriptEngine/ScriptExporter.hpp"
 
-using namespace luabind;
-
 SCRIPT_EXPORT(CScriptWorldProperty, (), {
     module(luaState)
     [

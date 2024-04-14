@@ -9,7 +9,7 @@ class shared_str;
 class XRUICORE_API CUIWndCallback
 {
 public:
-    typedef fastdelegate::FastDelegate2<CUIWindow*, void*, void> void_function;
+    typedef fastdelegate::FastDelegate<void(CUIWindow*, void*)> void_function;
 
 private:
     typedef xr_vector<SCallbackInfo*> CALLBACKS;

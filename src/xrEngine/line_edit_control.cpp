@@ -378,7 +378,7 @@ void line_edit_control::create_char_pair(u32 const dik, char c, char c_shift, bo
     m_actions[dik] = new text_editor::type_pair(dik, c, c_shift, translate);
 }
 
-void line_edit_control::assign_callback(u32 const dik, key_state state, Callback const& callback)
+void line_edit_control::assign_callback(u32 const dik, key_state state, Callback & callback)
 {
     VERIFY(dik < DIK_COUNT);
     Base* prev_action = m_actions[dik];

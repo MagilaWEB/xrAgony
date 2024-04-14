@@ -258,7 +258,7 @@ private:
 public:
     EventDeleterPredicate() { id_entity_victim = u16(-1); }
     EventDeleterPredicate(u16 id_entity) { id_entity_victim = id_entity; }
-    bool __stdcall PredicateDelVictim(GameEvent* const ge)
+    bool PredicateDelVictim(GameEvent* const ge)
     {
         bool ret_val = false;
         switch (ge->type)
@@ -276,7 +276,7 @@ public:
         };
         return ret_val;
     }
-    bool __stdcall PredicateForAll(GameEvent* const ge)
+    bool PredicateForAll(GameEvent* const ge)
     {
         Msg("- Erasing [%d] event before start.", ge->type);
         return true;
@@ -294,7 +294,7 @@ class EventDeleteForClientPredicate
 public:
     EventDeleteForClientPredicate(ClientID const& clientId) : m_client_id(clientId) {}
     EventDeleteForClientPredicate(EventDeleteForClientPredicate const& copy) : m_client_id(copy.m_client_id) {}
-    bool __stdcall Predicate(GameEvent* const ge)
+    bool Predicate(GameEvent* const ge)
     {
         if (ge && (ge->sender == m_client_id))
         {

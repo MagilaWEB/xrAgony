@@ -1,16 +1,118 @@
 #include "stdafx.h"
-#pragma hdrstop
-
-#if defined(WINDOWS)
-#include <intrin.h> // __rdtsc
-#include <process.h>
 #include <powerbase.h>
-#elif defined(LINUX)
-#include <x86intrin.h> // __rdtsc
-#include <fpu_control.h>
-#include <pthread.h>
-#endif
+#pragma comment(lib, "PowrProf.lib")
 
+// Initialized on startup
+XRCORE_API Fmatrix Fidentity;
+XRCORE_API Dmatrix Didentity;
+XRCORE_API CRandom Random;
+
+/*
+Функции управления точностью вычислений с плавающей точкой.
+Более подробную информацию можно получить здесь:
+https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/control87-controlfp-control87-2
+Число 24, 53 и 64 - определяют ограничение точности в битах.
+Наличие 'r' - включает округление результатов.
+Реально в движке используются только m24r и m64r.
+*/
+namespace FPU
+{
+    XRCORE_API void m24()
+    {
+#ifdef _M_IX86
+        _controlfp(_PC_24, MCW_PC);
+#endif
+        _controlfp(_RC_CHOP, MCW_RC);
+    }
+
+    XRCORE_API void m24r()
+    {
+#ifdef _M_IX86
+        _controlfp(_PC_24, MCW_PC);
+#endif
+        _controlfp(_RC_NEAR, MCW_RC);
+    }
+
+    XRCORE_API void m53()
+    {
+#ifdef _M_IX86
+        _controlfp(_PC_53, MCW_PC);
+#endif
+        _controlfp(_RC_CHOP, MCW_RC);
+    }
+
+    void m53r()
+    {
+#ifdef _M_IX86
+        _controlfp(_PC_53, MCW_PC);
+#endif
+        _controlfp(_RC_NEAR, MCW_RC);
+    }
+
+    XRCORE_API void m64()
+    {
+#ifdef _M_IX86
+        _controlfp(_PC_64, MCW_PC);
+#endif
+        _controlfp(_RC_CHOP, MCW_RC);
+    }
+
+    XRCORE_API void m64r()
+    {
+#ifdef _M_IX86
+        _controlfp(_PC_64, MCW_PC);
+#endif
+        _controlfp(_RC_NEAR, MCW_RC);
+    }
+
+    void initialize()
+    {
+        _clearfp();
+        // По-умолчанию для плагинов экспорта из 3D-редакторов включена высокая точность вычислений с плавающей точкой
+        m24r();
+        ::Random.seed(u32(CPU::GetCLK() % (1i64 << 32i64)));
+    }
+};
+
+namespace CPU
+{
+    XRCORE_API u64 qpc_freq = 0;
+    XRCORE_API u64 qpc_overhead = 0;
+    XRCORE_API u32 qpc_counter = 0;
+
+    XRCORE_API _processor_info ID;
+
+    XRCORE_API u64 QPC()
+    {
+        u64 _dest;
+        QueryPerformanceCounter((PLARGE_INTEGER)&_dest);
+        qpc_counter++;
+        return _dest;
+    }
+
+    void Detect()
+    {
+        LARGE_INTEGER Freq;
+        QueryPerformanceFrequency(&Freq);
+        CPU::qpc_freq = Freq.QuadPart;
+
+        // Timers & frequency
+        u64 start;
+        // Detect QPC Overhead
+        QueryPerformanceFrequency((PLARGE_INTEGER)&qpc_freq);
+        qpc_overhead = 0;
+        for (int i = 0; i < 256; i++)
+        {
+            start = QPC();
+            qpc_overhead += QPC() - start;
+        }
+        qpc_overhead /= 256;
+    }
+} // namespace CPU
+
+bool g_initialize_cpu_called = false;
+
+//------------------------------------------------------------------------------------
 typedef struct _PROCESSOR_POWER_INFORMATION
 {
     ULONG Number;
@@ -19,278 +121,100 @@ typedef struct _PROCESSOR_POWER_INFORMATION
     ULONG MhzLimit;
     ULONG MaxIdleState;
     ULONG CurrentIdleState;
-} PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
+} PROCESSOR_POWER_INFORMATION, * PPROCESSOR_POWER_INFORMATION;
 
-// Initialized on startup
-XRCORE_API Fmatrix Fidentity;
-XRCORE_API Dmatrix Didentity;
-XRCORE_API CRandom Random;
-
-#if defined(LINUX)
-#define nsec_per_sec	1000*1000*1000
-/**
- * From https://stackoverflow.com/questions/12468331/queryperformancecounter-linux-equivalent
- * @return
- */
-void QueryPerformanceCounter(PLARGE_INTEGER result)
+void _initialize_cpu(void)
 {
-	u64 nsec_count, nsec_per_tick;
-    /*
-     * clock_gettime() returns the number of secs. We translate that to number of nanosecs.
-     * clock_getres() returns number of seconds per tick. We translate that to number of nanosecs per tick.
-     * Number of nanosecs divided by number of nanosecs per tick - will give the number of ticks.
-     */
-     struct timespec ts1, ts2;
+    Msg("* Detected CPU: %s [%s], F%d/M%d/S%d",
+        _Trim(CPU::ID.brand),
+        CPU::ID.vendor,
+        CPU::ID.family,
+        CPU::ID.model,
+        CPU::ID.stepping
+    );
 
-     if (clock_gettime(CLOCK_MONOTONIC, &ts1) != 0) {
-         return;
-     }
+    Msg("* CPU cores: [%u], threads: [%u]", CPU::ID.coresCount, CPU::ID.threadCount);
 
-     nsec_count = ts1.tv_nsec + ts1.tv_sec * nsec_per_sec;
+    SYSTEM_INFO sysInfo;
+    GetSystemInfo(&sysInfo);
+    const DWORD cpuCounts = sysInfo.dwNumberOfProcessors;
 
-     if (clock_getres(CLOCK_MONOTONIC, &ts2) != 0) {
-         return;
-     }
+    xr_vector<PROCESSOR_POWER_INFORMATION> cpuInfos(cpuCounts);
+    CallNtPowerInformation(ProcessorInformation, nullptr, 0, cpuInfos.data(), ULONG(sizeof(PROCESSOR_POWER_INFORMATION) * cpuCounts));
 
-     nsec_per_tick = ts2.tv_nsec + ts2.tv_sec * nsec_per_sec;
-
-     *result = (nsec_count / nsec_per_tick);
-}
-#endif
-
-/*
-Функции управления точностью вычислений с плавающей точкой.
-Более подробную информацию можно получить здесь:
-https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/control87-controlfp-control87-2
-Число 24, 53 и 64 - определяют ограничение точности в битах.
-Наличие 'r' - включает округление результатов.
-Реально в движке используются только m24r и m64r. И один раз m64 - возможно ошибка?
-*/
-namespace FPU
-{
-XRCORE_API void m24()
-{
-#if defined(WINDOWS)
-    _controlfp(_PC_24, MCW_PC);
-    _controlfp(_RC_CHOP, MCW_RC);
-#elif defined(LINUX)
-    fpu_control_t fpu_cw;
-    _FPU_GETCW(fpu_cw);
-    fpu_cw = (fpu_cw & ~_FPU_EXTENDED & ~_FPU_DOUBLE) | _FPU_SINGLE;
-    _FPU_SETCW(fpu_cw);
-#endif
-}
-
-XRCORE_API void m24r()
-{
-#if defined(WINDOWS)
-    _controlfp(_PC_24, MCW_PC);
-    _controlfp(_RC_NEAR, MCW_RC);
-#elif defined(LINUX)
-    fpu_control_t fpu_cw;
-    _FPU_GETCW(fpu_cw);
-    fpu_cw = (fpu_cw & ~_FPU_EXTENDED & ~_FPU_DOUBLE) | _FPU_SINGLE | _FPU_RC_NEAREST;
-    _FPU_SETCW(fpu_cw);
-#endif
-}
-
-XRCORE_API void m53()
-{
-#if defined(WINDOWS)
-    _controlfp(_PC_53, MCW_PC);
-    _controlfp(_RC_CHOP, MCW_RC);
-#elif defined(LINUX)
-    fpu_control_t fpu_cw;
-    _FPU_GETCW(fpu_cw);
-    fpu_cw = (fpu_cw & ~_FPU_EXTENDED & ~_FPU_SINGLE) | _FPU_DOUBLE;
-    _FPU_SETCW(fpu_cw);
-#endif
-}
-
-XRCORE_API void m53r()
-{
-#if defined(WINDOWS)
-    _controlfp(_PC_53, MCW_PC);
-    _controlfp(_RC_NEAR, MCW_RC);
-#elif defined(LINUX)
-    fpu_control_t fpu_cw;
-    _FPU_GETCW(fpu_cw);
-    fpu_cw = (fpu_cw & ~_FPU_EXTENDED & ~_FPU_SINGLE) | _FPU_DOUBLE | _FPU_RC_NEAREST;
-    _FPU_SETCW(fpu_cw);
-#endif
-}
-
-XRCORE_API void m64()
-{
-#if defined(WINDOWS)
-    _controlfp(_PC_64, MCW_PC);
-    _controlfp(_RC_CHOP, MCW_RC);
-#elif defined(LINUX)
-    fpu_control_t fpu_cw;
-    _FPU_GETCW(fpu_cw);
-    fpu_cw = (fpu_cw & ~_FPU_DOUBLE & ~_FPU_SINGLE) | _FPU_EXTENDED;
-    _FPU_SETCW(fpu_cw);
-#endif
-}
-
-XRCORE_API void m64r()
-{
-#if defined(WINDOWS)
-    _controlfp(_PC_64, MCW_PC);
-    _controlfp(_RC_NEAR, MCW_RC);
-#elif defined(LINUX)
-    fpu_control_t fpu_cw;
-    _FPU_GETCW(fpu_cw);
-    fpu_cw = (fpu_cw & ~_FPU_DOUBLE & ~_FPU_SINGLE) | _FPU_EXTENDED | _FPU_RC_NEAREST;
-    _FPU_SETCW(fpu_cw);
-#endif
-}
-
-void initialize()
-{
-#if defined(WINDOWS)
-    _clearfp();
-#elif defined(LINUX)
-    fpu_control_t fpu_cw;
-    fpu_cw = _FPU_DEFAULT;
-    _FPU_SETCW(fpu_cw);
-#endif
-
-    // По-умолчанию для плагинов экспорта из 3D-редакторов включена высокая точность вычислений с плавающей точкой
-    if (Core.PluginMode)
-        m64r();
-    else
-        m24r();
-
-#if defined(WINDOWS)
-    ::Random.seed(u32(CPU::GetCLK() % (1i64 << 32i64)));
-#elif defined(LINUX)
-    ::Random.seed(u32(CPU::GetCLK() % ((u64)0x1 << 32)));
-#endif
-}
-};
-
-namespace CPU
-{
-XRCORE_API u64 qpc_freq = []
-{
-    u64 result;
-    QueryPerformanceCounter((PLARGE_INTEGER)&result);
-    return result;
-}();
-        
-XRCORE_API u32 qpc_counter = 0;
-
-XRCORE_API processor_info ID;
-
-XRCORE_API u64 QPC() noexcept
-{
-    u64 _dest;
-    QueryPerformanceCounter((PLARGE_INTEGER)&_dest);
-    qpc_counter++;
-    return _dest;
-}
-
-XRCORE_API u64 GetCLK()
-{
-    return __rdtsc();
-}
-} // namespace CPU
-
-bool g_initialize_cpu_called = false;
-
-//------------------------------------------------------------------------------------
-void _initialize_cpu()
-{
-    // General CPU identification
-    if (!query_processor_info(&CPU::ID))
-        FATAL("Can't detect CPU/FPU.");
-
-    Msg("* Detected CPU: %s [%s], F%d/M%d/S%d, 'rdtsc'", CPU::ID.modelName,
-        +CPU::ID.vendor, CPU::ID.family, CPU::ID.model, CPU::ID.stepping);
+    for (const PROCESSOR_POWER_INFORMATION& cpuInfo : cpuInfos)
+    {
+        if (cpuInfo.CurrentMhz == cpuInfo.MaxMhz)
+            Msg("* CPU thread[%zu] current freq: %lu MHz", cpuInfo.Number, cpuInfo.CurrentMhz);
+        else
+            Msg("* CPU thread[%zu] current freq: %lu MHz, max freq: %lu MHz", cpuInfo.Number, cpuInfo.CurrentMhz, cpuInfo.MaxMhz);
+    }
 
     string256 features;
     xr_strcpy(features, sizeof(features), "RDTSC");
-    if (CPU::ID.hasFeature(CpuFeature::Mmx)) xr_strcat(features, ", MMX");
-    if (CPU::ID.hasFeature(CpuFeature::_3dNow)) xr_strcat(features, ", 3DNow!");
-    if (CPU::ID.hasFeature(CpuFeature::Sse)) xr_strcat(features, ", SSE");
-    if (CPU::ID.hasFeature(CpuFeature::Sse2)) xr_strcat(features, ", SSE2");
-    if (CPU::ID.hasFeature(CpuFeature::Sse3)) xr_strcat(features, ", SSE3");
-    if (CPU::ID.hasFeature(CpuFeature::MWait)) xr_strcat(features, ", MONITOR/MWAIT");
-    if (CPU::ID.hasFeature(CpuFeature::Ssse3)) xr_strcat(features, ", SSSE3");
-    if (CPU::ID.hasFeature(CpuFeature::Sse41)) xr_strcat(features, ", SSE4.1");
-    if (CPU::ID.hasFeature(CpuFeature::Sse42)) xr_strcat(features, ", SSE4.2");
-    if (CPU::ID.hasFeature(CpuFeature::HT)) xr_strcat(features, ", HTT");
+    if (CPU::ID.hasMMX())
+        xr_strcat(features, ", MMX");
+
+    if (CPU::ID.has3DNOWExt())
+        xr_strcat(features, ", 3DNowExt!");
+
+    if (CPU::ID.has3DNOW())
+        xr_strcat(features, ", 3DNow!");
+
+    if (CPU::ID.hasSSE())
+        xr_strcat(features, ", SSE");
+
+    R_ASSERT(CPU::ID.hasSSE());
+
+    if (CPU::ID.hasSSE2())
+        xr_strcat(features, ", SSE2");
+
+    R_ASSERT(CPU::ID.hasSSE2());
+
+    if (CPU::ID.hasSSE3())
+        xr_strcat(features, ", SSE3");
+
+    if (CPU::ID.hasMWAIT())
+        xr_strcat(features, ", MONITOR/MWAIT");
+
+    if (CPU::ID.hasSSSE3())
+        xr_strcat(features, ", SSSE3");
+
+    if (CPU::ID.hasSSE41())
+        xr_strcat(features, ", SSE4.1");
+
+    if (CPU::ID.hasSSE42())
+        xr_strcat(features, ", SSE4.2");
+
+    if (CPU::ID.hasSSE4a())
+        xr_strcat(features, ", SSE4a");
+
+    if (CPU::ID.hasAVX())
+        xr_strcat(features, ", AVX");
+
+    if (CPU::ID.hasAVX2())
+        xr_strcat(features, ", AVX2");
+
+    if (CPU::ID.hasAVX512F())
+        xr_strcat(features, ", AVX512F");
+
+    if (CPU::ID.hasAVX512PF())
+        xr_strcat(features, ", AVX512PF");
+
+    if (CPU::ID.hasAVX512ER())
+        xr_strcat(features, ", AVX512ER");
+
+    if (CPU::ID.hasAVX512CD())
+        xr_strcat(features, ", AVX512CD");
 
     Msg("* CPU features: %s", features);
-    Msg("* CPU cores/threads: %d/%d", CPU::ID.n_cores, CPU::ID.n_threads);
 
-#if defined(WINDOWS)
-    SYSTEM_INFO sysInfo;
-    GetSystemInfo(&sysInfo);
-    const size_t cpusCount = sysInfo.dwNumberOfProcessors;
-
-    xr_vector<PROCESSOR_POWER_INFORMATION> cpusInfo(cpusCount);
-    CallNtPowerInformation(ProcessorInformation, nullptr, 0, cpusInfo.data(),
-                           sizeof(PROCESSOR_POWER_INFORMATION) * cpusCount);
-
-    for (size_t i = 0; i < cpusInfo.size(); i++)
-    {
-        const PROCESSOR_POWER_INFORMATION& cpuInfo = cpusInfo[i];
-        Msg("* CPU%zu current freq: %lu MHz, max freq: %lu MHz",
-            i, cpuInfo.CurrentMhz, cpuInfo.MaxMhz);
-    }
-
-    Log("");
-#endif
     Fidentity.identity(); // Identity matrix
     Didentity.identity(); // Identity matrix
     pvInitializeStatics(); // Lookup table for compressed normals
     FPU::initialize();
-    _initialize_cpu_thread();
 
     g_initialize_cpu_called = true;
-}
-
-// per-thread initialization
-#include <xmmintrin.h>
-#define _MM_DENORMALS_ZERO_MASK 0x0040
-#define _MM_DENORMALS_ZERO_ON 0x0040
-#define _MM_FLUSH_ZERO_MASK 0x8000
-#define _MM_FLUSH_ZERO_ON 0x8000
-#define _MM_SET_FLUSH_ZERO_MODE(mode) _mm_setcsr((_mm_getcsr() & ~_MM_FLUSH_ZERO_MASK) | (mode))
-#define _MM_SET_DENORMALS_ZERO_MODE(mode) _mm_setcsr((_mm_getcsr() & ~_MM_DENORMALS_ZERO_MASK) | (mode))
-static BOOL _denormals_are_zero_supported = TRUE;
-extern void __cdecl _terminate();
-
-void _initialize_cpu_thread()
-{
-    xrDebug::OnThreadSpawn();
-
-    // По-умолчанию для плагинов экспорта из 3D-редакторов включена высокая точность вычислений с плавающей точкой
-    if (Core.PluginMode)
-        FPU::m64r();
-    else
-        FPU::m24r();
-
-    if (CPU::ID.hasFeature(CpuFeature::Sse))
-    {
-        //_mm_setcsr ( _mm_getcsr() | (_MM_FLUSH_ZERO_ON+_MM_DENORMALS_ZERO_ON) );
-        _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
-#if defined(WINDOWS)
-        if (_denormals_are_zero_supported)
-        {
-            __try
-            {
-                _MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
-            }
-            __except (EXCEPTION_EXECUTE_HANDLER)
-            {
-                _denormals_are_zero_supported = FALSE;
-            }
-        }
-#endif
-    }
 }
 
 void spline1(float t, Fvector* p, Fvector* ret)
@@ -346,8 +270,7 @@ void spline3(float t, Fvector* p, Fvector* ret)
     float d = 1.0f / delta;
     float b0 = 2.0f * b13 * d * s * s * s;
     float b3 = 2.0f * t3 * d;
-    float b1 = d * (2 * b13 * t * (t2 - 3 * t + 3) + 2 * b12 * (t3 - 3 * t2 + 2) + 2 * beta1 * (t3 - 3 * t + 2) +
-                       beta2 * (2 * t3 - 3 * t2 + 1));
+    float b1 = d * (2 * b13 * t * (t2 - 3 * t + 3) + 2 * b12 * (t3 - 3 * t2 + 2) + 2 * beta1 * (t3 - 3 * t + 2) + beta2 * (2 * t3 - 3 * t2 + 1));
     float b2 = d * (2 * b12 * t2 * (-t + 3) + 2 * beta1 * t * (-t2 + 3) + beta2 * t2 * (-2 * t + 3) + 2 * (-t3 + 1));
 
     ret->x = p[0].x * b0 + p[1].x * b1 + p[2].x * b2 + p[3].x * b3;

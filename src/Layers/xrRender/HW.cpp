@@ -278,7 +278,7 @@ void CHW::Reset(HWND hwnd)
 #endif
 
     updateWindowProps(hwnd);
-    ShowWindow(hwnd, SW_SHOWNORMAL);
+    //ShowWindow(hwnd, SW_SHOWNORMAL);
 }
 
 D3DFORMAT CHW::selectDepthStencil(D3DFORMAT fTarget)

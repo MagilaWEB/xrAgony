@@ -8,8 +8,9 @@ public:
 
 private:
     volatile LogFunc log;
-    static void startup(void* P);
+    void startup();
     static void StubLog(const char*, ...);
+    xrThread mt_startup{ "startup" };
 
 public:
     volatile u32 thID;
@@ -31,7 +32,7 @@ public:
         thDestroyOnComplete = TRUE;
     }
     virtual ~CThread() {}
-    void Start() { ThreadUtil::CreateThread(startup, "worker-thread", 1024 * 1024, this); }
+    void Start() { mt_startup.Init([this]() { startup(); });}
     virtual void Execute() = 0;
 };
 

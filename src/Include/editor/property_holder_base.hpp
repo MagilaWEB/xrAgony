@@ -55,28 +55,28 @@ class property_value;
 class property_holder_base
 {
 public:
-    typedef fastdelegate::FastDelegate0<bool> boolean_getter_type;
-    typedef fastdelegate::FastDelegate1<bool> boolean_setter_type;
+    typedef fastdelegate::FastDelegate<bool()> boolean_getter_type;
+    typedef fastdelegate::FastDelegate<void(bool)> boolean_setter_type;
 
-    typedef fastdelegate::FastDelegate0<int> integer_getter_type;
-    typedef fastdelegate::FastDelegate1<int> integer_setter_type;
+    typedef fastdelegate::FastDelegate<int()> integer_getter_type;
+    typedef fastdelegate::FastDelegate<void(int)> integer_setter_type;
 
-    typedef fastdelegate::FastDelegate0<float> float_getter_type;
-    typedef fastdelegate::FastDelegate1<float> float_setter_type;
+    typedef fastdelegate::FastDelegate<float()> float_getter_type;
+    typedef fastdelegate::FastDelegate<void(float)> float_setter_type;
 
-    typedef fastdelegate::FastDelegate0<LPCSTR> string_getter_type;
-    typedef fastdelegate::FastDelegate1<LPCSTR> string_setter_type;
+    typedef fastdelegate::FastDelegate<LPCSTR()> string_getter_type;
+    typedef fastdelegate::FastDelegate<void(LPCSTR)> string_setter_type;
 
-    typedef fastdelegate::FastDelegate0<color> color_getter_type;
-    typedef fastdelegate::FastDelegate1<color> color_setter_type;
+    typedef fastdelegate::FastDelegate<color()> color_getter_type;
+    typedef fastdelegate::FastDelegate<void(color)> color_setter_type;
 
-    typedef fastdelegate::FastDelegate0<vec3f> vec3f_getter_type;
-    typedef fastdelegate::FastDelegate1<vec3f> vec3f_setter_type;
+    typedef fastdelegate::FastDelegate<vec3f()> vec3f_getter_type;
+    typedef fastdelegate::FastDelegate<void(vec3f)> vec3f_setter_type;
 
-    typedef fastdelegate::FastDelegate0<property_holder_collection*> collection_getter_type;
+    typedef fastdelegate::FastDelegate<property_holder_collection* ()> collection_getter_type;
 
-    typedef fastdelegate::FastDelegate0<LPCSTR const*> string_collection_getter_type;
-    typedef fastdelegate::FastDelegate0<u32> string_collection_size_getter_type;
+    typedef fastdelegate::FastDelegate<LPCSTR const*()> string_collection_getter_type;
+    typedef fastdelegate::FastDelegate<u32()> string_collection_size_getter_type;
 
 public:
     enum enter_text_enum

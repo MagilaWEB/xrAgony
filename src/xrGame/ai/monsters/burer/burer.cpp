@@ -232,7 +232,7 @@ void CBurer::shedule_Update(u32 dt)
 }
 
 void CBurer::CheckSpecParams(u32 spec_params) {}
-void xr_stdcall CBurer::StaminaHit()
+void CBurer::StaminaHit()
 {
     if (GodMode())
     {

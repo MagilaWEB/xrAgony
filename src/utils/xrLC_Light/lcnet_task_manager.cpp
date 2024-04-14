@@ -80,7 +80,7 @@ void task_manager::startup()
     start_time.Start();
     tasks_completed = 0;
     // create_user( );
-    ThreadUtil::CreateThread(task_manager::user_thread_proc, "release-user", 1024 * 1024, this);
+    xrThread { "release-user" }.Init([&]() { user_thread_proc(this); });
     for (;;)
     {
         Sleep(1);

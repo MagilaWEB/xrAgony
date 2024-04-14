@@ -867,7 +867,7 @@ void CActorDeathEffector::UpdateCL() { m_pParent->SetHealth(m_start_health); }
 void CActorDeathEffector::OnPPEffectorReleased()
 {
     m_b_actual = false;
-    Msg("111");
+    //Msg("111");
     // m_pParent->health()		= -1.0f;
     m_pParent->SetHealth(-1.0f);
 }

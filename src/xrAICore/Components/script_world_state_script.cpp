@@ -11,8 +11,6 @@
 #include "condition_state.h"
 #include "xrScriptEngine/ScriptExporter.hpp"
 
-using namespace luabind;
-
 SCRIPT_EXPORT(CScriptWorldState, (), {
     module(
         luaState)[class_<CScriptWorldState>("world_state")

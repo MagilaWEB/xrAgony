@@ -12,7 +12,6 @@
 #include "xrScriptEngine/DebugMacros.hpp" // for THROW // XXX: move debug macros to xrCore
 #include "AISpaceBase.hpp"
 
-using namespace luabind;
 using namespace luabind::policy;
 
 const CGameGraph* get_game_graph() { return &GEnv.AISpace->game_graph(); }

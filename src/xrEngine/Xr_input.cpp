@@ -348,7 +348,7 @@ void CInput::ClipCursor(bool clip)
 	if (clip)
 	{
 		ShowCursor(FALSE);
-		//if (!Device.IsQUIT())
+		if (!Device.IsQUIT())
 			SetMouseAcquire(TRUE);
 		if (Device.m_hWnd)
 		{
@@ -377,7 +377,7 @@ void CInput::ClipCursor(bool clip)
 	}
 	else
 	{
-		//if (!Device.IsQUIT())
+		if (!Device.IsQUIT())
 			SetMouseAcquire(FALSE);
 		while (ShowCursor(TRUE) < 0)
 			;

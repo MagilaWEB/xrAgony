@@ -47,7 +47,7 @@ public:
 
     using Root = xr_vector<Sect*>;
 
-    using allow_include_func_t = fastdelegate::FastDelegate1<pcstr, bool>;
+    using allow_include_func_t = fastdelegate::FastDelegate<bool(pcstr)>;
 
     static CInifile* Create(pcstr fileName, bool readOnly = true);
     static void Destroy(CInifile*);
