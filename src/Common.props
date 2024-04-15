@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <PropertyGroup Label="UserMacros">
-    <xrGameDir>D:AGONY\</xrGameDir>
+    <xrGameDir>D:\AGONY\</xrGameDir>
     <xrBinRootDir>$(SolutionDir)..\_build\bin\</xrBinRootDir>
     <xrBinDir>$(xrGameDir)bin\$(xrPlatform)\</xrBinDir>
     <xrLibDir>$(SolutionDir)..\_build\lib\$(xrPlatform)\$(Configuration)\</xrLibDir>

@@ -1,4 +1,7 @@
 #pragma once
+#define COMPANY_NAME "GSC Game World"
+#define PRODUCT_NAME "S.T.A.L.K.E.R.: A.G.O.N.Y."
+#define PRODUCT_VIRSION "1.0.0.1"
 
 // CONFIG_PROFILE_LOCKS
 // XXX: convert to command line params
