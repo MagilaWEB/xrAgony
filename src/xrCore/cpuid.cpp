@@ -1,240 +1,177 @@
 #include "stdafx.h"
-#pragma hdrstop
-
 #include "cpuid.h"
+#include <intrin.h>
 
-#include <array>
-#include <bitset>
-#include <memory>
-
-#ifdef _EDITOR
-unsgined int query_processor_info(processor_info* pinfo)
+_processor_info::_processor_info()
 {
-    ZeroMemory(pinfo, sizeof(processor_info));
+	int cpuInfo[4];
+	// detect cpu vendor
+	__cpuid(cpuInfo, 0);
+	memcpy(vendor, &(cpuInfo[1]), sizeof(int));
+	memcpy(vendor + sizeof(int), &(cpuInfo[3]), sizeof(int));
+	memcpy(vendor + 2 * sizeof(int), &(cpuInfo[2]), sizeof(int));
 
-    pinfo->feature = static_cast<u32>(CpuFeature::Mmx) | static_cast<u32>(CpuFeature::Sse);
-    return pinfo->feature;
+	// detect cpu model
+	__cpuid(cpuInfo, 0x80000002);
+	memcpy(brand, cpuInfo, sizeof(cpuInfo));
+	__cpuid(cpuInfo, 0x80000003);
+	memcpy(brand + sizeof(cpuInfo), cpuInfo, sizeof(cpuInfo));
+	__cpuid(cpuInfo, 0x80000004);
+	memcpy(brand + 2 * sizeof(cpuInfo), cpuInfo, sizeof(cpuInfo));
+
+	// detect cpu main features
+	__cpuid(cpuInfo, 1);
+	stepping = cpuInfo[0] & 0xf;
+	model = (u8)((cpuInfo[0] >> 4) & 0xf) | ((u8)((cpuInfo[0] >> 16) & 0xf) << 4);
+	family = (u8)((cpuInfo[0] >> 8) & 0xf) | ((u8)((cpuInfo[0] >> 20) & 0xff) << 4);
+	m_f1_ECX = cpuInfo[2];
+	m_f1_EDX = cpuInfo[3];
+
+	__cpuid(cpuInfo, 7);
+	m_f7_EBX = cpuInfo[1];
+	m_f7_ECX = cpuInfo[2];
+
+	// and check 3DNow! support
+	__cpuid(cpuInfo, 0x80000001);
+	m_f81_ECX = cpuInfo[2];
+	m_f81_EDX = cpuInfo[3];
+
+	// get version of OS
+	DWORD dwMajorVersion = 0;
+	DWORD dwVersion = 0;
+	dwVersion = GetVersion();
+
+	dwMajorVersion = (DWORD)(LOBYTE(LOWORD(dwVersion)));
+
+	if (dwMajorVersion <= 5) // XP don't support SSE3+ instruction sets
+	{
+		m_f1_ECX[0] = 0;
+		m_f1_ECX[9] = 0;
+		m_f1_ECX[19] = 0;
+		m_f1_ECX[20] = 0;
+		m_f81_ECX[6] = 0;
+		m_f1_ECX[28] = 0;
+		m_f7_EBX[5] = 0;
+	}
+
+	// Calculate available processors
+	DWORD returnedLength = 0;
+	DWORD byteOffset = 0;
+	GetLogicalProcessorInformation(nullptr, &returnedLength);
+
+	auto buffer = std::make_unique<u8[]>(returnedLength);
+	auto ptr = reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION>(buffer.get());
+	GetLogicalProcessorInformation(ptr, &returnedLength);
+
+	u16 processorCoreCount = 0;
+	u16 logicalProcessorCount = 0;
+
+	while (byteOffset + sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION) <= returnedLength)
+	{
+		if (ptr->Relationship == RelationProcessorCore)
+		{
+			processorCoreCount++;
+
+			ULONG_PTR LSHIFT = sizeof(ULONG_PTR) * 8 - 1;
+			u16 bitSetCount = 0;
+			ULONG_PTR bitTest = static_cast<ULONG_PTR>(1) << LSHIFT;
+
+			for (DWORD i = 0; i <= LSHIFT; ++i)
+			{
+				bitSetCount += ((ptr->ProcessorMask & bitTest) ? 1 : 0);
+				bitTest /= 2;
+			}
+
+			// A hyperthreaded core supplies more than one logical processor.
+			logicalProcessorCount += bitSetCount;
+		}
+
+		byteOffset += sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
+		ptr++;
+	}
+
+	// All logical processors
+	coresCount = processorCoreCount;
+	threadCount = logicalProcessorCount;
+
+	SYSTEM_INFO sysInfo;
+	GetSystemInfo(&sysInfo);
+	m_dwNumberOfProcessors = sysInfo.dwNumberOfProcessors;
+	fUsage = std::make_unique<float[]>(m_dwNumberOfProcessors);
+	m_idleTime = std::make_unique<LARGE_INTEGER[]>(m_dwNumberOfProcessors);
+	performanceInfo = std::make_unique<SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION[]>(m_dwNumberOfProcessors);
 }
-#else
 
-#undef _CPUID_DEBUG
-
-void nativeCpuId(int regs[4], int i)
+unsigned long long SubtractTimes(const FILETIME one, const FILETIME two)
 {
-#ifdef WINDOWS
-    __cpuid((int *)regs, (int)i);
-#elif defined(LINUX) && defined(GCC)
-    __cpuid((int)i, (int *)regs);
-#elif defined(LINUX)
-    asm volatile("cpuid" :
-    "=eax" (regs[0]),
-    "=ebx" (regs[1]),
-    "=ecx" (regs[2]),
-    "=edx" (regs[3])
-    : "eax" (i));
-#else
-#error Cpuid is not implemented
-#endif
+	LARGE_INTEGER a, b;
+	a.LowPart = one.dwLowDateTime;
+	a.HighPart = one.dwHighDateTime;
+
+	b.LowPart = two.dwLowDateTime;
+	b.HighPart = two.dwHighDateTime;
+
+	return a.QuadPart - b.QuadPart;
 }
 
-#ifndef WINDOWS
-#include <thread>
-
-void __cpuidex(int regs[4], int i, int j)
+bool _processor_info::getCPULoad(double& val)
 {
-    nativeCpuId(regs, i);
-}
-#endif
+	FILETIME sysIdle, sysKernel, sysUser;
+	// sysKernel include IdleTime
+	if (GetSystemTimes(&sysIdle, &sysKernel, &sysUser) == 0) // GetSystemTimes func FAILED return value is zero;
+		return false;
 
-#ifdef WINDOWS
-DWORD countSetBits(ULONG_PTR bitMask)
+	if (prevSysIdle.dwLowDateTime != 0 && prevSysIdle.dwHighDateTime != 0)
+	{
+		DWORDLONG sysIdleDiff, sysKernelDiff, sysUserDiff;
+		sysIdleDiff = SubtractTimes(sysIdle, prevSysIdle);
+		sysKernelDiff = SubtractTimes(sysKernel, prevSysKernel);
+		sysUserDiff = SubtractTimes(sysUser, prevSysUser);
+
+		DWORDLONG sysTotal = sysKernelDiff + sysUserDiff;
+		DWORDLONG kernelTotal = sysKernelDiff - sysIdleDiff; // kernelTime - IdleTime = kernelTime, because sysKernel include IdleTime
+
+		if (sysTotal > 0) // sometimes kernelTime > idleTime
+			val = (double)(((kernelTotal + sysUserDiff) * 100.0) / sysTotal);
+	}
+
+	prevSysIdle = sysIdle;
+	prevSysKernel = sysKernel;
+	prevSysUser = sysUser;
+
+	return true;
+}
+
+void _processor_info::MTCPULoad()
 {
-    DWORD LSHIFT = sizeof(ULONG_PTR) * 8 - 1;
-    DWORD bitSetCount = 0;
-    ULONG_PTR bitTest = static_cast<ULONG_PTR>(1) << LSHIFT;
-    DWORD i;
+	using NTQUERYSYSTEMINFORMATION = NTSTATUS(NTAPI*)(SYSTEM_INFORMATION_CLASS, PVOID, ULONG, PULONG);
+	static auto m_pNtQuerySystemInformation = (NTQUERYSYSTEMINFORMATION)GetProcAddress(GetModuleHandle("ntdll.dll"), "NtQuerySystemInformation");
 
-    for (i = 0; i <= LSHIFT; ++i)
-    {
-        bitSetCount += ((bitMask & bitTest) ? 1 : 0);
-        bitTest /= 2;
-    }
+	if (!NT_SUCCESS(m_pNtQuerySystemInformation(SystemProcessorPerformanceInformation, performanceInfo.get(),
+		sizeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION) * (ULONG)m_dwNumberOfProcessors, nullptr)))
+		Msg("!![%s] Can't get NtQuerySystemInformation", __FUNCTION__);
 
-    return bitSetCount;
+	DWORD dwTickCount = GetTickCount();
+	if (!m_dwCount)
+		m_dwCount = dwTickCount;
+
+	for (DWORD i = 0; i < m_dwNumberOfProcessors; i++)
+	{
+		auto* cpuPerfInfo = &performanceInfo[i];
+		cpuPerfInfo->KernelTime.QuadPart -= cpuPerfInfo->IdleTime.QuadPart;
+
+		fUsage[i] = 100.0f - 0.01f * (cpuPerfInfo->IdleTime.QuadPart - m_idleTime[i].QuadPart) / ((dwTickCount - m_dwCount));
+		if (fUsage[i] < 0.0f)
+		{
+			fUsage[i] = 0.0f;
+		}
+		if (fUsage[i] > 100.0f)
+		{
+			fUsage[i] = 100.0f;
+		}
+
+		m_idleTime[i] = cpuPerfInfo->IdleTime;
+	}
+
+	m_dwCount = dwTickCount;
 }
-#endif
-
-unsigned int query_processor_info(processor_info* pinfo)
-{
-    ZeroMemory(pinfo, sizeof(processor_info));
-
-    std::bitset<32> f_1_ECX;
-    std::bitset<32> f_1_EDX;
-    /*std::bitset<32> f_7_EBX;
-    std::bitset<32> f_7_ECX;
-    std::bitset<32> f_81_ECX;*/
-    std::bitset<32> f_81_EDX;
-
-    xr_vector<std::array<int, 4>> data;
-    std::array<int, 4> cpui;
-
-    nativeCpuId(cpui.data(), 0);
-    const int nIds = cpui[0];
-
-    for (int i = 0; i <= nIds; ++i)
-    {
-        __cpuidex(cpui.data(), i, 0);
-        data.push_back(cpui);
-    }
-
-    memset(pinfo->vendor, 0, sizeof(pinfo->vendor));
-    *reinterpret_cast<int*>(pinfo->vendor) = data[0][1];
-    *reinterpret_cast<int*>(pinfo->vendor + 4) = data[0][3];
-    *reinterpret_cast<int*>(pinfo->vendor + 8) = data[0][2];
-
-    //const bool isIntel = std::strncmp(pinfo->vendor, "GenuineIntel", 12);
-    const bool isAmd = strncmp(pinfo->vendor, "AuthenticAMD", 12) != 0;
-
-    // load bitset with flags for function 0x00000001
-    if (nIds >= 1)
-    {
-        f_1_ECX = data[1][2];
-        f_1_EDX = data[1][3];
-    }
-
-    // load bitset with flags for function 0x00000007
-    /*if (nIds >= 7)
-    {
-    f_7_EBX = data[7][1];
-    f_7_ECX = data[7][2];
-    }*/
-
-    nativeCpuId(cpui.data(), 0x80000000);
-    const int nExIds_ = cpui[0];
-    data.clear();
-
-    for (int i = 0x80000000; i <= nExIds_; ++i)
-    {
-        __cpuidex(cpui.data(), i, 0);
-        data.push_back(cpui);
-    }
-
-    // load bitset with flags for function 0x80000001
-    if (nExIds_ >= 0x80000001)
-    {
-        //f_81_ECX = data[1][2];
-        f_81_EDX = data[1][3];
-    }
-
-    memset(pinfo->modelName, 0, sizeof(pinfo->modelName));
-
-    // Interpret CPU brand string if reported
-    if (nExIds_ >= 0x80000004)
-    {
-        memcpy(pinfo->modelName, data[2].data(), sizeof(cpui));
-        memcpy(pinfo->modelName + 16, data[3].data(), sizeof(cpui));
-        memcpy(pinfo->modelName + 32, data[4].data(), sizeof(cpui));
-    }
-
-    if (f_1_EDX[23]) pinfo->features |= static_cast<u32>(CpuFeature::Mmx);
-    if (f_1_EDX[25]) pinfo->features |= static_cast<u32>(CpuFeature::Sse);
-    if (f_1_EDX[26]) pinfo->features |= static_cast<u32>(CpuFeature::Sse2);
-    if (isAmd && f_81_EDX[31]) pinfo->features |= static_cast<u32>(CpuFeature::_3dNow);
-
-    if (f_1_ECX[0]) pinfo->features |= static_cast<u32>(CpuFeature::Sse3);
-    if (f_1_ECX[9]) pinfo->features |= static_cast<u32>(CpuFeature::Ssse3);
-    if (f_1_ECX[19]) pinfo->features |= static_cast<u32>(CpuFeature::Sse41);
-    if (f_1_ECX[20]) pinfo->features |= static_cast<u32>(CpuFeature::Sse42);
-
-    nativeCpuId(cpui.data(), 1);
-
-    const bool hasMWait = (cpui[2] & 0x8) > 0;
-    if (hasMWait) pinfo->features |= static_cast<u32>(CpuFeature::MWait);
-
-    pinfo->family = (cpui[0] >> 8) & 0xf;
-    pinfo->model = (cpui[0] >> 4) & 0xf;
-    pinfo->stepping = cpui[0] & 0xf;
-
-    // Calculate available processors
-#ifdef WINDOWS
-    ULONG_PTR pa_mask_save, sa_mask_stub = 0;
-    GetProcessAffinityMask(GetCurrentProcess(), &pa_mask_save, &sa_mask_stub);
-#elif defined(LINUX)
-    unsigned int pa_mask_save = 0;
-    cpu_set_t my_set;
-    CPU_ZERO(&my_set);
-    sched_getaffinity(0, sizeof(cpu_set_t), &my_set);
-    pa_mask_save = CPU_COUNT(&my_set);
-#else
-#warning "No Function to obtain process affinity"
-    unsigned int pa_mask_save = 0;
-#endif // WINDOWS
-
-#ifdef WINDOWS
-    DWORD returnedLength = 0;
-    DWORD byteOffset = 0;
-    GetLogicalProcessorInformation(nullptr, &returnedLength);
-
-    auto buffer = std::make_unique<u8[]>(returnedLength);
-    auto ptr = reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION>(buffer.get());
-    GetLogicalProcessorInformation(ptr, &returnedLength);
-
-    auto processorCoreCount = 0u;
-    auto logicalProcessorCount = 0u;
-
-    while (byteOffset + sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION) <= returnedLength)
-    {
-        switch (ptr->Relationship)
-        {
-            case RelationProcessorCore:
-                processorCoreCount++;
-
-                // A hyperthreaded core supplies more than one logical processor.
-                logicalProcessorCount += countSetBits(ptr->ProcessorMask);
-                break;
-
-            default:
-                break;
-        }
-
-        byteOffset += sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
-        ptr++;
-    }
-#elif defined(LINUX)
-    int logicalProcessorCount = std::thread::hardware_concurrency();
-
-    //not sure about processorCoreCount - is it really cores or threads
-    //https://stackoverflow.com/questions/150355/programmatically-find-the-number-of-cores-on-a-machine
-    int processorCoreCount = sysconf(_SC_NPROCESSORS_ONLN);
-
-    //2nd implementation
-    //
-    //#include <hwloc.h>
-    //// Allocate, initialize, and perform topology detection
-    //hwloc_topology_t topology;
-    //hwloc_topology_init(&topology);
-    //hwloc_topology_load(topology);
-    //
-    //// Try to get the number of CPU cores from topology
-    //int depth = hwloc_get_type_depth(topology, HWLOC_OBJ_CORE);
-    //int processorCoreCount = hwloc_get_nbobjs_by_depth(topology, depth);
-    //
-    //// Destroy topology object and return
-    //hwloc_topology_destroy(topology);
-
-    //3rd another implementation
-    //https://stackoverflow.com/questions/2901694/programmatically-detect-number-of-physical-processors-cores-or-if-hyper-threadin
-
-#endif
-
-
-    if (logicalProcessorCount != processorCoreCount) pinfo->features |= static_cast<u32>(CpuFeature::HT);
-
-    // All logical processors
-    pinfo->n_threads = logicalProcessorCount;
-    pinfo->affinity_mask = pa_mask_save;
-    pinfo->n_cores = processorCoreCount;
-
-    return pinfo->features;
-}
-#endif

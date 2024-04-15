@@ -69,11 +69,11 @@ public:
 #endif // USE_OGL
 
 public:
-    void __stdcall apply_load(u32 stage);
-    void __stdcall apply_theora(u32 stage);
-    void __stdcall apply_avi(u32 stage);
-    void __stdcall apply_seq(u32 stage);
-    void __stdcall apply_normal(u32 stage);
+    void apply_load(u32 stage);
+    void apply_theora(u32 stage);
+    void apply_avi(u32 stage);
+    void apply_seq(u32 stage);
+    void apply_normal(u32 stage);
 
     void Preload();
     void Load();
@@ -146,7 +146,7 @@ public: //	Public class members (must be encapsulated further)
 #endif	//	USE_DX10
     } flags;
 
-    fastdelegate::FastDelegate1<u32> bind;
+    fastdelegate::FastDelegate<void(u32)> bind;
 
     CAviPlayerCustom* pAVI;
     CTheoraSurface* pTheora;

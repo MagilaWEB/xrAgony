@@ -498,7 +498,7 @@ class CSE_ALifeObjectHangingLamp : public CSE_ALifeDynamicObjectVisual, public C
     using inherited2 = CSE_PHSkeleton;
 
 public:
-    void __stdcall OnChangeFlag(PropValue* sender);
+    void OnChangeFlag(PropValue* sender);
     enum
     {
         flPhysic = (1 << 0),

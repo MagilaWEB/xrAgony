@@ -83,7 +83,7 @@ private: System::ComponentModel::Container^ components;
         this->Controls->Add(this->editorDock);
         this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
         this->Name = L"WindowIDE";
-        this->Text = L"OpenXRay Editor";
+        this->Text = L"AGONY Editor";
         this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &WindowIDE::WindowIDE_FormClosing);
         this->ResumeLayout(false);
 

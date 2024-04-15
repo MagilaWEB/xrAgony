@@ -40,8 +40,8 @@ IC IServerEntityShape::~IServerEntityShape() {}
 class CSE_Visual
 {
 public:
-    void __stdcall OnChangeVisual(PropValue* sender);
-    void __stdcall OnChangeAnim(PropValue* sender);
+    void OnChangeVisual(PropValue* sender);
+    void OnChangeAnim(PropValue* sender);
 
 public:
     shared_str visual_name;
@@ -71,7 +71,7 @@ public:
 class CSE_Motion
 {
 public:
-    void __stdcall OnChangeMotion(PropValue* sender);
+    void OnChangeMotion(PropValue* sender);
 
 public:
     shared_str motion_name;

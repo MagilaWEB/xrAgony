@@ -29,16 +29,14 @@ enum
     rsOcclusionStats = (1ul << 13ul),
 
     mtSound = (1ul << 14ul),
-    mtPhysics = (1ul << 15ul),
+    //mtPhysics = (1ul << 15ul),
     mtNetwork = (1ul << 16ul),
     mtParticles = (1ul << 17ul),
 
     rsCameraPos = (1ul << 18ul),
 
-    rsR1 = (1ul << 19ul),
-    rsR2 = (1ul << 20ul),
-    rsR3 = (1ul << 21ul),
-    rsR4 = (1ul << 22ul), // 22 was reserved for editor
+    rsDX9 = (1ul << 19ul),
+    rsDX11 = (1ul << 20ul),
     rsShowFPS = (1ul << 23ul), // 23 was reserved for editor
     // 24-32 bit - reserved to Editor
 };

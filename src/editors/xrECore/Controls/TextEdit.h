@@ -12,9 +12,9 @@ using namespace System::Data;
 using namespace System::Drawing;
 public ref class TextEdit : public System::Windows::Forms::Form
 {
-    using TOnApplyClick = fastdelegate::FastDelegate1<pcstr, bool>;
-    using TOnCloseClick = fastdelegate::FastDelegate0<bool>;
-    using TOnCodeInsight = fastdelegate::FastDelegate3<const xr_string&, xr_string&, bool&>;
+    using TOnApplyClick = fastdelegate::FastDelegate<bool(pcstr)>;
+    using TOnCloseClick = fastdelegate::FastDelegate<bool()>;
+    using TOnCodeInsight = fastdelegate::FastDelegate<void(const xr_string&, xr_string&, bool&)>;
 
 public:
     TextEdit(void)

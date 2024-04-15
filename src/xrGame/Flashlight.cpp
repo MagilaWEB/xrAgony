@@ -259,9 +259,8 @@ BOOL CFlashlight::net_Spawn(CSE_Abstract* DC)
 	if (!inherited::net_Spawn(DC))
 		return FALSE;
 
-	bool b_r2 = !!psDeviceFlags.test(rsR2);
-	b_r2 |= !!psDeviceFlags.test(rsR3);
-	b_r2 |= !!psDeviceFlags.test(rsR4);
+	bool b_r2 = !!psDeviceFlags.test(rsDX9);
+	b_r2 |= !!psDeviceFlags.test(rsDX11);
 
 	lanim = LALib.FindItem(pSettings->r_string(m_light_section, "color_animator"));
 

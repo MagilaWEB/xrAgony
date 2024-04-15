@@ -49,8 +49,8 @@ public:
 private:
     typedef xr_vector<visual_data> visuals_collection;
 
-    void __stdcall OnChangeDescription(PropValue* sender);
-    void __stdcall OnChangeLoopholes(PropValue* sender);
+    void OnChangeDescription(PropValue* sender);
+    void OnChangeLoopholes(PropValue* sender);
 
 public:
     void set_loopholes_table_checker(BOOLValue* value);

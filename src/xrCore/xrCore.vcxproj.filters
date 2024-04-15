@@ -106,9 +106,6 @@
     <Filter Include="Memory">
       <UniqueIdentifier>{0173b19d-898c-495c-8d22-2cc3d8436008}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Threading\Util">
-      <UniqueIdentifier>{d58c8dbd-1e58-42b0-8711-1d091c68e3ad}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FTimer.cpp">
@@ -240,9 +237,6 @@
     <ClCompile Include="Threading\Lock.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
-    <ClCompile Include="Threading\Event.cpp">
-      <Filter>Threading</Filter>
-    </ClCompile>
     <ClCompile Include="Debug\dxerr.cpp">
       <Filter>Debug core\DxErr</Filter>
     </ClCompile>
@@ -285,11 +279,14 @@
     <ClCompile Include="FileCRC32.cpp">
       <Filter>FS</Filter>
     </ClCompile>
-    <ClCompile Include="Threading\ThreadUtil_Win.cpp">
-      <Filter>Threading\Util</Filter>
-    </ClCompile>
     <ClCompile Include="string_concatenations.cpp">
       <Filter>shared memory/string library</Filter>
+    </ClCompile>
+    <ClCompile Include="Threading\xrThread.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Threading\xrSyncronize.cpp">
+      <Filter>Threading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -545,9 +542,6 @@
     <ClInclude Include="Threading\Lock.hpp">
       <Filter>Threading</Filter>
     </ClInclude>
-    <ClInclude Include="Threading\Event.hpp">
-      <Filter>Threading</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\object_type_traits.h">
       <Filter>Common\Object</Filter>
     </ClInclude>
@@ -638,15 +632,6 @@
     <ClInclude Include="FileCRC32.h">
       <Filter>FS</Filter>
     </ClInclude>
-    <ClInclude Include="Memory\xalloc.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\XRayAllocator.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Threading\ThreadUtil.h">
-      <Filter>Threading\Util</Filter>
-    </ClInclude>
     <ClInclude Include="Containers\FixedMap.h">
       <Filter>Containers</Filter>
     </ClInclude>
@@ -655,6 +640,12 @@
     </ClInclude>
     <ClInclude Include="string_concatenations_inline.h">
       <Filter>shared memory/string library</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading\xrThread.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading\xrSyncronize.hpp">
+      <Filter>Threading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -68,10 +68,10 @@ namespace xrPostprocessEditor
         Color ConvertColor(ColorF value)
         {
             Color result = Color.FromArgb(
-                (byte)(255*value.a),
-                (byte)(255*value.r),
-                (byte)(255*value.g),
-                (byte)(255*value.b));
+                (byte)(255 * value.a),
+                (byte)(255 * value.r),
+                (byte)(255 * value.g),
+                (byte)(255 * value.b));
             return result;
         }
 
@@ -120,7 +120,7 @@ namespace xrPostprocessEditor
             nslColorMappingInfluence.Value = (decimal)value.Influence;
             tbColorMappingTexture.Text = value.Texture;
         }
-        
+
         public void Initialize(EditorEngine engine) { this.engine = engine; }
 
         private void CopyKeyFrames(ChannelDesc dst, ChannelDesc src)
@@ -153,7 +153,7 @@ namespace xrPostprocessEditor
                     ch.List.Items.Add(param.GetKeyTime(i));
             }
         }
-        
+
         private void LoadAllChannels()
         {
             foreach (var ch in chInfo)

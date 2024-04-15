@@ -70,17 +70,17 @@
 // stl ext
 struct XRCORE_API xr_rtoken
 {
-    shared_str name;
-    int id;
+	shared_str name;
+	int id;
 
-    xr_rtoken(pcstr _nm, int _id)
-    {
-        name = _nm;
-        id = _id;
-    }
+	xr_rtoken(pcstr _nm, int _id)
+	{
+		name = _nm;
+		id = _id;
+	}
 
-    void rename(pcstr _nm) { name = _nm; }
-    bool equal(pcstr _nm) const { return (0 == xr_strcmp(*name, _nm)); }
+	void rename(pcstr _nm) { name = _nm; }
+	bool equal(pcstr _nm) const { return (0 == xr_strcmp(*name, _nm)); }
 };
 
 #include "xr_shortcut.h"
@@ -106,59 +106,59 @@ using RTokenVec = xr_vector<xr_rtoken>;
 #endif
 
 #include "net_utils.h"
-#include "Threading/ThreadUtil.h"
+#include "Threading/xrThread.h"
 
 // destructor
 template <class T>
 class destructor
 {
-    T* ptr;
+	T* ptr;
 
 public:
-    destructor(T* p) { ptr = p; }
-    ~destructor() { xr_delete(ptr); }
-    T& operator()() { return *ptr; }
+	destructor(T* p) { ptr = p; }
+	~destructor() { xr_delete(ptr); }
+	T& operator()() { return *ptr; }
 };
 
 // ***** The Core definition *****
 class XRCORE_API xrCore
 {
-    const char* buildDate = "";
-    u32 buildId = 0;
+	const char* buildDate = "";
+	u32 buildId = 0;
 
 public:
-    string64 ApplicationName;
-    string_path ApplicationPath;
-    string_path WorkingPath;
-    string64 UserName;
-    string64 CompName;
-    char* Params;
-    DWORD dwFrame;
-    bool PluginMode;
+	string64 ApplicationName;
+	string_path ApplicationPath;
+	string_path WorkingPath;
+	string64 UserName;
+	string64 CompName;
+	char* Params;
+	DWORD dwFrame;
+	bool PluginMode;
 
-    Flags16 ParamFlags; //Alun: TODO: Add all params
-    enum ParamFlag {
-        verboselog = (1 << 0),
-        fpslock60 = (1 << 1),
-        fpslock120 = (1 << 2),
-        fpslock144 = (1 << 3),
-        fpslock240 = (1 << 4),
-        nofpslock = (1 << 5),
-        dbgbullet = (1 << 6),
-        genbump = (1 << 7),
-        dev = (1 << 8),
-    };
+	Flags16 ParamFlags; //Alun: TODO: Add all params
+	enum ParamFlag {
+		verboselog = (1 << 0),
+		fpslock60 = (1 << 1),
+		fpslock120 = (1 << 2),
+		fpslock144 = (1 << 3),
+		fpslock240 = (1 << 4),
+		nofpslock = (1 << 5),
+		dbgbullet = (1 << 6),
+		genbump = (1 << 7),
+		dev = (1 << 8),
+	};
 
-    void Initialize(
-        pcstr ApplicationName, LogCallback cb = nullptr, bool init_fs = true, pcstr fs_fname = nullptr, bool plugin = false);
-    void initParamFlags();
-    void _destroy();
-    const char* GetBuildDate() const { return buildDate; }
-    u32 GetBuildId() const { return buildId; }
-    static constexpr pcstr GetBuildConfiguration();
+	void Initialize(
+		pcstr ApplicationName, LogCallback cb = nullptr, bool init_fs = true, pcstr fs_fname = nullptr, bool plugin = false);
+	void initParamFlags();
+	void _destroy();
+	const char* GetBuildDate() const { return buildDate; }
+	u32 GetBuildId() const { return buildId; }
+	static constexpr pcstr GetBuildConfiguration();
 
 private:
-    void CalculateBuildId();
+	void CalculateBuildId();
 };
 
 extern XRCORE_API xrCore Core;

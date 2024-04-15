@@ -118,7 +118,7 @@ public:
     }
 };
 
-typedef fastdelegate::FastDelegate2<CCommandVar, CCommandVar, CCommandVar> TECommandEvent;
+typedef fastdelegate::FastDelegate<void(CCommandVar, CCommandVar, CCommandVar)> TECommandEvent;
 
 struct SECommand;
 

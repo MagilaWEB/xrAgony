@@ -1,0 +1,10 @@
+I:\xrAgony\src\editors\xrSdkControls\xrSdkControls\xrSdkControls.csproj.AssemblyReference.cache
+I:\xrAgony\src\editors\xrSdkControls\xrSdkControls\XRay.SdkControls.ColorPicker.resources
+I:\xrAgony\src\editors\xrSdkControls\xrSdkControls\XRay.SdkControls.NumericSlider.resources
+I:\xrAgony\src\editors\xrSdkControls\xrSdkControls\XRay.SdkControls.IntegerSlider.resources
+I:\xrAgony\src\editors\xrSdkControls\xrSdkControls\XRay.SdkControls.NumericSpinner.resources
+I:\xrAgony\src\editors\xrSdkControls\xrSdkControls\XRay.SdkControls.TreeViewFilterPanel.resources
+I:\xrAgony\src\editors\xrSdkControls\xrSdkControls\XRay.SdkControls.TreeViewSearchPanel.resources
+I:\xrAgony\src\editors\xrSdkControls\xrSdkControls\XRay.SdkControls.Properties.Resources.resources
+I:\xrAgony\src\editors\xrSdkControls\xrSdkControls\xrSdkControls.csproj.GenerateResource.cache
+I:\xrAgony\src\editors\xrSdkControls\xrSdkControls\xrSdkControls.csproj.CoreCompileInputs.cache

@@ -15,8 +15,6 @@
 #include "xrScriptEngine/ScriptExporter.hpp"
 #include "xrServerEntities/script_token_list.h"
 
-using namespace luabind;
-
 struct CChooseType
 {
 };

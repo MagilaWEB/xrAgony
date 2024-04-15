@@ -85,7 +85,7 @@ public:
     virtual CSE_Abstract* cast_abstract() { return nullptr; };
     virtual CSE_ALifeTraderAbstract* cast_trader_abstract() { return this; };
     // end of the virtual inheritance dependant code
-    void __stdcall OnChangeProfile(PropValue* sender);
+    void OnChangeProfile(PropValue* sender);
 
 #ifdef XRGAME_EXPORTS
     virtual void add_online(const bool& update_registries);

@@ -214,9 +214,6 @@
     <Filter Include="editor\ide">
       <UniqueIdentifier>{9a5bc97a-fa45-4997-96d2-2ec72f114570}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OpenAutomate">
-      <UniqueIdentifier>{fe56b488-34f8-4632-9f5e-7805f761b338}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game API\MaterialSystem">
       <UniqueIdentifier>{59004dc1-5e77-4968-8321-6290b1ab9d3a}</UniqueIdentifier>
     </Filter>
@@ -231,7 +228,7 @@
     </Filter>
     <Filter Include="Rendering Device">
       <UniqueIdentifier>{e4d34774-3a5b-468f-9400-12c702636fa1}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="Game API\StringTable">
       <UniqueIdentifier>{948b4643-0f42-4027-ac44-dbe3702887f4}</UniqueIdentifier>
     </Filter>
@@ -522,9 +519,6 @@
     <ClInclude Include="ide.hpp">
       <Filter>editor\ide</Filter>
     </ClInclude>
-    <ClInclude Include="xrSASH.h">
-      <Filter>OpenAutomate</Filter>
-    </ClInclude>
     <ClInclude Include="GameMtlLib.h">
       <Filter>Game API\MaterialSystem</Filter>
     </ClInclude>
@@ -569,7 +563,7 @@
     </ClInclude>
     <ClInclude Include="Stats.h">
       <Filter>Rendering Device</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="xr_input_xinput.h">
       <Filter>Interfaces\Input</Filter>
     </ClInclude>
@@ -579,6 +573,7 @@
     <ClInclude Include="StringTable\IStringTableDefs.h">
       <Filter>Game API\StringTable</Filter>
     </ClInclude>
+    <ClInclude Include="xrSASH.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -845,9 +840,6 @@
     <ClCompile Include="editor_environment_detail.cpp">
       <Filter>editor\environment\detail</Filter>
     </ClCompile>
-    <ClCompile Include="xrSASH.cpp">
-      <Filter>OpenAutomate</Filter>
-    </ClCompile>
     <ClCompile Include="GameMtlLib.cpp">
       <Filter>Game API\MaterialSystem</Filter>
     </ClCompile>
@@ -898,13 +890,14 @@
     </ClCompile>
     <ClCompile Include="Stats.cpp">
       <Filter>Rendering Device</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="xr_input_xinput.cpp">
       <Filter>Interfaces\Input</Filter>
     </ClCompile>
     <ClCompile Include="StringTable\IStringTable.cpp">
       <Filter>Game API\StringTable</Filter>
     </ClCompile>
+    <ClCompile Include="xrSASH.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ClientServer.txt" />

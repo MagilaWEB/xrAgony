@@ -3,7 +3,7 @@
 #include "SoundRender_Core.h"
 #include "SoundRender_Source.h"
 #include "xrCore/Threading/ScopeLock.hpp"
-#include <tbb/parallel_for_each.h>
+#include <tbb.h>
 
 CSoundRender_Source* CSoundRender_Core::i_create_source(pcstr name)
 {
@@ -41,7 +41,8 @@ void CSoundRender_Core::CreateAllSources()
     const size_t sizeBefore = s_sources.size();
 
     Lock lock;
-    const auto processFile = [&](const FS_File& file)
+
+    tbb::parallel_for_each(flist, [&](const FS_File& file)
     {
         string256 id;
         xr_strcpy(id, file.name.c_str());
@@ -55,7 +56,7 @@ void CSoundRender_Core::CreateAllSources()
             const auto it = s_sources.find(id);
             if (it != s_sources.end())
                 return;
-			UNUSED(scope);
+            UNUSED(scope);
         }
 
         CSoundRender_Source* S = new CSoundRender_Source();
@@ -64,9 +65,7 @@ void CSoundRender_Core::CreateAllSources()
         lock.Enter();
         s_sources.insert({ id, S });
         lock.Leave();
-    };
-
-    tbb::parallel_for_each(flist,processFile);
+    });
 
     Msg("Finished creating %d sound sources. Duration: %d ms", s_sources.size() - sizeBefore, T.GetElapsed_ms());
 }

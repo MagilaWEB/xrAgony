@@ -24,20 +24,15 @@
   </ItemGroup>
 
   <PropertyGroup Label="UserMacros">
+    <xrGameDir>D:AGONY\</xrGameDir>
     <xrBinRootDir>$(SolutionDir)..\_build\bin\</xrBinRootDir>
-    <xrLibRootDir>$(SolutionDir)..\_build\lib\</xrLibRootDir>
-    <xrBinDir>$(SolutionDir)..\_build\bin\$(xrPlatform)\$(Configuration)\</xrBinDir>
-    <xrPlugBinDir>$(SolutionDir)..\_build\bin\$(xrPlatform)\$(Configuration)\plugins\</xrPlugBinDir>
+    <xrBinDir>$(xrGameDir)bin\$(xrPlatform)\</xrBinDir>
     <xrLibDir>$(SolutionDir)..\_build\lib\$(xrPlatform)\$(Configuration)\</xrLibDir>
     <xrIntDir>$(SolutionDir)..\_build\intermediate\$(xrPlatform)\$(Configuration)\</xrIntDir>
     <xrSdkDir>$(SolutionDir)..\sdk\</xrSdkDir>
-    <xrExternals>$(SolutionDir)..\Externals\</xrExternals>
-
-    
-    <xrLibraries>$(SolutionDir)libraries\</xrLibraries>
+    <xrLibraries>$(SolutionDir)Libraries\</xrLibraries>
     <xrLuaJit>$(xrLibraries)luajit\</xrLuaJit>
     <xrLuaDir>$(xrLuaJit)src\</xrLuaDir>
-    <xrLuaLib>$(xrLuaJit)bin\$(PlatformShortName)</xrLuaLib>
   </PropertyGroup>
 
   <PropertyGroup Label="OutputDirectories">
@@ -59,7 +54,7 @@
 
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrExternals);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)DXSDK/Include;$(xrLuaDir);$(xrLibraries)luabind;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrLibraries);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)include\oneapi;$(xrSdkDir)DXSDK/Include;$(xrLuaDir);$(xrLibraries)luabind;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <!-- MultiProcessorCompilation don't compatible with LinkIncremental and UseDebugLibraries -->
       <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Debug'  ))">false</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Mixed'  ))">true</MultiProcessorCompilation>
@@ -84,13 +79,13 @@
       <WarningLevel>Level1</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(xrLuaLib);$(xrSdkDir)libraries;$(xrSdkDir)libraries/$(PlatformShortName);$(xrLibDir);$(xrSdkDir)DXSDK/Lib/$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrSdkDir)libraries;$(xrSdkDir)libraries/$(PlatformShortName);$(xrLibDir);$(xrSdkDir)DXSDK/Lib/$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>$(xrLibDir)$(TargetName).lib</ImportLibrary>
       <LargeAddressAware>true</LargeAddressAware>
       <SubSystem>Windows</SubSystem>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(xrLuaLib);$(xrSdkDir)libraries;$(xrSdkDir)libraries/$(PlatformShortName);$(xrLibDir);$(xrSdkDir)DXSDK/Lib/$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrSdkDir)libraries;$(xrSdkDir)libraries/$(PlatformShortName);$(xrLibDir);$(xrSdkDir)DXSDK/Lib/$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(xrLibDir)$(TargetName).lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>

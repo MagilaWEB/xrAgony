@@ -22,7 +22,7 @@ class GameEventQueue : Noncopyable
     xr_set<ClientID> m_blocked_clients;
 
 public:
-    typedef fastdelegate::FastDelegate1<GameEvent*, bool> event_predicate;
+    typedef fastdelegate::FastDelegate<bool(GameEvent*)> event_predicate;
 
     GameEventQueue();
     ~GameEventQueue();

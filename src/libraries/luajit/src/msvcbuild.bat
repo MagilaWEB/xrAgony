@@ -21,14 +21,18 @@
 @set DASM=%DASMDIR%\dynasm.lua
 @set LJBINPATH=..\bin\
 @set LJTARGETARCH=%1
+@set LJSDKPATH=..\..\..\..\sdk\
+@set LJbinaries=%LJSDKPATH%binaries\%LJTARGETARCH%\
+@set LJlibraries=%LJSDKPATH%libraries\%LJTARGETARCH%\
+
 @if defined LJTARGETARCH (
   @set LJBINPATH=%LJBINPATH%%LJTARGETARCH%\
 )
 @if not exist %LJBINPATH% (
   @mkdir %LJBINPATH%
 )
-@set LJDLLNAME=%LJBINPATH%lua51.dll
-@set LJLIBNAME=%LJBINPATH%lua51.lib
+@set LJDLLNAME=%LJbinaries%lua51.dll
+@set LJLIBNAME=%LJlibraries%lua51.lib
 @set ALL_LIB=lib_base.c lib_math.c lib_bit.c lib_string.c lib_table.c lib_io.c lib_os.c lib_package.c lib_debug.c lib_jit.c lib_ffi.c lib_buffer.c
 
 %LJCOMPILE% host\minilua.c
@@ -99,6 +103,12 @@ if exist %LJDLLNAME%.manifest^
 
 %LJCOMPILE% luajit.c
 @if errorlevel 1 goto :BAD
+
+@del %LJbinaries%lua51.exp
+@echo Deleted %LJbinaries%lua51.exp
+
+@move %LJbinaries%lua51.lib %LJlibraries%
+@echo moved %LJbinaries%lua51.lib to %LJlibraries%
 
 @del *.obj *.manifest minilua.exe buildvm.exe
 @del host\buildvm_arch.h

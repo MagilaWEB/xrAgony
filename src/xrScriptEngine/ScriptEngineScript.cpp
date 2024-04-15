@@ -140,7 +140,6 @@ inline profile_timer_script operator+(const profile_timer_script& portion0, cons
 std::ostream& operator<<(std::ostream& os, const profile_timer_script& pt) { return os << pt.time(); }
 SCRIPT_EXPORT(CScriptEngine, (),
 {
-    using namespace luabind;
     module(luaState)
     [
         class_<profile_timer_script>("profile_timer")

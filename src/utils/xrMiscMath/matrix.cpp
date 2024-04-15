@@ -1,7 +1,7 @@
 #include "pch.hpp"
 
 #include <limits>
-
+#include <xmmintrin.h>
 #include "xrCore/_matrix.h"
 #include "xrCore/_quaternion.h"
 #include "xrCore/xrDebug_macros.h"
@@ -97,55 +97,55 @@ _matrix<T>& _matrix<T>::identity()
 
 // Multiply RES = A[4x4]*B[4x4] (WITH projection)
 template <typename T>
-_matrix<T>& _matrix<T>::mul(const _matrix<T>& A, const _matrix<T>& B)
+_matrix<T>& _matrix<T>::mul(const Self& A, const Self& B)
 {
 	VERIFY((this != &A) && (this != &B));
-	m[0][0] = A.m[0][0] * B.m[0][0] + A.m[1][0] * B.m[0][1] + A.m[2][0] * B.m[0][2] + A.m[3][0] * B.m[0][3];
-	m[0][1] = A.m[0][1] * B.m[0][0] + A.m[1][1] * B.m[0][1] + A.m[2][1] * B.m[0][2] + A.m[3][1] * B.m[0][3];
-	m[0][2] = A.m[0][2] * B.m[0][0] + A.m[1][2] * B.m[0][1] + A.m[2][2] * B.m[0][2] + A.m[3][2] * B.m[0][3];
-	m[0][3] = A.m[0][3] * B.m[0][0] + A.m[1][3] * B.m[0][1] + A.m[2][3] * B.m[0][2] + A.m[3][3] * B.m[0][3];
+	__m128 row1 = _mm_loadu_ps(&A.m[0][0]);
+	__m128 row2 = _mm_loadu_ps(&A.m[1][0]);
+	__m128 row3 = _mm_loadu_ps(&A.m[2][0]);
+	__m128 row4 = _mm_loadu_ps(&A.m[3][0]);
 
-	m[1][0] = A.m[0][0] * B.m[1][0] + A.m[1][0] * B.m[1][1] + A.m[2][0] * B.m[1][2] + A.m[3][0] * B.m[1][3];
-	m[1][1] = A.m[0][1] * B.m[1][0] + A.m[1][1] * B.m[1][1] + A.m[2][1] * B.m[1][2] + A.m[3][1] * B.m[1][3];
-	m[1][2] = A.m[0][2] * B.m[1][0] + A.m[1][2] * B.m[1][1] + A.m[2][2] * B.m[1][2] + A.m[3][2] * B.m[1][3];
-	m[1][3] = A.m[0][3] * B.m[1][0] + A.m[1][3] * B.m[1][1] + A.m[2][3] * B.m[1][2] + A.m[3][3] * B.m[1][3];
-
-	m[2][0] = A.m[0][0] * B.m[2][0] + A.m[1][0] * B.m[2][1] + A.m[2][0] * B.m[2][2] + A.m[3][0] * B.m[2][3];
-	m[2][1] = A.m[0][1] * B.m[2][0] + A.m[1][1] * B.m[2][1] + A.m[2][1] * B.m[2][2] + A.m[3][1] * B.m[2][3];
-	m[2][2] = A.m[0][2] * B.m[2][0] + A.m[1][2] * B.m[2][1] + A.m[2][2] * B.m[2][2] + A.m[3][2] * B.m[2][3];
-	m[2][3] = A.m[0][3] * B.m[2][0] + A.m[1][3] * B.m[2][1] + A.m[2][3] * B.m[2][2] + A.m[3][3] * B.m[2][3];
-
-	m[3][0] = A.m[0][0] * B.m[3][0] + A.m[1][0] * B.m[3][1] + A.m[2][0] * B.m[3][2] + A.m[3][0] * B.m[3][3];
-	m[3][1] = A.m[0][1] * B.m[3][0] + A.m[1][1] * B.m[3][1] + A.m[2][1] * B.m[3][2] + A.m[3][1] * B.m[3][3];
-	m[3][2] = A.m[0][2] * B.m[3][0] + A.m[1][2] * B.m[3][1] + A.m[2][2] * B.m[3][2] + A.m[3][2] * B.m[3][3];
-	m[3][3] = A.m[0][3] * B.m[3][0] + A.m[1][3] * B.m[3][1] + A.m[2][3] * B.m[3][2] + A.m[3][3] * B.m[3][3];
+	for (u32 i = 0; i < 4; i++)
+		_mm_storeu_ps(&m[i][0], _mm_add_ps(
+			_mm_add_ps(
+				_mm_add_ps(
+					_mm_mul_ps(row1, _mm_set1_ps(B.m[i][0])),
+					_mm_mul_ps(row2, _mm_set1_ps(B.m[i][1]))),
+				_mm_mul_ps(row3, _mm_set1_ps(B.m[i][2]))),
+			_mm_mul_ps(row4, _mm_set1_ps(B.m[i][3])))
+		);
 	return *this;
 }
 
 // Multiply RES = A[4x3]*B[4x3] (no projection), faster than ordinary multiply
 template <typename T>
-_matrix<T>& _matrix<T>::mul_43(const _matrix<T>& A, const _matrix<T>& B)
+_matrix<T>& _matrix<T>::mul_43(const Self& A, const Self& B)
 {
 	VERIFY((this != &A) && (this != &B));
-	m[0][0] = A.m[0][0] * B.m[0][0] + A.m[1][0] * B.m[0][1] + A.m[2][0] * B.m[0][2];
-	m[0][1] = A.m[0][1] * B.m[0][0] + A.m[1][1] * B.m[0][1] + A.m[2][1] * B.m[0][2];
-	m[0][2] = A.m[0][2] * B.m[0][0] + A.m[1][2] * B.m[0][1] + A.m[2][2] * B.m[0][2];
-	m[0][3] = 0;
+	__m128 row1 = _mm_loadu_ps(&A.m[0][0]);
+	__m128 row2 = _mm_loadu_ps(&A.m[1][0]);
+	__m128 row3 = _mm_loadu_ps(&A.m[2][0]);
+	__m128 row4 = _mm_loadu_ps(&A.m[3][0]);
 
-	m[1][0] = A.m[0][0] * B.m[1][0] + A.m[1][0] * B.m[1][1] + A.m[2][0] * B.m[1][2];
-	m[1][1] = A.m[0][1] * B.m[1][0] + A.m[1][1] * B.m[1][1] + A.m[2][1] * B.m[1][2];
-	m[1][2] = A.m[0][2] * B.m[1][0] + A.m[1][2] * B.m[1][1] + A.m[2][2] * B.m[1][2];
-	m[1][3] = 0;
+	for (u32 i = 0; i < 3; i++)
+	{
+		_mm_storeu_ps(&m[i][0], _mm_add_ps(
+			_mm_add_ps(
+				_mm_mul_ps(row1, _mm_set1_ps(B.m[i][0])),
+				_mm_mul_ps(row2, _mm_set1_ps(B.m[i][1]))),
+			_mm_mul_ps(row3, _mm_set1_ps(B.m[i][2])))
+		);
+		m[i][3] = TYPE(0);
+	}
 
-	m[2][0] = A.m[0][0] * B.m[2][0] + A.m[1][0] * B.m[2][1] + A.m[2][0] * B.m[2][2];
-	m[2][1] = A.m[0][1] * B.m[2][0] + A.m[1][1] * B.m[2][1] + A.m[2][1] * B.m[2][2];
-	m[2][2] = A.m[0][2] * B.m[2][0] + A.m[1][2] * B.m[2][1] + A.m[2][2] * B.m[2][2];
-	m[2][3] = 0;
+	_mm_storeu_ps(&m[3][0], _mm_add_ps(
+		_mm_add_ps(
+			_mm_mul_ps(row1, _mm_set1_ps(B.m[3][0])),
+			_mm_mul_ps(row2, _mm_set1_ps(B.m[3][1]))),
+		_mm_add_ps(_mm_mul_ps(row3, _mm_set1_ps(B.m[3][2])), row4))
+	);
+	m[3][3] = TYPE(1);
 
-	m[3][0] = A.m[0][0] * B.m[3][0] + A.m[1][0] * B.m[3][1] + A.m[2][0] * B.m[3][2] + A.m[3][0];
-	m[3][1] = A.m[0][1] * B.m[3][0] + A.m[1][1] * B.m[3][1] + A.m[2][1] * B.m[3][2] + A.m[3][1];
-	m[3][2] = A.m[0][2] * B.m[3][0] + A.m[1][2] * B.m[3][1] + A.m[2][2] * B.m[3][2] + A.m[3][2];
-	m[3][3] = 1;
 	return *this;
 }
 

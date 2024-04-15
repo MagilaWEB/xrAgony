@@ -51,7 +51,7 @@ public:
     virtual void IR_OnMouseWheel(int direction);
     virtual void IR_OnActivate(void);
     bool Persistent() { return !!m_flags.test(etsPersistent); }
-    fastdelegate::FastDelegate0<> m_on_destroy_event;
+    fastdelegate::FastDelegate<void()> m_on_destroy_event;
 
     enum
     {

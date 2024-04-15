@@ -103,9 +103,8 @@ protected:
         eFastMode = (1 << 12),
         eIdleObjectParticlesDontStop = (1 << 13),
         eAffectPickDOF = (1 << 14),
-        eIdleLightR1 = (1 << 15),
-        eBoltEntranceParticles = (1 << 16),
-        eUseSecondaryHit = (1 << 17),
+        eBoltEntranceParticles = (1 << 15),
+        eUseSecondaryHit = (1 << 16),
     };
     u32 m_owner_id;
     u32 m_ttl;

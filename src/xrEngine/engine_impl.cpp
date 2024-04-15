@@ -31,7 +31,7 @@ bool engine_impl::on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
     return (Device.on_message(hWnd, uMsg, wParam, lParam, result));
 }
 
-void engine_impl::on_idle() { Device.on_idle(); }
+void engine_impl::on_idle() { Device.EngineUpdate_impl(); }
 void engine_impl::on_resize()
 {
     if (Console)

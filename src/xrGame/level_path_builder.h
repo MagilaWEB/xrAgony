@@ -65,7 +65,7 @@ public:
         if (Device.dwTimeGlobal < m_last_fail_time + time_to_wait_after_fail)
             return;
 
-        Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CLevelPathBuilder::process));
+        Device.add_parallel(this, &CLevelPathBuilder::process);
     }
 
     void process_impl()
@@ -97,7 +97,7 @@ public:
         inherited::process_impl(false);
     }
 
-    void __stdcall process()
+    void process()
     {
         if (Device.dwTimeGlobal < m_last_fail_time + time_to_wait_after_fail)
             return;
@@ -110,6 +110,6 @@ public:
         if (m_object->m_wait_for_distributed_computation)
             m_object->m_wait_for_distributed_computation = false;
 
-        Device.remove_from_seq_parallel(fastdelegate::FastDelegate0<>(this, &CLevelPathBuilder::process));
+        Device.remove_parallel(this, &CLevelPathBuilder::process);
     }
 };

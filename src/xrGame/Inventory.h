@@ -158,7 +158,7 @@ protected:
 	void				SendActionEvent		(u16 cmd, u32 flags);
 
 private:
-	std::vector<u8> m_blocked_slots;
+    xr_vector<u8> m_blocked_slots;
 	bool				IsSlotBlocked(u16 slot_id) const;
 	void				TryActivatePrevSlot		();
 	void				TryDeactivateActiveSlot	();

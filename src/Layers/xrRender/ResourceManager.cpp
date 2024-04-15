@@ -10,7 +10,7 @@
 #include <d3dx9.h>
 #pragma warning(pop)
 
-#include <tbb/parallel_for_each.h>
+#include <tbb.h>
 
 #include "ResourceManager.h"
 #include "tss.h"
@@ -347,12 +347,7 @@ void CResourceManager::DeferredUpload()
     if (!RDEVICE.b_is_Ready)
         return;
 
-#ifndef USE_OGL
     tbb::parallel_for_each(m_textures, [&](auto m_tex) { m_tex.second->Load(); });
-#else
-    for (auto& texture : m_textures)
-        texture.second->Load();
-#endif
 }
 /*
 void	CResourceManager::DeferredUnload	()

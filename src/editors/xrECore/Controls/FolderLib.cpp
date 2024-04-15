@@ -3,7 +3,7 @@
 #include "FolderLib.h"
 #include "xrServerEntities/PropertiesListHelper.h"
 
-CFolderHelper FHelper;
+XR_EPROPS_API CFolderHelper FHelper;
 //DEFINE_VECTOR(TreeNode^, ELVec, ELVecIt);
 //static ELVec drag_items;
 
