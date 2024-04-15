@@ -60,8 +60,6 @@ void Startup(LPSTR lpCmdLine)
     string256 temp;
     xr_sprintf(temp, "%s - Levels Compiler", name);
     Logger.Initialize(temp);
-    // Faster FPU
-    SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
     // Load project
     string_path prjName;
     FS.update_path(prjName, "$game_levels$", strconcat(sizeof(prjName), prjName, name, "\\build.prj"));

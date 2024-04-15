@@ -1045,15 +1045,19 @@ void D3DXRenderBase::End()
 	VERIFY(HW.pDevice);
 	if (HW.Caps.SceneMode)
 		overdrawEnd();
+
 	RCache.OnFrameEnd();
 	DoAsyncScreenshot();
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
-	bool bUseVSync = psDeviceFlags.is(rsFullscreen) && psDeviceFlags.test(rsVSync); //xxx: weird tearing glitches when VSync turned on for windowed mode in DX10\11
-	HW.m_pSwapChain->Present(bUseVSync ? 1 : 0, 0);
-#else
+
+	extern ENGINE_API u32 state_screen_mode;
+#if defined(USE_DX11)
+	if (!Device.m_SecondViewport.IsSVPFrame()) //!Device.m_SecondViewport.m_bCamReady +SecondVP+ Не выводим кадр из второго вьюпорта на экран (на практике у нас экранная картинка обновляется минимум в два раза реже) [don't flush image into display for SecondVP-frame]
+		HW.m_pSwapChain->Present((state_screen_mode == 1) && psDeviceFlags.test(rsVSync) ? 1 : 0, 0);
+#else //!USE_DX10 || USE_DX11
 	CHK_DX(HW.pDevice->EndScene());
-	HW.pDevice->Present(nullptr, nullptr, nullptr, nullptr);
-#endif
+	if (!Device.m_SecondViewport.IsSVPFrame()) //&& !Device.m_SecondViewport.m_bCamReady +SecondVP+ Не выводим кадр из второго вьюпорта на экран (на практике у нас экранная картинка обновляется минимум в два раза реже) [don't flush image into display for SecondVP-frame]
+		HW.pDevice->Present(nullptr, nullptr, nullptr, nullptr);
+#endif // USE_DX10
 }
 
 void D3DXRenderBase::ResourcesDestroyNecessaryTextures() { Resources->DestroyNecessaryTextures(); }

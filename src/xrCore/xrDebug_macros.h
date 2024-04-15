@@ -54,7 +54,7 @@
         if (!ignoreAlways && FAILED(hr))\
             xrDebug::Fail(ignoreAlways, DEBUG_INFO, #expr, hr, arg1);\
     } while (false)
-#define FATAL(desc) xrDebug::Fatal(DEBUG_INFO, "%s", desc)
+#define FATAL(...) xrDebug::Fatal(DEBUG_INFO,__VA_ARGS__)
 #define FATAL_F(format, ...) xrDebug::Fatal(DEBUG_INFO, format, __VA_ARGS__)
 
 #ifdef VERIFY

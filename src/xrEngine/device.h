@@ -162,6 +162,8 @@ private:
 	CTimer TimerMM;
 	RenderDeviceStatictics stats;
 
+	bool b_restart{ false };
+
 	void _SetupStates();
 
 public:
@@ -261,7 +263,9 @@ public:
 	void Create(void);
 	void Run(void);
 	void Destroy(void);
-	void Reset(bool precache = true);
+	void Reset();
+	bool IsReset() const;
+	void ResetStart();
 
 	void Initialize(void);
 	virtual const RenderDeviceStatictics& GetStats() const override { return stats; }
@@ -329,6 +333,7 @@ public:
 	}
 
 private:
+	void ProcessPriority();
 	void CalcFrameStats();
 	void OnFrame();
 	void GlobalUpdate();

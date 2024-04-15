@@ -199,9 +199,8 @@ void CDemoRecord::MakeLevelMapProcess()
         s_dev_flags = psDeviceFlags;
         s_hud_flag.assign(psHUD_Flags);
         psDeviceFlags.zero();
-        psDeviceFlags.set(rsClearBB | rsFullscreen | rsDrawStatic, TRUE);
-        if (!psDeviceFlags.equal(s_dev_flags, rsFullscreen))
-            Device.Reset();
+        psDeviceFlags.set(rsClearBB | rsDrawStatic, TRUE);
+        Device.Reset();
     }
     break;
 
@@ -233,10 +232,8 @@ void CDemoRecord::MakeLevelMapProcess()
         {
             psHUD_Flags.assign(s_hud_flag);
 
-            BOOL bDevReset = !psDeviceFlags.equal(s_dev_flags, rsFullscreen);
             psDeviceFlags = s_dev_flags;
-            if (bDevReset)
-                Device.Reset();
+            Device.Reset();
             m_bMakeLevelMap = FALSE;
             m_iLMScreenshotFragment = -1;
         }

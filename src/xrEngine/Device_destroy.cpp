@@ -28,21 +28,29 @@ void CRenderDevice::Destroy()
 	seqFrameMT.Clear();
 	seqDeviceReset.Clear();
 	seqParallel.clear();
+	seqParallel2.clear();
 	xr_delete(Statistic);
 }
 
 #include "IGame_Level.h"
 #include "CustomHUD.h"
 extern BOOL bNeed_re_create_env;
+void CRenderDevice::Reset()
+{
+	b_restart = true;
+}
 
-void CRenderDevice::Reset(bool precache)
+bool CRenderDevice::IsReset() const
+{
+	return b_restart;
+}
+
+void CRenderDevice::ResetStart()
 {
 	xrCriticalSection::raii mt{ ResetRender };
 	const auto dwWidth_before = dwWidth;
 	const auto dwHeight_before = dwHeight;
 	pInput->ClipCursor(false);
-
-	const auto tm_start = TimerAsync();
 
 	GEnv.Render->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
 	GetWindowRect(m_hWnd, &m_rcWindowBounds);
@@ -52,19 +60,17 @@ void CRenderDevice::Reset(bool precache)
 		g_pGamePersistent->Environment().bNeed_re_create_env = true;
 	_SetupStates();
 
-	if (precache)
-		PreCache(20, true, false);
+	CHECK_TIME("RenderDevice::Reset", {
+		// TODO: Remove this! It may hide crash
+		Memory.mem_compact();
 
-	const auto tm_end = TimerAsync();
-	Msg("*** RESET [%d ms]", tm_end - tm_start);
-
-	// TODO: Remove this! It may hide crash
-	Memory.mem_compact();
-
-	seqDeviceReset.Process();
-	if (dwWidth_before != dwWidth || dwHeight_before != dwHeight)
-		seqResolutionChanged.Process();
+		seqDeviceReset.Process();
+		if (dwWidth_before != dwWidth || dwHeight_before != dwHeight)
+			seqResolutionChanged.Process();
+	})
 
 	if (!GEnv.isDedicatedServer)
 		pInput->ClipCursor(true);
+
+	b_restart = false;
 }

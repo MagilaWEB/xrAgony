@@ -33,6 +33,12 @@ ENGINE_API CLoadScreenRenderer load_screen_renderer;
 ENGINE_API xr_list<LOADING_EVENT> g_loading_events;
 ENGINE_API BOOL g_bRendering = FALSE;
 
+
+extern int g_process_priority;
+extern int g_GlobalFPSlimit;//Limit fps global.
+extern int g_PausedFPSlimit;//Limit fps to Pause.
+extern int g_MainFPSlimit;//Limit fps to main.
+
 ref_light precache_light = 0;
 u32 g_dwFPSlimit = 60;
 
@@ -56,8 +62,9 @@ void CRenderDevice::Run()
 
 	mt_global_update.Init([this]() {
 		xrCriticalSection::raii mt{ ResetRender };
-		if (!RunFunctionPointer())
+		if ((!RunFunctionPointer()) && (!b_restart))
 		{
+			ProcessPriority();
 			GlobalUpdate();
 			FpsCalc();
 		}
@@ -80,6 +87,48 @@ void CRenderDevice::Run()
 	splash::hide();
 	message_loop();
 	seqAppEnd.Process();
+}
+
+//Sets the priority of the process from the parameter in real time.
+void CRenderDevice::ProcessPriority()
+{
+	static int set_id = 0;
+	if (set_id != g_process_priority)
+	{
+		switch (g_process_priority)
+		{
+		case 1:
+			SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+			Log("- The process priority (real-time) has been successfully set.");
+			break;
+		case 2:
+			SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+			Log("- The process priority (high) has been successfully set.");
+			break;
+		case 3:
+			SetPriorityClass(GetCurrentProcess(), ABOVE_NORMAL_PRIORITY_CLASS);
+			Log("- The process priority (above normal) has been successfully set.");
+			break;
+		case 4:
+			SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
+			Log("- The process priority (normal) has been successfully set.");
+			break;
+		case 5:
+			SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
+			Log("- The process priority (below normal) has been successfully set.");
+			break;
+		case 6:
+			SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS);
+			Log("- The process priority (low) has been successfully set.");
+			break;
+		default:
+			g_process_priority = 4;
+			SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
+			Log("~ The priority of the process was not selected or was selected incorrectly, set by default (normal).");
+		}
+
+		set_id = g_process_priority;
+	}
 }
 
 BOOL CRenderDevice::Begin()
@@ -252,6 +301,21 @@ void CRenderDevice::GlobalUpdate()
 		pApp->LoadDraw();
 		return;
 	}
+	else
+	{
+		const u32 limit = ActiveMain() ? g_MainFPSlimit : Paused() ? g_PausedFPSlimit : g_GlobalFPSlimit;
+		// FPS Lock
+		if (limit > 0 && !m_SecondViewport.IsSVPFrame())
+		{
+			static CTimer dwTime;
+			const float updateDelta = 1000.f / limit;
+			const float elapsed = dwTime.GetElapsed_sec() * 1000;
+			if (elapsed < updateDelta)
+				Sleep(DWORD(updateDelta - elapsed));
+
+			dwTime.Start();
+		}
+	}
 
 	FrameMove();
 
@@ -319,6 +383,9 @@ void CRenderDevice::message_loop()
 	PeekMessage(&msg, NULL, 0U, 0U, PM_NOREMOVE);
 	while (msg.message != WM_QUIT)
 	{
+		if (b_restart)
+			ResetStart();
+
 		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -448,10 +515,13 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 
 		if (b_is_Active)
 		{	
-			if (!editor() && !GEnv.isDedicatedServer && b_is_Active)
+			if (!editor() && !GEnv.isDedicatedServer)
 				pInput->ClipCursor(true);
 
-			ShowWindow(m_hWnd, SW_SHOW);
+			if (mt_global_update.IsInit() && GEnv.Render->GetDeviceState() == DeviceState::Lost)
+				ResetStart();
+
+			//ShowWindow(m_hWnd, SW_SHOW);
 			xrThread::GlobalState(xrThread::dsOK);
 		}
 		else

@@ -14,20 +14,28 @@
 #include "xr_object.h"
 #include "xr_object_list.h"
 
+ENGINE_API u32 state_screen_mode = 1;
 ENGINE_API xr_vector<xr_token> AvailableVideoModes;
 xr_vector<xr_token> vid_quality_token;
+int g_process_priority = 3;
+int g_GlobalFPSlimit = 121;//Limit fps global.
+int g_PausedFPSlimit = 30;//Limit fps to Pause.
+int g_MainFPSlimit = 60;//Limit fps to main.
 
-const xr_token FpsLockToken[] = {
-	{ "r_no_fps_lock",  0 },
-	{ "r_fps_lock_30",  30 },
-	{ "r_fps_lock_60",  60 },
-	{ "r_fps_lock_120", 120 },
-	{ "r_fps_lock_144", 144 },
-	{ "r_fps_lock_240", 240 },
-	{ nullptr, 0 }
+const xr_token vid_bpp_token[] =
+{
+	{"16", 16},
+	{"32", 32},
+	{0, 0}
 };
 
-const xr_token vid_bpp_token[] = { {"16", 16}, {"32", 32}, {0, 0} };
+const xr_token vid_screen_mode[] =
+{
+	{"st_full_mode", 1},
+	{"st_window_mode", 2},
+	{"st_window_no_frame_mode", 3},
+	{0, 0}
+};
 
 void IConsole_Command::InvalidSyntax()
 {
@@ -682,7 +690,11 @@ void CCC_Register()
 	//CMD3(CCC_Mask, "mt_physics", &psDeviceFlags, mtPhysics);
 	CMD3(CCC_Mask, "mt_network", &psDeviceFlags, mtNetwork);
 
-	CMD3(CCC_Token, "r_fps_lock", &g_dwFPSlimit, FpsLockToken);
+	CMD4(CCC_Integer, "r_fps_limit", &g_GlobalFPSlimit, 0, 240);
+	CMD4(CCC_Integer, "r_paused_fps_limit", &g_PausedFPSlimit, 0, 240);
+	CMD4(CCC_Integer, "r_main_fps_limit", &g_MainFPSlimit, 0, 240);
+
+	CMD4(CCC_Integer, "r_process_priority", &g_process_priority, 1, 6);
 
 	// Render device states
 	CMD4(CCC_Integer, "r__supersample", &ps_r__Supersample, 1, 4);
@@ -690,10 +702,10 @@ void CCC_Register()
 	CMD4(CCC_Integer, "rs_loadingstages", &ps_rs_loading_stages, 0, 1);
 	CMD3(CCC_Mask, "rs_v_sync", &psDeviceFlags, rsVSync);
 	// CMD3(CCC_Mask, "rs_disable_objects_as_crows",&psDeviceFlags, rsDisableObjectsAsCrows );
-	CMD3(CCC_Mask, "rs_fullscreen", &psDeviceFlags, rsFullscreen);
-	CMD3(CCC_Mask, "rs_refresh_60hz", &psDeviceFlags, rsRefresh60hz);
-	CMD3(CCC_Mask, "rs_stats", &psDeviceFlags, rsStatistic);
-	CMD3(CCC_Mask, "rs_fps", &psDeviceFlags, rsShowFPS);
+	//CMD3(CCC_Mask, "rs_fullscreen", &psDeviceFlags, rsFullscreen);
+	//CMD3(CCC_Mask, "rs_refresh_60hz", &psDeviceFlags, rsRefresh60hz);
+	CMD3(CCC_Mask,	"rs_stats", &psDeviceFlags, rsStatistic);
+	CMD3(CCC_Mask,	"rs_fps", &psDeviceFlags, rsShowFPS);
 	CMD4(CCC_Float, "rs_vis_distance", &psVisDistance, 0.4f, 1.0f);
 
 	CMD3(CCC_Mask, "rs_cam_pos", &psDeviceFlags, rsCameraPos);
@@ -707,13 +719,14 @@ void CCC_Register()
 	CMD2(CCC_Gamma, "rs_c_brightness", &ps_brightness);
 	CMD2(CCC_Gamma, "rs_c_contrast", &ps_contrast);
 	// CMD4(CCC_Integer, "rs_vb_size", &rsDVB_Size, 32, 4096);
-	// CMD4(CCC_Integer, "rs_ib_size", &rsDIB_Size, 32, 4096);
+	// CMD4(CCC_Integer, "rs_ib_size", &rsDIB_Size, 32, 
 
 	// Texture manager
 	CMD4(CCC_Integer, "texture_lod", &psTextureLOD, 0, 2);
 
 	// General video control
-	CMD1(CCC_VidMode, "vid_mode");
+	CMD1(CCC_VidMode,	"vid_mode");
+	CMD3(CCC_Token,		"vid_screen_mode", &state_screen_mode, vid_screen_mode);
 
 #ifdef DEBUG
 	CMD3(CCC_Token, "vid_bpp", &psCurrentBPP, vid_bpp_token);
