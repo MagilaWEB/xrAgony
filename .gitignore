@@ -20,3 +20,5 @@ buildvm.exp
 buildvm.lib
 minilua.exp
 minilua.lib
+
+src/Common.props
