@@ -70,6 +70,12 @@ namespace luabind {
 		}
 
 		template<class T, class U>
+		int binary_interpreter(lua_State*& L, T const& , U const& , std::false_type, std::false_type)
+		{
+			return -1;
+		}
+
+		template<class T, class U>
 		int binary_interpreter(lua_State*& L, T const& x, U const& y)
 		{
 			return binary_interpreter(L, x, y, is_lua_proxy_type<T>(), is_lua_proxy_type<U>());

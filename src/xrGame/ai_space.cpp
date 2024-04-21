@@ -115,7 +115,7 @@ void CAI_Space::LoadCommonScripts()
         for (u32 i = 0; i < scriptCount; i++)
         {
             _GetItem(*scriptString, i, scriptName);
-            GEnv.ScriptEngine->load_file(scriptName, CScriptEngine::GlobalNamespace);
+            GEnv.ScriptEngine->load_file(scriptName, LUA_GLOBAL);
         }
     }
     xr_delete(l_tpIniFile);

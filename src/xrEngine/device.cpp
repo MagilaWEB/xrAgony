@@ -25,6 +25,8 @@
 #include "xrSASH.h"
 #include "IGame_Persistent.h"
 #include "xrScriptEngine/ScriptExporter.hpp"
+#include "xrScriptEngine/script_process.hpp"
+#include "xrScriptEngine/script_engine.hpp"
 #include "xr_input.h"
 #include "splash.h"
 
@@ -278,6 +280,16 @@ void CRenderDevice::CalcFrameStats()
 
 void CRenderDevice::OnFrame()
 {
+	if (!Device.Paused())
+	{
+		GEnv.ScriptEngine->UpdateUniqueCall();
+		if (g_pGameLevel && g_pGameLevel->bReady)
+		{
+			GEnv.ScriptEngine->script_process(ScriptProcessor::Level)->update();
+			lua_gc(GEnv.ScriptEngine->lua(), LUA_GCSTEP, 10);
+		}
+	}
+	
 	while (!seqParallel.empty())
 	{
 		seqParallel.front()();

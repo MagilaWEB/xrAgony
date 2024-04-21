@@ -279,7 +279,6 @@ public:
 #ifdef DEBUG
     IC CDebugRenderer& debug_renderer();
 #endif
-    void script_gc(); // GC-cycle
     IC CPHCommander& ph_commander();
     IC CPHCommander& ph_commander_scripts();
     IC CPHCommander& ph_commander_physics_worldstep();

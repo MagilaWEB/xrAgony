@@ -13,50 +13,42 @@ public:
 	explicit xr_vector(size_t _count) : inherited(_count) {}
 	size_t size() const { return (size_t)inherited::size(); }
 
-	template <class _Ty>
-	IC const_iterator find(const _Ty& obj) const
+	IC const_iterator find(const T& obj) const
 	{
 		return std::find(inherited::begin(), inherited::end(), obj);
 	}
 
-	template <class _Ty>
-	IC iterator find(const _Ty& obj)
+	IC iterator find(T& obj)
 	{
 		return std::find(inherited::begin(), inherited::end(), obj);
 	}
 
-	template <class _Ty>
-	IC bool contain(const _Ty& obj) const
+	IC bool contain(const T& obj) const
 	{
 		return find(obj) != inherited::end();
 	}
 
-	template <class _Ty>
-	IC bool contain(_Ty& obj)
+	IC bool contain(T& obj)
 	{
 		return find(obj) != inherited::end();
 	}
 
-	template <class _Ty>
-	IC const_iterator find_if(const _Ty& obj) const
+	IC const_iterator find_if(const T& obj) const
 	{
 		return std::find_if(inherited::begin(), inherited::end(), obj);
 	}
 
-	template <class _Ty>
-	IC iterator find_if(const _Ty& obj)
+	IC iterator find_if(const T& obj)
 	{
 		return std::find_if(inherited::begin(), inherited::end(), obj);
 	}
 
-	template <class _Ty>
-	IC bool contain_if(const _Ty& obj) const
+	IC bool contain_if(const T& obj) const
 	{
 		return find_if(obj) != inherited::end();
 	}
 
-	template <class _Ty>
-	IC bool contain_if(_Ty& obj)
+	IC bool contain_if(T& obj)
 	{
 		return find_if(obj) != inherited::end();
 	}

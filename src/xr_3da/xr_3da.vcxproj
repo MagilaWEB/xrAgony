@@ -44,6 +44,7 @@
   <PropertyGroup>
     <TargetName>xrEngine</TargetName>
   </PropertyGroup>
+ 
   <ItemDefinitionGroup>
     <ClCompile>
       <ConformanceMode>false</ConformanceMode>
@@ -64,6 +65,12 @@
     <Manifest>
       <AdditionalManifestFiles>as-invoker-manifest-part.xml %(AdditionalManifestFiles)</AdditionalManifestFiles>
     </Manifest>
+     <PostBuildEvent>
+      <Command>for /r "$(xrSdkDir)binaries/$(PlatformShortName)" %%f in (*.dll *.pdb) do @xcopy /Q /D "%%f" "$(OutDir)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying the required libraries ...</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="entry_point.cpp" />

@@ -292,59 +292,6 @@ void show_indicators()
 
 void show_weapon(bool b) { psHUD_Flags.set(HUD_WEAPON_RT2, b); }
 bool is_level_present() { return (!!g_pGameLevel); }
-void add_call(const luabind::functor<bool>& condition, const luabind::functor<void>& action)
-{
-	luabind::functor<bool> _condition = condition;
-	luabind::functor<void> _action = action;
-	CPHScriptCondition* c = new CPHScriptCondition(_condition);
-	CPHScriptAction* a = new CPHScriptAction(_action);
-	Level().ph_commander_scripts().add_call(c, a);
-}
-
-void remove_call(const luabind::functor<bool>& condition, const luabind::functor<void>& action)
-{
-	CPHScriptCondition c(condition);
-	CPHScriptAction a(action);
-	Level().ph_commander_scripts().remove_call(&c, &a);
-}
-
-void add_call(const luabind::object& lua_object, LPCSTR condition, LPCSTR action)
-{
-	luabind::functor<bool> _condition = object_cast<luabind::functor<bool>>(lua_object[condition]);
-	luabind::functor<void> _action = object_cast<luabind::functor<void>>(lua_object[action]);
-	CPHScriptObjectConditionN* c = new CPHScriptObjectConditionN(lua_object, _condition);
-	CPHScriptObjectActionN* a = new CPHScriptObjectActionN(lua_object, _action);
-	Level().ph_commander_scripts().add_call_unique(c, c, a, a);
-}
-
-void remove_call(const luabind::object& lua_object, LPCSTR condition, LPCSTR action)
-{
-	CPHScriptObjectCondition c(lua_object, condition);
-	CPHScriptObjectAction a(lua_object, action);
-	Level().ph_commander_scripts().remove_call(&c, &a);
-}
-
-void add_call(
-	const luabind::object& lua_object, const luabind::functor<bool>& condition, const luabind::functor<void>& action)
-{
-	CPHScriptObjectConditionN* c = new CPHScriptObjectConditionN(lua_object, condition);
-	CPHScriptObjectActionN* a = new CPHScriptObjectActionN(lua_object, action);
-	Level().ph_commander_scripts().add_call(c, a);
-}
-
-void remove_call(
-	const luabind::object& lua_object, const luabind::functor<bool>& condition, const luabind::functor<void>& action)
-{
-	CPHScriptObjectConditionN c(lua_object, condition);
-	CPHScriptObjectActionN a(lua_object, action);
-	Level().ph_commander_scripts().remove_call(&c, &a);
-}
-
-void remove_calls_for_object(const luabind::object& lua_object)
-{
-	CPHSriptReqObjComparer c(lua_object);
-	Level().ph_commander_scripts().remove_calls(&c);
-}
 
 cphysics_world_scripted* physics_world_scripted()
 {
@@ -828,18 +775,12 @@ IC static void CLevel_Export(lua_State* luaState)
 
 		def("show_indicators", show_indicators),
 		def("show_weapon", show_weapon),
-		def("add_call", ((void (*)(const luabind::functor<bool>&, const luabind::functor<void>&)) & add_call)),
-		def("add_call",
-			((void (*)(const luabind::object&, const luabind::functor<bool>&, const luabind::functor<void>&)) &
-			add_call)),
-		def("add_call", ((void (*)(const luabind::object&, LPCSTR, LPCSTR)) & add_call)),
-		def("remove_call", ((void (*)(const luabind::functor<bool>&, const luabind::functor<void>&)) & remove_call)),
-		def("remove_call",
-			((void (*)(const luabind::object&, const luabind::functor<bool>&, const luabind::functor<void>&)) &
-			remove_call)),
-		def("remove_call", ((void (*)(const luabind::object&, LPCSTR, LPCSTR)) & remove_call)),
-		def("remove_calls_for_object", remove_calls_for_object), def("present", is_level_present),
-		def("disable_input", disable_input), def("enable_input", enable_input), def("spawn_phantom", spawn_phantom),
+
+		def("present", is_level_present),
+		
+		def("disable_input", disable_input),
+		def("enable_input", enable_input),
+		def("spawn_phantom", spawn_phantom),
 
 		def("get_bounding_volume", get_bounding_volume),
 

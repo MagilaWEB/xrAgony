@@ -26,7 +26,7 @@
   <PropertyGroup Label="UserMacros">
     <xrGameDir>D:\AGONY\</xrGameDir>
     <xrBinRootDir>$(SolutionDir)..\_build\bin\</xrBinRootDir>
-    <xrBinDir>$(xrGameDir)bin\$(xrPlatform)\</xrBinDir>
+    <xrBinDir>$(xrGameDir)bin\</xrBinDir><!--$(xrPlatform)\-->
     <xrLibDir>$(SolutionDir)..\_build\lib\$(xrPlatform)\$(Configuration)\</xrLibDir>
     <xrIntDir>$(SolutionDir)..\_build\intermediate\$(xrPlatform)\$(Configuration)\</xrIntDir>
     <xrSdkDir>$(SolutionDir)..\sdk\</xrSdkDir>

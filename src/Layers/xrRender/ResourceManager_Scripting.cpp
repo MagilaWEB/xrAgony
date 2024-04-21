@@ -294,7 +294,7 @@ void CResourceManager::LS_Load()
             continue;
         *strext(namesp) = 0;
         if (0 == namesp[0])
-            xr_strcpy(namesp, ScriptEngine.GlobalNamespace);
+            xr_strcpy(namesp, LUA_GLOBAL);
         strconcat(sizeof(fn), fn, shaderPath, (*folder)[it]);
         FS.update_path(fn, "$game_shaders$", fn);
         ScriptEngine.load_file_into_namespace(fn, namesp);

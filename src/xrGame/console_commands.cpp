@@ -63,7 +63,6 @@ extern u64 g_qwEStartGameTime;
 ENGINE_API
 extern	float	psHUD_FOV;
 extern	float	psSqueezeVelocity;
-extern	int		psLUA_GCSTEP;
 extern Fvector	m_hud_offset_pos;
 extern Fvector	m_hand_offset_pos;
 extern BOOL		g_use_aim_inertion;
@@ -110,7 +109,7 @@ int g_inv_highlight_equipped = 0;
 BOOL g_bCheckTime = FALSE;
 int net_cl_inputupdaterate = 50;
 Flags32 g_mt_config = {mtLevelPath | mtDetailPath | mtObjectHandler | mtSoundPlayer | mtAiVision | mtBullets |
-    mtLUA_GC | mtLevelSounds | mtALife | mtMap};
+   mtLevelSounds | mtALife | mtMap};
 #ifdef DEBUG
 Flags32 dbg_net_Draw_Flags = {0};
 #endif
@@ -1805,7 +1804,6 @@ void CCC_RegisterCommands()
     CMD3(CCC_Mask, "mt_object_handler", &g_mt_config, mtObjectHandler);
     CMD3(CCC_Mask, "mt_sound_player", &g_mt_config, mtSoundPlayer);
     CMD3(CCC_Mask, "mt_bullets", &g_mt_config, mtBullets);
-    CMD3(CCC_Mask, "mt_script_gc", &g_mt_config, mtLUA_GC);
     CMD3(CCC_Mask, "mt_level_sounds", &g_mt_config, mtLevelSounds);
     CMD3(CCC_Mask, "mt_alife", &g_mt_config, mtALife);
     CMD3(CCC_Mask, "mt_map", &g_mt_config, mtMap);
@@ -1821,7 +1819,6 @@ void CCC_RegisterCommands()
 #endif // MASTER_GOLD
 
 #ifdef DEBUG
-    CMD4(CCC_Integer, "lua_gcstep", &psLUA_GCSTEP, 1, 1000);
     CMD3(CCC_Mask, "ai_debug", &psAI_Flags, aiDebug);
     CMD3(CCC_Mask, "ai_dbg_brain", &psAI_Flags, aiBrain);
     CMD3(CCC_Mask, "ai_dbg_motion", &psAI_Flags, aiMotion);
