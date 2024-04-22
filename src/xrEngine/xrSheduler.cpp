@@ -321,7 +321,7 @@ void CSheduler::ProcessStep()
 {
 	// Normal priority
 	const u32 dwTime = Device.dwTimeGlobal;
-	CTimer eTimer;
+	//CTimer eTimer;
 
 	xr_map<u32, xr_list<u32>> deferredUpdateInfo;
 	for (int i = 0; !Items.empty() && Top().dwTimeForExecute < dwTime; ++i)
@@ -346,7 +346,7 @@ void CSheduler::ProcessStep()
 		// Insert into priority Queue
 		Pop();
 
-		u32 Elapsed = dwTime - item.dwTimeOfLastExecute;
+		const u32 Elapsed = dwTime - item.dwTimeOfLastExecute;
 
 		// Real update call
 		// Msg("------- %d:", Device.dwFrame);
@@ -377,13 +377,12 @@ void CSheduler::ProcessStep()
 
 		m_current_step_obj = nullptr;
 
-		item.dwTimeOfLastExecute = dwTime;
-		if (item.Object->shedule_canBeDeferedToAvoidJams)
-		{
-			deferredUpdateInfo[dwUpdate - (dwUpdate % sheduler_smoother_frame_size)].emplace_back(ItemsProcessed.size());
-		}
-		item.dwTimeForExecute = dwTime + dwUpdate;
-		ItemsProcessed.emplace_back(std::move(item));
+		Item TNext;
+		TNext.dwTimeForExecute = dwTime + dwUpdate;
+		TNext.dwTimeOfLastExecute = dwTime;
+		TNext.Object = item.Object;
+		TNext.scheduled_name = item.Object->shedule_Name();
+		ItemsProcessed.push_back(TNext);
 #if 0 // def DEBUG
 		auto itemName = item.Object->shedule_Name().c_str();
 		const u32 delta_ms = dwTime - item.dwTimeForExecute;
@@ -409,28 +408,6 @@ void CSheduler::ProcessStep()
 		}
 	}
 
-	for (auto& entity : deferredUpdateInfo)
-	{
-		const u32& preferedFrame = entity.first;
-		auto& listOfItems = entity.second;
-		if (listOfItems.size() > sheduler_smoother_max_per_time)
-		{
-			const float neededDelayBtwnItems = (2.f * sheduler_smoother_frame_size) / sheduler_smoother_max_per_time;
-			if (strstr(Core.Params, "-dev"))
-			{
-				Msg("* xrSheduler: jam detected and smoothed for range [%d-%d msec] (were %d items)", preferedFrame, preferedFrame + sheduler_smoother_frame_size, listOfItems.size(), neededDelayBtwnItems);
-			}
-			u32 counter = 0;
-			for (auto& offsetInArray : listOfItems)
-			{
-				auto& item = ItemsProcessed[offsetInArray];
-				item.dwTimeForExecute += neededDelayBtwnItems * counter;
-
-				counter++;
-			}
-		}
-	}
-
 	// Push "processed" back
 	while (!ItemsProcessed.empty())
 	{
@@ -450,7 +427,7 @@ void CSheduler::Update()
 	// Initialize
 	stats.Update.Begin();
 	cycles_start = CPU::QPC();
-	cycles_limit = CPU::qpc_freq * u64(iCeil(psShedulerCurrent)) / 1000ul + cycles_start;
+	cycles_limit = CPU::qpc_freq * u64(iCeil(psShedulerCurrent)) / 1000i64 + cycles_start;
 	internal_Registration();
 	isSheduleInProgress = true;
 
@@ -460,7 +437,7 @@ void CSheduler::Update()
 	// Realtime priority
 	m_processing_now = true;
 	const u32 dwTime = Device.dwTimeGlobal;
-	for (auto& item : ItemsRT)
+	for (Item & item : ItemsRT)
 	{
 		R_ASSERT(item.Object);
 #ifdef DEBUG_SCHEDULER

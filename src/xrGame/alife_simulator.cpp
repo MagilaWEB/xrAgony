@@ -59,6 +59,8 @@ CALifeSimulator::CALifeSimulator(xrServer* server, shared_str* command_line)
     xr_strcat(temp, p.m_alife);
     *command_line = temp;
 
+    GEnv.ScriptEngine->ClearUniqueCall();
+
     LPCSTR start_game_callback = pSettings->r_string(alife_section, "start_game_callback");
     luabind::functor<void> functor;
     R_ASSERT2(GEnv.ScriptEngine->functor(start_game_callback, functor), "failed to get start game callback");
@@ -79,6 +81,7 @@ CALifeSimulator::~CALifeSimulator()
 
 void CALifeSimulator::destroy()
 {
+    GEnv.ScriptEngine->ClearUniqueCall();
     //  validate                    ();
     CALifeUpdateManager::destroy();
     VERIFY(ai().get_alife());
@@ -91,7 +94,10 @@ void CALifeSimulator::setup_simulator(CSE_ALifeObject* object)
     object->m_alife_simulator = this;
 }
 
-void CALifeSimulator::reload(LPCSTR section) { CALifeUpdateManager::reload(section); }
+void CALifeSimulator::reload(LPCSTR section) {
+    GEnv.ScriptEngine->ClearUniqueCall();
+    CALifeUpdateManager::reload(section);
+}
 struct string_prdicate
 {
     shared_str m_value;

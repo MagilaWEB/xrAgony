@@ -419,39 +419,26 @@ void CRenderDevice::FrameMove()
 	dwFrame++;
 	Core.dwFrame = dwFrame;
 	dwTimeContinual = TimerMM.GetElapsed_ms() - app_inactive_time;
-	if (psDeviceFlags.test(rsConstantFPS))
-	{
-		// 20ms = 50fps
-		// fTimeDelta = 0.020f;
-		// fTimeGlobal += 0.020f;
-		// dwTimeDelta = 20;
-		// dwTimeGlobal += 20;
-		// 33ms = 30fps
-		fTimeDelta = 0.033f;
-		fTimeGlobal += 0.033f;
-		dwTimeDelta = 33;
-		dwTimeGlobal += 33;
-	}
-	else
-	{
-		// Timer
-		float fPreviousFrameTime = Timer.GetElapsed_sec();
-		Timer.Start(); // previous frame
-		fTimeDelta =
-			0.1f * fTimeDelta + 0.9f * fPreviousFrameTime; // smooth random system activity - worst case ~7% error
-		// fTimeDelta = 0.7f * fTimeDelta + 0.3f*fPreviousFrameTime; // smooth random system activity
-		if (fTimeDelta > .1f)
-			fTimeDelta = .1f; // limit to 15fps minimum
-		if (fTimeDelta <= 0.f)
-			fTimeDelta = EPS_S + EPS_S; // limit to 15fps minimum
-		if (Paused())
-			fTimeDelta = 0.0f;
-		// u64 qTime = TimerGlobal.GetElapsed_clk();
-		fTimeGlobal = TimerGlobal.GetElapsed_sec(); // float(qTime)*CPU::cycles2seconds;
-		u32 _old_global = dwTimeGlobal;
-		dwTimeGlobal = TimerGlobal.GetElapsed_ms();
-		dwTimeDelta = dwTimeGlobal - _old_global;
-	}
+
+	Timer.Start(); // previous frame
+
+	// floating point
+	float che_fTimeDelta = fTimeGlobal;
+	fTimeGlobal = TimerGlobal.GetElapsed_sec(); //float(qTime)*CPU::cycles2seconds;
+	fTimeDelta = fTimeGlobal - che_fTimeDelta;
+
+	if (fTimeDelta > .1f)
+		fTimeDelta = .1f; // limit to 15fps minimum
+
+	if (fTimeDelta <= 0.f)
+		fTimeDelta = EPS_S + EPS_S; // limit to 15fps minimum
+
+	if (Paused())
+		fTimeDelta = 0.0f;
+	// integer
+	u32 _old_global = dwTimeGlobal;
+	dwTimeGlobal = TimerGlobal.GetElapsed_ms();
+	dwTimeDelta = dwTimeGlobal - _old_global;
 
 	xrThread::StartGlobal(xrThread::sParalelFrame);
 	// Frame move
@@ -533,13 +520,13 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 			if (mt_global_update.IsInit() && GEnv.Render->GetDeviceState() == DeviceState::Lost)
 				ResetStart();
 
-			//ShowWindow(m_hWnd, SW_SHOW);
+			ShowWindow(m_hWnd, SW_SHOW);
 			xrThread::GlobalState(xrThread::dsOK);
 		}
 		else
 		{
 			pInput->ClipCursor(false);
-			ShowWindow(m_hWnd, SW_MINIMIZE);
+			ShowWindow(m_hWnd, SW_MINIMIZE); //Fixes a glitch with some applications when the window does not collapse if you quickly switch to another window.
 			xrThread::GlobalState(xrThread::dsSleep);
 		}
 

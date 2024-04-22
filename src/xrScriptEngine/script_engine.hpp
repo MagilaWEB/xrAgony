@@ -205,6 +205,7 @@ public:
 	void SetUserdataObjectLoggerFunc(decltype(m_userdataObjectLoggerFunc));
 
 public:
+	void ClearUniqueCall();
 	static bool AddUniqueCallScript(const luabind::functor<bool>& function);
 	static bool IsUniqueCallScript(const luabind::functor<bool>& function);
 	static bool RemoveUniqueCallScript(const luabind::functor<bool>& function);

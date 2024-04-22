@@ -138,6 +138,12 @@ inline profile_timer_script operator+(const profile_timer_script& portion0, cons
 }
 
 extern xr_vector<luabind::functor<bool>> UniqueCall;
+
+void CScriptEngine::ClearUniqueCall()
+{
+	UniqueCall.clear();
+}
+
 bool CScriptEngine::AddUniqueCallScript(const luabind::functor<bool>& function)
 {
 	if (UniqueCall.contain(function))

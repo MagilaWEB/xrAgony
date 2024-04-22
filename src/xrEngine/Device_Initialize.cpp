@@ -50,7 +50,7 @@ void CRenderDevice::Initialize()
 			LoadCursor(NULL, IDC_ARROW), (HBRUSH)GetStockObject(BLACK_BRUSH), NULL, wndclass };
 		RegisterClass(&wndClass);
 		// Set the window's initial style
-		m_dwWindowStyle = WS_BORDER | WS_DLGFRAME;
+		m_dwWindowStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP;
 		// Set the window's initial width
 		u32 screen_width = GetSystemMetrics(SM_CXSCREEN);
 		u32 screen_height = GetSystemMetrics(SM_CYSCREEN);

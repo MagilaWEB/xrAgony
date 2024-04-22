@@ -812,7 +812,12 @@ void D3DXRenderBase::Reset(HWND hWnd, u32 & dwWidth, u32 & dwHeight, float& fWid
 
 	Resources->reset_begin();
 	Memory.mem_compact();
+
+	ResourcesDeferredUnload();
+
 	HW.Reset(hWnd);
+
+	ResourcesDeferredUpload();
 
 #if defined(USE_DX11)
 	dwWidth = HW.m_ChainDesc.BufferDesc.Width;
@@ -979,6 +984,7 @@ void D3DXRenderBase::overdrawEnd()
 
 void D3DXRenderBase::DeferredLoad(bool E) { Resources->DeferredLoad(E); }
 void D3DXRenderBase::ResourcesDeferredUpload() { Resources->DeferredUpload(); }
+void D3DXRenderBase::ResourcesDeferredUnload() { Resources->DeferredUnload(); }
 void D3DXRenderBase::ResourcesGetMemoryUsage(u32 & m_base, u32 & c_base, u32 & m_lmaps, u32 & c_lmaps)
 {
 	if (Resources)

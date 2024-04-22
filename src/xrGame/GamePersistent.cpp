@@ -42,8 +42,6 @@
 #include "ai_debug.h"
 #endif // _EDITOR
 
-using super = IGame_Persistent;
-
 u32 UIStyleID = 0;
 xr_vector<xr_token> UIStyleToken;
 
@@ -173,7 +171,7 @@ void CGamePersistent::PreStart(LPCSTR op)
 {
 	if (!GEnv.isDedicatedServer)
 		pApp->SetLoadingScreen(new UILoadingScreen());
-	super::PreStart(op);
+	__super::PreStart(op);
 }
 
 void CGamePersistent::RegisterModel(IRenderVisual* V)
@@ -218,7 +216,7 @@ void CGamePersistent::OnAppStart()
 	// load game materials
 	GMLib.Load();
 	init_game_globals();
-	super::OnAppStart();
+	__super::OnAppStart();
 	GEnv.UICore = new ui_core();
 	m_pMainMenu = new CMainMenu();
 }
@@ -231,20 +229,20 @@ void CGamePersistent::OnAppEnd()
 	xr_delete(m_pMainMenu);
 	xr_delete(GEnv.UICore);
 
-	super::OnAppEnd();
+	__super::OnAppEnd();
 
 	clean_game_globals();
 
 	GMLib.Unload();
 }
 
-void CGamePersistent::Start(LPCSTR op) { super::Start(op); }
+void CGamePersistent::Start(LPCSTR op) { __super::Start(op); }
 void CGamePersistent::Disconnect()
 {
 	// destroy ambient particles
 	CParticlesObject::Destroy(ambient_particles);
 
-	super::Disconnect();
+	__super::Disconnect();
 	// stop all played emitters
 	GEnv.Sound->stop_emitters();
 	m_game_params.m_e_game_type = eGameIDNoGame;
@@ -254,7 +252,7 @@ void CGamePersistent::Disconnect()
 
 void CGamePersistent::OnGameStart()
 {
-	super::OnGameStart();
+	__super::OnGameStart();
 	UpdateGameType();
 }
 
@@ -275,7 +273,7 @@ LPCSTR GameTypeToString(EGameIDs gt, bool bShort)
 
 void CGamePersistent::UpdateGameType()
 {
-	super::UpdateGameType();
+	__super::UpdateGameType();
 
 	m_game_params.m_e_game_type = ParseStringToGameType(m_game_params.m_game_type);
 
@@ -287,7 +285,7 @@ void CGamePersistent::UpdateGameType()
 
 void CGamePersistent::OnGameEnd()
 {
-	super::OnGameEnd();
+	__super::OnGameEnd();
 
 	xr_delete(g_stalker_animation_data_storage);
 	xr_delete(g_stalker_velocity_holder);
@@ -694,7 +692,7 @@ void CGamePersistent::OnFrame()
 		}
 #endif // MASTER_GOLD
 	}
-	super::OnFrame();
+	__super::OnFrame();
 
 	//Device.add_parallel(&Engine.Sheduler, &CSheduler::Update);
 	Engine.Sheduler.Update();

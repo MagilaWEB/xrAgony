@@ -53,8 +53,8 @@ void CRenderDevice::ResetStart()
 	pInput->ClipCursor(false);
 
 	GEnv.Render->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
-	GetWindowRect(m_hWnd, &m_rcWindowBounds);
-	GetClientRect(m_hWnd, &m_rcWindowClient);
+	//GetWindowRect(m_hWnd, &m_rcWindowBounds);
+	//GetClientRect(m_hWnd, &m_rcWindowClient);
 
 	if (g_pGamePersistent)
 		g_pGamePersistent->Environment().bNeed_re_create_env = true;
@@ -67,10 +67,10 @@ void CRenderDevice::ResetStart()
 		seqDeviceReset.Process();
 		if (dwWidth_before != dwWidth || dwHeight_before != dwHeight)
 			seqResolutionChanged.Process();
-	})
+		})
 
-	if (!GEnv.isDedicatedServer)
-		pInput->ClipCursor(true);
+		if (!GEnv.isDedicatedServer)
+			pInput->ClipCursor(true);
 
-	b_restart = false;
+		b_restart = false;
 }

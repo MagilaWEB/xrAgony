@@ -104,7 +104,7 @@ xr_vector<luabind::functor<bool>> UniqueCall;
 void CScriptEngine::reinit()
 {
 	stateMapLock.Enter();
-	UniqueCall.clear();
+	ClearUniqueCall();
 	stateMap.reserve(32); // 32 lua states should be enough
 	stateMapLock.Leave();
 	if (m_virtual_machine)

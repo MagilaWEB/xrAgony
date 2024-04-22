@@ -34,10 +34,7 @@ void xrCore::Initialize(pcstr _ApplicationName, LogCallback cb, bool init_fs, pc
 		Params = xr_strdup(""); //TODO handle /proc/self/cmdline
 #endif
 
-#if defined(WINDOWS)
-		if (!strstr(Params, "-weather"))
-			CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-#endif
+		CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
 		initParamFlags();
 
