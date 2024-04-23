@@ -19,9 +19,7 @@ void LevelCompilerLoggerWindow::Initialize(const char* name)
 	InitCommonControls();
 	Sleep(150);
 	xr_strcpy(this->name, name);
-	xrThread{ "LogThreadProc" }.Init([&]() {
-		LogThreadProc();
-	});
+	xrThread{ "LogThreadProc" }.Init(this, &LevelCompilerLoggerWindow::LogThreadProc);
 
 	while (!logWindow)
 		Sleep(150);

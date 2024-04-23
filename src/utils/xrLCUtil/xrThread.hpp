@@ -32,7 +32,7 @@ public:
         thDestroyOnComplete = TRUE;
     }
     virtual ~CThread() {}
-    void Start() { mt_startup.Init([this]() { startup(); });}
+    void Start() { mt_startup.Init(this, &CThread::startup); }
     virtual void Execute() = 0;
 };
 

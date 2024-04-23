@@ -21,11 +21,6 @@
 #define GAME_OBJECT_TESTING_EXPORTS // see: script_game_object4.cpp  functions for object testing (ie. is_stalker(), is_heli())
 #define NAMESPACE_LEVEL_EXPORTS // see: level_script.cpp
 
-/* Visual */
-#define DETAIL_RADIUS // detail draw radius (by K.D.)
-#define GRASS_SHADOWS // enable grass shadows (by K.D.)
-#define ECO_RENDER // limit FPS in menu to prevent video card overheat (by alpet)
-
 /* Tweaks: */
 //#define FP_DEATH // first person death view
 #define DEAD_BODY_COLLISION // restore collision with dead bodies (thanks malandrinus)

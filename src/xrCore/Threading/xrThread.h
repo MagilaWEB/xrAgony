@@ -99,7 +99,7 @@ private:
 	static IC DWORD main_thread_id;
 	static IC xr_list<xrThread*> all_obj_thread;
 
-	std::function<void()> update_function{ []() {} };
+	fastdelegate::FastDelegate<void()> update_function;
 	ThreadState thread_state{ dsSleep };
 
 	IC void g_State(const ThreadState new_state)
@@ -141,7 +141,21 @@ public:
 	};
 
 	//Initializing and creating a Thread.
-	void Init(std::function<void()> new_function, ParallelState state = sParalelNone);
+	template<class  PAR, class PAR_X>
+	ICF void Init(PAR* pr_1, fastdelegate::FastDelegate<void()>::Parameters(PAR_X::* pr_2)(), ParallelState state = sParalelNone)
+	{
+		if (!IsInit())
+		{
+			thread_state = dsOK;
+			update_function = fastdelegate::FastDelegate<void()>(pr_1, pr_2);
+			b_init = true;
+			all_obj_thread.push_back(std::move(this));
+
+			std::thread{ [this]() { worker_main(); } }.detach();
+
+			global_parallel = state;
+		}
+	};
 
 	//Is the thread initialized.
 	bool IsInit() const;

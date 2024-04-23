@@ -133,6 +133,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OPCODE", "libraries\OPCODE\OPCODE.vcxproj", "{DAFD6D98-3DCD-40AD-BC85-EC71797B6767}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xr_3da", "xr_3da\xr_3da.vcxproj", "{F4757631-E6E8-469B-AD5A-516BAA01DABD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44F716E7-05BD-4390-AB02-5F7DAF7FEFDE} = {44F716E7-05BD-4390-AB02-5F7DAF7FEFDE}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrECore", "editors\xrECore\xrECore.vcxproj", "{87D068EC-1789-4F09-A9EC-54CF276955E0}"
 EndProject

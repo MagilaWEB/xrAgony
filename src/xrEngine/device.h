@@ -336,6 +336,7 @@ private:
 	void ProcessPriority();
 	void CalcFrameStats();
 	void OnFrame();
+	void OnFrame2();
 	void GlobalUpdate();
 	void FpsCalc();
 

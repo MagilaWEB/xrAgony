@@ -16,21 +16,6 @@ xrThread::~xrThread()
 		Stop();
 }
 
-void xrThread::Init(function<void()> new_function, ParallelState state)
-{
-	if (!IsInit())
-	{
-		thread_state = dsOK;
-		update_function = move(new_function);
-		b_init = true;
-		all_obj_thread.push_back(move(this));
-
-		thread{ [this]() { worker_main(); } }.detach();
-
-		global_parallel = state;
-	}
-}
-
 void xrThread::worker_main()
 {
 	thread_id = GetCurrentThreadId();

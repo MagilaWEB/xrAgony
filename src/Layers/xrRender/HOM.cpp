@@ -112,11 +112,7 @@ void CHOM::Load()
 	S->close();
 	FS.r_close(fs);
 
-	mt_update.Init([this]() {
-		if (RDEVICE.ActiveMain())
-			return;
-		frame_update();
-	}, xrThread::sParalelRender);
+	mt_update.Init(this, &CHOM::frame_update, xrThread::sParalelRender);
 }
 
 void CHOM::Unload()
@@ -232,6 +228,8 @@ void CHOM::Render_DB(CFrustum& base)
 
 void CHOM::frame_update()
 {
+	if (RDEVICE.ActiveMain())
+		return;
 	MT.Enter();
 	if (MT_frame_rendered != Device.dwFrame)
 	{

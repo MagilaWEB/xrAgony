@@ -91,24 +91,8 @@ void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc, vo
 #ifdef _EDITOR
 	build_internal(V, Vcnt, T, Tcnt, bc, bcp);
 #else
-	if (!strstr(Core.Params, "-mt_cdb"))
-	{
-		build_internal(V, Vcnt, T, Tcnt, bc, bcp);
-		status = S_READY;
-	}
-	else
-	{
-		BTHREAD_params P = { this, V, Vcnt, T, Tcnt, bc, bcp };
-		xrThread mt_build{ "build" };
-
-		mt_build.Init([&]() { build_thread(&P); });
-		while (S_INIT == status)
-		{
-			if (S_INIT != status)
-				break;
-			Sleep(5);
-		}
-	}
+	build_internal(V, Vcnt, T, Tcnt, bc, bcp);
+	status = S_READY;
 #endif
 }
 

@@ -422,7 +422,6 @@ void CRender::create()
 
     rmNormal();
     marker = 0;
-    xrRender_apply_tf();
     ::PortalTraverser.initialize();
     FluidManager.Initialize(70, 70, 70);
     //	FluidManager.Initialize( 100, 100, 100 );
@@ -464,14 +463,6 @@ void CRender::reset_begin()
         Lights_LastFrame.clear();
     }
 
-    //AVO: let's reload details while changed details options on vid_restart
-    if (b_loaded && (dm_current_size != dm_size || ps_r__Detail_density != ps_current_detail_density))
-    {
-        Details->Unload();
-        xr_delete(Details);
-    }
-    //-AVO
-
     xr_delete(Target);
     HWOCC.occq_destroy();
 }
@@ -482,15 +473,6 @@ void CRender::reset_end()
 
     Target = new CRenderTarget();
 
-    //AVO: let's reload details while changed details options on vid_restart
-    if (b_loaded && (dm_current_size != dm_size || ps_r__Detail_density != ps_current_detail_density))
-    {
-        Details = new CDetailManager();
-        Details->Load();
-    }
-    //-AVO
-
-    xrRender_apply_tf();
     FluidManager.SetScreenSize(Device.dwWidth, Device.dwHeight);
 
     // Set this flag true to skip the first render frame,
@@ -501,18 +483,6 @@ void CRender::reset_end()
 void CRender::OnFrame()
 {
     Models->DeleteQueue();
-	
-	if (IGame_Persistent::MainMenuActiveOrLevelNotExist())
-		return;
-
-    if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))
-    {
-        // MT-details (@front)
-        Device.add_parallel(Details, &CDetailManager::MT_CALC);
-
-        // MT-HOM (@front)
-        //Device.add_parallel(&HOM, &CHOM::MT_RENDER);
-    }
 }
 
 // Implementation

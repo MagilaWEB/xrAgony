@@ -77,6 +77,8 @@ bool CLevel::net_start_client3()
 			map_data.m_map_version = level_ver;
 			map_data.m_map_download_url = download_url;
 			map_data.m_map_loaded = false;
+			GEnv.Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
+			GEnv.Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
 			return false;
 		}
 #ifdef DEBUG
@@ -86,6 +88,9 @@ bool CLevel::net_start_client3()
 		map_data.m_map_version = level_ver;
 		map_data.m_map_download_url = download_url;
 		map_data.m_map_loaded = true;
+
+		GEnv.Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
+		GEnv.Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
 
 		deny_m_spawn = FALSE;
 		// Load level

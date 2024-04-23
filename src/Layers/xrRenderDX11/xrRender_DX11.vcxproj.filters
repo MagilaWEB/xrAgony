@@ -794,9 +794,6 @@
     <ClCompile Include="..\xrRender\DetailModel.cpp">
       <Filter>Details</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRenderDX10\dx10DetailManager_VS.cpp">
-      <Filter>Details</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\NvTriStrip.cpp">
       <Filter>Stripifier</Filter>
     </ClCompile>

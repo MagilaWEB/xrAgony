@@ -62,27 +62,11 @@ void CRenderDevice::Run()
 
 	seqAppStart.Process();
 
-	mt_global_update.Init([this]() {
-		xrCriticalSection::raii mt{ ResetRender };
-		if ((!RunFunctionPointer()) && (!b_restart))
-		{
-			ProcessPriority();
-			GlobalUpdate();
-			FpsCalc();
-		}
-	});
+	mt_global_update.Init(this, &CRenderDevice::GlobalUpdate);
 
-	mt_frame.Init([this]() {
-		OnFrame();
-	}, xrThread::sParalelRender);
+	mt_frame.Init(this, &CRenderDevice::OnFrame, xrThread::sParalelRender);
 
-	mt_frame2.Init([this]() {
-		while (!seqParallel2.empty())
-		{
-			seqParallel2.front()();
-			seqParallel2.pop_front();
-		}
-	}, xrThread::sParalelRender);
+	mt_frame2.Init(this, &CRenderDevice::OnFrame2, xrThread::sParalelRender);
 
 	// Message cycle
 	GEnv.Render->ClearTarget();
@@ -289,7 +273,7 @@ void CRenderDevice::OnFrame()
 			lua_gc(GEnv.ScriptEngine->lua(), LUA_GCSTEP, 10);
 		}
 	}
-	
+
 	while (!seqParallel.empty())
 	{
 		seqParallel.front()();
@@ -299,80 +283,96 @@ void CRenderDevice::OnFrame()
 	seqFrameMT.Process();
 }
 
+void CRenderDevice::OnFrame2()
+{
+	while (!seqParallel2.empty())
+	{
+		seqParallel2.front()();
+		seqParallel2.pop_front();
+	}
+}
+
 void CRenderDevice::GlobalUpdate()
 {
-	if (psDeviceFlags.test(rsStatistic))
-		g_bEnableStatGather = TRUE; // XXX: why not use either rsStatistic or g_bEnableStatGather?
-	else
-		g_bEnableStatGather = FALSE;
+	xrCriticalSection::raii mt{ ResetRender };
+	if ((!RunFunctionPointer()) && (!b_restart))
+	{
+		ProcessPriority();
 
-	if (g_loading_events.size())
-	{
-		if (g_loading_events.front()())
-			g_loading_events.pop_front();
-		pApp->LoadDraw();
-		return;
-	}
-	else
-	{
-		const u32 limit = ActiveMain() ? g_MainFPSlimit : Paused() ? g_PausedFPSlimit : g_GlobalFPSlimit;
-		// FPS Lock
-		if (limit > 0 && !m_SecondViewport.IsSVPFrame())
+		if (psDeviceFlags.test(rsStatistic))
+			g_bEnableStatGather = TRUE; // XXX: why not use either rsStatistic or g_bEnableStatGather?
+		else
+			g_bEnableStatGather = FALSE;
+
+		if (g_loading_events.size())
 		{
-			static CTimer dwTime;
-			const float updateDelta = 1000.f / limit;
-			const float elapsed = dwTime.GetElapsed_sec() * 1000;
-			if (elapsed < updateDelta)
-				Sleep(DWORD(updateDelta - elapsed));
-
-			dwTime.Start();
+			if (g_loading_events.front()())
+				g_loading_events.pop_front();
+			pApp->LoadDraw();
+			return;
 		}
+		else
+		{
+			const u32 limit = ActiveMain() ? g_MainFPSlimit : Paused() ? g_PausedFPSlimit : g_GlobalFPSlimit;
+			// FPS Lock
+			if (limit > 0 && !m_SecondViewport.IsSVPFrame())
+			{
+				static CTimer dwTime;
+				const float updateDelta = 1000.f / limit;
+				const float elapsed = dwTime.GetElapsed_sec() * 1000;
+				if (elapsed < updateDelta)
+					Sleep(DWORD(updateDelta - elapsed));
+
+				dwTime.Start();
+			}
+		}
+
+		FrameMove();
+
+		// Precache
+		if (dwPrecacheFrame)
+		{
+			float factor = float(dwPrecacheFrame) / float(dwPrecacheTotal);
+			float angle = PI_MUL_2 * factor;
+			vCameraDirection.set(_sin(angle), 0, _cos(angle));
+			vCameraDirection.normalize();
+			vCameraTop.set(0, 1, 0);
+			vCameraRight.crossproduct(vCameraTop, vCameraDirection);
+			mView.build_camera_dir(vCameraPosition, vCameraDirection, vCameraTop);
+		}
+		// Matrices
+		mFullTransform.mul(mProject, mView);
+		GEnv.Render->SetCacheXform(mView, mProject);
+		mInvFullTransform.invert_44(mFullTransform);
+
+		vCameraPositionSaved = vCameraPosition;
+		vCameraDirectionSaved = vCameraDirection;
+		vCameraTopSaved = vCameraTop;
+		vCameraRightSaved = vCameraRight;
+
+		mFullTransformSaved = mFullTransform;
+		mViewSaved = mView;
+		mProjectSaved = mProject;
+
+		xrThread::StartGlobal(xrThread::sParalelRender);
+		// all rendering is done here
+		CStatTimer renderTotalReal;
+		renderTotalReal.FrameStart();
+		renderTotalReal.Begin();
+		if (b_is_Active && Begin())
+		{
+			seqRender.Process();
+			CalcFrameStats();
+			Statistic->Show();
+			End(); // Present goes here
+		}
+		renderTotalReal.End();
+		renderTotalReal.FrameEnd();
+		stats.RenderTotal.accum = renderTotalReal.accum;
+
+		xrThread::WaitGlobal();
+		FpsCalc();
 	}
-
-	FrameMove();
-
-	// Precache
-	if (dwPrecacheFrame)
-	{
-		float factor = float(dwPrecacheFrame) / float(dwPrecacheTotal);
-		float angle = PI_MUL_2 * factor;
-		vCameraDirection.set(_sin(angle), 0, _cos(angle));
-		vCameraDirection.normalize();
-		vCameraTop.set(0, 1, 0);
-		vCameraRight.crossproduct(vCameraTop, vCameraDirection);
-		mView.build_camera_dir(vCameraPosition, vCameraDirection, vCameraTop);
-	}
-	// Matrices
-	mFullTransform.mul(mProject, mView);
-	GEnv.Render->SetCacheXform(mView, mProject);
-	mInvFullTransform.invert_44(mFullTransform);
-
-	vCameraPositionSaved = vCameraPosition;
-	vCameraDirectionSaved = vCameraDirection;
-	vCameraTopSaved = vCameraTop;
-	vCameraRightSaved = vCameraRight;
-
-	mFullTransformSaved = mFullTransform;
-	mViewSaved = mView;
-	mProjectSaved = mProject;
-
-	xrThread::StartGlobal(xrThread::sParalelRender);
-	// all rendering is done here
-	CStatTimer renderTotalReal;
-	renderTotalReal.FrameStart();
-	renderTotalReal.Begin();
-	if (b_is_Active && Begin())
-	{
-		seqRender.Process();
-		CalcFrameStats();
-		Statistic->Show();
-		End(); // Present goes here
-	}
-	renderTotalReal.End();
-	renderTotalReal.FrameEnd();
-	stats.RenderTotal.accum = renderTotalReal.accum;
-
-	xrThread::WaitGlobal();
 }
 
 void CRenderDevice::message_loop_weather_editor()
@@ -498,8 +498,8 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 #endif
 			}
 		}
+		}
 	}
-}
 
 BOOL CRenderDevice::Paused() { return g_pauseMngr().Paused(); }
 void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
@@ -507,13 +507,13 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 	u16 fActive = LOWORD(wParam);
 	const BOOL fMinimized = (BOOL)HIWORD(wParam);
 	const BOOL isWndActive = (fActive != WA_INACTIVE && !fMinimized) ? TRUE : FALSE;
-	
+
 	if (isWndActive != b_is_Active)
 	{
 		b_is_Active = isWndActive;
 
 		if (b_is_Active)
-		{	
+		{
 			if (!editor() && !GEnv.isDedicatedServer)
 				pInput->ClipCursor(true);
 
@@ -567,15 +567,15 @@ u32 script_time_global() { return Device.dwTimeGlobal; }
 u32 script_time_global_async() { return Device.TimerAsync_MMT(); }
 
 SCRIPT_EXPORT(Device, (),
-{
-	module(luaState)
-	[
-		def("time_global", &script_time_global),
-		def("time_global_async", &script_time_global_async),
-		def("device", &get_device),
-		def("is_enough_address_space_available", &is_enough_address_space_available)
-	];
-});
+	{
+		module(luaState)
+		[
+			def("time_global", &script_time_global),
+			def("time_global_async", &script_time_global_async),
+			def("device", &get_device),
+			def("is_enough_address_space_available", &is_enough_address_space_available)
+		];
+	});
 
 CLoadScreenRenderer::CLoadScreenRenderer() : b_registered(false), b_need_user_input(false) {}
 void CLoadScreenRenderer::start(bool b_user_input)
