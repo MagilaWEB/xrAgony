@@ -15,6 +15,12 @@
 
 XRCORE_API xrCore Core;
 
+namespace CPU
+{
+	extern void Detect();
+};
+
+
 static u32 init_counter = 0;
 
 void xrCore::Initialize(pcstr _ApplicationName, LogCallback cb, bool init_fs, pcstr fs_fname, bool plugin)
@@ -22,17 +28,13 @@ void xrCore::Initialize(pcstr _ApplicationName, LogCallback cb, bool init_fs, pc
 	xrThread::init_main_thread();
 
 	xr_strcpy(ApplicationName, _ApplicationName);
+
 	if (0 == init_counter)
 	{
 		CalculateBuildId();
 		PluginMode = plugin;
-		// Init COM so we can use CoCreateInstance
-		// HRESULT co_res =
-#if defined(WINDOWS)
+
 		Params = xr_strdup(GetCommandLine());
-#elif  defined(LINUX)
-		Params = xr_strdup(""); //TODO handle /proc/self/cmdline
-#endif
 
 		CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
@@ -41,9 +43,8 @@ void xrCore::Initialize(pcstr _ApplicationName, LogCallback cb, bool init_fs, pc
 		string_path fn, dr, di;
 
 		// application path
-#if defined(WINDOWS)
 		GetModuleFileName(GetModuleHandle("xrCore"), fn, sizeof(fn));
-#endif
+
 		_splitpath(fn, dr, di, nullptr, nullptr);
 		strconcat(sizeof(ApplicationPath), ApplicationPath, dr, di);
 
@@ -57,24 +58,23 @@ void xrCore::Initialize(pcstr _ApplicationName, LogCallback cb, bool init_fs, pc
 		}
 #endif
 
-#if defined(WINDOWS)
 		GetCurrentDirectory(sizeof(WorkingPath), WorkingPath);
-#endif
 
-#if defined(WINDOWS)
 		// User/Comp Name
 		DWORD sz_user = sizeof(UserName);
 		GetUserName(UserName, &sz_user);
 
 		DWORD sz_comp = sizeof(CompName);
 		GetComputerName(CompName, &sz_comp);
-#endif
+
+		// Mathematics & PSI detection
+		CPU::Detect();
 
 		Memory._initialize();
 
 		InitLog();
 
-		Msg("%s %s build %d, %s\n", "A.G.O.N.Y Unofficial Patch Engine", GetBuildConfiguration(), buildId, buildDate);
+		Msg("%s %s build %d, %s\n", "A.G.O.N.Y Engine", GetBuildConfiguration(), buildId, buildDate);
 		Msg("command line %s\n", Params);
 		_initialize_cpu();
 		R_ASSERT(CPU::ID.hasSSE());
@@ -88,6 +88,7 @@ void xrCore::Initialize(pcstr _ApplicationName, LogCallback cb, bool init_fs, pc
 		xr_EFS = std::make_unique<EFS_Utils>();
 		//. R_ASSERT (co_res==S_OK);
 	}
+
 	if (init_fs)
 	{
 		u32 flags = 0u;
@@ -227,24 +228,31 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvRese
 {
 	switch (ul_reason_for_call)
 	{
-		/*
-		По сути это не рекомендуемый Microsoft, но повсеместно используемый способ повышения точности
-		соблюдения и измерения временных интревалов функциями Sleep, QueryPerformanceCounter,
-		timeGetTime и GetTickCount.
-		Функция действует на всю операционную систему в целом (!) и нет необходимости вызывать её при
-		старте нового потока. Вызов timeEndPeriod специалисты Microsoft считают обязательным.
-		Есть подозрения, что Windows сама устанавливает максимальную точность при старте таких
-		приложений как, например, игры. Тогда есть шанс, что вызов timeBeginPeriod здесь бессмысленен.
-		Недостатком данного способа является то, что он приводит к общему замедлению работы как
-		текущего приложения, так и всей операционной системы.
-		Ещё можно посмотреть ссылки:
-			https://msdn.microsoft.com/en-us/library/vs/alm/dd757624(v=vs.85).aspx
-			https://users.livejournal.com/-winnie/151099.html
-			https://github.com/tebjan/TimerTool
-		*/
-	case DLL_PROCESS_ATTACH: timeBeginPeriod(1); break;
-	case DLL_PROCESS_DETACH: timeEndPeriod(1); break;
+	case DLL_PROCESS_ATTACH:
+	{
+		_clear87();
+#ifdef _M_IX86
+		_control87(_PC_53, MCW_PC);
+#endif
+		_control87(_RC_CHOP, MCW_RC);
+		_control87(_RC_NEAR, MCW_RC);
+		_control87(_MCW_EM, MCW_EM);
+	}
+	//. LogFile.reserve (256);
+	break;
+	case DLL_THREAD_ATTACH:
+		// if (!strstr(GetCommandLine(), "-editor"))
+		//     CoInitializeEx(NULL, COINIT_MULTITHREADED);
+		timeBeginPeriod(1);
+		break;
+	case DLL_THREAD_DETACH:
+		break;
+	case DLL_PROCESS_DETACH:
+#ifdef USE_MEMORY_MONITOR
+		memory_monitor::flush_each_time(true);
+#endif // USE_MEMORY_MONITOR
+		break;
 	}
 	return TRUE;
 }
-#endif
+#endif // XRCORE_STATIC
