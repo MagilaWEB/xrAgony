@@ -38,6 +38,38 @@ IC bool		InterpolateAndDither(float* alpha255, u32 x, u32 y, u32 sx, u32 sy, u32
 	return	c > dither[col][row];
 }
 
+IC void correction_orientation(const Fvector& pos, const Fvector& dir, const Fvector& ground_normal, float& target_angle)
+{
+	Fplane Plane_;
+	Plane_.build(pos, ground_normal);
+
+	Fvector				position_on_plane;
+	Plane_.project(position_on_plane, pos);
+
+	// находим проекцию точки, лежащей на векторе текущего направления
+	Fvector				dir_point, proj_point;
+	dir_point.mad(position_on_plane, dir, 1.f);
+	Plane_.project(proj_point, dir_point);
+
+	// получаем искомый вектор направления
+	Fvector				target_dir;
+	target_dir.sub(proj_point, position_on_plane);
+
+	// изменяем текущий угол Эйлера
+	target_angle = target_dir.getP();
+}
+
+IC void ground_correction(Fmatrix& xform_, const Fvector& ground_normal)
+{
+	Fvector saved_pos = xform_.c;
+	float h_, p_, b_;
+	xform_.getHPB(h_, p_, b_);
+	correction_orientation(xform_.c, xform_.k, ground_normal, p_);
+	correction_orientation(xform_.c, xform_.i, ground_normal, b_);
+	xform_.setHPB(h_, p_, -b_);
+	xform_.c = saved_pos;
+}
+
 #ifndef _EDITOR
 #ifdef	DEBUG
 //#include "../../Include/xrRender/DebugRender.h"
@@ -89,6 +121,7 @@ void CDetailManager::cache_Decompress(Slot* S)
 #else
 	xrc.box_options(CDB::OPT_FULL_TEST);
 	xrc.box_query(g_pGameLevel->ObjectSpace.GetStaticModel(), bC, bD);
+	Fvector* verts = g_pGameLevel->ObjectSpace.GetStaticVerts();
 #endif
 
 	if (0 == xrc.r_count())	return;
@@ -157,6 +190,8 @@ void CDetailManager::cache_Decompress(Slot* S)
 			float		rx = (float(x) / float(d_size)) * dm_slot_size + D.vis.box.vMin.x;
 			float		rz = (float(z) / float(d_size)) * dm_slot_size + D.vis.box.vMin.z;
 			Fvector		Item_P{};
+			Fvector normal{ 0, 1, 0 };
+
 
 			Item_P.set(rx + r_jitter.randFs(jitter), D.vis.box.vMax.y + 1.f, rz + r_jitter.randFs(jitter));
 
@@ -166,7 +201,7 @@ void CDetailManager::cache_Decompress(Slot* S)
 			g_pGameLevel->ObjectSpace.RayQuery(
 				collide::rq_results{},
 				collide::ray_defs{ Item_P,  Fvector{ 0, -1.f, 0 }, 1000.f, CDB::OPT_CULL, collide::rqtStatic },
-				[](collide::rq_result& result, LPVOID params)
+				[&normal, verts](collide::rq_result& result, LPVOID params)
 			{
 				auto LOCAL_RQ = reinterpret_cast<collide::rq_result*>(params);
 				if (result.O)
@@ -178,6 +213,8 @@ void CDetailManager::cache_Decompress(Slot* S)
 				{
 					CDB::TRI* T = g_pGameLevel->ObjectSpace.GetStaticTris() + result.element;
 					SGameMtl* mtl = GMLib.GetMaterialByIdx(T->material);
+
+					normal.mknormal(verts[T->verts[0]], verts[T->verts[1]], verts[T->verts[2]]);
 					// Ignore liquid and dynamic.
 					if (mtl->Flags.is(SGameMtl::flLiquid) || mtl->Flags.is(SGameMtl::flDynamic))
 						return TRUE;
@@ -287,6 +324,9 @@ void CDetailManager::cache_Decompress(Slot* S)
 				else
 					Item.vis_ID = 1; // First wave
 			}
+
+			if (Item.vis_ID == 0)//чтобы листики травы ложились на поверхность террейна
+				ground_correction(Item.mRotY, normal);
 
 			// Save it
 			D.G[index].items.push_back(std::move(ItemP));

@@ -40,12 +40,12 @@ private:
         collide::ray_cache* cache, IGameObject* ignore_object);
     BOOL _RayPick(const Fvector& start, const Fvector& dir, float range, collide::rq_target tgt, collide::rq_result& R,
         IGameObject* ignore_object);
-    BOOL _RayQuery(collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback* cb, LPVOID user_data,
-        collide::test_callback* tb, IGameObject* ignore_object);
-    BOOL _RayQuery2(collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback* cb, LPVOID user_data,
-        collide::test_callback* tb, IGameObject* ignore_object);
-    BOOL _RayQuery3(collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback* cb, LPVOID user_data,
-        collide::test_callback* tb, IGameObject* ignore_object);
+    BOOL _RayQuery(collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback cb, LPVOID user_data,
+        collide::test_callback tb, IGameObject* ignore_object);
+    BOOL _RayQuery2(collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback cb, LPVOID user_data,
+        collide::test_callback tb, IGameObject* ignore_object);
+    BOOL _RayQuery3(collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback cb, LPVOID user_data,
+        collide::test_callback tb, IGameObject* ignore_object);
 
 public:
     CObjectSpace();
@@ -64,8 +64,8 @@ public:
         IGameObject* ignore_object);
 
     // General collision query
-    BOOL RayQuery(collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback* cb, LPVOID user_data,
-        collide::test_callback* tb, IGameObject* ignore_object);
+    BOOL RayQuery(collide::rq_results& dest, const collide::ray_defs& rq, collide::rq_callback cb, LPVOID user_data,
+        collide::test_callback tb, IGameObject* ignore_object);
     BOOL RayQuery(collide::rq_results& dest, ICollisionForm* target, const collide::ray_defs& rq);
 
     bool BoxQuery(Fvector const& box_center, Fvector const& box_z_axis, Fvector const& box_y_axis,

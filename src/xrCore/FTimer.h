@@ -197,3 +197,6 @@ clock_t ms = clock() - tm_start; Msg("* %s [%d ms], [%f sec]", text, ms, (float)
 
 #define LIMIT_UPDATE(name_time, sec, code){ static CTimer name_time; \
 if(name_time.GetElapsed_sec() > sec){ name_time.Start(); code }}
+
+#define LIMIT_UPDATE_FPS(name_time, fps){ static DWORD name_time; DWORD dwCurrentTime = timeGetTime(); \
+if ((dwCurrentTime - (int)name_time) < (1000 / fps)) return; name_time = dwCurrentTime;}

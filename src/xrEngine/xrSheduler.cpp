@@ -3,6 +3,7 @@
 #include "xr_object.h"
 #include "GameFont.h"
 #include "PerformanceAlert.hpp"
+#include "timeapi.h"
 
 //#define DEBUG_SCHEDULER
 //#define DEBUG_SCHEDULERMT
@@ -423,7 +424,7 @@ void CSheduler::Update()
 {
 	if (Device.Paused())
 		return;
-
+	LIMIT_UPDATE_FPS(CShedulerFPS, 30)
 	// Initialize
 	stats.Update.Begin();
 	cycles_start = CPU::QPC();
@@ -460,7 +461,7 @@ void CSheduler::Update()
 #endif
 		item.Object->shedule_Update(Elapsed);
 		item.dwTimeOfLastExecute = dwTime;
-}
+	}
 
 	// Normal (sheduled)
 	ProcessStep();

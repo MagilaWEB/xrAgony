@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "DetailManager.h"
+#include "timeapi.h"
 
 #ifdef _EDITOR
 #include "ESceneClassList.h"
@@ -492,11 +493,8 @@ void CDetailManager::Frame()
 	if (!dtFS) return;
 	if (!psDeviceFlags.is(rsDetails)) return;
 	if (RDEVICE.ActiveMain()) return;
-	RImplementation.BasicStats.DetailCache.Begin();
-	Fvector EYE = RDEVICE.vCameraPositionSaved;
 
-	int s_x = iFloor(EYE.x / dm_slot_size + .5f);
-	int s_z = iFloor(EYE.z / dm_slot_size + .5f);
+	LIMIT_UPDATE_FPS(DetailManagerFPS, 30)
 
 	if (!RDEVICE.m_SecondViewport.IsSVPFrame())
 		VisiblesClear();
@@ -506,11 +504,19 @@ void CDetailManager::Frame()
 			VisiblesClear();*/
 		return;
 	}
+
+	RImplementation.BasicStats.DetailCache.Begin();
+	Fvector EYE = RDEVICE.vCameraPositionSaved;
+
+	int s_x = iFloor(EYE.x / dm_slot_size + .5f);
+	int s_z = iFloor(EYE.z / dm_slot_size + .5f);
+	
 	VisiblesClear();
 
 	UpdateVisibleM(EYE);
 	if (RDEVICE.dwFrame % ps_r__detail_limit_update == 0)
 		cache_Update(s_x, s_z, EYE);
+	xrCriticalSection::raii mt{ MT };
 	spawn_Slots(EYE);
 	RImplementation.BasicStats.DetailCache.End();
 }

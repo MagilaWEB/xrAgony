@@ -179,8 +179,8 @@ BOOL CObjectSpace::_RayPick(
 //--------------------------------------------------------------------------------
 // RayQuery
 //--------------------------------------------------------------------------------
-BOOL CObjectSpace::RayQuery(collide::rq_results& dest, const collide::ray_defs& R, collide::rq_callback* CB,
-    LPVOID user_data, collide::test_callback* tb, IGameObject* ignore_object)
+BOOL CObjectSpace::RayQuery(collide::rq_results& dest, const collide::ray_defs& R, collide::rq_callback CB,
+    LPVOID user_data, collide::test_callback tb, IGameObject* ignore_object)
 {
     lock->Enter();
     BOOL _res = _RayQuery2(dest, R, CB, user_data, tb, ignore_object);
@@ -188,8 +188,8 @@ BOOL CObjectSpace::RayQuery(collide::rq_results& dest, const collide::ray_defs& 
     lock->Leave();
     return (_res);
 }
-BOOL CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_defs& R, collide::rq_callback* CB,
-    LPVOID user_data, collide::test_callback* tb, IGameObject* ignore_object)
+BOOL CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_defs& R, collide::rq_callback CB,
+    LPVOID user_data, collide::test_callback tb, IGameObject* ignore_object)
 {
     // initialize query
     r_dest.r_clear();
@@ -247,8 +247,8 @@ BOOL CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_de
     return r_dest.r_count();
 }
 
-BOOL CObjectSpace::_RayQuery3(collide::rq_results& r_dest, const collide::ray_defs& R, collide::rq_callback* CB,
-    LPVOID user_data, collide::test_callback* tb, IGameObject* ignore_object)
+BOOL CObjectSpace::_RayQuery3(collide::rq_results& r_dest, const collide::ray_defs& R, collide::rq_callback CB,
+    LPVOID user_data, collide::test_callback tb, IGameObject* ignore_object)
 {
     // initialize query
     r_dest.r_clear();
@@ -341,8 +341,8 @@ BOOL CObjectSpace::_RayQuery3(collide::rq_results& r_dest, const collide::ray_de
     return r_dest.r_count();
 }
 
-BOOL CObjectSpace::_RayQuery(collide::rq_results& r_dest, const collide::ray_defs& R, collide::rq_callback* CB,
-    LPVOID user_data, collide::test_callback* tb, IGameObject* ignore_object)
+BOOL CObjectSpace::_RayQuery(collide::rq_results& r_dest, const collide::ray_defs& R, collide::rq_callback CB,
+    LPVOID user_data, collide::test_callback tb, IGameObject* ignore_object)
 {
 #ifdef DEBUG
     if (R.range < EPS || !_valid(R.range))

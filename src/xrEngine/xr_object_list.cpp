@@ -108,6 +108,7 @@ void CObjectList::o_sleep(IGameObject* O)
     O->MakeMeCrow();
 }
 
+#include "timeapi.h"
 void CObjectList::SingleUpdate(IGameObject* O)
 {
     if (Device.dwFrame == O->GetUpdateFrame())

@@ -193,6 +193,6 @@ public:
     IC rqVec& r_results() { return results; }
 };
 
-typedef BOOL rq_callback(rq_result& result, LPVOID user_data);
-typedef BOOL test_callback(const ray_defs& rd, IGameObject* object, LPVOID user_data);
+typedef std::function <BOOL(rq_result& result, LPVOID user_data)> rq_callback;
+typedef std::function <BOOL(const ray_defs& rd, IGameObject* object, LPVOID user_data)> test_callback;
 }
