@@ -24,23 +24,6 @@ void LuaLog(pcstr caMessage)
 #endif
 }
 
-void ErrorLog(pcstr caMessage)
-{
-	GEnv.ScriptEngine->error_log("%s", caMessage);
-	GEnv.ScriptEngine->print_stack();
-#if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-	if (GEnv.ScriptEngine->debugger())
-	GEnv.ScriptEngine->debugger()->Write(caMessage);
-#endif
-#ifdef DEBUG
-	bool lua_studio_connected = !!GEnv.ScriptEngine->debugger();
-	if (!lua_studio_connected)
-	R_ASSERT2(0, caMessage);
-#else
-	R_ASSERT2(0, caMessage);
-#endif
-}
-
 //AVO:
 void PrintStack()
 {
@@ -214,7 +197,7 @@ SCRIPT_EXPORT(CScriptEngine, (),
 		.def("time", &profile_timer_script::time),
 
 		def("log", &LuaLog),
-		def("error_log", &ErrorLog),
+		def("show_about_error", &xrDebug::ShowMSGboxAboutError),
 		def("flush", &FlushLogs),
 		def("print_stack", &PrintStack),
 		def("prefetch", &prefetch_module),

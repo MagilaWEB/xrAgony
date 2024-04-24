@@ -7,8 +7,6 @@
 #if defined(WINDOWS)
 #include "Debug/dxerr.h"
 #endif
-#include "Threading/ScopeLock.hpp"
-
 #pragma warning(push)
 #pragma warning(disable : 4091) // 'typedef ': ignored on left of '' when no variable is declared
 #if defined(WINDOWS)
@@ -69,9 +67,26 @@ namespace
 	}
 } // namespace
 
-static void ShowMSGboxAboutError() //MNP
+static xrCriticalSection dbgHelpLock;
+
+void xrDebug::ShowMSGboxAboutError(LPCSTR title = "X-Ray A.G.O.N.Y. Engine", LPCSTR description = "Fatal error. Check crash log for more info.") //MNP
 {
-	MessageBox(NULL, "Fatal error. Check crash log for more info.", "X-Ray Unofficial Patch Engine", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+	FlushLog();
+
+	while (ShowCursor(true) < 0);
+	ShowWindow(GetActiveWindow(), SW_FORCEMINIMIZE);
+
+	MessageBox(
+		NULL,
+		description,
+		title,
+		MB_OK |
+		MB_DEFBUTTON2 |
+		MB_ICONERROR |
+		MB_DEFAULT_DESKTOP_ONLY
+	);
+
+	TerminateProcess(GetCurrentProcess(), 1);
 }
 
 xrDebug::UnhandledExceptionFilter xrDebug::PrevFilter = nullptr;
@@ -82,12 +97,9 @@ string_path xrDebug::BugReportFile;
 bool xrDebug::ErrorAfterDialog = false;
 
 bool xrDebug::symEngineInitialized = false;
-Lock xrDebug::dbgHelpLock;
 
 #if defined(WINDOWS)
 void xrDebug::SetBugReportFile(const char* fileName) { strcpy_s(BugReportFile, fileName); }
-#elif defined(LINUX)
-void xrDebug::SetBugReportFile(const char* fileName) { strcpy_s(BugReportFile, 0, fileName); }
 #endif
 
 #if defined(WINDOWS)
@@ -198,7 +210,7 @@ void xrDebug::DeinitializeSymbolEngine(void)
 
 xr_vector<xr_string> xrDebug::BuildStackTrace(PCONTEXT threadCtx, u16 maxFramesCount)
 {
-	ScopeLock Lock(&dbgHelpLock);
+	xrCriticalSection::raii mt{ dbgHelpLock };
 
 	SStringVec traceResult;
 	STACKFRAME stackFrame = {};
@@ -345,12 +357,7 @@ void xrDebug::Fail(
 void xrDebug::Fail(bool& ignoreAlways, const ErrorLocation& loc, const char* expr, const char* desc, const char* arg1,
 	const char* arg2)
 {
-#ifdef PROFILE_CRITICAL_SECTIONS
-	static Lock lock(MUTEX_PROFILE_ID(xrDebug::Backend));
-#else
-	static Lock lock;
-#endif
-	lock.Enter();
+	xrCriticalSection::raii mt{ dbgHelpLock };
 	ErrorAfterDialog = true;
 
 	string4096 assertionInfo;
@@ -358,18 +365,13 @@ void xrDebug::Fail(bool& ignoreAlways, const ErrorLocation& loc, const char* exp
 
 	if (OnDialog)
 		OnDialog(true);
+
 	OnCrash();
-	FlushLog();
 
-	while (ShowCursor(true) < 0);
-	ShowWindow(GetActiveWindow(), SW_FORCEMINIMIZE);
-
-	ShowMSGboxAboutError();
 	if (OnDialog)
 		OnDialog(false);
 
-	lock.Leave();
-	TerminateProcess(GetCurrentProcess(), 1);
+	ShowMSGboxAboutError();
 }
 
 void xrDebug::Fail(bool& ignoreAlways, const ErrorLocation& loc, const char* expr, const std::string& desc,
@@ -479,8 +481,7 @@ void xrDebug::FormatLastError(char* buffer, const size_t& bufferSize)
 
 LONG WINAPI xrDebug::UnhandledFilter(EXCEPTION_POINTERS* exPtrs)
 {
-	static Lock lock;
-	lock.Enter();
+	xrCriticalSection::raii mt{ dbgHelpLock };
 	string256 errMsg;
 	FormatLastError(errMsg, sizeof(errMsg));
 	if (!ErrorAfterDialog && !strstr(GetCommandLine(), "-no_call_stack_assert"))
@@ -518,12 +519,11 @@ LONG WINAPI xrDebug::UnhandledFilter(EXCEPTION_POINTERS* exPtrs)
 #endif
 		}
 	}
+
 	OnCrash();
-	FlushLog();
-	ShowWindow(GetActiveWindow(), SW_FORCEMINIMIZE);
+
 	ShowMSGboxAboutError();
-	lock.Leave();
-	TerminateProcess(GetCurrentProcess(), 1);
+
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 

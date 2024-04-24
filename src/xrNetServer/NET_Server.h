@@ -35,7 +35,7 @@ protected:
     IClient* SV_Client;
 
     //
-    Lock csMessage;
+    xrCriticalSection csMessage;
     CTimer* device_timer;
 
     IClient* ID_to_client(ClientID ID, bool ScanAll = false);
