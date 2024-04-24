@@ -16,11 +16,29 @@ xrThread::~xrThread()
 		Stop();
 }
 
+void xrThread::Init(std::function<void()> fn, ParallelState state)
+{
+	if (!IsInit())
+	{
+		lambda_function = new new_lambda(fn);
+		Init(lambda_function, &new_lambda::Runfunction, state);
+	}
+};
+
 void xrThread::worker_main()
 {
 	thread_id = GetCurrentThreadId();
-	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	
 	Msg("* Start %s ID %d", thread_name.c_str(), thread_id);
+
+	const HRESULT co_initialize = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	if (S_FALSE == co_initialize)
+		Msg("~ The COM library has already been initialized in this thread %s ID %d", thread_name.c_str(), thread_id);
+	else if (RPC_E_CHANGED_MODE == co_initialize)
+	{
+		Msg("~ A previous call to CoInitializeEx defined the concurrency model for the thread[%s] ID[%d] as a multithreaded apartment (MTA).\n\
+		It may also indicate that there has been a change from a neutral-flow module to a single-threaded module.", thread_name.c_str(), thread_id);
+	}
 
 	if (thread_infinity)
 	{
@@ -130,6 +148,9 @@ void xrThread::Stop()
 			process.Set();
 
 		done.Wait();
+
+		if (lambda_function)
+			delete lambda_function;
 	}
 }
 

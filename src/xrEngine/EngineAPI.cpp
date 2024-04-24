@@ -9,9 +9,6 @@ extern xr_vector<xr_token> vid_quality_token;
 constexpr pcstr CHECK_FUNCTION = "CheckRendererSupport";
 constexpr pcstr SETUP_FUNCTION = "SetupEnv";
 
-constexpr pcstr DX9_LIBRARY = "xrRender_DX9";
-constexpr pcstr DX11_LIBRARY = "xrRender_DX11";
-
 constexpr pcstr RENDERER_DX9Basic = "renderer_DX9Basic";
 constexpr pcstr RENDERER_DX9Normal = "renderer_DX9Normal";
 constexpr pcstr RENDERER_DX9Enhanced = "renderer_DX9Enhanced";
@@ -47,14 +44,14 @@ void CEngineAPI::SelectRenderer()
 {
 	GEnv.CurrentRenderer = -1;
 
-	const auto select = [&](pcstr library, u32 selected, int index, u32 fallback = 0)
+	const auto select = [&](int index, u32 selected,  u32 fallback = 0)
 	{
 		if (psDeviceFlags.test(selected))
 		{
-			if (m_renderers[library]->IsLoaded())
+			if (m_renderers[index]->IsLoaded())
 			{
 				GEnv.CurrentRenderer = index;
-				m_setupSelectedRenderer = (SetupEnv)m_renderers[library]->GetProcAddress(SETUP_FUNCTION);
+				m_setupSelectedRenderer = (SetupEnv)m_renderers[index]->GetProcAddress(SETUP_FUNCTION);
 			}
 			else // Selected is unavailable
 			{
@@ -65,8 +62,8 @@ void CEngineAPI::SelectRenderer()
 		}
 	};
 
-	select(DX11_LIBRARY, rsDX11, 1, rsDX9);
-	select(DX9_LIBRARY, rsDX9, 0);
+	select(1, rsDX11, rsDX9);
+	select(0, rsDX9, 0);
 }
 
 void CEngineAPI::InitializeRenderers()
@@ -144,10 +141,9 @@ void CEngineAPI::Destroy(void)
 void CEngineAPI::CloseUnusedLibraries()
 {
 	// Now unload unused renderers
-	if (GEnv.CurrentRenderer != 1)
-		m_renderers[DX11_LIBRARY]->Close();
-	else
-		m_renderers[DX9_LIBRARY]->Close();
+	for (u32 it = 0; it < m_renderers.size(); it++)
+		if (GEnv.CurrentRenderer != it)
+			m_renderers[it]->Close();
 }
 
 void CEngineAPI::CreateRendererList()
@@ -155,34 +151,34 @@ void CEngineAPI::CreateRendererList()
 	if (!vid_quality_token.empty())
 		return;
 
-	m_renderers[DX9_LIBRARY] = XRay::LoadModule(DX9_LIBRARY);
-	m_renderers[DX11_LIBRARY] = XRay::LoadModule(DX11_LIBRARY);
+	m_renderers.push_back(XRay::LoadModule("xrRender_DX9"));
+	m_renderers.push_back(XRay::LoadModule("xrRender_DX11"));
 
 	auto& modes = vid_quality_token;
 
-	const auto checkRenderer = [&](pcstr library, pcstr mode, int index)
+	const auto checkRenderer = [&](int index, pcstr mode)
 	{
-		if (m_renderers[library]->IsLoaded())
+		if (m_renderers[index]->IsLoaded())
 		{
 			// Load SupportCheck, SetupEnv and GetModeName functions from DLL
-			const auto checkSupport = (SupportCheck)m_renderers[library]->GetProcAddress(CHECK_FUNCTION);
+			const auto checkSupport = (SupportCheck)m_renderers[index]->GetProcAddress(CHECK_FUNCTION);
 
 			// Test availability
 			if (checkSupport && checkSupport())
 				modes.emplace_back(mode, index);
 			else // Close the handle if test is failed
-				m_renderers[library]->Close();
+				m_renderers[index]->Close();
 		}
 	};
 
-	checkRenderer(DX9_LIBRARY, RENDERER_DX9Basic, 0);
+	checkRenderer(0, RENDERER_DX9Basic);
 
-	if (m_renderers[DX9_LIBRARY]->IsLoaded())
-		modes.emplace_back(RENDERER_DX9Normal, 1);
+	if (m_renderers[0]->IsLoaded())
+		modes.emplace_back(RENDERER_DX9Normal, 0);
 
-	checkRenderer(DX9_LIBRARY, RENDERER_DX9Enhanced, 2);
+	checkRenderer(0, RENDERER_DX9Enhanced);
 
-	checkRenderer(DX11_LIBRARY, RENDERER_dx11, 3);
+	checkRenderer(1, RENDERER_dx11);
 
 	modes.emplace_back(xr_token(nullptr, -1));
 

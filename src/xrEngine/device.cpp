@@ -395,7 +395,7 @@ void CRenderDevice::message_loop()
 	PeekMessage(&msg, NULL, 0U, 0U, PM_NOREMOVE);
 	while (msg.message != WM_QUIT)
 	{
-		if (b_restart)
+		if ((!IsQUIT()) && b_restart)
 			ResetStart();
 
 		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
@@ -517,7 +517,7 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 			if (!editor() && !GEnv.isDedicatedServer)
 				pInput->ClipCursor(true);
 
-			if (mt_global_update.IsInit() && GEnv.Render->GetDeviceState() == DeviceState::Lost)
+			if ((!IsQUIT()) && mt_global_update.IsInit() && GEnv.Render->GetDeviceState() == DeviceState::Lost)
 				ResetStart();
 
 			ShowWindow(m_hWnd, SW_SHOW);

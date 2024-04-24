@@ -52,7 +52,7 @@ class ENGINE_API CEngineAPI
 
     XRay::Module hGame;
     XRay::Module hTuner;
-    xr_map<pcstr, XRay::Module> m_renderers;
+    xr_vector<XRay::Module> m_renderers;
 
     SetupEnv m_setupSelectedRenderer;
 

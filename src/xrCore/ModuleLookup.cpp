@@ -32,12 +32,12 @@ namespace XRay
 
 	void ModuleHandle::Close()
 	{
-		if (dontUnload || !IsLoaded())
+		if (dontUnload || (!IsLoaded()) || (!handle))
 			return;
 
 		bool closed = false;
 
-		closed = FreeLibrary(static_cast<HMODULE>(handle)) != 0;
+		closed = FreeLibrary(static_cast<HMODULE>(handle)) != NULL;
 
 		if (closed == false)
 			Msg("! Failed to close DLL: %s", xrDebug::ErrorToString(GetLastError()));

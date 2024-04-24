@@ -247,8 +247,6 @@ xr_vector<xr_string> xrDebug::BuildStackTrace(PCONTEXT threadCtx, u16 maxFramesC
 		traceResult.push_back(frameStr);
 	}
 
-	DeinitializeSymbolEngine();
-
 	return traceResult;
 }
 

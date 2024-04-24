@@ -62,6 +62,23 @@ public:
 
 class XRCORE_API xrThread
 {
+	//For lambda functions.
+	struct new_lambda
+	{
+		std::function<void()> function{ []() {} };
+		new_lambda(std::function<void()> n_function)
+		{
+			function = std::move(n_function);
+		};
+
+		~new_lambda() = default;
+
+		void Runfunction()
+		{
+			function();
+		}
+	};
+
 public:
 	xrThread(const LPCSTR name, bool infinity = false, bool locked = false);
 	~xrThread();
@@ -95,6 +112,8 @@ private:
 	ParallelState global_parallel{ sParalelNone };
 	bool global_parallel_process{ false };
 	bool debug_info{ true };
+
+	new_lambda * lambda_function;
 
 	static IC DWORD main_thread_id;
 	static IC xr_list<xrThread*> all_obj_thread;
@@ -156,6 +175,8 @@ public:
 			global_parallel = state;
 		}
 	};
+
+	void Init(std::function<void()> fn, ParallelState state = sParalelNone);
 
 	//Is the thread initialized.
 	bool IsInit() const;

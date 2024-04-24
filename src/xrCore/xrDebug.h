@@ -4,14 +4,11 @@
 #include "xrCommon/xr_vector.h"
 
 #include <string>
-#if defined(LINUX)
-#include <cstdio>
-#elif defined(WINDOWS)
+
 #pragma warning(push)
 #pragma warning(disable : 4091) /// 'typedef ': ignored on left of '' when no variable is declared
 #include <DbgHelp.h>
 #pragma warning(pop)
-#endif
 
 class ErrorLocation
 {
@@ -55,7 +52,6 @@ private:
 public:
 	xrDebug() = delete;
 	static void Initialize(const bool& dedicated);
-	static void Destroy();
 	static void OnThreadSpawn();
 	static OutOfMemoryCallbackFunc GetOutOfMemoryCallback() { return OutOfMemoryCallback; }
 	static void SetOutOfMemoryCallback(OutOfMemoryCallbackFunc cb) { OutOfMemoryCallback = cb; }
@@ -84,19 +80,15 @@ public:
 
 	static void LogStackTrace(const char* header);
 	static xr_vector<xr_string> BuildStackTrace(u16 maxFramesCount = 512);
+
+	static void DeinitializeSymbolEngine();
 private:
 	static bool symEngineInitialized;
 	static void FormatLastError(char* buffer, const size_t& bufferSize);
-	static void SetupExceptionHandler(const bool& dedicated);
 	static LONG WINAPI UnhandledFilter(EXCEPTION_POINTERS* exPtrs);
-	static void WINAPI PreErrorHandler(INT_PTR);
-	static void SaveMiniDump(EXCEPTION_POINTERS* exPtrs);
-#if defined(WINDOWS)
 	static xr_vector<xr_string> BuildStackTrace(PCONTEXT threadCtx, u16 maxFramesCount);
 	static bool GetNextStackFrameString(LPSTACKFRAME stackFrame, PCONTEXT threadCtx, xr_string& frameStr);
 	static bool InitializeSymbolEngine();
-	static void DeinitializeSymbolEngine(void);
-#endif //WINDOWS
 };
 
 // for debug purposes only

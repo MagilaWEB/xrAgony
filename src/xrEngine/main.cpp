@@ -134,6 +134,9 @@ ENGINE_API void Startup()
 
 	// Main cycle
 	Device.Run();
+
+	xrDebug::DeinitializeSymbolEngine();
+
 	// Destroy APP
 	xr_delete(g_SpatialSpacePhysic);
 	xr_delete(g_SpatialSpace);
@@ -190,30 +193,13 @@ ENGINE_API int RunApplication()
 	if (CheckBenchmark())
 		return 0;
 
-	if (strstr(Core.Params, "-gl"))
-		Console->Execute("renderer renderer_gl");
-	else if (strstr(Core.Params, "-r4"))
-		Console->Execute("renderer renderer_r4");
-	else if (strstr(Core.Params, "-r3"))
-		Console->Execute("renderer renderer_r3");
-	else if (strstr(Core.Params, "-r2.5"))
-		Console->Execute("renderer renderer_r2.5");
-	else if (strstr(Core.Params, "-r2a"))
-		Console->Execute("renderer renderer_r2a");
-	else if (strstr(Core.Params, "-r2"))
-		Console->Execute("renderer renderer_r2");
-	else if (strstr(Core.Params, "-r1"))
-		Console->Execute("renderer renderer_r1");
-	else
-	{
-		CCC_LoadCFG_custom cmd("renderer ");
-		cmd.Execute(Console->ConfigFile);
-	}
+	CCC_LoadCFG_custom cmd("renderer ");
+	cmd.Execute(Console->ConfigFile);
 
 	Engine.External.Initialize();
 	Startup();
 	// check for need to execute something external
-	if (/*xr_strlen(g_sLaunchOnExit_params) && */ xr_strlen(g_sLaunchOnExit_app))
+	if (xr_strlen(g_sLaunchOnExit_app))
 	{
 		// CreateProcess need to return results to next two structures
 		STARTUPINFO si = {};
