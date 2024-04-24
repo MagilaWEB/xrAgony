@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "DetailManager.h"
-#include "timeapi.h"
 
 #ifdef _EDITOR
 #include "ESceneClassList.h"

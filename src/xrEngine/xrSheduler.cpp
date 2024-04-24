@@ -3,7 +3,6 @@
 #include "xr_object.h"
 #include "GameFont.h"
 #include "PerformanceAlert.hpp"
-#include "timeapi.h"
 
 //#define DEBUG_SCHEDULER
 //#define DEBUG_SCHEDULERMT
