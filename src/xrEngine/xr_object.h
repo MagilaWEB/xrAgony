@@ -216,7 +216,6 @@ public:
     virtual void PostLoad(LPCSTR section) = 0; //--#SM+#--
     // Update
     virtual void UpdateCL() = 0; // Called each frame, so no need for dt
-    virtual void PostUpdateCL(bool bUpdateCL_disabled) = 0; //--#SM+#-- Вызывается всегда, в отличии от UpdateCL [called always for object regardless of it being active\sleep]
     // Position stack
     virtual u32 ps_Size() const = 0;
     virtual GameObjectSavedPosition ps_Element(u32 id) const = 0;

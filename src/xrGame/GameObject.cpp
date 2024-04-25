@@ -1362,7 +1362,6 @@ void CGameObject::UpdateCL()
     m_previous_matrix = XFORM();
 }
 
-void CGameObject::PostUpdateCL(bool bUpdateCL_disabled) {}
 
 void CGameObject::on_matrix_change(const Fmatrix& previous) { obstacle().on_move(); }
 #ifdef DEBUG
