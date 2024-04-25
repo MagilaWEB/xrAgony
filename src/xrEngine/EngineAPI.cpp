@@ -63,7 +63,7 @@ void CEngineAPI::SelectRenderer()
 	};
 
 	select(1, rsDX11, rsDX9);
-	select(0, rsDX9, 0);
+	select(0, rsDX9);
 }
 
 void CEngineAPI::InitializeRenderers()
@@ -156,7 +156,7 @@ void CEngineAPI::CreateRendererList()
 
 	auto& modes = vid_quality_token;
 
-	const auto checkRenderer = [&](int index, pcstr mode)
+	const auto checkRenderer = [&](int index, pcstr mode, int r_index)
 	{
 		if (m_renderers[index]->IsLoaded())
 		{
@@ -165,20 +165,20 @@ void CEngineAPI::CreateRendererList()
 
 			// Test availability
 			if (checkSupport && checkSupport())
-				modes.emplace_back(mode, index);
+				modes.emplace_back(mode, r_index);
 			else // Close the handle if test is failed
 				m_renderers[index]->Close();
 		}
 	};
 
-	checkRenderer(0, RENDERER_DX9Basic);
+	checkRenderer(0, RENDERER_DX9Basic, 0);
 
 	if (m_renderers[0]->IsLoaded())
-		modes.emplace_back(RENDERER_DX9Normal, 0);
+		modes.emplace_back(RENDERER_DX9Normal, 1);
 
-	checkRenderer(0, RENDERER_DX9Enhanced);
+	checkRenderer(0, RENDERER_DX9Enhanced, 2);
 
-	checkRenderer(1, RENDERER_dx11);
+	checkRenderer(1, RENDERER_dx11, 3);
 
 	modes.emplace_back(xr_token(nullptr, -1));
 

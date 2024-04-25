@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "ISpatial.h"
 #include "xrCore/_fbox.h"
-#include "xrCore/Threading/Lock.hpp"
 
 extern Fvector c_spatial_offset[8];
 
@@ -35,9 +34,8 @@ public:
             return;
 
         // test items
-        for (auto& it : N->items)
+        for (ISpatial*& S : N->items)
         {
-            ISpatial* S = it;
             if (0 == (S->GetSpatialData().type & mask))
                 continue;
 
@@ -70,7 +68,7 @@ public:
 
 void ISpatial_DB::q_box(xr_vector<ISpatial*>& R, u32 _o, u32 _mask, const Fvector& _center, const Fvector& _size)
 {
-    pcs->Enter();
+    xrCriticalSection::raii mt{ pcs };
     Stats.Query.Begin();
     q_result = &R;
     q_result->clear();
@@ -85,11 +83,11 @@ void ISpatial_DB::q_box(xr_vector<ISpatial*>& R, u32 _o, u32 _mask, const Fvecto
         W.walk(m_root, m_center, m_bounds);
     }
     Stats.Query.End();
-    pcs->Leave();
 }
 
 void ISpatial_DB::q_sphere(xr_vector<ISpatial*>& R, u32 _o, u32 _mask, const Fvector& _center, const float _radius)
 {
+    xrCriticalSection::raii mt{ pcs };
     Fvector _size = {_radius, _radius, _radius};
     q_box(R, _o, _mask, _center, _size);
 }

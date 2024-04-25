@@ -148,9 +148,6 @@ void xrThread::Stop()
 			process.Set();
 
 		done.Wait();
-
-		if (lambda_function)
-			delete lambda_function;
 	}
 }
 

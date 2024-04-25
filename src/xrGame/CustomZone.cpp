@@ -509,7 +509,7 @@ void CCustomZone::shedule_Update(u32 dt)
 					StopObjectIdleParticles(pObject);
 			}
 
-			//если есть хотя бы один не дисабленый объект, то
+			//если есть хотя бы один не дисплейный объект, то
 			//зона считается активной
 			if (info.zone_ignore == false)
 				m_zone_flags.set(eZoneIsActive, TRUE);

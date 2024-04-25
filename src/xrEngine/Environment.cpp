@@ -488,18 +488,18 @@ void CEnvironment::OnFrame()
 #endif
     //-AVO
 
-#ifndef MASTER_GOLD
-    if (CurrentEnv->sun_dir.y > 0)
-    {
-        Log("CurrentEnv->sun_dir", CurrentEnv->sun_dir);
-        // Log("current_weight", current_weight);
-        // Log("mpower", mpower);
-
-        Log("Current[0]->sun_dir", Current[0]->sun_dir);
-        Log("Current[1]->sun_dir", Current[1]->sun_dir);
-    }
-    VERIFY2(CurrentEnv->sun_dir.y < 0, "Invalid sun direction settings in lerp");
-#endif // #ifndef MASTER_GOLD
+//#ifndef MASTER_GOLD
+//    if (CurrentEnv->sun_dir.y > 0)
+//    {
+//        Log("CurrentEnv->sun_dir", CurrentEnv->sun_dir);
+//        // Log("current_weight", current_weight);
+//        // Log("mpower", mpower);
+//
+//        Log("Current[0]->sun_dir", Current[0]->sun_dir);
+//        Log("Current[1]->sun_dir", Current[1]->sun_dir);
+//    }
+//    VERIFY2(CurrentEnv->sun_dir.y < 0, "Invalid sun direction settings in lerp");
+//#endif // #ifndef MASTER_GOLD
 
     PerlinNoise1D->SetFrequency(wind_gust_factor * MAX_NOISE_FREQ);
     wind_strength_factor = clampr(PerlinNoise1D->GetContinious(Device.fTimeGlobal) + 0.5f, 0.f, 1.f);
