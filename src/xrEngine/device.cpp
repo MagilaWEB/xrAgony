@@ -19,9 +19,6 @@
 #define INCLUDE_FROM_ENGINE
 #include "xrCore/FS_impl.h"
 
-#include "Include/editor/ide.hpp"
-#include "engine_impl.hpp"
-
 #include "xrSASH.h"
 #include "IGame_Persistent.h"
 #include "xrScriptEngine/ScriptExporter.hpp"
@@ -189,9 +186,6 @@ void CRenderDevice::End(void)
 	if (g_SASH.IsBenchmarkRunning())
 		g_SASH.DisplayFrame(Device.fTimeGlobal);
 	GEnv.Render->End();
-
-	if (load_finished && m_editor)
-		m_editor->on_load_finished();
 }
 
 #include "IGame_Level.h"
@@ -375,21 +369,9 @@ void CRenderDevice::GlobalUpdate()
 	}
 }
 
-void CRenderDevice::message_loop_weather_editor()
-{
-	m_editor->run();
-	m_editor_finalize(m_editor);
-	xr_delete(m_engine);
-}
 
 void CRenderDevice::message_loop()
 {
-	if (editor())
-	{
-		message_loop_weather_editor();
-		return;
-	}
-
 	ShowWindow(m_hWnd, SW_SHOW);
 
 	PeekMessage(&msg, NULL, 0U, 0U, PM_NOREMOVE);
@@ -462,13 +444,11 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 
 	if (bOn)
 	{
-		if (!Paused())
-			bShowPauseString =
-			editor() ? FALSE :
 #ifdef DEBUG
-			!xr_strcmp(reason, "li_pause_key_no_clip") ? FALSE :
+		if (!Paused())
+			bShowPauseString = !xr_strcmp(reason, "li_pause_key_no_clip");
 #endif // DEBUG
-			TRUE;
+
 		if (bTimer && (!g_pGamePersistent || g_pGamePersistent->CanBePaused()))
 		{
 			g_pauseMngr().Pause(TRUE);
@@ -514,7 +494,7 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 
 		if (b_is_Active)
 		{
-			if (!editor() && !GEnv.isDedicatedServer)
+			if (!GEnv.isDedicatedServer)
 				pInput->ClipCursor(true);
 
 			if ((!IsQUIT()) && mt_global_update.IsInit() && GEnv.Render->GetDeviceState() == DeviceState::Lost)

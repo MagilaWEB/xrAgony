@@ -81,7 +81,7 @@ void CRender::render_lights(light_Package& LP)
 		xr_vector<light*>& source = LP.v_shadowed;
 		light* L = source.back();
 		u16 sid = L->vis.smap_ID;
-		while (true)
+		do
 		{
 			if (source.empty())
 				break;
@@ -132,7 +132,7 @@ void CRender::render_lights(light_Package& LP)
 			}
 			L->svis.end();
 			r_pmask(true, false);
-		}
+		} while (true);
 
 		//		switch-to-accumulator
 		Target->phase_accumulator();

@@ -3,7 +3,7 @@
 #include "Common/LevelStructure.hpp"
 #include "xrEngine/IGame_Persistent.h"
 #include "xrEngine/Environment.h"
-#include "utils/xrLC_Light/R_light.h"
+#include "../xrRender/r_lights.h"
 #include "light_db.h"
 
 CLight_DB::CLight_DB() {}

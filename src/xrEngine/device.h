@@ -23,11 +23,8 @@ extern u32 g_dwFPSlimit;
 
 #define DEVICE_RESET_PRECACHE_FRAME_COUNT 10
 
-#include "Include/editor/interfaces.hpp"
 #include "Include/xrRender/FactoryPtr.h"
 #include "Render.h"
-
-class engine_impl;
 
 #pragma pack(push, 4)
 
@@ -216,10 +213,7 @@ public:
 
 	Fmatrix mInvFullTransform;
 
-	CRenderDevice()
-		: m_dwWindowStyle(0), fWidth_2(0), fHeight_2(0),
-		m_editor_module(nullptr), m_editor_initialize(nullptr),
-		m_editor_finalize(nullptr), m_editor(nullptr), m_engine(nullptr)
+	CRenderDevice() : m_dwWindowStyle(0), fWidth_2(0), fHeight_2(0)
 	{
 		m_hWnd = NULL;
 		b_is_Active = FALSE;
@@ -325,7 +319,6 @@ public:
 	}
 
 	bool on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& result);
-	XRay::Editor::ide_base* editor() const { return m_editor; }
 
 	ICF void EngineUpdate_impl()
 	{
@@ -355,18 +348,6 @@ private:
 
 		return fPointerStart;
 	}
-
-	void initialize_weather_editor();
-	void message_loop_weather_editor();
-
-	using initialize_function_ptr = XRay::Editor::initialize_function_ptr;
-	using finalize_function_ptr = XRay::Editor::finalize_function_ptr;
-
-	XRay::Module m_editor_module;
-	initialize_function_ptr m_editor_initialize;
-	finalize_function_ptr m_editor_finalize;
-	XRay::Editor::ide_base* m_editor;
-	engine_impl* m_engine;
 };
 
 extern ENGINE_API CRenderDevice Device;

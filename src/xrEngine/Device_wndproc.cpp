@@ -18,28 +18,16 @@ bool CRenderDevice::on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	}
 	case WM_ACTIVATE:
 	{
-		if (editor())
-		{
-			Device.b_is_Active = TRUE;
-			break;
-		}
-
 		OnWM_Activate(wParam, lParam);
 		return (false);
 	}
 	case WM_SETCURSOR:
 	{
-		if (editor())
-			break;
-
 		result = 1;
 		return (true);
 	}
 	case WM_SYSCOMMAND:
 	{
-		if (editor())
-			break;
-
 		// Prevent moving/sizing and power loss in fullscreen mode
 		switch (wParam)
 		{
@@ -52,9 +40,6 @@ bool CRenderDevice::on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	}
 	case WM_CLOSE:
 	{
-		if (editor())
-			break;
-
 		PostQuitMessage(WM_QUIT);
 		result = 0;
 		return (true);

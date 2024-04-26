@@ -152,7 +152,7 @@ BOOL CTheoraStream::ParseHeaders()
     // calculate frame count & total length in ms & key rate
     ogg_int64_t frame_count = 0;
     ogg_int64_t p_key = 0, c_key = 0;
-    while (TRUE)
+    do
     {
         while (ogg_stream_packetout(&o_stream_state, &o_packet) > 0)
         {
@@ -172,7 +172,7 @@ BOOL CTheoraStream::ParseHeaders()
             break;
         while (ogg_sync_pageout(&o_sync_state, &o_page) > 0)
             ogg_stream_pagein(&o_stream_state, &o_page);
-    }
+    } while (true);
     tm_total = iFloor(frame_count / fpms);
 
     // seek to 0

@@ -3,7 +3,6 @@
 
 #include "xr_input.h"
 #include "IInputReceiver.h"
-#include "Include/editor/ide.hpp"
 #include "GameFont.h"
 #include "PerformanceAlert.hpp"
 
@@ -26,7 +25,7 @@ float stop_vibration_time = flt_max;
 static bool g_exclusive = true;
 static void on_error_dialog(bool before)
 {
-	if (!pInput || !g_exclusive || Device.editor())
+	if (!pInput || !g_exclusive)
 		return;
 
 	if (before)
@@ -130,14 +129,11 @@ HRESULT CInput::CreateInputDevice(
 
 	// Set the cooperativity level to let DirectInput know how this device
 	// should interact with the system and with other DirectInput applications.
-	if (!Device.editor())
-	{
-		HRESULT _hr = (*device)->SetCooperativeLevel(RDEVICE.m_hWnd, dwFlags);
-		if (FAILED(_hr) && (_hr == E_NOTIMPL))
-			Msg("! INPUT: Can't set coop level. Emulation???");
-		else
-			R_CHK(_hr);
-	}
+	HRESULT _hr = (*device)->SetCooperativeLevel(RDEVICE.m_hWnd, dwFlags);
+	if (FAILED(_hr) && (_hr == E_NOTIMPL))
+		Msg("! INPUT: Can't set coop level. Emulation???");
+	else
+		R_CHK(_hr);
 
 	// setup the buffer size for the keyboard data
 	DIPROPDWORD dipdw;
@@ -691,16 +687,10 @@ void CInput::unacquire()
 
 void CInput::acquire(const bool& exclusive)
 {
-	pKeyboard->SetCooperativeLevel(
-		Device.editor() ? Device.editor()->main_handle() :
-		RDEVICE.m_hWnd,
-		(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND);
+	pKeyboard->SetCooperativeLevel(RDEVICE.m_hWnd, (exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND);
 	pKeyboard->Acquire();
 
-	pMouse->SetCooperativeLevel(
-		Device.editor() ? Device.editor()->main_handle() :
-		RDEVICE.m_hWnd,
-		(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY);
+	pMouse->SetCooperativeLevel(RDEVICE.m_hWnd,(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY);
 	pMouse->Acquire();
 }
 

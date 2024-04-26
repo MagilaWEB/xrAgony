@@ -2,7 +2,7 @@
 #include "Layers/xrRender/dxRenderFactory.h"
 #include "Layers/xrRender/dxUIRender.h"
 #include "Layers/xrRender/dxDebugRender.h"
-#include "Include/xrAPI/xrAPI.h"
+#include "Layers/xrAPI/xrAPI.h"
 
 extern "C"
 {

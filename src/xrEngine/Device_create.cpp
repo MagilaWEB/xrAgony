@@ -34,8 +34,8 @@ void CRenderDevice::Create()
 #endif
     fFOV = 90.f;
     fASPECT = 1.f;
-    const bool noEd = !editor();
-    GEnv.Render->Create(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2, noEd);
+
+    GEnv.Render->Create(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2, true);
     GetWindowRect(m_hWnd, &m_rcWindowBounds);
     GetClientRect(m_hWnd, &m_rcWindowClient);
     Memory.mem_compact();

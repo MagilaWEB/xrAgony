@@ -15,8 +15,6 @@
 #include "CustomHUD.h"
 #endif
 
-#include "editor_environment_manager.hpp"
-
 ENGINE_API IGame_Persistent* g_pGamePersistent = nullptr;
 
 bool IGame_Persistent::IsMainMenuActive()
@@ -39,10 +37,7 @@ IGame_Persistent::IGame_Persistent()
 
 	m_pMainMenu = nullptr;
 
-	if (RDEVICE.editor())
-		pEnvironment = new editor::environment::manager();
-	else
-		pEnvironment = new CEnvironment();
+	pEnvironment = new CEnvironment();
 
 	m_pGShaderConstants = new ShadersExternalData(); //--#SM+#--
 }
