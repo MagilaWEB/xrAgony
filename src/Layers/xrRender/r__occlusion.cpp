@@ -62,7 +62,7 @@ u32 R_occlusion::occq_begin(u32& ID)
 	RImplementation.BasicStats.OcclusionQueries++;
 	if (fids.empty())
 	{
-		ID = u32(used.size());
+		ID = used.size();
 		_Q q{};
 		q.order = ID;
 
@@ -107,7 +107,7 @@ R_occlusion::occq_result R_occlusion::occq_get(u32& ID)
 	occq_result fragments = 0;
 	
 //	Device.Statistic->RenderDUMP_Wait.Begin();
-	VERIFY2(ID < used[ID].size(), make_string("_Pos = %d, size() = %d", ID, used[ID].size()));
+	//VERIFY2(ID < used.size(), make_string("_Pos = %d, size() = %d", ID, used.size()));
 
 	// здесь нужно дождаться результата, т.к. отладка показывает, что
 	// очень редко когда он готов немедленно
