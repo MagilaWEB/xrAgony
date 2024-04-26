@@ -32,7 +32,8 @@ void R_occlusion::cleanup_lost()
 
 	for (u32 ID = 0; ID < used.size(); ID++)
 	{
-		if (used[ID].Q && used[ID].ttl && used[ID].ttl < Device.dwFrame)
+		_Q& q = used[ID];
+		if (q.Q && q.ttl && q.ttl < Device.dwFrame)
 		{
 			occq_free(ID);
 			cnt++;
@@ -73,7 +74,7 @@ u32 R_occlusion::occq_begin(u32& ID)
 			ID = iInvalidHandle;
 			return 0;
 		}
-		used.push_back(std::move(q));
+		used.push_back(q);
 	}
 	else
 	{
@@ -104,30 +105,27 @@ R_occlusion::occq_result R_occlusion::occq_get(u32& ID)
 		return 0xffffffff;
 
 	occq_result fragments = 0;
-	HRESULT hr;
-	CTimer T;
-	T.Start();
+	
 //	Device.Statistic->RenderDUMP_Wait.Begin();
-	VERIFY2(ID < used.size(), make_string("_Pos = %d, size() = %d", ID, used.size()));
+	VERIFY2(ID < used[ID].size(), make_string("_Pos = %d, size() = %d", ID, used[ID].size()));
 
 	// здесь нужно дождаться результата, т.к. отладка показывает, что
 	// очень редко когда он готов немедленно
-	while ((hr = GetData(used[ID].Q.Get(), &fragments, sizeof(fragments))) == S_FALSE)
+	while (true)
 	{
-		if (!SwitchToThread())
-			Sleep(ps_r2_wait_sleep);
-
-		if (T.GetElapsed_ms() > 500)
+		HRESULT hr = GetData(used[ID].Q.Get(), &fragments, sizeof(fragments));
+		if (hr == S_OK)
+			break;
+		else if(hr == S_FALSE)
 		{
 			fragments = (occq_result)-1; //0xffffffff;
 			break;
+		}else if (hr == D3DERR_DEVICELOST)
+		{
+			fragments = 0xffffffff;
+			break;
 		}
 	}
-
-	//Device.Statistic->RenderDUMP_Wait.End();
-
-	if (hr == D3DERR_DEVICELOST)
-		fragments = 0xffffffff;
 
 	if (fragments == 0)
 		RImplementation.BasicStats.OcclusionCulled++;
@@ -145,6 +143,6 @@ void R_occlusion::occq_free(u32 ID)
 	{
 		pool.push_back(used[ID]);
 		used[ID].Q.Reset();
-		fids.push_back(std::move(ID));
+		fids.push_back(ID);
 	}
 }
