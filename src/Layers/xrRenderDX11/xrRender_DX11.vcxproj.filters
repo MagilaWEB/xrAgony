@@ -737,9 +737,6 @@
     <ClCompile Include="r2_R_calculate.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="r2_R_lights.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="r2_sector_detect.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -1296,6 +1293,9 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\r_sun_support.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\r_lights.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>

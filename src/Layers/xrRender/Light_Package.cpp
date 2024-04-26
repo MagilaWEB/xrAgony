@@ -3,35 +3,60 @@
 
 void light_Package::clear()
 {
-    v_point.clear();
-    v_spot.clear();
-    v_shadowed.clear();
+	v_point.clear();
+	v_spot.clear();
+	v_shadowed.clear();
 }
 
-#if (RENDER == R_R2) || (RENDER == R_R3) || (RENDER == R_R4)  || (RENDER == R_GL)
 IC bool pred_light_cmp(light* _1, light* _2)
 {
-    if (_1->vis.pending)
-    {
-        if (_2->vis.pending)
-            return _1->vis.query_order > _2->vis.query_order; // q-order
-        else
-            return false; // _2 should be first
-    }
-    else
-    {
-        if (_2->vis.pending)
-            return true; // _1 should be first
-        else
-            return _1->range > _2->range; // sort by range
-    }
+	return _1->range > _2->range; // sort by range
 }
 
 void light_Package::sort()
 {
-    // resort lights (pending -> at the end), maintain stable order
-    std::stable_sort(v_point.begin(), v_point.end(), pred_light_cmp);
-    std::stable_sort(v_spot.begin(), v_spot.end(), pred_light_cmp);
-    std::stable_sort(v_shadowed.begin(), v_shadowed.end(), pred_light_cmp);
+	// resort lights (pending -> at the end), maintain stable order
+	std::stable_sort(v_point.begin(), v_point.end(), pred_light_cmp);
+	std::stable_sort(v_spot.begin(), v_spot.end(), pred_light_cmp);
+	std::stable_sort(v_shadowed.begin(), v_shadowed.end(), pred_light_cmp);
 }
-#endif // (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4) || (RENDER==R_GL)
+
+void light_Package::vis_prepare()
+{
+	for (light* L : v_point)
+		L->vis_prepare();
+	for (light* L : v_shadowed)
+		L->vis_prepare();
+	for (light* L : v_spot)
+		L->vis_prepare();
+}
+
+// Получаем ответы от запросов к окклюдеру в обратном порядке, от
+// самого свежего запроса, к самому старому. См. комментарии выше.
+void light_Package::vis_update()
+{
+	if (!v_spot.empty())
+	{
+		for (int it = v_spot.size() - 1; it >= 0; it--)
+		{
+			light* L = v_spot[it];
+			L->vis_update();
+		}
+	}
+	if (!v_shadowed.empty())
+	{
+		for (int it = v_shadowed.size() - 1; it >= 0; it--)
+		{
+			light* L = v_shadowed[it];
+			L->vis_update();
+		}
+	}
+	if (!v_point.empty())
+	{
+		for (int it = v_point.size() - 1; it >= 0; it--)
+		{
+			light* L = v_point[it];
+			L->vis_update();
+		}
+	}
+}

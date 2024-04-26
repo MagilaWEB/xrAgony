@@ -1,10 +1,9 @@
 #include "stdafx.h"
-#include "xrEngine/IGame_Persistent.h"
-#include "Layers/xrRender/FBasicVisual.h"
 #include "xrEngine/CustomHUD.h"
+#include "xrEngine/IGame_Persistent.h"
 #include "xrEngine/xr_object.h"
-
-#include "Layers/xrRender/QueryHelper.h"
+#include "../xrRender/FBasicVisual.h"
+#include "../xrRender/QueryHelper.h"
 
 IC bool pred_sp_sort(ISpatial* _1, ISpatial* _2)
 {
@@ -29,8 +28,13 @@ void CRender::render_main(Fmatrix& m_ViewProjection, bool _fportals)
 		//!!!
 		{
 			// Traverse object database
-			g_SpatialSpace->q_frustum(
-				lstRenderables, ISpatial_DB::O_ORDERED, STYPE_RENDERABLE + STYPE_LIGHTSOURCE, ViewBase);
+			g_SpatialSpace->q_frustum
+			(
+				lstRenderables,
+				ISpatial_DB::O_ORDERED,
+				STYPE_RENDERABLE + STYPE_LIGHTSOURCE,
+				ViewBase
+			);
 
 			// (almost) Exact sorting order (front-to-back)
 			lstRenderables.sort(pred_sp_sort);
@@ -324,7 +328,7 @@ void CRender::Render()
 	//******* Occlusion testing of volume-limited light-sources
 	Target->phase_occq();
 	LP_normal.clear();
-	LP_pending.clear();
+	//LP_pending.clear();
 	if (RImplementation.o.dx10_msaa)
 		RCache.set_ZB(RImplementation.Target->rt_MSAADepth->pZRT);
 	{
@@ -339,42 +343,11 @@ void CRender::Render()
 		Stats.l_total = Stats.l_shadowed + Stats.l_unshadowed;
 
 		// perform tests
-		count = _max(count, LP.v_point.size());
-		count = _max(count, LP.v_spot.size());
-		count = _max(count, LP.v_shadowed.size());
-		for (auto it = 0; it < count; it++)
-		{
-			if (it < LP.v_point.size())
-			{
-				light* L = LP.v_point[it];
-				L->vis_prepare();
-				if (L->vis.pending)
-					LP_pending.v_point.push_back(L);
-				else
-					LP_normal.v_point.push_back(L);
-			}
-			if (it < LP.v_spot.size())
-			{
-				light* L = LP.v_spot[it];
-				L->vis_prepare();
-				if (L->vis.pending)
-					LP_pending.v_spot.push_back(L);
-				else
-					LP_normal.v_spot.push_back(L);
-			}
-			if (it < LP.v_shadowed.size())
-			{
-				light* L = LP.v_shadowed[it];
-				L->vis_prepare();
-				if (L->vis.pending)
-					LP_pending.v_shadowed.push_back(L);
-				else
-					LP_normal.v_shadowed.push_back(L);
-			}
-		}
+		LP_normal.v_point = LP.v_point;
+		LP_normal.v_shadowed = LP.v_shadowed;
+		LP_normal.v_spot = LP.v_spot;
+		LP_normal.vis_prepare();
 	}
-	LP_normal.sort();
-	LP_pending.sort();
 
 	//******* Main render :: PART-1 (second)
 	if (split_the_scene_to_minimize_wait)
@@ -474,14 +447,16 @@ void CRender::Render()
 		PIX_EVENT(DEFER_LIGHT_NO_OCCQ);
 		Target->phase_accumulator();
 		HOM.Disable();
+		LP_normal.vis_update();
+		LP_normal.sort();
 		render_lights(LP_normal);
 	}
 
 	// Lighting, dependant on OCCQ
-	{
+	/*{
 		PIX_EVENT(DEFER_LIGHT_OCCQ);
 		render_lights(LP_pending);
-	}
+	}*/
 
 	// Postprocess
 	{

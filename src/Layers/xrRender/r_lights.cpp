@@ -2,9 +2,7 @@
 
 IC bool pred_area(light* _1, light* _2)
 {
-	u32 a0 = _1->X.S.size;
-	u32 a1 = _2->X.S.size;
-	return a0 > a1; // reverse -> descending
+	return _1->X.S.size > _2->X.S.size; // reverse -> descending
 }
 
 void CRender::render_lights(light_Package& LP)
@@ -13,22 +11,16 @@ void CRender::render_lights(light_Package& LP)
 	// Refactor order based on ability to pack shadow-maps
 	// 1. calculate area + sort in descending order
 	// const	u16		smap_unassigned		= u16(-1);
+	for (auto& it = LP.v_shadowed.begin(); it != LP.v_shadowed.end(); it++)
 	{
-		xr_vector<light*>& source = LP.v_shadowed;
-		for (u32 it = 0; it < source.size(); it++)
+		light*& L = *it;
+		if (!L->vis.visible)
 		{
-			light* L = source[it];
-			L->vis_update();
-			if (!L->vis.visible)
-			{
-				source.erase(source.begin() + it);
-				it--;
-			}
-			else
-			{
-				LR.compute_xf_spot(L);
-			}
+			LP.v_shadowed.erase(it);
+			it--;
 		}
+		else
+			LR.compute_xf_spot(*it);
 	}
 
 	// 2. refactor - infact we could go from the backside and sort in ascending order
@@ -41,7 +33,7 @@ void CRender::render_lights(light_Package& LP)
 		for (u16 smap_ID = 0; refactored.size() != total; ++smap_ID)
 		{
 			LP_smap_pool.initialize(RImplementation.o.smapsize);
-			std::sort(source.begin(), source.end(), pred_area);
+			source.sort(pred_area);
 			for (size_t test = 0; test < source.size(); ++test)
 			{
 				light* L = source[test];
@@ -106,6 +98,7 @@ void CRender::render_lights(light_Package& LP)
 			else
 				r_pmask(true, false);
 			L->svis.begin();
+			PIX_EVENT(SHADOWED_LIGHTS_RENDER_SUBSPACE);
 			r_dsgraph_render_subspace(L->spatial.sector, L->X.S.combine, L->position, TRUE);
 			bool bNormal = mapNormalPasses[0][0].size() || mapMatrixPasses[0][0].size();
 			bool bSpecial = mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
@@ -127,7 +120,9 @@ void CRender::render_lights(light_Package& LP)
 				{
 					L->X.S.transluent = TRUE;
 					Target->phase_smap_spot_tsh(L);
+					PIX_EVENT(SHADOWED_LIGHTS_RENDER_GRAPH);
 					r_dsgraph_render_graph(1); // normal level, secondary priority
+					PIX_EVENT(SHADOWED_LIGHTS_RENDER_SORTED);
 					r_dsgraph_render_sorted(); // strict-sorted geoms
 				}
 			}
@@ -141,14 +136,12 @@ void CRender::render_lights(light_Package& LP)
 
 		//		switch-to-accumulator
 		Target->phase_accumulator();
-		HOM.Disable();
-
+		//HOM.Disable();
 		//		if (has_point_unshadowed)	-> 	accum point unshadowed
 		if (!LP.v_point.empty())
 		{
 			light* L2 = LP.v_point.back();
 			LP.v_point.pop_back();
-			L2->vis_update();
 			if (L2->vis.visible)
 			{
 				Target->accum_point(L2);
@@ -161,7 +154,6 @@ void CRender::render_lights(light_Package& LP)
 		{
 			light* L2 = LP.v_spot.back();
 			LP.v_spot.pop_back();
-			L2->vis_update();
 			if (L2->vis.visible)
 			{
 				LR.compute_xf_spot(L2);
@@ -173,15 +165,15 @@ void CRender::render_lights(light_Package& LP)
 		//		if (was_spot_shadowed)		->	accum spot shadowed
 		if (!L_spot_s.empty())
 		{
-			for (u32 it = 0; it < L_spot_s.size(); it++)
+			for (light* p_light : L_spot_s)
 			{
-				Target->accum_spot(L_spot_s[it]);
-				render_indirect(L_spot_s[it]);
+				Target->accum_spot(p_light);
+				render_indirect(p_light);
 			}
 
 			if (RImplementation.o.advancedpp && ps_r2_ls_flags.is(R2FLAG_VOLUMETRIC_LIGHTS))
-				for (u32 it = 0; it < L_spot_s.size(); it++)
-					Target->accum_volumetric(L_spot_s[it]);
+				for (light* p_light : L_spot_s)
+					Target->accum_volumetric(p_light);
 
 			L_spot_s.clear();
 		}
@@ -190,34 +182,30 @@ void CRender::render_lights(light_Package& LP)
 	// Point lighting (unshadowed, if left)
 	if (!LP.v_point.empty())
 	{
-		xr_vector<light*>& Lvec = LP.v_point;
-		for (u32 pid = 0; pid < Lvec.size(); pid++)
+		for (light* p_light : LP.v_point)
 		{
-			Lvec[pid]->vis_update();
-			if (Lvec[pid]->vis.visible)
+			if (p_light->vis.visible)
 			{
-				render_indirect(Lvec[pid]);
-				Target->accum_point(Lvec[pid]);
+				render_indirect(p_light);
+				Target->accum_point(p_light);
 			}
 		}
-		Lvec.clear();
+		LP.v_point.clear();
 	}
 
 	// Spot lighting (unshadowed, if left)
 	if (!LP.v_spot.empty())
 	{
-		xr_vector<light*>& Lvec = LP.v_spot;
-		for (u32 pid = 0; pid < Lvec.size(); pid++)
+		for (light* p_light : LP.v_spot)
 		{
-			Lvec[pid]->vis_update();
-			if (Lvec[pid]->vis.visible)
+			if (p_light->vis.visible)
 			{
-				LR.compute_xf_spot(Lvec[pid]);
-				render_indirect(Lvec[pid]);
-				Target->accum_spot(Lvec[pid]);
+				LR.compute_xf_spot(p_light);
+				render_indirect(p_light);
+				Target->accum_spot(p_light);
 			}
 		}
-		Lvec.clear();
+		LP.v_spot.clear();
 	}
 }
 

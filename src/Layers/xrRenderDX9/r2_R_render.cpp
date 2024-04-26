@@ -313,10 +313,8 @@ void CRender::Render()
     //******* Occlusion testing of volume-limited light-sources
     Target->phase_occq();
     LP_normal.clear();
-    LP_pending.clear();
     {
         // perform tests
-        auto count = 0;
         light_Package& LP = Lights.package;
 
         // stats
@@ -325,42 +323,12 @@ void CRender::Render()
         Stats.l_total = Stats.l_shadowed + Stats.l_unshadowed;
 
         // perform tests
-        count = _max(count, LP.v_point.size());
-        count = _max(count, LP.v_spot.size());
-        count = _max(count, LP.v_shadowed.size());
-        for (auto it = 0; it < count; it++)
-        {
-            if (it < LP.v_point.size())
-            {
-                light* L = LP.v_point[it];
-                L->vis_prepare();
-                if (L->vis.pending)
-                    LP_pending.v_point.push_back(L);
-                else
-                    LP_normal.v_point.push_back(L);
-            }
-            if (it < LP.v_spot.size())
-            {
-                light* L = LP.v_spot[it];
-                L->vis_prepare();
-                if (L->vis.pending)
-                    LP_pending.v_spot.push_back(L);
-                else
-                    LP_normal.v_spot.push_back(L);
-            }
-            if (it < LP.v_shadowed.size())
-            {
-                light* L = LP.v_shadowed[it];
-                L->vis_prepare();
-                if (L->vis.pending)
-                    LP_pending.v_shadowed.push_back(L);
-                else
-                    LP_normal.v_shadowed.push_back(L);
-            }
-        }
+        LP_normal.v_point = LP.v_point;
+        LP_normal.v_shadowed = LP.v_shadowed;
+        LP_normal.v_spot = LP.v_spot;
+        LP_normal.vis_prepare();
     }
     LP_normal.sort();
-    LP_pending.sort();
 
     //******* Main render :: PART-1 (second)
     if (split_the_scene_to_minimize_wait)
@@ -452,10 +420,12 @@ void CRender::Render()
     // Lighting, non dependant on OCCQ
     Target->phase_accumulator();
     HOM.Disable();
+    LP_normal.vis_update();
+    LP_normal.sort();
     render_lights(LP_normal);
 
     // Lighting, dependant on OCCQ
-    render_lights(LP_pending);
+    //render_lights(LP_pending);
 
     // Postprocess
     Target->phase_combine();

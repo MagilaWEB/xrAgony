@@ -311,7 +311,6 @@ void CRender::create()
 
 	Models = new CModelPool();
 	PSLibrary.OnCreate();
-	HWOCC.occq_create(occq_size);
 
 	// rmNormal					();
 	marker = 0;
@@ -358,8 +357,6 @@ void CRender::reset_begin()
 
 void CRender::reset_end()
 {
-	HWOCC.occq_create(occq_size);
-
 	Target = new CRenderTarget();
 
 	// Set this flag true to skip the first render frame,
