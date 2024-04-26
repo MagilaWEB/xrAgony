@@ -111,7 +111,7 @@ R_occlusion::occq_result R_occlusion::occq_get(u32& ID)
 
 	// здесь нужно дождаться результата, т.к. отладка показывает, что
 	// очень редко когда он готов немедленно
-	while (true)
+	do
 	{
 		HRESULT hr = GetData(used[ID].Q.Get(), &fragments, sizeof(fragments));
 		if (hr == S_OK)
@@ -125,7 +125,7 @@ R_occlusion::occq_result R_occlusion::occq_get(u32& ID)
 			fragments = 0xffffffff;
 			break;
 		}
-	}
+	} while (true);
 
 	if (fragments == 0)
 		RImplementation.BasicStats.OcclusionCulled++;
