@@ -4,7 +4,7 @@
 #include "Layers/xrRender/FBasicVisual.h"
 #include "xrCommon/math_funcs_inline.h"
 
-#include "r4_R_sun_support.h"
+#include "r_sun_support.h"
 
 const float tweak_COP_initial_offs = 1200.f;
 const float tweak_ortho_xform_initial_offs = 1000.f; //. ?
@@ -205,9 +205,6 @@ Fvector3 wform(Fmatrix& m, Fvector3 const& v)
 
 void CRender::init_cacades()
 {
-	u32 cascade_count = 3;
-	m_sun_cascades.resize(cascade_count);
-
 	float fBias = -0.0000025f;
 	//	float size = MAP_SIZE_START;
 	m_sun_cascades[0].reset_chain = true;
@@ -231,15 +228,15 @@ void CRender::init_cacades()
 void CRender::render_sun_cascades()
 {
 	bool b_need_to_render_sunshafts = RImplementation.Target->need_to_render_sunshafts();
-	bool last_cascade_chain_mode = m_sun_cascades.back().reset_chain;
+	bool last_cascade_chain_mode = m_sun_cascades[SUN_CASCADES_COUN - 1].reset_chain;
 	if (b_need_to_render_sunshafts)
-		m_sun_cascades[m_sun_cascades.size() - 1].reset_chain = true;
+		m_sun_cascades[SUN_CASCADES_COUN - 1].reset_chain = true;
 
-	for (u32 i = 0; i < m_sun_cascades.size(); ++i)
+	for (u32 i = 0; i < SUN_CASCADES_COUN; i++)
 		render_sun_cascade(i);
 
 	if (b_need_to_render_sunshafts)
-		m_sun_cascades[m_sun_cascades.size() - 1].reset_chain = last_cascade_chain_mode;
+		m_sun_cascades[SUN_CASCADES_COUN - 1].reset_chain = last_cascade_chain_mode;
 }
 
 void CRender::render_sun_cascade(u32 cascade_ind)
@@ -320,7 +317,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 			if (cascade_ind == 0 || m_sun_cascades[cascade_ind].reset_chain)
 			{
 				Fvector3 near_p, edge_vec;
-				for (int p = 0; p < 4; p++)
+				for (u32 p = 0; p < VIEW_FRUSTUM_RAYS_COUNT; p++)
 				{
 					// 					Fvector asd = Device.vCameraDirection;
 					// 					asd.mul(-2);
@@ -332,11 +329,12 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 					edge_vec.sub(near_p);
 					edge_vec.normalize();
 
-					light_cuboid.view_frustum_rays.push_back(sun::ray(near_p, edge_vec));
+					light_cuboid.view_frustum_rays[p] = sun::ray(near_p, edge_vec);
 				}
 			}
 			else
-				light_cuboid.view_frustum_rays = m_sun_cascades[cascade_ind].rays;
+				for (u32 p = 0; p < VIEW_FRUSTUM_RAYS_COUNT; p++)
+					light_cuboid.view_frustum_rays[p] = m_sun_cascades[cascade_ind].rays[p];
 
 			light_cuboid.view_ray.P = Device.vCameraPosition;
 			light_cuboid.view_ray.D = Device.vCameraDirection;
@@ -393,15 +391,17 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 		//			lightXZshift.mad(proj_view, 20);
 
 		// Initialize rays for the next cascade
-		if (cascade_ind < m_sun_cascades.size() - 1)
-			m_sun_cascades[cascade_ind + 1].rays = light_cuboid.view_frustum_rays;
+		if (cascade_ind < SUN_CASCADES_COUN - 1)
+			for (u32 p = 0; p < VIEW_FRUSTUM_RAYS_COUNT; p++)
+				m_sun_cascades[cascade_ind + 1].rays[p] = light_cuboid.view_frustum_rays[p];
+			
 
 		// #ifdef	_DEBUG
 
-		static bool draw_debug = false;
+		/*static bool draw_debug = false;
 		if (draw_debug && cascade_ind == 0)
 			for (u32 it = 0; it < cull_planes.size(); it++)
-				RImplementation.Target->dbg_addplane(cull_planes[it], it * 0xFFF);
+				RImplementation.Target->dbg_addplane(cull_planes[it], it * 0xFFF);*/
 		//#endifDDS
 
 		Fvector cam_shifted = L_pos;
@@ -521,18 +521,17 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 	// Accumulate
 	Target->phase_accumulator();
 
+#if USE_DX11
 	if (Target->use_minmax_sm_this_frame())
-	{
-		PIX_EVENT(SE_SUN_NEAR_MINMAX_GENERATE);
 		Target->create_minmax_SM();
-	}
+#endif
 
 	PIX_EVENT(SE_SUN_NEAR);
 
 	if (cascade_ind == 0)
 		Target->accum_direct_cascade(SE_SUN_NEAR, m_sun_cascades[cascade_ind].xform, m_sun_cascades[cascade_ind].xform,
 			m_sun_cascades[cascade_ind].bias);
-	else if (cascade_ind < m_sun_cascades.size() - 1)
+	else if (cascade_ind < SUN_CASCADES_COUN - 1)
 		Target->accum_direct_cascade(SE_SUN_MIDDLE, m_sun_cascades[cascade_ind].xform,
 			m_sun_cascades[cascade_ind - 1].xform, m_sun_cascades[cascade_ind].bias);
 	else

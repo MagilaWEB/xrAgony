@@ -18,6 +18,8 @@
 
 class dxRender_Visual;
 
+constexpr u32 SUN_CASCADES_COUN = 3;
+
 // definition
 class CRender : public D3DXRenderBase
 {
@@ -147,7 +149,7 @@ public:
     bool m_bMakeAsyncSS;
     bool m_bFirstFrameAfterReset; // Determines weather the frame is the first after resetting device.
 
-    xr_vector<sun::cascade> m_sun_cascades;
+    sun::cascade m_sun_cascades[SUN_CASCADES_COUN];
 
 private:
     // Loading / Unloading

@@ -22,6 +22,8 @@
 #include "xrEngine/IRenderable.h"
 #include "xrCore/FMesh.hpp"
 
+constexpr u32 SUN_CASCADES_COUN = 3;
+
 class dxRender_Visual;
 
 // definition
@@ -187,7 +189,7 @@ public:
 
     bool m_bMakeAsyncSS;
     bool m_bFirstFrameAfterReset; // Determines weather the frame is the first after resetting device.
-    xr_vector<sun::cascade> m_sun_cascades;
+    sun::cascade m_sun_cascades[SUN_CASCADES_COUN];
 
 private:
     // Loading / Unloading

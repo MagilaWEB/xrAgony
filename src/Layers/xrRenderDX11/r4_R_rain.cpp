@@ -3,7 +3,7 @@
 #include "xrEngine/IRenderable.h"
 #include "Layers/xrRender/FBasicVisual.h"
 
-#include "r4_R_sun_support.h"
+#include "Layers/xrRender/r_sun_support.h"
 
 const float tweak_rain_COP_initial_offs = 1200.f;
 const float tweak_rain_ortho_xform_initial_offs = 1000.f; //. ?
