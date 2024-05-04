@@ -1758,7 +1758,7 @@ void CWeapon::UpdateHudAdditonal(Fmatrix& trans)
 
 	if (Device.m_ScopeVP.IsSVPActive())
 	{
-		Device.m_ScopeVP.m_vDirection.set(get_LastFD());
+		Device.m_ScopeVP.m_vDirection.set(Device.vCameraDirection);
 
 		Fmatrix Cam;
 		Cam.i.set(Device.vCameraRight);
@@ -1779,8 +1779,7 @@ void CWeapon::UpdateHudAdditonal(Fmatrix& trans)
 			cam_mHPB.z + (hud_mHPB.z - cam_mHPB.z)
 		);
 
-		Device.m_ScopeVP.m_vPosition.set(get_LastFP());
-		Device.m_ScopeVP.m_vPosition.add(Fvector{ 0.f, 0.1f, 0.f }.add(Fvector{ get_LastFD() }.mul(-.5f)));
+		Device.m_ScopeVP.m_vPosition.set(Device.vCameraPosition);
 		Device.m_ScopeVP.m_vNormal.set(Cam.j);
 		Device.m_ScopeVP.m_vRight.set(Cam.i);
 	}
