@@ -734,18 +734,6 @@
     <ClCompile Include="..\xrRender\PSLibrary.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="r2_blenders.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_R_calculate.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_sector_detect.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_test_hw.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="r4.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -1299,6 +1287,18 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\r_lights.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\r_blenders.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\r_calculate.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\r_test_hw.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\r_sector_detect.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
