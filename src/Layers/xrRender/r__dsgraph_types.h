@@ -100,7 +100,7 @@ struct mapNormalPS : public xr_fixed_map<ps_type, mapNormalCS>
 };
 #endif
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 struct mapNormalGS : public xr_fixed_map<gs_type, mapNormalPS>
 {
     float ssa;
@@ -158,7 +158,7 @@ struct mapMatrixPS : public xr_fixed_map<ps_type, mapMatrixCS>
 };
 #endif
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 struct mapMatrixGS : public xr_fixed_map<gs_type, mapMatrixPS>
 {
     float ssa;

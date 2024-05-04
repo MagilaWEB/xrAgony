@@ -84,6 +84,7 @@ public:
 	Fvector vCameraRight;
 
 	Fmatrix mView;
+	Fmatrix mInvView;
 	Fmatrix mProject;
 	Fmatrix mFullTransform;
 
@@ -127,27 +128,38 @@ protected:
 
 #pragma pack(pop)
 // refs
-class ENGINE_API CRenderDevice : public CRenderDeviceBase
+class ENGINE_API CRenderDevice final : public CRenderDeviceBase
 {
 public:
-	class ENGINE_API CSecondVPParams //--#SM+#-- +SecondVP+
+	struct ENGINE_API CScopeVP final
 	{
-		bool isActive; // Флаг активации рендера во второй вьюпорт
-		u8 frameDelay;  // На каком кадре с момента прошлого рендера во второй вьюпорт мы начнём новый
-		//(не может быть меньше 2 - каждый второй кадр, чем больше тем более низкий FPS во втором вьюпорте)
-
+		bool m_bIsActive		{ false };	// Флаг активации рендера во второй вьюпорт
+		bool m_bStartRender		{ false };	// Флаг начала рендеринга.
+		
 	public:
-		bool isCamReady; // Флаг готовности камеры (FOV, позиция, и т.п) к рендеру второго вьюпорта
+		Fvector		m_vPosition;
+		Fvector		m_vDirection;
+		Fvector		m_vNormal;
+		Fvector		m_vRight;
 
-		IC bool IsSVPActive() { return isActive; }
-		IC void SetSVPActive(bool bState) { isActive = bState; }
-		bool    IsSVPFrame();
-
-		IC u8 GetSVPFrameDelay() { return frameDelay; }
-		void  SetSVPFrameDelay(u8 iDelay)
+		IC void SetRender(bool bState)
 		{
-			frameDelay = iDelay;
-			clamp<u8>(frameDelay, 2, u8(-1));
+			m_bStartRender = bState;
+		}
+
+		IC bool IsSVPActive()
+		{
+			return m_bIsActive;
+		}
+
+		IC void SetSVPActive(bool bState)
+		{
+			m_bIsActive = bState;
+		}
+
+		bool IsSVPRender()
+		{
+			return IsSVPActive() && m_bStartRender;
 		}
 	};
 
@@ -165,7 +177,6 @@ private:
 
 public:
 	u16 FPS = 30;
-	u16 FPSViewport = 30;
 	// HWND m_hWnd;
    // LRESULT MsgProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -209,7 +220,7 @@ public:
 	xr_list<fastdelegate::FastDelegate<void()>>	seqParallel2;
 	xr_list<std::function<void()>>			functionPointer;
 
-	CSecondVPParams m_SecondViewport;	//--#SM+#-- +SecondVP+
+	CScopeVP m_ScopeVP;
 
 	Fmatrix mInvFullTransform;
 
@@ -220,10 +231,7 @@ public:
 		b_is_Ready = FALSE;
 		Timer.Start();
 		m_bNearer = FALSE;
-		//--#SM+#-- +SecondVP+
-		m_SecondViewport.SetSVPActive(false);
-		m_SecondViewport.SetSVPFrameDelay(2);
-		m_SecondViewport.isCamReady = false;
+		m_ScopeVP.SetSVPActive(false);
 	};
 
 	void Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason);
@@ -330,6 +338,8 @@ private:
 	void CalcFrameStats();
 	void OnFrame();
 	void OnFrame2();
+	void d_Render();
+	void d_SVPRender();
 	void GlobalUpdate();
 	void FpsCalc();
 

@@ -352,7 +352,7 @@ void CSkeletonX_PM::Load(const char* N, IReader* data, u32 dwFlags)
     void* _verts_ = data->pointer();
     inherited1::Load(N, data, dwFlags | VLOAD_NOVERTICES);
     GEnv.Render->shader_option_skinning(-1);
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
     _DuplicateIndices(N, data);
 #endif // USE_DX10
     vBase = 0;
@@ -364,14 +364,14 @@ void CSkeletonX_ST::Load(const char* N, IReader* data, u32 dwFlags)
     void* _verts_ = data->pointer();
     inherited1::Load(N, data, dwFlags | VLOAD_NOVERTICES);
     GEnv.Render->shader_option_skinning(-1);
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
     _DuplicateIndices(N, data);
 #endif // USE_DX10
     vBase = 0;
     _Load_hw(*this, _verts_);
 }
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 
 void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 {
@@ -762,7 +762,7 @@ void CSkeletonX_ext::_CollectBoneFaces(Fvisual* V, u32 iBase, u32 iCount)
 {
     u16* indices = nullptr;
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
     indices = *m_Indices;
 #else // USE_DX10
     R_CHK(V->p_rm_Indices->Lock(0, V->dwPrimitives * 3, (void**)&indices, D3DLOCK_READONLY));
@@ -1080,7 +1080,7 @@ BOOL CSkeletonX_ext::_PickBone(IKinematics::pick_result& r, float dist, const Fv
     CBoneData::FacesVec* faces = &BD.child_faces[ChildIDX];
     BOOL result = FALSE;
     u16* indices = nullptr;
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
     indices = *m_Indices;
 #else // USE_DX10
     CHK_DX(V->p_rm_Indices->Lock(0, V->dwPrimitives * 3, (void**)&indices, D3DLOCK_READONLY));
@@ -1148,7 +1148,7 @@ void CSkeletonX_PM::EnumBoneVertices(SEnumVerticesCallback& C, u16 bone_id)
     inherited2::_EnumBoneVertices(C, this, bone_id, iBase + SW.offset, SW.num_tris * 3);
 }
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 
 void CSkeletonX_ext::_FillVerticesHW1W(const Fmatrix& view, CSkeletonWallmark& wm, const Fvector& normal, float size,
     Fvisual* V, u16* indices, CBoneData::FacesVec& faces)
@@ -1507,7 +1507,7 @@ void CSkeletonX_ext::_EnumBoneVertices(SEnumVerticesCallback& C, Fvisual* V, u16
     u16* indices = nullptr;
     //R_CHK(V->pIndices->Lock(iBase, iCount, (void**)&indices, D3DLOCK_READONLY));
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
     VERIFY(*m_Indices);
     indices = *m_Indices;
 #else USE_DX10

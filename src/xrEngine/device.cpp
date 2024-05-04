@@ -217,20 +217,14 @@ void CRenderDevice::FpsCalc()
 {
 	//the inaccuracy is about ~0.1%
 	static u16 HFPS = 0;
-	static u16 HFPSViewport = 0;
 	static CTimer timer;
 
-	if (m_SecondViewport.IsSVPFrame())
-		HFPSViewport++;
-	else
-		HFPS++;
+	HFPS++;
 
 	if ((timer.GetElapsed_sec() * 1000) >= float(1000 / 3))
 	{
 		FPS = HFPS > 3 ? (HFPS * 3) - 3 : HFPS;
-		FPSViewport = HFPSViewport > 3 ? (HFPSViewport * 3) - 3 : HFPSViewport;
 		HFPS = 0;
-		HFPSViewport = 0;
 		timer.Start();
 	}
 }
@@ -286,6 +280,67 @@ void CRenderDevice::OnFrame2()
 	}
 }
 
+void CRenderDevice::d_Render()
+{
+	// all rendering is done here
+	CStatTimer renderTotalReal;
+	renderTotalReal.FrameStart();
+	renderTotalReal.Begin();
+	if (b_is_Active && Begin())
+	{
+		seqRender.Process();
+		CalcFrameStats();
+		Statistic->Show();
+		End(); // Present goes here
+
+		d_SVPRender();
+	}
+	renderTotalReal.End();
+	renderTotalReal.FrameEnd();
+	stats.RenderTotal.accum = renderTotalReal.accum;
+}
+
+void CRenderDevice::d_SVPRender()
+{
+	if (m_ScopeVP.IsSVPActive() && !ActiveMain())
+	{
+		dwFrame++;
+		Core.dwFrame = dwFrame;
+		m_ScopeVP.SetRender(true);
+
+		extern void DeviceViewportApplyDevice();
+		DeviceViewportApplyDevice();
+
+		if (dwPrecacheFrame)
+		{
+			float factor = float(dwPrecacheFrame) / float(dwPrecacheTotal);
+			float angle = PI_MUL_2 * factor;
+			vCameraDirection.set(_sin(angle), 0, _cos(angle));
+			vCameraDirection.normalize();
+			vCameraTop.set(0, 1, 0);
+			vCameraRight.crossproduct(vCameraTop, vCameraDirection);
+			mView.build_camera_dir(vCameraPosition, vCameraDirection, vCameraTop);
+		}
+		// Matrices
+		mInvView.invert(mView);
+		mFullTransform.mul(mProject, mView);
+		GEnv.Render->SetCacheXform(mView, mProject);
+		mInvFullTransform.invert_44(mFullTransform);
+
+		vCameraPositionSaved = vCameraPosition;
+
+		GEnv.Render->Begin();
+
+		g_bRendering = TRUE;
+		seqRender.Process();
+		g_bRendering = FALSE;
+
+		GEnv.Render->End();
+
+		m_ScopeVP.SetRender(false);
+	}
+}
+
 void CRenderDevice::GlobalUpdate()
 {
 	xrCriticalSection::raii mt{ ResetRender };
@@ -309,7 +364,7 @@ void CRenderDevice::GlobalUpdate()
 		{
 			const u32 limit = ActiveMain() ? g_MainFPSlimit : Paused() ? g_PausedFPSlimit : g_GlobalFPSlimit;
 			// FPS Lock
-			if (limit > 0 && !m_SecondViewport.IsSVPFrame())
+			if (limit > 0)
 			{
 				static CTimer dwTime;
 				const float updateDelta = 1000.f / limit;
@@ -335,6 +390,7 @@ void CRenderDevice::GlobalUpdate()
 			mView.build_camera_dir(vCameraPosition, vCameraDirection, vCameraTop);
 		}
 		// Matrices
+		mInvView.invert(mView);
 		mFullTransform.mul(mProject, mView);
 		GEnv.Render->SetCacheXform(mView, mProject);
 		mInvFullTransform.invert_44(mFullTransform);
@@ -349,20 +405,8 @@ void CRenderDevice::GlobalUpdate()
 		mProjectSaved = mProject;
 
 		xrThread::StartGlobal(xrThread::sParalelRender);
-		// all rendering is done here
-		CStatTimer renderTotalReal;
-		renderTotalReal.FrameStart();
-		renderTotalReal.Begin();
-		if (b_is_Active && Begin())
-		{
-			seqRender.Process();
-			CalcFrameStats();
-			Statistic->Show();
-			End(); // Present goes here
-		}
-		renderTotalReal.End();
-		renderTotalReal.FrameEnd();
-		stats.RenderTotal.accum = renderTotalReal.accum;
+		
+		d_Render();
 
 		xrThread::WaitGlobal();
 		FpsCalc();
@@ -575,12 +619,11 @@ void CLoadScreenRenderer::stop()
 	b_need_user_input = false;
 }
 
-void CLoadScreenRenderer::OnRender() { pApp->load_draw_internal(); }
-
-bool CRenderDevice::CSecondVPParams::IsSVPFrame() //--#SM+#-- +SecondVP+
+void CLoadScreenRenderer::OnRender()
 {
-	return IsSVPActive() && Device.dwFrame % frameDelay == 0;
+	pApp->load_draw_internal();
 }
+
 void CRenderDevice::time_factor(const float& time_factor)
 {
 	Timer.time_factor(time_factor);

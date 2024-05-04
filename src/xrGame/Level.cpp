@@ -412,18 +412,20 @@ extern void draw_wnds_rects();
 
 void CLevel::OnRender()
 {
-	GEnv.Render->BeforeWorldRender();	//--#SM+#-- +SecondVP+
-
 	inherited::OnRender();
 	if (!game)
 		return;
 
-	Game().OnRender();
+	if (!Device.m_ScopeVP.IsSVPRender())
+	{
+		Game().OnRender();
+		HUD().RenderUI();
+	}
+
 	BulletManager().Render();
 
-	GEnv.Render->AfterWorldRender(); //--#SM+#-- +SecondVP+
+	GEnv.Render->AfterWorldRender();
 
-	HUD().RenderUI();
 #ifdef DEBUG
 	draw_wnds_rects();
 	physics_world()->OnRender();

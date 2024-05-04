@@ -129,7 +129,7 @@ struct ShaderTypeTraits<SPS>
     static inline u32 GetShaderDest() { return RC_dest_pixel; }
 };
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 template <>
 struct ShaderTypeTraits<SGS>
 {
@@ -284,7 +284,7 @@ inline CResourceManager::map_VS& CResourceManager::GetShaderMap()
     return m_vs;
 }
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 template <>
 inline CResourceManager::map_GS& CResourceManager::GetShaderMap()
 {

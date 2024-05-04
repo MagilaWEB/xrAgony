@@ -40,7 +40,7 @@ public:
 
     void updateWindowProps(HWND hw);
 #ifdef DEBUG
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
     void Validate(void) {};
 #else //	USE_DX10
     void Validate(void)
@@ -128,7 +128,7 @@ public:
     stats_manager stats_manager;
 #endif
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
     void UpdateViews();
 #endif
 #if defined(USE_DX10) || defined(USE_DX11)

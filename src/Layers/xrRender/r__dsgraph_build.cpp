@@ -169,7 +169,7 @@ void D3DXRenderBase::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector&
 					{
 						Nps.ssa = SSA;
 #endif
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 						if (SSA > Ngs.ssa)
 						{
 							Ngs.ssa = SSA;
@@ -178,7 +178,7 @@ void D3DXRenderBase::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector&
 							{
 								Nvs.ssa = SSA;
 							}
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 						}
 #endif
 					}
@@ -316,7 +316,7 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 					{
 						Nps.ssa = SSA;
 #endif
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 						if (SSA > Ngs.ssa)
 						{
 							Ngs.ssa = SSA;
@@ -325,7 +325,7 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 							{
 								Nvs.ssa = SSA;
 							}
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 						}
 #endif
 					}
@@ -839,7 +839,7 @@ void D3DXRenderBase::Reset(HWND hWnd, u32 & dwWidth, u32 & dwHeight, float& fWid
 void D3DXRenderBase::SetupStates()
 {
 	HW.Caps.Update();
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 	SSManager.SetMaxAnisotropy(4);
 	//  TODO: DX10: Implement Resetting of render states into default mode
 	// VERIFY(!"D3DXRenderBase::SetupStates not implemented.");
@@ -928,7 +928,7 @@ void D3DXRenderBase::SetupGPU(bool bForceGPU_SW, bool bForceGPU_NonPure, bool bF
 
 void D3DXRenderBase::overdrawBegin()
 {
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 	//  TODO: DX10: Implement overdrawBegin
 	VERIFY(!"D3DXRenderBase::overdrawBegin not implemented.");
 #else
@@ -950,7 +950,7 @@ void D3DXRenderBase::overdrawBegin()
 
 void D3DXRenderBase::overdrawEnd()
 {
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 	// TODO: DX10: Implement overdrawEnd
 	VERIFY(!"D3DXRenderBase::overdrawBegin not implemented.");
 #else
@@ -996,7 +996,7 @@ void D3DXRenderBase::ResourcesDumpMemoryUsage() { Resources->_DumpMemoryUsage();
 DeviceState D3DXRenderBase::GetDeviceState()
 {
 	HW.Validate();
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 	//  TODO: DX10: Implement GetDeviceState
 	//  TODO: DX10: Implement DXGI_PRESENT_TEST testing
 	// VERIFY(!"D3DXRenderBase::overdrawBegin not implemented.");
@@ -1019,8 +1019,9 @@ bool D3DXRenderBase::GetForceGPU_REF() { return HW.Caps.bForceGPU_REF; }
 u32 D3DXRenderBase::GetCacheStatPolys() { return RCache.stat.polys; }
 void D3DXRenderBase::Begin()
 {
-#if !defined(USE_DX10) && !defined(USE_DX11) && !defined(USE_OGL)
-	CHK_DX(HW.pDevice->BeginScene());
+#if !defined(USE_DX11) 
+	if (!Device.m_ScopeVP.IsSVPRender())
+		CHK_DX(HW.pDevice->BeginScene());
 #endif
 	RCache.OnFrameBegin();
 	RCache.set_CullMode(CULL_CW);
@@ -1031,7 +1032,7 @@ void D3DXRenderBase::Begin()
 
 void D3DXRenderBase::Clear()
 {
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 	HW.pContext->ClearDepthStencilView(RCache.get_ZB(), D3D_CLEAR_DEPTH | D3D_CLEAR_STENCIL, 1.0f, 0);
 	if (psDeviceFlags.test(rsClearBB))
 	{
@@ -1053,23 +1054,24 @@ void D3DXRenderBase::End()
 		overdrawEnd();
 
 	RCache.OnFrameEnd();
-	DoAsyncScreenshot();
 
+	if (Device.m_ScopeVP.IsSVPRender())
+		return;
+
+	DoAsyncScreenshot();
 	extern ENGINE_API u32 state_screen_mode;
 #if defined(USE_DX11)
-	if (!Device.m_SecondViewport.IsSVPFrame()) //!Device.m_SecondViewport.m_bCamReady +SecondVP+ Не выводим кадр из второго вьюпорта на экран (на практике у нас экранная картинка обновляется минимум в два раза реже) [don't flush image into display for SecondVP-frame]
-		HW.m_pSwapChain->Present((state_screen_mode == 1) && psDeviceFlags.test(rsVSync) ? 1 : 0, 0);
+	HW.m_pSwapChain->Present((state_screen_mode == 1) && psDeviceFlags.test(rsVSync) ? 1 : 0, 0);
 #else //!USE_DX10 || USE_DX11
 	CHK_DX(HW.pDevice->EndScene());
-	if (!Device.m_SecondViewport.IsSVPFrame()) //&& !Device.m_SecondViewport.m_bCamReady +SecondVP+ Не выводим кадр из второго вьюпорта на экран (на практике у нас экранная картинка обновляется минимум в два раза реже) [don't flush image into display for SecondVP-frame]
-		HW.pDevice->Present(nullptr, nullptr, nullptr, nullptr);
+	HW.pDevice->Present(nullptr, nullptr, nullptr, nullptr);
 #endif // USE_DX10
 }
 
 void D3DXRenderBase::ResourcesDestroyNecessaryTextures() { Resources->DestroyNecessaryTextures(); }
 void D3DXRenderBase::ClearTarget()
 {
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 	FLOAT ColorRGBA[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	HW.pContext->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
 #else

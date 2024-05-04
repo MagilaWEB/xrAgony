@@ -495,15 +495,6 @@ void CDetailManager::Frame()
 
 	LIMIT_UPDATE_FPS(DetailManagerFPS, 30)
 
-	if (!RDEVICE.m_SecondViewport.IsSVPFrame())
-		VisiblesClear();
-	else
-	{
-		/*if (!R_GRASS_3D_SCOPE)
-			VisiblesClear();*/
-		return;
-	}
-
 	RImplementation.BasicStats.DetailCache.Begin();
 	Fvector EYE = RDEVICE.vCameraPositionSaved;
 
@@ -526,8 +517,6 @@ void CDetailManager::Render(VisiblesType type)
 	if (!dtFS) return;
 	if (!psDeviceFlags.is(rsDetails)) return;
 	if (RDEVICE.ActiveMain()) return;
-	/*if ((!R_GRASS_3D_SCOPE) && RDEVICE.m_SecondViewport.IsSVPFrame())
-		return;*/
 
 	{
 		xrCriticalSection::raii mt{ MT };
@@ -536,7 +525,6 @@ void CDetailManager::Render(VisiblesType type)
 	}
 
 	RImplementation.BasicStats.DetailRender.Begin();
-	//g_pGamePersistent->m_pGShaderConstants->m_blender_mode.w = 1.f; //--#SM+#-- Флаг начала рендера травы [begin of grass render]	 
 
 	swing_current.lerp(swing_desc[0], swing_desc[1], g_pGamePersistent->Environment().wind_strength_factor);
 
@@ -544,6 +532,5 @@ void CDetailManager::Render(VisiblesType type)
 	RCache.set_xform_world(Fidentity);
 	hw_Render(type);
 	RCache.set_CullMode(CULL_CCW);
-	//g_pGamePersistent->m_pGShaderConstants->m_blender_mode.w = 0.f; //--#SM+#-- Флаг конца рендера травы [end of grass render]
 	RImplementation.BasicStats.DetailRender.End();
 }

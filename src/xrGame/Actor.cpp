@@ -1046,9 +1046,7 @@ void CActor::UpdateCL()
 
 			fire_disp_full = m_fdisp_controller.GetCurrentDispertion();
 
-			//--#SM+#-- +SecondVP+ Чтобы перекрестие не скакало из за смены FOV (Sin!) [fix for crosshair shaking while SecondVP]
-			if (!Device.m_SecondViewport.IsSVPFrame())
-				HUD().SetCrosshairDisp(fire_disp_full, 0.02f);
+			HUD().SetCrosshairDisp(fire_disp_full, 0.02f);
 
 #ifdef DEBUG
 			HUD().SetFirstBulletCrosshairDisp(pWeapon->GetFirstBulletDisp());
@@ -1096,8 +1094,7 @@ void CActor::UpdateCL()
 			g_pGamePersistent->m_pGShaderConstants->hud_params.set(0.f, 0.f, 0.f, 0.f); //--#SM+#--
 
 			// Отключаем второй вьюпорт [Turn off SecondVP]
-			//CWeapon::UpdateSecondVP();
-			Device.m_SecondViewport.SetSVPActive(false); //--#SM+#-- +SecondVP+
+			Device.m_ScopeVP.SetSVPActive(false); 
 		}
 	}
 

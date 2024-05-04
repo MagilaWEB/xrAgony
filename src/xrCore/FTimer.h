@@ -200,3 +200,6 @@ if(name_time.GetElapsed_sec() > sec){ name_time.Start(); code }}
 
 #define LIMIT_UPDATE_FPS(name_time, fps){ static CTimer name_time; \
 if ((name_time.GetElapsed_ms()) < (1000 / fps)) return; name_time.Start();}
+
+#define LIMIT_UPDATE_FPS_CODE(name_time, fps, code){static CTimer name_time; \
+if ((name_time.GetElapsed_ms()) >= (1000 / fps)) { name_time.Start(); code}}

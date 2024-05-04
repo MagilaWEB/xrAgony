@@ -63,7 +63,7 @@ SPS::~SPS()
     RImplementation.Resources->_DeletePS(this);
 }
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 ///////////////////////////////////////////////////////////////////////
 // SGS
 SGS::~SGS()

@@ -33,8 +33,6 @@ void CRenderTarget::phase_ssao()
     RCache.set_Stencil(FALSE); // TODO - disable later
 
     {
-        Fmatrix m_v2w;
-        m_v2w.invert(Device.mView);
         // Fill VB
         float _w = float(Device.dwWidth);
         float _h = float(Device.dwHeight);
@@ -66,7 +64,7 @@ void CRenderTarget::phase_ssao()
         RCache.set_Element(s_ssao->E[0]);
         RCache.set_Geometry(g_combine_VP);
         RCache.set_c("ssao_params", fSSAONoise, fSSAOKernelSize, 0.0f, 0.0f);
-        RCache.set_c("m_v2w", m_v2w);
+        RCache.set_c("m_v2w", Device.mInvView);
 
         // HBAO constants
         RCache.set_c("c1", _w * 0.5f, _h * 0.5f, 2.0f / _w, 2.0f / _h);

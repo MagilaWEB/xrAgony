@@ -38,7 +38,7 @@ const xr_token qssao_token[] = {
 	{"st_opt_low", 1},
 	{"st_opt_medium", 2},
 	{"st_opt_high", 3},
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 	{"st_opt_ultra", 4},
 #endif
 	{nullptr, 0}
@@ -49,7 +49,7 @@ const xr_token qsun_quality_token[] = {
 	{"st_opt_low", 0},
 	{"st_opt_medium", 1},
 	{"st_opt_high", 2},
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 	{"st_opt_ultra", 3},
 	{"st_opt_extreme", 4},
 #endif // USE_DX10
@@ -332,7 +332,7 @@ public:
 		if (nullptr == HW.pDevice)
 			return;
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 		// TODO: DX10: Implement mip bias control
 		// VERIFY(!"apply not implmemented.");
 #else // USE_DX10

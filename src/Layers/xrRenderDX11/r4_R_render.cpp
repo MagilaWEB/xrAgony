@@ -490,13 +490,10 @@ void CRender::render_forward()
 	RImplementation.o.distortion = FALSE; // disable distorion
 }
 
-// Перед началом рендера мира --#SM+#-- +SecondVP+
-void CRender::BeforeWorldRender() {}
-
 // После рендера мира и пост-эффектов --#SM+#-- +SecondVP+
 void CRender::AfterWorldRender()
 {
-	if (Device.m_SecondViewport.IsSVPFrame())
+	if (Device.m_ScopeVP.IsSVPRender())
 	{
 		// Делает копию бэкбуфера (текущего экрана) в рендер-таргет второго вьюпорта
 		ID3DTexture2D* pBuffer = NULL;
