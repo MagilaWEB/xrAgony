@@ -148,7 +148,6 @@ private:
 public:
 	static void on_error(lua_State* state);
 
-	void flush_log();
 	void print_stack(lua_State* L = nullptr);
 
 	void LogTable(lua_State* l, pcstr S, int level);

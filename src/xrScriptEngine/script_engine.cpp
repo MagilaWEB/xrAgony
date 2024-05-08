@@ -693,14 +693,6 @@ void CScriptEngine::print_error(lua_State* L, int iErrorCode)
 	}
 }
 
-void CScriptEngine::flush_log()
-{
-	string_path log_file_name;
-	strconcat(sizeof(log_file_name), log_file_name, Core.ApplicationName, "_", Core.UserName, "_lua.log");
-	FS.update_path(log_file_name, "$logs$", log_file_name);
-	m_output.save_to(log_file_name);
-}
-
 int CScriptEngine::error_log(LPCSTR format, ...)
 {
 	va_list marker;
@@ -829,9 +821,6 @@ CScriptEngine::~CScriptEngine()
 		lua_close(m_virtual_machine);
 	while (!m_script_processes.empty())
 		remove_script_process(m_script_processes.begin()->first);
-#if defined(DEBUG) || defined(COC_EDITION)
-	flush_log();
-#endif
 #ifdef USE_DEBUGGER
 #ifndef USE_LUA_STUDIO
 	xr_delete(m_scriptDebugger);
