@@ -131,11 +131,11 @@ void CEngineAPI::Destroy(void)
 {
 	hGame = nullptr;
 	hTuner = nullptr;
-	m_renderers.clear();
 	pCreate = nullptr;
 	pDestroy = nullptr;
 	Engine.Event._destroy();
 	XRC.r_clear_compact();
+	Log("Engine Destroy!");
 }
 
 void CEngineAPI::CloseUnusedLibraries()

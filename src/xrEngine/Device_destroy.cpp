@@ -27,6 +27,7 @@ void CRenderDevice::Destroy()
 	seqFrame.Clear();
 	seqFrameMT.Clear();
 	seqDeviceReset.Clear();
+	functionPointer.clear();
 	seqParallel.clear();
 	seqParallel2.clear();
 	xr_delete(Statistic);
