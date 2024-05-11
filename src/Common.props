@@ -1,17 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ImportGroup Label="PropertySheets">
-    <Import Project="$(SolutionDir)ConfigurationDefs.props" />
-  </ImportGroup>
-  <PropertyGroup Label="UserMacros" Condition="'$(Platform)'=='Win32'">
-    <xrPlatform>Win32</xrPlatform>
-  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+      <ClCompile>
+         <PreprocessorDefinitions>NDEBUG;COC_EDITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      </ClCompile>
+  </ItemDefinitionGroup>
+
   <PropertyGroup Label="UserMacros" Condition="'$(Platform)'=='x86'">
     <xrPlatform>Win32</xrPlatform>
   </PropertyGroup>
-  <PropertyGroup Label="UserMacros" Condition="'$(Platform)'=='x64'">
-    <xrPlatform>Win64</xrPlatform>
-  </PropertyGroup>
+
   <PropertyGroup Label="UserMacros" Condition="'$(xrPlatform)'==''">
     <xrPlatform>$(Platform)</xrPlatform>
   </PropertyGroup>
@@ -44,23 +42,22 @@
     <IntDir>$(xrIntDir)$(ProjectName)\</IntDir>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(Configuration.StartsWith('Debug'  ))"> <UseDebugLibraries>true</UseDebugLibraries> </PropertyGroup>
-  <PropertyGroup Condition="$(Configuration.StartsWith('Mixed'  ))"> <UseDebugLibraries>false</UseDebugLibraries> </PropertyGroup>
-  <PropertyGroup Condition="$(Configuration.StartsWith('Release'))"> <UseDebugLibraries>false</UseDebugLibraries> </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration.StartsWith('Debug'))">
+      <UseDebugLibraries>true</UseDebugLibraries>
+      <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
 
-  <PropertyGroup Condition="$(Configuration.StartsWith('Debug'  ))"> <LinkIncremental>true</LinkIncremental> </PropertyGroup>
-  <PropertyGroup Condition="$(Configuration.StartsWith('Mixed'  ))"> <LinkIncremental>false</LinkIncremental> </PropertyGroup>
-  <PropertyGroup Condition="$(Configuration.StartsWith('Release'))"> <LinkIncremental>false</LinkIncremental> </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration.StartsWith('Release'))">
+      <UseDebugLibraries>false</UseDebugLibraries>
+      <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
 
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrLibraries);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)include\oneapi;$(xrSdkDir)DXSDK/Include;$(xrLuaDir);$(xrLibraries)luabind;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <!-- MultiProcessorCompilation don't compatible with LinkIncremental and UseDebugLibraries -->
-      <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Debug'  ))">false</MultiProcessorCompilation>
-      <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Mixed'  ))">true</MultiProcessorCompilation>
+      <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Debug'  ))">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Release'))">true</MultiProcessorCompilation>
-      <!-- Optimization is automatically enabled when UseDebugLibraries == false. That's why we'll turn it off manually -->
-      <Optimization Condition="$(Configuration.StartsWith('Mixed'))">Disabled</Optimization>
       <!--
         4251 : class 'x' needs to have dll-interface to be used by clients of class 'y'
         4275 : non dll-interface class 'x' used as base for dll-interface class 'y' 
