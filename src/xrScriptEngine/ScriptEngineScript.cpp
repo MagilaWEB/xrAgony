@@ -35,7 +35,6 @@ void FlushLogs()
 {
 #ifdef DEBUG
 	FlushLog();
-	GEnv.ScriptEngine->flush_log();
 #endif
 }
 

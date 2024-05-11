@@ -26,7 +26,7 @@ rnd_motion* rnd_motion::setup(IKinematicsAnimated* k, LPCSTR s)
 		}
 #ifdef DEBUG
         else
-            msg("death_anims: motion: %s not found!", n);
+            Msg("death_anims: motion: %s not found!", n);
 #endif
      }
      return this;

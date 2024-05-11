@@ -82,7 +82,7 @@ void DBG_PH_NetRelcase(IGameObject* obj);
 struct CFunctionGraph
 {
 public:
-    typedef fastdelegate::FastDelegate<void(float, float)> type_function;
+    typedef fastdelegate::FastDelegate<float(float)> type_function;
 
 private:
     CStatGraph* m_stat_graph;

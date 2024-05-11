@@ -54,22 +54,7 @@ public:
 #endif
 
 //	Variables section
-#if defined(USE_OGL)
-    CHW* pDevice;
-    CHW* pContext;
-    CHW* m_pSwapChain;
-    GLuint pBaseRT;
-    GLuint pBaseZB;
-    GLuint pPP;
-    GLuint pFB;
-    GLuint pCFB;
-
-    CHWCaps Caps;
-
-    HWND m_hWnd;
-    HDC m_hDC;
-    HGLRC m_hRC;
-#elif defined(USE_DX11)
+#if defined(USE_DX11)
 public:
     IDXGIFactory1*       m_pFactory = nullptr;
     IDXGIAdapter1*       m_pAdapter = nullptr; //	pD3D equivalent
@@ -78,7 +63,7 @@ public:
     IDXGISwapChain*    m_pSwapChain = nullptr;
     ID3D11RenderTargetView* pBaseRT = nullptr; //	combine with DX9 pBaseRT via typedef
     ID3D11DepthStencilView* pBaseZB = nullptr;
-#ifdef COC_DEBUG
+#ifdef DEBUG
     ID3DUserDefinedAnnotation* UserDefinedAnnotation = nullptr;
 #endif
 

@@ -152,31 +152,29 @@ template <typename T>
 void CMemoryManager::update(const xr_vector<T>& objects, bool add_enemies)
 {
     squad_mask_type mask = m_stalker ? m_stalker->agent_manager().member().mask(m_stalker) : 0;
-    xr_vector<T>::const_iterator I = objects.begin();
-    xr_vector<T>::const_iterator E = objects.end();
-    for (; I != E; ++I)
+    for (T object : objects)
     {
-        if (!(*I).m_enabled)
+        if (!object.m_enabled)
             continue;
 
-        if (m_stalker && !(*I).m_squad_mask.test(mask))
+        if (m_stalker && !object.m_squad_mask.test(mask))
             continue;
 
-        danger().add(*I);
+        danger().add(object);
 
         if (add_enemies)
         {
-            const CEntityAlive* entity_alive = smart_cast<const CEntityAlive*>((*I).m_object);
+            const CEntityAlive* entity_alive = smart_cast<const CEntityAlive*>(object.m_object);
             if (entity_alive && enemy().add(entity_alive))
                 continue;
         }
 
-        const CAI_Stalker* stalker = smart_cast<const CAI_Stalker*>((*I).m_object);
+        const CAI_Stalker* stalker = smart_cast<const CAI_Stalker*>(object.m_object);
         if (m_stalker && stalker)
             continue;
 
-        if ((*I).m_object)
-            item().add((*I).m_object);
+        if (object.m_object)
+            item().add(object.m_object);
     }
 }
 

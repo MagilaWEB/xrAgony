@@ -28,7 +28,7 @@ static BOOL bException = FALSE;
 
 #pragma comment(lib, "FaultRep.lib")
 
-#if defined(DEBUG) || defined(COC_DEBUG)
+#if defined(DEBUG)
 #define USE_OWN_ERROR_MESSAGE_WINDOW
 #else
 #define USE_OWN_MINI_DUMP
@@ -46,14 +46,6 @@ namespace
 {
 	ICN void* GetInstructionPtr()
 	{
-#if defined(LINUX)
-		pid_t traced_process;
-		struct user_regs_struct regs;
-		ptrace(PTRACE_ATTACH, traced_process, NULL, NULL);
-		ptrace(PTRACE_GETREGS, traced_process, NULL, &regs);
-
-		return regs.rip;
-#else
 #ifdef _MSC_VER
 		return _ReturnAddress();
 #else
@@ -61,7 +53,6 @@ namespace
 		_asm mov rax, [rsp] _asm retn
 #else
 		_asm mov eax, [esp] _asm retn
-#endif
 #endif
 #endif
 	}

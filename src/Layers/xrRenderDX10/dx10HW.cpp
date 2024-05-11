@@ -168,6 +168,9 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	R_CHK(pDevice->QueryInterface(IID_PPV_ARGS(&pDeviceDXGI)));
 	R_CHK(pDeviceDXGI->SetMaximumFrameLatency(1));
 	_RELEASE(pDeviceDXGI);
+#ifdef DEBUG
+	R_CHK(pContext->QueryInterface(__uuidof(UserDefinedAnnotation), reinterpret_cast<void**>(&UserDefinedAnnotation)));
+#endif
 #else
 	_R = D3DX10CreateDeviceAndSwapChain(m_pAdapter, m_DriverType, NULL, createDeviceFlags, &sd, &m_pSwapChain, &pDevice);
 

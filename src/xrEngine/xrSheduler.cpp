@@ -350,10 +350,6 @@ void CSheduler::ProcessStep()
 
 		// Real update call
 		// Msg("------- %d:", Device.dwFrame);
-#ifdef DEBUG
-		item.Object->GetSchedulerData().dbg_startframe = Device.dwFrame;
-		eTimer.Start();
-#endif
 
 		// Calc next update interval
 		const u32 dwMinDelay = _max(u32(30), item.Object->GetSchedulerData().t_min);

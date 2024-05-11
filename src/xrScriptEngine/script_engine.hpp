@@ -181,6 +181,8 @@ public:
 	void parse_script_namespace(const char* name, char* ns, u32 nsSize, char* func, u32 funcSize);
 	template <typename TResult>
 	IC bool functor(LPCSTR function_to_call, luabind::functor<TResult>& lua_function);
+	template <typename TResult, typename... Args>
+	IC TResult function_event(LPCSTR function_to_call, Args&&... args);
 #ifdef USE_DEBUGGER
 #ifndef USE_LUA_STUDIO
 	void stopDebugger();
@@ -219,4 +221,17 @@ IC bool CScriptEngine::functor(LPCSTR function_to_call, luabind::functor<TResult
 		return false;
 	lua_function = object;
 	return true;
+}
+
+template <typename TResult, typename... Args>
+IC TResult CScriptEngine::function_event(LPCSTR function_to_call, Args&&... args)
+{
+	luabind::functor<TResult>& function
+	luabind::object object;
+	if (!function_object(function_to_call, object))
+		return nullptr;
+
+	function = object;
+	
+	return function(std::forward<Args>(args)...);
 }

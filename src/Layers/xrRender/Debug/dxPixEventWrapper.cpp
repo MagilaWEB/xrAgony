@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "dxPixEventWrapper.h"
 
-#if defined(DEBUG) || defined(COC_DEBUG)
+#ifdef DEBUG
 
 CScopedPixEvent::CScopedPixEvent(LPCWSTR eventName)
 {
@@ -23,7 +23,7 @@ CScopedPixEvent::~CScopedPixEvent()
 
 ///////////////////////////////////////////////
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 void dxPixSetDebugName(ID3DDeviceChild* resource, const shared_str& name)
 {
     resource->SetPrivateData(WKPDID_D3DDebugObjectName, name.size(), name.c_str());
