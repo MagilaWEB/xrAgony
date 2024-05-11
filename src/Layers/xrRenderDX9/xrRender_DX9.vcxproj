@@ -41,6 +41,9 @@
       <ControlFlowGuard>false</ControlFlowGuard>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <AdditionalDependencies>d3d9.lib;nvapi$(PlatformArchitecture).lib;amd_ags_x86_2022_MD.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>

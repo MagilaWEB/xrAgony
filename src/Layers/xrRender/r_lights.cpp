@@ -11,49 +11,47 @@ void CRender::render_lights(light_Package& LP)
 	// Refactor order based on ability to pack shadow-maps
 	// 1. calculate area + sort in descending order
 	// const	u16		smap_unassigned		= u16(-1);
-	for (auto& it = LP.v_shadowed.begin(); it != LP.v_shadowed.end(); it++)
-	{
-		light*& L = *it;
-		if (!L->vis.visible)
-		{
-			LP.v_shadowed.erase(it);
-			it--;
-		}
-		else
-			LR.compute_xf_spot(*it);
-	}
+	for (light* L : LP.v_shadowed)
+		if (L->vis.visible)
+			LR.compute_xf_spot(L);
 
 	// 2. refactor - infact we could go from the backside and sort in ascending order
 	{
-		xr_vector<light*>& source = LP.v_shadowed;
-		xr_vector<light*> refactored;
-		refactored.reserve(source.size());
-		const size_t total = source.size();
+		static xr_vector<light*> refactored;
+		size_t total = LP.v_shadowed.size();
+		refactored.reserve(total);
 
-		for (u16 smap_ID = 0; refactored.size() != total; ++smap_ID)
+		for (size_t smap_ID = 0; refactored.size() != total; ++smap_ID)
 		{
 			LP_smap_pool.initialize(RImplementation.o.smapsize);
-			source.sort(pred_area);
-			for (size_t test = 0; test < source.size(); ++test)
+			for (auto test = LP.v_shadowed.begin(); test != LP.v_shadowed.end(); ++test)
 			{
-				light* L = source[test];
-				SMAP_Rect R{};
-				if (LP_smap_pool.push(R, L->X.S.size))
+				if ((*test)->vis.visible)
 				{
-					// OK
-					L->X.S.posX = R.min.x;
-					L->X.S.posY = R.min.y;
-					L->vis.smap_ID = smap_ID;
-					refactored.push_back(L);
-					source.erase(source.begin() + test);
+					SMAP_Rect R{};
+					if (LP_smap_pool.push(R, (*test)->X.S.size))
+					{
+						// OK
+						(*test)->X.S.posX = R.min.x;
+						(*test)->X.S.posY = R.min.y;
+						(*test)->vis.smap_ID = smap_ID;
+						refactored.push_back(*test);
+						LP.v_shadowed.erase(test);
+						--test;
+					}
+				}
+				else
+				{
+					LP.v_shadowed.erase(test);
 					--test;
+					--total;
 				}
 			}
 		}
 
 		// save (lights are popped from back)
-		std::reverse(refactored.begin(), refactored.end());
-		LP.v_shadowed = std::move(refactored);
+		LP.v_shadowed = refactored;
+		refactored.clear();
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -73,22 +71,21 @@ void CRender::render_lights(light_Package& LP)
 	while (LP.v_shadowed.size())
 	{
 		// if (has_spot_shadowed)
-		xr_vector<light*> L_spot_s;
+		static xr_vector<light*> L_spot_s;
 		Stats.s_used++;
 
 		// generate spot shadowmap
 		Target->phase_smap_spot_clear();
-		xr_vector<light*>& source = LP.v_shadowed;
-		light* L = source.back();
+		light* L = LP.v_shadowed.back();
 		u16 sid = L->vis.smap_ID;
 		do
 		{
-			if (source.empty())
+			if (LP.v_shadowed.empty())
 				break;
-			L = source.back();
+			L = LP.v_shadowed.back();
 			if (L->vis.smap_ID != sid)
 				break;
-			source.pop_back();
+			LP.v_shadowed.pop_back();
 			Lights_LastFrame.push_back(L);
 
 			// render
@@ -214,7 +211,7 @@ void CRender::render_indirect(light* L)
 	if (!ps_r2_ls_flags.test(R2FLAG_GI))
 		return;
 
-	light LIGEN;
+	static light LIGEN;
 	LIGEN.set_type(IRender_Light::REFLECTED);
 	LIGEN.set_shadow(false);
 	LIGEN.set_cone(PI_DIV_2 * 2.f);
@@ -223,10 +220,8 @@ void CRender::render_indirect(light* L)
 	if (Lvec.empty())
 		return;
 	float LE = L->color.intensity();
-	for (u32 it = 0; it < Lvec.size(); it++)
+	for (light_indirect& LI : Lvec)
 	{
-		light_indirect& LI = Lvec[it];
-
 		// energy and color
 		float LIE = LE * LI.E;
 		if (LIE < ps_r2_GI_clip)
