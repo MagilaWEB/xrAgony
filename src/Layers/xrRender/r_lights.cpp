@@ -135,7 +135,7 @@ void CRender::render_lights(light_Package& LP)
 		Target->phase_accumulator();
 		//HOM.Disable();
 		//		if (has_point_unshadowed)	-> 	accum point unshadowed
-		if (!LP.v_point.empty())
+		while(!LP.v_point.empty())
 		{
 			light* L2 = LP.v_point.back();
 			LP.v_point.pop_back();
@@ -147,7 +147,7 @@ void CRender::render_lights(light_Package& LP)
 		}
 
 		//		if (has_spot_unshadowed)	-> 	accum spot unshadowed
-		if (!LP.v_spot.empty())
+		while (!LP.v_point.empty())
 		{
 			light* L2 = LP.v_spot.back();
 			LP.v_spot.pop_back();
@@ -174,35 +174,6 @@ void CRender::render_lights(light_Package& LP)
 
 			L_spot_s.clear();
 		}
-	}
-
-	// Point lighting (unshadowed, if left)
-	if (!LP.v_point.empty())
-	{
-		for (light* p_light : LP.v_point)
-		{
-			if (p_light->vis.visible)
-			{
-				render_indirect(p_light);
-				Target->accum_point(p_light);
-			}
-		}
-		LP.v_point.clear();
-	}
-
-	// Spot lighting (unshadowed, if left)
-	if (!LP.v_spot.empty())
-	{
-		for (light* p_light : LP.v_spot)
-		{
-			if (p_light->vis.visible)
-			{
-				LR.compute_xf_spot(p_light);
-				render_indirect(p_light);
-				Target->accum_spot(p_light);
-			}
-		}
-		LP.v_spot.clear();
 	}
 }
 
