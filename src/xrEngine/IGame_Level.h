@@ -108,6 +108,7 @@ public:
 
     virtual void OnFrame(void);
     virtual void OnRender(void);
+    virtual void ActorApplyCamera(void) = 0;
     virtual void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert);
 
     // Main interface

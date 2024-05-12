@@ -21,6 +21,7 @@ int g_process_priority = 3;
 int g_GlobalFPSlimit = 121;//Limit fps global.
 int g_PausedFPSlimit = 30;//Limit fps to Pause.
 int g_MainFPSlimit = 60;//Limit fps to main.
+int r_scope_fps_limit = 0;
 
 const xr_token vid_bpp_token[] =
 {
@@ -691,6 +692,7 @@ void CCC_Register()
 	//CMD3(CCC_Mask, "mt_physics", &psDeviceFlags, mtPhysics);
 	CMD3(CCC_Mask, "mt_network", &psDeviceFlags, mtNetwork);
 
+	CMD4(CCC_Integer, "r_scope_fps_limit", &r_scope_fps_limit, 0, 124);
 	CMD4(CCC_Integer, "r_fps_limit", &g_GlobalFPSlimit, 0, 240);
 	CMD4(CCC_Integer, "r_paused_fps_limit", &g_PausedFPSlimit, 0, 240);
 	CMD4(CCC_Integer, "r_main_fps_limit", &g_MainFPSlimit, 0, 240);

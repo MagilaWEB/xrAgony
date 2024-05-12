@@ -1,4 +1,3 @@
-#include "CameraManager.h"
 // CameraManager.cpp: implementation of the CCameraManager class.
 //
 //////////////////////////////////////////////////////////////////////
@@ -22,7 +21,6 @@ float psCamSlideInert = 0.25f;
 
 SPPInfo pp_identity;
 SPPInfo pp_zero;
-static xr_vector<CCameraManager*> Cameras;
 
 CCameraManager::CCameraManager(bool bApplyOnUpdate)
 {
@@ -52,8 +50,6 @@ CCameraManager::CCameraManager(bool bApplyOnUpdate)
 	pp_zero.color_add.set(0, 0, 0);
 
 	pp_affected = pp_identity;
-
-	Cameras.push_back(std::move(this));
 }
 
 CCameraManager::~CCameraManager()
@@ -63,10 +59,6 @@ CCameraManager::~CCameraManager()
 
 	for (auto it = m_EffectorsPP.begin(); it != m_EffectorsPP.end(); it++)
 		xr_delete(*it);
-
-	auto iter_camera = Cameras.find(this);
-	if (iter_camera != Cameras.end())
-		Cameras.erase(iter_camera);
 }
 
 CEffectorCam* CCameraManager::GetCamEffector(ECamEffectorType type)
@@ -226,17 +218,6 @@ void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N
 		ApplyDevice(VIEWPORT_NEAR);
 
 	UpdateDeffered();
-}
-
-void DeviceViewportApplyDevice()
-{
-	CCameraManager::ViewportApplyDevice();
-}
-
-void CCameraManager::ViewportApplyDevice()
-{
-	for (CCameraManager*& camera : Cameras)
-		camera->ApplyDevice(VIEWPORT_NEAR / 3);
 }
 
 bool CCameraManager::ProcessCameraEffector(CEffectorCam* eff)

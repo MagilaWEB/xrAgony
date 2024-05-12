@@ -531,6 +531,13 @@ void CLevel::OnRender()
 #endif
 }
 
+#include "ActorEffector.h"
+void CLevel::ActorApplyCamera()
+{
+	if (Actor())
+		Actor()->Cameras().ApplyDevice(VIEWPORT_NEAR / 3);
+}
+
 void CLevel::OnEvent(EVENT E, u64 P1, u64 /**P2/**/)
 {
 	if (E == eEntitySpawn)

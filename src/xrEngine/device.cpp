@@ -37,9 +37,9 @@ extern int g_process_priority;
 extern int g_GlobalFPSlimit;//Limit fps global.
 extern int g_PausedFPSlimit;//Limit fps to Pause.
 extern int g_MainFPSlimit;//Limit fps to main.
+extern int r_scope_fps_limit;
 
 ref_light precache_light = 0;
-u32 g_dwFPSlimit = 60;
 
 void CRenderDevice::Run()
 {
@@ -292,8 +292,6 @@ void CRenderDevice::d_Render()
 		CalcFrameStats();
 		Statistic->Show();
 		End(); // Present goes here
-
-		d_SVPRender();
 	}
 	renderTotalReal.End();
 	renderTotalReal.FrameEnd();
@@ -308,8 +306,8 @@ void CRenderDevice::d_SVPRender()
 		Core.dwFrame = dwFrame;
 		m_ScopeVP.SetRender(true);
 
-		extern void DeviceViewportApplyDevice();
-		DeviceViewportApplyDevice();
+		if (g_pGameLevel)
+			g_pGameLevel->ActorApplyCamera();
 
 		if (dwPrecacheFrame)
 		{
@@ -374,6 +372,14 @@ void CRenderDevice::GlobalUpdate()
 
 				dwTime.Start();
 			}
+		}
+
+		if (b_is_Active && GEnv.Render->GetDeviceState() != DeviceState::Lost)
+		{
+			if (r_scope_fps_limit)
+				LIMIT_UPDATE_FPS_CODE(SecondViewportRenderFps, r_scope_fps_limit, d_SVPRender();)
+			else
+				d_SVPRender();
 		}
 
 		FrameMove();

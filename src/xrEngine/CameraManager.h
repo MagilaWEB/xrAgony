@@ -63,7 +63,6 @@ public:
     void UpdateFromCamera(const CCameraBase* C);
 
     void ApplyDevice(float _viewport_near);
-    static void ViewportApplyDevice();
     static void ResetPP();
 
     CCameraManager(bool bApplyOnUpdate);
