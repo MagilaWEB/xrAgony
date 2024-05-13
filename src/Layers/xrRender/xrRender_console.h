@@ -115,10 +115,6 @@ extern ECORE_API float ps_r2_ls_dsm_kernel; // r2-only
 extern ECORE_API float ps_r2_ls_psm_kernel; // r2-only
 extern ECORE_API float ps_r2_ls_ssm_kernel; // r2-only
 extern ECORE_API float ps_r2_mblur; // .5f
-extern ECORE_API int ps_r2_GI_depth; // 1..5
-extern ECORE_API int ps_r2_GI_photons; // 8..256
-extern ECORE_API float ps_r2_GI_clip; // EPS
-extern ECORE_API float ps_r2_GI_refl; // .9f
 extern ECORE_API float ps_r2_ls_depth_scale; // 1.0f
 extern ECORE_API float ps_r2_ls_depth_bias; // -0.0001f
 extern ECORE_API float ps_r2_ls_squality; // 1.0f
@@ -159,7 +155,7 @@ enum
 	R2FLAG_SUN_DETAILS = (1 << 3),
 	R2FLAG_TONEMAP = (1 << 4),
 
-	R2FLAG_GI = (1 << 6),
+	//R2FLAG_GI = (1 << 6),
 	R2FLAG_FASTBLOOM = (1 << 7),
 	R2FLAG_GLOBALMATERIAL = (1 << 8),
 	R2FLAG_ZFILL = (1 << 9),

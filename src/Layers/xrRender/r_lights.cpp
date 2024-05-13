@@ -67,7 +67,6 @@ void CRender::render_lights(light_Package& LP)
 	//	}
 	//	if (left_some_lights_that_doesn't cast shadows)
 	//		accumulate them
-	HOM.Disable();
 	while (LP.v_shadowed.size())
 	{
 		// if (has_spot_shadowed)
@@ -133,17 +132,13 @@ void CRender::render_lights(light_Package& LP)
 
 		//		switch-to-accumulator
 		Target->phase_accumulator();
-		//HOM.Disable();
-		//		if (has_point_unshadowed)	-> 	accum point unshadowed
+
 		while(!LP.v_point.empty())
 		{
 			light* L2 = LP.v_point.back();
 			LP.v_point.pop_back();
 			if (L2->vis.visible)
-			{
 				Target->accum_point(L2);
-				render_indirect(L2);
-			}
 		}
 
 		//		if (has_spot_unshadowed)	-> 	accum spot unshadowed
@@ -155,7 +150,6 @@ void CRender::render_lights(light_Package& LP)
 			{
 				LR.compute_xf_spot(L2);
 				Target->accum_spot(L2);
-				render_indirect(L2);
 			}
 		}
 
@@ -163,10 +157,7 @@ void CRender::render_lights(light_Package& LP)
 		if (!L_spot_s.empty())
 		{
 			for (light* p_light : L_spot_s)
-			{
 				Target->accum_spot(p_light);
-				render_indirect(p_light);
-			}
 
 			if (RImplementation.o.advancedpp && ps_r2_ls_flags.is(R2FLAG_VOLUMETRIC_LIGHTS))
 				for (light* p_light : L_spot_s)
@@ -174,53 +165,5 @@ void CRender::render_lights(light_Package& LP)
 
 			L_spot_s.clear();
 		}
-	}
-}
-
-void CRender::render_indirect(light* L)
-{
-	if (!ps_r2_ls_flags.test(R2FLAG_GI))
-		return;
-
-	static light LIGEN;
-	LIGEN.set_type(IRender_Light::REFLECTED);
-	LIGEN.set_shadow(false);
-	LIGEN.set_cone(PI_DIV_2 * 2.f);
-
-	xr_vector<light_indirect>& Lvec = L->indirect;
-	if (Lvec.empty())
-		return;
-	float LE = L->color.intensity();
-	for (light_indirect& LI : Lvec)
-	{
-		// energy and color
-		float LIE = LE * LI.E;
-		if (LIE < ps_r2_GI_clip)
-			continue;
-		Fvector T;
-		T.set(L->color.r, L->color.g, L->color.b).mul(LI.E);
-		LIGEN.set_color(T.x, T.y, T.z);
-
-		// geometric
-		Fvector L_up, L_right;
-		L_up.set(0, 1, 0);
-		if (_abs(L_up.dotproduct(LI.D)) > .99f)
-			L_up.set(0, 0, 1);
-		L_right.crossproduct(L_up, LI.D).normalize();
-		LIGEN.spatial.sector = LI.S;
-		LIGEN.set_position(LI.P);
-		LIGEN.set_rotation(LI.D, L_right);
-
-		// range
-		// dist^2 / range^2 = A - has infinity number of solutions
-		// approximate energy by linear fallof Emax / (1 + x) = Emin
-		float Emax = LIE;
-		float Emin = 1.f / 255.f;
-		float x = (Emax - Emin) / Emin;
-		if (x < 0.1f)
-			continue;
-		LIGEN.set_range(x);
-
-		Target->accum_reflected(&LIGEN);
 	}
 }

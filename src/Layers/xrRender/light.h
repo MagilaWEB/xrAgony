@@ -126,7 +126,6 @@ public:
     virtual IRender_Light* dcast_Light() { return this; }
     vis_data& get_homdata();
 #if (RENDER == R_R2) || (RENDER == R_R3) || (RENDER == R_R4) || (RENDER == R_GL)
-    void gi_generate();
     void xform_calc();
     void vis_prepare();
     void vis_update();
