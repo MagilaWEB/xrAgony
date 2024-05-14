@@ -254,9 +254,9 @@ void CRenderDevice::OnFrame()
 {
 	if (!Device.Paused())
 	{
-		GEnv.ScriptEngine->UpdateUniqueCall();
 		if (g_pGameLevel && g_pGameLevel->bReady)
 		{
+			LIMIT_UPDATE_FPS_CODE(UniqueCallLimit, 60, GEnv.ScriptEngine->UpdateUniqueCall();)
 			GEnv.ScriptEngine->script_process(ScriptProcessor::Level)->update();
 			lua_gc(GEnv.ScriptEngine->lua(), LUA_GCSTEP, 10);
 		}

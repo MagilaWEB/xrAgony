@@ -119,11 +119,10 @@ inline profile_timer_script operator+(const profile_timer_script& portion0, cons
 	return result;
 }
 
-extern xr_vector<luabind::functor<bool>> UniqueCall;
-
 void CScriptEngine::ClearUniqueCall()
 {
 	UniqueCall.clear();
+	ScriptLimitUpdateData.clear();
 }
 
 bool CScriptEngine::AddUniqueCallScript(const luabind::functor<bool>& function)
@@ -180,6 +179,28 @@ void CScriptEngine::UpdateUniqueCall()
 	}
 }
 
+void CScriptEngine::ScriptLimitUpdate(LPCSTR name, u16 fps, const luabind::functor<void> & fn)
+{
+	auto limit_update = ScriptLimitUpdateData.find(name);
+	if (limit_update != ScriptLimitUpdateData.end())
+	{
+		if ((limit_update->second.GetElapsed_ms()) >= (1000 / fps))
+		{
+			limit_update->second.Start();
+			try
+			{
+				fn();
+			}
+			catch (...)
+			{
+				GEnv.ScriptEngine->print_stack();
+			}
+		}
+	}
+	else
+		ScriptLimitUpdateData.insert({ name, CTimer{} });
+}
+
 std::ostream& operator<<(std::ostream& os, const profile_timer_script& pt) { return os << pt.time(); }
 SCRIPT_EXPORT(CScriptEngine, (),
 {
@@ -209,6 +230,7 @@ SCRIPT_EXPORT(CScriptEngine, (),
 		def("user_name", &user_name),
 		def("IsUniqueCall", &CScriptEngine::IsUniqueCallScript),
 		def("AddUniqueCall", &CScriptEngine::AddUniqueCallScript),
-		def("RemoveUniqueCall", &CScriptEngine::RemoveUniqueCallScript)
+		def("RemoveUniqueCall", &CScriptEngine::RemoveUniqueCallScript),
+		def("LimitUpdateFPS", &CScriptEngine::ScriptLimitUpdate)
 	];
 });

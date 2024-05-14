@@ -90,6 +90,9 @@ private:
 	//Debrovski
 	shared_str(*m_userdataObjectLoggerFunc) (const luabind::detail::object_rep* objectToLog);
 
+	IC static xr_vector<luabind::functor<bool>> UniqueCall;
+	IC static xr_map<LPCSTR, CTimer> ScriptLimitUpdateData;
+
 protected:
 	CScriptProcessStorage m_script_processes;
 	int m_stack_level;
@@ -211,6 +214,7 @@ public:
 	static bool IsUniqueCallScript(const luabind::functor<bool>& function);
 	static bool RemoveUniqueCallScript(const luabind::functor<bool>& function);
 	static void UpdateUniqueCall();
+	static void ScriptLimitUpdate(LPCSTR name, u16 fps, const luabind::functor<void>&);
 };
 
 template <typename TResult>

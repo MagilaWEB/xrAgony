@@ -95,7 +95,6 @@ void CALifeSimulator::setup_simulator(CSE_ALifeObject* object)
 }
 
 void CALifeSimulator::reload(LPCSTR section) {
-    GEnv.ScriptEngine->ClearUniqueCall();
     CALifeUpdateManager::reload(section);
 }
 struct string_prdicate

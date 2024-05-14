@@ -815,7 +815,7 @@ CScriptEngine::CScriptEngine(bool is_editor)
 
 CScriptEngine::~CScriptEngine()
 {
-	UniqueCall.clear();
+	ClearUniqueCall();
 
 	if (m_virtual_machine)
 		lua_close(m_virtual_machine);
