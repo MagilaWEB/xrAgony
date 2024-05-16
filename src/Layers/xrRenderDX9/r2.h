@@ -170,7 +170,6 @@ public:
 	void render_main(Fmatrix& mCombined, bool _fportals);
 	void render_forward();
 	void render_lights(light_Package& LP);
-	void render_menu();
 	void render_sun_cascade(u32 cascade_ind);
 	void init_cacades();
 	void render_sun_cascades();

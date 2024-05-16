@@ -30,8 +30,6 @@ void CRenderTarget::DoAsyncScreenshot()
 float hclip(float v, float dim) { return 2.f * v / dim - 1.f; }
 void CRenderTarget::phase_combine()
 {
-	bool _menu_pp = g_pGamePersistent ? g_pGamePersistent->OnRenderPPUI_query() : false;
-
 	u32 Offset = 0;
 	Fvector2 p0, p1;
 
@@ -108,7 +106,6 @@ void CRenderTarget::phase_combine()
 	}
 
 	// Draw full-screen quad textured with our scene image
-	if (!_menu_pp)
 	{
 		// Compute params
 		CEnvDescriptorMixer& envdesc = *g_pGamePersistent->Environment().CurrentEnv;
@@ -187,8 +184,8 @@ void CRenderTarget::phase_combine()
 		dxEnvDescriptorMixerRender& envdescren = *(dxEnvDescriptorMixerRender*)(&*envdesc.m_pDescriptorMixer);
 
 		// Setup textures
-		IDirect3DBaseTexture9* e0 = _menu_pp ? 0 : envdescren.sky_r_textures_env[0].second->surface_get();
-		IDirect3DBaseTexture9* e1 = _menu_pp ? 0 : envdescren.sky_r_textures_env[1].second->surface_get();
+		IDirect3DBaseTexture9* e0 = envdescren.sky_r_textures_env[0].second->surface_get();
+		IDirect3DBaseTexture9* e1 = envdescren.sky_r_textures_env[1].second->surface_get();
 		t_envmap_0->surface_set(e0);
 		_RELEASE(e0);
 		t_envmap_1->surface_set(e1);
@@ -219,8 +216,6 @@ void CRenderTarget::phase_combine()
 		RCache.set_ColorWriteEnable();
 		// g_pGamePersistent->Environment().RenderClouds    ();
 		RImplementation.render_forward();
-		if (g_pGamePersistent)
-			g_pGamePersistent->OnRenderPPUI_main(); // PP-UI
 	}
 
 	//  Igor: for volumetric lights
@@ -235,7 +230,7 @@ void CRenderTarget::phase_combine()
 	// Distortion filter
 	BOOL bDistort = RImplementation.o.distortion_enabled; // This can be modified
 	{
-		if ((0 == RImplementation.mapDistort.size()) && !_menu_pp)
+		if ((0 == RImplementation.mapDistort.size()))
 			bDistort = FALSE;
 		if (bDistort)
 		{
@@ -245,16 +240,12 @@ void CRenderTarget::phase_combine()
 			RCache.set_ColorWriteEnable();
 			CHK_DX(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, color_rgba(127, 127, 0, 127), 1.0f, 0L));
 			RImplementation.r_dsgraph_render_distort();
-			if (g_pGamePersistent)
-				g_pGamePersistent->OnRenderPPUI_PP(); // PP-UI
 		}
 	}
 
 	// PP enabled ?
 	//  Render to RT texture to be able to copy RT even in windowed mode.
 	BOOL PP_Complex = u_need_PP() | (BOOL)RImplementation.m_bMakeAsyncSS;
-	if (_menu_pp)
-		PP_Complex = FALSE;
 
 	// Combine everything + perform AA
 	if (PP_Complex)

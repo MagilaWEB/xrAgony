@@ -99,10 +99,6 @@ public:
 
     virtual void IR_OnMouseWheel(int direction);
 
-    bool OnRenderPPUI_query();
-    void OnRenderPPUI_main();
-    void OnRenderPPUI_PP();
-
     virtual void OnRender();
     virtual void OnFrame(void);
 

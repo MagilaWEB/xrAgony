@@ -160,58 +160,6 @@ void CRender::render_main(Fmatrix& m_ViewProjection, bool _fportals)
 	}
 }
 
-void CRender::render_menu()
-{
-	PIX_EVENT(render_menu);
-	//	Globals
-	RCache.set_CullMode(CULL_CCW);
-	RCache.set_Stencil(FALSE);
-	RCache.set_ColorWriteEnable();
-
-	// Main Render
-	{
-		PIX_EVENT_TEXT(L"Menu Main Render");
-		Target->u_setrt(Target->rt_Generic_0, 0, 0, HW.pBaseZB); // LDR RT
-		g_pGamePersistent->OnRenderPPUI_main(); // PP-UI
-	}
-
-	// Distort
-	{
-		PIX_EVENT_TEXT(L"Menu Distort");
-		FLOAT ColorRGBA[4] = { 127.0f / 255.0f, 127.0f / 255.0f, 0.0f, 127.0f / 255.0f };
-		Target->u_setrt(Target->rt_Generic_1, 0, 0, HW.pBaseZB); // Now RT is a distortion mask
-		HW.pContext->ClearRenderTargetView(Target->rt_Generic_1->pRT, ColorRGBA);
-		g_pGamePersistent->OnRenderPPUI_PP(); // PP-UI
-	}
-
-	// Actual Display
-	Target->u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
-	RCache.set_Shader(Target->s_menu);
-	RCache.set_Geometry(Target->g_menu);
-
-	Fvector2 p0, p1;
-	u32 Offset;
-	u32 C = color_rgba(255, 255, 255, 255);
-	float _w = float(Device.dwWidth);
-	float _h = float(Device.dwHeight);
-	float d_Z = EPS_S;
-	float d_W = 1.f;
-	p0.set(.5f / _w, .5f / _h);
-	p1.set((_w + .5f) / _w, (_h + .5f) / _h);
-
-	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, Target->g_menu->vb_stride, Offset);
-	pv->set(EPS, float(_h + EPS), d_Z, d_W, C, p0.x, p1.y);
-	pv++;
-	pv->set(EPS, EPS, d_Z, d_W, C, p0.x, p0.y);
-	pv++;
-	pv->set(float(_w + EPS), float(_h + EPS), d_Z, d_W, C, p1.x, p1.y);
-	pv++;
-	pv->set(float(_w + EPS), EPS, d_Z, d_W, C, p1.x, p0.y);
-	pv++;
-	RCache.Vertex.Unlock(4, Target->g_menu->vb_stride);
-	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-}
-
 extern u32 g_r;
 void CRender::Render()
 {
@@ -221,13 +169,6 @@ void CRender::Render()
 	VERIFY(0 == mapDistort.size());
 
 	rmNormal();
-
-	bool _menu_pp = g_pGamePersistent ? g_pGamePersistent->OnRenderPPUI_query() : false;
-	if (_menu_pp)
-	{
-		render_menu();
-		return;
-	};
 
 	IMainMenu* pMainMenu = g_pGamePersistent ? g_pGamePersistent->m_pMainMenu : 0;
 	bool bMenu = pMainMenu ? pMainMenu->CanSkipSceneRendering() : false;

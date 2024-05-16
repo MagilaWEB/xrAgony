@@ -102,9 +102,6 @@ public:
     ShadersExternalData* m_pGShaderConstants; //--#SM+#--
 
     const ParticleStatistics& GetStats() { return stats; }
-    virtual bool OnRenderPPUI_query() { return FALSE; }; // should return true if we want to have second function called
-    virtual void OnRenderPPUI_main(){};
-    virtual void OnRenderPPUI_PP(){};
 
     virtual void OnAppStart();
     virtual void OnAppEnd();
