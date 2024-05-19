@@ -1,16 +1,6 @@
 #include "stdafx.h"
 #include "MathUtil.hpp"
 
-#ifdef _EDITOR
-#include "SkeletonX.h"
-#include "SkeletonCustom.h"
-#else
-#include "xrCore/Animation/Bone.hpp"
-#include "Layers/xrRender/SkeletonXVertRender.h"
-#define RENDER 1
-#include "xrEngine/Render.h"
-#include "Layers/xrRender/light.h"
-#endif
 #include "PLC_SSE.hpp"
 #ifdef XR_X86
 #include "SkinXW_SSE.hpp"

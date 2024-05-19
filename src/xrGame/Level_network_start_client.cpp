@@ -77,8 +77,8 @@ bool CLevel::net_start_client3()
 			map_data.m_map_version = level_ver;
 			map_data.m_map_download_url = download_url;
 			map_data.m_map_loaded = false;
-			GEnv.Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
-			GEnv.Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
+			::Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
+			::Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
 			return false;
 		}
 #ifdef DEBUG
@@ -89,8 +89,8 @@ bool CLevel::net_start_client3()
 		map_data.m_map_download_url = download_url;
 		map_data.m_map_loaded = true;
 
-		GEnv.Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
-		GEnv.Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
+		::Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
+		::Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
 
 		deny_m_spawn = FALSE;
 		// Load level
@@ -141,14 +141,11 @@ bool CLevel::net_start_client5()
 		// HUD
 
 		// Textures
-		if (!GEnv.isDedicatedServer)
-		{
-			g_pGamePersistent->SetLoadStageTitle("st_loading_textures");
-			g_pGamePersistent->LoadTitle();
-			GEnv.Render->DeferredLoad(FALSE);
-			GEnv.Render->ResourcesDeferredUpload();
-			LL_CheckTextures();
-		}
+		g_pGamePersistent->SetLoadStageTitle("st_loading_textures");
+		g_pGamePersistent->LoadTitle();
+		::Render->DeferredLoad(FALSE);
+		::Render->ResourcesDeferredUpload();
+		LL_CheckTextures();
 
 		deny_m_spawn = TRUE;
 	}
@@ -168,11 +165,8 @@ bool CLevel::net_start_client6()
 			pApp->LoadEnd();
 			return true;
 		}
-		if (!GEnv.isDedicatedServer)
-		{
-			g_hud->Load();
-			g_hud->OnConnected();
-		}
+		g_hud->Load();
+		g_hud->OnConnected();
 
 #ifdef DEBUG
 		Msg("--- net_start_client6");

@@ -161,15 +161,15 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 {
     string_path name;
     xr_strcpy(name, _name);
-    if (0 == GEnv.Render->m_skinning)
+    if (0 == ::Render->m_skinning)
         xr_strcat(name, "_0");
-    if (1 == GEnv.Render->m_skinning)
+    if (1 == ::Render->m_skinning)
         xr_strcat(name, "_1");
-    if (2 == GEnv.Render->m_skinning)
+    if (2 == ::Render->m_skinning)
         xr_strcat(name, "_2");
-    if (3 == GEnv.Render->m_skinning)
+    if (3 == ::Render->m_skinning)
         xr_strcat(name, "_3");
-    if (4 == GEnv.Render->m_skinning)
+    if (4 == ::Render->m_skinning)
         xr_strcat(name, "_4");
     
     return CreateShader<SVS>(name, _name, true);
@@ -214,7 +214,7 @@ CRT* CResourceManager::_CreateRT(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 /*S
         CRT* RT = new CRT();
         RT->dwFlags |= xr_resource_flagged::RF_REGISTERED;
         m_rtargets.insert(std::make_pair(RT->set_name(Name), RT));
-        if (RDEVICE.b_is_Ready)
+        if (Device.b_is_Ready)
             RT->create(Name, w, h, f);
         return RT;
     }
@@ -249,7 +249,7 @@ CRTC*	CResourceManager::_CreateRTC		(LPCSTR Name, u32 size,	D3DFORMAT f)
         CRTC *RT				=	new CRTC();
         RT->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
         m_rtargets_c.insert		(std::make_pair(RT->set_name(Name),RT));
-        if (RDEVICE.b_is_Ready)	RT->create	(Name,size,f);
+        if (Device.b_is_Ready)	RT->create	(Name,size,f);
         return					RT;
     }
 }
@@ -350,7 +350,7 @@ CTexture* CResourceManager::_CreateTexture(LPCSTR _Name)
         T->dwFlags |= xr_resource_flagged::RF_REGISTERED;
         m_textures.insert(std::make_pair(T->set_name(Name), T));
         T->Preload();
-        if (RDEVICE.b_is_Ready && !bDeferredLoad)
+        if (Device.b_is_Ready && !bDeferredLoad)
             T->Load();
         return T;
     }

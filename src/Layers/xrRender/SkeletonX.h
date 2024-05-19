@@ -130,7 +130,7 @@ protected:
 
     //	Index buffer replica since we can't read from index buffer in DX10
     ref_smem<u16> m_Indices;
-#endif //	USE_DX10
+#endif
 };
 
 template <typename T_vertex, typename T_buffer>
@@ -164,7 +164,7 @@ BOOL pick_bone(CKinematics* Parent, IKinematics::pick_result& r, float dist, con
     VERIFY(!"Not implemented");
     return FALSE;
 }
-#else USE_DX10
+#else
 template <typename T>
 BOOL pick_bone(CKinematics* Parent, IKinematics::pick_result& r, float dist, const Fvector& S, const Fvector& D,
     Fvisual* V, u16* indices, CBoneData::FacesVec& faces)
@@ -175,6 +175,6 @@ BOOL pick_bone(CKinematics* Parent, IKinematics::pick_result& r, float dist, con
     CHK_DX(V->p_rm_Vertices->Unlock());
     return intersect;
 }
-#endif //	USE_DX10
+#endif
 
 #endif // SkeletonXH

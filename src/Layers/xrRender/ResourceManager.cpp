@@ -58,7 +58,7 @@ IBlender* CResourceManager::_GetBlender(LPCSTR Name)
 		return 0;
 #else
 	//	TODO: DX10: When all shaders are ready switch to common path
-#if defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX11)
 	if (I == m_blenders.end())
 	{
 		Msg("DX10: Shader '%s' not found in library.", Name);
@@ -273,64 +273,50 @@ Shader* CResourceManager::_cpp_Create(
 
 Shader* CResourceManager::_cpp_Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-	if (!GEnv.isDedicatedServer)
-	{
-		//	TODO: DX10: When all shaders are ready switch to common path
-#if defined(USE_DX10) || defined(USE_DX11)
-		IBlender* pBlender = _GetBlender(s_shader ? s_shader : "null");
-		if (!pBlender)
-			return nullptr;
-		return _cpp_Create(pBlender, s_shader, s_textures, s_constants, s_matrices);
-#else //	USE_DX10
-		return _cpp_Create(_GetBlender(s_shader ? s_shader : "null"), s_shader, s_textures, s_constants, s_matrices);
-#endif //	USE_DX10
-		//#else
-	}
-	return nullptr;
+	//	TODO: DX10: When all shaders are ready switch to common path
+#if defined(USE_DX11)
+	IBlender* pBlender = _GetBlender(s_shader ? s_shader : "null");
+	if (!pBlender)
+		return nullptr;
+	return _cpp_Create(pBlender, s_shader, s_textures, s_constants, s_matrices);
+#else
+	return _cpp_Create(_GetBlender(s_shader ? s_shader : "null"), s_shader, s_textures, s_constants, s_matrices);
+#endif
 }
 
 Shader* CResourceManager::Create(IBlender* B, LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-	if (GEnv.isDedicatedServer)
-		return nullptr;
-
 	return _cpp_Create(B, s_shader, s_textures, s_constants, s_matrices);
 }
 
 Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-	if (!GEnv.isDedicatedServer)
-	{
-		//	TODO: DX10: When all shaders are ready switch to common path
+	//	TODO: DX10: When all shaders are ready switch to common path
 #if defined(USE_DX11)
-		if (_lua_HasShader(s_shader))
-			return _lua_Create(s_shader, s_textures);
+	if (_lua_HasShader(s_shader))
+		return _lua_Create(s_shader, s_textures);
+	else
+	{
+		Shader* pShader = _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
+		if (pShader)
+			return pShader;
 		else
 		{
-			Shader* pShader = _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
-			if (pShader)
-				return pShader;
+			if (_lua_HasShader("stub_default"))
+				return _lua_Create("stub_default", s_textures);
 			else
 			{
-				if (_lua_HasShader("stub_default"))
-					return _lua_Create("stub_default", s_textures);
-				else
-				{
-					FATAL("Can't find stub_default.s");
-					return 0;
-				}
+				FATAL("Can't find stub_default.s");
+				return 0;
 			}
 		}
-#else //	USE_DX10
-#ifndef _EDITOR
-		if (_lua_HasShader(s_shader))
-			return _lua_Create(s_shader, s_textures);
-		else
-#endif
-			return _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
-#endif //	USE_DX10
 	}
-	return nullptr;
+#else
+	if (_lua_HasShader(s_shader))
+		return _lua_Create(s_shader, s_textures);
+	else
+		return _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
+#endif
 }
 
 void CResourceManager::Delete(const Shader* S)
@@ -344,11 +330,11 @@ void CResourceManager::Delete(const Shader* S)
 
 void CResourceManager::DeferredUpload()
 {
-	if (!RDEVICE.b_is_Ready)
+	if (!Device.b_is_Ready)
 		return;
 
 #if defined(USE_DX11)
-	if (RDEVICE.IsReset())
+	if (Device.IsReset())
 		return;
 #endif
 
@@ -362,11 +348,11 @@ void CResourceManager::DeferredUpload()
 
 void CResourceManager::DeferredUnload()
 {
-	if (!RDEVICE.b_is_Ready)
+	if (!Device.b_is_Ready)
 		return;
 
 #if defined(USE_DX11)
-	if (RDEVICE.IsReset())
+	if (Device.IsReset())
 		return;
 #endif
 
@@ -377,30 +363,6 @@ void CResourceManager::DeferredUnload()
 		});
 	)
 }
-
-#ifdef _EDITOR
-void CResourceManager::ED_UpdateTextures(AStringVec* names)
-{
-	// 1. Unload
-	if (names)
-	{
-		for (u32 nid = 0; nid < names->size(); nid++)
-		{
-			map_TextureIt I = m_textures.find((*names)[nid].c_str());
-			if (I != m_textures.end())
-				I->second->Unload();
-		}
-	}
-	else
-	{
-		for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
-			t->second->Unload();
-}
-
-	// 2. Load
-	// DeferredUpload	();
-}
-#endif
 
 void CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps)
 {
@@ -423,6 +385,7 @@ void CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u
 		}
 	}
 }
+
 void CResourceManager::_DumpMemoryUsage()
 {
 	xr_multimap<u32, std::pair<u32, shared_str>> mtex;
@@ -452,21 +415,7 @@ void CResourceManager::_DumpMemoryUsage()
 void CResourceManager::Evict()
 {
 	//	TODO: DX10: check if we really need this method
-#if !defined(USE_DX10) && !defined(USE_DX11) && !defined(USE_OGL)
+#if !defined(USE_DX11)
 	CHK_DX(HW.pDevice->EvictManagedResources());
 #endif
 }
-/*
-BOOL	CResourceManager::_GetDetailTexture(LPCSTR Name,LPCSTR& T, R_constant_setup* &CS)
-{
-	LPSTR N = LPSTR(Name);
-	map_TD::iterator I = m_td.find	(N);
-	if (I!=m_td.end())
-	{
-		T	= I->second.T;
-		CS	= I->second.cs;
-		return TRUE;
-	} else {
-		return FALSE;
-	}
-}*/

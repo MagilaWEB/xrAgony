@@ -644,7 +644,7 @@ public:
 #endif
 	{
 		string_path pname;
-		strconcat(sizeof(pname), pname, GEnv.Render->getShaderPath(), pFileName);
+		strconcat(sizeof(pname), pname, ::Render->getShaderPath(), pFileName);
 		IReader* R = FS.r_open("$game_shaders$", pname);
 		if (nullptr == R)
 		{
@@ -1057,7 +1057,7 @@ HRESULT CRender::shader_compile(LPCSTR name, IReader* fs, LPCSTR pFunctionName, 
 	}
 
 	string_path shadersFolder;
-	FS.update_path(shadersFolder, "$game_shaders$", GEnv.Render->getShaderPath());
+	FS.update_path(shadersFolder, "$game_shaders$", ::Render->getShaderPath());
 
 	u32 fileCrc = 0;
 	getFileCrc32(fs, shadersFolder, fileCrc);

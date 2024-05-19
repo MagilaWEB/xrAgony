@@ -220,7 +220,7 @@ void CDangerManager::add(const CVisibleObject& object)
     if (obj && !obj->g_Alive() && (obj->killer_id() != ALife::_OBJECT_ID(-1)))
     {
         luabind::functor<bool>	funct;
-        if (GEnv.ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
+        if (::ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
             if (funct(m_object->lua_game_object(), object, obj->Position(), object.m_level_time, CDangerObject::eDangerTypeFreshEntityCorpse, CDangerObject::eDangerPerceiveTypeVisual) == false)
                 return;
 
@@ -240,7 +240,7 @@ void CDangerManager::add(const CSoundObject& object)
     if ((object.m_sound_type & SOUND_TYPE_BULLET_HIT) == SOUND_TYPE_BULLET_HIT)
     {
         luabind::functor<bool>	funct;
-        if (GEnv.ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
+        if (::ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
             if (funct(m_object->lua_game_object(), object, object.m_object_params.m_position, object.m_level_time, CDangerObject::eDangerTypeBulletRicochet, CDangerObject::eDangerPerceiveTypeSound) == false)
                 return;
 
@@ -252,7 +252,7 @@ void CDangerManager::add(const CSoundObject& object)
     if ((object.m_sound_type & SOUND_TYPE_WEAPON_SHOOTING) == SOUND_TYPE_WEAPON_SHOOTING)
     {
         luabind::functor<bool>	funct;
-        if (GEnv.ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
+        if (::ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
             if (funct(m_object->lua_game_object(), object, object.m_object_params.m_position, object.m_level_time, CDangerObject::eDangerTypeAttackSound, CDangerObject::eDangerPerceiveTypeSound) == false)
                 return;
 
@@ -273,7 +273,7 @@ void CDangerManager::add(const CSoundObject& object)
         if (do_add)
         {
             luabind::functor<bool>	funct;
-            if (GEnv.ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
+            if (::ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
                 if (funct(m_object->lua_game_object(), object, object.m_object_params.m_position, object.m_level_time, CDangerObject::eDangerTypeEntityAttacked, CDangerObject::eDangerPerceiveTypeSound) == false)
                     return;
 
@@ -286,7 +286,7 @@ void CDangerManager::add(const CSoundObject& object)
     if ((object.m_sound_type & SOUND_TYPE_DYING) == SOUND_TYPE_DYING)
     {
         luabind::functor<bool>	funct;
-        if (GEnv.ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
+        if (::ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
             if (funct(m_object->lua_game_object(), object, object.m_object_params.m_position, object.m_level_time, CDangerObject::eDangerTypeEntityDeath, CDangerObject::eDangerPerceiveTypeSound) == false)
                 return;
 
@@ -298,7 +298,7 @@ void CDangerManager::add(const CSoundObject& object)
     if (obj && m_object->is_relation_enemy(obj))
     {
         luabind::functor<bool>	funct;
-        if (GEnv.ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
+        if (::ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
             if (funct(m_object->lua_game_object(), object, object.m_object_params.m_position, object.m_level_time, CDangerObject::eDangerTypeEnemySound, CDangerObject::eDangerPerceiveTypeSound) == false)
                 return;
 
@@ -322,7 +322,7 @@ void CDangerManager::add(const CHitObject& object)
     const CEntityAlive* obj = smart_cast<const CEntityAlive*>(object.m_object);
 
     luabind::functor<bool>	funct;
-    if (GEnv.ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
+    if (::ScriptEngine->functor("xr_danger.CDangerManager__on_before_add", funct))
         if (funct(m_object->lua_game_object(), object, obj->Position(), object.m_level_time, CDangerObject::eDangerTypeAttacked, CDangerObject::eDangerPerceiveTypeHit) == false)
             return;
 

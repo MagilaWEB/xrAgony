@@ -144,7 +144,7 @@ static void full_memory_stats()
 {
 	Memory.mem_compact();
 	u32 m_base = 0, c_base = 0, m_lmaps = 0, c_lmaps = 0;
-	GEnv.Render->ResourcesGetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
+	::Render->ResourcesGetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
 	log_vminfo();
 	size_t _process_heap = ::Memory.mem_usage();
 	int _eco_strings = (int)g_pStringContainer->stat_economy();
@@ -869,7 +869,7 @@ public:
 	{
 		if (strstr(cName, "script_debug_break") == cName)
 		{
-			CScriptDebugger* d = GEnv.ScriptEngine->debugger();
+			CScriptDebugger* d = ::ScriptEngine->debugger();
 			if (d)
 			{
 				if (d->Active())
@@ -882,11 +882,11 @@ public:
 		}
 		else if (strstr(cName, "script_debug_stop") == cName)
 		{
-			GEnv.ScriptEngine->stopDebugger();
+			::ScriptEngine->stopDebugger();
 		}
 		else if (strstr(cName, "script_debug_restart") == cName)
 		{
-			GEnv.ScriptEngine->restartDebugger();
+			::ScriptEngine->restartDebugger();
 		};
 	};
 
@@ -909,14 +909,14 @@ class CCC_ScriptLuaStudioConnect : public IConsole_Command
 {
 public:
 	CCC_ScriptLuaStudioConnect(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args) { GEnv.ScriptEngine->try_connect_to_debugger(); };
+	virtual void Execute(LPCSTR args) { ::ScriptEngine->try_connect_to_debugger(); };
 };
 
 class CCC_ScriptLuaStudioDisconnect : public IConsole_Command
 {
 public:
 	CCC_ScriptLuaStudioDisconnect(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args) { GEnv.ScriptEngine->disconnect_from_debugger(); };
+	virtual void Execute(LPCSTR args) { ::ScriptEngine->disconnect_from_debugger(); };
 };
 #endif // #if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
 
@@ -1209,8 +1209,8 @@ public:
 			P->m_Flags.set(FS_Path::flNeedRescan, TRUE);
 			FS.rescan_pathes();
 			// run script
-			if (GEnv.ScriptEngine->script_process(ScriptProcessor::Level))
-				GEnv.ScriptEngine->script_process(ScriptProcessor::Level)->add_script(args, false, true);
+			if (::ScriptEngine->script_process(ScriptProcessor::Level))
+				::ScriptEngine->script_process(ScriptProcessor::Level)->add_script(args, false, true);
 		}
 	}
 
@@ -1229,28 +1229,28 @@ public:
 			Log("* Specify string to run!");
 		else
 		{
-			if (GEnv.ScriptEngine->script_process(ScriptProcessor::Level))
+			if (::ScriptEngine->script_process(ScriptProcessor::Level))
 			{
-				GEnv.ScriptEngine->script_process(ScriptProcessor::Level)->add_script(args, true, true);
+				::ScriptEngine->script_process(ScriptProcessor::Level)->add_script(args, true, true);
 				return;
 			}
 
 			string4096 S;
 			shared_str m_script_name = "console command";
 			xr_sprintf(S, "%s\n", args);
-			int l_iErrorCode = luaL_loadbuffer(GEnv.ScriptEngine->lua(), S, xr_strlen(S), "@console_command");
+			int l_iErrorCode = luaL_loadbuffer(::ScriptEngine->lua(), S, xr_strlen(S), "@console_command");
 			if (!l_iErrorCode)
 			{
-				l_iErrorCode = lua_pcall(GEnv.ScriptEngine->lua(), 0, 0, 0);
+				l_iErrorCode = lua_pcall(::ScriptEngine->lua(), 0, 0, 0);
 				if (l_iErrorCode)
 				{
-					GEnv.ScriptEngine->print_output(GEnv.ScriptEngine->lua(), *m_script_name, l_iErrorCode);
-					GEnv.ScriptEngine->on_error(GEnv.ScriptEngine->lua());
+					::ScriptEngine->print_output(::ScriptEngine->lua(), *m_script_name, l_iErrorCode);
+					::ScriptEngine->on_error(::ScriptEngine->lua());
 					return;
 				}
 			}
 
-			GEnv.ScriptEngine->print_output(GEnv.ScriptEngine->lua(), *m_script_name, l_iErrorCode);
+			::ScriptEngine->print_output(::ScriptEngine->lua(), *m_script_name, l_iErrorCode);
 		}
 	} // void	Execute
 
@@ -1527,11 +1527,11 @@ public:
 			return;
 		}
 
-		IRenderVisual* visual = GEnv.Render->model_Create(arguments);
+		IRenderVisual* visual = ::Render->model_Create(arguments);
 		IKinematics* kinematics = smart_cast<IKinematics*>(visual);
 		if (!kinematics)
 		{
-			GEnv.Render->model_Delete(visual);
+			::Render->model_Delete(visual);
 			Msg("! Invalid visual type \"%s\" (not a IKinematics)", arguments);
 			return;
 		}
@@ -1540,7 +1540,7 @@ public:
 		for (u16 i = 0, n = kinematics->LL_BoneCount(); i < n; ++i)
 			Msg("%s", *kinematics->LL_GetData(i).name);
 
-		GEnv.Render->model_Delete(visual);
+		::Render->model_Delete(visual);
 	}
 };
 

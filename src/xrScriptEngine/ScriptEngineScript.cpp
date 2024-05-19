@@ -16,18 +16,18 @@
 void LuaLog(pcstr caMessage)
 {
 #if defined(COC_EDITION) || !defined(MASTER_GOLD)
-	GEnv.ScriptEngine->script_log(LuaMessageType::Message, "%s", caMessage);
+	::ScriptEngine->script_log(LuaMessageType::Message, "%s", caMessage);
 #endif
 #if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-	if (GEnv.ScriptEngine->debugger())
-	GEnv.ScriptEngine->debugger()->Write(caMessage);
+	if (::ScriptEngine->debugger())
+	::ScriptEngine->debugger()->Write(caMessage);
 #endif
 }
 
 //AVO:
 void PrintStack()
 {
-	GEnv.ScriptEngine->print_stack();
+	::ScriptEngine->print_stack();
 }
 //-AVO
 
@@ -40,12 +40,12 @@ void FlushLogs()
 
 void verify_if_thread_is_running()
 {
-	THROW2(GEnv.ScriptEngine->current_thread(), "coroutine.yield() is called outside the LUA thread!");
+	THROW2(::ScriptEngine->current_thread(), "coroutine.yield() is called outside the LUA thread!");
 }
 
 bool is_editor()
 {
-	return GEnv.ScriptEngine->is_editor();
+	return ::ScriptEngine->is_editor();
 }
 
 inline int bit_and(const int i, const int j) { return i & j; }
@@ -54,7 +54,7 @@ inline int bit_xor(const int i, const int j) { return i ^ j; }
 inline int bit_not(const int i) { return ~i; }
 inline const char* user_name() { return Core.UserName; }
 
-void prefetch_module(pcstr file_name) { GEnv.ScriptEngine->process_file(file_name); }
+void prefetch_module(pcstr file_name) { ::ScriptEngine->process_file(file_name); }
 
 struct profile_timer_script
 {
@@ -164,7 +164,7 @@ void CScriptEngine::UpdateUniqueCall()
 		{
 			try
 			{
-				GEnv.ScriptEngine->print_stack();
+				::ScriptEngine->print_stack();
 				if (it != UniqueCall.end())
 					UniqueCall.erase(it);
 				it--;
@@ -172,7 +172,7 @@ void CScriptEngine::UpdateUniqueCall()
 			}
 			catch (...)
 			{
-				GEnv.ScriptEngine->print_stack();
+				::ScriptEngine->print_stack();
 				break;
 			}
 		}
@@ -193,7 +193,7 @@ void CScriptEngine::ScriptLimitUpdate(LPCSTR name, u16 fps, const luabind::funct
 			}
 			catch (...)
 			{
-				GEnv.ScriptEngine->print_stack();
+				::ScriptEngine->print_stack();
 			}
 		}
 	}

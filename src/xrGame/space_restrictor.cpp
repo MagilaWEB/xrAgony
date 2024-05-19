@@ -230,7 +230,7 @@ void CSpaceRestrictor::OnRender()
     if (!(dbg_net_Draw_Flags.is_any(dbg_draw_customzone)))
         return;
     // RCache.OnFrameEnd();
-    GEnv.DRender->OnFrameEnd();
+    ::DRender->OnFrameEnd();
     Fvector l_half;
     l_half.set(.5f, .5f, .5f);
     Fmatrix l_ball, l_box;

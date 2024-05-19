@@ -169,8 +169,7 @@ CGamePersistent::~CGamePersistent(void)
 
 void CGamePersistent::PreStart(LPCSTR op)
 {
-	if (!GEnv.isDedicatedServer)
-		pApp->SetLoadingScreen(new UILoadingScreen());
+	pApp->SetLoadingScreen(new UILoadingScreen());
 	__super::PreStart(op);
 }
 
@@ -217,7 +216,7 @@ void CGamePersistent::OnAppStart()
 	GMLib.Load();
 	init_game_globals();
 	__super::OnAppStart();
-	GEnv.UICore = new ui_core();
+	::UICore = new ui_core();
 	m_pMainMenu = new CMainMenu();
 }
 
@@ -227,7 +226,7 @@ void CGamePersistent::OnAppEnd()
 		m_pMainMenu->Activate(false);
 
 	xr_delete(m_pMainMenu);
-	xr_delete(GEnv.UICore);
+	xr_delete(::UICore);
 
 	__super::OnAppEnd();
 
@@ -244,7 +243,7 @@ void CGamePersistent::Disconnect()
 
 	__super::Disconnect();
 	// stop all played emitters
-	GEnv.Sound->stop_emitters();
+	::Sound->stop_emitters();
 	m_game_params.m_e_game_type = eGameIDNoGame;
 }
 
@@ -293,7 +292,7 @@ void CGamePersistent::OnGameEnd()
 
 void CGamePersistent::WeathersUpdate()
 {
-	if (g_pGameLevel && !GEnv.isDedicatedServer)
+	if (g_pGameLevel)
 	{
 		CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
 		BOOL bIndoor = TRUE;
@@ -493,7 +492,7 @@ void CGamePersistent::start_logo_intro()
 	if (Device.dwPrecacheFrame == 0)
 	{
 		m_intro_event.bind(this, &CGamePersistent::update_logo_intro);
-		if (!GEnv.isDedicatedServer && 0 == xr_strlen(m_game_params.m_game_or_spawn) && NULL == g_pGameLevel)
+		if (0 == xr_strlen(m_game_params.m_game_or_spawn) && NULL == g_pGameLevel)
 		{
 			VERIFY(NULL == m_intro);
 			m_intro = new CUISequencer();
@@ -848,13 +847,13 @@ void CGamePersistent::LoadTitle(bool change_tip, shared_str map_name)
 
 		luabind::functor<LPCSTR> m_functor;
 
-		R_ASSERT(GEnv.ScriptEngine->functor("loadscreen.get_tip_header", m_functor));
+		R_ASSERT(::ScriptEngine->functor("loadscreen.get_tip_header", m_functor));
 		tip_header = m_functor(map_name.c_str());
 
-		R_ASSERT(GEnv.ScriptEngine->functor("loadscreen.get_tip_title", m_functor));
+		R_ASSERT(::ScriptEngine->functor("loadscreen.get_tip_title", m_functor));
 		tip_title = m_functor(map_name.c_str());
 
-		R_ASSERT(GEnv.ScriptEngine->functor("loadscreen.get_tip_text", m_functor));
+		R_ASSERT(::ScriptEngine->functor("loadscreen.get_tip_text", m_functor));
 		tip_text = m_functor(map_name.c_str());
 
 		pApp->LoadTitleInt(tip_header, tip_title, tip_text);
@@ -865,12 +864,12 @@ void CGamePersistent::LoadTitle(bool change_tip, shared_str map_name)
 		bool is_single = !xr_strcmp(m_game_params.m_game_type, "single");
 		if (is_single)
 		{
-			R_ASSERT(GEnv.ScriptEngine->functor("loadscreen.get_tip_number", m_functor));
+			R_ASSERT(::ScriptEngine->functor("loadscreen.get_tip_number", m_functor));
 			tip_num = m_functor(map_name.c_str());
 		}
 		else
 		{
-			R_ASSERT(GEnv.ScriptEngine->functor("loadscreen.get_mp_tip_number", m_functor));
+			R_ASSERT(::ScriptEngine->functor("loadscreen.get_mp_tip_number", m_functor));
 			tip_num = m_functor(map_name.c_str());
 		}
 		//		tip_num = 83;
@@ -939,11 +938,8 @@ void CGamePersistent::UpdateDof()
 	if (m_dof[1].similar(m_dof[0]))
 		return;
 
-	float td = Device.fTimeDelta;
-	Fvector diff;
-	diff.sub(m_dof[0], m_dof[2]);
-	diff.mul(td / 0.2f); // 0.2 sec
-	m_dof[1].add(diff);
+	m_dof[1].add(Fvector{}.sub(m_dof[0], m_dof[2]));
+
 	(m_dof[0].x < m_dof[2].x) ? clamp(m_dof[1].x, m_dof[0].x, m_dof[2].x) : clamp(m_dof[1].x, m_dof[2].x, m_dof[0].x);
 	(m_dof[0].y < m_dof[2].y) ? clamp(m_dof[1].y, m_dof[0].y, m_dof[2].y) : clamp(m_dof[1].y, m_dof[2].y, m_dof[0].y);
 	(m_dof[0].z < m_dof[2].z) ? clamp(m_dof[1].z, m_dof[0].z, m_dof[2].z) : clamp(m_dof[1].z, m_dof[2].z, m_dof[0].z);

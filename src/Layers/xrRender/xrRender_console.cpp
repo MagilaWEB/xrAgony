@@ -52,7 +52,7 @@ const xr_token qsun_quality_token[] = {
 #if defined(USE_DX11)
 	{"st_opt_ultra", 3},
 	{"st_opt_extreme", 4},
-#endif // USE_DX10
+#endif
 	{nullptr, 0}
 };
 
@@ -246,9 +246,9 @@ float ps_r2_gloss_factor = 4.0f;
 #include "xrEngine/XR_IOConsole.h"
 #include "xrEngine/xr_ioc_cmd.h"
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX11)
 #include "Layers/xrRenderDX10/StateManager/dx10SamplerStateCache.h"
-#endif // USE_DX10
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -273,7 +273,7 @@ public:
 class CCC_DBGGrassLevelScale : public CCC_Float
 {
 public:
-	CCC_DBGGrassLevelScale(LPCSTR N) : CCC_Float(N, &GEnv.Render->grass_level_scale, -10.f, 10.f) {};
+	CCC_DBGGrassLevelScale(LPCSTR N) : CCC_Float(N, &::Render->grass_level_scale, -10.f, 10.f) {};
 
 	virtual void Save(IWriter* F)
 	{
@@ -283,7 +283,7 @@ public:
 class CCC_DBGGrassLevelDensityCoff : public CCC_Float
 {
 public:
-	CCC_DBGGrassLevelDensityCoff(LPCSTR N) : CCC_Float(N, &GEnv.Render->grass_level_density, 0.f, 100.f) {};
+	CCC_DBGGrassLevelDensityCoff(LPCSTR N) : CCC_Float(N, &::Render->grass_level_density, 0.f, 100.f) {};
 
 	virtual void Save(IWriter* F)
 	{
@@ -299,14 +299,12 @@ public:
 			return;
 		int val = *value;
 		clamp(val, 1, 16);
-#if defined(USE_OGL)
-		// TODO: OGL: Implement aniso filtering.
-#elif defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX11)
 		SSManager.SetMaxAnisotropy(val);
 #else
 		for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
 			CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MAXANISOTROPY, val));
-#endif // USE_DX10
+#endif
 	}
 	CCC_tf_Aniso(LPCSTR N, int* v) : CCC_Integer(N, v, 1, 16) {};
 	virtual void Execute(LPCSTR args)
@@ -331,10 +329,10 @@ public:
 #if defined(USE_DX11)
 		// TODO: DX10: Implement mip bias control
 		// VERIFY(!"apply not implmemented.");
-#else // USE_DX10
+#else
 		for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
 			CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MIPMAPLODBIAS, *((LPDWORD)value)));
-#endif // USE_DX10
+#endif
 	}
 
 	CCC_tf_MipBias(LPCSTR N, float* v) : CCC_Float(N, v, -3.f, +3.f) {}
@@ -384,14 +382,11 @@ public:
 	CCC_Screenshot(LPCSTR N) : IConsole_Command(N) {};
 	virtual void Execute(LPCSTR args)
 	{
-		if (GEnv.isDedicatedServer)
-			return;
-
 		string_path name;
 		name[0] = 0;
 		sscanf(args, "%s", name);
 		LPCSTR image = xr_strlen(name) ? name : 0;
-		GEnv.Render->Screenshot(IRender::SM_NORMAL, image);
+		::Render->Screenshot(IRender::SM_NORMAL, image);
 	}
 };
 
@@ -498,7 +493,6 @@ public:
 	virtual void Execute(LPCSTR /*args*/)
 	{
 		// TODO: OGL: Implement memory usage statistics.
-#ifndef USE_OGL
 		u32 m_base = 0;
 		u32 c_base = 0;
 		u32 m_lmaps = 0;
@@ -532,11 +526,9 @@ public:
 
 		Msg("\nTotal             \t \t %f \t %f \t %f ", vb_video + ib_video + rt_video,
 			textures_managed + vb_managed + ib_managed + rt_managed, vb_system + ib_system + rt_system);
-#endif // USE_OGL
 	}
 };
 
-#if RENDER != R_R1 && RENDER != R_GL
 #include "r__pixel_calculator.h"
 class CCC_BuildSSA : public IConsole_Command
 {
@@ -544,14 +536,13 @@ public:
 	CCC_BuildSSA(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
 	virtual void Execute(LPCSTR /*args*/)
 	{
-#if !defined(USE_DX10) && !defined(USE_DX11)
+#if !defined(USE_DX11)
 		//  TODO: DX10: Implement pixel calculator
 		r_pixel_calculator c;
 		c.run();
-#endif //   USE_DX10
+#endif
 	}
 };
-#endif
 
 class CCC_DofFar : public CCC_Float
 {
@@ -674,6 +665,35 @@ public:
 	}
 };
 
+class CCC_Dof_DBG : public CCC_Vector3
+{
+	Fvector Dof_DBG_v;
+public:
+	CCC_Dof_DBG(LPCSTR N, const Fvector _min, const Fvector _max) : CCC_Vector3(N, &Dof_DBG_v, _min, _max) { ; }
+	virtual void Execute(LPCSTR args)
+	{
+		Fvector v;
+		if (3 != sscanf(args, "%f,%f,%f", &v.x, &v.y, &v.z))
+			InvalidSyntax();
+		else
+		{
+			CCC_Vector3::Execute(args);
+			if (g_pGamePersistent)
+				g_pGamePersistent->SetEffectorDOF(v);
+		}
+	}
+	virtual void Status(TStatus& S) { xr_sprintf(S, "%f,%f,%f", value->x, value->y, value->z); }
+	virtual void Info(TInfo& I)
+	{
+		xr_sprintf(I, "vector3 in range [%.3f,%.3f,%.3f]-[%.3f,%.3f,%.3f]", min.x, min.y, min.z, max.x, max.y, max.z);
+	}
+
+	virtual void Save(IWriter* F)
+	{
+
+	}
+};
+
 class CCC_DumpResources : public IConsole_Command
 {
 public:
@@ -693,7 +713,7 @@ public:
 };
 
 //  Allow real-time fog config reload
-#if (RENDER == R_R3) || (RENDER == R_R4)
+#ifdef USE_DX11
 #ifdef DEBUG
 
 #include "Layers/xrRenderDX10/3DFluid/dx103DFluidManager.h"
@@ -705,7 +725,7 @@ public:
 	virtual void Execute(LPCSTR /*args*/) { FluidManager.UpdateProfiles(); }
 };
 #endif // DEBUG
-#endif // (RENDER == R_R3) || (RENDER == R_R4)
+#endif
 
 //-----------------------------------------------------------------------
 void xrRender_initconsole()
@@ -725,9 +745,7 @@ void xrRender_initconsole()
 	//  Igor: just to test bug with rain/particles corruption
 	CMD1(CCC_RestoreQuadIBData, "r_restore_quad_ib_data");
 #ifdef DEBUG
-#if RENDER != R_R1 && RENDER != R_GL
 	CMD1(CCC_BuildSSA, "build_ssa");
-#endif
 	CMD4(CCC_Integer, "r__lsleep_frames", &ps_r__LightSleepFrames, 4, 30);
 	CMD4(CCC_Float, "r__ssa_glod_start", &ps_r__GLOD_ssa_start, 128, 512);
 	CMD4(CCC_Float, "r__ssa_glod_end", &ps_r__GLOD_ssa_end, 16, 96);
@@ -871,6 +889,8 @@ void xrRender_initconsole()
 	CMD4(CCC_DofNear, "r2_dof_near", &ps_r2_dof.x, tw_min.x, tw_max.x);
 	CMD4(CCC_DofFocus, "r2_dof_focus", &ps_r2_dof.y, tw_min.y, tw_max.y);
 	CMD4(CCC_DofFar, "r2_dof_far", &ps_r2_dof.z, tw_min.z, tw_max.z);
+	CMD3(CCC_Dof_DBG, "r2_dof_dbg", tw_max, tw_max);
+
 
 	CMD4(CCC_Float, "r2_dof_kernel", &ps_r2_dof_kernel_size, .0f, 10.f);
 	CMD4(CCC_Float, "r2_dof_sky", &ps_r2_dof_sky, -10000.f, 10000.f);
@@ -925,15 +945,15 @@ void xrRender_initconsole()
 	CMD4(CCC_Integer, "r__detail_limit_update", &ps_r__detail_limit_update, 5, 50);
 	CMD1(CCC_DBGGrassLevelScale, "r__dbg_detail_level_scale");
 	CMD1(CCC_DBGGrassLevelDensityCoff, "r__dbg_detail_radius_coff");
-	CMD4(CCC_detail_radius, "r__detail_radius",			&ps_r__detail_radius,		39, ps_r__detail_radius_MAX);
-	CMD4(CCC_Integer,		"r__details_opt_intensity",		&ps_r__details_opt_intensity, 0, 10);
+	CMD4(CCC_detail_radius, "r__detail_radius", &ps_r__detail_radius, 39, ps_r__detail_radius_MAX);
+	CMD4(CCC_Integer, "r__details_opt_intensity", &ps_r__details_opt_intensity, 0, 10);
 
 	//  Allow real-time fog config reload
-#if (RENDER == R_R3) || (RENDER == R_R4)
+#ifdef USE_DX11
 #ifdef DEBUG
 	CMD1(CCC_Fog_Reload, "r3_fog_reload");
 #endif // DEBUG
-#endif // (RENDER == R_R3) || (RENDER == R_R4)
+#endif
 
 	CMD3(CCC_Mask, "r3_dynamic_wet_surfaces", &ps_r2_ls_flags, R3FLAG_DYN_WET_SURF);
 	CMD4(CCC_Float, "r3_dynamic_wet_surfaces_near", &ps_r3_dyn_wet_surf_near, 10, 70);

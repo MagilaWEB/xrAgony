@@ -200,7 +200,7 @@ void CUIPdaWnd::SetActiveSubdialog(const shared_str& section)
     }
 
     luabind::functor<CUIDialogWndEx*> funct;
-    if (GEnv.ScriptEngine->functor("pda.set_active_subdialog", funct))
+    if (::ScriptEngine->functor("pda.set_active_subdialog", funct))
     {
         CUIDialogWndEx* ret = funct((LPCSTR)section.c_str());
         CUIWindow* pScriptWnd = ret ? smart_cast<CUIWindow*>(ret) : (0);

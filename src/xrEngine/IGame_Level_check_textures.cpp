@@ -5,7 +5,7 @@
 void IGame_Level::LL_CheckTextures()
 {
     u32 m_base, c_base, m_lmaps, c_lmaps;
-    GEnv.Render->ResourcesGetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
+    ::Render->ResourcesGetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
     if (Core.ParamFlags.test(Core.verboselog))
     {
         Msg("* t-report - base: %d, %d K", c_base, m_base / 1024);

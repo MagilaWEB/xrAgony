@@ -349,7 +349,7 @@ void CAI_Stalker::Hit(SHit* pHDS)
         tLuaHit.m_tpDraftsman = smart_cast<const CGameObject*>(HDS.who)->lua_game_object();
 
         luabind::functor<bool> funct;
-        if (GEnv.ScriptEngine->functor("_G.CAI_Stalker__BeforeHitCallback", funct))
+        if (::ScriptEngine->functor("_G.CAI_Stalker__BeforeHitCallback", funct))
         {
             if (!funct(this->lua_game_object(), &tLuaHit, HDS.boneID))
                 return;
@@ -411,7 +411,7 @@ void CAI_Stalker::update_best_item_info()
 void CAI_Stalker::update_best_item_info_impl()
 {
     luabind::functor<CScriptGameObject*> funct;
-    if (GEnv.ScriptEngine->functor("ai_stalker.update_best_weapon", funct))
+    if (::ScriptEngine->functor("ai_stalker.update_best_weapon", funct))
     {
         CScriptGameObject* GO = funct(this->lua_game_object(), m_item_actuality && m_best_item_to_kill ? m_best_item_to_kill->cast_game_object()->lua_game_object() : NULL);
         if (GO)

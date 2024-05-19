@@ -114,8 +114,9 @@ public:
     virtual void OnGameEnd();
 
     virtual void UpdateGameType(){};
-    virtual void GetCurrentDof(Fvector3& dof) { dof.set(-1.4f, 0.0f, 250.f); };
-    virtual void SetBaseDof(const Fvector3& /*dof*/) {};
+    virtual void GetCurrentDof(Fvector3& dof) = 0;
+    virtual void SetBaseDof(const Fvector3& /*dof*/) = 0;
+    virtual void SetEffectorDOF(const Fvector& needed_dof) = 0;
     virtual void OnSectorChanged(int /*sector*/) {};
     virtual void OnAssetsChanged();
 

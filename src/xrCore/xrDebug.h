@@ -51,7 +51,7 @@ private:
 
 public:
 	xrDebug() = delete;
-	static void Initialize(const bool& dedicated);
+	static void Initialize();
 	static void OnThreadSpawn();
 	static OutOfMemoryCallbackFunc GetOutOfMemoryCallback() { return OutOfMemoryCallback; }
 	static void SetOutOfMemoryCallback(OutOfMemoryCallbackFunc cb) { OutOfMemoryCallback = cb; }

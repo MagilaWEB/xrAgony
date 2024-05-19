@@ -153,7 +153,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 	switch (_curr)
 	{
 	case kSCREENSHOT:
-		GEnv.Render->Screenshot();
+		::Render->Screenshot();
 		return;
 		break;
 
@@ -196,7 +196,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 		return;
 
 	luabind::functor<bool> funct;
-	if (GEnv.ScriptEngine->functor("level_input.on_key_press", funct))
+	if (::ScriptEngine->functor("level_input.on_key_press", funct))
 	{
 		if (funct(key, _curr))
 			return;
@@ -338,7 +338,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 	}
 	case DIK_BACK:
 		if (GameID() == eGameIDSingle)
-			GEnv.DRender->NextSceneMode();
+			::DRender->NextSceneMode();
 		// HW.Caps.SceneMode			= (HW.Caps.SceneMode+1)%3;
 		return;
 
@@ -462,7 +462,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 	//			m_bSynchronization	= false;
 	//		}
 	//		luabind::functor<void>	functor;
-	//		GEnv.ScriptEngine->functor("alife_test.set_switch_online",functor);
+	//		::ScriptEngine->functor("alife_test.set_switch_online",functor);
 	//		functor(0,false);
 	//	}
 	//		return;

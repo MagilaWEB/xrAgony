@@ -446,8 +446,8 @@ public:
 	CCC_SND_Restart(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
 	virtual void Execute(LPCSTR args)
 	{
-		if (GEnv.Sound)
-			GEnv.Sound->_restart();
+		if (::Sound)
+			::Sound->_restart();
 	}
 };
 
@@ -460,10 +460,10 @@ public:
 	virtual void Execute(LPCSTR args)
 	{
 		CCC_Float::Execute(args);
-		GEnv.Render->setGamma(ps_gamma);
-		GEnv.Render->setBrightness(ps_brightness);
-		GEnv.Render->setContrast(ps_contrast);
-		GEnv.Render->updateGamma();
+		::Render->setGamma(ps_gamma);
+		::Render->setBrightness(ps_brightness);
+		::Render->setContrast(ps_contrast);
+		::Render->updateGamma();
 	}
 };
 
@@ -768,8 +768,7 @@ void CCC_Register()
 
 	CMD1(CCC_r2, "renderer");
 
-	if (!GEnv.isDedicatedServer)
-		CMD1(CCC_soundDevice, "snd_device");
+	CMD1(CCC_soundDevice, "snd_device");
 
 	// psSoundRolloff = pSettings->r_float ("sound","rolloff"); clamp(psSoundRolloff, EPS_S, 2.f);
 	psSoundOcclusionScale = pSettings->r_float("sound", "occlusion_scale");

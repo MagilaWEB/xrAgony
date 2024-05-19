@@ -5,13 +5,13 @@
 #include "Navigation/graph_engine.h"
 #include "Navigation/PatrolPath/patrol_path_storage.h"
 
-AISpaceBase::AISpaceBase() { GEnv.AISpace = this; }
+AISpaceBase::AISpaceBase() { ::AISpace = this; }
 AISpaceBase::~AISpaceBase()
 {
     xr_delete(m_patrol_path_storage);
     xr_delete(m_graph_engine);
     VERIFY(!m_game_graph);
-    GEnv.AISpace = nullptr;
+    ::AISpace = nullptr;
 }
 
 void AISpaceBase::Load(const char* levelName)
@@ -34,8 +34,6 @@ void AISpaceBase::Load(const char* levelName)
 
 void AISpaceBase::Unload(bool reload)
 {
-    if (GEnv.isDedicatedServer)
-        return;
     xr_delete(m_graph_engine);
     xr_delete(m_level_graph);
     if (!reload && m_game_graph)
@@ -44,8 +42,6 @@ void AISpaceBase::Unload(bool reload)
 
 void AISpaceBase::Initialize()
 {
-    if (GEnv.isDedicatedServer)
-        return;
     VERIFY(!m_graph_engine);
     m_graph_engine = new CGraphEngine(1024);
     VERIFY(!m_patrol_path_storage);
@@ -86,8 +82,6 @@ void AISpaceBase::Validate(u32 levelId) const
 
 void AISpaceBase::patrol_path_storage_raw(IReader& stream)
 {
-    if (GEnv.isDedicatedServer)
-        return;
     xr_delete(m_patrol_path_storage);
     m_patrol_path_storage = new CPatrolPathStorage();
     m_patrol_path_storage->load_raw(get_level_graph(), get_cross_table(), get_game_graph(), stream);
@@ -95,8 +89,6 @@ void AISpaceBase::patrol_path_storage_raw(IReader& stream)
 
 void AISpaceBase::patrol_path_storage(IReader& stream)
 {
-    if (GEnv.isDedicatedServer)
-        return;
     xr_delete(m_patrol_path_storage);
     m_patrol_path_storage = new CPatrolPathStorage();
     m_patrol_path_storage->load(stream);

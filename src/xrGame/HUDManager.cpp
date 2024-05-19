@@ -66,10 +66,10 @@ void CHUDManager::Render_First()
         return;
 
     // only shadow
-    GEnv.Render->set_Invisible(TRUE);
-    GEnv.Render->set_Object(O->H_Root());
+    ::Render->set_Invisible(TRUE);
+    ::Render->set_Object(O->H_Root());
     O->renderable_Render();
-    GEnv.Render->set_Invisible(FALSE);
+    ::Render->set_Invisible(FALSE);
 }
 
 bool need_render_hud()
@@ -100,10 +100,10 @@ void CHUDManager::Render_Last()
 
     IGameObject* O = g_pGameLevel->CurrentViewEntity();
     // hud itself
-    GEnv.Render->set_HUD(TRUE);
-    GEnv.Render->set_Object(O->H_Root());
+    ::Render->set_HUD(TRUE);
+    ::Render->set_Object(O->H_Root());
     O->OnHUDDraw(this);
-    GEnv.Render->set_HUD(FALSE);
+    ::Render->set_HUD(FALSE);
 }
 
 void CHUDManager::Render_Actor_Shadow() // added by KD
@@ -123,7 +123,7 @@ void CHUDManager::Render_Actor_Shadow() // added by KD
 	if (flashlight && flashlight->torch_active())
 		return;
     if (actor->active_cam() != eacFirstEye) return;
-    GEnv.Render->set_Object(object->H_Root());
+    ::Render->set_Object(object->H_Root());
     object->renderable_Render();
 }
 

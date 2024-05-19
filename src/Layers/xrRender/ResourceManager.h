@@ -40,9 +40,6 @@ public:
 
 #if defined(USE_DX11)
 	using map_GS = xr_map<const char*, SGS*, str_pred>;
-#endif
-
-#if defined(USE_DX11) || defined(USE_OGL)
 	using map_HS = xr_map<const char*, SHS*, str_pred>;
 	using map_DS = xr_map<const char*, SDS*, str_pred>;
 	using map_CS = xr_map<const char*, SCS*, str_pred>;
@@ -66,7 +63,7 @@ private:
 	map_GS m_gs;
 #endif
 
-#if defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 	map_DS m_ds;
 	map_HS m_hs;
 	map_CS m_cs;
@@ -79,10 +76,10 @@ private:
 	xr_vector<SGeometry*> v_geoms;
 	xr_vector<R_constant_table*> v_constant_tables;
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX11)
 	xr_vector<dx10ConstantBuffer*> v_constant_buffer;
 	xr_vector<SInputSignature*> v_input_signature;
-#endif //	USE_DX10
+#endif
 
 	// lists
 	xr_vector<STextureList*> lst_textures;
@@ -125,9 +122,6 @@ public:
 	void ED_UpdateBlender(LPCSTR Name, IBlender* data);
 	void ED_UpdateMatrix(LPCSTR Name, CMatrix* data);
 	void ED_UpdateConstant(LPCSTR Name, CConstant* data);
-#ifdef _EDITOR
-	void ED_UpdateTextures(AStringVec* names);
-#endif
 
 	// Low level resource creation
 	CTexture* _CreateTexture(LPCSTR Name);
@@ -142,15 +136,13 @@ public:
 	R_constant_table* _CreateConstantTable(R_constant_table& C);
 	void _DeleteConstantTable(const R_constant_table* C);
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX11)
 	dx10ConstantBuffer* _CreateConstantBuffer(ID3DShaderReflectionConstantBuffer* pTable);
 	void _DeleteConstantBuffer(const dx10ConstantBuffer* pBuffer);
 
 	SInputSignature* _CreateInputSignature(ID3DBlob* pBlob);
 	void _DeleteInputSignature(const SInputSignature* pSignature);
-#endif //	USE_DX10
 
-#ifdef USE_DX11
 	CRT* _CreateRT(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 SampleCount = 1, bool useUAV = false);
 #else
 	CRT* _CreateRT(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 SampleCount = 1);
@@ -162,9 +154,9 @@ public:
 #if defined(USE_DX11)
 	SGS* _CreateGS(LPCSTR Name);
 	void _DeleteGS(const SGS* GS);
-#endif //	USE_DX10
+#endif
 
-#if defined(USE_DX11) || defined(USE_OGL)
+#if defined(USE_DX11)
 	SHS* _CreateHS(LPCSTR Name);
 	void _DeleteHS(const SHS* HS);
 
@@ -187,10 +179,6 @@ public:
 	// Shader compiling / optimizing
 	SState* _CreateState(SimulatorStates& Code);
 	void _DeleteState(const SState* SB);
-
-#ifdef USE_OGL
-	SDeclaration* _CreateDecl(u32 FVF);
-#endif
 
 	SDeclaration* _CreateDecl(D3DVERTEXELEMENT9* dcl);
 	void _DeleteDecl(const SDeclaration* dcl);
@@ -233,13 +221,8 @@ public:
 		v_constant_setup.push_back(std::make_pair(shared_str(name), s));
 	}
 
-#ifdef USE_OGL
-	SGeometry* CreateGeom(D3DVERTEXELEMENT9* decl, GLuint vb, GLuint ib);
-	SGeometry* CreateGeom(u32 FVF, GLuint vb, GLuint ib);
-#else
 	SGeometry* CreateGeom(D3DVERTEXELEMENT9* decl, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib);
 	SGeometry* CreateGeom(u32 FVF, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib);
-#endif
 
 	void DeleteGeom(const SGeometry* VS);
 	void DeferredLoad(BOOL E) { bDeferredLoad = E; }

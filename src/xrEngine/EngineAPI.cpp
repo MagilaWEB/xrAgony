@@ -42,7 +42,7 @@ bool is_enough_address_space_available()
 
 void CEngineAPI::SelectRenderer()
 {
-	GEnv.CurrentRenderer = -1;
+	::CurrentRenderer = -1;
 
 	const auto select = [&](int index, u32 selected,  u32 fallback = 0)
 	{
@@ -50,7 +50,7 @@ void CEngineAPI::SelectRenderer()
 		{
 			if (m_renderers[index]->IsLoaded())
 			{
-				GEnv.CurrentRenderer = index;
+				::CurrentRenderer = index;
 				m_setupSelectedRenderer = (SetupEnv)m_renderers[index]->GetProcAddress(SETUP_FUNCTION);
 			}
 			else // Selected is unavailable
@@ -142,7 +142,7 @@ void CEngineAPI::CloseUnusedLibraries()
 {
 	// Now unload unused renderers
 	for (u32 it = 0; it < m_renderers.size(); it++)
-		if (GEnv.CurrentRenderer != it)
+		if (::CurrentRenderer != it)
 			m_renderers[it]->Close();
 }
 

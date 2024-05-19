@@ -15,7 +15,7 @@ ENGINE_API Fvector2 g_current_font_scale = {1.0f, 1.0f};
 
 CGameFont::CGameFont(pcstr section, u32 flags)
 {
-    pFontRender = GEnv.RenderFactory->CreateFontRender();
+    pFontRender = ::RenderFactory->CreateFontRender();
     fCurrentHeight = 0.0f;
     fXStep = 0.0f;
     fYStep = 0.0f;
@@ -37,7 +37,7 @@ CGameFont::CGameFont(pcstr section, u32 flags)
 
 CGameFont::CGameFont(pcstr shader, pcstr texture, u32 flags)
 {
-    pFontRender = GEnv.RenderFactory->CreateFontRender();
+    pFontRender = ::RenderFactory->CreateFontRender();
     fCurrentHeight = 0.0f;
     fXStep = 0.0f;
     fYStep = 0.0f;
@@ -179,11 +179,11 @@ CGameFont::~CGameFont()
         xr_free(TCMap);
 
     // Shading
-    GEnv.RenderFactory->DestroyFontRender(pFontRender);
+    ::RenderFactory->DestroyFontRender(pFontRender);
 }
 
-#define DI2PX(x) float(iFloor((x + 1) * float(GEnv.Render->getTarget()->get_width()) * 0.5f))
-#define DI2PY(y) float(iFloor((y + 1) * float(GEnv.Render->getTarget()->get_height()) * 0.5f))
+#define DI2PX(x) float(iFloor((x + 1) * float(::Render->getTarget()->get_width()) * 0.5f))
+#define DI2PY(y) float(iFloor((y + 1) * float(::Render->getTarget()->get_height()) * 0.5f))
 
 void CGameFont::OutSet(float x, float y)
 {
@@ -278,7 +278,7 @@ u16 CGameFont::SplitByWidth(u16* puBuffer, u16 uBufferSize, float fTargetWidth, 
 void CGameFont::MasterOut(bool bCheckDevice, bool bUseCoords, bool bScaleCoords, bool bUseSkip, float _x, float _y,
     float _skip, pcstr fmt, va_list p)
 {
-    if (bCheckDevice && (!RDEVICE.b_is_Active))
+    if (bCheckDevice && (!Device.b_is_Active))
         return;
 
     String rs;
@@ -383,7 +383,7 @@ float CGameFont::CurrentHeight_() { return fCurrentHeight * vInterval.y; }
 void CGameFont::SetHeightI(float S)
 {
     VERIFY(uFlags & fsDeviceIndependent);
-    fCurrentHeight = S * RDEVICE.dwHeight;
+    fCurrentHeight = S * Device.dwHeight;
 };
 
 void CGameFont::SetHeight(float S)

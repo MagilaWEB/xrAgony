@@ -24,18 +24,11 @@ void CParticlesObject::Init(LPCSTR p_name, IRender_Sector* S, BOOL bAutoRemove)
 	m_bAutoRemove = bAutoRemove;
 	float time_limit = 0.0f;
 
-    if (!GEnv.isDedicatedServer)
-	{
-		// create visual
-        renderable.visual = GEnv.Render->model_CreateParticles(p_name);
-		VERIFY(renderable.visual);
-		IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual);  VERIFY(V);
-		time_limit = V->GetTimeLimit();
-	}
-	else
-	{
-		time_limit = 1.0f;
-	}
+	// create visual
+	renderable.visual = ::Render->model_CreateParticles(p_name);
+	VERIFY(renderable.visual);
+	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual);  VERIFY(V);
+	time_limit = V->GetTimeLimit();
 
 	if (time_limit > 0.f)
 	{
@@ -79,9 +72,6 @@ CParticlesObject::~CParticlesObject()
 
 void CParticlesObject::UpdateSpatial()
 {
-	if (GEnv.isDedicatedServer)
-		return;
-
 	// spatial	(+ workaround occasional bug inside particle-system)
 	vis_data& vis = renderable.visual->getVisData();
 	if (_valid(vis.sphere))
@@ -110,9 +100,6 @@ void CParticlesObject::UpdateSpatial()
 
 const shared_str CParticlesObject::Name()
 {
-	if (GEnv.isDedicatedServer)
-		return "";
-
 	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 	return (V) ? V->Name() : "";
 }
@@ -120,9 +107,6 @@ const shared_str CParticlesObject::Name()
 //----------------------------------------------------
 void CParticlesObject::Play(bool bHudMode)
 {
-	if (GEnv.isDedicatedServer)
-		return;
-
 	xrCriticalSection::raii mt{ po_lock };
 	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 	if (bHudMode)
@@ -138,8 +122,6 @@ void CParticlesObject::Play(bool bHudMode)
 
 void CParticlesObject::play_at_pos(const Fvector& pos, BOOL xform)
 {
-	if (GEnv.isDedicatedServer)
-		return;
 	xrCriticalSection::raii mt{ po_lock };
 	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 	Fmatrix m; m.translate(pos);
@@ -155,8 +137,6 @@ void CParticlesObject::play_at_pos(const Fvector& pos, BOOL xform)
 void CParticlesObject::Stop(BOOL bDefferedStop)
 {
 	xrCriticalSection::raii mt{ po_lock };
-	if (GEnv.isDedicatedServer)
-		return;
 
 	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 	V->Stop(bDefferedStop);
@@ -167,7 +147,7 @@ void CParticlesObject::shedule_Update(u32 _dt)
 {
 	inherited::shedule_Update(_dt);
 
-	if (GEnv.isDedicatedServer || m_bDead)
+	if (m_bDead)
 		return;
 
 	if (psDeviceFlags.test(mtParticles))
@@ -178,7 +158,7 @@ void CParticlesObject::shedule_Update(u32 _dt)
 
 void CParticlesObject::PerformAllTheWork()
 {
-	if (GEnv.isDedicatedServer || m_bDead)
+	if (m_bDead)
 		return;
 
 	xrCriticalSection::raii mt{ po_lock };
@@ -195,8 +175,6 @@ void CParticlesObject::PerformAllTheWork()
 
 void CParticlesObject::SetXFORM(const Fmatrix& m)
 {
-	if (GEnv.isDedicatedServer)
-		return;
 	xrCriticalSection::raii mt{ po_lock };
 	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 	V->UpdateParent(m, zero_vel, TRUE);
@@ -206,8 +184,6 @@ void CParticlesObject::SetXFORM(const Fmatrix& m)
 
 void CParticlesObject::UpdateParent(const Fmatrix& m, const Fvector& vel)
 {
-	if (GEnv.isDedicatedServer)
-		return;
 	xrCriticalSection::raii mt{ po_lock };
 	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 	V->UpdateParent(m, vel, FALSE);
@@ -216,20 +192,12 @@ void CParticlesObject::UpdateParent(const Fmatrix& m, const Fvector& vel)
 
 Fvector& CParticlesObject::Position()
 {
-	if (GEnv.isDedicatedServer)
-	{
-		static Fvector _pos = Fvector().set(0, 0, 0);
-		return _pos;
-	}
 	vis_data& vis = renderable.visual->getVisData();
 	return vis.sphere.P;
 }
 
 float CParticlesObject::shedule_Scale()
 {
-	if (GEnv.isDedicatedServer)
-		return 5.0f;
-
 	return Device.vCameraPosition.distance_to(Position()) / 200.f;
 }
 
@@ -245,8 +213,8 @@ void CParticlesObject::renderable_Render()
 		dwLastTime = Device.dwTimeGlobal;
 	}
 
-	GEnv.Render->set_Transform(&renderable.xform);
-	GEnv.Render->add_Visual(renderable.visual);
+	::Render->set_Transform(&renderable.xform);
+	::Render->add_Visual(renderable.visual);
 }
 
 bool CParticlesObject::IsAutoRemove()
@@ -264,9 +232,6 @@ void CParticlesObject::SetAutoRemove(bool auto_remove)
 //остановки Stop партиклы могут еще доигрывать анимацию IsPlaying = true
 bool CParticlesObject::IsPlaying()
 {
-	if (GEnv.isDedicatedServer)
-		return false;
-
 	IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual);
 	VERIFY(V);
 	return !!V->IsPlaying();

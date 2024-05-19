@@ -1,17 +1,6 @@
 #include "stdafx.h"
 #include "xrCDB/Frustum.h"
 
-#pragma warning(push)
-#pragma warning(disable : 4995)
-// mmsystem.h
-#define MMNOSOUND
-#define MMNOMIDI
-#define MMNOAUX
-#define MMNOMIXER
-#define MMNOJOY
-#include <mmsystem.h>
-#pragma warning(pop)
-
 #include "x_ray.h"
 #include "Render.h"
 
@@ -39,23 +28,12 @@ extern int g_PausedFPSlimit;//Limit fps to Pause.
 extern int g_MainFPSlimit;//Limit fps to main.
 extern int r_scope_fps_limit;
 
-ref_light precache_light = 0;
-
 void CRenderDevice::Run()
 {
 	Log("Starting engine...");
 
 	// Startup timers and calculate timer delta
 	dwTimeGlobal = 0;
-	Timer_MM_Delta = 0;
-	{
-		u32 time_mm = timeGetTime();
-		while (timeGetTime() == time_mm)
-			; // wait for next tick
-		u32 time_system = timeGetTime();
-		u32 time_local = TimerAsync();
-		Timer_MM_Delta = time_system - time_local;
-	}
 
 	seqAppStart.Process();
 
@@ -66,7 +44,7 @@ void CRenderDevice::Run()
 	mt_frame2.Init(this, &CRenderDevice::OnFrame2, xrThread::sParalelRender);
 
 	// Message cycle
-	GEnv.Render->ClearTarget();
+	::Render->ClearTarget();
 	splash::hide();
 	message_loop();
 	seqAppEnd.Process();
@@ -116,27 +94,24 @@ void CRenderDevice::ProcessPriority()
 
 BOOL CRenderDevice::Begin()
 {
-	if (GEnv.isDedicatedServer)
-		return TRUE;
-
-	if (GEnv.Render->GetDeviceState() == DeviceState::Lost)
+	if (::Render->GetDeviceState() == DeviceState::Lost)
 	{
 		// If the device was lost, do not render until we get it back
 		Sleep(33);
 		return FALSE;
 	}
 
-	if (GEnv.Render->GetDeviceState() == DeviceState::NeedReset)
+	if (::Render->GetDeviceState() == DeviceState::NeedReset)
 		Reset();
 
-	GEnv.Render->Begin();
+	::Render->Begin();
 	FPU::m24r();
 	g_bRendering = TRUE;
 
 	return TRUE;
 }
 
-void CRenderDevice::Clear() { GEnv.Render->Clear(); }
+void CRenderDevice::Clear() { ::Render->Clear(); }
 
 bool CRenderDevice::ActiveMain()
 {
@@ -145,25 +120,17 @@ bool CRenderDevice::ActiveMain()
 
 void CRenderDevice::End(void)
 {
-	if (GEnv.isDedicatedServer)
-		return;
-
 	bool load_finished = false;
 	if (dwPrecacheFrame)
 	{
-		GEnv.Sound->set_master_volume(0.f);
+		::Sound->set_master_volume(0.f);
 		dwPrecacheFrame--;
 		if (!dwPrecacheFrame)
 		{
 			load_finished = true;
-			GEnv.Render->updateGamma();
-			if (precache_light)
-			{
-				precache_light->set_active(false);
-				precache_light.destroy();
-			}
-			GEnv.Sound->set_master_volume(1.f);
-			GEnv.Render->ResourcesDestroyNecessaryTextures();
+			::Render->updateGamma();
+			::Sound->set_master_volume(1.f);
+			::Render->ResourcesDestroyNecessaryTextures();
 			Memory.mem_compact();
 			Msg("* MEMORY USAGE: %d K", Memory.mem_usage() / 1024);
 			Msg("* End of synchronization A[%d] R[%d]", b_is_Active, b_is_Ready);
@@ -185,27 +152,16 @@ void CRenderDevice::End(void)
 	// Present goes here, so call OA Frame end.
 	if (g_SASH.IsBenchmarkRunning())
 		g_SASH.DisplayFrame(Device.fTimeGlobal);
-	GEnv.Render->End();
+	::Render->End();
 }
 
 #include "IGame_Level.h"
 void CRenderDevice::PreCache(u32 amount, bool b_draw_loadscreen, bool b_wait_user_input)
 {
-	if (GEnv.isDedicatedServer)
-		amount = 0;
-	else if (GEnv.Render->GetForceGPU_REF())
+	if (::Render->GetForceGPU_REF())
 		amount = 0;
 
 	dwPrecacheFrame = dwPrecacheTotal = amount;
-	if (amount && !precache_light && g_pGameLevel && g_loading_events.empty())
-	{
-		precache_light = GEnv.Render->light_create();
-		precache_light->set_shadow(false);
-		precache_light->set_position(vCameraPosition);
-		precache_light->set_color(255, 255, 255);
-		precache_light->set_range(5.0f);
-		precache_light->set_active(true);
-	}
 	if (amount && b_draw_loadscreen && !load_screen_renderer.b_registered)
 	{
 		load_screen_renderer.start(b_wait_user_input);
@@ -242,7 +198,7 @@ void CRenderDevice::CalcFrameStats()
 		stats.fFPS = fInv * stats.fFPS + fOne * fps;
 		if (stats.RenderTotal.result > EPS_S)
 		{
-			u32 renderedPolys = GEnv.Render->GetCacheStatPolys();
+			u32 renderedPolys = ::Render->GetCacheStatPolys();
 			stats.fTPS = fInv * stats.fTPS + fOne * float(renderedPolys) / (stats.RenderTotal.result * 1000.f);
 			stats.fRFPS = fInv * stats.fRFPS + fOne * 1000.f / stats.RenderTotal.result;
 		}
@@ -256,9 +212,9 @@ void CRenderDevice::OnFrame()
 	{
 		if (g_pGameLevel && g_pGameLevel->bReady)
 		{
-			LIMIT_UPDATE_FPS_CODE(UniqueCallLimit, 60, GEnv.ScriptEngine->UpdateUniqueCall();)
-			GEnv.ScriptEngine->script_process(ScriptProcessor::Level)->update();
-			lua_gc(GEnv.ScriptEngine->lua(), LUA_GCSTEP, 10);
+			LIMIT_UPDATE_FPS_CODE(UniqueCallLimit, 60, ::ScriptEngine->UpdateUniqueCall();)
+			::ScriptEngine->script_process(ScriptProcessor::Level)->update();
+			lua_gc(::ScriptEngine->lua(), LUA_GCSTEP, 10);
 		}
 	}
 
@@ -322,18 +278,18 @@ void CRenderDevice::d_SVPRender()
 		// Matrices
 		mInvView.invert(mView);
 		mFullTransform.mul(mProject, mView);
-		GEnv.Render->SetCacheXform(mView, mProject);
+		::Render->SetCacheXform(mView, mProject);
 		mInvFullTransform.invert_44(mFullTransform);
 
 		vCameraPositionSaved = vCameraPosition;
 
-		GEnv.Render->Begin();
+		::Render->Begin();
 
 		g_bRendering = TRUE;
 		seqRender.Process();
 		g_bRendering = FALSE;
 
-		GEnv.Render->End();
+		::Render->End();
 
 		m_ScopeVP.SetRender(false);
 	}
@@ -374,7 +330,7 @@ void CRenderDevice::GlobalUpdate()
 			}
 		}
 
-		if (b_is_Active && GEnv.Render->GetDeviceState() != DeviceState::Lost)
+		if (b_is_Active && ::Render->GetDeviceState() != DeviceState::Lost)
 		{
 			if (r_scope_fps_limit)
 				LIMIT_UPDATE_FPS_CODE(SecondViewportRenderFps, r_scope_fps_limit, d_SVPRender();)
@@ -398,7 +354,7 @@ void CRenderDevice::GlobalUpdate()
 		// Matrices
 		mInvView.invert(mView);
 		mFullTransform.mul(mProject, mView);
-		GEnv.Render->SetCacheXform(mView, mProject);
+		::Render->SetCacheXform(mView, mProject);
 		mInvFullTransform.invert_44(mFullTransform);
 
 		vCameraPositionSaved = vCameraPosition;
@@ -489,7 +445,7 @@ ENGINE_API BOOL bShowPauseString = TRUE;
 void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 {
 	static int snd_emitters_ = -1;
-	if (g_bBenchmark || GEnv.isDedicatedServer)
+	if (g_bBenchmark)
 		return;
 
 	if (bOn)
@@ -507,8 +463,8 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 				TimerGlobal.Pause(FALSE);
 #endif
 		}
-		if (bSound && GEnv.Sound)
-			snd_emitters_ = GEnv.Sound->pause_emitters(true);
+		if (bSound && ::Sound)
+			snd_emitters_ = ::Sound->pause_emitters(true);
 	}
 	else
 	{
@@ -520,11 +476,11 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 		if (bSound)
 		{
 			if (snd_emitters_ > 0) // avoid crash
-				snd_emitters_ = GEnv.Sound->pause_emitters(false);
+				snd_emitters_ = ::Sound->pause_emitters(false);
 			else
 			{
 #ifdef DEBUG
-				Log("GEnv.Sound->pause_emitters underflow");
+				Log("::Sound->pause_emitters underflow");
 #endif
 			}
 		}
@@ -544,10 +500,9 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 
 		if (b_is_Active)
 		{
-			if (!GEnv.isDedicatedServer)
-				pInput->ClipCursor(true);
+			pInput->ClipCursor(true);
 
-			if ((!IsQUIT()) && mt_global_update.IsInit() && GEnv.Render->GetDeviceState() == DeviceState::Lost)
+			if ((!IsQUIT()) && mt_global_update.IsInit() && ::Render->GetDeviceState() == DeviceState::Lost)
 				ResetStart();
 
 			ShowWindow(m_hWnd, SW_SHOW);
@@ -594,14 +549,12 @@ void CRenderDevice::RemoveSeqFrame(pureFrame* f)
 
 CRenderDevice* get_device() { return &Device; }
 u32 script_time_global() { return Device.dwTimeGlobal; }
-u32 script_time_global_async() { return Device.TimerAsync_MMT(); }
 
 SCRIPT_EXPORT(Device, (),
 	{
 		module(luaState)
 		[
 			def("time_global", &script_time_global),
-			def("time_global_async", &script_time_global_async),
 			def("device", &get_device),
 			def("is_enough_address_space_available", &is_enough_address_space_available)
 		];

@@ -52,7 +52,7 @@ void CSkeletonX::_Copy(CSkeletonX* B)
 
 #if defined(USE_DX11)
     m_Indices = B->m_Indices;
-#endif //	USE_DX10
+#endif
 }
 //////////////////////////////////////////////////////////////////////
 void CSkeletonX::_Render(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCount)
@@ -174,11 +174,6 @@ void CSkeletonX::_Load(const char* N, IReader* data, u32& dwVertCount)
     //	Igor: some shaders in r1 need more free constant registers
     u16 hw_bones_cnt = u16((HW.Caps.geometry.dwRegisters - 22 - 3) / 3);
 
-#if RENDER == R_R1
-    if (ps_r1_SoftwareSkinning == 1)
-        hw_bones_cnt = 0;
-#endif // RENDER == R_R1
-
     u16 sw_bones_cnt = 0;
 #ifdef _EDITOR
     hw_bones_cnt = 0;
@@ -189,7 +184,7 @@ void CSkeletonX::_Load(const char* N, IReader* data, u32& dwVertCount)
     dwVertCount = data->r_u32();
 
     RenderMode = RM_SKINNING_SOFT;
-    GEnv.Render->shader_option_skinning(-1);
+    ::Render->shader_option_skinning(-1);
 
     switch (dwVertType)
     {
@@ -219,21 +214,21 @@ void CSkeletonX::_Load(const char* N, IReader* data, u32& dwVertCount)
             // HW- single bone
             RenderMode = RM_SINGLE;
             RMS_boneid = *bids.begin();
-            GEnv.Render->shader_option_skinning(0);
+            ::Render->shader_option_skinning(0);
         }
         else if (sw_bones_cnt <= hw_bones_cnt)
         {
             // HW- one weight
             RenderMode = RM_SKINNING_1B;
             RMS_bonecount = sw_bones_cnt + 1;
-            GEnv.Render->shader_option_skinning(1);
+            ::Render->shader_option_skinning(1);
         }
         else
         {
             // software
             crc = crc32(data->pointer(), size);
             Vertices1W.create(crc, dwVertCount, (vertBoned1W*)data->pointer());
-            GEnv.Render->shader_option_skinning(-1);
+            ::Render->shader_option_skinning(-1);
         }
 #endif
     }
@@ -262,14 +257,14 @@ void CSkeletonX::_Load(const char* N, IReader* data, u32& dwVertCount)
             // HW- two weights
             RenderMode = RM_SKINNING_2B;
             RMS_bonecount = sw_bones_cnt + 1;
-            GEnv.Render->shader_option_skinning(2);
+            ::Render->shader_option_skinning(2);
         }
         else
         {
             // software
             crc = crc32(data->pointer(), size);
             Vertices2W.create(crc, dwVertCount, (vertBoned2W*)data->pointer());
-            GEnv.Render->shader_option_skinning(-1);
+            ::Render->shader_option_skinning(-1);
         }
     }
     break;
@@ -295,13 +290,13 @@ void CSkeletonX::_Load(const char* N, IReader* data, u32& dwVertCount)
         {
             RenderMode = RM_SKINNING_3B;
             RMS_bonecount = sw_bones_cnt + 1;
-            GEnv.Render->shader_option_skinning(3);
+            ::Render->shader_option_skinning(3);
         }
         else
         {
             crc = crc32(data->pointer(), size);
             Vertices3W.create(crc, dwVertCount, (vertBoned3W*)data->pointer());
-            GEnv.Render->shader_option_skinning(-1);
+            ::Render->shader_option_skinning(-1);
         }
     }
     break;
@@ -328,13 +323,13 @@ void CSkeletonX::_Load(const char* N, IReader* data, u32& dwVertCount)
         {
             RenderMode = RM_SKINNING_4B;
             RMS_bonecount = sw_bones_cnt + 1;
-            GEnv.Render->shader_option_skinning(4);
+            ::Render->shader_option_skinning(4);
         }
         else
         {
             crc = crc32(data->pointer(), size);
             Vertices4W.create(crc, dwVertCount, (vertBoned4W*)data->pointer());
-            GEnv.Render->shader_option_skinning(-1);
+            ::Render->shader_option_skinning(-1);
         }
     }
     break;
@@ -692,4 +687,4 @@ void CSkeletonX::_DuplicateIndices(const char* /*N*/, IReader* data)
     u32 crc = crc32(data->pointer(), size);
     m_Indices.create(crc, iCount, (u16*)data->pointer());
 }
-#endif //	USE_DX10
+#endif

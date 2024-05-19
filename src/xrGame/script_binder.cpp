@@ -63,9 +63,9 @@ void CScriptBinder::reload(LPCSTR section)
         return;
 
     luabind::functor<void> lua_function;
-    if (!GEnv.ScriptEngine->functor(pSettings->r_string(section, "script_binding"), lua_function))
+    if (!::ScriptEngine->functor(pSettings->r_string(section, "script_binding"), lua_function))
     {
-        GEnv.ScriptEngine->script_log(
+        ::ScriptEngine->script_log(
             LuaMessageType::Error, "function %s is not loaded!", pSettings->r_string(section, "script_binding"));
         return;
     }

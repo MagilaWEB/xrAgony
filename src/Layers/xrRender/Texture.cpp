@@ -397,7 +397,7 @@ _DDS:
 		ID3DTexture2D* T_normal_1C = TW_LoadTextureFromTexture(T_normal_1, fmt, psTextureLOD, dwWidth, dwHeight);
 		//TW_Save(T_normal_1C, fname, "debug-3", "normal-G-C");
 
-	#if RENDER==R_R2
+	#if RENDER==R_R1
 		// Decompress (back)
 		fmt = D3DFMT_A8R8G8B8;
 		ID3DTexture2D* T_normal_1U = TW_LoadTextureFromTexture(T_normal_1C, fmt, 0, dwWidth, dwHeight);
@@ -491,7 +491,7 @@ _BUMP_from_base:
 		ID3DTexture2D* T_normal_1C = TW_LoadTextureFromTexture(T_normal_1, fmt, img_loaded_lod, dwWidth, dwHeight);
 		mip_cnt = T_normal_1C->GetLevelCount();
 
-#if RENDER == R_R2
+#if RENDER == R_R1
 		// Decompress (back)
 		fmt = D3DFMT_A8R8G8B8;
 		ID3DTexture2D* T_normal_1U = TW_LoadTextureFromTexture(T_normal_1C, fmt, 0, dwWidth, dwHeight);

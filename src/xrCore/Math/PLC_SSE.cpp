@@ -1,9 +1,6 @@
 #include "stdafx.h"
-#ifndef _EDITOR
-#define RENDER 1
 #include "xrEngine/Render.h"
 #include "Layers/xrRender/light.h"
-#endif
 
 namespace XRay
 {

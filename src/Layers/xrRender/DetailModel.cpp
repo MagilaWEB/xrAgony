@@ -116,12 +116,9 @@ void CDetail::Load(IReader* S)
 		bv_bb.modify(vertices[i].P);
 	bv_bb.getsphere(bv_sphere.P, bv_sphere.R);
 
-#if !defined(_EDITOR) && !defined(USE_OGL)
 	Optimize();
-#endif
 }
 
-#if !defined(_EDITOR) && !defined(USE_OGL)
 #include "xrstripify.h"
 
 void CDetail::Optimize()
@@ -149,4 +146,3 @@ void CDetail::Optimize()
 			vertices[i] = verts[vec_permute[i]];
 	}
 }
-#endif

@@ -121,12 +121,12 @@ void CUIActorMenu::TryRepairItem(CUIWindow* w, void* d)
     LPCSTR partner = m_pPartnerInvOwner->CharacterInfo().Profile().c_str();
 
     luabind::functor<bool> funct;
-    R_ASSERT2(GEnv.ScriptEngine->functor("inventory_upgrades.can_repair_item", funct),
+    R_ASSERT2(::ScriptEngine->functor("inventory_upgrades.can_repair_item", funct),
         make_string("Failed to get functor <inventory_upgrades.can_repair_item>, item = %s", item_name));
     bool can_repair = funct(item_name, item->GetCondition(), partner);
 
     luabind::functor<LPCSTR> funct2;
-    R_ASSERT2(GEnv.ScriptEngine->functor("inventory_upgrades.question_repair_item", funct2),
+    R_ASSERT2(::ScriptEngine->functor("inventory_upgrades.question_repair_item", funct2),
         make_string("Failed to get functor <inventory_upgrades.question_repair_item>, item = %s", item_name));
     LPCSTR question = funct2(item_name, item->GetCondition(), can_repair, partner);
 
@@ -149,7 +149,7 @@ void CUIActorMenu::RepairEffect_CurItem()
     LPCSTR item_name = item->m_section_id.c_str();
 
     luabind::functor<void> funct;
-    R_ASSERT(GEnv.ScriptEngine->functor("inventory_upgrades.effect_repair_item", funct));
+    R_ASSERT(::ScriptEngine->functor("inventory_upgrades.effect_repair_item", funct));
     funct(item_name, item->GetCondition());
 
     item->SetCondition(1.0f);
@@ -167,7 +167,7 @@ bool CUIActorMenu::CanUpgradeItem(PIItem item)
     LPCSTR partner = m_pPartnerInvOwner->CharacterInfo().Profile().c_str();
 
     luabind::functor<bool> funct;
-    R_ASSERT2(GEnv.ScriptEngine->functor("inventory_upgrades.can_upgrade_item", funct),
+    R_ASSERT2(::ScriptEngine->functor("inventory_upgrades.can_upgrade_item", funct),
         make_string("Failed to get functor <inventory_upgrades.can_upgrade_item>, item = %s, mechanic = %s", item_name,
             partner));
 
@@ -178,7 +178,7 @@ void CUIActorMenu::CurModeToScript()
 {
     int mode = (int)m_currMenuMode;
     luabind::functor<void> funct;
-    R_ASSERT(GEnv.ScriptEngine->functor("actor_menu.actor_menu_mode", funct));
+    R_ASSERT(::ScriptEngine->functor("actor_menu.actor_menu_mode", funct));
     funct(mode);
 }
 

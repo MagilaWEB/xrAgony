@@ -38,21 +38,18 @@ extern void InitHudSoundSettings();
 #include "xrEngine/IGame_Persistent.h"
 void init_game_globals()
 {
-    CreateUIGeom();
-    InitHudSoundSettings();
-    if (!GEnv.isDedicatedServer)
-    {
-        //		CInfoPortion::InitInternal					();
-        //.		CEncyclopediaArticle::InitInternal			();
-        CPhraseDialog::InitInternal();
-        InventoryUtilities::CreateShaders();
-    };
-    CCharacterInfo::InitInternal();
-    CSpecificCharacter::InitInternal();
-    CHARACTER_COMMUNITY::InitInternal();
-    CHARACTER_RANK::InitInternal();
-    CHARACTER_REPUTATION::InitInternal();
-    MONSTER_COMMUNITY::InitInternal();
+	CreateUIGeom();
+	InitHudSoundSettings();
+	//		CInfoPortion::InitInternal					();
+		  //.		CEncyclopediaArticle::InitInternal			();
+	CPhraseDialog::InitInternal();
+	InventoryUtilities::CreateShaders();
+	CCharacterInfo::InitInternal();
+	CSpecificCharacter::InitInternal();
+	CHARACTER_COMMUNITY::InitInternal();
+	CHARACTER_RANK::InitInternal();
+	CHARACTER_REPUTATION::InitInternal();
+	MONSTER_COMMUNITY::InitInternal();
 }
 
 extern CUIXml* g_uiSpotXml;
@@ -62,55 +59,52 @@ extern void destroy_lua_wpn_params();
 
 void clean_game_globals()
 {
-    destroy_lua_wpn_params();
-    // destroy ai space
-    xr_delete(g_ai_space);
-    // destroy object factory
-    xr_delete(g_object_factory);
-    // destroy monster squad global var
-    xr_delete(g_monster_squad);
+	destroy_lua_wpn_params();
+	// destroy ai space
+	xr_delete(g_ai_space);
+	// destroy object factory
+	xr_delete(g_object_factory);
+	// destroy monster squad global var
+	xr_delete(g_monster_squad);
 
-    story_ids.clear();
-    spawn_story_ids.clear();
+	story_ids.clear();
+	spawn_story_ids.clear();
 
-    if (!GEnv.isDedicatedServer)
-    {
-        CPhraseDialog::DeleteSharedData();
-        CPhraseDialog::DeleteIdToIndexData();
+	CPhraseDialog::DeleteSharedData();
+	CPhraseDialog::DeleteIdToIndexData();
 
-        InventoryUtilities::DestroyShaders();
-    }
-    CCharacterInfo::DeleteSharedData();
-    CCharacterInfo::DeleteIdToIndexData();
+	InventoryUtilities::DestroyShaders();
+	CCharacterInfo::DeleteSharedData();
+	CCharacterInfo::DeleteIdToIndexData();
 
-    CSpecificCharacter::DeleteSharedData();
-    CSpecificCharacter::DeleteIdToIndexData();
+	CSpecificCharacter::DeleteSharedData();
+	CSpecificCharacter::DeleteIdToIndexData();
 
-    CHARACTER_COMMUNITY::DeleteIdToIndexData();
-    CHARACTER_RANK::DeleteIdToIndexData();
-    CHARACTER_REPUTATION::DeleteIdToIndexData();
-    MONSTER_COMMUNITY::DeleteIdToIndexData();
+	CHARACTER_COMMUNITY::DeleteIdToIndexData();
+	CHARACTER_RANK::DeleteIdToIndexData();
+	CHARACTER_REPUTATION::DeleteIdToIndexData();
+	MONSTER_COMMUNITY::DeleteIdToIndexData();
 
-    // static shader for blood
-    CEntityAlive::UnloadBloodyWallmarks();
-    CEntityAlive::UnloadFireParticles();
-    // Очищение таблицы цветов
-    CUIXmlInit::DeleteColorDefs();
-    // Очищение таблицы идентификаторов рангов и отношений сталкеров
-    InventoryUtilities::ClearCharacterInfoStrings();
+	// static shader for blood
+	CEntityAlive::UnloadBloodyWallmarks();
+	CEntityAlive::UnloadFireParticles();
+	// Очищение таблицы цветов
+	CUIXmlInit::DeleteColorDefs();
+	// Очищение таблицы идентификаторов рангов и отношений сталкеров
+	InventoryUtilities::ClearCharacterInfoStrings();
 
-    xr_delete(g_sound_collection_storage);
+	xr_delete(g_sound_collection_storage);
 
 #ifdef DEBUG
-    // XXX nitrocaster PROFILER: temporarily disabled due to linkage issues
-    // xr_delete										(g_profiler);
+	// XXX nitrocaster PROFILER: temporarily disabled due to linkage issues
+	// xr_delete										(g_profiler);
 #endif
 
-    RELATION_REGISTRY::clear_relation_registry();
+	RELATION_REGISTRY::clear_relation_registry();
 
-    clean_wnd_rects();
-    xr_delete(g_uiSpotXml);
-    DestroyUIGeom();
-    xr_delete(pWpnScopeXml);
-    CUITextureMaster::FreeTexInfo();
+	clean_wnd_rects();
+	xr_delete(g_uiSpotXml);
+	DestroyUIGeom();
+	xr_delete(pWpnScopeXml);
+	CUITextureMaster::FreeTexInfo();
 }

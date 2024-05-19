@@ -129,7 +129,7 @@ HRESULT CInput::CreateInputDevice(
 
 	// Set the cooperativity level to let DirectInput know how this device
 	// should interact with the system and with other DirectInput applications.
-	HRESULT _hr = (*device)->SetCooperativeLevel(RDEVICE.m_hWnd, dwFlags);
+	HRESULT _hr = (*device)->SetCooperativeLevel(Device.m_hWnd, dwFlags);
 	if (FAILED(_hr) && (_hr == E_NOTIMPL))
 		Msg("! INPUT: Can't set coop level. Emulation???");
 	else
@@ -662,7 +662,7 @@ void CInput::OnFrame(void)
 {
 	stats.FrameStart();
 	stats.FrameTime.Begin();
-	dwCurTime = RDEVICE.TimerAsync_MMT();
+	dwCurTime = Device.TimerAsync();
 	if (pKeyboard)
 		KeyUpdate();
 	if (pMouse)
@@ -687,10 +687,10 @@ void CInput::unacquire()
 
 void CInput::acquire(const bool& exclusive)
 {
-	pKeyboard->SetCooperativeLevel(RDEVICE.m_hWnd, (exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND);
+	pKeyboard->SetCooperativeLevel(Device.m_hWnd, (exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND);
 	pKeyboard->Acquire();
 
-	pMouse->SetCooperativeLevel(RDEVICE.m_hWnd,(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY);
+	pMouse->SetCooperativeLevel(Device.m_hWnd,(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY);
 	pMouse->Acquire();
 }
 
@@ -703,7 +703,7 @@ void CInput::exclusive_mode(const bool& exclusive)
 bool CInput::get_exclusive_mode() { return g_exclusive; }
 void CInput::feedback(u16 s1, u16 s2, float time)
 {
-	stop_vibration_time = RDEVICE.fTimeGlobal + time;
+	stop_vibration_time = Device.fTimeGlobal + time;
 #ifndef _EDITOR
 	//. set_vibration (s1, s2);
 #endif

@@ -86,9 +86,9 @@ void CBlender_accum_direct_mask_msaa::Compile(CBlender_Compile& C)
     IBlender::Compile(C);
 
     if (Name)
-        GEnv.Render->m_MSAASample = atoi(Definition);
+        ::Render->m_MSAASample = atoi(Definition);
     else
-        GEnv.Render->m_MSAASample = -1;
+        ::Render->m_MSAASample = -1;
 
     switch (C.iElement)
     {
@@ -151,5 +151,5 @@ void CBlender_accum_direct_mask_msaa::Compile(CBlender_Compile& C)
         C.r_End();
         break;
     }
-    GEnv.Render->m_MSAASample = -1;
+    ::Render->m_MSAASample = -1;
 }

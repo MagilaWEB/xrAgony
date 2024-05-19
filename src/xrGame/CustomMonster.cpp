@@ -118,11 +118,9 @@ CCustomMonster::~CCustomMonster()
 
 #ifdef DEBUG
 	Msg("dumping client spawn manager stuff for object with id %d", ID());
-	if (!GEnv.isDedicatedServer)
-		Level().client_spawn_manager().dump(ID());
+	Level().client_spawn_manager().dump(ID());
 #endif // DEBUG
-	if (!GEnv.isDedicatedServer)
-		Level().client_spawn_manager().clear(ID());
+	Level().client_spawn_manager().clear(ID());
 }
 
 void CCustomMonster::Load(LPCSTR section)
@@ -1065,7 +1063,7 @@ void draw_visiblity_rays(CCustomMonster* self, const IGameObject* object, collid
 
 void CCustomMonster::OnRender()
 {
-	GEnv.DRender->OnFrameEnd();
+	::DRender->OnFrameEnd();
 	// RCache.OnFrameEnd				();
 
 	{

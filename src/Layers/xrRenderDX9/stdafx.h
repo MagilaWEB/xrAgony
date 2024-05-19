@@ -18,12 +18,9 @@
 #include "Layers/xrRender/R_Backend.h"
 #include "Layers/xrRender/R_Backend_Runtime.h"
 
-#define R_GL 0
 #define R_R1 1
 #define R_R2 2
-#define R_R3 3
-#define R_R4 4
-#define RENDER R_R2
+#define RENDER R_R1
 
 #include "Layers/xrRender/ResourceManager.h"
 #include "xrEngine/vis_common.h"

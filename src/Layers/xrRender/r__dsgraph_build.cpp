@@ -42,12 +42,6 @@ void D3DXRenderBase::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector&
 		return;
 	pVisual->vis.marker = RI.marker;
 
-#if RENDER == R_R1
-	if (RI.o.vis_intersect && (pVisual->vis.accept_frame != Device.dwFrame))
-		return;
-	pVisual->vis.accept_frame = Device.dwFrame;
-#endif
-
 	float distSQ;
 	float SSA = CalcSSA(distSQ, Center, pVisual);
 	if (SSA <= r_ssaDISCARD)
@@ -78,17 +72,12 @@ void D3DXRenderBase::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector&
 		else
 			mapHUD.insert_anyway(distSQ, _MatrixItemS({ SSA, RI.val_pObject, pVisual, *RI.val_pTransform, sh }));
 
-#if RENDER != R_R1
 		if (sh->flags.bEmissive)
 			mapHUDEmissive.insert_anyway(distSQ, _MatrixItemS({ SSA, RI.val_pObject, pVisual, *RI.val_pTransform, sh_d })); // sh_d -> L_special
-#endif
 		return;
 	}
 
 	// Shadows registering
-#if RENDER == R_R1
-	RI.L_Shadows->add_element(_MatrixItem{ SSA, RI.val_pObject, pVisual, *RI.val_pTransform });
-#endif
 	if (RI.val_bInvisible)
 		return;
 
@@ -99,7 +88,6 @@ void D3DXRenderBase::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector&
 		return;
 	}
 
-#if RENDER != R_R1
 	// Emissive geometry should be marked and R2 special-cases it
 	// a) Allow to skeep already lit pixels
 	// b) Allow to make them 100% lit and really bright
@@ -114,7 +102,6 @@ void D3DXRenderBase::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector&
 		mapWmark.insert_anyway(distSQ, _MatrixItemS({ SSA, RI.val_pObject, pVisual, *RI.val_pTransform, sh }));
 		return;
 	}
-#endif
 
 	// Create common node
 	// NOTE: Invisible elements exist only in R1
@@ -125,11 +112,7 @@ void D3DXRenderBase::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector&
 		auto& pass = *sh->passes[iPass];
 		auto& map = mapMatrixPasses[sh->flags.iPriority / 2][iPass];
 
-#ifdef USE_OGL
-		auto& Nvs = map[pass.vs->sh];
-		auto& Ngs = Nvs[pass.gs->sh];
-		auto& Nps = Ngs[pass.ps->sh];
-#elif defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX11)
 		auto& Nvs = map[&*pass.vs];
 		auto& Ngs = Nvs[pass.gs->sh];
 		auto& Nps = Ngs[pass.ps->sh];
@@ -187,7 +170,6 @@ void D3DXRenderBase::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector&
 		}
 	}
 
-#if RENDER != R_R1
 	if (val_recorder)
 	{
 		Fbox3 temp;
@@ -195,7 +177,6 @@ void D3DXRenderBase::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector&
 		temp.xform(pVisual->vis.box, xf);
 		val_recorder->push_back(temp);
 	}
-#endif
 }
 
 void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
@@ -205,12 +186,6 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 	if (pVisual->vis.marker == RI.marker)
 		return;
 	pVisual->vis.marker = RI.marker;
-
-#if RENDER == R_R1
-	if (RI.o.vis_intersect && (pVisual->vis.accept_frame != Device.dwFrame))
-		return;
-	pVisual->vis.accept_frame = Device.dwFrame;
-#endif
 
 	float distSQ;
 	float SSA = CalcSSA(distSQ, pVisual->vis.sphere.P, pVisual);
@@ -243,7 +218,6 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 		return;
 	}
 
-#if RENDER != R_R1
 	// Emissive geometry should be marked and R2 special-cases it
 	// a) Allow to skeep already lit pixels
 	// b) Allow to make them 100% lit and really bright
@@ -258,7 +232,6 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 		mapWmark.insert_anyway(distSQ, _MatrixItemS({ SSA, nullptr, pVisual, Fidentity, sh }));
 		return;
 	}
-#endif
 
 	if (val_feedback && counter_S == val_feedback_breakp)
 		val_feedback->rfeedback_static(pVisual);
@@ -272,11 +245,7 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 		auto& pass = *sh->passes[iPass];
 		auto& map = mapNormalPasses[sh->flags.iPriority / 2][iPass];
 
-#ifdef USE_OGL
-		auto& Nvs = map[pass.vs->sh];
-		auto& Ngs = Nvs[pass.gs->sh];
-		auto& Nps = Ngs[pass.ps->sh];
-#elif defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX11)
 		auto& Nvs = map[&*pass.vs];
 		auto& Ngs = Nvs[pass.gs->sh];
 		auto& Nps = Ngs[pass.ps->sh];
@@ -334,12 +303,10 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 		}
 	}
 
-#if RENDER != R_R1
 	if (val_recorder)
 	{
 		val_recorder->push_back(pVisual->vis.box);
 	}
-#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -757,36 +724,22 @@ D3DXRenderBase::D3DXRenderBase()
 void D3DXRenderBase::Copy(IRender & _in) { *this = *(D3DXRenderBase*)&_in; }
 void D3DXRenderBase::setGamma(float fGamma)
 {
-#ifndef USE_OGL
 	m_Gamma.Gamma(fGamma);
-#else
-	UNUSED(fGamma);
-#endif
 }
 
 void D3DXRenderBase::setBrightness(float fGamma)
 {
-#ifndef USE_OGL
 	m_Gamma.Brightness(fGamma);
-#else
-	UNUSED(fGamma);
-#endif
 }
 
 void D3DXRenderBase::setContrast(float fGamma)
 {
-#ifndef USE_OGL
 	m_Gamma.Contrast(fGamma);
-#else
-	UNUSED(fGamma);
-#endif
 }
 
 void D3DXRenderBase::updateGamma()
 {
-#ifndef USE_OGL
 	m_Gamma.Update();
-#endif
 }
 
 void D3DXRenderBase::OnDeviceDestroy(bool bKeepTextures)
@@ -843,7 +796,7 @@ void D3DXRenderBase::SetupStates()
 	SSManager.SetMaxAnisotropy(4);
 	//  TODO: DX10: Implement Resetting of render states into default mode
 	// VERIFY(!"D3DXRenderBase::SetupStates not implemented.");
-#else //    USE_DX10
+#else
 	for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
 	{
 		float fBias = -.5f;
@@ -883,16 +836,14 @@ void D3DXRenderBase::SetupStates()
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE));
 		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_LINEAR));
 	}
-#endif // USE_DX10
+#endif
 }
 
 void D3DXRenderBase::OnDeviceCreate(const char* shName)
 {
 	// Signal everyone - device created
 	RCache.OnDeviceCreate();
-#ifndef USE_OGL
 	m_Gamma.Update();
-#endif
 	Resources->OnDeviceCreate(shName);
 	create();
 
@@ -904,10 +855,7 @@ void D3DXRenderBase::OnDeviceCreate(const char* shName)
 void D3DXRenderBase::Create(HWND hWnd, u32 & dwWidth, u32 & dwHeight, float& fWidth_2, float& fHeight_2, bool move_window)
 {
 	HW.CreateDevice(hWnd, move_window);
-#if defined(USE_OGL)
-	dwWidth = psCurrentVidMode[0];
-	dwHeight = psCurrentVidMode[1];
-#elif defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX11)
 	dwWidth = HW.m_ChainDesc.BufferDesc.Width;
 	dwHeight = HW.m_ChainDesc.BufferDesc.Height;
 #else
@@ -979,7 +927,7 @@ void D3DXRenderBase::overdrawEnd()
 		CHK_DX(HW.pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, pv, sizeof(FVF::TL)));
 	}
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE));
-#endif // USE_DX10
+#endif
 }
 
 void D3DXRenderBase::DeferredLoad(bool E) { Resources->DeferredLoad(E); }
@@ -1000,7 +948,7 @@ DeviceState D3DXRenderBase::GetDeviceState()
 	//  TODO: DX10: Implement GetDeviceState
 	//  TODO: DX10: Implement DXGI_PRESENT_TEST testing
 	// VERIFY(!"D3DXRenderBase::overdrawBegin not implemented.");
-#else // USE_DX10
+#else
 	HRESULT _hr = HW.pDevice->TestCooperativeLevel();
 	if (FAILED(_hr))
 	{
@@ -1011,7 +959,7 @@ DeviceState D3DXRenderBase::GetDeviceState()
 		if (D3DERR_DEVICENOTRESET == _hr)
 			return DeviceState::NeedReset;
 	}
-#endif // USE_DX10
+#endif
 	return DeviceState::Normal;
 }
 
@@ -1062,10 +1010,10 @@ void D3DXRenderBase::End()
 	extern ENGINE_API u32 state_screen_mode;
 #if defined(USE_DX11)
 	HW.m_pSwapChain->Present((state_screen_mode == 1) && psDeviceFlags.test(rsVSync) ? 1 : 0, 0);
-#else //!USE_DX10 || USE_DX11
+#else
 	CHK_DX(HW.pDevice->EndScene());
 	HW.pDevice->Present(nullptr, nullptr, nullptr, nullptr);
-#endif // USE_DX10
+#endif
 }
 
 void D3DXRenderBase::ResourcesDestroyNecessaryTextures() { Resources->DestroyNecessaryTextures(); }

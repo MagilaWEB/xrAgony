@@ -122,8 +122,8 @@ void CPatrolPoint::save(IWriter& stream)
 
 const u32& CPatrolPoint::level_vertex_id() const
 {
-    const CGameGraph& gameGraph = GEnv.AISpace->game_graph();
-    const CLevelGraph& levelGraph = GEnv.AISpace->level_graph();
+    const CGameGraph& gameGraph = ::AISpace->game_graph();
+    const CLevelGraph& levelGraph = ::AISpace->level_graph();
     if (gameGraph.vertex(m_game_vertex_id)->level_id() == levelGraph.level_id())
         return level_vertex_id(&levelGraph, &gameGraph.cross_table(), &gameGraph);
     return m_level_vertex_id;
@@ -131,8 +131,8 @@ const u32& CPatrolPoint::level_vertex_id() const
 
 const GameGraph::_GRAPH_ID& CPatrolPoint::game_vertex_id() const
 {
-    const CGameGraph& gameGraph = GEnv.AISpace->game_graph();
-    const CLevelGraph& levelGraph = GEnv.AISpace->level_graph();
+    const CGameGraph& gameGraph = ::AISpace->game_graph();
+    const CLevelGraph& levelGraph = ::AISpace->level_graph();
     const CGameGraph::CVertex* vertex = gameGraph.vertex(m_game_vertex_id);
 
 #ifdef DEBUG
@@ -151,7 +151,7 @@ CPatrolPoint& CPatrolPoint::position(Fvector position)
 {
     m_position = position;
 
-    auto level_graph = &GEnv.AISpace->level_graph();
+    auto level_graph = &::AISpace->level_graph();
     if (level_graph && level_graph->valid_vertex_position(m_position))
     {
         Fvector pos = m_position;
@@ -160,7 +160,7 @@ CPatrolPoint& CPatrolPoint::position(Fvector position)
     }
     else
         m_level_vertex_id = u32(-1);
-    correct_position(level_graph, &GEnv.AISpace->cross_table(), &GEnv.AISpace->game_graph());
+    correct_position(level_graph, &::AISpace->cross_table(), &::AISpace->game_graph());
 
     return *this;
 }

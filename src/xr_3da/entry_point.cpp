@@ -17,10 +17,7 @@ int entry_point(pcstr commandLine)
         splash::show(topmost);
     }
 
-    if (strstr(commandLine, "-dedicated"))
-        GEnv.isDedicatedServer = true;
-
-    xrDebug::Initialize(GEnv.isDedicatedServer);
+    xrDebug::Initialize();
 
     StickyKeyFilter filter;
     filter.initialize();

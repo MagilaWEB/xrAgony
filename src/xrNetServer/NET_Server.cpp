@@ -8,31 +8,31 @@ XRNETSERVER_API ClientID BroadcastCID(0xffffffff);
 //------------------------------------------------------------------------------
 IClient* IPureServer::ID_to_client(ClientID ID, bool ScanAll)
 {
-    if (ID.value())
-        if (SV_Client->ID == ID)
-            return SV_Client;
+	if (ID.value())
+		if (SV_Client->ID == ID)
+			return SV_Client;
 
-    return nullptr;
+	return nullptr;
 }
 
 //==============================================================================
-IPureServer::IPureServer(CTimer* timer, bool Dedicated)
+IPureServer::IPureServer(CTimer* timer)
 {
-    device_timer = timer;
-    SV_Client = nullptr;
+	device_timer = timer;
+	SV_Client = nullptr;
 #ifdef DEBUG
-    sender_functor_invoked = false;
+	sender_functor_invoked = false;
 #endif
 }
 
 IPureServer::~IPureServer()
 {
-    SV_Client = nullptr;
+	SV_Client = nullptr;
 }
 
 IPureServer::EConnect IPureServer::Connect(pcstr options)
 {
-    connect_options = options;
+	connect_options = options;
 
-    return ErrNoError;
+	return ErrNoError;
 }

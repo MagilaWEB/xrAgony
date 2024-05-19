@@ -147,7 +147,7 @@ void RELATION_REGISTRY::ForceSetGoodwill(u16 from, u16 to, CHARACTER_GOODWILL go
 
     if (!from_obj || !to_obj)
     {
-        GEnv.ScriptEngine->script_log(LuaMessageType::Error,
+        ::ScriptEngine->script_log(LuaMessageType::Error,
             "RELATION_REGISTRY::ForceSetGoodwill  : cannot convert obj to CSE_ALifeTraderAbstract!");
         return;
     }

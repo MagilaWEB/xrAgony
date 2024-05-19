@@ -188,7 +188,7 @@ void CParticleGroup::SItem::Clear()
 	{
 		//::Render->model_Delete(*it);
 		IRenderVisual* pVisual = smart_cast<IRenderVisual*>(*it);
-        GEnv.Render->model_Delete(pVisual);
+        ::Render->model_Delete(pVisual);
 		*it = 0;
 	}
 
@@ -205,7 +205,7 @@ void CParticleGroup::SItem::StartRelatedChild(CParticleEffect* emitter, LPCSTR e
 
 	C->SetHudMode(emitter->GetHudMode());
 
-	float fDT_STEPP = RDEVICE.fTimeDelta;
+	float fDT_STEPP = Device.fTimeDelta;
 	Fmatrix M;
 	M.identity();
 	Fvector	vel;
@@ -236,7 +236,7 @@ void CParticleGroup::SItem::StopRelatedChild(u32 idx)
 
 void CParticleGroup::SItem::StartFreeChild(CParticleEffect* emitter, LPCSTR nm, PAPI::Particle& m)
 {
-	float fDT_STEPP = RDEVICE.fTimeDelta;
+	float fDT_STEPP = Device.fTimeDelta;
 	CParticleEffect* C = static_cast<CParticleEffect*>(RImplementation.model_CreatePE(nm));
 	C->SetHudMode(emitter->GetHudMode());
 	if (!C->IsLooped())
@@ -294,14 +294,14 @@ void CParticleGroup::SItem::Stop(BOOL def_stop)
 		{
 			//::Render->model_Delete(*it);
 			IRenderVisual* pVisual = smart_cast<IRenderVisual*>(*it);
-            GEnv.Render->model_Delete(pVisual);
+            ::Render->model_Delete(pVisual);
 			*it = 0;
 		}
 		for (it = _children_free.begin(); it != _children_free.end(); it++)
 		{
 			//::Render->model_Delete(*it);
 			IRenderVisual* pVisual = smart_cast<IRenderVisual*>(*it);
-            GEnv.Render->model_Delete(pVisual);
+            ::Render->model_Delete(pVisual);
 			*it = 0;
 		}
 		_children_related.clear();
@@ -357,7 +357,7 @@ struct zero_vis_pred
 
 void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& box, bool& bPlaying)
 {
-	float fDT_STEPP = RDEVICE.fTimeDelta;
+	float fDT_STEPP = Device.fTimeDelta;
 	CParticleEffect* E1 = static_cast<CParticleEffect*>(_effect);
 	if (E1) {
 		E1->OnFrame(u_dt);
@@ -424,7 +424,7 @@ void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& 
 					rem_cnt++;
 					//::Render->model_Delete(*it);
 					IRenderVisual* pVisual = smart_cast<IRenderVisual*>(*it);
-                    GEnv.Render->model_Delete(pVisual);
+                    ::Render->model_Delete(pVisual);
 					*it = nullptr;
 				}
 			}

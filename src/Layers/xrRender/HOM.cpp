@@ -228,7 +228,7 @@ void CHOM::Render_DB(CFrustum& base)
 
 void CHOM::frame_update()
 {
-	if (RDEVICE.ActiveMain())
+	if (Device.ActiveMain())
 		return;
 	MT.Enter();
 	if (MT_frame_rendered != Device.dwFrame)

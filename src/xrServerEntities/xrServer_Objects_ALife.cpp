@@ -191,7 +191,7 @@ void SFillPropData::load()
 
     luabind::object table;
 
-    R_ASSERT(GEnv.ScriptEngine->function_object("smart_covers.descriptions", table, LUA_TTABLE));
+    R_ASSERT(::ScriptEngine->function_object("smart_covers.descriptions", table, LUA_TTABLE));
 
     for (luabind::iterator I(table), E; I != E; ++I)
         smart_covers.push_back(luabind::object_cast<LPCSTR>(I.key()));
@@ -1432,8 +1432,8 @@ bool CSE_ALifeObjectHangingLamp::match_configuration() const noexcept
 {
     R_ASSERT3(flags.test(flR1) || flags.test(flR2), "no renderer type set for hanging-lamp ", name_replace());
 #ifdef XRGAME_EXPORTS
-    return ((flags.test(flR1) && (GEnv.Render->get_generation() == IRender::GENERATION_R1)) ||
-    (flags.test(flR2) && (GEnv.Render->get_generation() == IRender::GENERATION_R2)));
+    return ((flags.test(flR1) && (::Render->get_generation() == IRender::GENERATION_R1)) ||
+    (flags.test(flR2) && (::Render->get_generation() == IRender::GENERATION_R2)));
 #else
     return (true);
 #endif

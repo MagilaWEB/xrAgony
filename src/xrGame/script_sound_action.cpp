@@ -25,7 +25,7 @@ void CScriptSoundAction::SetSound(LPCSTR caSoundToPlay)
     }
     else
     {
-        GEnv.ScriptEngine->script_log(LuaMessageType::Error, "File not found \"%s\"!", l_caFileName);
+        ::ScriptEngine->script_log(LuaMessageType::Error, "File not found \"%s\"!", l_caFileName);
         m_bStartedToPlay = true;
         m_bCompleted = true;
     }

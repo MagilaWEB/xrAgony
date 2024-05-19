@@ -143,8 +143,8 @@ struct SPHDBGDrawTri : public SPHDBGDrawAbsract
     {
         if (solid)
         {
-            GEnv.DRender->dbg_DrawTRI(Fidentity, v[0], v[1], v[2], c);
-            GEnv.DRender->dbg_DrawTRI(Fidentity, v[2], v[1], v[0], c);
+            ::DRender->dbg_DrawTRI(Fidentity, v[0], v[1], v[2], c);
+            ::DRender->dbg_DrawTRI(Fidentity, v[2], v[1], v[0], c);
         }
         else
         {
@@ -540,13 +540,13 @@ void PH_DBG_Clear()
 void PH_DBG_Render()
 {
     if (ph_dbg_draw_mask.test(phDbgDrawZDisable))
-        GEnv.DRender->ZEnable(false);
+        ::DRender->ZEnable(false);
     // CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE,0));
     UI().Font().pFontStat->OutSet(550, 250);
     DBG_PHAbstructRender();
 
     if (ph_dbg_draw_mask.test(phDbgDrawZDisable))
-        GEnv.DRender->ZEnable(true);
+        ::DRender->ZEnable(true);
     // CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE,1));
 
     // draw_frame=!draw_frame;

@@ -6,26 +6,26 @@
 class CLight_DB
 {
 private:
-    xr_vector<ref_light> v_static;
-    xr_vector<ref_light> v_hemi;
+	xr_vector<ref_light> v_static;
+	xr_vector<ref_light> v_hemi;
 
 public:
-    ref_light sun_original;
-    ref_light sun_adapted;
-    light_Package package;
+	ref_light sun_original;
+	ref_light sun_adapted;
+	light_Package package;
 
 public:
-    void add_light(light* L);
+	void add_light(light* L);
 
-    void Load(IReader* fs);
-#if RENDER != R_R1
-    void LoadHemi();
-#endif
-    void Unload();
+	void Load(IReader* fs);
 
-    light* Create();
-    void Update();
+	void LoadHemi();
 
-    CLight_DB();
-    ~CLight_DB();
+	void Unload();
+
+	light* Create();
+	void Update();
+
+	CLight_DB();
+	~CLight_DB();
 };

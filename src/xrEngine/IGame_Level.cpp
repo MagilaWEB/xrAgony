@@ -30,24 +30,24 @@ IGame_Level::~IGame_Level()
 {
 	if (strstr(Core.Params, "-nes_texture_storing"))
 		// Device.Resources->StoreNecessaryTextures();
-		GEnv.Render->ResourcesStoreNecessaryTextures();
+		::Render->ResourcesStoreNecessaryTextures();
 	xr_delete(pLevel);
 
 	// Render-level unload
-	GEnv.Render->level_Unload();
+	::Render->level_Unload();
 	xr_delete(m_pCameras);
 	// Unregister
 	Device.seqRender.Remove(this);
 	Device.seqFrame.Remove(this);
 	CCameraManager::ResetPP();
 	///////////////////////////////////////////
-	GEnv.Sound->set_geometry_occ(nullptr);
-	GEnv.Sound->set_handler(nullptr);
+	::Sound->set_geometry_occ(nullptr);
+	::Sound->set_handler(nullptr);
 	Device.DumpResourcesMemoryUsage();
 
 	u32 m_base = 0, c_base = 0, m_lmaps = 0, c_lmaps = 0;
-	if (GEnv.Render)
-		GEnv.Render->ResourcesGetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
+	if (::Render)
+		::Render->ResourcesGetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
 
 	Msg("* [ D3D ]: textures[%d K]", (m_base + m_lmaps) / 1024);
 }
@@ -100,9 +100,9 @@ bool IGame_Level::Load(u32 dwNum)
 	g_pGamePersistent->SetLoadStageTitle("st_loading_cform");
 	g_pGamePersistent->LoadTitle();
 	ObjectSpace.Load(build_callback);
-	// GEnv.Sound->set_geometry_occ ( &Static );
-	GEnv.Sound->set_geometry_occ(ObjectSpace.GetStaticModel());
-	GEnv.Sound->set_handler(_sound_event);
+	// ::Sound->set_geometry_occ ( &Static );
+	::Sound->set_geometry_occ(ObjectSpace.GetStaticModel());
+	::Sound->set_handler(_sound_event);
 
 	pApp->LoadSwitch();
 
@@ -111,7 +111,7 @@ bool IGame_Level::Load(u32 dwNum)
 		g_hud = smart_cast<CCustomHUD*>(NEW_INSTANCE(CLSID_HUDMANAGER));
 
 	// Render-level Load
-	GEnv.Render->level_Load(LL_Stream);
+	::Render->level_Load(LL_Stream);
 	// tscreate.FrameEnd ();
 	// Msg ("* S-CREATE: %f ms, %d times",tscreate.result,tscreate.count);
 
@@ -125,11 +125,8 @@ bool IGame_Level::Load(u32 dwNum)
 	FS.r_close(LL_Stream);
 	bReady = true;
 
-	if (!GEnv.isDedicatedServer)
-	{
-		IR_Capture();
-		Device.seqRender.Add(this);
-	}
+	IR_Capture();
+	Device.seqRender.Add(this);
 
 	Device.seqFrame.Add(this);
 	return true;
@@ -146,8 +143,8 @@ void IGame_Level::OnRender()
 #endif // _GPA_ENABLED
 
 	// Level render, only when no client output required
-	GEnv.Render->Calculate();
-	GEnv.Render->Render();
+	::Render->Calculate();
+	::Render->Render();
 
 #ifdef _GPA_ENABLED
 	TAL_RetireID(rtID);
@@ -248,7 +245,7 @@ void IGame_Level::SoundEvent_Register(ref_sound_data_ptr S, float range)
 	Fvector snd_position = p->position;
 	if (S->feedback->is_2D())
 	{
-		snd_position.add(GEnv.Sound->listener_position());
+		snd_position.add(::Sound->listener_position());
 	}
 
 	VERIFY(p && _valid(range));
@@ -283,7 +280,7 @@ void IGame_Level::SoundEvent_Register(ref_sound_data_ptr S, float range)
 		VERIFY(_valid(Power));
 		if (Power > EPS_S)
 		{
-			float occ = GEnv.Sound->get_occlusion_to(it->GetSpatialData().sphere.P, snd_position);
+			float occ = ::Sound->get_occlusion_to(it->GetSpatialData().sphere.P, snd_position);
 			VERIFY(_valid(occ));
 			Power *= occ;
 			if (Power > EPS_S)

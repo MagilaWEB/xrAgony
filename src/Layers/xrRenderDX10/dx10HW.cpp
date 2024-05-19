@@ -264,13 +264,7 @@ void CHW::Reset(HWND hwnd)
 {
 	DXGI_SWAP_CHAIN_DESC& cd = m_ChainDesc;
 
-	//if (IsDebuggerPresent())
-	//	psDeviceFlags.set(rsFullscreen, false);
-
-	bool bWindowed = true;
-
-	if (!GEnv.isDedicatedServer)
-		bWindowed = state_screen_mode != 1;
+	bool bWindowed = state_screen_mode != 1;
 
 	cd.Windowed = bWindowed;
 
@@ -396,10 +390,7 @@ void CHW::updateWindowProps(HWND m_hWnd)
 	/*if (IsDebuggerPresent())
 		psDeviceFlags.set(rsFullscreen, false);*/
 
-	bool bWindowed = true;
-
-	if (!GEnv.isDedicatedServer)
-		bWindowed = state_screen_mode != 1;
+	bool bWindowed = state_screen_mode != 1;
 
 	LONG_PTR dwWindowStyle = 0;
 	// Set window properties depending on what mode were in.

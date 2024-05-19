@@ -19,7 +19,7 @@ IC bool compare_safe(const luabind::object& o1, const luabind::object& o2)
 
 #if XRAY_EXCEPTIONS
 #define process_error \
-    catch (luabind::error & e) { GEnv.ScriptEngine->print_output(GEnv.ScriptEngine->lua(), "", LUA_ERRRUN); }
+    catch (luabind::error & e) { ::ScriptEngine->print_output(::ScriptEngine->lua(), "", LUA_ERRRUN); }
 #else
 #define process_error
 #endif
@@ -109,7 +109,7 @@ public:
             }
             process_error catch (std::exception&)
             {
-                GEnv.ScriptEngine->print_output(GEnv.ScriptEngine->lua(), "", 1);
+                ::ScriptEngine->print_output(::ScriptEngine->lua(), "", 1);
             }
         }
         catch (...)
@@ -140,7 +140,7 @@ public:
             }
             process_error catch (std::exception&)
             {
-                GEnv.ScriptEngine->print_output(GEnv.ScriptEngine->lua(), "", 1);
+                ::ScriptEngine->print_output(::ScriptEngine->lua(), "", 1);
             }
         }
         catch (...)
@@ -171,7 +171,7 @@ void CScriptCallbackEx<void>::operator()(Args&&... args) const
                     luabind::call_function<void>(m_functor, std::forward<Args>(args)...);
             }
         }
-        process_error catch (std::exception&) { GEnv.ScriptEngine->print_output(GEnv.ScriptEngine->lua(), "", 1); }
+        process_error catch (std::exception&) { ::ScriptEngine->print_output(::ScriptEngine->lua(), "", 1); }
     }
     catch (...)
     {
@@ -199,7 +199,7 @@ void CScriptCallbackEx<void>::operator()(Args&&... args)
                     luabind::call_function<void>(m_functor, std::forward<Args>(args)...);
             }
         }
-        process_error catch (std::exception&) { GEnv.ScriptEngine->print_output(GEnv.ScriptEngine->lua(), "", 1); }
+        process_error catch (std::exception&) { ::ScriptEngine->print_output(::ScriptEngine->lua(), "", 1); }
     }
     catch (...)
     {

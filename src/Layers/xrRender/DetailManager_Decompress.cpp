@@ -137,7 +137,7 @@ void CDetailManager::cache_Decompress(Slot* S)
 	}
 
 	// Prepare to selection
-	float		density = ps_r__Detail_density * GEnv.Render->grass_level_density;
+	float		density = ps_r__Detail_density * ::Render->grass_level_density;
 	float		jitter = density / 1.7f;
 	u32			d_size = iCeil(dm_slot_size / density);
 	svector<int, dm_obj_in_slot>		selected;
@@ -284,7 +284,7 @@ void CDetailManager::cache_Decompress(Slot* S)
 
 			// Angles and scale
 			Item.scale = r_scale.randF(Dobj->m_fMinScale, Dobj->m_fMaxScale);
-			Item.scale *= GEnv.Render->grass_level_scale;
+			Item.scale *= ::Render->grass_level_scale;
 
 			// X-Form BBox
 			Fmatrix		mScale{}, mXform{};

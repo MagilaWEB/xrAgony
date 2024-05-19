@@ -73,7 +73,7 @@ CExplosive::CExplosive(void)
 
 void CExplosive::LightCreate()
 {
-    m_pLight = GEnv.Render->light_create();
+    m_pLight = ::Render->light_create();
     m_pLight->set_shadow(true);
 }
 
@@ -348,7 +348,7 @@ void CExplosive::Explode()
 #ifdef LAYERED_SND_SHOOT
     m_layered_sounds.PlaySound("sndExplode", pos, smart_cast<IGameObject*>(this), false, false, (u8)-1);
 #else
-    GEnv.Sound->play_at_pos(sndExplode, 0, pos, false);
+    ::Sound->play_at_pos(sndExplode, 0, pos, false);
 #endif
 
     //показываем эффекты

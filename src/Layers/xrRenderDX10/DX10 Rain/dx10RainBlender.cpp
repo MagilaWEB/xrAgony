@@ -155,9 +155,9 @@ void CBlender_rain_msaa::Compile(CBlender_Compile& C)
     IBlender::Compile(C);
 
     if (Name)
-        GEnv.Render->m_MSAASample = atoi(Definition);
+        ::Render->m_MSAASample = atoi(Definition);
     else
-        GEnv.Render->m_MSAASample = -1;
+        ::Render->m_MSAASample = -1;
 
     switch (C.iElement)
     {
@@ -266,5 +266,5 @@ void CBlender_rain_msaa::Compile(CBlender_Compile& C)
 
         break;
     }
-    GEnv.Render->m_MSAASample = -1;
+    ::Render->m_MSAASample = -1;
 }

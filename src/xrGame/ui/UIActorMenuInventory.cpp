@@ -1218,7 +1218,7 @@ void CUIActorMenu::PropertiesBoxForUsing(PIItem item, bool& b_show)
         if (functor_name)
         {
             luabind::functor<LPCSTR> funct;
-            if (GEnv.ScriptEngine->functor(functor_name, funct))
+            if (::ScriptEngine->functor(functor_name, funct))
             {
                 act_str = funct(GO->lua_game_object());
                 if (act_str)
@@ -1304,7 +1304,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked(CUIWindow* w, void* d)
         if (functor_name)
         {
             luabind::functor<bool> funct1;
-            if (GEnv.ScriptEngine->functor(functor_name, funct1))
+            if (::ScriptEngine->functor(functor_name, funct1))
             {
                 if (funct1(GO->lua_game_object()))
                     TryUseItem(cell_item);
@@ -1319,7 +1319,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked(CUIWindow* w, void* d)
         if (functor_name)
         {
             luabind::functor<bool> funct2;
-            if (GEnv.ScriptEngine->functor(functor_name, funct2))
+            if (::ScriptEngine->functor(functor_name, funct2))
             {
                 if (funct2(GO->lua_game_object()))
                     TryUseItem(cell_item);
@@ -1334,7 +1334,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked(CUIWindow* w, void* d)
         if (functor_name)
         {
             luabind::functor<bool> funct3;
-            if (GEnv.ScriptEngine->functor(functor_name, funct3))
+            if (::ScriptEngine->functor(functor_name, funct3))
             {
                 if (funct3(GO->lua_game_object()))
                     TryUseItem(cell_item);
@@ -1349,7 +1349,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked(CUIWindow* w, void* d)
         if (functor_name)
         {
             luabind::functor<bool> funct4;
-            if (GEnv.ScriptEngine->functor(functor_name, funct4))
+            if (::ScriptEngine->functor(functor_name, funct4))
             {
                 if (funct4(GO->lua_game_object()))
                     TryUseItem(cell_item);

@@ -585,15 +585,10 @@ void xrDebug::OnThreadSpawn()
 #endif
 }
 
-void xrDebug::Initialize(const bool& dedicated)
+void xrDebug::Initialize()
 {
 	*BugReportFile = 0;
 	OnThreadSpawn();
-#ifdef USE_BUG_TRAP
-	SetupExceptionHandler(dedicated);
-#endif
 	// exception handler to all "unhandled" exceptions
-#if defined(WINDOWS)
 	PrevFilter = ::SetUnhandledExceptionFilter(UnhandledFilter);
-#endif
 }

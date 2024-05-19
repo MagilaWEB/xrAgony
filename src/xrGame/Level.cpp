@@ -74,25 +74,19 @@ CLevel::CLevel()
 	eEnvironment = Engine.Event.Handler_Attach("LEVEL:Environment", this);
 	eEntitySpawn = Engine.Event.Handler_Attach("LEVEL:spawn", this);
 	m_pBulletManager = new CBulletManager();
-	if (!GEnv.isDedicatedServer)
-	{
-		m_map_manager = new CMapManager();
-		m_game_task_manager = new CGameTaskManager();
-	}
+	m_map_manager = new CMapManager();
+	m_game_task_manager = new CGameTaskManager();
 	m_dwDeltaUpdate = u32(fixed_step * 1000);
 	m_seniority_hierarchy_holder = new CSeniorityHierarchyHolder();
-	if (!GEnv.isDedicatedServer)
-	{
-		m_level_sound_manager = new CLevelSoundManager();
-		m_space_restriction_manager = new CSpaceRestrictionManager();
-		m_client_spawn_manager = new CClientSpawnManager();
-		m_autosave_manager = new CAutosaveManager();
+	m_level_sound_manager = new CLevelSoundManager();
+	m_space_restriction_manager = new CSpaceRestrictionManager();
+	m_client_spawn_manager = new CClientSpawnManager();
+	m_autosave_manager = new CAutosaveManager();
 #ifdef DEBUG
-		m_debug_renderer = new CDebugRenderer();
-		levelGraphDebugRender = new LevelGraphDebugRender();
-		m_level_debug = new CLevelDebug();
+	m_debug_renderer = new CDebugRenderer();
+	levelGraphDebugRender = new LevelGraphDebugRender();
+	m_level_debug = new CLevelDebug();
 #endif
-	}
 	m_ph_commander = new CPHCommander();
 	m_ph_commander_scripts = new CPHCommander();
 	pObjects4CrPr.clear();
@@ -143,8 +137,7 @@ CLevel::~CLevel()
 	xr_delete(levelGraphDebugRender);
 	xr_delete(m_debug_renderer);
 #endif
-	if (!GEnv.isDedicatedServer)
-		GEnv.ScriptEngine->remove_script_process(ScriptProcessor::Level);
+	::ScriptEngine->remove_script_process(ScriptProcessor::Level);
 	xr_delete(game);
 	xr_delete(game_events);
 	xr_delete(m_pBulletManager);
@@ -338,37 +331,24 @@ void CLevel::OnFrame()
 	ProcessGameEvents();
 	if (m_bNeed_CrPr)
 		make_NetCorrectionPrediction();
-	if (!GEnv.isDedicatedServer)
+	if (g_mt_config.test(mtMap))
+		Device.add_parallel(m_map_manager, &CMapManager::Update);
+	else
+		MapManager().Update();
+	if (IsGameTypeSingle() && Device.dwPrecacheFrame == 0)
 	{
-		if (g_mt_config.test(mtMap))
-			Device.add_parallel(m_map_manager, &CMapManager::Update);
-		else
-			MapManager().Update();
-		if (IsGameTypeSingle() && Device.dwPrecacheFrame == 0)
-		{
-			// XXX nitrocaster: was enabled in x-ray 1.5; to be restored or removed
-			// if (g_mt_config.test(mtMap))
-			//{
-			//    Device.seqParallel.push_back(fastdelegate::FastDelegate<>(
-			//    m_game_task_manager,&CGameTaskManager::UpdateTasks));
-			//}
-			// else
-			GameTaskManager().UpdateTasks();
-		}
+		// XXX nitrocaster: was enabled in x-ray 1.5; to be restored or removed
+		// if (g_mt_config.test(mtMap))
+		//{
+		//    Device.seqParallel.push_back(fastdelegate::FastDelegate<>(
+		//    m_game_task_manager,&CGameTaskManager::UpdateTasks));
+		//}
+		// else
+		GameTaskManager().UpdateTasks();
 	}
 	// Inherited update
 	inherited::OnFrame();
-	// Draw client/server stats
-	/*if (!GEnv.isDedicatedServer && psDeviceFlags.test(rsStatistic))
-	{
-	}
-	else
-	{
-#ifdef DEBUG
-		if (pStatGraphR)
-			xr_delete(pStatGraphR);
-#endif
-	}*/
+
 #ifdef DEBUG
 	g_pGamePersistent->Environment().m_paused = m_bEnvPaused;
 #endif
@@ -382,15 +362,13 @@ void CLevel::OnFrame()
 	stats.BulletManagerCommit.End();
 
 	// update static sounds
-	if (!GEnv.isDedicatedServer)
+	if (g_mt_config.test(mtLevelSounds))
 	{
-		if (g_mt_config.test(mtLevelSounds))
-		{
-			Device.add_parallel(m_level_sound_manager, &CLevelSoundManager::Update);
-		}
-		else
-			m_level_sound_manager->Update();
+		Device.add_parallel(m_level_sound_manager, &CLevelSoundManager::Update);
 	}
+	else
+		m_level_sound_manager->Update();
+
 	if (pStatGraphR)
 	{
 		static float fRPC_Mult = 10.0f;
@@ -424,7 +402,7 @@ void CLevel::OnRender()
 
 	BulletManager().Render();
 
-	GEnv.Render->AfterWorldRender();
+	::Render->AfterWorldRender();
 
 #ifdef DEBUG
 	draw_wnds_rects();
@@ -526,7 +504,7 @@ void CLevel::OnRender()
 			if (!stalker)
 				continue;
 			stalker->dbg_draw_visibility_rays();
-}
+		}
 	}
 #endif
 }

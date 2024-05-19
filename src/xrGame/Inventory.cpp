@@ -1041,7 +1041,7 @@ bool CInventory::Eat(PIItem pIItem)
 #endif // MP_LOGGING
 
     luabind::functor<bool> funct;
-    if (GEnv.ScriptEngine->functor("_G.CInventory__eat", funct))
+    if (::ScriptEngine->functor("_G.CInventory__eat", funct))
     {
         if (!funct(smart_cast<CGameObject*>(pItemToEat->object().H_Parent())->lua_game_object(),
                 (smart_cast<CGameObject*>(pIItem))->lua_game_object()))
@@ -1189,7 +1189,7 @@ CInventoryItem* CInventory::tpfGetObjectByIndex(int iIndex)
     }
     else
     {
-        GEnv.ScriptEngine->script_log(LuaMessageType::Error, "invalid inventory index!");
+        ::ScriptEngine->script_log(LuaMessageType::Error, "invalid inventory index!");
         return (0);
     }
     R_ASSERT(false);
@@ -1259,7 +1259,7 @@ void CInventory::AddAvailableItems(TIItemContainer& items_container, bool for_tr
             if (bOverride)
             {
                 luabind::functor<bool> funct;
-                if (GEnv.ScriptEngine->functor("actor_menu_inventory.CInventory_ItemAvailableToTrade", funct))
+                if (::ScriptEngine->functor("actor_menu_inventory.CInventory_ItemAvailableToTrade", funct))
                 {
                     if (!funct(m_pOwner->cast_game_object()->lua_game_object(),
                             pIItem->cast_game_object()->lua_game_object()))
@@ -1280,7 +1280,7 @@ void CInventory::AddAvailableItems(TIItemContainer& items_container, bool for_tr
                 if (bOverride)
                 {
                     luabind::functor<bool> funct;
-                    if (GEnv.ScriptEngine->functor("actor_menu_inventory.CInventory_ItemAvailableToTrade", funct))
+                    if (::ScriptEngine->functor("actor_menu_inventory.CInventory_ItemAvailableToTrade", funct))
                     {
                         if (!funct(m_pOwner->cast_game_object()->lua_game_object(),
                                 pIItem->cast_game_object()->lua_game_object()))
@@ -1306,7 +1306,7 @@ void CInventory::AddAvailableItems(TIItemContainer& items_container, bool for_tr
                     if (bOverride)
                     {
                         luabind::functor<bool> funct;
-                        if (GEnv.ScriptEngine->functor("actor_menu_inventory.CInventory_ItemAvailableToTrade", funct))
+                        if (::ScriptEngine->functor("actor_menu_inventory.CInventory_ItemAvailableToTrade", funct))
                         {
                             if (!funct(m_pOwner->cast_game_object()->lua_game_object(),
                                     item->cast_game_object()->lua_game_object()))

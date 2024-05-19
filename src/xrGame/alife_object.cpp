@@ -23,7 +23,7 @@ void CSE_ALifeObject::spawn_supplies(LPCSTR ini_string)
         return;
 
     luabind::functor<bool> funct;
-    if (GEnv.ScriptEngine->functor("ai_stalker.CSE_ALifeObject_spawn_supplies", funct))
+    if (::ScriptEngine->functor("ai_stalker.CSE_ALifeObject_spawn_supplies", funct))
     {
         if (funct(this, ID, ini_string))
             return;

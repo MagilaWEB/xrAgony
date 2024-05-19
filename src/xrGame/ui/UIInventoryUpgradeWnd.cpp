@@ -329,7 +329,7 @@ void CUIInventoryUpgradeWnd::OnMesBoxYes()
         {
             //Alundaio: tell script that item has been upgraded
             luabind::functor<void> funct;
-            GEnv.ScriptEngine->functor("inventory_upgrades.effect_upgrade_item", funct);
+            ::ScriptEngine->functor("inventory_upgrades.effect_upgrade_item", funct);
             if (funct)
             {
                 CGameObject* GO = m_inv_item->cast_game_object();

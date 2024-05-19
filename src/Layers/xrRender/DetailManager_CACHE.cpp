@@ -191,7 +191,7 @@ void CDetailManager::cache_Update(int v_x, int v_z, Fvector& view)
 void CDetailManager::spawn_Slots(Fvector& view)
 {
 	// Task performer
-	if (!RDEVICE.ActiveMain())
+	if (!Device.ActiveMain())
 	{
 		for (u32 i = 0; i < (u32)ps_r__detail_limit_spawn && !cache_task.empty(); i++)
 		{

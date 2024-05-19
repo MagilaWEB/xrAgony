@@ -273,7 +273,7 @@ IC u32 dest_to_shift_value(u32 destination)
     {
     case RC_dest_vertex: return RC_dest_vertex_cb_index_shift;
     case RC_dest_pixel: return RC_dest_pixel_cb_index_shift;
-#if defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX11)
     case RC_dest_geometry: return RC_dest_geometry_cb_index_shift;
 #ifdef USE_DX11
     case RC_dest_hull: return RC_dest_hull_cb_index_shift;
@@ -292,7 +292,7 @@ IC u32 dest_to_cbuf_type(u32 destination)
     {
     case RC_dest_vertex: return CB_BufferVertexShader;
     case RC_dest_pixel: return CB_BufferPixelShader;
-#if defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX11)
     case RC_dest_geometry: return CB_BufferGeometryShader;
 #ifdef USE_DX11
     case RC_dest_hull: return CB_BufferHullShader;

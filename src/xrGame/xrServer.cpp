@@ -38,7 +38,7 @@ void xrClientData::Clear()
 
 xrClientData::~xrClientData() { }
 
-xrServer::xrServer() : IPureServer(Device.GetTimerGlobal(), GEnv.isDedicatedServer)
+xrServer::xrServer() : IPureServer(Device.GetTimerGlobal())
 {
     m_last_update_time = 0;
 }

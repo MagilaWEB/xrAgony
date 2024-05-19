@@ -30,7 +30,7 @@ SDS* CResourceManager::_CreateDS(LPCSTR Name) { return CreateShader<SDS>(Name); 
 void CResourceManager::_DeleteDS(const SDS* DS) { DestroyShader(DS); }
 SCS* CResourceManager::_CreateCS(LPCSTR Name) { return CreateShader<SCS>(Name); }
 void CResourceManager::_DeleteCS(const SCS* CS) { DestroyShader(CS); }
-#endif //	USE_DX10
+#endif
 
 void fix_texture_name(LPSTR fn);
 
@@ -64,11 +64,11 @@ SState* CResourceManager::_CreateState(SimulatorStates& state_code)
     // Create New
     v_states.push_back(new SState());
     v_states.back()->dwFlags |= xr_resource_flagged::RF_REGISTERED;
-#if defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX11)
     v_states.back()->state = ID3DState::Create(state_code);
-#else //	USE_DX10
+#else
     v_states.back()->state = state_code.record();
-#endif //	USE_DX10
+#endif
     v_states.back()->state_code = state_code;
     return v_states.back();
 }
@@ -124,15 +124,15 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 {
     string_path name;
     xr_strcpy(name, _name);
-    if (0 == GEnv.Render->m_skinning)
+    if (0 == ::Render->m_skinning)
         xr_strcat(name, "_0");
-    if (1 == GEnv.Render->m_skinning)
+    if (1 == ::Render->m_skinning)
         xr_strcat(name, "_1");
-    if (2 == GEnv.Render->m_skinning)
+    if (2 == ::Render->m_skinning)
         xr_strcat(name, "_2");
-    if (3 == GEnv.Render->m_skinning)
+    if (3 == ::Render->m_skinning)
         xr_strcat(name, "_3");
-    if (4 == GEnv.Render->m_skinning)
+    if (4 == ::Render->m_skinning)
         xr_strcat(name, "_4");
     
     return CreateShader<SVS>(name, _name, false);
@@ -172,21 +172,21 @@ SPS* CResourceManager::_CreatePS(LPCSTR _name)
 {
     string_path name;
     xr_strcpy(name, _name);
-    if (0 == GEnv.Render->m_MSAASample)
+    if (0 == ::Render->m_MSAASample)
         xr_strcat(name, "_0");
-    if (1 == GEnv.Render->m_MSAASample)
+    if (1 == ::Render->m_MSAASample)
         xr_strcat(name, "_1");
-    if (2 == GEnv.Render->m_MSAASample)
+    if (2 == ::Render->m_MSAASample)
         xr_strcat(name, "_2");
-    if (3 == GEnv.Render->m_MSAASample)
+    if (3 == ::Render->m_MSAASample)
         xr_strcat(name, "_3");
-    if (4 == GEnv.Render->m_MSAASample)
+    if (4 == ::Render->m_MSAASample)
         xr_strcat(name, "_4");
-    if (5 == GEnv.Render->m_MSAASample)
+    if (5 == ::Render->m_MSAASample)
         xr_strcat(name, "_5");
-    if (6 == GEnv.Render->m_MSAASample)
+    if (6 == ::Render->m_MSAASample)
         xr_strcat(name, "_6");
-    if (7 == GEnv.Render->m_MSAASample)
+    if (7 == ::Render->m_MSAASample)
         xr_strcat(name, "_7");
 
     return CreateShader<SPS>(name, _name, false);

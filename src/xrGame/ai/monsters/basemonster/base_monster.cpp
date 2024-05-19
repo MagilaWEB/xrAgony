@@ -508,7 +508,7 @@ void CBaseMonster::ChangeTeam(int team, int squad, int group)
 #ifdef DEBUG
     if (!g_Alive())
     {
-        GEnv.ScriptEngine->print_stack();
+        ::ScriptEngine->print_stack();
         VERIFY2(g_Alive(), "you are trying to change team of a dead entity");
     }
 #endif // DEBUG

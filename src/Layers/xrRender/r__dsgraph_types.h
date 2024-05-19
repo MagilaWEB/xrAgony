@@ -40,22 +40,14 @@ struct _LodItem
 };
 
 using state_type = SState*;
-#ifndef USE_OGL
 using ps_type = ID3DPixelShader*;
-#if defined(USE_DX10) || defined(USE_DX11) // DX10 and DX11 needs shader signature to properly bind geometry to shader
+#if defined(USE_DX11) // DX11 needs shader signature to properly bind geometry to shader
 using vs_type = SVS*;
 using gs_type = ID3DGeometryShader*;
-#else
-using vs_type = ID3DVertexShader*;
-#endif
-#ifdef USE_DX11
 using hs_type = ID3D11HullShader*;
 using ds_type = ID3D11DomainShader*;
-#endif
 #else
-using vs_type = GLuint;
-using ps_type = GLuint;
-using gs_type = GLuint;
+using vs_type = ID3DVertexShader*;
 #endif
 
 // NORMAL

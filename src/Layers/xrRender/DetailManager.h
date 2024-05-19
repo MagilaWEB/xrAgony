@@ -65,9 +65,6 @@ public:
 		//bool						collision_save;
 		//float						humidity;
 		//bool						is_shelter;
-#if RENDER==R_R1
-		Fvector						c_rgb;
-#endif
 	};
 	DEFINE_VECTOR(SlotItem*, SlotItemVec, SlotItemVecIt);
 	struct	SlotPart {

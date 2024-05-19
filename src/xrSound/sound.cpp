@@ -9,16 +9,16 @@ void ISoundManager::_create()
 {
     SoundRenderA = new CSoundRender_CoreA();
     SoundRender = SoundRenderA;
-    GEnv.Sound = SoundRender;
+    ::Sound = SoundRender;
     SoundRender->bPresent = strstr(Core.Params, "-nosound") == nullptr;
     if (!SoundRender->bPresent)
         return;
-    GEnv.Sound->_initialize();
+    ::Sound->_initialize();
 }
 
 void ISoundManager::_destroy()
 {
-    GEnv.Sound->_clear();
+    ::Sound->_clear();
     xr_delete(SoundRender);
-    GEnv.Sound = nullptr;
+    ::Sound = nullptr;
 }

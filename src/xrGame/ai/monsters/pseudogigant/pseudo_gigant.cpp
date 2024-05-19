@@ -200,9 +200,9 @@ void CPseudoGigant::Load(LPCSTR section)
 
     // --------------------------------------------------------------------------------
 
-    GEnv.Sound->create(
+    ::Sound->create(
         m_sound_threaten_hit, pSettings->r_string(section, "sound_threaten_hit"), st_Effect, SOUND_TYPE_WORLD);
-    GEnv.Sound->create(m_sound_start_threaten, pSettings->r_string(section, "sound_threaten_start"), st_Effect,
+    ::Sound->create(m_sound_start_threaten, pSettings->r_string(section, "sound_threaten_start"), st_Effect,
         SOUND_TYPE_MONSTER_ATTACKING);
 
     m_kick_damage = pSettings->r_float(section, "HugeKick_Damage");

@@ -41,7 +41,7 @@ protected:
     IClient* ID_to_client(ClientID ID, bool ScanAll = false);
 
 public:
-    IPureServer(CTimer* timer, bool Dedicated = false);
+    IPureServer(CTimer* timer);
     virtual ~IPureServer();
 
     virtual EConnect Connect(pcstr session_name);

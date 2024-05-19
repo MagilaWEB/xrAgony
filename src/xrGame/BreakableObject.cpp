@@ -180,7 +180,7 @@ void CBreakableObject::net_Destroy()
     xr_delete(CForm);
     Init();
     // Visual()->vis.box.set(m_saved_box);
-    GEnv.Render->model_Delete(renderable.visual, TRUE);
+    ::Render->model_Delete(renderable.visual, TRUE);
     cNameVisual_set("");
 }
 void CBreakableObject::Split()

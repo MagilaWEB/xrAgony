@@ -48,9 +48,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	m_move_window = move_window;
 	CreateD3D();
 
-	bool bWindowed = true;
-	if (!GEnv.isDedicatedServer)
-		bWindowed = state_screen_mode != 1;
+	bool bWindowed = state_screen_mode != 1;
 
 	m_DriverType = Caps.bForceGPU_REF ? D3DDEVTYPE_REF : D3DDEVTYPE_HAL;
 
@@ -225,10 +223,7 @@ void CHW::Reset(HWND hwnd)
 	_RELEASE(pBaseZB);
 	_RELEASE(pBaseRT);
 
-	bool bWindowed = true;
-
-	if (!GEnv.isDedicatedServer)
-		bWindowed = state_screen_mode != 1;
+	bool bWindowed = state_screen_mode != 1;
 
 	selectResolution(DevPP.BackBufferWidth, DevPP.BackBufferHeight, bWindowed);
 	// Windoze
@@ -272,7 +267,7 @@ D3DFORMAT CHW::selectDepthStencil(D3DFORMAT fTarget)
 {
 	// R2 hack
 #pragma todo("R2 need to specify depth format")
-	if (GEnv.CurrentRenderer < 1)
+	if (::CurrentRenderer < 1)
 		return D3DFMT_D24S8;
 
 	// R1 usual
@@ -298,13 +293,6 @@ D3DFORMAT CHW::selectDepthStencil(D3DFORMAT fTarget)
 void CHW::selectResolution(u32& dwWidth, u32& dwHeight, BOOL bWindowed)
 {
 	fill_vid_mode_list(this);
-
-	if (GEnv.isDedicatedServer)
-	{
-		dwWidth = 640;
-		dwHeight = 480;
-		return;
-	}
 
 	if (bWindowed)
 	{
@@ -392,10 +380,6 @@ void CheckForIntelGMA(CHWCaps& Caps)
 
 u32 CHW::selectGPU()
 {
-#if RENDER == R_R1
-	CheckForIntelGMA(Caps);
-#endif
-
 	if (Caps.bForceGPU_SW)
 		return D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 
@@ -450,10 +434,7 @@ void CHW::updateWindowProps(HWND m_hWnd)
 	/*if (IsDebuggerPresent())
 		psDeviceFlags.set(rsFullscreen, false);*/
 
-	bool bWindowed = true;
-
-	if (!GEnv.isDedicatedServer)
-		bWindowed = state_screen_mode != 1;
+	bool bWindowed = state_screen_mode != 1;
 
 	LONG_PTR dwWindowStyle = 0;
 	// Set window properties depending on what mode were in.

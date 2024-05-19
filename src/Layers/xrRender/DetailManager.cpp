@@ -251,7 +251,7 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 	const float dist_optimization = (10 - (ps_r__details_opt_intensity - 1)) * 550.f;
 
 	CFrustum View{};
-	View.CreateFromMatrix(RDEVICE.mFullTransformSaved, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
+	View.CreateFromMatrix(Device.mFullTransformSaved, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	float fade_limit = dm_fade * dm_fade;
 	float fade_start = 2.f;
 	float fade_range = fade_limit - fade_start;
@@ -365,7 +365,7 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 
 								if ((!Item->collision_save) && Item->collision_size_cache >= Item->collision_size)
 								{
-									Item->collision_size += (RDEVICE.fTimeDelta * ps_r__grass_collision_speed);
+									Item->collision_size += (Device.fTimeDelta * ps_r__grass_collision_speed);
 									clamp(Item->collision_size, 0.01f, Item->collision_size_cache);
 								}
 								else
@@ -379,9 +379,9 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 							/*if (!Item->is_shelter)
 							{
 								if (::Render->grass_humidity > .0f && Item->humidity < ::Render->grass_humidity)
-									Item->humidity += (::Render->grass_humidity * RDEVICE.fTimeDelta * 0.05f);
+									Item->humidity += (::Render->grass_humidity * Device.fTimeDelta * 0.05f);
 								else if (Item->humidity > .0f)
-									Item->humidity -= 0.01f * RDEVICE.fTimeDelta;
+									Item->humidity -= 0.01f * Device.fTimeDelta;
 
 								clamp(Item->humidity, 0.f, 1.f);
 
@@ -394,7 +394,7 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 
 							const u32 vis_id = Item->vis_ID;
 
-							//RDEVICE.position_render_ui(Item->mRotY.c);
+							//Device.position_render_ui(Item->mRotY.c);
 							m_visibles[vis_id][sp.id].push_back(Item);
 
 							// Shadow!
@@ -461,23 +461,23 @@ void CDetailManager::RessetScaleRandom()
 
 void CDetailManager::DetailResset()
 {
-	static float current_grass_level_scale = GEnv.Render->grass_level_scale;
-	static float current_grass_level_density = GEnv.Render->grass_level_density;
+	static float current_grass_level_scale = ::Render->grass_level_scale;
+	static float current_grass_level_density = ::Render->grass_level_density;
 	static float current_detail_density = ps_r__Detail_density;
 	static int dm_current_size = ps_r__detail_radius;
 	static int details_opt_intensity = ps_r__details_opt_intensity;
 	if (
 		current_detail_density != ps_r__Detail_density ||
 		dm_current_size != ps_r__detail_radius ||
-		current_grass_level_scale != GEnv.Render->grass_level_scale ||
-		current_grass_level_density != GEnv.Render->grass_level_density ||
+		current_grass_level_scale != ::Render->grass_level_scale ||
+		current_grass_level_density != ::Render->grass_level_density ||
 		details_opt_intensity != ps_r__details_opt_intensity
 		)
 	{
 		current_detail_density = ps_r__Detail_density;
 		dm_current_size = ps_r__detail_radius;
-		current_grass_level_scale = GEnv.Render->grass_level_scale;
-		current_grass_level_density = GEnv.Render->grass_level_density;
+		current_grass_level_scale = ::Render->grass_level_scale;
+		current_grass_level_density = ::Render->grass_level_density;
 		details_opt_intensity = ps_r__details_opt_intensity;
 		// Initialize 'vis' and 'cache'
 		detail_size();
@@ -491,12 +491,12 @@ void CDetailManager::Frame()
 	if (!RImplementation.Details) return;	// possibly deleted
 	if (!dtFS) return;
 	if (!psDeviceFlags.is(rsDetails)) return;
-	if (RDEVICE.ActiveMain()) return;
+	if (Device.ActiveMain()) return;
 
 	LIMIT_UPDATE_FPS(DetailManagerFPS, 30)
 
 	RImplementation.BasicStats.DetailCache.Begin();
-	Fvector EYE = RDEVICE.vCameraPositionSaved;
+	Fvector EYE = Device.vCameraPositionSaved;
 
 	int s_x = iFloor(EYE.x / dm_slot_size + .5f);
 	int s_z = iFloor(EYE.z / dm_slot_size + .5f);
@@ -504,7 +504,7 @@ void CDetailManager::Frame()
 	VisiblesClear();
 
 	UpdateVisibleM(EYE);
-	if (RDEVICE.dwFrame % ps_r__detail_limit_update == 0)
+	if (Device.dwFrame % ps_r__detail_limit_update == 0)
 		cache_Update(s_x, s_z, EYE);
 	xrCriticalSection::raii mt{ MT };
 	spawn_Slots(EYE);
@@ -516,7 +516,7 @@ void CDetailManager::Render(VisiblesType type)
 	if (!RImplementation.Details) return;	// possibly deleted
 	if (!dtFS) return;
 	if (!psDeviceFlags.is(rsDetails)) return;
-	if (RDEVICE.ActiveMain()) return;
+	if (Device.ActiveMain()) return;
 
 	{
 		xrCriticalSection::raii mt{ MT };

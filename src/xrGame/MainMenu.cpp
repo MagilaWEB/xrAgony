@@ -58,11 +58,8 @@ CMainMenu::CMainMenu()
 	m_NeedErrDialog = ErrNoError;
 	m_start_time = 0;
 
-	if (!GEnv.isDedicatedServer)
-	{
-		g_btnHint = new CUIButtonHint();
-		g_statHint = new CUIButtonHint();
-	}
+	g_btnHint = new CUIButtonHint();
+	g_statHint = new CUIButtonHint();
 
 	Device.seqFrame.Add(this, REG_PRIORITY_LOW - 1000);
 	mLanguageChanged = false;
@@ -124,9 +121,6 @@ void CMainMenu::Activate(bool bActivate)
 		return;
 
 	bool b_is_single = IsGameTypeSingle();
-
-	if (GEnv.isDedicatedServer && bActivate)
-		return;
 
 	if (bActivate)
 	{
@@ -300,7 +294,7 @@ void CMainMenu::IR_OnKeyboardPress(int dik)
 	}
 	if (DIK_F12 == dik)
 	{
-		GEnv.Render->Screenshot();
+		::Render->Screenshot();
 		return;
 	}
 
@@ -338,9 +332,9 @@ void CMainMenu::OnRender()
 		return;
 
 	if (g_pGameLevel)
-		GEnv.Render->Calculate();
+		::Render->Calculate();
 
-	GEnv.Render->Render();
+	::Render->Render();
 
 	DoRenderDialogs();
 	UI().RenderFont();
@@ -364,7 +358,7 @@ void CMainMenu::OnFrame()
 	if (m_Flags.test(flGameSaveScreenshot) && Device.dwFrame > m_screenshotFrame)
 	{
 		m_Flags.set(flGameSaveScreenshot, FALSE);
-		GEnv.Render->Screenshot(IRender::SM_FOR_GAMESAVE, m_screenshot_name);
+		::Render->Screenshot(IRender::SM_FOR_GAMESAVE, m_screenshot_name);
 
 		if (g_pGameLevel && m_Flags.test(flActive))
 		{
@@ -394,7 +388,7 @@ void CMainMenu::Screenshot(IRender::ScreenshotMode mode, LPCSTR name)
 {
 	if (mode != IRender::SM_FOR_GAMESAVE)
 	{
-		GEnv.Render->Screenshot(mode, name);
+		::Render->Screenshot(mode, name);
 	}
 	else
 	{

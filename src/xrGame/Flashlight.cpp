@@ -16,15 +16,15 @@ CFlashlight::CFlashlight()
 	m_bFastAnimMode = false;
 	m_bNeedActivation = false;
     
-	light_render = GEnv.Render->light_create();
+	light_render = ::Render->light_create();
 	light_render->set_type(IRender_Light::SPOT);
 	light_render->set_shadow(true);
-    light_omni = GEnv.Render->light_create();
+    light_omni = ::Render->light_create();
 	light_omni->set_type(IRender_Light::POINT);
 	light_omni->set_shadow(false);
 
 	m_switched_on = false;
-    glow_render = GEnv.Render->glow_create();
+    glow_render = ::Render->glow_create();
 	lanim = 0;
 	fBrightness = 1.f;
 

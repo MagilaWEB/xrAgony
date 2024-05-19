@@ -59,11 +59,11 @@ void CUIProgressShape::Draw()
     if (m_bText)
         DrawText();
 
-    GEnv.UIRender->SetShader(*GetShader());
+    ::UIRender->SetShader(*GetShader());
     Fvector2 tsize;
-    GEnv.UIRender->GetActiveTextureResolution(tsize);
+    ::UIRender->GetActiveTextureResolution(tsize);
 
-    GEnv.UIRender->StartPrimitive(m_sectorCount * 3, IUIRender::ptTriList, UI().m_currentPointType);
+    ::UIRender->StartPrimitive(m_sectorCount * 3, IUIRender::ptTriList, UI().m_currentPointType);
 
     Frect pos_rect;
     GetAbsoluteRect(pos_rect);
@@ -117,7 +117,7 @@ void CUIProgressShape::Draw()
         float ffff = calc_color(i + 1, m_sectorCount, m_stage, 1.0f, m_blend);
         u32 color = color_argb_f(ffff, 1.0f, 1.0f, 1.0f);
 
-        GEnv.UIRender->PushPoint(center_pos.x, center_pos.y, 0, color, center_tex.x, center_tex.y);
+        ::UIRender->PushPoint(center_pos.x, center_pos.y, 0, color, center_tex.x, center_tex.y);
 
         Fvector2 tp;
         tp.set(prev_pos_pt);
@@ -148,15 +148,15 @@ void CUIProgressShape::Draw()
 
         if (m_bClockwise)
         {
-            GEnv.UIRender->PushPoint(tp1.x, tp1.y, 0, color, tx1.x, tx1.y);
-            GEnv.UIRender->PushPoint(tp.x, tp.y, 0, color, tx.x, tx.y);
+            ::UIRender->PushPoint(tp1.x, tp1.y, 0, color, tx1.x, tx1.y);
+            ::UIRender->PushPoint(tp.x, tp.y, 0, color, tx.x, tx.y);
         }
         else
         {
-            GEnv.UIRender->PushPoint(tp.x, tp.y, 0, color, tx.x, tx.y);
-            GEnv.UIRender->PushPoint(tp1.x, tp1.y, 0, color, tx1.x, tx1.y);
+            ::UIRender->PushPoint(tp.x, tp.y, 0, color, tx.x, tx.y);
+            ::UIRender->PushPoint(tp1.x, tp1.y, 0, color, tx1.x, tx1.y);
         }
     }
 
-    GEnv.UIRender->FlushPrimitive();
+    ::UIRender->FlushPrimitive();
 }

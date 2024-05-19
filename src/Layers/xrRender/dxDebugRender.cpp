@@ -74,9 +74,7 @@ void dxDebugRender::add_lines(
 void dxDebugRender::NextSceneMode()
 {
 //	This mode is not supported in DX10
-#ifndef USE_DX10
     HW.Caps.SceneMode = (HW.Caps.SceneMode + 1) % 3;
-#endif //	USE_DX10
 }
 
 void dxDebugRender::ZEnable(bool bEnable)
@@ -92,12 +90,12 @@ void dxDebugRender::CacheSetCullMode(CullMode m) { RCache.set_CullMode(CULL_NONE
 void dxDebugRender::SetAmbient(u32 colour)
 {
 #if defined(USE_DX11)
-    //	TODO: DX10: Check if need this for DX10
+    //	TODO: DX11: Check if need this for DX11
     VERIFY(!"Not implemented for DX10");
     UNUSED(colour);
-#else //	USE_DX10
+#else
     CHK_DX(HW.pDevice->SetRenderState(D3DRS_AMBIENT, colour));
-#endif //	USE_DX10
+#endif
 }
 
 void dxDebugRender::SetDebugShader(dbgShaderHandle shdHandle)

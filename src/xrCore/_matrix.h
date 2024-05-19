@@ -62,7 +62,7 @@ struct _matrix
 			Tvector c;
 			T _44_;
 		};
-		float m[4][4]; // Array
+		T m[4][4]; // Array
 	};
 
 	// Class members

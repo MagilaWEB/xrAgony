@@ -8,12 +8,12 @@ extern "C"
 {
 XR_EXPORT void SetupEnv()
 {
-    GEnv.Render = &RImplementation;
-    GEnv.RenderFactory = &RenderFactoryImpl;
-    GEnv.DU = &DUImpl;
-    GEnv.UIRender = &UIRenderImpl;
+    ::Render = &RImplementation;
+    ::RenderFactory = &RenderFactoryImpl;
+    ::DU = &DUImpl;
+    ::UIRender = &UIRenderImpl;
 #ifdef DEBUG
-    GEnv.DRender = &DebugRenderImpl;
+    ::DRender = &DebugRenderImpl;
 #endif
     xrRender_initconsole();
 }

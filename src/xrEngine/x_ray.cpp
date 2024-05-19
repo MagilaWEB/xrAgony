@@ -36,7 +36,7 @@ struct _SoundProcessor : public pureFrame
 	virtual void OnFrame()
 	{
 		// Msg ("------------- sound: %d [%3.2f,%3.2f,%3.2f]",u32(Device.dwFrame),VPUSH(Device.vCameraPosition));
-		GEnv.Sound->update(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
+		::Sound->update(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
 	}
 } SoundProcessor;
 
@@ -228,8 +228,7 @@ void CApplication::LoadBegin()
 	{
 		loaded = false;
 
-		if (!GEnv.isDedicatedServer)
-			_InitializeFont(pFontSystem, "ui_font_letterica18_russian", 0);
+		_InitializeFont(pFontSystem, "ui_font_letterica18_russian", 0);
 
 		phase_timer.Start();
 		load_stage = 0;
@@ -275,10 +274,7 @@ void CApplication::LoadDraw()
 	if (!Device.Begin())
 		return;
 
-	if (GEnv.isDedicatedServer)
-		Console->OnRender();
-	else
-		load_draw_internal();
+	load_draw_internal();
 
 	Device.End();
 }
@@ -486,5 +482,5 @@ void CApplication::load_draw_internal()
 	if (loadingScreen)
 		loadingScreen->Update(load_stage, max_load_stage);
 	else
-		GEnv.Render->ClearTarget();
+		::Render->ClearTarget();
 }

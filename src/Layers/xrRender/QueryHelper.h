@@ -46,7 +46,7 @@ IC HRESULT ReleaseQuery(ID3DQuery* pQuery)
     return S_OK;
 }
 
-#else //	USE_DX10
+#else
 
 IC HRESULT CreateQuery(ID3DQuery** ppQuery, D3DQUERYTYPE Type)
 {
@@ -67,6 +67,6 @@ IC HRESULT EndQuery(ID3DQuery* pQuery)
 {
 	return pQuery->Issue(D3DISSUE_END);
 }
-#endif //	USE_DX10
+#endif
 
 #endif // QueryHelper_included

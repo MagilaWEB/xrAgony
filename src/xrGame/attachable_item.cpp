@@ -61,8 +61,8 @@ void CAttachableItem::OnH_A_Chield()
 
 void CAttachableItem::renderable_Render()
 {
-    GEnv.Render->set_Transform(&object().XFORM());
-    GEnv.Render->add_Visual(object().Visual());
+    ::Render->set_Transform(&object().XFORM());
+    ::Render->add_Visual(object().Visual());
 }
 
 void CAttachableItem::OnH_A_Independent() { enable(false); }

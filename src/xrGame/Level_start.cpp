@@ -61,11 +61,10 @@ bool CLevel::net_start1()
 
 			map_data.m_name = game_sv_GameState::parse_level_name(m_caServerOptions);
 
-			if (!GEnv.isDedicatedServer)
-				g_pGamePersistent->LoadTitle(true, map_data.m_name);
+			g_pGamePersistent->LoadTitle(true, map_data.m_name);
 
-			GEnv.Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
-			GEnv.Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
+			::Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
+			::Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
 
 			int id = pApp->Level_ID(map_data.m_name.c_str(), l_ver.c_str(), true);
 
@@ -97,11 +96,11 @@ bool CLevel::net_start2()
 		}
 		Server->SLS_Default();
 		map_data.m_name = Server->level_name(m_caServerOptions);
-		if (!GEnv.isDedicatedServer)
-			g_pGamePersistent->LoadTitle(true, map_data.m_name);
+		
+		g_pGamePersistent->LoadTitle(true, map_data.m_name);
 
-		GEnv.Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
-		GEnv.Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
+		::Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
+		::Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
 	}
 	return true;
 }

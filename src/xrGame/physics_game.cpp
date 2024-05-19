@@ -143,7 +143,7 @@ public:
     virtual void run()
     {
         //добавить отметку на материале
-        GEnv.Render->add_StaticWallmark(pWallmarkShader, pos, 0.09f, T, Level().ObjectSpace.GetStaticVerts());
+        ::Render->add_StaticWallmark(pWallmarkShader, pos, 0.09f, T, Level().ObjectSpace.GetStaticVerts());
     };
     virtual bool obsolete() const { return false; }
 };

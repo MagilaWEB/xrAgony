@@ -36,12 +36,12 @@ short QC(float v)
 
 float CDetailManager::hw_timeDelta()
 {
-	float fDelta = RDEVICE.fTimeGlobal - m_global_time_old;
+	float fDelta = Device.fTimeGlobal - m_global_time_old;
 
 	if ((fDelta < 0) || (fDelta > 1))
 		fDelta = 0.03f;
 
-	m_global_time_old = RDEVICE.fTimeGlobal;
+	m_global_time_old = Device.fTimeGlobal;
 
 	return fDelta;
 }
@@ -80,7 +80,7 @@ void CDetailManager::hw_Load_Geom()
 	R_CHK(HW.pDevice->CreateIndexBuffer(dwIndices * 2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &hw_IB, nullptr));
 	HW.stats_manager.increment_stats_ib(hw_IB);
 
-#endif	//	USE_DX10
+#endif
 	Msg("* [DETAILS] Batch(%d), VB(%dK), IB(%dK)", hw_BatchSize, (dwVerts * vSize) / 1024, (dwIndices * 2) / 1024);
 
 	// Fill VB
@@ -190,8 +190,8 @@ void CDetailManager::hw_Render(VisiblesType type)
 	m_time_rot_2 += (PI_MUL_2 * fDelta / swing_current.rot2);
 	m_time_pos += (swing_current.speed * fDelta);
 
-	//float tm_rot1 = (PI_MUL_2*RDEVICE.fTimeGlobal/swing_current.rot1);
-	//float tm_rot2 = (PI_MUL_2*RDEVICE.fTimeGlobal/swing_current.rot2);
+	//float tm_rot1 = (PI_MUL_2*Device.fTimeGlobal/swing_current.rot1);
+	//float tm_rot2 = (PI_MUL_2*Device.fTimeGlobal/swing_current.rot2);
 	float tm_rot1 = m_time_rot_1;
 	float tm_rot2 = m_time_rot_2;
 
@@ -231,7 +231,7 @@ void CDetailManager::hw_Render(VisiblesType type)
 
 void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave, const Fvector4& wind, u32 var_id, u32 lod_id, vis_list& v_list)
 {
-	//RDEVICE.Statistic->RenderDUMP_DT_Count = 0;
+	//Device.Statistic->RenderDUMP_DT_Count = 0;
 	static shared_str strConsts("consts");
 	static shared_str strWave("wave");
 	static shared_str strDir2D("dir2D");
@@ -300,7 +300,7 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 				if (++dwBatch == hw_BatchSize)
 				{
 					// flush
-					//RDEVICE.Statistic->RenderDUMP_DT_Count += dwBatch;
+					//Device.Statistic->RenderDUMP_DT_Count += dwBatch;
 					u32 dwCNT_verts = dwBatch * Object.number_vertices;
 					u32 dwCNT_prims = (dwBatch * Object.number_indices) / 3;
 #if USE_DX11
@@ -321,7 +321,7 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 			// flush if nessecary
 			if (dwBatch)
 			{
-				//RDEVICE.Statistic->RenderDUMP_DT_Count += dwBatch;
+				//Device.Statistic->RenderDUMP_DT_Count += dwBatch;
 				u32 dwCNT_verts = dwBatch * Object.number_vertices;
 				u32 dwCNT_prims = (dwBatch * Object.number_indices) / 3;
 #if USE_DX11

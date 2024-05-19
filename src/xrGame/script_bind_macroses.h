@@ -30,7 +30,7 @@
     B* l_tpEntity = smart_cast<B*>(Z); \
     if (!l_tpEntity)                   \
     {                                  \
-        GEnv.ScriptEngine->script_log(LuaMessageType::Error, "%s : cannot access class member %s!", #B, #A);
+        ::ScriptEngine->script_log(LuaMessageType::Error, "%s : cannot access class member %s!", #B, #A);
 
 #define CAST_OBJECT0(Z, A, B) \
     CAST_OBJECT(Z, A, B)      \

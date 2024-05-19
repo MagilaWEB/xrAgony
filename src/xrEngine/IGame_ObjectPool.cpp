@@ -12,7 +12,7 @@ void IGame_ObjectPool::prefetch()
     R_ASSERT(m_PrefetchObjects.empty());
 
     int p_count = 0;
-    GEnv.Render->model_Logging(FALSE);
+    ::Render->model_Logging(FALSE);
 
     string256 section;
     // prefetch objects
@@ -29,7 +29,7 @@ void IGame_ObjectPool::prefetch()
     }
 
     // out statistic
-    GEnv.Render->model_Logging(TRUE);
+    ::Render->model_Logging(TRUE);
 }
 
 void IGame_ObjectPool::clear()
@@ -65,7 +65,7 @@ R_ASSERT (map_POOL.empty());
 u32 mem_0 = Memory.mem_usage();
 float p_time = 1000.f*Device.GetTimerGlobal()->GetElapsed_sec();
 int p_count = 0;
-GEnv.Render->model_Logging (FALSE);
+::Render->model_Logging (FALSE);
 
 string256 section;
 // prefetch objects
@@ -87,7 +87,7 @@ map_POOL.insert (std::make_pair(pObject->cNameSect(),pObject));
 }
 
 // out statistic
-GEnv.Render->model_Logging (TRUE);
+::Render->model_Logging (TRUE);
 p_time = 1000.f*Device.GetTimerGlobal()->GetElapsed_sec() - p_time;
 u32 p_mem = Memory.mem_usage() - mem_0;
 if (p_count){

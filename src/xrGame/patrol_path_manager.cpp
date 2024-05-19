@@ -342,7 +342,7 @@ shared_str CPatrolPathManager::path_name() const
 {
     if (!m_path)
     {
-        GEnv.ScriptEngine->script_log(
+        ::ScriptEngine->script_log(
             LuaMessageType::Error, "Path not specified (object %s)!", *m_game_object->cName());
         return ("");
     }
@@ -354,14 +354,14 @@ void CPatrolPathManager::set_previous_point(int point_index)
 {
     if (!m_path)
     {
-        GEnv.ScriptEngine->script_log(
+        ::ScriptEngine->script_log(
             LuaMessageType::Error, "Path not specified (object %s)!", *m_game_object->cName());
         return;
     }
 
     if (!m_path->vertex(point_index))
     {
-        GEnv.ScriptEngine->script_log(LuaMessageType::Error, "Start point violates path bounds %s (object %s)!",
+        ::ScriptEngine->script_log(LuaMessageType::Error, "Start point violates path bounds %s (object %s)!",
             *m_path_name, *m_game_object->cName());
         return;
     }
@@ -374,13 +374,13 @@ void CPatrolPathManager::set_start_point(int point_index)
 {
     if (!m_path)
     {
-        GEnv.ScriptEngine->script_log(
+        ::ScriptEngine->script_log(
             LuaMessageType::Error, "Path not specified (object %s)!", *m_game_object->cName());
         return;
     }
     if (!m_path->vertex(point_index))
     {
-        GEnv.ScriptEngine->script_log(LuaMessageType::Error, "Start point violates path bounds %s (object %s)!",
+        ::ScriptEngine->script_log(LuaMessageType::Error, "Start point violates path bounds %s (object %s)!",
             *m_path_name, *m_game_object->cName());
         return;
     }

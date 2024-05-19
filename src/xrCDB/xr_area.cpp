@@ -23,7 +23,7 @@ CObjectSpace::CObjectSpace()
 #endif
 {
 #ifdef DEBUG
-    if (GEnv.RenderFactory)
+    if (::RenderFactory)
         m_pRender = new FactoryPtr<IObjectSpaceRender>();
 
 // sh_debug.create				("debug\\wireframe","$null");
@@ -34,8 +34,8 @@ CObjectSpace::CObjectSpace()
 CObjectSpace::~CObjectSpace()
 {
 // moved to ~IGameLevel
-//	GEnv.Sound->set_geometry_occ		(NULL);
-//	GEnv.Sound->set_handler			(NULL);
+//	::Sound->set_geometry_occ		(NULL);
+//	::Sound->set_handler			(NULL);
 //
 #ifdef DEBUG
     // sh_debug.destroy			();
@@ -115,8 +115,8 @@ void CObjectSpace::Create(Fvector* verts, CDB::TRI* tris, const hdrCFORM& H, CDB
     m_BoundingVolume.set(H.aabb);
     g_SpatialSpace->initialize(m_BoundingVolume);
     g_SpatialSpacePhysic->initialize(m_BoundingVolume);
-    // GEnv.Sound->set_geometry_occ				( &Static );
-    // GEnv.Sound->set_handler					( _sound_event );
+    // ::Sound->set_geometry_occ				( &Static );
+    // ::Sound->set_handler					( _sound_event );
 }
 
 //----------------------------------------------------------------------

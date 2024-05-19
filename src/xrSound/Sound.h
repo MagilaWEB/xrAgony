@@ -230,12 +230,12 @@ public:
     float fTimeTotal;
 
     ref_sound_data()  throw() : handle(0), feedback(0), s_type(st_Effect), g_type(0), g_object(0) {  }
-    ref_sound_data(pcstr fName, esound_type sound_type, int game_type) { GEnv.Sound->_create_data(*this, fName, sound_type, game_type); }
-    virtual ~ref_sound_data() { GEnv.Sound->_destroy_data(*this); }
+    ref_sound_data(pcstr fName, esound_type sound_type, int game_type) { ::Sound->_create_data(*this, fName, sound_type, game_type); }
+    virtual ~ref_sound_data() { ::Sound->_destroy_data(*this); }
     float get_length_sec() const { return fTimeTotal; }
 };
 
-inline void VerSndUnlocked() { VERIFY(!GEnv.Sound->i_locked()); }
+inline void VerSndUnlocked() { VERIFY(!::Sound->i_locked()); }
 /*! \class ref_sound
 \brief Sound source + control
 
@@ -257,24 +257,24 @@ struct ref_sound
     CSound_UserDataPtr _g_userdata() { VERIFY(_p); return _p->g_userdata; }
 
     void create(pcstr name, esound_type sound_type, int game_type)
-    { VerSndUnlocked(); GEnv.Sound->create(*this, name, sound_type, game_type); }
+    { VerSndUnlocked(); ::Sound->create(*this, name, sound_type, game_type); }
     void attach_tail(pcstr name)
-    { VerSndUnlocked(); GEnv.Sound->attach_tail(*this, name); }
+    { VerSndUnlocked(); ::Sound->attach_tail(*this, name); }
 
     void clone(const ref_sound& from, esound_type sound_type, int game_type)
-    { VerSndUnlocked(); GEnv.Sound->clone(*this, from, sound_type, game_type); }
+    { VerSndUnlocked(); ::Sound->clone(*this, from, sound_type, game_type); }
 
     void destroy()
-    { VerSndUnlocked(); GEnv.Sound->destroy(*this); }
+    { VerSndUnlocked(); ::Sound->destroy(*this); }
 
     void play(IGameObject* O, u32 flags = 0, float delay = 0.f)
-    { VerSndUnlocked(); GEnv.Sound->play(*this, O, flags, delay); }
+    { VerSndUnlocked(); ::Sound->play(*this, O, flags, delay); }
 
     void play_at_pos(IGameObject* O, const Fvector& pos, u32 flags = 0, float delay = 0.f)
-    { VerSndUnlocked(); GEnv.Sound->play_at_pos(*this, O, pos, flags, delay); }
+    { VerSndUnlocked(); ::Sound->play_at_pos(*this, O, pos, flags, delay); }
 
     void play_no_feedback(IGameObject* O, u32 flags = 0, float delay = 0.f, Fvector* pos = nullptr, float* vol = nullptr, float* freq = nullptr, Fvector2* range = nullptr)
-    { VerSndUnlocked(); GEnv.Sound->play_no_feedback(*this, O, flags, delay, pos, vol, freq, range); }
+    { VerSndUnlocked(); ::Sound->play_no_feedback(*this, O, flags, delay, pos, vol, freq, range); }
 
     void stop()                           { VerSndUnlocked(); if (_feedback()) _feedback()->stop(false); }
     void stop_deferred()                  { VerSndUnlocked(); if (_feedback()) _feedback()->stop(true ); }

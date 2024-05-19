@@ -340,7 +340,7 @@ void light::Export(light_Package& package)
 				L->s_point = s_point;
 
 				// Holger - do we need to export msaa stuff as well ?
-#if (RENDER == R_R3) || (RENDER == R_R4) || (RENDER == R_GL)
+#ifdef USE_DX11
 				if (RImplementation.o.dx10_msaa)
 				{
 					int bound = 1;
@@ -355,7 +355,7 @@ void light::Export(light_Package& package)
 						// L->s_volumetric_msaa[i] = s_volumetric_msaa[i];
 					}
 				}
-#endif // (RENDER==R_R3) || (RENDER==R_R4) || (RENDER==R_GL)
+#endif
 
 				//  Igor: add volumetric support
 				L->set_volumetric(flags.bVolumetric);

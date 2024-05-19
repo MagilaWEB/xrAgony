@@ -11,14 +11,14 @@ void CRenderDevice::Destroy()
 		return;
 	Log("Destroying Direct3D...");
 	pInput->ClipCursor(false);
-	GEnv.Render->ValidateHW();
-	GEnv.DU->OnDeviceDestroy();
+	::Render->ValidateHW();
+	::DU->OnDeviceDestroy();
 	b_is_Ready = false;
 	Statistic->OnDeviceDestroy();
-	GEnv.Render->destroy();
-	GEnv.Render->OnDeviceDestroy(false);
+	::Render->destroy();
+	::Render->OnDeviceDestroy(false);
 	Memory.mem_compact();
-	GEnv.Render->DestroyHW();
+	::Render->DestroyHW();
 	seqRender.Clear();
 	seqAppActivate.Clear();
 	seqAppDeactivate.Clear();
@@ -53,7 +53,7 @@ void CRenderDevice::ResetStart()
 	const auto dwHeight_before = dwHeight;
 	pInput->ClipCursor(false);
 
-	GEnv.Render->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
+	::Render->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
 	//GetWindowRect(m_hWnd, &m_rcWindowBounds);
 	//GetClientRect(m_hWnd, &m_rcWindowClient);
 
@@ -70,8 +70,7 @@ void CRenderDevice::ResetStart()
 			seqResolutionChanged.Process();
 		})
 
-		if (!GEnv.isDedicatedServer)
-			pInput->ClipCursor(true);
+		pInput->ClipCursor(true);
 
 		b_restart = false;
 }

@@ -5,11 +5,11 @@
 #define FACTORY_PTR_INSTANCIATE(Class)\
     template <>\
     inline void FactoryPtr<I##Class>::CreateObject(void)\
-    { m_pObject = GEnv.RenderFactory->Create##Class(); }\
+    { m_pObject = ::RenderFactory->Create##Class(); }\
     template <>\
     inline void FactoryPtr<I##Class>::DestroyObject(void)\
     {\
-        GEnv.RenderFactory->Destroy##Class(m_pObject);\
+        ::RenderFactory->Destroy##Class(m_pObject);\
         m_pObject = NULL;\
     }
 

@@ -201,8 +201,6 @@ CBinocularsVision::CBinocularsVision(const shared_str& sect) { Load(sect); }
 CBinocularsVision::~CBinocularsVision() { delete_data(m_active_objects); }
 void CBinocularsVision::Update()
 {
-    if (GEnv.isDedicatedServer)
-        return;
     //-----------------------------------------------------
     const CActor* pActor = nullptr;
     if (IsGameTypeSingle())

@@ -341,7 +341,7 @@ bool CUIActorMenu::CanMoveToPartner(PIItem pItem)
 
     //Alundaio: 
     luabind::functor<bool> funct;
-    if (GEnv.ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_CanMoveToPartner", funct))
+    if (::ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_CanMoveToPartner", funct))
     {
         if (funct(m_pPartnerInvOwner->cast_game_object()->lua_game_object(), pItem->object().lua_game_object(), r1, r2, itmWeight, partner_inv_weight, partner_max_weight) == false)
             return false;
@@ -578,7 +578,7 @@ void CUIActorMenu::DonateCurrentItem(CUICellItem* cell_item)
 
     //Alundaio: 
     luabind::functor<bool> funct;
-    if (GEnv.ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_DonateCurrentItem", funct))
+    if (::ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_DonateCurrentItem", funct))
     {
         if (funct(m_pPartnerInvOwner->cast_game_object()->lua_game_object(), item->object().lua_game_object()) == false)
             return;

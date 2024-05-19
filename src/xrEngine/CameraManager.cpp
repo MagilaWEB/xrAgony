@@ -347,7 +347,7 @@ void CCameraManager::ApplyDevice(float _viewport_near)
 	{
 		pp_affected.validate("apply device");
 		// postprocess
-		IRender_Target* T = GEnv.Render->getTarget();
+		IRender_Target* T = ::Render->getTarget();
 		T->set_duality_h(pp_affected.duality.h);
 		T->set_duality_v(pp_affected.duality.v);
 		T->set_blur(pp_affected.blur);
@@ -371,7 +371,7 @@ void CCameraManager::ApplyDevice(float _viewport_near)
 
 void CCameraManager::ResetPP()
 {
-	IRender_Target* T = GEnv.Render->getTarget();
+	IRender_Target* T = ::Render->getTarget();
 	T->set_duality_h(pp_identity.duality.h);
 	T->set_duality_v(pp_identity.duality.v);
 	T->set_blur(pp_identity.blur);

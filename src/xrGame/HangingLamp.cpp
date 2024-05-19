@@ -95,7 +95,7 @@ BOOL CHangingLamp::net_Spawn(CSE_Abstract* DC)
     clr.a = 1.f;
     clr.mul_rgb(fBrightness);
 
-    light_render = GEnv.Render->light_create();
+    light_render = ::Render->light_create();
     light_render->set_shadow(!!lamp->flags.is(CSE_ALifeObjectHangingLamp::flCastShadow));
     light_render->set_volumetric(!!lamp->flags.is(CSE_ALifeObjectHangingLamp::flVolumetric));
     light_render->set_type(
@@ -112,7 +112,7 @@ BOOL CHangingLamp::net_Spawn(CSE_Abstract* DC)
 
     if (lamp->glow_texture.size())
     {
-        glow_render = GEnv.Render->glow_create();
+        glow_render = ::Render->glow_create();
         glow_render->set_texture(*lamp->glow_texture);
         glow_render->set_color(clr);
         glow_render->set_radius(lamp->glow_radius);
@@ -121,7 +121,7 @@ BOOL CHangingLamp::net_Spawn(CSE_Abstract* DC)
     if (lamp->flags.is(CSE_ALifeObjectHangingLamp::flPointAmbient))
     {
         ambient_power = lamp->m_ambient_power;
-        light_ambient = GEnv.Render->light_create();
+        light_ambient = ::Render->light_create();
         light_ambient->set_type(IRender_Light::POINT);
         light_ambient->set_shadow(false);
         clr.mul_rgb(ambient_power);

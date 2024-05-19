@@ -144,7 +144,7 @@ bool CUIActorMenu::ToDeadBodyBag(CUICellItem* itm, bool b_use_cursor_pos)
         {
             //Alundaio:
             luabind::functor<bool> funct;
-            if (GEnv.ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_CanMoveToPartner", funct))
+            if (::ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_CanMoveToPartner", funct))
             {
                 float itmWeight = quest_item->Weight();
                 float partner_inv_weight = m_pPartnerInvOwner->inventory().CalcTotalWeight();
@@ -161,7 +161,7 @@ bool CUIActorMenu::ToDeadBodyBag(CUICellItem* itm, bool b_use_cursor_pos)
             return false;
 
         luabind::functor<bool> funct;
-        if (GEnv.ScriptEngine->functor("_G.CInventoryBox_CanTake", funct))
+        if (::ScriptEngine->functor("_G.CInventoryBox_CanTake", funct))
         {
             if (funct(m_pInvBox->cast_game_object()->lua_game_object(), quest_item->cast_game_object()->lua_game_object()) == false)
                 return false;

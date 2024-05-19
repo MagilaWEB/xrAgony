@@ -185,7 +185,7 @@ CActor::CActor() : CEntityAlive(), current_ik_cam_shift(0)
 	m_iLastHittingWeaponID = u16(-1);
 	m_statistic_manager = NULL;
 	//-----------------------------------------------------------------------------------
-	m_memory = GEnv.isDedicatedServer ? 0 : new CActorMemory(this);
+	m_memory = new CActorMemory(this);
 	m_bOutBorder = false;
 	m_hit_probability = 1.f;
 	m_feel_touch_characters = 0;
@@ -244,8 +244,7 @@ void CActor::reinit()
 	character_physics_support()->in_Init();
 	material().reinit();
 
-	if (!GEnv.isDedicatedServer)
-		memory().reinit();
+	memory().reinit();
 
 	set_input_external_handler(0);
 	m_time_lock_accel = 0;
@@ -257,8 +256,7 @@ void CActor::reload(LPCSTR section)
 	CInventoryOwner::reload(section);
 	material().reload(section);
 	CStepManager::reload(section);
-	if (!GEnv.isDedicatedServer)
-		memory().reload(section);
+	memory().reload(section);
 	m_location_manager->reload(section);
 }
 void set_box(LPCSTR section, CPHMovementControl& mc, u32 box_num)
@@ -342,38 +340,36 @@ void CActor::Load(LPCSTR section)
 
 	character_physics_support()->in_Load(section);
 
-	if (!GEnv.isDedicatedServer)
+
+	LPCSTR hit_snd_sect = pSettings->r_string(section, "hit_sounds");
+	for (int hit_type = 0; hit_type < (int)ALife::eHitTypeMax; ++hit_type)
 	{
-		LPCSTR hit_snd_sect = pSettings->r_string(section, "hit_sounds");
-		for (int hit_type = 0; hit_type < (int)ALife::eHitTypeMax; ++hit_type)
+		LPCSTR hit_name = ALife::g_cafHitType2String((ALife::EHitType)hit_type);
+		LPCSTR hit_snds = READ_IF_EXISTS(pSettings, r_string, hit_snd_sect, hit_name, "");
+		int cnt = _GetItemCount(hit_snds);
+		string128 tmp;
+		VERIFY(cnt != 0);
+		for (int i = 0; i < cnt; ++i)
 		{
-			LPCSTR hit_name = ALife::g_cafHitType2String((ALife::EHitType)hit_type);
-			LPCSTR hit_snds = READ_IF_EXISTS(pSettings, r_string, hit_snd_sect, hit_name, "");
-			int cnt = _GetItemCount(hit_snds);
-			string128 tmp;
-			VERIFY(cnt != 0);
-			for (int i = 0; i < cnt; ++i)
-			{
-				sndHit[hit_type].push_back(ref_sound());
-				sndHit[hit_type].back().create(_GetItem(hit_snds, i, tmp), st_Effect, sg_SourceType);
-			}
-			char buf[256];
-
-			GEnv.Sound->create(
-				sndDie[0], strconcat(sizeof(buf), buf, *cName(), "\\die0"), st_Effect, SOUND_TYPE_MONSTER_DYING);
-			GEnv.Sound->create(
-				sndDie[1], strconcat(sizeof(buf), buf, *cName(), "\\die1"), st_Effect, SOUND_TYPE_MONSTER_DYING);
-			GEnv.Sound->create(
-				sndDie[2], strconcat(sizeof(buf), buf, *cName(), "\\die2"), st_Effect, SOUND_TYPE_MONSTER_DYING);
-			GEnv.Sound->create(
-				sndDie[3], strconcat(sizeof(buf), buf, *cName(), "\\die3"), st_Effect, SOUND_TYPE_MONSTER_DYING);
-
-			m_HeavyBreathSnd.create(
-				pSettings->r_string(section, "heavy_breath_snd"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
-			m_BloodSnd.create(pSettings->r_string(section, "heavy_blood_snd"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
-			m_DangerSnd.create(
-				pSettings->r_string(section, "heavy_danger_snd"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
+			sndHit[hit_type].push_back(ref_sound());
+			sndHit[hit_type].back().create(_GetItem(hit_snds, i, tmp), st_Effect, sg_SourceType);
 		}
+		char buf[256];
+
+		::Sound->create(
+			sndDie[0], strconcat(sizeof(buf), buf, *cName(), "\\die0"), st_Effect, SOUND_TYPE_MONSTER_DYING);
+		::Sound->create(
+			sndDie[1], strconcat(sizeof(buf), buf, *cName(), "\\die1"), st_Effect, SOUND_TYPE_MONSTER_DYING);
+		::Sound->create(
+			sndDie[2], strconcat(sizeof(buf), buf, *cName(), "\\die2"), st_Effect, SOUND_TYPE_MONSTER_DYING);
+		::Sound->create(
+			sndDie[3], strconcat(sizeof(buf), buf, *cName(), "\\die3"), st_Effect, SOUND_TYPE_MONSTER_DYING);
+
+		m_HeavyBreathSnd.create(
+			pSettings->r_string(section, "heavy_breath_snd"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
+		m_BloodSnd.create(pSettings->r_string(section, "heavy_blood_snd"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
+		m_DangerSnd.create(
+			pSettings->r_string(section, "heavy_danger_snd"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
 	}
 
 	cam_Set(eacFirstEye);
@@ -484,7 +480,7 @@ void CActor::Hit(SHit* pHDS)
 	m_hit_slowmo = conditions().HitSlowmo(pHDS);
 
 	//---------------------------------------------------------------
-	if ((Level().CurrentViewEntity() == this) && !GEnv.isDedicatedServer && (HDS.hit_type == ALife::eHitTypeFireWound))
+	if ((Level().CurrentViewEntity() == this) && (HDS.hit_type == ALife::eHitTypeFireWound))
 	{
 		IGameObject* pLastHitter = Level().Objects.net_Find(m_iLastHitterID);
 		IGameObject* pLastHittingWeapon = Level().Objects.net_Find(m_iLastHittingWeaponID);
@@ -500,7 +496,7 @@ void CActor::Hit(SHit* pHDS)
 			mstate_wishful &= ~mcSprint;
 		}
 	}
-	if (!GEnv.isDedicatedServer && !m_disabled_hitmarks)
+	if (!m_disabled_hitmarks)
 	{
 		bool b_fireWound = (pHDS->hit_type == ALife::eHitTypeFireWound || pHDS->hit_type == ALife::eHitTypeWound_2);
 		b_initiated = b_initiated && (pHDS->hit_type == ALife::eHitTypeStrike);
@@ -531,7 +527,7 @@ void CActor::Hit(SHit* pHDS)
 			tLuaHit.m_tpDraftsman = smart_cast<const CGameObject*>(HDS.who)->lua_game_object();
 
 			luabind::functor<bool> funct;
-			if (GEnv.ScriptEngine->functor("_G.CActor__BeforeHitCallback", funct))
+			if (::ScriptEngine->functor("_G.CActor__BeforeHitCallback", funct))
 			{
 				if (!funct(this->lua_game_object(), &tLuaHit, HDS.boneID))
 					return;
@@ -729,14 +725,11 @@ void CActor::Die(IGameObject* who)
 	//    }
 	//}
 
-	if (!GEnv.isDedicatedServer)
-	{
-		GEnv.Sound->play_at_pos(sndDie[Random.randI(SND_DIE_COUNT)], this, Position());
+	::Sound->play_at_pos(sndDie[Random.randI(SND_DIE_COUNT)], this, Position());
 
-		m_HeavyBreathSnd.stop();
-		m_BloodSnd.stop();
-		m_DangerSnd.stop();
-	}
+	m_HeavyBreathSnd.stop();
+	m_BloodSnd.stop();
+	m_DangerSnd.stop();
 
 	if (IsGameTypeSingle())
 	{
@@ -1094,7 +1087,7 @@ void CActor::UpdateCL()
 			g_pGamePersistent->m_pGShaderConstants->hud_params.set(0.f, 0.f, 0.f, 0.f); //--#SM+#--
 
 			// Отключаем второй вьюпорт [Turn off SecondVP]
-			Device.m_ScopeVP.SetSVPActive(false); 
+			Device.m_ScopeVP.SetSVPActive(false);
 		}
 	}
 
@@ -1199,7 +1192,7 @@ void CActor::shedule_Update(u32 DT)
 	pCamBobbing->SetState(mstate_real, conditions().IsLimping(), IsZoomAimingMode());
 
 	//звук тяжелого дыхания при уталости и хромании
-	if (this == Level().CurrentControlEntity() && !GEnv.isDedicatedServer)
+	if (this == Level().CurrentControlEntity())
 	{
 		if (conditions().IsLimping() && g_Alive() && !psActorFlags.test(AF_GODMODE_RT))
 		{
@@ -1363,8 +1356,8 @@ void CActor::renderable_Render()
 
 
 	if ((cam_active == eacFirstEye && // first eye cam
-		GEnv.Render->get_generation() == GEnv.Render->GENERATION_R2 && // R2
-		GEnv.Render->active_phase() == 1) // shadow map rendering on R2	
+		::Render->get_generation() == ::Render->GENERATION_R2 && // R2
+		::Render->active_phase() == 1) // shadow map rendering on R2	
 		||
 		!(IsFocused() && cam_active == eacFirstEye &&
 			(!m_holder || (m_holder && m_holder->allowWeapon() && m_holder->HUDView())))
@@ -1431,7 +1424,7 @@ void CActor::RenderIndicator(Fvector dpos, float r1, float r2, const ui_shader& 
 	if (!g_Alive())
 		return;
 
-	GEnv.UIRender->StartPrimitive(4, IUIRender::ptTriStrip, IUIRender::pttLIT);
+	::UIRender->StartPrimitive(4, IUIRender::ptTriStrip, IUIRender::pttLIT);
 
 	CBoneInstance& BI = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(u16(m_head));
 	Fmatrix M;
@@ -1456,10 +1449,10 @@ void CActor::RenderIndicator(Fvector dpos, float r1, float r2, const ui_shader& 
 	c.invert(a);
 	d.invert(b);
 
-	GEnv.UIRender->PushPoint(d.x + pos.x, d.y + pos.y, d.z + pos.z, 0xffffffff, 0.f, 1.f);
-	GEnv.UIRender->PushPoint(a.x + pos.x, a.y + pos.y, a.z + pos.z, 0xffffffff, 0.f, 0.f);
-	GEnv.UIRender->PushPoint(c.x + pos.x, c.y + pos.y, c.z + pos.z, 0xffffffff, 1.f, 1.f);
-	GEnv.UIRender->PushPoint(b.x + pos.x, b.y + pos.y, b.z + pos.z, 0xffffffff, 1.f, 0.f);
+	::UIRender->PushPoint(d.x + pos.x, d.y + pos.y, d.z + pos.z, 0xffffffff, 0.f, 1.f);
+	::UIRender->PushPoint(a.x + pos.x, a.y + pos.y, a.z + pos.z, 0xffffffff, 0.f, 0.f);
+	::UIRender->PushPoint(c.x + pos.x, c.y + pos.y, c.z + pos.z, 0xffffffff, 1.f, 1.f);
+	::UIRender->PushPoint(b.x + pos.x, b.y + pos.y, b.z + pos.z, 0xffffffff, 1.f, 0.f);
 	// pv->set         (d.x+pos.x,d.y+pos.y,d.z+pos.z, 0xffffffff, 0.f,1.f);        pv++;
 	// pv->set         (a.x+pos.x,a.y+pos.y,a.z+pos.z, 0xffffffff, 0.f,0.f);        pv++;
 	// pv->set         (c.x+pos.x,c.y+pos.y,c.z+pos.z, 0xffffffff, 1.f,1.f);        pv++;
@@ -1468,13 +1461,13 @@ void CActor::RenderIndicator(Fvector dpos, float r1, float r2, const ui_shader& 
 	// dwCount 				= u32(pv-pv_start);
 	// RCache.Vertex.Unlock	(dwCount,hFriendlyIndicator->vb_stride);
 
-	GEnv.UIRender->CacheSetXformWorld(Fidentity);
+	::UIRender->CacheSetXformWorld(Fidentity);
 	// RCache.set_xform_world		(Fidentity);
-	GEnv.UIRender->SetShader(*IndShader);
+	::UIRender->SetShader(*IndShader);
 	// RCache.set_Shader			(IndShader);
 	// RCache.set_Geometry			(hFriendlyIndicator);
 	// RCache.Render	   			(D3DPT_TRIANGLESTRIP,dwOffset,0, dwCount, 0, 2);
-	GEnv.UIRender->FlushPrimitive();
+	::UIRender->FlushPrimitive();
 };
 
 static float mid_size = 0.097f;
@@ -1974,7 +1967,7 @@ float CActor::GetRestoreSpeed(ALife::EConditionRestoreType const& type)
 		}
 
 		break;
-	}
+		}
 	case ALife::eBleedingRestoreSpeed:
 	{
 		res = conditions().change_v().m_fV_WoundIncarnation;
@@ -1995,7 +1988,7 @@ float CActor::GetRestoreSpeed(ALife::EConditionRestoreType const& type)
 	} // switch
 
 	return res;
-}
+	}
 
 void CActor::On_SetEntity()
 {
@@ -2051,15 +2044,15 @@ void CActor::SwitchNightVision(bool vision_on, bool use_sounds, bool send_event)
 				if (m_bNightVisionOn && !bIsActiveNow)
 				{
 					m_night_vision->Start(pOutfit->m_NightVisionSect, this, use_sounds);
+				}
 			}
-		}
 			else
 			{
 				m_night_vision->OnDisabled(this, use_sounds);
 				m_bNightVisionOn = false;
 			}
+		}
 	}
-}
 	if (!m_bNightVisionOn && bIsActiveNow)
 	{
 		m_night_vision->Stop(100000.0f, use_sounds);

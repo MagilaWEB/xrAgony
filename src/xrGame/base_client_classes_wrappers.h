@@ -99,7 +99,7 @@ public:
 
     static void HitSignal_static(CEntity* self, float P, Fvector& local_dir, IGameObject* who, s16 element)
     {
-        GEnv.ScriptEngine->script_log(
+        ::ScriptEngine->script_log(
             LuaMessageType::Error, "You are trying to call a pure virtual function CEntity::HitSignal!");
     }
 
@@ -110,7 +110,7 @@ public:
 
     static void HitImpulse_static(float P, Fvector& vWorldDir, Fvector& vLocalDir)
     {
-        GEnv.ScriptEngine->script_log(
+        ::ScriptEngine->script_log(
             LuaMessageType::Error, "You are trying to call a pure virtual function CEntity::HitImpulse!");
     }
 };

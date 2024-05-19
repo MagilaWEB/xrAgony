@@ -91,7 +91,7 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
     {
         //Alundaio: Here we export the action of dragging one inventory item on top of another! 
         luabind::functor<bool> funct1;
-        if (GEnv.ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_OnItemDropped", funct1))
+        if (::ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_OnItemDropped", funct1))
         {
             //If list only has 1 item, get it, otherwise try to get item at current drag position
             CUICellItem* _citem = new_owner->ItemsCount() == 1 ? new_owner->GetItemIdx(0) : nullptr;
@@ -178,7 +178,7 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 
     //Alundaio: Here we export the action of dragging one inventory item on top of another! 
     luabind::functor<bool> funct1;
-    if (GEnv.ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_OnItemDropped", funct1))
+    if (::ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_OnItemDropped", funct1))
     {
         //If list only has 1 item, get it, otherwise try to get item at current drag position
         CUICellItem* _citem = new_owner->ItemsCount() == 1 ? new_owner->GetItemIdx(0) : nullptr;
@@ -327,7 +327,7 @@ bool CUIActorMenu::OnItemFocusReceive(CUICellItem* itm)
     set_highlight_item(itm);
 
     luabind::functor<void> funct1;
-    if (GEnv.ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_OnItemFocusReceive", funct1))
+    if (::ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_OnItemFocusReceive", funct1))
     {
         PIItem _iitem = static_cast<PIItem>(itm->m_pData);
 
@@ -349,7 +349,7 @@ bool CUIActorMenu::OnItemFocusLost(CUICellItem* itm)
     clear_highlight_lists();
 
     luabind::functor<void> funct1;
-    if (GEnv.ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_OnItemFocusLost", funct1))
+    if (::ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_OnItemFocusLost", funct1))
     {
         PIItem _iitem = static_cast<PIItem>(itm->m_pData);
 

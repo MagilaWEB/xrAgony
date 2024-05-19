@@ -28,31 +28,9 @@ extern u32 g_dwFPSlimit;
 
 #pragma pack(push, 4)
 
-class ENGINE_API IRenderDevice
-{
-public:
-	struct RenderDeviceStatictics
-	{
-		CStatTimer RenderTotal; // pureRender
-		CStatTimer EngineTotal; // pureFrame
-		float fFPS, fRFPS, fTPS; // FPS, RenderFPS, TPS
+#pragma pack(pop)
 
-		RenderDeviceStatictics()
-		{
-			fFPS = 30.f;
-			fRFPS = 30.f;
-			fTPS = 0;
-		}
-	};
-
-	virtual ~IRenderDevice() {}
-	virtual void AddSeqFrame(pureFrame* f, bool mt) = 0;
-	virtual void RemoveSeqFrame(pureFrame* f) = 0;
-	virtual const RenderDeviceStatictics& GetStats() const = 0;
-	virtual void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert) = 0;
-};
-
-class ENGINE_API CRenderDeviceData
+class CRenderDeviceBase
 {
 public:
 	// Rendering resolution
@@ -101,10 +79,26 @@ public:
 	float fFOV;
 	float fASPECT;
 
+	struct RenderDeviceStatictics final
+	{
+		CStatTimer RenderTotal; // pureRender
+		CStatTimer EngineTotal; // pureFrame
+		float fFPS, fRFPS, fTPS; // FPS, RenderFPS, TPS
+
+		RenderDeviceStatictics()
+		{
+			fFPS = 30.f;
+			fRFPS = 30.f;
+			fTPS = 0;
+		}
+	};
+
+	virtual const RenderDeviceStatictics& GetStats() const = 0;
+
 protected:
-	u32 Timer_MM_Delta;
 	CTimer_paused Timer;
 	CTimer_paused TimerGlobal;
+	CStats* Statistic;
 
 public:
 	// Registrators
@@ -119,18 +113,11 @@ public:
 	HWND m_hWnd;
 };
 
-class ENGINE_API CRenderDeviceBase : public IRenderDevice, public CRenderDeviceData
-{
-protected:
-	CStats* Statistic;
-	CRenderDeviceBase() { Statistic = nullptr; }
-};
-
-#pragma pack(pop)
 // refs
 class ENGINE_API CRenderDevice final : public CRenderDeviceBase
 {
 public:
+
 	struct ENGINE_API CScopeVP final
 	{
 		bool m_bIsActive		{ false };	// Флаг активации рендера во второй вьюпорт
@@ -177,21 +164,10 @@ private:
 
 public:
 	u16 FPS = 30;
-	// HWND m_hWnd;
-   // LRESULT MsgProc(HWND, UINT, WPARAM, LPARAM);
 
-	// u32 dwFrame;
-	// u32 dwPrecacheFrame;
 	u32 dwPrecacheTotal;
-
-	// u32 dwWidth, dwHeight;
 	float fWidth_2, fHeight_2;
-	// BOOL b_is_Ready;
-	// BOOL b_is_Active;
 	void OnWM_Activate(WPARAM wParam, LPARAM lParam);
-
-	// ref_shader m_WireShader;
-	// ref_shader m_SelectionShader;
 
 	BOOL m_bNearer;
 	void SetNearer(BOOL enabled)
@@ -206,13 +182,10 @@ public:
 			m_bNearer = FALSE;
 			mProject._43 += EPS_L;
 		}
-		GEnv.Render->SetCacheXform(mView, mProject);
-		// R_ASSERT(0);
-		// TODO: re-implement set projection
-		// RCache.set_xform_project (mProject);
+		::Render->SetCacheXform(mView, mProject);
 	}
 
-	void DumpResourcesMemoryUsage() { GEnv.Render->ResourcesDumpMemoryUsage(); }
+	void DumpResourcesMemoryUsage() { ::Render->ResourcesDumpMemoryUsage(); }
 
 	MessageRegistry<pureFrame>				seqFrameMT;
 	MessageRegistry<pureDeviceReset>		seqDeviceReset;
@@ -233,6 +206,11 @@ public:
 		m_bNearer = FALSE;
 		m_ScopeVP.SetSVPActive(false);
 	};
+
+	~CRenderDevice()
+	{
+		Statistic = nullptr;
+	}
 
 	void Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason);
 	BOOL Paused();
@@ -260,18 +238,16 @@ public:
 	void DumpFlags();
 	IC CTimer_paused* GetTimerGlobal() { return &TimerGlobal; }
 	u32 TimerAsync() { return TimerGlobal.GetElapsed_ms(); }
-	u32 TimerAsync_MMT() { return TimerMM.GetElapsed_ms() + Timer_MM_Delta; }
 	// Creation & Destroying
-	void Create(void);
-	void Run(void);
-	void Destroy(void);
+	void Create();
+	void Run();
+	void Destroy();
 	void Reset();
 	bool IsReset() const;
 	void ResetStart();
-
-	void Initialize(void);
-	virtual const RenderDeviceStatictics& GetStats() const override { return stats; }
-	virtual void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert) override;
+	void Initialize();
+	const RenderDeviceStatictics& GetStats() const override { return stats; }
+	void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert);
 
 	void time_factor(const float& time_factor); //--#SM+#--
 
@@ -328,11 +304,6 @@ public:
 
 	bool on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& result);
 
-	ICF void EngineUpdate_impl()
-	{
-		GlobalUpdate();
-	}
-
 private:
 	void ProcessPriority();
 	void CalcFrameStats();
@@ -361,13 +332,6 @@ private:
 };
 
 extern ENGINE_API CRenderDevice Device;
-
-#ifndef _EDITOR
-#define RDEVICE Device
-#else
-#define RDEVICE EDevice
-#endif
-
 extern ENGINE_API bool g_bBenchmark;
 
 typedef fastdelegate::FastDelegate<bool()> LOADING_EVENT;

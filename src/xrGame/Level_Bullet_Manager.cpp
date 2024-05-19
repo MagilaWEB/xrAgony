@@ -812,7 +812,7 @@ void CBulletManager::Render()
         FvectorIt it;
         u32 C[3] = {0xffff0000, 0xff00ff00, 0xff0000ff};
         // RCache.set_xform_world(Fidentity);
-        GEnv.DRender->CacheSetXformWorld(Fidentity);
+        ::DRender->CacheSetXformWorld(Fidentity);
         for (int i = 0; i < 3; ++i)
             for (it = g_hit[i].begin(); it != g_hit[i].end(); ++it)
             {
@@ -827,7 +827,7 @@ void CBulletManager::Render()
     // u32	vOffset			=	0	;
     u32 bullet_num = m_BulletsRendered.size();
 
-    GEnv.UIRender->StartPrimitive((u32)bullet_num * 12, IUIRender::ptTriList, IUIRender::pttLIT);
+    ::UIRender->StartPrimitive((u32)bullet_num * 12, IUIRender::ptTriList, IUIRender::pttLIT);
 
     for (auto it = m_BulletsRendered.begin(); it != m_BulletsRendered.end(); it++)
     {
@@ -880,11 +880,11 @@ void CBulletManager::Render()
             bullet->bullet_pos, center, tracer_direction, length, width, bullet->m_u8ColorID, bullet->speed, bActor);
     }
 
-    GEnv.UIRender->CacheSetCullMode(IUIRender::cmNONE);
-    GEnv.UIRender->CacheSetXformWorld(Fidentity);
-    GEnv.UIRender->SetShader(*tracers.sh_Tracer);
-    GEnv.UIRender->FlushPrimitive();
-    GEnv.UIRender->CacheSetCullMode(IUIRender::cmCCW);
+    ::UIRender->CacheSetCullMode(IUIRender::cmNONE);
+    ::UIRender->CacheSetXformWorld(Fidentity);
+    ::UIRender->SetShader(*tracers.sh_Tracer);
+    ::UIRender->FlushPrimitive();
+    ::UIRender->CacheSetCullMode(IUIRender::cmCCW);
 }
 
 void CBulletManager::CommitRenderSet() // @ the end of frame

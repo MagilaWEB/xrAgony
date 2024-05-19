@@ -193,7 +193,7 @@ void CUIRankingWnd::Init()
     u8 topRankCount = 50;
     luabind::functor<u8> getRankingArraySize;
     
-    if (GEnv.ScriptEngine->functor("pda.get_rankings_array_size", getRankingArraySize))
+    if (::ScriptEngine->functor("pda.get_rankings_array_size", getRankingArraySize))
     	topRankCount = getRankingArraySize();
     
     for(u8 i=1; i <= topRankCount; i++)
@@ -288,7 +288,7 @@ void CUIRankingWnd::get_statistic()
     for (u8 i = 0; i < m_stat_count; ++i)
     {
         luabind::functor<pcstr> funct;
-        if (GEnv.ScriptEngine->functor("pda.get_stat", funct))
+        if (::ScriptEngine->functor("pda.get_stat", funct))
         {
             pcstr const str = funct(i);
             m_stat_info[i]->SetTextColor(color_rgba(170, 170, 170, 255));
@@ -302,7 +302,7 @@ void CUIRankingWnd::get_statistic()
 void CUIRankingWnd::get_best_monster()
 {
     luabind::functor<pcstr> funct;
-    R_ASSERT(GEnv.ScriptEngine->functor("pda.get_monster_back", funct));
+    R_ASSERT(::ScriptEngine->functor("pda.get_monster_back", funct));
     pcstr str = funct();
     if (!xr_strcmp(str, ""))
         return;
@@ -314,7 +314,7 @@ void CUIRankingWnd::get_best_monster()
         m_last_monster_icon_back = str;
     }
 
-    R_ASSERT(GEnv.ScriptEngine->functor("pda.get_monster_icon", funct));
+    R_ASSERT(::ScriptEngine->functor("pda.get_monster_icon", funct));
     str = funct();
     if (!xr_strcmp(str, ""))
         return;
@@ -329,7 +329,7 @@ void CUIRankingWnd::get_best_monster()
 void CUIRankingWnd::get_favorite_weapon()
 {
     luabind::functor<pcstr> funct;
-    R_ASSERT(GEnv.ScriptEngine->functor("pda.get_favorite_weapon", funct));
+    R_ASSERT(::ScriptEngine->functor("pda.get_favorite_weapon", funct));
     pcstr str = funct();
 
     if (!xr_strcmp(str, ""))

@@ -4,11 +4,11 @@
 void CRenderDevice::overdrawBegin()
 {
     VERIFY(0);
-    GEnv.Render->overdrawBegin();
+    ::Render->overdrawBegin();
 }
 
 void CRenderDevice::overdrawEnd()
 {
     VERIFY(0);
-    GEnv.Render->overdrawEnd();
+    ::Render->overdrawEnd();
 }

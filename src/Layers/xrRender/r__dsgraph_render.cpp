@@ -418,11 +418,6 @@ void D3DXRenderBase::r_dsgraph_render_hud()
 	hud_transform_helper helper;
 
 	sort_front_to_back_render_and_clean(mapHUD);
-
-#if RENDER == R_R1
-	if (g_hud && g_hud->RenderActiveItemUIQuery())
-		r_dsgraph_render_hud_ui(); // hud ui
-#endif
 }
 
 void D3DXRenderBase::r_dsgraph_render_hud_ui()
@@ -432,14 +427,13 @@ void D3DXRenderBase::r_dsgraph_render_hud_ui()
 	PIX_EVENT_TEXT(L"Render Hud Item");
 	hud_transform_helper helper;
 
-#if RENDER != R_R1
 	// Targets, use accumulator for temporary storage
 	const ref_rt rt_null;
 	RCache.set_RT(0, 1);
 	RCache.set_RT(0, 2);
 	auto zb = HW.pBaseZB;
 
-#if (RENDER == R_R3) || (RENDER == R_R4) || (RENDER==R_GL)
+#ifdef USE_DX11
 	if (RImplementation.o.dx10_msaa)
 		zb = RImplementation.Target->rt_MSAADepth->pZRT;
 #endif
@@ -447,7 +441,6 @@ void D3DXRenderBase::r_dsgraph_render_hud_ui()
 	RImplementation.Target->u_setrt(
 		RImplementation.o.albedo_wo ? RImplementation.Target->rt_Accumulator : RImplementation.Target->rt_Color,
 		rt_null, rt_null, zb);
-#endif // RENDER!=R_R1
 
 	g_hud->RenderActiveItemUI();
 }
@@ -469,7 +462,6 @@ void D3DXRenderBase::r_dsgraph_render_sorted()
 // strict-sorted render
 void D3DXRenderBase::r_dsgraph_render_emissive()
 {
-#if RENDER != R_R1
 	PIX_EVENT(r_dsgraph_render_emissive);
 
 	sort_front_to_back_render_and_clean(mapEmissive);
@@ -477,18 +469,15 @@ void D3DXRenderBase::r_dsgraph_render_emissive()
 	hud_transform_helper helper;
 
 	sort_front_to_back_render_and_clean(mapHUDEmissive);
-#endif
 }
 
 //////////////////////////////////////////////////////////////////////////
 // strict-sorted render
 void D3DXRenderBase::r_dsgraph_render_wmarks()
 {
-#if RENDER != R_R1
 	PIX_EVENT(r_dsgraph_render_wmarks);
 
 	sort_front_to_back_render_and_clean(mapWmark);
-#endif
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -586,13 +575,11 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 		}
 	}
 
-#if RENDER != R_R1
 	if (g_pGameLevel && (phase == RImplementation.PHASE_SMAP) && ps_actor_shadow_flags.test(RFLAG_ACTOR_SHADOW))
 	{
 		PIX_EVENT_TEXT(L"Render Actor Shadow");
 		g_hud->Render_Actor_Shadow(); // Actor Shadow
 	}
-#endif
 
 	// Restore
 	ViewBase = ViewSave;
