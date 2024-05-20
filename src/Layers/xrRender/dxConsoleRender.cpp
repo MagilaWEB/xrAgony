@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "dxConsoleRender.h"
+#include "FVF.h"
 
 dxConsoleRender::dxConsoleRender()
 {
@@ -22,13 +23,13 @@ void dxConsoleRender::OnRender(bool bGame)
 	u32 vOffset = 0;
 	//	TODO: DX10: Implement console background clearing for DX10
 	FVF::TL* verts = (FVF::TL*)RCache.Vertex.Lock(4, m_Geom->vb_stride, vOffset);
-	verts->set(R.x1, R.y2, color_xrgb(32, 32, 32), 0, 0);
+	verts->set(float(R.x1), float(R.y2), color_xrgb(32, 32, 32), 0, 0);
 	verts++;
-	verts->set(R.x1, R.y1, color_xrgb(32, 32, 32), 0, 0);
+	verts->set(float(R.x1), float(R.y1), color_xrgb(32, 32, 32), 0, 0);
 	verts++;
-	verts->set(R.x2, R.y2, color_xrgb(32, 32, 32), 0, 0);
+	verts->set(float(R.x2), float(R.y2), color_xrgb(32, 32, 32), 0, 0);
 	verts++;
-	verts->set(R.x2, R.y1, color_xrgb(32, 32, 32), 0, 0);
+	verts->set(float(R.x2), float(R.y1), color_xrgb(32, 32, 32), 0, 0);
 	verts++;
 	RCache.Vertex.Unlock(4, m_Geom->vb_stride);
 

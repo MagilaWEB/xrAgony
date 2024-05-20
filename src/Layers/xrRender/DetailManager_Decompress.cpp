@@ -2,6 +2,7 @@
 #pragma hdrstop
 #include "DetailManager.h"
 #include "xrCDB/Intersect.hpp"
+#include "xrEngine\IGame_Level.h"
 #ifdef _EDITOR
 #include "scene.h"
 #include "sceneobject.h"
@@ -189,10 +190,11 @@ void CDetailManager::cache_Decompress(Slot* S)
 			collide::rq_result RQ;
 
 			// Adjust the position by the Y coordinate above the level.
-			g_pGameLevel->ObjectSpace.RayQuery(
-				collide::rq_results{},
-				collide::ray_defs{ Item_P,  Fvector{ 0, -1.f, 0 }, 1000.f, CDB::OPT_CULL, collide::rqtStatic },
-				[&normal, verts](collide::rq_result& result, LPVOID params)
+			/*BOOL _RayQuery(collide::rq_results & dest, const collide::ray_defs & rq, collide::rq_callback cb, LPVOID user_data,
+				collide::test_callback tb, IGameObject * ignore_object);*/
+			collide::rq_results rq_res{};
+			g_pGameLevel->ObjectSpace.RayQuery(rq_res, collide::ray_defs{ Item_P,  Fvector{ 0, -1.f, 0 }, 1000.f, CDB::OPT_CULL, collide::rqtStatic },
+			[&normal, verts](collide::rq_result& result, LPVOID params)
 			{
 				auto LOCAL_RQ = reinterpret_cast<collide::rq_result*>(params);
 				if (result.O)

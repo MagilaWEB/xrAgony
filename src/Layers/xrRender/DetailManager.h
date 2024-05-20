@@ -179,7 +179,7 @@ public:
 	void							hw_Unload();
 	void							hw_Render(VisiblesType type);
 	float							hw_timeDelta();
-	void							hw_Render_dump(const Fvector4& consts, const Fvector4& wave, const Fvector4& wind, u32 var_id, u32 lod_id, vis_list& v_list);
+	void							hw_Render_dump(const Fvector4& consts, const Fvector4& wave, const Fvector4& wind, u32 var_id, u32 lod_id, const vis_list v_list);
 	//void							hw_Render_dump(ref_constant array, u32 var_id, u32 lod_id, bool shadow);
 
 public:

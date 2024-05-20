@@ -209,7 +209,7 @@ void CDetailManager::hw_Render(VisiblesType type)
 		else if (type == SHADOW_LIGHT)
 			return m_visibles_shadow_light[var_id];
 
-		return  m_visibles[var_id];
+		return m_visibles[var_id];
 	};
 
 	// Wave0
@@ -229,7 +229,7 @@ void CDetailManager::hw_Render(VisiblesType type)
 	hw_Render_dump(consts, wave.div(PI_MUL_2), dir2, 0, 1, v_list(0));
 }
 
-void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave, const Fvector4& wind, u32 var_id, u32 lod_id, vis_list& v_list)
+void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave, const Fvector4& wind, u32 var_id, u32 lod_id, const vis_list v_list)
 {
 	//Device.Statistic->RenderDUMP_DT_Count = 0;
 	static shared_str strConsts("consts");
@@ -254,7 +254,7 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 	for (u32 O = 0; O < objects.size(); O++)
 	{
 		CDetail& Object = *objects[O];
-		xr_vector <SlotItem*> & vis = v_list[O];
+		xr_vector <SlotItem*> vis = v_list[O];
 
 		if (!vis.empty())
 		{

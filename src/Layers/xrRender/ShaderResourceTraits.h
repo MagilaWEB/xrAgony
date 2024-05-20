@@ -265,7 +265,7 @@ inline CResourceManager::map_CS& CResourceManager::GetShaderMap()
 template <typename T>
 inline T* CResourceManager::CreateShader(const char* name, const char* filename /*= nullptr*/, const bool searchForEntryAndTarget /*= false*/)
 {
-	ShaderTypeTraits<T>::MapType& sh_map = GetShaderMap<ShaderTypeTraits<T>::MapType>();
+	typename ShaderTypeTraits<T>::MapType& sh_map = GetShaderMap<typename ShaderTypeTraits<T>::MapType>();
 	LPSTR N = LPSTR(name);
 	auto iterator = sh_map.find(N);
 
@@ -359,7 +359,7 @@ inline void CResourceManager::DestroyShader(const T* sh)
 	if (0 == (sh->dwFlags & xr_resource_flagged::RF_REGISTERED))
 		return;
 
-	ShaderTypeTraits<T>::MapType& sh_map = GetShaderMap<ShaderTypeTraits<T>::MapType>();
+	typename ShaderTypeTraits<T>::MapType& sh_map = GetShaderMap<typename ShaderTypeTraits<T>::MapType>();
 
 	LPSTR N = LPSTR(*sh->cName);
 	auto iterator = sh_map.find(N);

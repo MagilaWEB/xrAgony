@@ -8,6 +8,7 @@
 
 #include "SkeletonCustom.h"
 #include "SkeletonXVertRender.h"
+#include "xrCDB\Intersect.hpp"
 
 // refs
 class CKinematics;
@@ -165,6 +166,7 @@ BOOL pick_bone(CKinematics* Parent, IKinematics::pick_result& r, float dist, con
     return FALSE;
 }
 #else
+#include "Fvisual.h"
 template <typename T>
 BOOL pick_bone(CKinematics* Parent, IKinematics::pick_result& r, float dist, const Fvector& S, const Fvector& D,
     Fvisual* V, u16* indices, CBoneData::FacesVec& faces)
