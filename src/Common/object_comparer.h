@@ -119,8 +119,8 @@ struct CComparer
             if (a1.size() != a2.size())
                 return p();
 
-            T::const_iterator I = a1.begin(), J = a2.begin();
-            T::const_iterator E = a1.end();
+            typename T::const_iterator I = a1.begin(), J = a2.begin();
+            typename T::const_iterator E = a1.end();
             for (; I != E; ++I, ++J)
                 if (!CComparer::compare(*I, *J, p))
                     return false;

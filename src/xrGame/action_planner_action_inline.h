@@ -28,12 +28,8 @@ void CPlanner::initialize() { inherited_action::initialize(); }
 TEMPLATE_SPECIALIZATION
 void CPlanner::finalize()
 {
-	if (current_action_id() != _action_id_type(-1))
-		current_action().finalize();
-
     inherited_action::finalize();
-	m_initialized = false;
-    //inherited_planner::finalize();
+    inherited_planner::finalize();
 }
 
 TEMPLATE_SPECIALIZATION

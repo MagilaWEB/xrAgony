@@ -1,11 +1,17 @@
 #pragma once
 #include <vector>
+#include <tbb.h>
+#include <xrCommon\inlining_macros.h>
 
 template <typename T, typename allocator = std::allocator<T> >
 class xr_vector : public std::vector < T, allocator >
 {
 private:
-	typedef std::vector<T, allocator> inherited;
+	using inherited			= std::vector<T, allocator>;
+
+public:
+	using const_iterator	= inherited::const_iterator;
+	using iterator			= inherited::iterator;
 
 public:
 	xr_vector() : inherited() {}

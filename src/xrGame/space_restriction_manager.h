@@ -10,6 +10,7 @@
 
 #include "space_restriction_holder.h"
 #include "alife_space.h"
+#include "space_restriction.h"
 
 namespace RestrictionSpace
 {

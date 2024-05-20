@@ -60,7 +60,7 @@ public:
     void on_key_release(int dik);
     void on_frame();
 
-    void assign_callback(u32 const dik, key_state state, Callback & callback);
+    void assign_callback(u32 const dik, key_state state, Callback const& callback);
 
     void insert_character(char c);
 

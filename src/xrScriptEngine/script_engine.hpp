@@ -230,8 +230,9 @@ IC bool CScriptEngine::functor(LPCSTR function_to_call, luabind::functor<TResult
 template <typename TResult, typename... Args>
 IC TResult CScriptEngine::function_event(LPCSTR function_to_call, Args&&... args)
 {
-	luabind::functor<TResult>& function
 	luabind::object object;
+	luabind::functor<TResult>& function;
+
 	if (!function_object(function_to_call, object))
 		return nullptr;
 

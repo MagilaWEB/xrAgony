@@ -1,4 +1,5 @@
 #pragma once
+#include "ai_monster_squad.h"
 
 class CMonsterSquad;
 class CEntity;

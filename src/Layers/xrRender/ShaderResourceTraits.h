@@ -201,7 +201,7 @@ struct ShaderTypeTraits<SDS>
 template <>
 struct ShaderTypeTraits<SCS>
 {
-	typedef CResourceManager::map_CS MapType;
+	using MapType =  CResourceManager::map_CS;
 
 	using HWShaderType = ID3D11ComputeShader*;
 

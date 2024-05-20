@@ -90,22 +90,22 @@ void CPlanner::update()
 
     THROW(!this->solution().empty());
 
-    if (solution().empty())
+    if (this->solution().empty())
         return;
 
     if (initialized())
     {
-        if (current_action_id() != solution().front())
+        if (current_action_id() != this->solution().front())
         {
             current_action().finalize();
-            m_current_action_id = solution().front();
+            m_current_action_id = this->solution().front();
             current_action().initialize();
         }
     }
     else
     {
         m_initialized = true;
-        m_current_action_id = solution().front();
+        m_current_action_id = this->solution().front();
         current_action().initialize();
     }
 

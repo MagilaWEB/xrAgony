@@ -18,6 +18,7 @@
 #include "Layers/xrRender/R_Backend.h"
 #include "Layers/xrRender/R_Backend_Runtime.h"
 
+#define USE_DX9 1
 #define R_R1 1
 #define R_R2 2
 #define RENDER R_R1

@@ -13,7 +13,6 @@
 //#include <assert.h> // ~440 - but it has no include guard! Perhaps that's intentional?
 #include <math.h>
 #include <queue> // ~360
-#include <dinput.h> // Only ~60, heavy enough to warrant including in pch
 #include "luabind/luabind.hpp" // luabind/*, almost 5000
 #include "xrServerEntities/smart_cast.h" // a lot
 #include "xrScriptEngine/script_space_forward.hpp" // ~765 // XXX: See to it this goes to pch_script
@@ -47,6 +46,7 @@
 #include "xrCore/_plane2.h" // ~450
 #include "xrAICore/AISpaceBase.hpp" // ~650
 #include "xrAICore/Navigation/game_graph.h" // ~600
+#include "xrPhysics/xrPhysics.h" // ~400
 #include "xrServerEntities/xrServer_Objects.h" // ~500
 #include "xrServerEntities/xrServer_Objects_ALife.h" // ~500
 #include "xrServerEntities/xrServer_Objects_ALife_Items.h" // ~500
@@ -56,7 +56,6 @@
 #include "xrUICore/ui_defs.h" // ~450
 #include "xrGame/entity_alive.h" // ~430
 #include "xrCore/XML/XMLDocument.hpp" // ~400
-#include "xrPhysics/xrPhysics.h" // ~400
 #include "xrEngine/Feel_Sound.h" // ~400
 #include "xrAICore/Navigation/graph_edge.h" // ~380
 #include "xrAICore/Navigation/graph_abstract.h" // ~380
@@ -222,7 +221,7 @@
 #include "xrGame/ai/monsters/monster_corpse_manager.h" // ~130
 #include "xrGame/ai/stalker/ai_stalker.h"
 #include "Include/xrRender/WallMarkArray.h" // ~80
-#include "xrAICore/Navigation/ai_object_location.h" // ~95, very heavy to compile
+//#include "xrAICore/Navigation/ai_object_location.h" // ~95, very heavy to compile
 #include "xrAICore/Navigation/graph_engine.h" // ~80, VERY heavy to compile
 #include "xrAICore/Navigation/PatrolPath/patrol_path.h" // ~80, VERY heavy to compile
 #ifdef DEBUG

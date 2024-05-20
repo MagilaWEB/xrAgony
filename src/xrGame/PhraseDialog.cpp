@@ -220,7 +220,7 @@ void CPhraseDialog::load_shared(LPCSTR)
     data()->m_PhraseGraph.clear();
 
     XML_NODE phrase_list_node = pXML->NavigateToNode(dialog_node, "phrase_list", 0);
-    if (NULL == phrase_list_node)
+    if (!phrase_list_node)
     {
         LPCSTR func = pXML->Read(dialog_node, "init_func", 0, "");
 

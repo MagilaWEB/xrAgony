@@ -8,6 +8,7 @@
 #include "xrCore/_rect.h"
 #include "xrCore/xr_trims.h"
 #include "xrCore/xr_shortcut.h"
+#include "xrCore/xr_token.h"
 //#include "xrCore/xrCore.h"
 
 #ifdef __BORLANDC__
@@ -682,16 +683,16 @@ public:
             return HaveCaption() ? caption[GetValueEx() ? 1 : 0].c_str() : "";
         return draw_val;
     }
-    virtual bool Equal(PropValue* val) { return !!value->equal(*((FlagValue<T>*)val)->value, mask); }
-    virtual const T& GetValue() { return *value; }
-    virtual void ResetValue() { value->set(mask, init_value.is(mask)); }
-    virtual bool GetValueEx() { return !!value->is(mask); }
+    virtual bool Equal(PropValue* val) { return !!this->value->equal(*((FlagValue<T>*)val)->value, mask); }
+    virtual const T& GetValue() { return *this->value; }
+    virtual void ResetValue() { this->value->set(mask, this->init_value.is(mask)); }
+    virtual bool GetValueEx() { return !!this->value->is(mask); }
 
     bool ApplyValue(const T& val)
     {
-        if (!val.equal(*value, mask))
+        if (!val.equal(*this->value, mask))
         {
-            value->set(mask, val.is(mask));
+            this->value->set(mask, val.is(mask));
             return true;
         }
         return false;
@@ -728,7 +729,7 @@ public:
             OnDrawText(this, draw_val);
         else
             for (int i = 0; token[i].name; i++)
-                if (token[i].id == (int)GetValue())
+                if (token[i].id == (int)this->GetValue())
                     return token[i].name;
         return draw_val;
     }
@@ -760,7 +761,7 @@ public:
             OnDrawText(this, draw_val);
         else
             for (u32 k = 0; k < token_count; k++)
-                if ((T)token[k].id == GetValue())
+                if ((T)token[k].id == this->GetValue())
                     return *token[k].name;
         return draw_val;
     }

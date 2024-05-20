@@ -281,10 +281,8 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 				if (!View.testSphere_dirty(S->vis.sphere.P, S->vis.sphere.R))
 					continue;	// invisible-view frustum
 
-#ifndef _EDITOR
 				if (!RImplementation.HOM.visible(S->vis))
 					continue;	// invisible-occlusion
-#endif
 
 				float dist_sq = EYE.distance_to_sqr(S->vis.sphere.P);
 				if (dist_sq > fade_limit)

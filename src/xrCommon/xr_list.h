@@ -5,7 +5,11 @@ template <typename T, typename allocator = std::allocator<T>>
 class xr_list : public std::list<T, allocator>
 {
 private:
-	typedef std::list<T, allocator> inherited;
+	using inherited = std::list<T, allocator>;
+	
+public:
+	using const_iterator = inherited::const_iterator;
+	using iterator = inherited::iterator;
 
 public:
 	xr_list() : inherited() {};

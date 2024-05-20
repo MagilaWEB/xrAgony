@@ -8,6 +8,17 @@
 
 #pragma once
 
+namespace hash_fixed_vertex_manager
+{
+    extern u32 to_u32(const GraphEngineSpace::CWorldState& other);
+
+    ICF u32 to_u32(shared_str const& string)
+    {
+        const str_value* val = string._get();
+        return *(u32 const*)&val;
+    }
+}
+
 #define TEMPLATE_SPECIALIZATION                                             \
     template <typename TPathId, typename TIndex, u32 HashSize, u32 FixSize> \
     template <typename TPathBuilder, typename TVertexAllocator, typename TCompoundVertex>
@@ -16,14 +27,18 @@
     CVertexManagerHashFixed<TPathId, TIndex, HashSize, FixSize>::CDataStorage<TPathBuilder, TVertexAllocator, \
         TCompoundVertex>
 
+#define CHashFixedVertexManagerT                                                                              \
+    typename CVertexManagerHashFixed<TPathId, TIndex, HashSize, FixSize>::template CDataStorage<TPathBuilder, \
+        TVertexAllocator, TCompoundVertex>
+
 TEMPLATE_SPECIALIZATION
 inline CHashFixedVertexManager::CDataStorage(const u32 vertex_count)
     : CDataStorageBase(vertex_count), CDataStorageAllocator(), m_current_path_id(PathId(0))
 {
     m_hash = xr_alloc<IndexVertex*>(HashSize);
-    ZeroMemory(m_hash, HashSize * sizeof(IndexVertex*));
+    ZeroMemory(m_hash, IndexVertexHashSize);
     m_vertices = xr_alloc<IndexVertex>(FixSize);
-    ZeroMemory(m_vertices, FixSize * sizeof(IndexVertex));
+    ZeroMemory(m_vertices, IndexVertexFixSize);
 }
 
 TEMPLATE_SPECIALIZATION
@@ -38,13 +53,13 @@ inline void CHashFixedVertexManager::init()
 {
     CDataStorageBase::init();
     CDataStorageAllocator::init();
-    m_current_path_id++;
+    ++m_current_path_id;
     m_vertex_count = 0;
     if (!m_current_path_id)
     {
-        m_current_path_id++;
-        ZeroMemory(m_hash, HashSize * sizeof(IndexVertex*));
-        ZeroMemory(m_vertices, FixSize * sizeof(IndexVertex));
+        ++m_current_path_id;
+        ZeroMemory(m_hash, IndexVertexHashSize);
+        ZeroMemory(m_vertices, IndexVertexFixSize);
     }
 }
 
@@ -53,7 +68,7 @@ inline void CHashFixedVertexManager::add_opened(Vertex& vertex) { vertex.opened(
 TEMPLATE_SPECIALIZATION
 inline void CHashFixedVertexManager::add_closed(Vertex& vertex) { vertex.opened() = 0; }
 TEMPLATE_SPECIALIZATION
-inline typename CHashFixedVertexManager::PathId CHashFixedVertexManager::current_path_id() const
+inline CHashFixedVertexManagerT::PathId CHashFixedVertexManager::current_path_id() const
 {
     return m_current_path_id;
 }
@@ -84,7 +99,7 @@ inline bool CHashFixedVertexManager::is_visited(const Index& vertex_id) const
 TEMPLATE_SPECIALIZATION
 inline bool CHashFixedVertexManager::is_closed(const Vertex& vertex) const { return !is_opened(vertex); }
 TEMPLATE_SPECIALIZATION
-inline typename CHashFixedVertexManager::Vertex& CHashFixedVertexManager::get_node(const Index& vertex_id) const
+inline CHashFixedVertexManagerT::Vertex& CHashFixedVertexManager::get_node(const Index& vertex_id) const
 {
     VERIFY(is_visited(vertex_id));
     IndexVertex* vertex = m_hash[hash_index(vertex_id)];
@@ -94,11 +109,11 @@ inline typename CHashFixedVertexManager::Vertex& CHashFixedVertexManager::get_no
             return *vertex->m_vertex;
     }
     NODEFAULT;
-    return *vertex->m_vertex;
+    return *vertex->m_vertex; //-V522
 }
 
 TEMPLATE_SPECIALIZATION
-inline typename CHashFixedVertexManager::Vertex& CHashFixedVertexManager::create_vertex(
+inline CHashFixedVertexManagerT::Vertex& CHashFixedVertexManager::create_vertex(
     Vertex& vertex, const Index& vertex_id)
 {
     // allocating new index node
