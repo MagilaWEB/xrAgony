@@ -429,19 +429,11 @@ CSoundRender_Environment* CSoundRender_Core::get_environment(const Fvector& P)
     if (geom_ENV)
     {
         Fvector dir = {0, -1, 0};
-#ifdef _EDITOR
-            ETOOLS::ray_options(CDB::OPT_ONLYNEAREST);
-            ETOOLS::ray_query(geom_ENV, P, dir, 1000.f);
-            if (ETOOLS::r_count())
-            {
-                CDB::RESULT* r = ETOOLS::r_begin();
-#else
-        geom_DB.ray_options(CDB::OPT_ONLYNEAREST);
-        geom_DB.ray_query(geom_ENV, P, dir, 1000.f);
+
+        geom_DB.ray_query(CDB::OPT_ONLYNEAREST, geom_ENV, P, dir, 1000.f);
         if (geom_DB.r_count())
         {
             CDB::RESULT* r = geom_DB.r_begin();
-#endif
             CDB::TRI* T = geom_ENV->get_tris() + r->id;
             Fvector* V = geom_ENV->get_verts();
             Fvector tri_norm;

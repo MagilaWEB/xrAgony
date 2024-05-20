@@ -27,12 +27,7 @@ BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 }
 
 // Model building
-MODEL::MODEL() :
-#ifdef CONFIG_PROFILE_LOCKS
-	pcs(new Lock(MUTEX_PROFILE_ID(MODEL)))
-#else
-	pcs(new Lock)
-#endif // CONFIG_PROFILE_LOCKS
+MODEL::MODEL()
 {
 	tree = 0;
 	tris = 0;
@@ -50,15 +45,11 @@ MODEL::~MODEL()
 	tris_count = 0;
 	xr_free(verts);
 	verts_count = 0;
-	delete pcs;
 }
 
 void MODEL::syncronize_impl() const
 {
 	Log("! WARNING: syncronized CDB::query");
-	Lock* C = pcs;
-	C->Enter();
-	C->Leave();
 }
 
 struct BTHREAD_params
@@ -71,17 +62,6 @@ struct BTHREAD_params
 	build_callback* BC;
 	void* BCP;
 };
-
-void MODEL::build_thread(void* params)
-{
-	FPU::m64r();
-	BTHREAD_params P = *((BTHREAD_params*)params);
-	P.M->pcs->Enter();
-	P.M->build_internal(P.V, P.Vcnt, P.T, P.Tcnt, P.BC, P.BCP);
-	P.M->status = S_READY;
-	P.M->pcs->Leave();
-	// Msg						("* xrCDB: cform build completed, memory usage: %d K",P.M->memory()/1024);
-}
 
 void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc, void* bcp)
 {
@@ -171,9 +151,6 @@ u32 MODEL::memory()
 // see xrCDB.h for the class definition
 COLLIDER::COLLIDER()
 {
-	ray_mode = 0;
-	box_mode = 0;
-	frustum_mode = 0;
 }
 
 COLLIDER::~COLLIDER() { r_free(); }

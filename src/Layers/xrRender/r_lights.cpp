@@ -50,7 +50,7 @@ void CRender::render_lights(light_Package& LP)
 		}
 
 		// save (lights are popped from back)
-		LP.v_shadowed = refactored;
+		LP.v_shadowed = std::move(refactored);
 		refactored.clear();
 	}
 
@@ -89,10 +89,9 @@ void CRender::render_lights(light_Package& LP)
 
 			// render
 			phase = PHASE_SMAP;
-			if (RImplementation.o.Tshadows)
-				r_pmask(true, true);
-			else
-				r_pmask(true, false);
+
+			r_pmask(true, !!RImplementation.o.Tshadows);
+
 			L->svis.begin();
 			PIX_EVENT(SHADOWED_LIGHTS_RENDER_SUBSPACE);
 			r_dsgraph_render_subspace(L->spatial.sector, L->X.S.combine, L->position, TRUE);

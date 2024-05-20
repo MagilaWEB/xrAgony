@@ -154,10 +154,13 @@ ps_cst_minus_inf[4] = { -flt_plus_inf, -flt_plus_inf, -flt_plus_inf, -flt_plus_i
 ICF BOOL isect_sse(const aabb_t& box, const ray_t& ray, float& dist)
 {
 	// you may already have those values hanging around somewhere
-	const __m128 plus_inf = loadps(ps_cst_plus_inf), minus_inf = loadps(ps_cst_minus_inf);
+	const __m128 plus_inf = loadps(ps_cst_plus_inf),
+		minus_inf = loadps(ps_cst_minus_inf);
 
 	// use whatever's appropriate to load.
-	const __m128 box_min = loadps(&box.min), box_max = loadps(&box.max), pos = loadps(&ray.pos),
+	const __m128 box_min = loadps(&box.min),
+		box_max = loadps(&box.max),
+		pos = loadps(&ray.pos),
 		inv_dir = loadps(&ray.inv_dir);
 
 	// use a div if inverted directions aren't available
@@ -221,20 +224,13 @@ public:
 		if (!bUseSSE)
 		{
 			// for FPU - zero out inf
-			if (_abs(D.x) > flt_eps)
-			{
-			}
-			else
+			if (_abs(D.x) <= flt_eps)
 				ray.inv_dir.x = 0;
-			if (_abs(D.y) > flt_eps)
-			{
-			}
-			else
+
+			if (_abs(D.y) <= flt_eps)
 				ray.inv_dir.y = 0;
-			if (_abs(D.z) > flt_eps)
-			{
-			}
-			else
+
+			if (_abs(D.z) <= flt_eps)
 				ray.inv_dir.z = 0;
 		}
 	}
@@ -255,13 +251,24 @@ public:
 			box.min.sub (bCenter,bExtents);	box.min.pad = 0;
 			box.max.add	(bCenter,bExtents); box.max.pad = 0;
 		*/
-		__m128 CN = _mm_unpacklo_ps(_mm_load_ss((float*)&bCenter.x), _mm_load_ss((float*)&bCenter.y));
-		CN = _mm_movelh_ps(CN, _mm_load_ss((float*)&bCenter.z));
-		__m128 EX = _mm_unpacklo_ps(_mm_load_ss((float*)&bExtents.x), _mm_load_ss((float*)&bExtents.y));
-		EX = _mm_movelh_ps(EX, _mm_load_ss((float*)&bExtents.z));
+		__m128 CN = _mm_unpacklo_ps
+		(
+			_mm_load_ss(&bCenter.x),
+			_mm_load_ss(&bCenter.y)
+		);
 
-		_mm_store_ps((float*)&box.min, _mm_sub_ps(CN, EX));
-		_mm_store_ps((float*)&box.max, _mm_add_ps(CN, EX));
+		CN = _mm_movelh_ps(CN, _mm_load_ss(&bCenter.z));
+
+		__m128 EX = _mm_unpacklo_ps
+		(
+			_mm_load_ss(&bExtents.x),
+			_mm_load_ss(&bExtents.y)
+		);
+
+		EX = _mm_movelh_ps(EX, _mm_load_ss(&bExtents.z));
+
+		_mm_store_ps((float*) &box.min, _mm_sub_ps(CN, EX));
+		_mm_store_ps((float*) &box.max, _mm_add_ps(CN, EX));
 
 		return isect_sse(box, ray, dist);
 	}
@@ -415,7 +422,7 @@ public:
 	}
 };
 
-void COLLIDER::ray_query(const MODEL* m_def, const Fvector& r_start, const Fvector& r_dir, float r_range)
+void COLLIDER::ray_query(const u32 ray_mode, const MODEL* m_def, const Fvector& r_start, const Fvector& r_dir, float r_range)
 {
 	m_def->syncronize();
 
