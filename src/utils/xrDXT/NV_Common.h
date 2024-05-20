@@ -21,77 +21,77 @@ Comments:
 
 #ifndef ASSERT_IF_FAILED
 #define ASSERT_IF_FAILED(hres)\
-    {\
-        if (FAILED(hres))\
-            assert(false);\
-    }
+	{\
+		if (FAILED(hres))\
+			assert(false);\
+	}
 #endif
 
 #ifndef ASSERT_AND_RET_IF_FAILED
 #define ASSERT_AND_RET_IF_FAILED(hres)\
-    {\
-        if (FAILED(hres))\
-        {\
-            assert(false);\
-            return (hres);\
-        }\
-    }
+	{\
+		if (FAILED(hres))\
+		{\
+			assert(false);\
+			return (hres);\
+		}\
+	}
 #endif
 
 #ifndef FAIL_IF_NULL
 #define FAIL_IF_NULL(x)\
-    {\
-        if (x == NULL)\
-        {\
-            assert(false);\
-            return E_FAIL;\
-        }\
-    }
+	{\
+		if (x == NULL)\
+		{\
+			assert(false);\
+			return E_FAIL;\
+		}\
+	}
 #endif
 
 // FDebug defined in NV_Error.h
 #ifndef ASSERT_MSG
 #define ASSERT_MSG(var, msg)\
-    {\
-        if (!(var))\
-        {\
-            FDebug(msg);\
-        }\
-        assert(var);\
-    }
+	{\
+		if (!(var))\
+		{\
+			FDebug(msg);\
+		}\
+		assert(var);\
+	}
 #endif
 
 #ifndef SAFE_ARRAY_DELETE
 #define SAFE_ARRAY_DELETE(p)\
-    {\
-        if (p)\
-        {\
-            delete[](p);\
-            p = NULL;\
-        }\
-    }
+	{\
+		if (p)\
+		{\
+			delete[](p);\
+			p = NULL;\
+		}\
+	}
 #endif
 
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(p)\
-    {\
-        if (p)\
-        {\
-            delete (p);\
-            p = NULL;\
-        }\
-    }
+	{\
+		if (p)\
+		{\
+			delete (p);\
+			p = NULL;\
+		}\
+	}
 #endif
 
 #ifndef SAFE_RELEASE
 #define SAFE_RELEASE(p)\
-    {\
-        if (p)\
-        {\
-            (p)->Release();\
-            (p) = NULL;\
-        }\
-    }
+	{\
+		if (p)\
+		{\
+			(p)->Release();\
+			(p) = NULL;\
+		}\
+	}
 #endif
 
 #define ifnot(x) if (!(x))

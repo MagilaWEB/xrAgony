@@ -16,7 +16,7 @@
 #undef XMD_H
 
 #include "ximaiter.h"
-         
+		 
 #include <setjmp.h>
 
 struct jpg_error_mgr {
@@ -121,7 +121,7 @@ bool CxImageJPG::Decode(CxFile * hFile)
 	/* Step 2: specify data source (eg, a file) */
 	//jpeg_stdio_src(&cinfo, infile);
 	CxFileJpg src(hFile);
-    cinfo.src = &src;
+	cinfo.src = &src;
 
 	/* Step 3: read file parameters with jpeg_read_header() */
 	(void) jpeg_read_header(&cinfo, TRUE);
@@ -220,7 +220,7 @@ bool CxImageJPG::Decode(CxFile * hFile)
 		((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
 
 	/* Step 6: while (scan lines remain to be read) */
-	/*           jpeg_read_scanlines(...); */
+	/*			jpeg_read_scanlines(...); */
 	/* Here we use the library's state variable cinfo.output_scanline as the
 	* loop counter, so that we don't have to keep track ourselves.
 	*/
@@ -359,7 +359,7 @@ bool CxImageJPG::Encode(CxFile * hFile)
 
 	//jpeg_stdio_dest(&cinfo, outfile);
 	CxFileJpg dest(hFile);
-    cinfo.dest = &dest;
+	cinfo.dest = &dest;
 
 	/* Step 3: set parameters for compression */
 	/* First we supply a description of the input image.
@@ -454,7 +454,7 @@ bool CxImageJPG::Encode(CxFile * hFile)
 	jpeg_start_compress(&cinfo, TRUE);
 
 	/* Step 5: while (scan lines remain to be written) */
-	/*           jpeg_write_scanlines(...); */
+	/*			jpeg_write_scanlines(...); */
 	/* Here we use the library's state variable cinfo.next_scanline as the
 	* loop counter, so that we don't have to keep track ourselves.
 	* To keep things simple, we pass one scanline per call; you can pass

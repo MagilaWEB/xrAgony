@@ -40,7 +40,7 @@ private:
 	Objects objects_sleeping;
 	u32 m_owner_thread_id;
 	/**
-	 * @brief m_primary_crows   - list of items of the primary thread
+	 * @brief m_primary_crows	- list of items of the primary thread
 	 * @brief m_secondary_crows - list of items of the secondary thread
 	 */
 	Objects m_primary_crows, m_secondary_crows;

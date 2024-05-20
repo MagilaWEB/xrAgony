@@ -380,10 +380,10 @@ void CHOM::Enable() { bEnabled = m_pModel ? TRUE : FALSE; }
 void CHOM::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 {
 	stats.FrameEnd();
-	font.OutNext("HOM:          %2.2fms, %u", stats.Total.result, stats.Total.count);
-	font.OutNext("- visible:    %u", stats.VisibleTriangleCount);
-	font.OutNext("- frustum:    %u", stats.FrustumTriangleCount);
-	font.OutNext("- total:      %d", m_pModel ? m_pModel->get_tris_count() : 0);
+	font.OutNext("HOM:		  %2.2fms, %u", stats.Total.result, stats.Total.count);
+	font.OutNext("- visible:	%u", stats.VisibleTriangleCount);
+	font.OutNext("- frustum:	%u", stats.FrustumTriangleCount);
+	font.OutNext("- total:	  %d", m_pModel ? m_pModel->get_tris_count() : 0);
 	stats.FrameStart();
 	xrc.DumpStatistics(font, alert);
 }

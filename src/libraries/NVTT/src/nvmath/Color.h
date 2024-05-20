@@ -139,7 +139,7 @@ inline Vector3 colorNormalize(Vector3::Arg c)
 inline Color16 toColor16(Color32 c)
 {
 	Color16 color;
-	//         rrrrrggggggbbbbb
+	//		 rrrrrggggggbbbbb
 	// rrrrr000gggggg00bbbbb000
 //	color.u = (c.u >> 3) & 0x1F;
 //	color.u |= (c.u >> 5) & 0x7E0;

@@ -87,19 +87,19 @@
 #ifdef LUABIND_DYNAMIC_LINK
 # if defined (_WIN32)
 #  ifdef LUABIND_BUILDING
-#   define LUABIND_API __declspec(dllexport)
+#	define LUABIND_API __declspec(dllexport)
 #  else
-#   define LUABIND_API __declspec(dllimport)
+#	define LUABIND_API __declspec(dllimport)
 #  endif
 # elif defined (__CYGWIN__)
 #  ifdef LUABIND_BUILDING
-#   define LUABIND_API __attribute__ ((dllexport))
+#	define LUABIND_API __attribute__ ((dllexport))
 #  else
-#   define LUABIND_API __attribute__ ((dllimport))
+#	define LUABIND_API __attribute__ ((dllimport))
 #  endif
 # else
 #  if defined(__GNUC__) && __GNUC__ >=4
-#   define LUABIND_API __attribute__ ((visibility("default")))
+#	define LUABIND_API __attribute__ ((visibility("default")))
 #  endif
 # endif
 #endif

@@ -22,7 +22,7 @@ int str_trim(lua_State* L)
 	luaL_checktype(L, 1, LUA_TSTRING);
 	const char* front;
 	const char* end;
-	size_t      size;
+	size_t	  size;
 	front = luaL_checklstring(L, 1, &size);
 	end = &front[size - 1];
 	for (; size && isspace(*front); size--, front++)
@@ -38,7 +38,7 @@ int str_trim_l(lua_State* L)
 	luaL_checktype(L, 1, LUA_TSTRING);
 	const char* front;
 	const char* end;
-	size_t      size;
+	size_t	  size;
 	front = luaL_checklstring(L, 1, &size);
 	end = &front[size - 1];
 	for (; size && isspace(*front); size--, front++)
@@ -52,7 +52,7 @@ int str_trim_r(lua_State* L)
 	luaL_checktype(L, 1, LUA_TSTRING);
 	const char* front;
 	const char* end;
-	size_t      size;
+	size_t	  size;
 	front = luaL_checklstring(L, 1, &size);
 	end = &front[size - 1];
 	for (; size && isspace(*end); size--, end--)

@@ -9,7 +9,7 @@
 #pragma once
 
 IC CCoverPoint::CCoverPoint(Fvector const& point, u32 const& level_vertex_id)
-    : m_position(point), m_level_vertex_id(level_vertex_id), m_is_smart_cover(0)
+	: m_position(point), m_level_vertex_id(level_vertex_id), m_is_smart_cover(0)
 {
 }
 

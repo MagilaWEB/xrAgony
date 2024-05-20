@@ -6,7 +6,7 @@
 #include "StepJointInternal.h"
 
 
-#define	   DOT6(A,B)	(A[0]*B[0]+A[1]*B[1]+A[2]*B[2]+A[4]*B[4]+A[5]*B[5]+A[6]*B[6])
+#define		DOT6(A,B)	(A[0]*B[0]+A[1]*B[1]+A[2]*B[2]+A[4]*B[4]+A[5]*B[5]+A[6]*B[6])
 
 static void Multiply2_sym_3p8p (dReal * A, dReal * B, dReal * C)
 {
@@ -86,7 +86,7 @@ A[2]+=DOT6(B,C);
 }
 
 
-#define	   DOTs6(A,B)	(A[0]*B[0]+A[8]*B[1]+A[16]*B[2])
+#define		DOTs6(A,B)	(A[0]*B[0]+A[8]*B[1]+A[16]*B[2])
 
 static void
 Multiply1_3p8q1 (dReal * A, dReal * B, dReal * C)
@@ -128,9 +128,9 @@ dInternalStepJointContact (dxWorld * world, dxBody * body[2], dReal * GI[2], dRe
 	// compute A = J*invM*J'. first compute JinvM = J*invM. this has the same
 	// format as J so we just go through the constraints in J multiplying by
 	// the appropriate scalars and matrices.
-#   ifdef TIMING
+#	ifdef TIMING
 	dTimerNow ("compute A");
-#   endif
+#	endif
 	dReal JinvM[2 * SZM * 8];
 	//dSetZero (JinvM, 2 * m * 8);
 
@@ -183,9 +183,9 @@ dInternalStepJointContact (dxWorld * world, dxBody * body[2], dReal * GI[2], dRe
 		A[i * mskip + i] += Jinfo.cfm[i] * stepsize1;
 
 	// compute the right hand side `rhs'
-#   ifdef TIMING
+#	ifdef TIMING
 	dTimerNow ("compute rhs");
-#   endif
+#	endif
 	dReal tmp1[16];
 	//dSetZero (tmp1, 16);
 	// put v/h + invM*fe into tmp1

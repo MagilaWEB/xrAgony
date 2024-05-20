@@ -14,12 +14,12 @@
 
 void CScriptActionWrapper::setup(CScriptGameObject* object, CPropertyStorage* storage)
 {
-    luabind::call_member<void>(this, "setup", object, storage);
+	luabind::call_member<void>(this, "setup", object, storage);
 }
 
 void CScriptActionWrapper::setup_static(CScriptActionBase* action, CScriptGameObject* object, CPropertyStorage* storage)
 {
-    action->CScriptActionBase::setup(object, storage);
+	action->CScriptActionBase::setup(object, storage);
 }
 
 void CScriptActionWrapper::initialize() { luabind::call_member<void>(this, "initialize"); }

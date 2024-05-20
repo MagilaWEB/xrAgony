@@ -6,87 +6,87 @@ class CParticlesObject;
 
 class CPhantom : public CEntity
 {
-    typedef CEntity inherited;
+	typedef CEntity inherited;
 
 private:
-    enum EState
-    {
-        stInvalid = -2,
-        stIdle = -1,
-        stBirth = 0,
-        stFly = 1,
-        stContact = 2,
-        stShoot = 3,
-        stCount
-    };
-    EState m_CurState;
-    EState m_TgtState;
+	enum EState
+	{
+		stInvalid = -2,
+		stIdle = -1,
+		stBirth = 0,
+		stFly = 1,
+		stContact = 2,
+		stShoot = 3,
+		stCount
+	};
+	EState m_CurState;
+	EState m_TgtState;
 
-    void SwitchToState_internal(EState new_state);
-    void SwitchToState(EState new_state) { m_TgtState = new_state; }
-    void OnIdleState();
-    void OnFlyState();
-    void OnDeadState();
+	void SwitchToState_internal(EState new_state);
+	void SwitchToState(EState new_state) { m_TgtState = new_state; }
+	void OnIdleState();
+	void OnFlyState();
+	void OnDeadState();
 
-    void UpdateFlyMedia();
+	void UpdateFlyMedia();
 
-    fastdelegate::FastDelegate<void()> UpdateEvent;
-
-private:
-    struct SStateData
-    {
-        shared_str particles;
-        ref_sound sound;
-        MotionID motion;
-    };
-    SStateData m_state_data[stCount];
+	fastdelegate::FastDelegate<void()> UpdateEvent;
 
 private:
-    CParticlesObject* m_fly_particles;
-    static void animation_end_callback(CBlend* B);
+	struct SStateData
+	{
+		shared_str particles;
+		ref_sound sound;
+		MotionID motion;
+	};
+	SStateData m_state_data[stCount];
 
 private:
-    IGameObject* m_enemy;
+	CParticlesObject* m_fly_particles;
+	static void animation_end_callback(CBlend* B);
 
-    float fSpeed;
-    float fASpeed;
-    Fvector2 vHP;
+private:
+	IGameObject* m_enemy;
 
-    float fContactHit;
+	float fSpeed;
+	float fASpeed;
+	Fvector2 vHP;
 
-    Fmatrix XFORM_center();
+	float fContactHit;
 
-    CParticlesObject* PlayParticles(const shared_str& name, BOOL bAutoRemove, const Fmatrix& xform);
-    //	void				PlayMotion					(MotionID);
+	Fmatrix XFORM_center();
 
-    void UpdatePosition(const Fvector& tgt_pos);
+	CParticlesObject* PlayParticles(const shared_str& name, BOOL bAutoRemove, const Fmatrix& xform);
+	//	void				PlayMotion					(MotionID);
 
-    void PsyHit(const IGameObject* object, float value);
+	void UpdatePosition(const Fvector& tgt_pos);
+
+	void PsyHit(const IGameObject* object, float value);
 
 public:
-    CPhantom();
-    virtual ~CPhantom();
+	CPhantom();
+	virtual ~CPhantom();
 
-    virtual void Load(LPCSTR section);
-    virtual BOOL net_Spawn(CSE_Abstract* DC);
-    virtual void net_Destroy();
+	virtual void Load(LPCSTR section);
+	virtual BOOL net_Spawn(CSE_Abstract* DC);
+	virtual void net_Destroy();
 
-    virtual void net_Export(NET_Packet& P);
-    virtual void net_Import(NET_Packet& P);
-    virtual void save(NET_Packet& output_packet);
-    virtual void load(IReader& input_packet);
+	virtual void net_Export(NET_Packet& P);
+	virtual void net_Import(NET_Packet& P);
+	virtual void save(NET_Packet& output_packet);
+	virtual void load(IReader& input_packet);
 
-    virtual void shedule_Update(u32 DT);
-    virtual void UpdateCL();
+	virtual void shedule_Update(u32 DT);
+	virtual void UpdateCL();
 
-    virtual void HitSignal(float HitAmount, Fvector& local_dir, IGameObject* who, s16 element) {}
-    virtual void HitImpulse(float amount, Fvector& vWorldDir, Fvector& vLocalDir) {}
-    virtual void Hit(SHit* pHDS);
+	virtual void HitSignal(float HitAmount, Fvector& local_dir, IGameObject* who, s16 element) {}
+	virtual void HitImpulse(float amount, Fvector& vWorldDir, Fvector& vLocalDir) {}
+	virtual void Hit(SHit* pHDS);
 
-    virtual BOOL IsVisibleForHUD() { return false; }
-    virtual bool IsVisibleForZones() { return false; }
-    virtual BOOL UsedAI_Locations() { return false; }
-    virtual CEntity* cast_entity() { return this; }
+	virtual BOOL IsVisibleForHUD() { return false; }
+	virtual bool IsVisibleForZones() { return false; }
+	virtual BOOL UsedAI_Locations() { return false; }
+	virtual CEntity* cast_entity() { return this; }
 
-    void SetEnemy(IGameObject* enemy) { m_enemy = enemy; } //Alundaio
+	void SetEnemy(IGameObject* enemy) { m_enemy = enemy; } //Alundaio
 };

@@ -5,44 +5,44 @@
 
 enum EPointType
 {
-    ptRPoint = 0,
-    ptEnvMod,
-    ptSpawnPoint,
-    ptMaxType,
-    pt_force_dword = u32(-1)
+	ptRPoint = 0,
+	ptEnvMod,
+	ptSpawnPoint,
+	ptMaxType,
+	pt_force_dword = u32(-1)
 };
 
 enum EWayType
 {
-    wtPatrolPath = 0,
-    wtMaxType,
-    wt_force_dword = u32(-1)
+	wtPatrolPath = 0,
+	wtMaxType,
+	wt_force_dword = u32(-1)
 };
 
 enum ERPpointType
 { // [0..255]
-    rptActorSpawn = 0,
-    rptArtefactSpawn,
-    rptItemSpawn,
-    rptLast = 0xff
+	rptActorSpawn = 0,
+	rptArtefactSpawn,
+	rptItemSpawn,
+	rptLast = 0xff
 };
 
 enum EEnvModUsedParams
 {
-    eViewDist = (1 << 0),
-    eFogColor = (1 << 1),
-    eFogDensity = (1 << 2),
-    eAmbientColor = (1 << 3),
-    eSkyColor = (1 << 4),
-    eHemiColor = (1 << 5)
+	eViewDist = (1 << 0),
+	eFogColor = (1 << 1),
+	eFogDensity = (1 << 2),
+	eAmbientColor = (1 << 3),
+	eSkyColor = (1 << 4),
+	eHemiColor = (1 << 5)
 };
 
 /* // XXX: find better place for this (need cpp)
 xr_token rpoint_type[] = {
-    {"Actor Spawn", rptActorSpawn},
-    {"Artefact Spawn", rptArtefactSpawn},
-    {"Item Spawn", rptItemSpawn},
-    {nullptr, rptLast}
+	{"Actor Spawn", rptActorSpawn},
+	{"Artefact Spawn", rptArtefactSpawn},
+	{"Item Spawn", rptItemSpawn},
+	{nullptr, rptLast}
 };
 */
 
@@ -67,44 +67,44 @@ xr_token rpoint_type[] = {
 
 /*
 - chunk RPOINT_CHUNK
-    - chunk #0
-        vector3	(PPosition);
-        vector3	(PRotation);
-        u8		(team_id);
-        u8		(type)
-        u16		(reserved)
-    ...
-    - chunk #n
+	- chunk #0
+		vector3	(PPosition);
+		vector3	(PRotation);
+		u8		(team_id);
+		u8		(type)
+		u16		(reserved)
+	...
+	- chunk #n
 
 - chunk WAY_PATH_CHUNK
-    - chunk #0
-        chunk WAYOBJECT_CHUNK_VERSION
-            word (version)
-        chunk WAYOBJECT_CHUNK_NAME
-            stringZ (Name)
-        chunk WAY_CHUNK_TYPE
-            dword EWayType (type)
-        chunk WAY_CHUNK_POINTS
-            word (count)
-            for (i=0; i<count; ++i){
-                Fvector (pos)
-                dword	(flags)
-                stringZ	(name)
-            }
-        chunk WAY_CHUNK_LINKS
-            word (count)
-            for (i=0; i<count; ++i){
-                word 	(from)
-                word 	(to)
-                float	(probability)
-            }
-    ...
-    - chunk #n
+	- chunk #0
+		chunk WAYOBJECT_CHUNK_VERSION
+			word (version)
+		chunk WAYOBJECT_CHUNK_NAME
+			stringZ (Name)
+		chunk WAY_CHUNK_TYPE
+			dword EWayType (type)
+		chunk WAY_CHUNK_POINTS
+			word (count)
+			for (i=0; i<count; ++i){
+				Fvector (pos)
+				dword	(flags)
+				stringZ	(name)
+			}
+		chunk WAY_CHUNK_LINKS
+			word (count)
+			for (i=0; i<count; ++i){
+				word 	(from)
+				word 	(to)
+				float	(probability)
+			}
+	...
+	- chunk #n
 - chunk WAY_JUMP_CHUNK
-    -//-
+	-//-
 - chunk WAY_TRAFFIC_CHUNK
-    -//-
+	-//-
 - chunk WAY_CUSTOM_CHUNK
-    -//-
+	-//-
 
 */

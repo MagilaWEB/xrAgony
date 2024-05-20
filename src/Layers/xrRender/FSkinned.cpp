@@ -406,11 +406,11 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 		//vertBoned1W* src = (vertBoned1W*)_verts_;
 		//for (u32 it = 0; it<V.vCount; it++)
 		//{
-		//    Fvector2 uv;
-		//    uv.set(src->u, src->v);
-		//    dst->set(src->P, src->N, src->T, src->B, uv, src->matrix*3);
-		//    dst++;
-		//    src++;
+		//	Fvector2 uv;
+		//	uv.set(src->u, src->v);
+		//	dst->set(src->P, src->N, src->T, src->B, uv, src->matrix*3);
+		//	dst++;
+		//	src++;
 		//}
 		//V.p_rm_Vertices->Unlock();
 		// TODO: DX10: Check for memory fragmentation
@@ -454,11 +454,11 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 		//vertBoned2W* src = (vertBoned2W*)_verts_;
 		//for (u32 it = 0; it<V.vCount; ++it)
 		//{
-		//    Fvector2uv;
-		//    uv.set(src->u, src->v);
-		//    dst->set(src->P, src->N, src->T, src->B, uv, int(src->matrix0)*3, int(src->matrix1)*3, src->w);
-		//    dst++;
-		//    src++;
+		//	Fvector2uv;
+		//	uv.set(src->u, src->v);
+		//	dst->set(src->P, src->N, src->T, src->B, uv, int(src->matrix0)*3, int(src->matrix1)*3, src->w);
+		//	dst++;
+		//	src++;
 		//}
 		//V.p_rm_Vertices->Unlock();
 		// TODO: DX10: Check for memory fragmentation
@@ -504,12 +504,12 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 
 		//for (u32 it = 0; it<V.vCount; ++it)
 		//{
-		//    Fvector2 uv;
-		//    uv.set(src->u, src->v);
-		//    dst->set(src->P, src->N, src->T, src->B, uv,
-		//        int(src->m[0])*3, int(src->m[1])*3, int(src->m[2])*3, src->w[0], src->w[1]);
-		//    dst++;
-		//    src++;
+		//	Fvector2 uv;
+		//	uv.set(src->u, src->v);
+		//	dst->set(src->P, src->N, src->T, src->B, uv,
+		//		int(src->m[0])*3, int(src->m[1])*3, int(src->m[2])*3, src->w[0], src->w[1]);
+		//	dst++;
+		//	src++;
 		//}
 		//V.p_rm_Vertices->Unlock();
 		// TODO: DX10: Check for memory fragmentation
@@ -555,11 +555,11 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 		//vertBoned4W* src = (vertBoned4W*)_verts_;
 		//for (u32 it = 0; it<V.vCount; ++it)
 		//{
-		//    Fvector2 uv; uv.set(src->u, src->v);
-		//    dst->set(src->P, src->N, src->T, src->B, uv, int(src->m[0])*3,
-		//        int(src->m[1])*3, int(src->m[2])*3, int(src->m[3])*3, src->w[0], src->w[1], src->w[2]);
-		//    dst++;
-		//    src++;
+		//	Fvector2 uv; uv.set(src->u, src->v);
+		//	dst->set(src->P, src->N, src->T, src->B, uv, int(src->m[0])*3,
+		//		int(src->m[1])*3, int(src->m[2])*3, int(src->m[3])*3, src->w[0], src->w[1], src->w[2]);
+		//	dst++;
+		//	src++;
 		//}
 		//V.p_rm_Vertices->Unlock();
 

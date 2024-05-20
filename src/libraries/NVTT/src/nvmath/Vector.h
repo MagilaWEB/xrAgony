@@ -767,24 +767,24 @@ vector4 transform(matrix44, vector4);
 */
 
 /*
-Quaternion mul(Quaternion, Quaternion);   // rotational composition
+Quaternion mul(Quaternion, Quaternion);	// rotational composition
 Quaternion conjugate(Quaternion);
 Quaternion inverse(Quaternion);
 Quaternion axis_angle(const Vector3 & v, scalar s);
 */
 
 /*
-matrix34 add(matrix34, matrix34);            // note: implicit '1' stays as '1'
+matrix34 add(matrix34, matrix34);			// note: implicit '1' stays as '1'
 matrix34 operator+(matrix34, matrix34);
-matrix34 sub(matrix34, matrix34);            // note: implicit '1' stays as '1'
+matrix34 sub(matrix34, matrix34);			// note: implicit '1' stays as '1'
 matrix34 operator-(matrix34, matrix34);
 matrix34 mul(matrix34, matrix34);
 matrix34 operator*(matrix34, matrix34);
-matrix34 mul(matrix34, quaternion4);         //  rotation multiplication
-matrix34 operator*(matrix34, quaternion4);   //  rotation multiplication
+matrix34 mul(matrix34, quaternion4);		 //  rotation multiplication
+matrix34 operator*(matrix34, quaternion4);	//  rotation multiplication
 matrix34 translation(vector3);
 matrix34 rotation(quaternion4);
-matrix34 rotation(vector3, scalar);          //  axis/angle
+matrix34 rotation(vector3, scalar);		  //  axis/angle
 
 matrix44 add(matrix44, matrix44);
 matrix44 operator+(matrix44, matrix44);
@@ -792,8 +792,8 @@ matrix44 sub(matrix44, matrix44);
 matrix44 operator-(matrix44, matrix44);
 matrix44 mul(matrix44, matrix44);
 matrix44 operator*(matrix44, matrix44);
-matrix44 mul(matrix44, quaternion4);         //  rotation multiplication
-matrix44 operator*(matrix44, quaternion4);   //  rotation multiplication
+matrix44 mul(matrix44, quaternion4);		 //  rotation multiplication
+matrix44 operator*(matrix44, quaternion4);	//  rotation multiplication
 matrix44 invert(matrix34);
 matrix44 invert(matrix44);
 matrix44 transpose(matrix34);

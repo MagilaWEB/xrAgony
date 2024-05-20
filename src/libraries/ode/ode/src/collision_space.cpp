@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 /*
@@ -52,19 +52,19 @@ void dGeomMoved (dxGeom *geom)
   dxSpace *parent = geom->parent_space;
 
   while (parent && (geom->gflags & GEOM_DIRTY)==0) {
-    CHECK_NOT_LOCKED (parent);
-    geom->gflags |= GEOM_DIRTY | GEOM_AABB_BAD;
-    parent->dirty (geom);
-    geom = parent;
-    parent = parent->parent_space;
+	CHECK_NOT_LOCKED (parent);
+	geom->gflags |= GEOM_DIRTY | GEOM_AABB_BAD;
+	parent->dirty (geom);
+	geom = parent;
+	parent = parent->parent_space;
   }
 
   // all the remaining dirty geoms must have their AABB_BAD flags set, to
   // ensure that their AABBs get recomputed
   while (geom) {
-    geom->gflags |= GEOM_DIRTY | GEOM_AABB_BAD;
-    CHECK_NOT_LOCKED (geom->parent_space);
-    geom = geom->parent_space;
+	geom->gflags |= GEOM_DIRTY | GEOM_AABB_BAD;
+	CHECK_NOT_LOCKED (geom->parent_space);
+	geom = geom->parent_space;
   }
 }
 
@@ -88,19 +88,19 @@ dxSpace::~dxSpace()
 {
   CHECK_NOT_LOCKED (this);
   if (cleanup) {
-    // note that destroying each geom will call remove()
-    dxGeom *g,*n;
-    for (g = first; g; g=n) {
-      n = g->next;
-      dGeomDestroy (g);
-    }
+	// note that destroying each geom will call remove()
+	dxGeom *g,*n;
+	for (g = first; g; g=n) {
+	  n = g->next;
+	  dGeomDestroy (g);
+	}
   }
   else {
-    dxGeom *g,*n;
-    for (g = first; g; g=n) {
-      n = g->next;
-      remove (g);
-    }
+	dxGeom *g,*n;
+	for (g = first; g; g=n) {
+	  n = g->next;
+	  remove (g);
+	}
   }
 }
 
@@ -108,23 +108,23 @@ dxSpace::~dxSpace()
 void dxSpace::computeAABB()
 {
   if (first) {
-    int i;
-    dReal a[6];
-    a[0] = dInfinity;
-    a[1] = -dInfinity;
-    a[2] = dInfinity;
-    a[3] = -dInfinity;
-    a[4] = dInfinity;
-    a[5] = -dInfinity;
-    for (dxGeom *g=first; g; g=g->next) {
-      g->recomputeAABB();
-      for (i=0; i<6; i += 2) if (g->aabb[i] < a[i]) a[i] = g->aabb[i];
-      for (i=1; i<6; i += 2) if (g->aabb[i] > a[i]) a[i] = g->aabb[i];
-    }
-    memcpy(aabb,a,6*sizeof(dReal));
+	int i;
+	dReal a[6];
+	a[0] = dInfinity;
+	a[1] = -dInfinity;
+	a[2] = dInfinity;
+	a[3] = -dInfinity;
+	a[4] = dInfinity;
+	a[5] = -dInfinity;
+	for (dxGeom *g=first; g; g=g->next) {
+	  g->recomputeAABB();
+	  for (i=0; i<6; i += 2) if (g->aabb[i] < a[i]) a[i] = g->aabb[i];
+	  for (i=1; i<6; i += 2) if (g->aabb[i] > a[i]) a[i] = g->aabb[i];
+	}
+	memcpy(aabb,a,6*sizeof(dReal));
   }
   else {
-    dSetZero (aabb,6);
+	dSetZero (aabb,6);
   }
 }
 
@@ -160,18 +160,18 @@ dxGeom *dxSpace::getGeom (int i)
 {
   dUASSERT (i >= 0 && i < count,"index out of range");
   if (current_geom && current_index == i-1) {
-    current_geom = current_geom->next;
-    current_index = i;
-    return current_geom;
+	current_geom = current_geom->next;
+	current_index = i;
+	return current_geom;
   }
   else {
-    dxGeom *g=first;
-    for (int j=0; j<i; j++) {
-      if (g) g = g->next; else return 0;
-    }
-    current_geom = g;
-    current_index = i;
-    return g;
+	dxGeom *g=first;
+	for (int j=0; j<i; j++) {
+	  if (g) g = g->next; else return 0;
+	}
+	current_geom = g;
+	current_index = i;
+	return g;
   }
 }
 
@@ -181,7 +181,7 @@ void dxSpace::add (dxGeom *geom)
   CHECK_NOT_LOCKED (this);
   dAASSERT (geom);
   dUASSERT (geom->parent_space == 0 && geom->next == 0,
-	    "geom is already in a space");
+		"geom is already in a space");
 
   // add
   geom->parent_space = this;
@@ -251,11 +251,11 @@ void dxSimpleSpace::cleanGeoms()
   // compute the AABBs of all dirty geoms, and clear the dirty flags
   lock_count++;
   for (dxGeom *g=first; g && (g->gflags & GEOM_DIRTY); g=g->next) {
-    if (IS_SPACE(g)) {
-      ((dxSpace*)g)->cleanGeoms();
-    }
-    g->recomputeAABB();
-    g->gflags &= (~(GEOM_DIRTY|GEOM_AABB_BAD));
+	if (IS_SPACE(g)) {
+	  ((dxSpace*)g)->cleanGeoms();
+	}
+	g->recomputeAABB();
+	g->gflags &= (~(GEOM_DIRTY|GEOM_AABB_BAD));
   }
   lock_count--;
 }
@@ -270,13 +270,13 @@ void dxSimpleSpace::collide (void *data, dNearCallback *callback)
 
   // intersect all bounding boxes
   for (dxGeom *g1=first; g1; g1=g1->next) {
-    if (GEOM_ENABLED(g1)){
-      for (dxGeom *g2=g1->next; g2; g2=g2->next) {
+	if (GEOM_ENABLED(g1)){
+	  for (dxGeom *g2=g1->next; g2; g2=g2->next) {
 	if (GEOM_ENABLED(g2)){
 	  collideAABBs (g1,g2,data,callback);
 	}
-      }
-    }
+	  }
+	}
   }
 
   lock_count--;
@@ -284,7 +284,7 @@ void dxSimpleSpace::collide (void *data, dNearCallback *callback)
 
 
 void dxSimpleSpace::collide2 (void *data, dxGeom *geom,
-			      dNearCallback *callback)
+				  dNearCallback *callback)
 {
   dAASSERT (geom && callback);
 
@@ -294,9 +294,9 @@ void dxSimpleSpace::collide2 (void *data, dxGeom *geom,
 
   // intersect bounding boxes
   for (dxGeom *g=first; g; g=g->next) {
-    if (GEOM_ENABLED(g)){
-      collideAABBs (g,geom,data,callback);
-    }
+	if (GEOM_ENABLED(g)){
+	  collideAABBs (g,geom,data,callback);
+	}
   }
 
   lock_count--;
@@ -348,9 +348,9 @@ struct Node {
 static int findLevel (dReal bounds[6])
 {
   if (bounds[0] <= -dInfinity || bounds[1] >= dInfinity ||
-      bounds[2] <= -dInfinity || bounds[3] >= dInfinity ||
-      bounds[4] <= -dInfinity || bounds[5] >= dInfinity) {
-    return MAXINT;
+	  bounds[2] <= -dInfinity || bounds[3] >= dInfinity ||
+	  bounds[4] <= -dInfinity || bounds[5] >= dInfinity) {
+	return MAXINT;
   }
 
   // compute q
@@ -424,11 +424,11 @@ void dxHashSpace::cleanGeoms()
   // compute the AABBs of all dirty geoms, and clear the dirty flags
   lock_count++;
   for (dxGeom *g=first; g && (g->gflags & GEOM_DIRTY); g=g->next) {
-    if (IS_SPACE(g)) {
-      ((dxSpace*)g)->cleanGeoms();
-    }
-    g->recomputeAABB();
-    g->gflags &= (~(GEOM_DIRTY|GEOM_AABB_BAD));
+	if (IS_SPACE(g)) {
+	  ((dxSpace*)g)->cleanGeoms();
+	}
+	g->recomputeAABB();
+	g->gflags &= (~(GEOM_DIRTY|GEOM_AABB_BAD));
   }
   lock_count--;
 }
@@ -458,35 +458,35 @@ void dxHashSpace::collide (void *data, dNearCallback *callback)
   dxAABB *big_boxes = 0;	// list of AABBs too big for hash table
   maxlevel = global_minlevel - 1;
   for (geom = first; geom; geom=geom->next) {
-    if (!GEOM_ENABLED(geom)){
-      continue;
-    }
-    dxAABB *aabb = (dxAABB*) ALLOCA (sizeof(dxAABB));
-    aabb->geom = geom;
-    // compute level, but prevent cells from getting too small
-    int level = findLevel (geom->aabb);
-    if (level < global_minlevel) level = global_minlevel;
-    if (level <= global_maxlevel) {
-      // aabb goes in main list
-      aabb->next = first_aabb;
-      first_aabb = aabb;
-      aabb->level = level;
-      if (level > maxlevel) maxlevel = level;
-      // cellsize = 2^level
-      dReal cellsize = (dReal) ldexp (1.0,level);
-      // discretize AABB position to cell size
-      for (i=0; i < 6; i++) aabb->dbounds[i] = (int)
-			      floor (geom->aabb[i]/cellsize);
-      // set AABB index
-      aabb->index = n;
-      n++;
-    }
-    else {
-      // aabb is too big, put it in the big_boxes list. we don't care about
-      // setting level, dbounds, index, or the maxlevel
-      aabb->next = big_boxes;
-      big_boxes = aabb;
-    }
+	if (!GEOM_ENABLED(geom)){
+	  continue;
+	}
+	dxAABB *aabb = (dxAABB*) ALLOCA (sizeof(dxAABB));
+	aabb->geom = geom;
+	// compute level, but prevent cells from getting too small
+	int level = findLevel (geom->aabb);
+	if (level < global_minlevel) level = global_minlevel;
+	if (level <= global_maxlevel) {
+	  // aabb goes in main list
+	  aabb->next = first_aabb;
+	  first_aabb = aabb;
+	  aabb->level = level;
+	  if (level > maxlevel) maxlevel = level;
+	  // cellsize = 2^level
+	  dReal cellsize = (dReal) ldexp (1.0,level);
+	  // discretize AABB position to cell size
+	  for (i=0; i < 6; i++) aabb->dbounds[i] = (int)
+				  floor (geom->aabb[i]/cellsize);
+	  // set AABB index
+	  aabb->index = n;
+	  n++;
+	}
+	else {
+	  // aabb is too big, put it in the big_boxes list. we don't care about
+	  // setting level, dbounds, index, or the maxlevel
+	  aabb->next = big_boxes;
+	  big_boxes = aabb;
+	}
   }
 
   // for `n' objects, an n*n array of bits is used to record if those objects
@@ -502,7 +502,7 @@ void dxHashSpace::collide (void *data, dNearCallback *callback)
 
   // compute hash table size sz to be a prime > 8*n
   for (i=0; i<NUM_PRIMES; i++) {
-    if (prime[i] >= (8*n)) break;
+	if (prime[i] >= (8*n)) break;
   }
   if (i >= NUM_PRIMES) i = NUM_PRIMES-1;	// probably pointless
   int sz = prime[i];
@@ -513,9 +513,9 @@ void dxHashSpace::collide (void *data, dNearCallback *callback)
 
   // add each AABB to the hash table (may need to add it to up to 8 cells)
   for (aabb=first_aabb; aabb; aabb=aabb->next) {
-    int *dbounds = aabb->dbounds;
-    for (int xi = dbounds[0]; xi <= dbounds[1]; xi++) {
-      for (int yi = dbounds[2]; yi <= dbounds[3]; yi++) {
+	int *dbounds = aabb->dbounds;
+	for (int xi = dbounds[0]; xi <= dbounds[1]; xi++) {
+	  for (int yi = dbounds[2]; yi <= dbounds[3]; yi++) {
 	for (int zi = dbounds[4]; zi <= dbounds[5]; zi++) {
 	  // get the hash index
 	  unsigned long hi = getVirtualAddress (aabb->level,xi,yi,zi) % sz;
@@ -528,8 +528,8 @@ void dxHashSpace::collide (void *data, dNearCallback *callback)
 	  node->next = table[hi];
 	  table[hi] = node;
 	}
-      }
-    }
+	  }
+	}
   }
 
   // now that all AABBs are loaded into the hash table, we do the actual
@@ -539,20 +539,20 @@ void dxHashSpace::collide (void *data, dNearCallback *callback)
 
   int db[6];			// discrete bounds at current level
   for (aabb=first_aabb; aabb; aabb=aabb->next) {
-    // we are searching for collisions with aabb
-    for (i=0; i<6; i++) db[i] = aabb->dbounds[i];
-    for (int level = aabb->level; level <= maxlevel; level++) {
-      for (int xi = db[0]; xi <= db[1]; xi++) {
+	// we are searching for collisions with aabb
+	for (i=0; i<6; i++) db[i] = aabb->dbounds[i];
+	for (int level = aabb->level; level <= maxlevel; level++) {
+	  for (int xi = db[0]; xi <= db[1]; xi++) {
 	for (int yi = db[2]; yi <= db[3]; yi++) {
 	  for (int zi = db[4]; zi <= db[5]; zi++) {
-	    // get the hash index
-	    unsigned long hi = getVirtualAddress (level,xi,yi,zi) % sz;
-	    // search all nodes at this index
-	    Node *node;
-	    for (node = table[hi]; node; node=node->next) {
-	      // node points to an AABB that may intersect aabb
-	      if (node->aabb == aabb) continue;
-	      if (node->aabb->level == level &&
+		// get the hash index
+		unsigned long hi = getVirtualAddress (level,xi,yi,zi) % sz;
+		// search all nodes at this index
+		Node *node;
+		for (node = table[hi]; node; node=node->next) {
+		  // node points to an AABB that may intersect aabb
+		  if (node->aabb == aabb) continue;
+		  if (node->aabb->level == level &&
 		  node->x == xi && node->y == yi && node->z == zi) {
 		// see if aabb and node->aabb have already been tested
 		// against each other
@@ -570,30 +570,30 @@ void dxHashSpace::collide (void *data, dNearCallback *callback)
 		  collideAABBs (aabb->geom,node->aabb->geom,data,callback);
 		}
 		tested[i] |= mask;
-	      }
-	    }
+		  }
+		}
 	  }
 	}
-      }
-      // get the discrete bounds for the next level up
-      for (i=0; i<6; i++) db[i] >>= 1;
-    }
+	  }
+	  // get the discrete bounds for the next level up
+	  for (i=0; i<6; i++) db[i] >>= 1;
+	}
   }
 
   // every AABB in the normal list must now be intersected against every
   // AABB in the big_boxes list. so let's hope there are not too many objects
   // in the big_boxes list.
   for (aabb=first_aabb; aabb; aabb=aabb->next) {
-    for (dxAABB *aabb2=big_boxes; aabb2; aabb2=aabb2->next) {
-      collideAABBs (aabb->geom,aabb2->geom,data,callback);
-    }
+	for (dxAABB *aabb2=big_boxes; aabb2; aabb2=aabb2->next) {
+	  collideAABBs (aabb->geom,aabb2->geom,data,callback);
+	}
   }
 
   // intersected all AABBs in the big_boxes list together
   for (aabb=big_boxes; aabb; aabb=aabb->next) {
-    for (dxAABB *aabb2=aabb->next; aabb2; aabb2=aabb2->next) {
-      collideAABBs (aabb->geom,aabb2->geom,data,callback);
-    }
+	for (dxAABB *aabb2=aabb->next; aabb2; aabb2=aabb2->next) {
+	  collideAABBs (aabb->geom,aabb2->geom,data,callback);
+	}
   }
 
   lock_count--;
@@ -601,7 +601,7 @@ void dxHashSpace::collide (void *data, dNearCallback *callback)
 
 
 void dxHashSpace::collide2 (void *data, dxGeom *geom,
-			    dNearCallback *callback)
+				dNearCallback *callback)
 {
   dAASSERT (geom && callback);
   
@@ -614,7 +614,7 @@ void dxHashSpace::collide2 (void *data, dxGeom *geom,
   
   // intersect bounding boxes
   for (dxGeom *g=first; g; g=g->next) {
-    collideAABBs (g,geom,data,callback);
+	collideAABBs (g,geom,data,callback);
   }
   
   lock_count--;
@@ -735,7 +735,7 @@ void dSpaceCollide (dxSpace *space, void *data, dNearCallback *callback)
 
 
 void dSpaceCollide2 (dxGeom *g1, dxGeom *g2, void *data,
-		     dNearCallback *callback)
+			 dNearCallback *callback)
 {
   dAASSERT (g1 && g2 && callback);
   dxSpace *s1,*s2;
@@ -746,40 +746,40 @@ void dSpaceCollide2 (dxGeom *g1, dxGeom *g2, void *data,
 
   // handle the four space/geom cases
   if (s1) {
-    if (s2) {
-      // g1 and g2 are spaces.
-      if (s1==s2) {
+	if (s2) {
+	  // g1 and g2 are spaces.
+	  if (s1==s2) {
 	// collide a space with itself --> interior collision
 	s1->collide (data,callback);
-      }
-      else {
+	  }
+	  else {
 	// iterate through the space that has the fewest geoms, calling
 	// collide2 in the other space for each one.
 	if (s1->count < s2->count) {
 	  for (dxGeom *g = s1->first; g; g=g->next) {
-	    s2->collide2 (data,g,callback);
+		s2->collide2 (data,g,callback);
 	  }
 	}
 	else {
 	  for (dxGeom *g = s2->first; g; g=g->next) {
-	    s1->collide2 (data,g,callback);
+		s1->collide2 (data,g,callback);
 	  }
 	}
-      }
-    }
-    else {
-      // g1 is a space, g2 is a geom
-      s1->collide2 (data,g2,callback);
-    }
+	  }
+	}
+	else {
+	  // g1 is a space, g2 is a geom
+	  s1->collide2 (data,g2,callback);
+	}
   }
   else {
-    if (s2) {
-      // g1 is a geom, g2 is a space
-      s2->collide2 (data,g1,callback);
-    }
-    else {
-      // g1 and g2 are geoms, call the callback directly
-      callback (data,g1,g2);
-    }
+	if (s2) {
+	  // g1 is a geom, g2 is a space
+	  s2->collide2 (data,g1,callback);
+	}
+	else {
+	  // g1 and g2 are geoms, call the callback directly
+	  callback (data,g1,g2);
+	}
   }
 }

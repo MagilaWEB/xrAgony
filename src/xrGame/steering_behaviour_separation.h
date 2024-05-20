@@ -19,11 +19,11 @@ namespace steering_behaviour
 class separation final : public base, private Noncopyable
 {
 public:
-    separation(CAI_Rat const* object);
-    virtual Fvector direction();
+	separation(CAI_Rat const* object);
+	virtual Fvector direction();
 
 private:
-    typedef base inherited;
+	typedef base inherited;
 };
 
 } // namespace steering_behaviour

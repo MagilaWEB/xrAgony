@@ -19,74 +19,74 @@
 class CGameLevelCrossTable
 {
 #ifdef AI_COMPILER
-    friend class CLevelGameGraph;
-    friend class CCrossTableBuilder;
-    friend class CRenumbererConverter;
-    friend class CGameGraphBuilder;
+	friend class CLevelGameGraph;
+	friend class CCrossTableBuilder;
+	friend class CRenumbererConverter;
+	friend class CGameGraphBuilder;
 #endif // AI_COMPILER
 
 public:
 #pragma pack(push, 2)
-    class CHeader
-    {
-        u32 dwVersion;
-        u32 dwNodeCount;
-        u32 dwGraphPointCount;
-        xrGUID m_level_guid;
-        xrGUID m_game_guid;
+	class CHeader
+	{
+		u32 dwVersion;
+		u32 dwNodeCount;
+		u32 dwGraphPointCount;
+		xrGUID m_level_guid;
+		xrGUID m_game_guid;
 
-    public:
-        IC u32 version() const;
-        IC u32 level_vertex_count() const;
-        IC u32 game_vertex_count() const;
-        IC const xrGUID& level_guid() const;
-        IC const xrGUID& game_guid() const;
+	public:
+		IC u32 version() const;
+		IC u32 level_vertex_count() const;
+		IC u32 game_vertex_count() const;
+		IC const xrGUID& level_guid() const;
+		IC const xrGUID& game_guid() const;
 
 #ifdef AI_COMPILER
-        friend class CLevelGameGraph;
-        friend class CCrossTableBuilder;
-        friend class CRenumbererConverter;
-        friend class CGameGraphBuilder;
+		friend class CLevelGameGraph;
+		friend class CCrossTableBuilder;
+		friend class CRenumbererConverter;
+		friend class CGameGraphBuilder;
 #endif // AI_COMPILER
-    };
+	};
 
-    class CCell
-    {
-        GameGraph::_GRAPH_ID tGraphIndex;
-        float fDistance;
+	class CCell
+	{
+		GameGraph::_GRAPH_ID tGraphIndex;
+		float fDistance;
 
-    public:
-        IC GameGraph::_GRAPH_ID game_vertex_id() const;
-        IC float distance() const;
+	public:
+		IC GameGraph::_GRAPH_ID game_vertex_id() const;
+		IC float distance() const;
 #ifdef AI_COMPILER
-        friend class CLevelGameGraph;
-        friend class CCrossTableBuilder;
-        friend class CRenumbererConverter;
-        friend class CGameGraphBuilder;
+		friend class CLevelGameGraph;
+		friend class CCrossTableBuilder;
+		friend class CRenumbererConverter;
+		friend class CGameGraphBuilder;
 #endif // AI_COMPILER
-    };
+	};
 #pragma pack(pop)
 
 private:
-    CHeader m_tCrossTableHeader;
-    CCell* m_tpaCrossTable;
+	CHeader m_tCrossTableHeader;
+	CCell* m_tpaCrossTable;
 
 #ifdef AI_COMPILER
 private:
-    IReader* m_tpCrossTableVFS;
-    IReader* m_chunk;
+	IReader* m_tpCrossTableVFS;
+	IReader* m_chunk;
 #endif // AI_COMPILER
 
 public:
-    IC CGameLevelCrossTable(const void* buffer, const u32& buffer_size);
+	IC CGameLevelCrossTable(const void* buffer, const u32& buffer_size);
 #ifdef AI_COMPILER
-    IC CGameLevelCrossTable(LPCSTR fName);
+	IC CGameLevelCrossTable(LPCSTR fName);
 #endif // AI_COMPILER
 
 public:
-    IC virtual ~CGameLevelCrossTable();
-    IC const CCell& vertex(u32 level_vertex_id) const;
-    IC const CHeader& header() const;
+	IC virtual ~CGameLevelCrossTable();
+	IC const CCell& vertex(u32 level_vertex_id) const;
+	IC const CHeader& header() const;
 };
 
 #include "xrAICore/Navigation/game_level_cross_table_inline.h"

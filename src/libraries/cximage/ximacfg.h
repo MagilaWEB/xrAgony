@@ -27,11 +27,11 @@ extern "C" void*	cxrealloc(void* ptr, size_t size);
 
 /////////////////////////////////////////////////////////////////////////////
 // CxImage supported features
-#define CXIMAGE_SUPPORT_ALPHA          1
-#define CXIMAGE_SUPPORT_SELECTION      1
+#define CXIMAGE_SUPPORT_ALPHA		  1
+#define CXIMAGE_SUPPORT_SELECTION	  1
 #define CXIMAGE_SUPPORT_TRANSFORMATION 1
-#define CXIMAGE_SUPPORT_DSP            1
-#define CXIMAGE_SUPPORT_LAYERS		   1
+#define CXIMAGE_SUPPORT_DSP			1
+#define CXIMAGE_SUPPORT_LAYERS			1
 #define CXIMAGE_SUPPORT_INTERPOLATION  1
 
 #define CXIMAGE_SUPPORT_DECODE	1

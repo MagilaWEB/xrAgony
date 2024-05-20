@@ -40,10 +40,10 @@
 
 // static double angle_normalize_signed(double x)
 //{
-//    while (x > M_PI)  x -= 2*M_PI;
-//    while (x < -M_PI) x += 2*M_PI;
+//	while (x > M_PI)  x -= 2*M_PI;
+//	while (x < -M_PI) x += 2*M_PI;
 //
-//    return x;
+//	return x;
 //}
 
 #if 0  
@@ -55,21 +55,21 @@
 //
 float angle_distance(float x, float y)
 {
-    unsigned int signx = x > 0.0;
-    unsigned int signy = y > 0.0;
-    float dist; 
+	unsigned int signx = x > 0.0;
+	unsigned int signy = y > 0.0;
+	float dist; 
 
-    dist = _abs(x-y);
+	dist = _abs(x-y);
 
-    // If angles are of opposite signs check whether clockwise
-    // or anticlockwise distances are closer 
-    if (signx != signy)
-    {
-        float temp = (2*M_PI) - dist;
-        if (temp < dist)
-            dist = temp;
-    }
-    return dist;
+	// If angles are of opposite signs check whether clockwise
+	// or anticlockwise distances are closer 
+	if (signx != signy)
+	{
+		float temp = (2*M_PI) - dist;
+		if (temp < dist)
+			dist = temp;
+	}
+	return dist;
 }
 #endif
 
@@ -80,42 +80,42 @@ float angle_distance(float x, float y)
 
 int solve_trig1(float a, float b, float c, float theta[2])
 {
-    float temp = (a * a + b * b - c * c);
+	float temp = (a * a + b * b - c * c);
 
-    if (temp < 0.0)
-    {
-        // temp is practically zero
+	if (temp < 0.0)
+	{
+		// temp is practically zero
 
-        if (_abs(temp / (_abs(a * a) + _abs(b * b) + _abs(c * c))) < 1e-6)
-        {
-            // printf("Special case\n");
-            theta[0] = (float)(2 * atan(-b / (-a - c)));
-            return 1;
-        }
-        else
-            return 0;
-    }
+		if (_abs(temp / (_abs(a * a) + _abs(b * b) + _abs(c * c))) < 1e-6)
+		{
+			// printf("Special case\n");
+			theta[0] = (float)(2 * atan(-b / (-a - c)));
+			return 1;
+		}
+		else
+			return 0;
+	}
 
-    temp = (float)atan2((float)_sqrt(temp), (float)c); //.(float) c
-    int num = (!iszero(temp)) ? 2 : 1;
+	temp = (float)atan2((float)_sqrt(temp), (float)c); //.(float) c
+	int num = (!iszero(temp)) ? 2 : 1;
 
-    // Calculate answer in radians
-    theta[0] = (float)atan2(b, a);
-    if (num == 2)
-    {
-        theta[1] = theta[0] - temp;
-        theta[0] += temp;
+	// Calculate answer in radians
+	theta[0] = (float)atan2(b, a);
+	if (num == 2)
+	{
+		theta[1] = theta[0] - temp;
+		theta[0] += temp;
 
-        // theta[0] = angle_normalize_signed(theta[0]);
-        // theta[1] = angle_normalize_signed(theta[1]);
-    }
-    return num;
+		// theta[0] = angle_normalize_signed(theta[0]);
+		// theta[1] = angle_normalize_signed(theta[1]);
+	}
+	return num;
 }
 
 //
 // Solve the system
-//      a*cos(theta) - b*sin(theta) = c
-//      a*sin(theta) + b*cos(theta) = d
+//	  a*cos(theta) - b*sin(theta) = c
+//	  a*sin(theta) + b*cos(theta) = d
 //
 // There is at most one solution. The answer is returned in radians
 //
@@ -126,17 +126,17 @@ float solve_trig2(float a, float b, float c, float d) { return (float)atan2(a * 
 //
 int myacos(float x, float solns[2])
 {
-    if (_abs(x) > 1)
-        return 0;
+	if (_abs(x) > 1)
+		return 0;
 
-    solns[0] = angle_normalize_signed(acos(x));
+	solns[0] = angle_normalize_signed(acos(x));
 
-    if (iszero(solns[0]))
-        return 1;
+	if (iszero(solns[0]))
+		return 1;
 
-    solns[1] = -solns[0];
+	solns[1] = -solns[0];
 
-    return 2;
+	return 2;
 }
 
 //
@@ -144,18 +144,18 @@ int myacos(float x, float solns[2])
 //
 int myasin(float x, float solns[2])
 {
-    if (_abs(x) > 1)
-        return 0;
+	if (_abs(x) > 1)
+		return 0;
 
-    solns[0] = (float)angle_normalize_signed(asin(x));
+	solns[0] = (float)angle_normalize_signed(asin(x));
 
-    if (iszero(solns[0]))
-        return 1;
+	if (iszero(solns[0]))
+		return 1;
 
-    if (solns[0] > 0)
-        solns[1] = M_PI - solns[0];
-    else
-        solns[1] = -M_PI - solns[0];
+	if (solns[0] > 0)
+		solns[1] = M_PI - solns[0];
+	else
+		solns[1] = -M_PI - solns[0];
 
-    return 2;
+	return 2;
 }

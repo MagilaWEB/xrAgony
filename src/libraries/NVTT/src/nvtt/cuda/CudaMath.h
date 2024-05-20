@@ -31,55 +31,55 @@
 
 inline __device__ __host__ float3 operator *(float3 a, float3 b)
 {
-    return make_float3(a.x*b.x, a.y*b.y, a.z*b.z);
+	return make_float3(a.x*b.x, a.y*b.y, a.z*b.z);
 }
 
 inline __device__ __host__ float3 operator *(float f, float3 v)
 {
-    return make_float3(v.x*f, v.y*f, v.z*f);
+	return make_float3(v.x*f, v.y*f, v.z*f);
 }
 
 inline __device__ __host__ float3 operator *(float3 v, float f)
 {
-    return make_float3(v.x*f, v.y*f, v.z*f);
+	return make_float3(v.x*f, v.y*f, v.z*f);
 }
 
 inline __device__ __host__ float3 operator +(float3 a, float3 b)
 {
-    return make_float3(a.x+b.x, a.y+b.y, a.z+b.z);
+	return make_float3(a.x+b.x, a.y+b.y, a.z+b.z);
 }
 
 inline __device__ __host__ void operator +=(float3 & b, float3 a)
 {
-    b.x += a.x;
-    b.y += a.y;
-    b.z += a.z;
+	b.x += a.x;
+	b.y += a.y;
+	b.z += a.z;
 }
 
 inline __device__ __host__ float3 operator -(float3 a, float3 b)
 {
-    return make_float3(a.x-b.x, a.y-b.y, a.z-b.z);
+	return make_float3(a.x-b.x, a.y-b.y, a.z-b.z);
 }
 
 inline __device__ __host__ void operator -=(float3 & b, float3 a)
 {
-    b.x -= a.x;
-    b.y -= a.y;
-    b.z -= a.z;
+	b.x -= a.x;
+	b.y -= a.y;
+	b.z -= a.z;
 }
 
 inline __device__ __host__ float3 operator /(float3 v, float f)
 {
-    float inv = 1.0f / f;
-    return v * inv;
+	float inv = 1.0f / f;
+	return v * inv;
 }
 
 inline __device__ __host__ void operator /=(float3 & b, float f)
 {
-    float inv = 1.0f / f;
-    b.x *= inv;
-    b.y *= inv;
-    b.z *= inv;
+	float inv = 1.0f / f;
+	b.x *= inv;
+	b.y *= inv;
+	b.z *= inv;
 }
 
 inline __device__ __host__ bool operator ==(float3 a, float3 b)
@@ -89,34 +89,34 @@ inline __device__ __host__ bool operator ==(float3 a, float3 b)
 
 inline __device__ __host__ float dot(float3 a, float3 b)
 {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
+	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 inline __device__ __host__ float dot(float4 a, float4 b)
 {
-    return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+	return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
 
 inline __device__ __host__ float clamp(float f, float a, float b)
 {
-    return max(a, min(f, b));
+	return max(a, min(f, b));
 }
 
 inline __device__ __host__ float3 clamp(float3 v, float a, float b)
 {
-    return make_float3(clamp(v.x, a, b), clamp(v.y, a, b), clamp(v.z, a, b));
+	return make_float3(clamp(v.x, a, b), clamp(v.y, a, b), clamp(v.z, a, b));
 }
 
 inline __device__ __host__ float3 clamp(float3 v, float3 a, float3 b)
 {
-    return make_float3(clamp(v.x, a.x, b.x), clamp(v.y, a.y, b.y), clamp(v.z, a.z, b.z));
+	return make_float3(clamp(v.x, a.x, b.x), clamp(v.y, a.y, b.y), clamp(v.z, a.z, b.z));
 }
 
 
 inline __device__ __host__ float3 normalize(float3 v)
 {
-    float len = 1.0f / sqrtf(dot(v, v));
-    return make_float3(v.x * len, v.y * len, v.z * len);
+	float len = 1.0f / sqrtf(dot(v, v));
+	return make_float3(v.x * len, v.y * len, v.z * len);
 }
 
 
@@ -146,7 +146,7 @@ inline __device__ __host__ float3 firstEigenVector( float matrix[6] )
 		float x = v.x * matrix[0] + v.y * matrix[1] + v.z * matrix[2];
 		float y = v.x * matrix[1] + v.y * matrix[3] + v.z * matrix[4];
 		float z = v.x * matrix[2] + v.y * matrix[4] + v.z * matrix[5];
-		float m = max(max(x, y), z);        
+		float m = max(max(x, y), z);		
 		float iv = 1.0f / m;
 		if (m == 0.0f) iv = 0.0f;
 		v = make_float3(x*iv, y*iv, z*iv);
@@ -230,7 +230,7 @@ inline __device__ float3 bestFitLine(const float3 * colors, float3 color_sum, fl
 	// @@ It seems that doing that and unrolling the reduction doesn't help...
 	__shared__ float covariance[16*6];
 
-	covariance[6 * idx + 0] = diff.x * diff.x;    // 0, 6, 12, 2, 8, 14, 4, 10, 0
+	covariance[6 * idx + 0] = diff.x * diff.x;	// 0, 6, 12, 2, 8, 14, 4, 10, 0
 	covariance[6 * idx + 1] = diff.x * diff.y;
 	covariance[6 * idx + 2] = diff.x * diff.z;
 	covariance[6 * idx + 3] = diff.y * diff.y;

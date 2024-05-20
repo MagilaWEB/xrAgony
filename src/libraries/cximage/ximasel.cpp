@@ -305,9 +305,9 @@ bool CxImage::SelectionAddPolygon(POINT *points, long npoints, BYTE level)
 		for(y=ymin;y<ymax;y++){
 			for(x=xmin;x<xmax;x++){
 				if (plocal[x+y*head.biWidth]==0){
-					// Subject: FLOOD FILL ROUTINE              Date: 12-23-97 (00:57)       
-					// Author:  Petter Holmberg                 Code: QB, QBasic, PDS        
-					// Origin:  petter.holmberg@usa.net         Packet: GRAPHICS.ABC
+					// Subject: FLOOD FILL ROUTINE			  Date: 12-23-97 (00:57)		
+					// Author:  Petter Holmberg				 Code: QB, QBasic, PDS		
+					// Origin:  petter.holmberg@usa.net		 Packet: GRAPHICS.ABC
 					first=0;
 					last=1;
 					while(first!=last){
@@ -401,27 +401,27 @@ bool CxImage::SelectionAddPolygon(POINT *points, long npoints, BYTE level)
  */
 bool CxImage::SelectionAddColor(RGBQUAD c, BYTE level)
 {
-    if (pSelection==NULL) SelectionCreate();
+	if (pSelection==NULL) SelectionCreate();
 	if (pSelection==NULL) return false;
 
 	RECT localbox = {head.biWidth,0,0,head.biHeight};
 
-    for (long y = 0; y < head.biHeight; y++){
-        for (long x = 0; x < head.biWidth; x++){
-            RGBQUAD color = BlindGetPixelColor(x, y);
-            if (color.rgbRed   == c.rgbRed &&
+	for (long y = 0; y < head.biHeight; y++){
+		for (long x = 0; x < head.biWidth; x++){
+			RGBQUAD color = BlindGetPixelColor(x, y);
+			if (color.rgbRed	== c.rgbRed &&
 				color.rgbGreen == c.rgbGreen &&
-                color.rgbBlue  == c.rgbBlue)
-            {
-                pSelection[x + y * head.biWidth] = level;
+				color.rgbBlue  == c.rgbBlue)
+			{
+				pSelection[x + y * head.biWidth] = level;
 
 				if (localbox.top < y) localbox.top = y;
 				if (localbox.left > x) localbox.left = x;
 				if (localbox.right < x) localbox.right = x;
 				if (localbox.bottom > y) localbox.bottom = y;
-            }
-        }
-    }
+			}
+		}
+	}
 
 	if (info.rSelectionBox.top <= localbox.top) info.rSelectionBox.top = localbox.top + 1;
 	if (info.rSelectionBox.left > localbox.left) info.rSelectionBox.left = localbox.left;
@@ -436,21 +436,21 @@ bool CxImage::SelectionAddColor(RGBQUAD c, BYTE level)
  */
 bool CxImage::SelectionAddPixel(long x, long y, BYTE level)
 {
-    if (pSelection==NULL) SelectionCreate();
+	if (pSelection==NULL) SelectionCreate();
 	if (pSelection==NULL) return false;
 
-    if (IsInside(x,y)) {
-        pSelection[x + y * head.biWidth] = level; // set the correct mask bit
+	if (IsInside(x,y)) {
+		pSelection[x + y * head.biWidth] = level; // set the correct mask bit
 
 		if (info.rSelectionBox.top <= y) info.rSelectionBox.top = y+1;
 		if (info.rSelectionBox.left > x) info.rSelectionBox.left = x;
 		if (info.rSelectionBox.right <= x) info.rSelectionBox.right = x+1;
 		if (info.rSelectionBox.bottom > y) info.rSelectionBox.bottom = y;
 
-        return true;
-    }
+		return true;
+	}
 
-    return false;
+	return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**
@@ -663,33 +663,33 @@ bool CxImage::SelectionMirror()
  */
 bool CxImage::SelectionToHRGN(HRGN& region)
 {
-	if (pSelection && region){           
-        for(int y = 0; y < head.biHeight; y++){
-            HRGN hTemp = NULL;
-            int iStart = -1;
-            int x = 0;
+	if (pSelection && region){			
+		for(int y = 0; y < head.biHeight; y++){
+			HRGN hTemp = NULL;
+			int iStart = -1;
+			int x = 0;
 			for(; x < head.biWidth; x++){
-                if (pSelection[x + y * head.biWidth] != 0){
+				if (pSelection[x + y * head.biWidth] != 0){
 					if (iStart == -1) iStart = x;
 					continue;
-                }else{
-                    if (iStart >= 0){
-                        hTemp = CreateRectRgn(iStart, y, x, y + 1);
-                        CombineRgn(region, hTemp, region, RGN_OR);
-                        DeleteObject(hTemp);
-                        iStart = -1;
-                    }
-                }
-            }
-            if (iStart >= 0){
-                hTemp = CreateRectRgn(iStart, y, x, y + 1);
-                CombineRgn(region, hTemp, region, RGN_OR);
-                DeleteObject(hTemp);
-                iStart = -1;
-            }
-        }
+				}else{
+					if (iStart >= 0){
+						hTemp = CreateRectRgn(iStart, y, x, y + 1);
+						CombineRgn(region, hTemp, region, RGN_OR);
+						DeleteObject(hTemp);
+						iStart = -1;
+					}
+				}
+			}
+			if (iStart >= 0){
+				hTemp = CreateRectRgn(iStart, y, x, y + 1);
+				CombineRgn(region, hTemp, region, RGN_OR);
+				DeleteObject(hTemp);
+				iStart = -1;
+			}
+		}
 		return true;
-    }
+	}
 	return false;
 }
 #endif //CXIMAGE_SUPPORT_WINDOWS

@@ -110,8 +110,8 @@ BOOL LineIntersection2D(D3DXVECTOR2* result, const D3DXVECTOR2* lineA, const D3D
 }
 ///////////////////////////////////////////////////////////////////////////
 //  PlaneIntersection
-//    computes the point where three planes intersect
-//    returns whether or not the point exists.
+//	computes the point where three planes intersect
+//	returns whether or not the point exists.
 static inline BOOL PlaneIntersection(
 	D3DXVECTOR3* intersectPt, const D3DXPLANE* p0, const D3DXPLANE* p1, const D3DXPLANE* p2)
 {

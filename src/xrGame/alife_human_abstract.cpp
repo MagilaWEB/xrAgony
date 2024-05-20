@@ -16,17 +16,17 @@
 
 void CSE_ALifeHumanAbstract::update()
 {
-    if (!bfActive())
-        return;
+	if (!bfActive())
+		return;
 
-    brain().update();
+	brain().update();
 }
 
 bool CSE_ALifeHumanAbstract::bfPerformAttack() { return (brain().perform_attack()); }
 ALife::EMeetActionType CSE_ALifeHumanAbstract::tfGetActionType(
-    CSE_ALifeSchedulable* schedulable, int iGroupIndex, bool bMutualDetection)
+	CSE_ALifeSchedulable* schedulable, int iGroupIndex, bool bMutualDetection)
 {
-    return (brain().action_type(schedulable, iGroupIndex, bMutualDetection));
+	return (brain().action_type(schedulable, iGroupIndex, bMutualDetection));
 }
 
 void CSE_ALifeHumanAbstract::vfDetachAll(bool bFictitious) { brain().objects().detach_all(bFictitious); }
@@ -36,33 +36,33 @@ void CSE_ALifeHumanAbstract::vfAttachItems(ALife::ETakeType tTakeType) { brain()
 CSE_ALifeDynamicObject* CSE_ALifeHumanAbstract::tpfGetBestDetector() { return (brain().objects().best_detector()); }
 CSE_ALifeItemWeapon* CSE_ALifeHumanAbstract::tpfGetBestWeapon(ALife::EHitType& tHitType, float& fHitPower)
 {
-    return (brain().objects().best_weapon());
+	return (brain().objects().best_weapon());
 }
 
 void CSE_ALifeHumanAbstract::on_register()
 {
-    inherited2::on_register();
-    // because we need to load profile to setup graph vertex masks
-    specific_character();
+	inherited2::on_register();
+	// because we need to load profile to setup graph vertex masks
+	specific_character();
 }
 
 void CSE_ALifeHumanAbstract::on_unregister() { inherited2::on_unregister(); }
 void CSE_ALifeHumanAbstract::spawn_supplies()
 {
-    specific_character();
-    inherited1::spawn_supplies();
-    inherited2::spawn_supplies();
+	specific_character();
+	inherited1::spawn_supplies();
+	inherited2::spawn_supplies();
 }
 
 void CSE_ALifeHumanAbstract::add_online(const bool& update_registries)
 {
-    CSE_ALifeTraderAbstract::add_online(update_registries);
-    brain().on_switch_online();
+	CSE_ALifeTraderAbstract::add_online(update_registries);
+	brain().on_switch_online();
 }
 
 void CSE_ALifeHumanAbstract::add_offline(
-    const xr_vector<ALife::_OBJECT_ID>& saved_children, const bool& update_registries)
+	const xr_vector<ALife::_OBJECT_ID>& saved_children, const bool& update_registries)
 {
-    CSE_ALifeTraderAbstract::add_offline(saved_children, update_registries);
-    brain().on_switch_offline();
+	CSE_ALifeTraderAbstract::add_offline(saved_children, update_registries);
+	brain().on_switch_offline();
 }

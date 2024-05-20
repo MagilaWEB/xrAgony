@@ -9,14 +9,14 @@
 #pragma once
 
 IC CDangerObject::CDangerObject(const CEntityAlive* object, const Fvector& position, u32 time, const EDangerType& type,
-    const EDangerPerceiveType& perceive_type, const IGameObject* dependent_object)
+	const EDangerPerceiveType& perceive_type, const IGameObject* dependent_object)
 {
-    m_object = object;
-    m_dependent_object = dependent_object;
-    m_position = position;
-    m_time = time;
-    m_type = type;
-    m_perceive_type = perceive_type;
+	m_object = object;
+	m_dependent_object = dependent_object;
+	m_position = position;
+	m_time = time;
+	m_type = type;
+	m_perceive_type = perceive_type;
 }
 
 IC const CEntityAlive* CDangerObject::object() const { return (m_object); }
@@ -28,14 +28,14 @@ IC const IGameObject* CDangerObject::dependent_object() const { return (m_depend
 IC void CDangerObject::clear_dependent_object() { m_dependent_object = 0; }
 IC bool CDangerObject::operator==(const CDangerObject& object) const
 {
-    if (!m_object && object.object())
-        return (false);
+	if (!m_object && object.object())
+		return (false);
 
-    if (m_object && !object.object())
-        return (false);
+	if (m_object && !object.object())
+		return (false);
 
-    if (m_object && (m_object->ID() != object.object()->ID()))
-        return (false);
+	if (m_object && (m_object->ID() != object.object()->ID()))
+		return (false);
 
-    return ((type() == object.type()) && (perceive_type() == object.perceive_type()));
+	return ((type() == object.type()) && (perceive_type() == object.perceive_type()));
 }

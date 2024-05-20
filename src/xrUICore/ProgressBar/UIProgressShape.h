@@ -6,24 +6,24 @@ class CUIStatic;
 
 class XRUICORE_API CUIProgressShape : public CUIStatic
 {
-    friend class CUIXmlInitBase;
+	friend class CUIXmlInitBase;
 
 public:
-    CUIProgressShape();
-    virtual ~CUIProgressShape();
-    void SetPos(int pos, int max);
-    void SetPos(float pos);
-    void SetTextVisible(bool b);
+	CUIProgressShape();
+	virtual ~CUIProgressShape();
+	void SetPos(int pos, int max);
+	void SetPos(float pos);
+	void SetTextVisible(bool b);
 
-    virtual void Draw();
+	virtual void Draw();
 
 protected:
-    bool m_bClockwise;
-    u32 m_sectorCount;
-    float m_stage;
-    bool m_bText;
-    bool m_blend;
+	bool m_bClockwise;
+	u32 m_sectorCount;
+	float m_stage;
+	bool m_bText;
+	bool m_blend;
 
-    float m_angle_begin;
-    float m_angle_end;
+	float m_angle_begin;
+	float m_angle_end;
 };

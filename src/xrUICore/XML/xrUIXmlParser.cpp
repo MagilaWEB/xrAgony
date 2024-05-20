@@ -8,14 +8,14 @@
 shared_str CUIXml::correct_file_name(pcstr path, pcstr fn)
 {
 #ifdef XRUICORE_EXPORTS
-    if (0 == xr_strcmp(path, UI_PATH) || 0 == xr_strcmp(path, "UI"))
-    {
-        return UI().get_xml_name(fn);
-    }
-    else
-        return fn;
+	if (0 == xr_strcmp(path, UI_PATH) || 0 == xr_strcmp(path, "UI"))
+	{
+		return UI().get_xml_name(fn);
+	}
+	else
+		return fn;
 #else
-    return fn;
+	return fn;
 #endif
 }
 

@@ -38,7 +38,7 @@ enum
 	RC_dest_sampler = (1 << 2), //  For DX10 it's either sampler or texture
 	RC_dest_geometry = (1 << 3), // DX10 only
 	RC_dest_hull = (1 << 4), // DX11 only
-	RC_dest_domain = (1 << 5), //   DX11 only
+	RC_dest_domain = (1 << 5), //	DX11 only
 	RC_dest_compute = (1 << 6), //  DX11 only
 	RC_dest_compute_cb_index_mask = 0xF0000000, // Buffer index == 0..14
 	RC_dest_compute_cb_index_shift = 28,

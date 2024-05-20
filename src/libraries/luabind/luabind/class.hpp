@@ -269,7 +269,7 @@ namespace luabind {
 				: name(name), f(f)
 			{}
 
-            void register_(lua_State* L, bool default_scope = false) const
+			void register_(lua_State* L, bool default_scope = false) const
 			{
 				// Need to check if the class type of the signature is a base of this class
 				object fn = make_function(L, f, default_scope, deduce_signature_t<F, Class>(), Policies());
@@ -386,7 +386,7 @@ namespace luabind {
 			{
 				object context(from_stack(L, -1));
 				register_aux(L, context, make_get(L, get, default_scope, std::is_member_object_pointer<Get>()),
-                    set, default_scope);
+					set, default_scope);
 			}
 
 

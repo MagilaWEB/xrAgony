@@ -15,11 +15,11 @@
 
 // matrices
 #define BIND_DECLARE(xf)\
-    class cl_xform_##xf : public R_constant_setup\
-    {\
-        virtual void setup(R_constant* C) { RCache.xforms.set_c_##xf(C); }\
-    };\
-    static cl_xform_##xf binder_##xf
+	class cl_xform_##xf : public R_constant_setup\
+	{\
+		virtual void setup(R_constant* C) { RCache.xforms.set_c_##xf(C); }\
+	};\
+	static cl_xform_##xf binder_##xf
 BIND_DECLARE(w);
 BIND_DECLARE(invw);
 BIND_DECLARE(v);
@@ -29,11 +29,11 @@ BIND_DECLARE(vp);
 BIND_DECLARE(wvp);
 
 #define DECLARE_TREE_BIND(c)\
-    class cl_tree_##c : public R_constant_setup\
-    {\
-        virtual void setup(R_constant* C) { RCache.tree.set_c_##c(C); }\
-    };\
-    static cl_tree_##c tree_binder_##c
+	class cl_tree_##c : public R_constant_setup\
+	{\
+		virtual void setup(R_constant* C) { RCache.tree.set_c_##c(C); }\
+	};\
+	static cl_tree_##c tree_binder_##c
 
 DECLARE_TREE_BIND(m_xform_v);
 DECLARE_TREE_BIND(m_xform);

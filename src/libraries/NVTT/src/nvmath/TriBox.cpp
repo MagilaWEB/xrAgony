@@ -1,15 +1,15 @@
 /********************************************************/
-/* AABB-triangle overlap test code                      */
-/* by Tomas Akenine-Möller                              */
-/* Function: int triBoxOverlap(float boxcenter[3],      */
-/*          float boxhalfsize[3],float triverts[3][3]); */
-/* History:                                             */
-/*   2001-03-05: released the code in its first version */
-/*   2001-06-18: changed the order of the tests, faster */
-/*                                                      */
+/* AABB-triangle overlap test code					  */
+/* by Tomas Akenine-Möller							  */
+/* Function: int triBoxOverlap(float boxcenter[3],	  */
+/*		  float boxhalfsize[3],float triverts[3][3]); */
+/* History:											 */
+/*	2001-03-05: released the code in its first version */
+/*	2001-06-18: changed the order of the tests, faster */
+/*													  */
 /* Acknowledgement: Many thanks to Pierre Terdiman for  */
 /* suggestions and discussions on how to optimize code. */
-/* Thanks to David Hunt for finding a ">="-bug!         */
+/* Thanks to David Hunt for finding a ">="-bug!		 */
 /********************************************************/
 
 #include <nvmath/Vector.h>
@@ -22,7 +22,7 @@ using namespace nv;
 #define Z 2
 
 #define FINDMINMAX(x0,x1,x2,min,max) \
-  min = max = x0;   \
+  min = max = x0;	\
   if(x1<min) min=x1;\
   if(x1>max) max=x1;\
   if(x2<min) min=x2;\
@@ -101,10 +101,10 @@ bool triBoxOverlap(Vector3::Arg boxcenter, Vector3::Arg boxhalfsize, const Trian
 	// use separating axis theorem to test overlap between triangle and box
 	// need to test for overlap in these directions:
 	// 1) the {x,y,z}-directions (actually, since we use the AABB of the triangle
-	//    we do not even need to test these)
+	//	we do not even need to test these)
 	// 2) normal of the triangle
 	// 3) crossproduct(edge from tri, {x,y,z}-directin)
-	//    this gives 3x3=9 more tests
+	//	this gives 3x3=9 more tests
 	Vector3 v0, v1, v2;
 	float min, max, p0, p1, p2, rad, fex, fey, fez;
 	Vector3 normal, e0, e1, e2;
@@ -175,10 +175,10 @@ bool triBoxOverlapNoBounds(Vector3::Arg boxcenter, Vector3::Arg boxhalfsize, con
 	// use separating axis theorem to test overlap between triangle and box
 	// need to test for overlap in these directions:
 	// 1) the {x,y,z}-directions (actually, since we use the AABB of the triangle
-	//    we do not even need to test these)
+	//	we do not even need to test these)
 	// 2) normal of the triangle
 	// 3) crossproduct(edge from tri, {x,y,z}-directin)
-	//    this gives 3x3=9 more tests
+	//	this gives 3x3=9 more tests
 	Vector3 v0, v1, v2;
 	float min, max, p0, p1, p2, rad, fex, fey, fez;
 	Vector3 normal, e0, e1, e2;

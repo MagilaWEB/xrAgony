@@ -1058,7 +1058,7 @@ void PAMove::Execute(ParticleEffect* effect, const float dt, float& tm_max)
 		// move
 		m.age += dt;
 		m.posB = m.pos;
-		//        m.velB 	= m.vel;
+		//		m.velB 	= m.vel;
 		m.pos += m.vel * dt;
 	}
 }

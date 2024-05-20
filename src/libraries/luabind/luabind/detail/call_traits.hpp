@@ -62,8 +62,8 @@ namespace luabind {
 		struct call_traits
 		{
 		public:
-			using value_type      = T;
-			using reference       = T&;
+			using value_type	  = T;
+			using reference		= T&;
 			using const_reference = const T&;
 
 			using param_type = typename ct_imp<
@@ -77,10 +77,10 @@ namespace luabind {
 		template <typename T>
 		struct call_traits<T&>
 		{
-			using value_type      = T&;
-			using reference       = T&;
+			using value_type	  = T&;
+			using reference		= T&;
 			using const_reference = const T&;
-			using param_type      = T&;
+			using param_type	  = T&;
 		};
 
 		template <typename T, std::size_t N>
@@ -89,10 +89,10 @@ namespace luabind {
 		private:
 			using array_type = T[N];
 		public:
-			using value_type      = const T*;
-			using reference       = array_type&;
+			using value_type	  = const T*;
+			using reference		= array_type&;
 			using const_reference = const array_type&;
-			using param_type      = const T* const;
+			using param_type	  = const T* const;
 		};
 
 		template <typename T, std::size_t N>
@@ -101,10 +101,10 @@ namespace luabind {
 		private:
 			using array_type = const T[N];
 		public:
-			using value_type      = const T*;
-			using reference       = array_type&;
+			using value_type	  = const T*;
+			using reference		= array_type&;
 			using const_reference = const array_type&;
-			using param_type      = const T* const;
+			using param_type	  = const T* const;
 		};
 	}
 }

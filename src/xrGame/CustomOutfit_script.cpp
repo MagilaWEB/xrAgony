@@ -6,12 +6,12 @@
 using namespace luabind;
 
 SCRIPT_EXPORT(CCustomOutfit, (CGameObject), {
-    module(luaState)
-    [
-        class_<CCustomOutfit, CGameObject>("CCustomOutfit")
-            .def(constructor<>()),
+	module(luaState)
+	[
+		class_<CCustomOutfit, CGameObject>("CCustomOutfit")
+			.def(constructor<>()),
 
-        class_<CHelmet, CGameObject>("CHelmet")
-            .def(constructor<>())
-    ];
+		class_<CHelmet, CGameObject>("CHelmet")
+			.def(constructor<>())
+	];
 });

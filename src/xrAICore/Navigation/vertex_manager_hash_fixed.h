@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////
-//  Module      : vertex_manager_hash_fixed.h
-//  Created     : 21.03.2002
-//  Modified    : 05.03.2004
-//  Author      : Dmitriy Iassenev
+//  Module	  : vertex_manager_hash_fixed.h
+//  Created	 : 21.03.2002
+//  Modified	: 05.03.2004
+//  Author	  : Dmitriy Iassenev
 //  Description : Hash fixed vertex manager
 ////////////////////////////////////////////////////////////////////////////
 

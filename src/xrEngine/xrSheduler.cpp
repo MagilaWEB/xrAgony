@@ -51,10 +51,10 @@ void CSheduler::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 	stats.FrameEnd();
 	const float percentage = 100.f * stats.Update.result / Device.GetStats().EngineTotal.result;
 	font.OutNext("Scheduler:");
-	font.OutNext("- update:     %2.2fms, %2.1f%%", stats.Update.result, percentage);
-	font.OutNext("- load:       %2.2fms", stats.Load);
+	font.OutNext("- update:	 %2.2fms, %2.1f%%", stats.Update.result, percentage);
+	font.OutNext("- load:		%2.2fms", stats.Load);
 	if (alert && stats.Update.result > 3.0f)
-		alert->Print(font, "Update    > 3ms:  %3.1f", stats.Update.result);
+		alert->Print(font, "Update	> 3ms:  %3.1f", stats.Update.result);
 	stats.FrameStart();
 }
 
@@ -315,8 +315,8 @@ void CSheduler::Pop()
 	Items.pop_back();
 }
 
-extern    int sheduler_smoother_max_per_time;
-extern    int sheduler_smoother_frame_size;
+extern	int sheduler_smoother_max_per_time;
+extern	int sheduler_smoother_frame_size;
 void CSheduler::ProcessStep()
 {
 	// Normal priority

@@ -109,7 +109,7 @@ int g_inv_highlight_equipped = 0;
 BOOL g_bCheckTime = FALSE;
 int net_cl_inputupdaterate = 50;
 Flags32 g_mt_config = { mtLevelPath | mtDetailPath | mtObjectHandler | mtSoundPlayer | mtAiVision | mtBullets |
-   mtLevelSounds | mtALife | mtMap };
+	mtLevelSounds | mtALife | mtMap };
 #ifdef DEBUG
 Flags32 dbg_net_Draw_Flags = { 0 };
 #endif
@@ -648,7 +648,7 @@ public:
 			return;
 		}
 
-		/*     moved to level_network_messages.cpp
+		/*	 moved to level_network_messages.cpp
 				CSavedGameWrapper			wrapper(args);
 				if (wrapper.level_id() == ai().level_graph().level_id()) {
 					if (Device.Paused())
@@ -1412,18 +1412,18 @@ void CCC_RadioMask::Execute(LPCSTR args)
 	group->Execute(*this, args);
 }
 
-#define CMD_RADIOGROUPMASK2(p1, p2, p3, p4, p5, p6)                                        \
-    \
-{                                                                                   \
-        \
-static CCC_RadioMask x##CCC_RadioMask1(p1, p2, p3);                                        \
-        Console->AddCommand(&x##CCC_RadioMask1);                                           \
-        \
-static CCC_RadioMask x##CCC_RadioMask2(p4, p5, p6);                                        \
-        Console->AddCommand(&x##CCC_RadioMask2);                                           \
-        \
+#define CMD_RADIOGROUPMASK2(p1, p2, p3, p4, p5, p6)										\
+	\
+{																					\
+		\
+static CCC_RadioMask x##CCC_RadioMask1(p1, p2, p3);										\
+		Console->AddCommand(&x##CCC_RadioMask1);											\
+		\
+static CCC_RadioMask x##CCC_RadioMask2(p4, p5, p6);										\
+		Console->AddCommand(&x##CCC_RadioMask2);											\
+		\
 static CCC_RadioGroupMask2 x##CCC_RadioGroupMask2(&x##CCC_RadioMask1, &x##CCC_RadioMask2); \
-    \
+	\
 }
 
 struct CCC_DbgBullets : public CCC_Integer

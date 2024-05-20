@@ -129,58 +129,58 @@ bool nv::strMatch(const char * str, const char * pat)
 	nvDebugCheck(str != NULL);
 	nvDebugCheck(pat != NULL);
 
-    char c2;
+	char c2;
 
-    while (true) {
-        if (*pat==0) {
-            if (*str==0) return true;
-            else         return false;
-        }
-        if ((*str==0) && (*pat!='*')) return false;
-        if (*pat=='*') {
-            pat++;
-            if (*pat==0) return true;
-            while (true) {
-                if (strMatch(str, pat)) return true;
-                if (*str==0) return false;
-                str++;
-            }
-        }
-        if (*pat=='?') goto match;
-        if (*pat=='[') {
-            pat++;
-            while (true) {
-                if ((*pat==']') || (*pat==0)) return false;
-                if (*pat==*str) break;
-                if (pat[1] == '-') {
-                    c2 = pat[2];
-                    if (c2==0) return false;
-                    if ((*pat<=*str) && (c2>=*str)) break;
-                    if ((*pat>=*str) && (c2<=*str)) break;
-                    pat+=2;
-                }
-                pat++;
-            }
-            while (*pat!=']') {
-                if (*pat==0) {
-                    pat--;
-                    break;
-                }
-                pat++;
-            }
-            goto match;
-        }
+	while (true) {
+		if (*pat==0) {
+			if (*str==0) return true;
+			else		 return false;
+		}
+		if ((*str==0) && (*pat!='*')) return false;
+		if (*pat=='*') {
+			pat++;
+			if (*pat==0) return true;
+			while (true) {
+				if (strMatch(str, pat)) return true;
+				if (*str==0) return false;
+				str++;
+			}
+		}
+		if (*pat=='?') goto match;
+		if (*pat=='[') {
+			pat++;
+			while (true) {
+				if ((*pat==']') || (*pat==0)) return false;
+				if (*pat==*str) break;
+				if (pat[1] == '-') {
+					c2 = pat[2];
+					if (c2==0) return false;
+					if ((*pat<=*str) && (c2>=*str)) break;
+					if ((*pat>=*str) && (c2<=*str)) break;
+					pat+=2;
+				}
+				pat++;
+			}
+			while (*pat!=']') {
+				if (*pat==0) {
+					pat--;
+					break;
+				}
+				pat++;
+			}
+			goto match;
+		}
 
-        if (*pat == NV_PATH_SEPARATOR) {
-            pat++;
-            if (*pat==0) return false;
-        }
-        if (*pat!=*str) return false;
+		if (*pat == NV_PATH_SEPARATOR) {
+			pat++;
+			if (*pat==0) return false;
+		}
+		if (*pat!=*str) return false;
 
 match:
-        pat++;
-        str++;
-    }
+		pat++;
+		str++;
+	}
 }
 
 

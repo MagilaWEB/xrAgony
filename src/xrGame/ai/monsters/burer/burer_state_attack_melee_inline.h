@@ -1,7 +1,7 @@
 #pragma once
 
 #define TEMPLATE_SPECIALIZATION \
-    template <typename _Object\
+	template <typename _Object\
 >
 
 #define CStateBurerAttackMeleeAbstract CStateBurerAttackMelee<_Object>
@@ -14,21 +14,21 @@ CStateBurerAttackMeleeAbstract::CStateBurerAttackMelee(_Object* obj) : inherited
 TEMPLATE_SPECIALIZATION
 bool CStateBurerAttackMeleeAbstract::check_start_conditions()
 {
-    const float dist = this->object->Position().distance_to(this->object->EnemyMan.get_enemy()->Position());
-    if (dist > MIN_DIST_MELEE_ATTACK)
-        return false;
+	const float dist = this->object->Position().distance_to(this->object->EnemyMan.get_enemy()->Position());
+	if (dist > MIN_DIST_MELEE_ATTACK)
+		return false;
 
-    return true;
+	return true;
 }
 
 TEMPLATE_SPECIALIZATION
 bool CStateBurerAttackMeleeAbstract::check_completion()
 {
-    const float dist = this->object->Position().distance_to(this->object->EnemyMan.get_enemy()->Position());
-    if (dist < MAX_DIST_MELEE_ATTACK)
-        return false;
+	const float dist = this->object->Position().distance_to(this->object->EnemyMan.get_enemy()->Position());
+	if (dist < MAX_DIST_MELEE_ATTACK)
+		return false;
 
-    return true;
+	return true;
 }
 
 #undef TEMPLATE_SPECIALIZATION

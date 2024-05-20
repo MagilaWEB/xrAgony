@@ -6,15 +6,15 @@ class CUIFrameWindow;
 class CUIEditBoxEx : public CUICustomEdit
 {
 public:
-    CUIEditBoxEx();
-    virtual ~CUIEditBoxEx();
+	CUIEditBoxEx();
+	virtual ~CUIEditBoxEx();
 
-    virtual void InitCustomEdit(Fvector2 pos, Fvector2 size);
+	virtual void InitCustomEdit(Fvector2 pos, Fvector2 size);
 
-    // CUIMultiTextureOwner
-    virtual void InitTexture(LPCSTR texture);
-    virtual void InitTextureEx(LPCSTR texture, LPCSTR shader);
+	// CUIMultiTextureOwner
+	virtual void InitTexture(LPCSTR texture);
+	virtual void InitTextureEx(LPCSTR texture, LPCSTR shader);
 
 protected:
-    CUIFrameWindow* m_pFrameWindow;
+	CUIFrameWindow* m_pFrameWindow;
 };

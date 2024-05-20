@@ -131,22 +131,22 @@
 // 110 - CSE_ALifeHumanAbstract			removed a lot
 // 111 - CSE_ALifeHumanStalker			removed demo mode
 // 112 - CSE_Abstract					removed all the spawn properties, sad but true
-//	   - CSE_SpawnGroup					is no more
-//	   - CSE_Event						is no more
-//	   - CSE_Target_CS					is no more
-//	   - CSE_Target_CS_Cask				is no more
-//	   - CSE_Target_CS_Base				is no more
-//	   - CSE_TargetAssault				is no more
-//	   - CSE_Target						is no more
-//	   - CSE_ALifeObject				appended with property m_spawn_story_id
+//		- CSE_SpawnGroup					is no more
+//		- CSE_Event						is no more
+//		- CSE_Target_CS					is no more
+//		- CSE_Target_CS_Cask				is no more
+//		- CSE_Target_CS_Base				is no more
+//		- CSE_TargetAssault				is no more
+//		- CSE_Target						is no more
+//		- CSE_ALifeObject				appended with property m_spawn_story_id
 // 113 - CSE_ALifeAnomalousZone			removed property m_fStartPower
-//	   - CSE_ALifeAnomalousZone			removed property m_faWeights
-//	   - CSE_ALifeAnomalousZone			removed property m_cppArtefactSections
-//	   - CSE_ALifeAnomalousZone			removed property m_min_start_power
-//	   - CSE_ALifeAnomalousZone			removed property m_max_start_power
-//	   - CSE_ALifeAnomalousZone			removed property m_power_artefact_factor
-//	   - CSE_ALifeCustomZone			removed property m_attn
-//	   - CSE_ALifeCustomZone			removed property m_period
+//		- CSE_ALifeAnomalousZone			removed property m_faWeights
+//		- CSE_ALifeAnomalousZone			removed property m_cppArtefactSections
+//		- CSE_ALifeAnomalousZone			removed property m_min_start_power
+//		- CSE_ALifeAnomalousZone			removed property m_max_start_power
+//		- CSE_ALifeAnomalousZone			removed property m_power_artefact_factor
+//		- CSE_ALifeCustomZone			removed property m_attn
+//		- CSE_ALifeCustomZone			removed property m_period
 // 114 - CSE_ALifeMonsterAbstract		m_task_reached, internal member, added
 // 115 - CSE_ALifeCreatureAbstract		fHealth now in range 0..1
 // 116 - CSE_ALifeCreatureAbstract		appended with property m_game_death_time
@@ -161,7 +161,7 @@
 // 122 - CSE_ALifeItemWeapon			appended with count of grenades to spawn in grenade launcher (if it attached)
 // 123 - CSE_ALifeInventoryItem			added functions has_upgrade & add_upgrade, xr_vector<shared_str> m_upgrades
 // 124 - CSE_ALifeInventoryBox			added property m_can_take, m_closed
-//       CSE_ALifeTraderAbstract		added property m_deadbody_can_take, m_deadbody_closed
+//		CSE_ALifeTraderAbstract		added property m_deadbody_can_take, m_deadbody_closed
 // 127	 CSE_ALifeObjectClimable		added material;
 // 128	 CSE_ALifeObjectClimable		added can_fire in smart covers;
 //------------------------------------------------------------------------------
@@ -169,81 +169,81 @@
 
 class CSE_Shape : public IServerEntityShape, public CShapeData
 {
-    using inherited1 = IServerEntityShape;
-    using inherited2 = CShapeData;
+	using inherited1 = IServerEntityShape;
+	using inherited2 = CShapeData;
 
 public:
-    void cform_read(NET_Packet& P);
-    void cform_write(NET_Packet& P);
-    CSE_Shape();
-    virtual ~CSE_Shape();
-    virtual IServerEntityShape* __stdcall shape() = 0;
-    virtual void __stdcall assign_shapes(CShapeData::shape_def* shapes, u32 cnt);
+	void cform_read(NET_Packet& P);
+	void cform_write(NET_Packet& P);
+	CSE_Shape();
+	virtual ~CSE_Shape();
+	virtual IServerEntityShape* __stdcall shape() = 0;
+	virtual void __stdcall assign_shapes(CShapeData::shape_def* shapes, u32 cnt);
 };
 
 class CSE_Temporary : public CSE_Abstract
 {
-    using inherited = CSE_Abstract;
+	using inherited = CSE_Abstract;
 
 public:
-    u32 m_tNodeID;
-    CSE_Temporary(LPCSTR caSection);
-    virtual ~CSE_Temporary();
-    virtual void UPDATE_Read(NET_Packet& P);
-    virtual void UPDATE_Write(NET_Packet& P);
-    virtual void STATE_Read(NET_Packet& P, u16 size);
-    virtual void STATE_Write(NET_Packet& P);
-    SERVER_ENTITY_EDITOR_METHODS
+	u32 m_tNodeID;
+	CSE_Temporary(LPCSTR caSection);
+	virtual ~CSE_Temporary();
+	virtual void UPDATE_Read(NET_Packet& P);
+	virtual void UPDATE_Write(NET_Packet& P);
+	virtual void STATE_Read(NET_Packet& P, u16 size);
+	virtual void STATE_Write(NET_Packet& P);
+	SERVER_ENTITY_EDITOR_METHODS
 };
 
 class CSE_PHSkeleton
 {
 public:
-    CSE_PHSkeleton(LPCSTR caSection);
-    virtual ~CSE_PHSkeleton();
+	CSE_PHSkeleton(LPCSTR caSection);
+	virtual ~CSE_PHSkeleton();
 
-    enum
-    {
-        flActive = (1 << 0),
-        flSpawnCopy = (1 << 1),
-        flSavedData = (1 << 2),
-        flNotSave = (1 << 3)
-    };
-    Flags8 _flags;
-    SPHBonesData saved_bones;
-    u16 source_id; // for break only
-    virtual void load(NET_Packet& tNetPacket);
-    virtual bool need_save() const noexcept { return !_flags.test(flNotSave); }
-    virtual void set_sorce_id(u16 si) { source_id = si; }
-    virtual u16 get_source_id() { return source_id; }
-    virtual CSE_Abstract* cast_abstract() { return nullptr; }
+	enum
+	{
+		flActive = (1 << 0),
+		flSpawnCopy = (1 << 1),
+		flSavedData = (1 << 2),
+		flNotSave = (1 << 3)
+	};
+	Flags8 _flags;
+	SPHBonesData saved_bones;
+	u16 source_id; // for break only
+	virtual void load(NET_Packet& tNetPacket);
+	virtual bool need_save() const noexcept { return !_flags.test(flNotSave); }
+	virtual void set_sorce_id(u16 si) { source_id = si; }
+	virtual u16 get_source_id() { return source_id; }
+	virtual CSE_Abstract* cast_abstract() { return nullptr; }
 protected:
-    virtual void data_load(NET_Packet& tNetPacket);
-    virtual void data_save(NET_Packet& tNetPacket);
+	virtual void data_load(NET_Packet& tNetPacket);
+	virtual void data_save(NET_Packet& tNetPacket);
 
 public:
-    virtual void UPDATE_Read(NET_Packet& P);
-    virtual void UPDATE_Write(NET_Packet& P);
-    virtual void STATE_Read(NET_Packet& P, u16 size);
-    virtual void STATE_Write(NET_Packet& P);
-    SERVER_ENTITY_EDITOR_METHODS
+	virtual void UPDATE_Read(NET_Packet& P);
+	virtual void UPDATE_Write(NET_Packet& P);
+	virtual void STATE_Read(NET_Packet& P, u16 size);
+	virtual void STATE_Write(NET_Packet& P);
+	SERVER_ENTITY_EDITOR_METHODS
 };
 
 class CSE_AbstractVisual : public CSE_Abstract, public CSE_Visual
 {
 public:
-    using inherited1 = CSE_Abstract;
-    using inherited2 = CSE_Visual;
+	using inherited1 = CSE_Abstract;
+	using inherited2 = CSE_Visual;
 
-    CSE_AbstractVisual(LPCSTR caSection);
-    virtual ~CSE_AbstractVisual();
-    virtual CSE_Visual* __stdcall visual();
-    LPCSTR getStartupAnimation();
-    virtual void UPDATE_Read(NET_Packet& P);
-    virtual void UPDATE_Write(NET_Packet& P);
-    virtual void STATE_Read(NET_Packet& P, u16 size);
-    virtual void STATE_Write(NET_Packet& P);
-    SERVER_ENTITY_EDITOR_METHODS
+	CSE_AbstractVisual(LPCSTR caSection);
+	virtual ~CSE_AbstractVisual();
+	virtual CSE_Visual* __stdcall visual();
+	LPCSTR getStartupAnimation();
+	virtual void UPDATE_Read(NET_Packet& P);
+	virtual void UPDATE_Write(NET_Packet& P);
+	virtual void STATE_Read(NET_Packet& P, u16 size);
+	virtual void STATE_Write(NET_Packet& P);
+	SERVER_ENTITY_EDITOR_METHODS
 };
 
 #ifndef AI_COMPILER

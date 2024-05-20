@@ -39,7 +39,7 @@ public:
 	void scale(Vector3::Arg s);
 	void translate(Vector3::Arg t);
 	void rotate(scalar theta, scalar v0, scalar v1, scalar v2);
-    scalar determinant() const;
+	scalar determinant() const;
 	
 	void apply(Matrix::Arg m);
 
@@ -126,7 +126,7 @@ inline void Matrix::scale(scalar s)
 	m_data[0] *= s; m_data[1] *= s; m_data[2] *= s; m_data[3] *= s;
 	m_data[4] *= s; m_data[5] *= s; m_data[6] *= s; m_data[7] *= s;
 	m_data[8] *= s; m_data[9] *= s; m_data[10] *= s; m_data[11] *= s;
-    m_data[12] *= s; m_data[13] *= s; m_data[14] *= s; m_data[15] *= s;
+	m_data[12] *= s; m_data[13] *= s; m_data[14] *= s; m_data[15] *= s;
 }
 
 /// Apply scale.
@@ -342,25 +342,25 @@ inline Matrix transpose(Matrix::Arg m)
 
 inline Matrix inverse(Matrix::Arg m)
 {
-   Matrix r;
-   r.data( 0) = m.data(6)*m.data(11)*m.data(13) - m.data(7)*m.data(10)*m.data(13) + m.data(7)*m.data(9)*m.data(14) - m.data(5)*m.data(11)*m.data(14) - m.data(6)*m.data(9)*m.data(15) + m.data(5)*m.data(10)*m.data(15);
-   r.data( 1) = m.data(3)*m.data(10)*m.data(13) - m.data(2)*m.data(11)*m.data(13) - m.data(3)*m.data(9)*m.data(14) + m.data(1)*m.data(11)*m.data(14) + m.data(2)*m.data(9)*m.data(15) - m.data(1)*m.data(10)*m.data(15);
-   r.data( 2) = m.data(2)*m.data( 7)*m.data(13) - m.data(3)*m.data( 6)*m.data(13) + m.data(3)*m.data(5)*m.data(14) - m.data(1)*m.data( 7)*m.data(14) - m.data(2)*m.data(5)*m.data(15) + m.data(1)*m.data( 6)*m.data(15);
-   r.data( 3) = m.data(3)*m.data( 6)*m.data( 9) - m.data(2)*m.data( 7)*m.data( 9) - m.data(3)*m.data(5)*m.data(10) + m.data(1)*m.data( 7)*m.data(10) + m.data(2)*m.data(5)*m.data(11) - m.data(1)*m.data( 6)*m.data(11);
-   r.data( 4) = m.data(7)*m.data(10)*m.data(12) - m.data(6)*m.data(11)*m.data(12) - m.data(7)*m.data(8)*m.data(14) + m.data(4)*m.data(11)*m.data(14) + m.data(6)*m.data(8)*m.data(15) - m.data(4)*m.data(10)*m.data(15);
-   r.data( 5) = m.data(2)*m.data(11)*m.data(12) - m.data(3)*m.data(10)*m.data(12) + m.data(3)*m.data(8)*m.data(14) - m.data(0)*m.data(11)*m.data(14) - m.data(2)*m.data(8)*m.data(15) + m.data(0)*m.data(10)*m.data(15);
-   r.data( 6) = m.data(3)*m.data( 6)*m.data(12) - m.data(2)*m.data( 7)*m.data(12) - m.data(3)*m.data(4)*m.data(14) + m.data(0)*m.data( 7)*m.data(14) + m.data(2)*m.data(4)*m.data(15) - m.data(0)*m.data( 6)*m.data(15);
-   r.data( 7) = m.data(2)*m.data( 7)*m.data( 8) - m.data(3)*m.data( 6)*m.data( 8) + m.data(3)*m.data(4)*m.data(10) - m.data(0)*m.data( 7)*m.data(10) - m.data(2)*m.data(4)*m.data(11) + m.data(0)*m.data( 6)*m.data(11);
-   r.data( 8) = m.data(5)*m.data(11)*m.data(12) - m.data(7)*m.data( 9)*m.data(12) + m.data(7)*m.data(8)*m.data(13) - m.data(4)*m.data(11)*m.data(13) - m.data(5)*m.data(8)*m.data(15) + m.data(4)*m.data( 9)*m.data(15);
-   r.data( 9) = m.data(3)*m.data( 9)*m.data(12) - m.data(1)*m.data(11)*m.data(12) - m.data(3)*m.data(8)*m.data(13) + m.data(0)*m.data(11)*m.data(13) + m.data(1)*m.data(8)*m.data(15) - m.data(0)*m.data( 9)*m.data(15);
-   r.data(10) = m.data(1)*m.data( 7)*m.data(12) - m.data(3)*m.data( 5)*m.data(12) + m.data(3)*m.data(4)*m.data(13) - m.data(0)*m.data( 7)*m.data(13) - m.data(1)*m.data(4)*m.data(15) + m.data(0)*m.data( 5)*m.data(15);
-   r.data(11) = m.data(3)*m.data( 5)*m.data( 8) - m.data(1)*m.data( 7)*m.data( 8) - m.data(3)*m.data(4)*m.data( 9) + m.data(0)*m.data( 7)*m.data( 9) + m.data(1)*m.data(4)*m.data(11) - m.data(0)*m.data( 5)*m.data(11);
-   r.data(12) = m.data(6)*m.data( 9)*m.data(12) - m.data(5)*m.data(10)*m.data(12) - m.data(6)*m.data(8)*m.data(13) + m.data(4)*m.data(10)*m.data(13) + m.data(5)*m.data(8)*m.data(14) - m.data(4)*m.data( 9)*m.data(14);
-   r.data(13) = m.data(1)*m.data(10)*m.data(12) - m.data(2)*m.data( 9)*m.data(12) + m.data(2)*m.data(8)*m.data(13) - m.data(0)*m.data(10)*m.data(13) - m.data(1)*m.data(8)*m.data(14) + m.data(0)*m.data( 9)*m.data(14);
-   r.data(14) = m.data(2)*m.data( 5)*m.data(12) - m.data(1)*m.data( 6)*m.data(12) - m.data(2)*m.data(4)*m.data(13) + m.data(0)*m.data( 6)*m.data(13) + m.data(1)*m.data(4)*m.data(14) - m.data(0)*m.data( 5)*m.data(14);
-   r.data(15) = m.data(1)*m.data( 6)*m.data( 8) - m.data(2)*m.data( 5)*m.data( 8) + m.data(2)*m.data(4)*m.data( 9) - m.data(0)*m.data( 6)*m.data( 9) - m.data(1)*m.data(4)*m.data(10) + m.data(0)*m.data( 5)*m.data(10);
-   r.scale(1.0f / m.determinant());
-   return r;
+	Matrix r;
+	r.data( 0) = m.data(6)*m.data(11)*m.data(13) - m.data(7)*m.data(10)*m.data(13) + m.data(7)*m.data(9)*m.data(14) - m.data(5)*m.data(11)*m.data(14) - m.data(6)*m.data(9)*m.data(15) + m.data(5)*m.data(10)*m.data(15);
+	r.data( 1) = m.data(3)*m.data(10)*m.data(13) - m.data(2)*m.data(11)*m.data(13) - m.data(3)*m.data(9)*m.data(14) + m.data(1)*m.data(11)*m.data(14) + m.data(2)*m.data(9)*m.data(15) - m.data(1)*m.data(10)*m.data(15);
+	r.data( 2) = m.data(2)*m.data( 7)*m.data(13) - m.data(3)*m.data( 6)*m.data(13) + m.data(3)*m.data(5)*m.data(14) - m.data(1)*m.data( 7)*m.data(14) - m.data(2)*m.data(5)*m.data(15) + m.data(1)*m.data( 6)*m.data(15);
+	r.data( 3) = m.data(3)*m.data( 6)*m.data( 9) - m.data(2)*m.data( 7)*m.data( 9) - m.data(3)*m.data(5)*m.data(10) + m.data(1)*m.data( 7)*m.data(10) + m.data(2)*m.data(5)*m.data(11) - m.data(1)*m.data( 6)*m.data(11);
+	r.data( 4) = m.data(7)*m.data(10)*m.data(12) - m.data(6)*m.data(11)*m.data(12) - m.data(7)*m.data(8)*m.data(14) + m.data(4)*m.data(11)*m.data(14) + m.data(6)*m.data(8)*m.data(15) - m.data(4)*m.data(10)*m.data(15);
+	r.data( 5) = m.data(2)*m.data(11)*m.data(12) - m.data(3)*m.data(10)*m.data(12) + m.data(3)*m.data(8)*m.data(14) - m.data(0)*m.data(11)*m.data(14) - m.data(2)*m.data(8)*m.data(15) + m.data(0)*m.data(10)*m.data(15);
+	r.data( 6) = m.data(3)*m.data( 6)*m.data(12) - m.data(2)*m.data( 7)*m.data(12) - m.data(3)*m.data(4)*m.data(14) + m.data(0)*m.data( 7)*m.data(14) + m.data(2)*m.data(4)*m.data(15) - m.data(0)*m.data( 6)*m.data(15);
+	r.data( 7) = m.data(2)*m.data( 7)*m.data( 8) - m.data(3)*m.data( 6)*m.data( 8) + m.data(3)*m.data(4)*m.data(10) - m.data(0)*m.data( 7)*m.data(10) - m.data(2)*m.data(4)*m.data(11) + m.data(0)*m.data( 6)*m.data(11);
+	r.data( 8) = m.data(5)*m.data(11)*m.data(12) - m.data(7)*m.data( 9)*m.data(12) + m.data(7)*m.data(8)*m.data(13) - m.data(4)*m.data(11)*m.data(13) - m.data(5)*m.data(8)*m.data(15) + m.data(4)*m.data( 9)*m.data(15);
+	r.data( 9) = m.data(3)*m.data( 9)*m.data(12) - m.data(1)*m.data(11)*m.data(12) - m.data(3)*m.data(8)*m.data(13) + m.data(0)*m.data(11)*m.data(13) + m.data(1)*m.data(8)*m.data(15) - m.data(0)*m.data( 9)*m.data(15);
+	r.data(10) = m.data(1)*m.data( 7)*m.data(12) - m.data(3)*m.data( 5)*m.data(12) + m.data(3)*m.data(4)*m.data(13) - m.data(0)*m.data( 7)*m.data(13) - m.data(1)*m.data(4)*m.data(15) + m.data(0)*m.data( 5)*m.data(15);
+	r.data(11) = m.data(3)*m.data( 5)*m.data( 8) - m.data(1)*m.data( 7)*m.data( 8) - m.data(3)*m.data(4)*m.data( 9) + m.data(0)*m.data( 7)*m.data( 9) + m.data(1)*m.data(4)*m.data(11) - m.data(0)*m.data( 5)*m.data(11);
+	r.data(12) = m.data(6)*m.data( 9)*m.data(12) - m.data(5)*m.data(10)*m.data(12) - m.data(6)*m.data(8)*m.data(13) + m.data(4)*m.data(10)*m.data(13) + m.data(5)*m.data(8)*m.data(14) - m.data(4)*m.data( 9)*m.data(14);
+	r.data(13) = m.data(1)*m.data(10)*m.data(12) - m.data(2)*m.data( 9)*m.data(12) + m.data(2)*m.data(8)*m.data(13) - m.data(0)*m.data(10)*m.data(13) - m.data(1)*m.data(8)*m.data(14) + m.data(0)*m.data( 9)*m.data(14);
+	r.data(14) = m.data(2)*m.data( 5)*m.data(12) - m.data(1)*m.data( 6)*m.data(12) - m.data(2)*m.data(4)*m.data(13) + m.data(0)*m.data( 6)*m.data(13) + m.data(1)*m.data(4)*m.data(14) - m.data(0)*m.data( 5)*m.data(14);
+	r.data(15) = m.data(1)*m.data( 6)*m.data( 8) - m.data(2)*m.data( 5)*m.data( 8) + m.data(2)*m.data(4)*m.data( 9) - m.data(0)*m.data( 6)*m.data( 9) - m.data(1)*m.data(4)*m.data(10) + m.data(0)*m.data( 5)*m.data(10);
+	r.scale(1.0f / m.determinant());
+	return r;
 }
 
 inline Matrix isometryInverse(Matrix::Arg m)
@@ -443,27 +443,27 @@ inline Matrix mul(Matrix::Arg a, Matrix::Arg b)
 
 		if( 1 == v0 && 0 == v1 && 0 == v2 ) {
 			data[0] = 1.0f;	data[1] = 0.0f;	data[2] = 0.0f;	data[3] = 0.0f;
-	        data[4] = 0.0f;	data[5] = cost;	data[6] = -sint;data[7] = 0.0f;
-		    data[8] = 0.0f;	data[9] = sint;	data[10] = cost;data[11] = 0.0f;
+			data[4] = 0.0f;	data[5] = cost;	data[6] = -sint;data[7] = 0.0f;
+			data[8] = 0.0f;	data[9] = sint;	data[10] = cost;data[11] = 0.0f;
 			data[12] = 0.0f;data[13] = 0.0f;data[14] = 0.0f;data[15] = 1.0f;
-	    }
+		}
 		else if( 0 == v0  && 1 == v1 && 0 == v2 ) {
-	        data[0] = cost;	data[1] = 0.0f;	data[2] = sint;	data[3] = 0.0f;
-		    data[4] = 0.0f;	data[5] = 1.0f;	data[6] = 0.0f;	data[7] = 0.0f;
+			data[0] = cost;	data[1] = 0.0f;	data[2] = sint;	data[3] = 0.0f;
+			data[4] = 0.0f;	data[5] = 1.0f;	data[6] = 0.0f;	data[7] = 0.0f;
 			data[8] = -sint;data[9] = 0.0f;data[10] = cost;	data[11] = 0.0f;
 			data[12] = 0.0f;data[13] = 0.0f;data[14] = 0.0f;data[15] = 1.0f;
-	    }
+		}
 		else if( 0 == v0 && 0 == v1 && 1 == v2 ) {
 			data[0] = cost;	data[1] = -sint;data[2] = 0.0f;	data[3] = 0.0f;
-	        data[4] = sint; data[5] = cost;	data[6] = 0.0f;	data[7] = 0.0f;
-		    data[8] = 0.0f;	data[9] = 0.0f;	data[10] = 1.0f;data[11] = 0.0f;
+			data[4] = sint; data[5] = cost;	data[6] = 0.0f;	data[7] = 0.0f;
+			data[8] = 0.0f;	data[9] = 0.0f;	data[10] = 1.0f;data[11] = 0.0f;
 			data[12] = 0.0f;data[13] = 0.0f;data[14] = 0.0f;data[15] = 1.0f;
-	    } 
+		} 
 		else {
 			//we need scale a,b,c to unit length.
 			scalar a2, b2, c2;
-	        a2 = v0 * v0;
-		    b2 = v1 * v1;
+			a2 = v0 * v0;
+			b2 = v1 * v1;
 			c2 = v2 * v2;
 
 			scalar iscale = 1.0f / sqrtf(a2 + b2 + c2);
@@ -473,23 +473,23 @@ inline Matrix mul(Matrix::Arg a, Matrix::Arg b)
 
 			scalar abm, acm, bcm;
 			scalar mcos, asin, bsin, csin;
-	        mcos = 1.0f - cost;
-		    abm = v0 * v1 * mcos;
+			mcos = 1.0f - cost;
+			abm = v0 * v1 * mcos;
 			acm = v0 * v2 * mcos;
-	        bcm = v1 * v2 * mcos;
-		    asin = v0 * sint;
+			bcm = v1 * v2 * mcos;
+			asin = v0 * sint;
 			bsin = v1 * sint;
-	        csin = v2 * sint;
-		    data[0] = a2 * mcos + cost;
+			csin = v2 * sint;
+			data[0] = a2 * mcos + cost;
 			data[1] = abm - csin;
-	        data[2] = acm + bsin;
-		    data[3] = abm + csin;
+			data[2] = acm + bsin;
+			data[3] = abm + csin;
 			data[4] = 0.0f;
-	        data[5] = b2 * mcos + cost;
-		    data[6] = bcm - asin;
+			data[5] = b2 * mcos + cost;
+			data[6] = bcm - asin;
 			data[7] = acm - bsin;
 			data[8] = 0.0f;
-		    data[9] = bcm + asin;
+			data[9] = bcm + asin;
 			data[10] = c2 * mcos + cost;
 			data[11] = 0.0f;
 			data[12] = 0.0f;
@@ -606,7 +606,7 @@ inline Matrix mul(Matrix::Arg a, Matrix::Arg b)
 		doubleznear = 2.0f * zNear;
 		one_deltax = 1.0f / (xmax - xmin);
 		one_deltay = 1.0f / (ymax - ymin);
-	    nudge = 1.0; // 0.999;
+		nudge = 1.0; // 0.999;
 
 		data[0] = doubleznear * one_deltax;
 		data[1] = 0.0f;
@@ -686,9 +686,9 @@ inline Matrix mul(Matrix::Arg a, Matrix::Arg b)
 		y2 = q.y + q.y;
 		z2 = q.z + q.z;
 
-		xx = q.x * x2;   xy = q.x * y2;   xz = q.x * z2;
-		yy = q.y * y2;   yz = q.y * z2;   zz = q.z * z2;
-		wx = q.w * x2;   wy = q.w * y2;   wz = q.w * z2;
+		xx = q.x * x2;	xy = q.x * y2;	xz = q.x * z2;
+		yy = q.y * y2;	yz = q.y * z2;	zz = q.z * z2;
+		wx = q.w * x2;	wy = q.w * y2;	wz = q.w * z2;
 
 		data[0] = 1.0f - (yy + zz); 	
 		data[1] = xy - wz;

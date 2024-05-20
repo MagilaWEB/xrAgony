@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 // TriMesh code by Erwin de Vries.
@@ -47,21 +47,21 @@ struct dxTriMeshData{
 	Model BVTree;
 	MeshInterface Mesh;
 
-    dxTriMeshData();
-    ~dxTriMeshData();
-    
-    void Build(const void* Vertices, int VertexStide, int VertexCount, 
-	       const void* Indices, int IndexCount, int TriStride, 
-	       const void* Normals, 
-	       bool Single);
-    
-        /* aabb in model space */
-        dVector3 AABBCenter;
-        dVector3 AABBExtents;
+	dxTriMeshData();
+	~dxTriMeshData();
+	
+	void Build(const void* Vertices, int VertexStide, int VertexCount, 
+			const void* Indices, int IndexCount, int TriStride, 
+			const void* Normals, 
+			bool Single);
+	
+		/* aabb in model space */
+		dVector3 AABBCenter;
+		dVector3 AABBExtents;
 
-    /* data for use in collison resolution */
-    const void* Normals;
-    Matrix4x4   last_trans;
+	/* data for use in collison resolution */
+	const void* Normals;
+	Matrix4x4	last_trans;
 };
 
 
@@ -238,72 +238,72 @@ template<class T> const T& dcMIN(const T& x, const T& y){
 }
 
 dReal SqrDistancePointTri( const dVector3 p, const dVector3 triOrigin, 
-                           const dVector3 triEdge1, const dVector3 triEdge2,
-                           dReal* pfSParam = 0, dReal* pfTParam = 0 );
+							const dVector3 triEdge1, const dVector3 triEdge2,
+							dReal* pfSParam = 0, dReal* pfTParam = 0 );
 
 dReal SqrDistanceSegments( const dVector3 seg1Origin, const dVector3 seg1Direction, 
-                           const dVector3 seg2Origin, const dVector3 seg2Direction,
-                           dReal* pfSegP0 = 0, dReal* pfSegP1 = 0 );
+							const dVector3 seg2Origin, const dVector3 seg2Direction,
+							dReal* pfSegP0 = 0, dReal* pfSegP1 = 0 );
 
 dReal SqrDistanceSegTri( const dVector3 segOrigin, const dVector3 segEnd, 
-                         const dVector3 triOrigin, 
-                         const dVector3 triEdge1, const dVector3 triEdge2,
-                         dReal* t = 0, dReal* u = 0, dReal* v = 0 );
+						 const dVector3 triOrigin, 
+						 const dVector3 triEdge1, const dVector3 triEdge2,
+						 dReal* t = 0, dReal* u = 0, dReal* v = 0 );
 
 inline
 void Vector3Subtract( const dVector3 left, const dVector3 right, dVector3 result )
 {
-    result[0] = left[0] - right[0];
-    result[1] = left[1] - right[1];
-    result[2] = left[2] - right[2];
-    result[3] = REAL(0.0);
+	result[0] = left[0] - right[0];
+	result[1] = left[1] - right[1];
+	result[2] = left[2] - right[2];
+	result[3] = REAL(0.0);
 }
 
 inline
 void Vector3Add( const dVector3 left, const dVector3 right, dVector3 result )
 {
-    result[0] = left[0] + right[0];
-    result[1] = left[1] + right[1];
-    result[2] = left[2] + right[2];
-    result[3] = REAL(0.0);
+	result[0] = left[0] + right[0];
+	result[1] = left[1] + right[1];
+	result[2] = left[2] + right[2];
+	result[3] = REAL(0.0);
 }
 
 inline
 void Vector3Negate( const dVector3 in, dVector3 out )
 {
-    out[0] = -in[0];
-    out[1] = -in[1];
-    out[2] = -in[2];
-    out[3] = REAL(0.0);
+	out[0] = -in[0];
+	out[1] = -in[1];
+	out[2] = -in[2];
+	out[3] = REAL(0.0);
 }
 
 inline
 void Vector3Copy( const dVector3 in, dVector3 out )
 {
-    out[0] = in[0];
-    out[1] = in[1];
-    out[2] = in[2];
-    out[3] = REAL(0.0);
+	out[0] = in[0];
+	out[1] = in[1];
+	out[2] = in[2];
+	out[3] = REAL(0.0);
 }
 
 inline
 void Vector3Multiply( const dVector3 in, dReal scalar, dVector3 out )
 {
-    out[0] = in[0] * scalar;
-    out[1] = in[1] * scalar;
-    out[2] = in[2] * scalar;
-    out[3] = REAL(0.0);
+	out[0] = in[0] * scalar;
+	out[1] = in[1] * scalar;
+	out[2] = in[2] * scalar;
+	out[3] = REAL(0.0);
 }
 
 inline
 void TransformVector3( const dVector3 in, 
-                       const dMatrix3 orientation, const dVector3 position, 
-                       dVector3 out )
+						const dMatrix3 orientation, const dVector3 position, 
+						dVector3 out )
 {
-    dMULTIPLY0_331( out, orientation, in );
-    out[0] += position[0];
-    out[1] += position[1];
-    out[2] += position[2];
+	dMULTIPLY0_331( out, orientation, in );
+	out[0] += position[0];
+	out[1] += position[1];
+	out[2] += position[2];
 }
 
 //------------------------------------------------------------------------------
@@ -311,13 +311,13 @@ void TransformVector3( const dVector3 in,
   @brief Check for intersection between triangle and capsule.
   
   @param dist [out] Shortest distance squared between the triangle and 
-                    the capsule segment (central axis).
-  @param t    [out] t value of point on segment that's the shortest distance 
-                    away from the triangle, the coordinates of this point 
-                    can be found by (cap.seg.end - cap.seg.start) * t,
-                    or cap.seg.ipol(t).
-  @param u    [out] Barycentric coord on triangle.
-  @param v    [out] Barycentric coord on triangle.
+					the capsule segment (central axis).
+  @param t	[out] t value of point on segment that's the shortest distance 
+					away from the triangle, the coordinates of this point 
+					can be found by (cap.seg.end - cap.seg.start) * t,
+					or cap.seg.ipol(t).
+  @param u	[out] Barycentric coord on triangle.
+  @param v	[out] Barycentric coord on triangle.
   @return True if intersection exists.
   
   The third Barycentric coord is implicit, ie. w = 1.0 - u - v
@@ -327,17 +327,17 @@ void TransformVector3( const dVector3 in,
 */
 inline
 bool IntersectCapsuleTri( const dVector3 segOrigin, const dVector3 segEnd, 
-                          const dReal radius, const dVector3 triOrigin, 
-                          const dVector3 triEdge0, const dVector3 triEdge1,
-                          dReal* dist, dReal* t, dReal* u, dReal* v )
+						  const dReal radius, const dVector3 triOrigin, 
+						  const dVector3 triEdge0, const dVector3 triEdge1,
+						  dReal* dist, dReal* t, dReal* u, dReal* v )
 {
-    dReal sqrDist = SqrDistanceSegTri( segOrigin, segEnd, triOrigin, triEdge0, triEdge1, 
-                                       t, u, v );
+	dReal sqrDist = SqrDistanceSegTri( segOrigin, segEnd, triOrigin, triEdge0, triEdge1, 
+										t, u, v );
   
-    if ( dist )
-      *dist = sqrDist;
-    
-    return ( sqrDist <= (radius * radius) );
+	if ( dist )
+	  *dist = sqrDist;
+	
+	return ( sqrDist <= (radius * radius) );
 }
 
 #endif	//TRIMESH_INTERNAL

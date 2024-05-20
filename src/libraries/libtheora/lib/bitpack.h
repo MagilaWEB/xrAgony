@@ -1,13 +1,13 @@
 /********************************************************************
- *                                                                  *
- * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.   *
- * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
+ *																  *
+ * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.	*
+ * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS	 *
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
- * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
- *                                                                  *
- * THE OggTheora SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
+ * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.		*
+ *																  *
+ * THE OggTheora SOURCE CODE IS (C) COPYRIGHT 1994-2009			 *
  * by the Xiph.Org Foundation and contributors http://www.xiph.org/ *
- *                                                                  *
+ *																  *
  ********************************************************************
 
   function: packing variable sized words into an octet stream
@@ -20,25 +20,25 @@
 
 
 
-typedef unsigned long      oc_pb_window;
+typedef unsigned long	  oc_pb_window;
 typedef struct oc_pack_buf oc_pack_buf;
 
 
 
 # define OC_PB_WINDOW_SIZE ((int)sizeof(oc_pb_window)*CHAR_BIT)
 /*This is meant to be a large, positive constant that can still be efficiently
-   loaded as an immediate (on platforms like ARM, for example).
+	loaded as an immediate (on platforms like ARM, for example).
   Even relatively modest values like 100 would work fine.*/
 # define OC_LOTS_OF_BITS (0x40000000)
 
 
 
 struct oc_pack_buf{
-  oc_pb_window         window;
+  oc_pb_window		 window;
   const unsigned char *ptr;
   const unsigned char *stop;
-  int                  bits;
-  int                  eof;
+  int				  bits;
+  int				  eof;
 };
 
 void oc_pack_readinit(oc_pack_buf *_b,unsigned char *_buf,long _bytes);

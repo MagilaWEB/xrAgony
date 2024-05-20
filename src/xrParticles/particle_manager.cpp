@@ -90,7 +90,7 @@ void CParticleManager::DestroyActionList(int alist_id)
 void CParticleManager::PlayEffect(int effect_id, int alist_id)
 {
 	// effect
-//    ParticleEffect* pe		= GetEffectPtr(effect_id);
+//	ParticleEffect* pe		= GetEffectPtr(effect_id);
 	// Execute the specified action list.
 	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);
@@ -153,7 +153,7 @@ void CParticleManager::Update(int effect_id, int alist_id, float dt)
 }
 void CParticleManager::Render(int effect_id)
 {
-	//    ParticleEffect* pe	= GetEffectPtr(effect_id);
+	//	ParticleEffect* pe	= GetEffectPtr(effect_id);
 }
 void CParticleManager::Transform(int alist_id, const Fmatrix& full, const Fvector& vel)
 {

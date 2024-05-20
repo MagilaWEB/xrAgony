@@ -7,15 +7,15 @@
 class dxConsoleRender : public IConsoleRender
 {
 public:
-    dxConsoleRender();
+	dxConsoleRender();
 
-    virtual void Copy(IConsoleRender& _in);
-    virtual void OnRender(bool bGame);
+	virtual void Copy(IConsoleRender& _in);
+	virtual void OnRender(bool bGame);
 
 private:
 #if defined(USE_DX11)
-    ref_shader m_Shader;
-    ref_geom m_Geom;
+	ref_shader m_Shader;
+	ref_geom m_Geom;
 #endif
 };
 

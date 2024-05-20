@@ -297,7 +297,7 @@ void CxImage::BlindSetPixelColor(long x,long y,RGBQUAD c, bool bSetAlpha)
 		BYTE* iDst = info.pImage + y*info.dwEffWidth + x*3;
 		*iDst++ = c.rgbBlue;
 		*iDst++ = c.rgbGreen;
-		*iDst   = c.rgbRed;
+		*iDst	= c.rgbRed;
 	}
 #if CXIMAGE_SUPPORT_ALPHA
 	if (bSetAlpha) AlphaSet(x,y,c.rgbReserved);
@@ -314,7 +314,7 @@ void CxImage::SetPixelColor(long x,long y,RGBQUAD c, bool bSetAlpha)
 		BYTE* iDst = info.pImage + y*info.dwEffWidth + x*3;
 		*iDst++ = c.rgbBlue;
 		*iDst++ = c.rgbGreen;
-		*iDst   = c.rgbRed;
+		*iDst	= c.rgbRed;
 	}
 #if CXIMAGE_SUPPORT_ALPHA
 	if (bSetAlpha) AlphaSet(x,y,c.rgbReserved);
@@ -347,7 +347,7 @@ void CxImage::BlendPixelColor(long x,long y,RGBQUAD c, float blend, bool bSetAlp
 		BYTE* iDst = info.pImage + y*info.dwEffWidth + x*3;
 		*iDst++ = c.rgbBlue;
 		*iDst++ = c.rgbGreen;
-		*iDst   = c.rgbRed;
+		*iDst	= c.rgbRed;
 #if CXIMAGE_SUPPORT_ALPHA
 		if (bSetAlpha) AlphaSet(x,y,c.rgbReserved);
 #endif //CXIMAGE_SUPPORT_ALPHA
@@ -686,9 +686,9 @@ void* CxImage::BlindGetPixelPointer(const long x, const long y)
   #endif
 #endif
   if (!IsIndexed())
-    return info.pImage + y*info.dwEffWidth + x*3;
+	return info.pImage + y*info.dwEffWidth + x*3;
   else
-    return 0;
+	return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CxImage::DrawLine(int StartX, int EndX, int StartY, int EndY, COLORREF cr)
@@ -705,51 +705,51 @@ void CxImage::DrawLine(int StartX, int EndX, int StartY, int EndY, RGBQUAD color
 	//////////////////////////////////////////////////////
 	int x1 = StartX;
 	int y1 = StartY;
-	int x = x1;                       // Start x off at the first pixel
-	int y = y1;                       // Start y off at the first pixel
+	int x = x1;						// Start x off at the first pixel
+	int y = y1;						// Start y off at the first pixel
 	int x2 = EndX;
 	int y2 = EndY;
 
-	int xinc1,xinc2,yinc1,yinc2;      // Increasing values
-	int den, num, numadd,numpixels;   
-	int deltax = abs(x2 - x1);        // The difference between the x's
-	int deltay = abs(y2 - y1);        // The difference between the y's
+	int xinc1,xinc2,yinc1,yinc2;	  // Increasing values
+	int den, num, numadd,numpixels;	
+	int deltax = abs(x2 - x1);		// The difference between the x's
+	int deltay = abs(y2 - y1);		// The difference between the y's
 
 	// Get Increasing Values
-	if (x2 >= x1) {                // The x-values are increasing
+	if (x2 >= x1) {				// The x-values are increasing
 		xinc1 = 1;
 		xinc2 = 1;
-	} else {                         // The x-values are decreasing
+	} else {						 // The x-values are decreasing
 		xinc1 = -1;
 		xinc2 = -1;
 	}
 
-	if (y2 >= y1) {                // The y-values are increasing
+	if (y2 >= y1) {				// The y-values are increasing
 		yinc1 = 1;
 		yinc2 = 1;
-	} else {                         // The y-values are decreasing
+	} else {						 // The y-values are decreasing
 		yinc1 = -1;
 		yinc2 = -1;
 	}
 
 	// Actually draw the line
-	if (deltax >= deltay)         // There is at least one x-value for every y-value
+	if (deltax >= deltay)		 // There is at least one x-value for every y-value
 	{
-		xinc1 = 0;                  // Don't change the x when numerator >= denominator
-		yinc2 = 0;                  // Don't change the y for every iteration
+		xinc1 = 0;				  // Don't change the x when numerator >= denominator
+		yinc2 = 0;				  // Don't change the y for every iteration
 		den = deltax;
 		num = deltax / 2;
 		numadd = deltay;
-		numpixels = deltax;         // There are more x-values than y-values
+		numpixels = deltax;		 // There are more x-values than y-values
 	}
-	else                          // There is at least one y-value for every x-value
+	else						  // There is at least one y-value for every x-value
 	{
-		xinc2 = 0;                  // Don't change the x for every iteration
-		yinc1 = 0;                  // Don't change the y when numerator >= denominator
+		xinc2 = 0;				  // Don't change the x for every iteration
+		yinc1 = 0;				  // Don't change the y when numerator >= denominator
 		den = deltay;
 		num = deltay / 2;
 		numadd = deltax;
-		numpixels = deltay;         // There are more y-values than x-values
+		numpixels = deltay;		 // There are more y-values than x-values
 	}
 	
 	for (int curpixel = 0; curpixel <= numpixels; curpixel++)
@@ -757,15 +757,15 @@ void CxImage::DrawLine(int StartX, int EndX, int StartY, int EndY, RGBQUAD color
 		// Draw the current pixel
 		SetPixelColor(x,y,color,bSetAlpha);
 		
-		num += numadd;              // Increase the numerator by the top of the fraction
-		if (num >= den)             // Check if numerator >= denominator
+		num += numadd;			  // Increase the numerator by the top of the fraction
+		if (num >= den)			 // Check if numerator >= denominator
 		{
-			num -= den;               // Calculate the new numerator value
-			x += xinc1;               // Change the x as appropriate
-			y += yinc1;               // Change the y as appropriate
+			num -= den;				// Calculate the new numerator value
+			x += xinc1;				// Change the x as appropriate
+			y += yinc1;				// Change the y as appropriate
 		}
-		x += xinc2;                 // Change the x as appropriate
-		y += yinc2;                 // Change the y as appropriate
+		x += xinc2;				 // Change the x as appropriate
+		y += yinc2;				 // Change the y as appropriate
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -15,16 +15,16 @@ CFlashlight::CFlashlight()
 {
 	m_bFastAnimMode = false;
 	m_bNeedActivation = false;
-    
+	
 	light_render = ::Render->light_create();
 	light_render->set_type(IRender_Light::SPOT);
 	light_render->set_shadow(true);
-    light_omni = ::Render->light_create();
+	light_omni = ::Render->light_create();
 	light_omni->set_type(IRender_Light::POINT);
 	light_omni->set_shadow(false);
 
 	m_switched_on = false;
-    glow_render = ::Render->glow_create();
+	glow_render = ::Render->glow_create();
 	lanim = 0;
 	fBrightness = 1.f;
 
@@ -129,16 +129,16 @@ void CFlashlight::ToggleDevice(bool bFastMode)
 	}
 	 
 	else if (GetState() == eIdle || GetState() == EFlashlightStates::eIdleZoom)
-        {
-        if (m_switched_on && !m_bFastAnimMode)
-            {
-                SwitchState(eSwitchOff);
-            }
-            else
-            {
-                SwitchState(eHiding);
-            }
-        }
+		{
+		if (m_switched_on && !m_bFastAnimMode)
+			{
+				SwitchState(eSwitchOff);
+			}
+			else
+			{
+				SwitchState(eHiding);
+			}
+		}
 
 }
 
@@ -365,19 +365,19 @@ void CFlashlight::UpdateVisibility()
 			}
 		}
 	}
-    else if (m_bNeedActivation)
-    {
-        attachable_hud_item* i0 = g_player_hud->attached_item(0);
-        bool bClimb = ((Actor()->MovingState() & mcClimb) != 0);
-	    if (!bClimb)
-        {
-            CHudItem* huditem = (i0) ? i0->m_parent_hud_item : NULL;
-            bool bChecked = !huditem || CheckCompatibilityInt(huditem, 0);
+	else if (m_bNeedActivation)
+	{
+		attachable_hud_item* i0 = g_player_hud->attached_item(0);
+		bool bClimb = ((Actor()->MovingState() & mcClimb) != 0);
+		if (!bClimb)
+		{
+			CHudItem* huditem = (i0) ? i0->m_parent_hud_item : NULL;
+			bool bChecked = !huditem || CheckCompatibilityInt(huditem, 0);
 
-            if (bChecked)
-                ShowDevice(true);
-        }
-    }
+			if (bChecked)
+				ShowDevice(true);
+		}
+	}
 }
 
 void CFlashlight::UpdateCL()

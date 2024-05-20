@@ -18,7 +18,7 @@ static const float max_linear_velocity = 10.f;
 
 IC bool moving_objects::collided(const IGameObject* object, const Fvector& position, const float& radius) const
 {
-    return (object->Position().distance_to(position) <= (object->Radius() + radius));
+	return (object->Position().distance_to(position) <= (object->Radius() + radius));
 }
 
 #endif // MOVING_OBJECTS_IMPL_H

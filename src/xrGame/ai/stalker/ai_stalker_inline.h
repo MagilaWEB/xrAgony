@@ -11,58 +11,58 @@
 IC BOOL CAI_Stalker::UsedAI_Locations() { return (TRUE); }
 IC CStalkerAnimationManager& CAI_Stalker::animation() const
 {
-    VERIFY(m_animation_manager);
-    return (*m_animation_manager);
+	VERIFY(m_animation_manager);
+	return (*m_animation_manager);
 }
 
 IC CStalkerPlanner& CAI_Stalker::brain() const
 {
-    VERIFY(m_brain);
-    return (*m_brain);
+	VERIFY(m_brain);
+	return (*m_brain);
 }
 
 IC CSightManager& CAI_Stalker::sight() const
 {
-    VERIFY(m_sight_manager);
-    return (*m_sight_manager);
+	VERIFY(m_sight_manager);
+	return (*m_sight_manager);
 }
 
 IC LPCSTR CAI_Stalker::Name() const { return (CInventoryOwner::Name()); }
 IC stalker_movement_manager_smart_cover& CAI_Stalker::movement() const
 {
-    VERIFY(m_movement_manager);
-    return (*m_movement_manager);
+	VERIFY(m_movement_manager);
+	return (*m_movement_manager);
 }
 
 IC bool CAI_Stalker::frame_check(u32& frame)
 {
-    if (Device.dwFrame == frame)
-        return (false);
+	if (Device.dwFrame == frame)
+		return (false);
 
-    frame = Device.dwFrame;
-    return (true);
+	frame = Device.dwFrame;
+	return (true);
 }
 
 IC bool CAI_Stalker::group_behaviour() const { return (m_group_behaviour); }
 IC CWeaponShotEffector& CAI_Stalker::weapon_shot_effector() const
 {
-    VERIFY(m_weapon_shot_effector);
-    return (*m_weapon_shot_effector);
+	VERIFY(m_weapon_shot_effector);
+	return (*m_weapon_shot_effector);
 }
 
 IC bool CAI_Stalker::wounded() const { return (m_wounded); }
 IC const CAI_Stalker::CRITICAL_WOUND_WEIGHTS& CAI_Stalker::critical_wound_weights() const
 {
-    VERIFY(!m_critical_wound_weights.empty());
-    return (m_critical_wound_weights);
+	VERIFY(!m_critical_wound_weights.empty());
+	return (m_critical_wound_weights);
 }
 
 IC const bool& CAI_Stalker::throw_enabled()
 {
-    if (!m_throw_actual)
-        update_throw_params();
+	if (!m_throw_actual)
+		update_throw_params();
 
-    return (m_throw_enabled);
+	return (m_throw_enabled);
 }
 
 IC const u32& CAI_Stalker::last_throw_time() const { return (m_last_throw_time); }

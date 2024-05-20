@@ -14,18 +14,18 @@ class CScriptValue;
 class CScriptValue
 {
 public:
-    virtual ~CScriptValue() {}
+	virtual ~CScriptValue() {}
 };
 #endif
 
 class CScriptValueContainer
 {
 protected:
-    xr_vector<CScriptValue*> m_values;
+	xr_vector<CScriptValue*> m_values;
 
 public:
-    virtual ~CScriptValueContainer();
-    IC void assign();
-    IC void clear();
-    IC void add(CScriptValue* value);
+	virtual ~CScriptValueContainer();
+	IC void assign();
+	IC void clear();
+	IC void add(CScriptValue* value);
 };

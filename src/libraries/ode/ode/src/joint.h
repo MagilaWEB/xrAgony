@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 //#define	DE_PADF_INTEGRATION
@@ -71,38 +71,38 @@ struct dxJoint : public dObject {
   // number of unbounded variables (which have lo,hi = -/+ infinity).
 
   struct Info1 {
-    int m,nub;
+	int m,nub;
   };
 
   // info returned by getInfo2 function
 
   struct Info2 {
-    // integrator parameters: frames per second (1/stepsize), default error
-    // reduction parameter (0..1).
-    dReal fps,erp;
+	// integrator parameters: frames per second (1/stepsize), default error
+	// reduction parameter (0..1).
+	dReal fps,erp;
 
-    // for the first and second body, pointers to two (linear and angular)
-    // n*3 jacobian sub matrices, stored by rows. these matrices will have
-    // been initialized to 0 on entry. if the second body is zero then the
-    // J2xx pointers may be 0.
-    dReal *J1l,*J1a,*J2l,*J2a;
+	// for the first and second body, pointers to two (linear and angular)
+	// n*3 jacobian sub matrices, stored by rows. these matrices will have
+	// been initialized to 0 on entry. if the second body is zero then the
+	// J2xx pointers may be 0.
+	dReal *J1l,*J1a,*J2l,*J2a;
 
-    // elements to jump from one row to the next in J's
-    int rowskip;
+	// elements to jump from one row to the next in J's
+	int rowskip;
 
-    // right hand sides of the equation J*v = c + cfm * lambda. cfm is the
-    // "constraint force mixing" vector. c is set to zero on entry, cfm is
-    // set to a constant value (typically very small or zero) value on entry.
-    dReal *c,*cfm;
+	// right hand sides of the equation J*v = c + cfm * lambda. cfm is the
+	// "constraint force mixing" vector. c is set to zero on entry, cfm is
+	// set to a constant value (typically very small or zero) value on entry.
+	dReal *c,*cfm;
 
-    // lo and hi limits for variables (set to -/+ infinity on entry).
-    dReal *lo,*hi;
+	// lo and hi limits for variables (set to -/+ infinity on entry).
+	dReal *lo,*hi;
 
-    // findex vector for variables. see the LCP solver interface for a
-    // description of what this does. this is set to -1 on entry.
-    // note that the returned indexes are relative to the first index of
-    // the constraint.
-    int *findex;
+	// findex vector for variables. see the LCP solver interface for a
+	// description of what this does. this is set to -1 on entry.
+	// note that the returned indexes are relative to the first index of
+	// the constraint.
+	int *findex;
   };
 
   // virtual function table: size of the joint structure, function pointers.
@@ -114,11 +114,11 @@ struct dxJoint : public dObject {
   typedef void getInfo2_fn (dxJoint *joint, Info2 *info);
   typedef void addBodiesForces_fn(dxJoint *joint);
   struct Vtable {
-    int size;
-    init_fn *init;
-    getInfo1_fn *getInfo1;
-    getInfo2_fn *getInfo2;
-    int typenum;		// a dJointTypeXXX type number
+	int size;
+	init_fn *init;
+	getInfo1_fn *getInfo1;
+	getInfo2_fn *getInfo2;
+	int typenum;		// a dJointTypeXXX type number
 #ifdef DE_PADF_INTEGRATION
 	addBodiesForces_fn *addForces;
 #endif
@@ -192,7 +192,7 @@ struct dxJointUniversal : public dxJoint {
   dVector3 axis1;		// axis w.r.t first body
   dVector3 axis2;		// axis w.r.t second body
   dQuaternion qrel1;	// initial relative rotation body1 -> virtual cross piece
-  dQuaternion qrel2;    // initial relative rotation virtual cross piece -> body2
+  dQuaternion qrel2;	// initial relative rotation virtual cross piece -> body2
   dxJointLimitMotor limot1;	// limit and motor information for axis1
   dxJointLimitMotor limot2;	// limit and motor information for axis2
 };

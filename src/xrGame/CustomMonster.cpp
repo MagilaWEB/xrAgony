@@ -670,7 +670,7 @@ void CCustomMonster::Exec_Visibility()
 	if (!g_Alive()) return;
 	if (getDestroy()) return;
 
-    Level().AIStats.Vis.Begin();
+	Level().AIStats.Vis.Begin();
 	switch (eye_pp_stage % 2)
 	{
 	case 0:
@@ -679,7 +679,7 @@ void CCustomMonster::Exec_Visibility()
 	case 1:	eye_pp_s2();	break;
 	}
 	++eye_pp_stage;
-    Level().AIStats.Vis.End();
+	Level().AIStats.Vis.End();
 }
 
 void CCustomMonster::UpdateCamera()

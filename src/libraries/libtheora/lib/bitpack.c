@@ -1,13 +1,13 @@
 /********************************************************************
- *                                                                  *
- * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.   *
- * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
+ *																  *
+ * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.	*
+ * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS	 *
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
- * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
- *                                                                  *
- * THE OggTheora SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
+ * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.		*
+ *																  *
+ * THE OggTheora SOURCE CODE IS (C) COPYRIGHT 1994-2009			 *
  * by the Xiph.Org Foundation and contributors http://www.xiph.org/ *
- *                                                                  *
+ *																  *
  ********************************************************************
 
   function: packing variable sized words into an octet stream
@@ -19,7 +19,7 @@
 #include "bitpack.h"
 
 /*We're 'MSb' endian; if we write a word but read individual bits,
-   then we'll read the MSb first.*/
+	then we'll read the MSb first.*/
 
 void oc_pack_readinit(oc_pack_buf *_b,unsigned char *_buf,long _bytes){
   memset(_b,0,sizeof(*_b));
@@ -30,23 +30,23 @@ void oc_pack_readinit(oc_pack_buf *_b,unsigned char *_buf,long _bytes){
 static oc_pb_window oc_pack_refill(oc_pack_buf *_b,int _bits){
   const unsigned char *ptr;
   const unsigned char *stop;
-  oc_pb_window         window;
-  int                  available;
+  oc_pb_window		 window;
+  int				  available;
   window=_b->window;
   available=_b->bits;
   ptr=_b->ptr;
   stop=_b->stop;
   while(available<=OC_PB_WINDOW_SIZE-8&&ptr<stop){
-    available+=8;
-    window|=(oc_pb_window)*ptr++<<OC_PB_WINDOW_SIZE-available;
+	available+=8;
+	window|=(oc_pb_window)*ptr++<<OC_PB_WINDOW_SIZE-available;
   }
   _b->ptr=ptr;
   if(_bits>available){
-    if(ptr>=stop){
-      _b->eof=1;
-      available=OC_LOTS_OF_BITS;
-    }
-    else window|=*ptr>>(available&7);
+	if(ptr>=stop){
+	  _b->eof=1;
+	  available=OC_LOTS_OF_BITS;
+	}
+	else window|=*ptr>>(available&7);
   }
   _b->bits=available;
   return window;
@@ -54,7 +54,7 @@ static oc_pb_window oc_pack_refill(oc_pack_buf *_b,int _bits){
 
 int oc_pack_look1(oc_pack_buf *_b){
   oc_pb_window window;
-  int          available;
+  int		  available;
   window=_b->window;
   available=_b->bits;
   if(available<1)_b->window=window=oc_pack_refill(_b,1);
@@ -69,14 +69,14 @@ void oc_pack_adv1(oc_pack_buf *_b){
 /*Here we assume that 0<=_bits&&_bits<=32.*/
 long oc_pack_read(oc_pack_buf *_b,int _bits){
   oc_pb_window window;
-  int          available;
-  long         result;
+  int		  available;
+  long		 result;
   window=_b->window;
   available=_b->bits;
   if(_bits==0)return 0;
   if(available<_bits){
-    window=oc_pack_refill(_b,_bits);
-    available=_b->bits;
+	window=oc_pack_refill(_b,_bits);
+	available=_b->bits;
   }
   result=window>>OC_PB_WINDOW_SIZE-_bits;
   available-=_bits;
@@ -89,13 +89,13 @@ long oc_pack_read(oc_pack_buf *_b,int _bits){
 
 int oc_pack_read1(oc_pack_buf *_b){
   oc_pb_window window;
-  int          available;
-  int          result;
+  int		  available;
+  int		  result;
   window=_b->window;
   available=_b->bits;
   if(available<1){
-    window=oc_pack_refill(_b,1);
-    available=_b->bits;
+	window=oc_pack_refill(_b,1);
+	available=_b->bits;
   }
   result=window>>OC_PB_WINDOW_SIZE-1;
   available--;

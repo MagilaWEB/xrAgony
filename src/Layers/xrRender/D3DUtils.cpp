@@ -32,28 +32,28 @@ static Fvector boxvert[boxvertcount];
 #ifdef _EDITOR
 #define DU_DRAW_RS dxRenderDeviceRender::Instance().SetRS
 #define DU_DRAW_SH_C(a, c)\
-    {\
-        dxRenderDeviceRender::Instance().SetShader(a);\
-        dxRenderDeviceRender::Instance().SetRS(D3DRS_TEXTUREFACTOR, c);\
-    }
+	{\
+		dxRenderDeviceRender::Instance().SetShader(a);\
+		dxRenderDeviceRender::Instance().SetRS(D3DRS_TEXTUREFACTOR, c);\
+	}
 #define DU_DRAW_SH(a)\
-    {\
-        dxRenderDeviceRender::Instance().SetShader(a);\
-        dxRenderDeviceRender::Instance().SetRS(D3DRS_TEXTUREFACTOR, 0xFFFFFFFF);\
-    }
+	{\
+		dxRenderDeviceRender::Instance().SetShader(a);\
+		dxRenderDeviceRender::Instance().SetRS(D3DRS_TEXTUREFACTOR, 0xFFFFFFFF);\
+	}
 #else
 #define DU_DRAW_RS RCache.dbg_SetRS
 #define DU_DRAW_SH_C(sh, c)\
-    {\
-        RCache.set_Shader(sh);\
-        RCache.set_c("tfactor", float(color_get_R(c)) / 255.f, float(color_get_G(c)) / 255.f,\
-            float(color_get_B(c)) / 255.f, float(color_get_A(c)) / 255.f);\
-    }
+	{\
+		RCache.set_Shader(sh);\
+		RCache.set_c("tfactor", float(color_get_R(c)) / 255.f, float(color_get_G(c)) / 255.f,\
+			float(color_get_B(c)) / 255.f, float(color_get_A(c)) / 255.f);\
+	}
 #define DU_DRAW_SH(sh)\
-    {\
-        RCache.set_Shader(sh);\
-        RCache.set_c("tfactor", 1, 1, 1, 1);\
-    }
+	{\
+		RCache.set_Shader(sh);\
+		RCache.set_c("tfactor", 1, 1, 1, 1);\
+	}
 #endif
 
 #ifdef _EDITOR
@@ -79,20 +79,20 @@ static Fvector identboxwire[identboxwirecount] = { {-0.5f, -0.5f, -0.5f}, {-0.5f
 /*
 static const int identboxindexcount = 36;
 static const WORD identboxindices[identboxindexcount] = {
-	0, 1, 2,   2, 3, 0,
-	3, 2, 6,   6, 7, 3,
-	6, 4, 5,   6, 5, 7,
-	4, 1, 5,   1, 0, 5,
-	3, 5, 0,   3, 7, 5,
-	1, 4, 6,   1, 6, 2};
+	0, 1, 2,	2, 3, 0,
+	3, 2, 6,	6, 7, 3,
+	6, 4, 5,	6, 5, 7,
+	4, 1, 5,	1, 0, 5,
+	3, 5, 0,	3, 7, 5,
+	1, 4, 6,	1, 6, 2};
 static const int identboxindexwirecount = 24;
 static const WORD identboxindiceswire[identboxindexwirecount] = {
-	0, 1,   1, 2,
-	2, 3,   3, 0,
-	4, 6,   6, 7,
-	7, 5,   5, 4,
-	1, 4,   2, 6,
-	3, 7,   0, 5};
+	0, 1,	1, 2,
+	2, 3,	3, 0,
+	4, 6,	6, 7,
+	7, 5,	5, 4,
+	1, 4,	2, 6,
+	3, 7,	0, 5};
 */
 
 #define SIGN(x) ((x < 0) ? -1 : 1)

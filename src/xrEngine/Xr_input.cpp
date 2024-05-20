@@ -152,7 +152,7 @@ HRESULT CInput::CreateInputDevice(
 
 void CInput::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 {
-	font.OutNext("*** INPUT:    %2.2fms", pInput->GetStats().FrameTime.result);
+	font.OutNext("*** INPUT:	%2.2fms", pInput->GetStats().FrameTime.result);
 }
 
 void CInput::SetAllAcquire(BOOL bAcquire)

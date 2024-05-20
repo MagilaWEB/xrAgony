@@ -16,5 +16,5 @@
 // Установка анимации
 void CBaseMonster::SelectAnimation(const Fvector& /**_view/**/, const Fvector& /**_move/**/, float /**speed/**/)
 {
-    control().animation().update_frame();
+	control().animation().update_frame();
 }

@@ -31,8 +31,8 @@
 #if defined(LINUX)
 IC int vsnprintf_s(char* buffer, size_t size, size_t count, const char* format, va_list list)
 {
-    // TODO add bound check
-    return vsnprintf(buffer, size, format, list);
+	// TODO add bound check
+	return vsnprintf(buffer, size, format, list);
 }
 #endif
 
@@ -40,54 +40,54 @@ IC int vsnprintf_s(char* buffer, size_t size, size_t count, const char* format, 
 template <class T>
 IC T _min(T a, T b)
 {
-    return a < b ? a : b;
+	return a < b ? a : b;
 }
 template <class T>
 IC T _max(T a, T b)
 {
-    return a > b ? a : b;
+	return a > b ? a : b;
 }
 template <class T>
 IC T _sqr(T a)
 {
-    return a * a;
+	return a * a;
 }
 
 IC bool _valid(const float x) noexcept
 {
-    // check for: Signaling NaN, Quiet NaN, Negative infinity ( –INF), Positive infinity (+INF), Negative denormalized,
-    // Positive denormalized
+	// check for: Signaling NaN, Quiet NaN, Negative infinity ( –INF), Positive infinity (+INF), Negative denormalized,
+	// Positive denormalized
 #if defined(WINDOWS)
-    int cls = _fpclass(double(x));
-    if (cls & (_FPCLASS_SNAN + _FPCLASS_QNAN + _FPCLASS_NINF + _FPCLASS_PINF + _FPCLASS_ND + _FPCLASS_PD))
-        return false;
+	int cls = _fpclass(double(x));
+	if (cls & (_FPCLASS_SNAN + _FPCLASS_QNAN + _FPCLASS_NINF + _FPCLASS_PINF + _FPCLASS_ND + _FPCLASS_PD))
+		return false;
 #endif
-    /* *****other cases are*****
-    _FPCLASS_NN Negative normalized non-zero
-    _FPCLASS_NZ Negative zero ( – 0)
-    _FPCLASS_PZ Positive 0 (+0)
-    _FPCLASS_PN Positive normalized non-zero
-    */
-    return true;
+	/* *****other cases are*****
+	_FPCLASS_NN Negative normalized non-zero
+	_FPCLASS_NZ Negative zero ( – 0)
+	_FPCLASS_PZ Positive 0 (+0)
+	_FPCLASS_PN Positive normalized non-zero
+	*/
+	return true;
 }
 
 // double
 IC bool _valid(const double x)
 {
-    // check for: Signaling NaN, Quiet NaN, Negative infinity ( –INF), Positive infinity (+INF), Negative denormalized,
-    // Positive denormalized
+	// check for: Signaling NaN, Quiet NaN, Negative infinity ( –INF), Positive infinity (+INF), Negative denormalized,
+	// Positive denormalized
 #if defined(WINDOWS)
-    int cls = _fpclass(x);
-    if (cls & (_FPCLASS_SNAN + _FPCLASS_QNAN + _FPCLASS_NINF + _FPCLASS_PINF + _FPCLASS_ND + _FPCLASS_PD))
-        return false;
+	int cls = _fpclass(x);
+	if (cls & (_FPCLASS_SNAN + _FPCLASS_QNAN + _FPCLASS_NINF + _FPCLASS_PINF + _FPCLASS_ND + _FPCLASS_PD))
+		return false;
 #endif
-    /* *****other cases are*****
-    _FPCLASS_NN Negative normalized non-zero
-    _FPCLASS_NZ Negative zero ( – 0)
-    _FPCLASS_PZ Positive 0 (+0)
-    _FPCLASS_PN Positive normalized non-zero
-    */
-    return true;
+	/* *****other cases are*****
+	_FPCLASS_NN Negative normalized non-zero
+	_FPCLASS_NZ Negative zero ( – 0)
+	_FPCLASS_PZ Positive 0 (+0)
+	_FPCLASS_PN Positive normalized non-zero
+	*/
+	return true;
 }
 
 // XXX: "magic" specializations, that really require profiling to see if they are worth this effort.
@@ -123,85 +123,85 @@ IC size_t xr_strlen(const char* S) { return strlen(S); }
 
 inline int xr_strcpy(LPSTR destination, size_t const destination_size, LPCSTR source)
 {
-    return strcpy_s(destination, destination_size, source);
+	return strcpy_s(destination, destination_size, source);
 }
 
 inline int xr_strcat(LPSTR destination, size_t const buffer_size, LPCSTR source)
 {
-    return strcat_s(destination, buffer_size, source);
+	return strcat_s(destination, buffer_size, source);
 }
 
 inline int __cdecl xr_sprintf(LPSTR destination, size_t const buffer_size, LPCSTR format_string, ...)
 {
-    va_list args;
-    va_start(args, format_string);
-    return vsprintf_s(destination, buffer_size, format_string, args);
+	va_list args;
+	va_start(args, format_string);
+	return vsprintf_s(destination, buffer_size, format_string, args);
 }
 
 template <int count>
 inline int __cdecl xr_sprintf(char (&destination)[count], LPCSTR format_string, ...)
 {
-    va_list args;
-    va_start(args, format_string);
-    return vsprintf_s(destination, count, format_string, args);
+	va_list args;
+	va_start(args, format_string);
+	return vsprintf_s(destination, count, format_string, args);
 }
 #else // #ifndef MASTER_GOLD
 
 inline int xr_strcpy(LPSTR destination, size_t const destination_size, LPCSTR source)
 {
-    return strncpy_s(destination, destination_size, source, destination_size);
+	return strncpy_s(destination, destination_size, source, destination_size);
 }
 
 inline int xr_strcat(LPSTR destination, size_t const buffer_size, LPCSTR source)
 {
-    size_t const destination_length = xr_strlen(destination);
-    LPSTR i = destination + destination_length;
-    LPSTR const e = destination + buffer_size - 1;
-    if (i > e)
-        return 0;
+	size_t const destination_length = xr_strlen(destination);
+	LPSTR i = destination + destination_length;
+	LPSTR const e = destination + buffer_size - 1;
+	if (i > e)
+		return 0;
 
-    for (LPCSTR j = source; *j && (i != e); ++i, ++j)
-        *i = *j;
+	for (LPCSTR j = source; *j && (i != e); ++i, ++j)
+		*i = *j;
 
-    *i = 0;
-    return 0;
+	*i = 0;
+	return 0;
 }
 
 inline int __cdecl xr_sprintf(LPSTR destination, size_t const buffer_size, LPCSTR format_string, ...)
 {
-    va_list args;
-    va_start(args, format_string);
-    return vsnprintf_s(destination, buffer_size, buffer_size - 1, format_string, args);
+	va_list args;
+	va_start(args, format_string);
+	return vsnprintf_s(destination, buffer_size, buffer_size - 1, format_string, args);
 }
 
 template <int count>
 inline int __cdecl xr_sprintf(char (&destination)[count], LPCSTR format_string, ...)
 {
-    va_list args;
-    va_start(args, format_string);
-    return vsnprintf_s(destination, count, count - 1, format_string, args);
+	va_list args;
+	va_start(args, format_string);
+	return vsnprintf_s(destination, count, count - 1, format_string, args);
 }
 #endif // #ifndef MASTER_GOLD
 
 template <int count>
 inline int xr_strcpy(char (&destination)[count], LPCSTR source)
 {
-    return xr_strcpy(destination, count, source);
+	return xr_strcpy(destination, count, source);
 }
 
 template <int count>
 inline int xr_strcat(char (&destination)[count], LPCSTR source)
 {
-    return xr_strcat(destination, count, source);
+	return xr_strcat(destination, count, source);
 }
 //#endif // #ifndef _EDITOR
 
 inline void MemFill32(void* dst, u32 value, size_t dstSize)
 {
-    u32* ptr = static_cast<u32*>(dst);
-    u32* end = ptr + dstSize;
-    while (ptr != end)
-        *ptr++ = value;
+	u32* ptr = static_cast<u32*>(dst);
+	u32* end = ptr + dstSize;
+	while (ptr != end)
+		*ptr++ = value;
 }
 
 XRCORE_API char* timestamp(string64& dest);

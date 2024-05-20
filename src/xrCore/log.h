@@ -25,15 +25,15 @@ void XRCORE_API LogWinErr(LPCSTR msg, long err_code);
 
 struct LogCallback
 {
-    typedef void (*Func)(void* context, const char* s);
-    Func Log;
-    void* Context;
+	typedef void (*Func)(void* context, const char* s);
+	Func Log;
+	void* Context;
 
-    LogCallback() : Log(nullptr), Context(nullptr) {}
-    LogCallback(nullptr_t) : Log(nullptr), Context(nullptr) {}
-    LogCallback(Func log, void* ctx) : Log(log), Context(ctx) {}
-    void operator()(const char* s) { Log(Context, s); }
-    operator bool() const { return !!Log; }
+	LogCallback() : Log(nullptr), Context(nullptr) {}
+	LogCallback(nullptr_t) : Log(nullptr), Context(nullptr) {}
+	LogCallback(Func log, void* ctx) : Log(log), Context(ctx) {}
+	void operator()(const char* s) { Log(Context, s); }
+	operator bool() const { return !!Log; }
 };
 
 LogCallback XRCORE_API SetLogCB(const LogCallback& cb);

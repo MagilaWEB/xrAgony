@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 #include "ode/ode.h"
@@ -101,61 +101,61 @@ dIASSERT(dValid(b->avel[0])&&dValid(b->avel[1])&&dValid(b->avel[2]));
   for (j=0; j<3; j++) b->posr.pos[j] += h * b->lvel[j];
 
   if (b->flags & dxBodyFlagFiniteRotation) {
-    dVector3 irv;	// infitesimal rotation vector
-    dQuaternion q;	// quaternion for finite rotation
+	dVector3 irv;	// infitesimal rotation vector
+	dQuaternion q;	// quaternion for finite rotation
 
-    if (b->flags & dxBodyFlagFiniteRotationAxis) {
-      // split the angular velocity vector into a component along the finite
-      // rotation axis, and a component orthogonal to it.
-      dVector3 frv;		// finite rotation vector
-      dReal k = dDOT (b->finite_rot_axis,b->avel);
-      frv[0] = b->finite_rot_axis[0] * k;
-      frv[1] = b->finite_rot_axis[1] * k;
-      frv[2] = b->finite_rot_axis[2] * k;
-      irv[0] = b->avel[0] - frv[0];
-      irv[1] = b->avel[1] - frv[1];
-      irv[2] = b->avel[2] - frv[2];
+	if (b->flags & dxBodyFlagFiniteRotationAxis) {
+	  // split the angular velocity vector into a component along the finite
+	  // rotation axis, and a component orthogonal to it.
+	  dVector3 frv;		// finite rotation vector
+	  dReal k = dDOT (b->finite_rot_axis,b->avel);
+	  frv[0] = b->finite_rot_axis[0] * k;
+	  frv[1] = b->finite_rot_axis[1] * k;
+	  frv[2] = b->finite_rot_axis[2] * k;
+	  irv[0] = b->avel[0] - frv[0];
+	  irv[1] = b->avel[1] - frv[1];
+	  irv[2] = b->avel[2] - frv[2];
 
-      // make a rotation quaternion q that corresponds to frv * h.
-      // compare this with the full-finite-rotation case below.
-      h *= REAL(0.5);
-      dReal theta = k * h;
-      q[0] = dCos(theta);
-      dReal s = sinc(theta) * h;
-      q[1] = frv[0] * s;
-      q[2] = frv[1] * s;
-      q[3] = frv[2] * s;
-    }
-    else {
-      // make a rotation quaternion q that corresponds to w * h
-      dReal wlen = dSqrt (b->avel[0]*b->avel[0] + b->avel[1]*b->avel[1] +
+	  // make a rotation quaternion q that corresponds to frv * h.
+	  // compare this with the full-finite-rotation case below.
+	  h *= REAL(0.5);
+	  dReal theta = k * h;
+	  q[0] = dCos(theta);
+	  dReal s = sinc(theta) * h;
+	  q[1] = frv[0] * s;
+	  q[2] = frv[1] * s;
+	  q[3] = frv[2] * s;
+	}
+	else {
+	  // make a rotation quaternion q that corresponds to w * h
+	  dReal wlen = dSqrt (b->avel[0]*b->avel[0] + b->avel[1]*b->avel[1] +
 			  b->avel[2]*b->avel[2]);
-      h *= REAL(0.5);
-      dReal theta = wlen * h;
-      q[0] = dCos(theta);
-      dReal s = sinc(theta) * h;
-      q[1] = b->avel[0] * s;
-      q[2] = b->avel[1] * s;
-      q[3] = b->avel[2] * s;
-    }
+	  h *= REAL(0.5);
+	  dReal theta = wlen * h;
+	  q[0] = dCos(theta);
+	  dReal s = sinc(theta) * h;
+	  q[1] = b->avel[0] * s;
+	  q[2] = b->avel[1] * s;
+	  q[3] = b->avel[2] * s;
+	}
 
-    // do the finite rotation
-    dQuaternion q2;
-    dQMultiply0 (q2,q,b->q);
-    for (j=0; j<4; j++) b->q[j] = q2[j];
+	// do the finite rotation
+	dQuaternion q2;
+	dQMultiply0 (q2,q,b->q);
+	for (j=0; j<4; j++) b->q[j] = q2[j];
 
-    // do the infitesimal rotation if required
-    if (b->flags & dxBodyFlagFiniteRotationAxis) {
-      dReal dq[4];
-      dWtoDQ (irv,b->q,dq);
-      for (j=0; j<4; j++) b->q[j] += h * dq[j];
-    }
+	// do the infitesimal rotation if required
+	if (b->flags & dxBodyFlagFiniteRotationAxis) {
+	  dReal dq[4];
+	  dWtoDQ (irv,b->q,dq);
+	  for (j=0; j<4; j++) b->q[j] += h * dq[j];
+	}
   }
   else {
-    // the normal way - do an infitesimal rotation
-    dReal dq[4];
-    dWtoDQ (b->avel,b->q,dq);
-    for (j=0; j<4; j++) b->q[j] += h * dq[j];
+	// the normal way - do an infitesimal rotation
+	dReal dq[4];
+	dWtoDQ (b->avel,b->q,dq);
+	for (j=0; j<4; j++) b->q[j] += h * dq[j];
   }
 
   // normalize the quaternion and convert it to a rotation matrix
@@ -164,7 +164,7 @@ dIASSERT(dValid(b->avel[0])&&dValid(b->avel[1])&&dValid(b->avel[2]));
 
   // notify all attached geoms that this body has moved
   for (dxGeom *geom = b->geom; geom; geom = dGeomGetBodyNext (geom))
-    dGeomMoved (geom);
+	dGeomMoved (geom);
 
 #ifdef DEBUG_VALID
 dIASSERT(dValid(b->avel[0])&&dValid(b->avel[1])&&dValid(b->avel[2]));
@@ -222,50 +222,50 @@ void dxProcessIslands (dxWorld *world, dReal stepsize, dstepper_fn_t stepper)
   dxBody **stack = (dxBody**) ALLOCA (stackalloc * sizeof(dxBody*));
 
   for (bb=world->firstbody; bb; bb=(dxBody*)bb->next) {
-    // get bb = the next enabled, untagged body, and tag it
-    if (bb->tag || (bb->flags & dxBodyDisabled)) continue;
-    bb->tag = 1;
+	// get bb = the next enabled, untagged body, and tag it
+	if (bb->tag || (bb->flags & dxBodyDisabled)) continue;
+	bb->tag = 1;
 
-    // tag all bodies and joints starting from bb.
-    int stacksize = 0;
-    b = bb;
-    body[0] = bb;
-    bcount = 1;
-    jcount = 0;
-    goto quickstart;
-    while (stacksize > 0) {
-      b = stack[--stacksize];	// pop body off stack
-      body[bcount++] = b;	// put body on body list
-      quickstart:
+	// tag all bodies and joints starting from bb.
+	int stacksize = 0;
+	b = bb;
+	body[0] = bb;
+	bcount = 1;
+	jcount = 0;
+	goto quickstart;
+	while (stacksize > 0) {
+	  b = stack[--stacksize];	// pop body off stack
+	  body[bcount++] = b;	// put body on body list
+	  quickstart:
 
-      // traverse and tag all body's joints, add untagged connected bodies
-      // to stack
-      for (dxJointNode *n=b->firstjoint; n; n=n->next) {
+	  // traverse and tag all body's joints, add untagged connected bodies
+	  // to stack
+	  for (dxJointNode *n=b->firstjoint; n; n=n->next) {
 	if (!n->joint->tag) {
 	  n->joint->tag = 1;
 	  joint[jcount++] = n->joint;
 	  if (n->body && !n->body->tag) {
-	    n->body->tag = 1;
-	    stack[stacksize++] = n->body;
+		n->body->tag = 1;
+		stack[stacksize++] = n->body;
 	  }
 	}
-      }
-      dIASSERT(stacksize <= world->nb);
-      dIASSERT(stacksize <= world->nj);
-    }
+	  }
+	  dIASSERT(stacksize <= world->nb);
+	  dIASSERT(stacksize <= world->nj);
+	}
 
-    // now do something with body and joint lists
-    stepper (world,body,bcount,joint,jcount,stepsize);
+	// now do something with body and joint lists
+	stepper (world,body,bcount,joint,jcount,stepsize);
 
-    // what we've just done may have altered the body/joint tag values.
-    // we must make sure that these tags are nonzero.
-    // also make sure all bodies are in the enabled state.
-    int i;
-    for (i=0; i<bcount; i++) {
-      body[i]->tag = 1;
-      body[i]->flags &= ~dxBodyDisabled;
-    }
-    for (i=0; i<jcount; i++) joint[i]->tag = 1;
+	// what we've just done may have altered the body/joint tag values.
+	// we must make sure that these tags are nonzero.
+	// also make sure all bodies are in the enabled state.
+	int i;
+	for (i=0; i<bcount; i++) {
+	  body[i]->tag = 1;
+	  body[i]->flags &= ~dxBodyDisabled;
+	}
+	for (i=0; i<jcount; i++) joint[i]->tag = 1;
   }
 
   // if debugging, check that all objects (except for disabled bodies,
@@ -273,21 +273,21 @@ void dxProcessIslands (dxWorld *world, dReal stepsize, dstepper_fn_t stepper)
   // were tagged.
 # ifndef dNODEBUG
   for (b=world->firstbody; b; b=(dxBody*)b->next) {
-    if (b->flags & dxBodyDisabled) {
-      if (b->tag) dDebug (0,"disabled body tagged");
-    }
-    else {
-      if (!b->tag) dDebug (0,"enabled body not tagged");
-    }
+	if (b->flags & dxBodyDisabled) {
+	  if (b->tag) dDebug (0,"disabled body tagged");
+	}
+	else {
+	  if (!b->tag) dDebug (0,"enabled body not tagged");
+	}
   }
   for (j=world->firstjoint; j; j=(dxJoint*)j->next) {
-    if ((j->node[0].body && (j->node[0].body->flags & dxBodyDisabled)==0) ||
+	if ((j->node[0].body && (j->node[0].body->flags & dxBodyDisabled)==0) ||
 	(j->node[1].body && (j->node[1].body->flags & dxBodyDisabled)==0)) {
-      if (!j->tag) dDebug (0,"attached enabled joint not tagged");
-    }
-    else {
-      if (j->tag) dDebug (0,"unattached or disabled joint tagged");
-    }
+	  if (!j->tag) dDebug (0,"attached enabled joint not tagged");
+	}
+	else {
+	  if (j->tag) dDebug (0,"unattached or disabled joint tagged");
+	}
   }
 # endif
 }

@@ -10,6 +10,6 @@
 class CAntirad : public CEatableItemObject
 {
 public:
-    CAntirad();
-    virtual ~CAntirad();
+	CAntirad();
+	virtual ~CAntirad();
 };

@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 /* this comes from the `reuse' library. copy any changes back to the source.
@@ -27,9 +27,9 @@ they allocate memory from a separate pool.
 
 advantages over alloca():
   - consecutive allocations are guaranteed to be contiguous with increasing
-    address.
+	address.
   - functions can allocate stack memory that is returned to the caller,
-    in other words pushing and popping stack frames is optional.
+	in other words pushing and popping stack frames is optional.
 
 disadvantages compared to alloca():
   - less portable
@@ -38,7 +38,7 @@ disadvantages compared to alloca():
 
 just like alloca():
   - using too much stack memory does not fail gracefully, it fails with a
-    segfault.
+	segfault.
 
 */
 
@@ -58,8 +58,8 @@ struct dStack {
   char *pointer;	// current top of the stack
   char *frame;		// linked list of stack frame ptrs
 # ifdef WIN32		// stuff for windows:
-  int pagesize;		//   - page size - this is ASSUMED to be a power of 2
-  int committed;	//   - bytes committed in allocated region
+  int pagesize;		//	- page size - this is ASSUMED to be a power of 2
+  int committed;	//	- bytes committed in allocated region
 #endif
 
   // initialize the stack. `max_size' is the maximum size that the stack can
@@ -81,16 +81,16 @@ struct dStack {
 
   char * alloc (int size)
   {
-    char *ret = pointer;
-    pointer += ((size-1) | (sizeof(long int)-1) )+1;
-#   ifdef WIN32
-    // for windows we need to commit pages as they are required
-    if ((pointer-base) > committed) {
-      committed = ((pointer-base-1) | (pagesize-1))+1;	// round up to pgsize
-      VirtualAlloc (base,committed,MEM_COMMIT,PAGE_READWRITE);
-    }
-#   endif
-    return ret;
+	char *ret = pointer;
+	pointer += ((size-1) | (sizeof(long int)-1) )+1;
+#	ifdef WIN32
+	// for windows we need to commit pages as they are required
+	if ((pointer-base) > committed) {
+	  committed = ((pointer-base-1) | (pagesize-1))+1;	// round up to pgsize
+	  VirtualAlloc (base,committed,MEM_COMMIT,PAGE_READWRITE);
+	}
+#	endif
+	return ret;
   }
 
 
@@ -98,7 +98,7 @@ struct dStack {
 
   char *nextAlloc()
   {
-    return pointer;
+	return pointer;
   }
 
 
@@ -111,26 +111,26 @@ struct dStack {
 
   char * pushFrame()
   {
-    char *newframe = pointer;
-    char **addr = (char**) alloc (sizeof(char*));
-    *addr = frame;
-    frame = newframe;
-    return newframe;
+	char *newframe = pointer;
+	char **addr = (char**) alloc (sizeof(char*));
+	*addr = frame;
+	frame = newframe;
+	return newframe;
 
-    /* OLD CODE
+	/* OLD CODE
 	*((char**)pointer) = frame;
 	frame = pointer;
 	char *ret = pointer;
 	pointer += sizeof(char*);
 	return ret;
-    */
+	*/
   }
 
   char * popFrame()
   {
-    pointer = frame;
-    frame = *((char**)pointer);
-    return pointer;
+	pointer = frame;
+	frame = *((char**)pointer);
+	return pointer;
   }
 };
 

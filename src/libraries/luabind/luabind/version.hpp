@@ -9,9 +9,9 @@
 
 // Each component uses two digits, so:
 //
-//   major = LUABIND_VERSION / 10000
-//   minor = LUABIND_VERSION / 100 % 100
-//   patch = LUABIND_VERSION % 100
+//	major = LUABIND_VERSION / 10000
+//	minor = LUABIND_VERSION / 100 % 100
+//	patch = LUABIND_VERSION % 100
 
 #endif // LUABIND_VERSION_090216_HPP
 

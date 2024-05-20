@@ -1,13 +1,13 @@
 /********************************************************************
- *                                                                  *
- * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.   *
- * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
+ *																  *
+ * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.	*
+ * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS	 *
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
- * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
- *                                                                  *
- * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009                *
- * by the Xiph.Org Foundation http://www.xiph.org/                  *
- *                                                                  *
+ * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.		*
+ *																  *
+ * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009				*
+ * by the Xiph.Org Foundation http://www.xiph.org/				  *
+ *																  *
  ********************************************************************
 
   function:
@@ -35,12 +35,12 @@
  * The functions documented here are actually subdivided into three 
  * separate libraries:
  * - <tt>libtheoraenc</tt> contains the encoder interface,
- *   described in \ref encfuncs.
+ *	described in \ref encfuncs.
  * - <tt>libtheoradec</tt> contains the decoder interface and
- *   routines shared with the encoder.
- *   You must also link to this if you link to <tt>libtheoraenc</tt>.
- *   The routines in this library are described in \ref decfuncs and 
- *   \ref basefuncs.
+ *	routines shared with the encoder.
+ *	You must also link to this if you link to <tt>libtheoraenc</tt>.
+ *	The routines in this library are described in \ref decfuncs and 
+ *	\ref basefuncs.
  * - <tt>libtheora</tt> contains the \ref oldfuncs.
  *
  * New code should link to <tt>libtheoradec</tt> and, if using encoder
@@ -72,23 +72,23 @@ extern "C" {
 /**\name Return codes*/
 /*@{*/
 /**An invalid pointer was provided.*/
-#define TH_EFAULT     (-1)
+#define TH_EFAULT	 (-1)
 /**An invalid argument was provided.*/
-#define TH_EINVAL     (-10)
+#define TH_EINVAL	 (-10)
 /**The contents of the header were incomplete, invalid, or unexpected.*/
 #define TH_EBADHEADER (-20)
 /**The header does not belong to a Theora stream.*/
 #define TH_ENOTFORMAT (-21)
 /**The bitstream version is too high.*/
-#define TH_EVERSION   (-22)
+#define TH_EVERSION	(-22)
 /**The specified function is not implemented.*/
-#define TH_EIMPL      (-23)
+#define TH_EIMPL	  (-23)
 /**There were errors in the video data packet.*/
 #define TH_EBADPACKET (-24)
 /**The decoded packet represented a dropped frame.
-   The player can continue to display the current frame, as the contents of the
-    decoded frame buffer have not changed.*/
-#define TH_DUPFRAME   (1)
+	The player can continue to display the current frame, as the contents of the
+	decoded frame buffer have not changed.*/
+#define TH_DUPFRAME	(1)
 /*@}*/
 
 /**The currently defined color space tags.
@@ -97,7 +97,7 @@ extern "C" {
  *  of each of these color spaces.*/
 typedef enum{
   /**The color space was not specified at the encoder.
-      It may be conveyed by an external means.*/
+	  It may be conveyed by an external means.*/
   TH_CS_UNSPECIFIED,
   /**A color space designed for NTSC content.*/
   TH_CS_ITU_REC_470M,
@@ -113,17 +113,17 @@ typedef enum{
  *  locations.*/
 typedef enum{
   /**Chroma decimation by 2 in both the X and Y directions (4:2:0).
-     The Cb and Cr chroma planes are half the width and half the
-      height of the luma plane.*/
+	 The Cb and Cr chroma planes are half the width and half the
+	  height of the luma plane.*/
   TH_PF_420,
   /**Currently reserved.*/
   TH_PF_RSVD,
   /**Chroma decimation by 2 in the X direction (4:2:2).
-     The Cb and Cr chroma planes are half the width of the luma plane, but full
-      height.*/
+	 The Cb and Cr chroma planes are half the width of the luma plane, but full
+	  height.*/
   TH_PF_422,
   /**No chroma decimation (4:4:4).
-     The Cb and Cr chroma planes are full width and full height.*/
+	 The Cb and Cr chroma planes are full width and full height.*/
   TH_PF_444,
   /**The total number of currently defined pixel formats.*/
   TH_PF_NFORMATS
@@ -141,11 +141,11 @@ typedef enum{
  * The decoder currently always generates images with positive strides.*/
 typedef struct{
   /**The width of this plane.*/
-  int            width;
+  int			width;
   /**The height of this plane.*/
-  int            height;
+  int			height;
   /**The offset in bytes between successive rows.*/
-  int            stride;
+  int			stride;
   /**A pointer to the beginning of the first row.*/
   unsigned char *data;
 }th_img_plane;
@@ -203,51 +203,51 @@ typedef th_img_plane th_ycbcr_buffer[3];
  *  image dimensions.*/
 typedef struct{
   /**\name Theora version
-   * Bitstream version information.*/
+	* Bitstream version information.*/
   /*@{*/
   unsigned char version_major;
   unsigned char version_minor;
   unsigned char version_subminor;
   /*@}*/
   /**The encoded frame width.
-   * This must be a multiple of 16, and less than 1048576.*/
+	* This must be a multiple of 16, and less than 1048576.*/
   ogg_uint32_t  frame_width;
   /**The encoded frame height.
-   * This must be a multiple of 16, and less than 1048576.*/
+	* This must be a multiple of 16, and less than 1048576.*/
   ogg_uint32_t  frame_height;
   /**The displayed picture width.
-   * This must be no larger than width.*/
+	* This must be no larger than width.*/
   ogg_uint32_t  pic_width;
   /**The displayed picture height.
-   * This must be no larger than height.*/
+	* This must be no larger than height.*/
   ogg_uint32_t  pic_height;
   /**The X offset of the displayed picture.
-   * This must be no larger than #frame_width-#pic_width or 255, whichever is
-   *  smaller.*/
+	* This must be no larger than #frame_width-#pic_width or 255, whichever is
+	*  smaller.*/
   ogg_uint32_t  pic_x;
   /**The Y offset of the displayed picture.
-   * This must be no larger than #frame_height-#pic_height, and
-   *  #frame_height-#pic_height-#pic_y must be no larger than 255.
-   * This slightly funny restriction is due to the fact that the offset is
-   *  specified from the top of the image for consistency with the standard
-   *  graphics left-handed coordinate system used throughout this API, while
-   *  it is stored in the encoded stream as an offset from the bottom.*/
+	* This must be no larger than #frame_height-#pic_height, and
+	*  #frame_height-#pic_height-#pic_y must be no larger than 255.
+	* This slightly funny restriction is due to the fact that the offset is
+	*  specified from the top of the image for consistency with the standard
+	*  graphics left-handed coordinate system used throughout this API, while
+	*  it is stored in the encoded stream as an offset from the bottom.*/
   ogg_uint32_t  pic_y;
   /**\name Frame rate
-   * The frame rate, as a fraction.
-   * If either is 0, the frame rate is undefined.*/
+	* The frame rate, as a fraction.
+	* If either is 0, the frame rate is undefined.*/
   /*@{*/
   ogg_uint32_t  fps_numerator;
   ogg_uint32_t  fps_denominator;
   /*@}*/
   /**\name Aspect ratio
-   * The aspect ratio of the pixels.
-   * If either value is zero, the aspect ratio is undefined.
-   * If not specified by any external means, 1:1 should be assumed.
-   * The aspect ratio of the full picture can be computed as
-   * \code
-   *  aspect_numerator*pic_width/(aspect_denominator*pic_height).
-   * \endcode */
+	* The aspect ratio of the pixels.
+	* If either value is zero, the aspect ratio is undefined.
+	* If not specified by any external means, 1:1 should be assumed.
+	* The aspect ratio of the full picture can be computed as
+	* \code
+	*  aspect_numerator*pic_width/(aspect_denominator*pic_height).
+	* \endcode */
   /*@{*/
   ogg_uint32_t  aspect_numerator;
   ogg_uint32_t  aspect_denominator;
@@ -257,43 +257,43 @@ typedef struct{
   /**The pixel format.*/
   th_pixel_fmt  pixel_fmt;
   /**The target bit-rate in bits per second.
-     If initializing an encoder with this struct, set this field to a non-zero
-      value to activate CBR encoding by default.*/
-  int           target_bitrate;
+	 If initializing an encoder with this struct, set this field to a non-zero
+	  value to activate CBR encoding by default.*/
+  int			target_bitrate;
   /**The target quality level.
-     Valid values range from 0 to 63, inclusive, with higher values giving
-      higher quality.
-     If initializing an encoder with this struct, and #target_bitrate is set
-      to zero, VBR encoding at this quality will be activated by default.*/
+	 Valid values range from 0 to 63, inclusive, with higher values giving
+	  higher quality.
+	 If initializing an encoder with this struct, and #target_bitrate is set
+	  to zero, VBR encoding at this quality will be activated by default.*/
   /*Currently this is set so that a qi of 0 corresponds to distortions of 24
-     times the JND, and each increase by 16 halves that value.
-    This gives us fine discrimination at low qualities, yet effective rate
-     control at high qualities.
-    The qi value 63 is special, however.
-    For this, the highest quality, we use one half of a JND for our threshold.
-    Due to the lower bounds placed on allowable quantizers in Theora, we will
-     not actually be able to achieve quality this good, but this should
-     provide as close to visually lossless quality as Theora is capable of.
-    We could lift the quantizer restrictions without breaking VP3.1
-     compatibility, but this would result in quantized coefficients that are
-     too large for the current bitstream to be able to store.
-    We'd have to redesign the token syntax to store these large coefficients,
-     which would make transcoding complex.*/
-  int           quality;
+	 times the JND, and each increase by 16 halves that value.
+	This gives us fine discrimination at low qualities, yet effective rate
+	 control at high qualities.
+	The qi value 63 is special, however.
+	For this, the highest quality, we use one half of a JND for our threshold.
+	Due to the lower bounds placed on allowable quantizers in Theora, we will
+	 not actually be able to achieve quality this good, but this should
+	 provide as close to visually lossless quality as Theora is capable of.
+	We could lift the quantizer restrictions without breaking VP3.1
+	 compatibility, but this would result in quantized coefficients that are
+	 too large for the current bitstream to be able to store.
+	We'd have to redesign the token syntax to store these large coefficients,
+	 which would make transcoding complex.*/
+  int			quality;
   /**The amount to shift to extract the last keyframe number from the granule
-   *  position.
-   * This can be at most 31.
-   * th_info_init() will set this to a default value (currently <tt>6</tt>,
-   *  which is good for streaming applications), but you can set it to 0 to
-   *  make every frame a keyframe.
-   * The maximum distance between key frames is
-   *  <tt>1<<#keyframe_granule_shift</tt>.
-   * The keyframe frequency can be more finely controlled with
-   *  #TH_ENCCTL_SET_KEYFRAME_FREQUENCY_FORCE, which can also be adjusted
-   *  during encoding (for example, to force the next frame to be a keyframe),
-   *  but it cannot be set larger than the amount permitted by this field after
-   *  the headers have been output.*/
-  int           keyframe_granule_shift;
+	*  position.
+	* This can be at most 31.
+	* th_info_init() will set this to a default value (currently <tt>6</tt>,
+	*  which is good for streaming applications), but you can set it to 0 to
+	*  make every frame a keyframe.
+	* The maximum distance between key frames is
+	*  <tt>1<<#keyframe_granule_shift</tt>.
+	* The keyframe frequency can be more finely controlled with
+	*  #TH_ENCCTL_SET_KEYFRAME_FREQUENCY_FORCE, which can also be adjusted
+	*  during encoding (for example, to force the next frame to be a keyframe),
+	*  but it cannot be set larger than the amount permitted by this field after
+	*  the headers have been output.*/
+  int			keyframe_granule_shift;
 }th_info;
 
 /**The comment information.
@@ -324,11 +324,11 @@ typedef struct th_comment{
   /**The array of comment string vectors.*/
   char **user_comments;
   /**An array of the corresponding length of each vector, in bytes.*/
-  int   *comment_lengths;
+  int	*comment_lengths;
   /**The total number of comment strings.*/
-  int    comments;
+  int	comments;
   /**The null-terminated vendor string.
-     This identifies the software used to encode the stream.*/
+	 This identifies the software used to encode the stream.*/
   char  *vendor;
 }th_comment;
 
@@ -340,79 +340,79 @@ typedef unsigned char th_quant_base[64];
 /**A set of \a qi ranges.*/
 typedef struct{
   /**The number of ranges in the set.*/
-  int                  nranges;
+  int				  nranges;
   /**The size of each of the #nranges ranges.
-     These must sum to 63.*/
-  const int           *sizes;
+	 These must sum to 63.*/
+  const int			*sizes;
   /**#nranges <tt>+1</tt> base matrices.
-     Matrices \a i and <tt>i+1</tt> form the endpoints of range \a i.*/
+	 Matrices \a i and <tt>i+1</tt> form the endpoints of range \a i.*/
   const th_quant_base *base_matrices;
 }th_quant_ranges;
 
 /**A complete set of quantization parameters.
-   The quantizer for each coefficient is calculated as:
-   \code
-    Q=MAX(MIN(qmin[qti][ci!=0],scale[ci!=0][qi]*base[qti][pli][qi][ci]/100),
-     1024).
-   \endcode
+	The quantizer for each coefficient is calculated as:
+	\code
+	Q=MAX(MIN(qmin[qti][ci!=0],scale[ci!=0][qi]*base[qti][pli][qi][ci]/100),
+	 1024).
+	\endcode
 
-   \a qti is the quantization type index: 0 for intra, 1 for inter.
-   <tt>ci!=0</tt> is 0 for the DC coefficient and 1 for AC coefficients.
-   \a qi is the quality index, ranging between 0 (low quality) and 63 (high
-    quality).
-   \a pli is the color plane index: 0 for Y', 1 for Cb, 2 for Cr.
-   \a ci is the DCT coefficient index.
-   Coefficient indices correspond to the normal 2D DCT block
-    ordering--row-major with low frequencies first--\em not zig-zag order.
+	\a qti is the quantization type index: 0 for intra, 1 for inter.
+	<tt>ci!=0</tt> is 0 for the DC coefficient and 1 for AC coefficients.
+	\a qi is the quality index, ranging between 0 (low quality) and 63 (high
+	quality).
+	\a pli is the color plane index: 0 for Y', 1 for Cb, 2 for Cr.
+	\a ci is the DCT coefficient index.
+	Coefficient indices correspond to the normal 2D DCT block
+	ordering--row-major with low frequencies first--\em not zig-zag order.
 
-   Minimum quantizers are constant, and are given by:
-   \code
-   qmin[2][2]={{4,2},{8,4}}.
-   \endcode
+	Minimum quantizers are constant, and are given by:
+	\code
+	qmin[2][2]={{4,2},{8,4}}.
+	\endcode
 
-   Parameters that can be stored in the bitstream are as follows:
-    - The two scale matrices ac_scale and dc_scale.
-      \code
-      scale[2][64]={dc_scale,ac_scale}.
-      \endcode
-    - The base matrices for each \a qi, \a qti and \a pli (up to 384 in all).
-      In order to avoid storing a full 384 base matrices, only a sparse set of
-       matrices are stored, and the rest are linearly interpolated.
-      This is done as follows.
-      For each \a qti and \a pli, a series of \a n \a qi ranges is defined.
-      The size of each \a qi range can vary arbitrarily, but they must sum to
-       63.
-      Then, <tt>n+1</tt> matrices are specified, one for each endpoint of the
-       ranges.
-      For interpolation purposes, each range's endpoints are the first \a qi
-       value it contains and one past the last \a qi value it contains.
-      Fractional values are rounded to the nearest integer, with ties rounded
-       away from zero.
+	Parameters that can be stored in the bitstream are as follows:
+	- The two scale matrices ac_scale and dc_scale.
+	  \code
+	  scale[2][64]={dc_scale,ac_scale}.
+	  \endcode
+	- The base matrices for each \a qi, \a qti and \a pli (up to 384 in all).
+	  In order to avoid storing a full 384 base matrices, only a sparse set of
+		matrices are stored, and the rest are linearly interpolated.
+	  This is done as follows.
+	  For each \a qti and \a pli, a series of \a n \a qi ranges is defined.
+	  The size of each \a qi range can vary arbitrarily, but they must sum to
+		63.
+	  Then, <tt>n+1</tt> matrices are specified, one for each endpoint of the
+		ranges.
+	  For interpolation purposes, each range's endpoints are the first \a qi
+		value it contains and one past the last \a qi value it contains.
+	  Fractional values are rounded to the nearest integer, with ties rounded
+		away from zero.
 
-      Base matrices are stored by reference, so if the same matrices are used
-       multiple times, they will only appear once in the bitstream.
-      The bitstream is also capable of omitting an entire set of ranges and
-       its associated matrices if they are the same as either the previous
-       set (indexed in row-major order) or if the inter set is the same as the
-       intra set.
+	  Base matrices are stored by reference, so if the same matrices are used
+		multiple times, they will only appear once in the bitstream.
+	  The bitstream is also capable of omitting an entire set of ranges and
+		its associated matrices if they are the same as either the previous
+		set (indexed in row-major order) or if the inter set is the same as the
+		intra set.
 
-    - Loop filter limit values.
-      The same limits are used for the loop filter in all color planes, despite
-       potentially differing levels of quantization in each.
+	- Loop filter limit values.
+	  The same limits are used for the loop filter in all color planes, despite
+		potentially differing levels of quantization in each.
 
-   For the current encoder, <tt>scale[ci!=0][qi]</tt> must be no greater
-    than <tt>scale[ci!=0][qi-1]</tt> and <tt>base[qti][pli][qi][ci]</tt> must
-    be no greater than <tt>base[qti][pli][qi-1][ci]</tt>.
-   These two conditions ensure that the actual quantizer for a given \a qti,
-    \a pli, and \a ci does not increase as \a qi increases.
-   This is not required by the decoder.*/
+	For the current encoder, <tt>scale[ci!=0][qi]</tt> must be no greater
+	than <tt>scale[ci!=0][qi-1]</tt> and <tt>base[qti][pli][qi][ci]</tt> must
+	be no greater than <tt>base[qti][pli][qi-1][ci]</tt>.
+	These two conditions ensure that the actual quantizer for a given \a qti,
+	\a pli, and \a ci does not increase as \a qi increases.
+	This is not required by the decoder.*/
 typedef struct{
   /**The DC scaling factors.*/
-  ogg_uint16_t    dc_scale[64];
+  ogg_uint16_t	dc_scale[64];
   /**The AC scaling factors.*/
-  ogg_uint16_t    ac_scale[64];
+  ogg_uint16_t	ac_scale[64];
   /**The loop filter limit values.*/
-  unsigned char   loop_filter_limits[64];
+  unsigned char	loop_filter_limits[64];
   /**The \a qi ranges for each \a ci and \a pli.*/
   th_quant_ranges qi_ranges[2][3];
 }th_quant_info;
@@ -422,7 +422,7 @@ typedef struct{
 /**The number of Huffman tables used by Theora.*/
 #define TH_NHUFFMAN_TABLES (80)
 /**The number of DCT token values in each table.*/
-#define TH_NDCT_TOKENS     (32)
+#define TH_NDCT_TOKENS	 (32)
 
 /**A Huffman code for a Theora DCT token.
  * Each set of Huffman codes in a given table must form a complete, prefix-free
@@ -437,11 +437,11 @@ typedef struct{
  *  the remaining four groups must all be in the same place.*/
 typedef struct{
   /**The bit pattern for the code, with the LSbit of the pattern aligned in
-   *   the LSbit of the word.*/
+	*	the LSbit of the word.*/
   ogg_uint32_t pattern;
   /**The number of bits in the code.
-   * This must be between 0 and 32, inclusive.*/
-  int          nbits;
+	* This must be between 0 and 32, inclusive.*/
+  int		  nbits;
 }th_huff_code;
 
 
@@ -469,7 +469,7 @@ extern ogg_uint32_t th_version_number(void);
  * The granule position is interpreted in the context of a given
  *  #th_enc_ctx or #th_dec_ctx handle (either will suffice).
  * \param _encdec  A previously allocated #th_enc_ctx or #th_dec_ctx
- *                  handle.
+ *				  handle.
  * \param _granpos The granule position to convert.
  * \returns The absolute frame index corresponding to \a _granpos.
  * \retval -1 The given granule position was invalid (i.e. negative).*/
@@ -478,12 +478,12 @@ extern ogg_int64_t th_granule_frame(void *_encdec,ogg_int64_t _granpos);
  * The granule position is interpreted in the context of a given
  *  #th_enc_ctx or #th_dec_ctx handle (either will suffice).
  * \param _encdec  A previously allocated #th_enc_ctx or #th_dec_ctx
- *                  handle.
+ *				  handle.
  * \param _granpos The granule position to convert.
  * \return The absolute time in seconds corresponding to \a _granpos.
- *         This is the "end time" for the frame, or the latest time it should
- *          be displayed.
- *         It is not the presentation time.
+ *		 This is the "end time" for the frame, or the latest time it should
+ *		  be displayed.
+ *		 It is not the presentation time.
  * \retval -1 The given granule position was invalid (i.e. negative).*/
 extern double th_granule_time(void *_encdec,ogg_int64_t _granpos);
 /**Determines whether a Theora packet is a header or not.
@@ -534,9 +534,9 @@ extern void th_comment_init(th_comment *_tc);
  *  support them.
  * To add such comments you will need to manipulate the #th_comment
  *  structure directly.
- * \param _tc      The #th_comment struct to add the comment to.
+ * \param _tc	  The #th_comment struct to add the comment to.
  * \param _comment Must be a null-terminated UTF-8 string containing the
- *                  comment in "TAG=the value" form.*/
+ *				  comment in "TAG=the value" form.*/
 extern void th_comment_add(th_comment *_tc, char *_comment);
 /**Add a comment to an initialized #th_comment structure.
  * \note Neither th_comment_add() nor th_comment_add_tag() support
@@ -546,31 +546,31 @@ extern void th_comment_add(th_comment *_tc, char *_comment);
  *  structure directly.
  * \param _tc  The #th_comment struct to add the comment to.
  * \param _tag A null-terminated string containing the tag  associated with
- *              the comment.
+ *			  the comment.
  * \param _val The corresponding value as a null-terminated string.*/
 extern void th_comment_add_tag(th_comment *_tc,char *_tag,char *_val);
 /**Look up a comment value by its tag.
- * \param _tc    An initialized #th_comment structure.
- * \param _tag   The tag to look up.
+ * \param _tc	An initialized #th_comment structure.
+ * \param _tag	The tag to look up.
  * \param _count The instance of the tag.
- *               The same tag can appear multiple times, each with a distinct
- *                value, so an index is required to retrieve them all.
- *               The order in which these values appear is significant and
- *                should be preserved.
- *               Use th_comment_query_count() to get the legal range for
- *                the \a _count parameter.
+ *				The same tag can appear multiple times, each with a distinct
+ *				value, so an index is required to retrieve them all.
+ *				The order in which these values appear is significant and
+ *				should be preserved.
+ *				Use th_comment_query_count() to get the legal range for
+ *				the \a _count parameter.
  * \return A pointer to the queried tag's value.
- *         This points directly to data in the #th_comment structure.
- *         It should not be modified or freed by the application, and
- *          modifications to the structure may invalidate the pointer.
+ *		 This points directly to data in the #th_comment structure.
+ *		 It should not be modified or freed by the application, and
+ *		  modifications to the structure may invalidate the pointer.
  * \retval NULL If no matching tag is found.*/
 extern char *th_comment_query(th_comment *_tc,char *_tag,int _count);
 /**Look up the number of instances of a tag.
  * Call this first when querying for a specific tag and then iterate over the
  *  number of instances with separate calls to th_comment_query() to
  *  retrieve all the values for that tag in order.
- * \param _tc    An initialized #th_comment structure.
- * \param _tag   The tag to look up.
+ * \param _tc	An initialized #th_comment structure.
+ * \param _tag	The tag to look up.
  * \return The number on instances of this particular tag.*/
 extern int th_comment_query_count(th_comment *_tc,char *_tag);
 /**Clears a #th_comment structure.

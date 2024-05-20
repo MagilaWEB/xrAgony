@@ -5,11 +5,11 @@
 
 ScopeLock::ScopeLock(Lock* SyncObject) : syncObject(SyncObject)
 {
-    R_ASSERT(syncObject);
-    syncObject->Enter();
+	R_ASSERT(syncObject);
+	syncObject->Enter();
 }
 
 ScopeLock::~ScopeLock()
 {
-    syncObject->Leave();
+	syncObject->Leave();
 }

@@ -201,10 +201,10 @@ void CSoundRender_Core::DumpStatistics(IGameFont& font, IPerformanceAlert* alert
 	Stats.FrameEnd();
 	CSound_stats sndStat;
 	statistic(&sndStat, nullptr);
-	font.OutNext("*** SOUND:    %2.2fms", Stats.Update.result);
-	font.OutNext("Rendered:     %d", sndStat._rendered);
-	font.OutNext("Simulated:    %d", sndStat._simulated);
-	font.OutNext("Events:       %d", sndStat._events);
+	font.OutNext("*** SOUND:	%2.2fms", Stats.Update.result);
+	font.OutNext("Rendered:	 %d", sndStat._rendered);
+	font.OutNext("Simulated:	%d", sndStat._simulated);
+	font.OutNext("Events:		%d", sndStat._events);
 	font.OutNext("Hits/misses:  %d/%d", sndStat._cache_hits, sndStat._cache_misses);
 	Stats.FrameStart();
 }

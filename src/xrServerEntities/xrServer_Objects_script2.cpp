@@ -8,6 +8,6 @@ using namespace luabind;
 SCRIPT_EXPORT(CSE_PHSkeleton, (), { module(luaState)[class_<CSE_PHSkeleton>("cse_ph_skeleton")]; });
 
 SCRIPT_EXPORT(CSE_AbstractVisual, (CSE_Visual, CSE_Abstract), {
-    module(luaState)[luabind_class_abstract2(CSE_AbstractVisual, "CSE_AbstractVisual", CSE_Visual,
-        CSE_Abstract).def("getStartupAnimation", &CSE_AbstractVisual::getStartupAnimation)];
+	module(luaState)[luabind_class_abstract2(CSE_AbstractVisual, "CSE_AbstractVisual", CSE_Visual,
+		CSE_Abstract).def("getStartupAnimation", &CSE_AbstractVisual::getStartupAnimation)];
 });

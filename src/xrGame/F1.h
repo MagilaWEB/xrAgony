@@ -4,9 +4,9 @@
 
 class CF1 : public CGrenade
 {
-    typedef CGrenade inherited;
+	typedef CGrenade inherited;
 
 public:
-    CF1() {}
-    virtual ~CF1() {}
+	CF1() {}
+	virtual ~CF1() {}
 };

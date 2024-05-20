@@ -10,14 +10,14 @@
 
 IC CALifeMonsterBrain::object_type& CALifeMonsterBrain::object() const
 {
-    VERIFY(m_object);
-    return (*m_object);
+	VERIFY(m_object);
+	return (*m_object);
 }
 
 IC CALifeMonsterBrain::movement_manager_type& CALifeMonsterBrain::movement() const
 {
-    VERIFY(m_movement_manager);
-    return (*m_movement_manager);
+	VERIFY(m_movement_manager);
+	return (*m_movement_manager);
 }
 
 IC bool CALifeMonsterBrain::can_choose_alife_tasks() const { return (m_can_choose_alife_tasks); }

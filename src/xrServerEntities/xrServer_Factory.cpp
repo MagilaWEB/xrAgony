@@ -11,5 +11,5 @@
 
 CSE_Abstract* F_entity_Create(LPCSTR section)
 {
-    return (object_factory().server_object(pSettings->r_clsid(section, "class"), section));
+	return (object_factory().server_object(pSettings->r_clsid(section, "class"), section));
 }

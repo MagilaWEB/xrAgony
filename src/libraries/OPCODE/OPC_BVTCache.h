@@ -28,41 +28,41 @@
 //! even entering the recursive collision code.
 struct OPCODE_API BVTCache : Pair
 {
-    //! Constructor
-    inline_ BVTCache()
-    {
-        ResetCache();
-        ResetCountDown();
-    }
+	//! Constructor
+	inline_ BVTCache()
+	{
+		ResetCache();
+		ResetCountDown();
+	}
 
-    void ResetCache()
-    {
-        Model0 = nullptr;
-        Model1 = nullptr;
-        id0 = 0;
-        id1 = 1;
+	void ResetCache()
+	{
+		Model0 = nullptr;
+		Model1 = nullptr;
+		id0 = 0;
+		id1 = 1;
 #ifdef __MESHMERIZER_H__ // Collision hulls only supported within ICE !
-        HullTest = true;
-        SepVector.pid = 0;
-        SepVector.qid = 0;
-        SepVector.SV = Point(1.0f, 0.0f, 0.0f);
+		HullTest = true;
+		SepVector.pid = 0;
+		SepVector.qid = 0;
+		SepVector.SV = Point(1.0f, 0.0f, 0.0f);
 #endif // __MESHMERIZER_H__
-    }
+	}
 
-    inline_ void ResetCountDown()
-    {
+	inline_ void ResetCountDown()
+	{
 #ifdef __MESHMERIZER_H__ // Collision hulls only supported within ICE !
-        CountDown = 50;
+		CountDown = 50;
 #endif // __MESHMERIZER_H__
-    }
+	}
 
-    OPCODE_Model* Model0; //!< Model for first object
-    OPCODE_Model* Model1; //!< Model for second object
+	OPCODE_Model* Model0; //!< Model for first object
+	OPCODE_Model* Model1; //!< Model for second object
 
 #ifdef __MESHMERIZER_H__ // Collision hulls only supported within ICE !
-    SVCache SepVector;
-    udword CountDown;
-    bool HullTest;
+	SVCache SepVector;
+	udword CountDown;
+	bool HullTest;
 #endif // __MESHMERIZER_H__
 };
 

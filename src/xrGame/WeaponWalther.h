@@ -4,9 +4,9 @@
 
 class CWeaponWalther : public CWeaponPistol
 {
-    using inherited = CWeaponPistol;
+	using inherited = CWeaponPistol;
 
 public:
-    CWeaponWalther() {}
-    virtual ~CWeaponWalther() {}
+	CWeaponWalther() {}
+	virtual ~CWeaponWalther() {}
 };

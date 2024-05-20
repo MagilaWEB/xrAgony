@@ -22,7 +22,7 @@ enum
 	HELMET_SLOT,
 	BACKPACK_SLOT,
 	PATCH_SLOT,
-    //Alundaio: More slots for custom uses
+	//Alundaio: More slots for custom uses
 	CUSTOM_SLOT_1,
 	CUSTOM_SLOT_2,
 	CUSTOM_SLOT_3,
@@ -47,24 +47,24 @@ typedef xr_vector<PIItem> TIItemContainer;
 
 enum eItemPlace
 {
-    eItemPlaceUndefined = 0,
-    eItemPlaceSlot,
-    eItemPlaceBelt,
-    eItemPlaceRuck
+	eItemPlaceUndefined = 0,
+	eItemPlaceSlot,
+	eItemPlaceBelt,
+	eItemPlaceRuck
 };
 
 struct SInvItemPlace
 {
-    union
-    {
-        struct
-        {
-            u16 type : 4;
-            u16 slot_id : 6;
-            u16 base_slot_id : 6;
-        };
-        u16 value;
-    };
+	union
+	{
+		struct
+		{
+			u16 type : 4;
+			u16 slot_id : 6;
+			u16 base_slot_id : 6;
+		};
+		u16 value;
+	};
 };
 
 extern u16 INV_STATE_LADDER;
@@ -75,26 +75,26 @@ extern u16 INV_STATE_BUY_MENU;
 
 struct II_BriefInfo
 {
-    shared_str name;
-    shared_str icon;
-    shared_str cur_ammo;
-    shared_str fmj_ammo;
-    shared_str ap_ammo;
-    shared_str third_ammo; //Alundaio
-    shared_str fire_mode;
+	shared_str name;
+	shared_str icon;
+	shared_str cur_ammo;
+	shared_str fmj_ammo;
+	shared_str ap_ammo;
+	shared_str third_ammo; //Alundaio
+	shared_str fire_mode;
 
-    shared_str grenade;
+	shared_str grenade;
 
-    II_BriefInfo() { clear(); }
-    IC void clear()
-    {
-        name = "";
-        icon = "";
-        cur_ammo = "";
-        fmj_ammo = "";
-        ap_ammo = "";
-        third_ammo = ""; //Alundaio
-        fire_mode = "";
-        grenade = "";
-    }
+	II_BriefInfo() { clear(); }
+	IC void clear()
+	{
+		name = "";
+		icon = "";
+		cur_ammo = "";
+		fmj_ammo = "";
+		ap_ammo = "";
+		third_ammo = ""; //Alundaio
+		fire_mode = "";
+		grenade = "";
+	}
 };

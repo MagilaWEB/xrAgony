@@ -20,7 +20,7 @@ void CxImage::Startup(DWORD imagetype)
 	memset(&head,0,sizeof(BITMAPINFOHEADER));
 	memset(&info,0,sizeof(CXIMAGEINFO));
 	//init default attributes
-    info.dwType = imagetype;
+	info.dwType = imagetype;
 	info.fQuality = 90.0f;
 	info.nAlphaMax = 255;
 	info.nBkgndIndex = -1;
@@ -178,11 +178,11 @@ void* CxImage::Create(DWORD dwWidth, DWORD dwHeight, DWORD wBpp, DWORD imagetype
 		return NULL;
 	}
 
-    // Make sure bits per pixel is valid
-    if		(wBpp <= 1)	wBpp = 1;
-    else if (wBpp <= 4)	wBpp = 4;
-    else if (wBpp <= 8)	wBpp = 8;
-    else				wBpp = 24;
+	// Make sure bits per pixel is valid
+	if		(wBpp <= 1)	wBpp = 1;
+	else if (wBpp <= 4)	wBpp = 4;
+	else if (wBpp <= 8)	wBpp = 8;
+	else				wBpp = 24;
 
 	// limit memory requirements (and also a check for bad parameters)
 	if (((dwWidth*dwHeight*wBpp)>>3) > CXIMAGE_MAX_MEMORY ||
@@ -193,35 +193,35 @@ void* CxImage::Create(DWORD dwWidth, DWORD dwHeight, DWORD wBpp, DWORD imagetype
 	}
 
 	// set the correct bpp value
-    switch (wBpp){
-        case 1:
-            head.biClrUsed = 2;	break;
-        case 4:
-            head.biClrUsed = 16; break;
-        case 8:
-            head.biClrUsed = 256; break;
-        default:
-            head.biClrUsed = 0;
-    }
+	switch (wBpp){
+		case 1:
+			head.biClrUsed = 2;	break;
+		case 4:
+			head.biClrUsed = 16; break;
+		case 8:
+			head.biClrUsed = 256; break;
+		default:
+			head.biClrUsed = 0;
+	}
 
 	//set the common image informations
-    info.dwEffWidth = ((((wBpp * dwWidth) + 31) / 32) * 4);
-    info.dwType = imagetype;
+	info.dwEffWidth = ((((wBpp * dwWidth) + 31) / 32) * 4);
+	info.dwType = imagetype;
 
-    // initialize BITMAPINFOHEADER
+	// initialize BITMAPINFOHEADER
 	head.biSize = sizeof(BITMAPINFOHEADER); //<ralphw>
-    head.biWidth = dwWidth;		// fill in width from parameter
-    head.biHeight = dwHeight;	// fill in height from parameter
-    head.biPlanes = 1;			// must be 1
-    head.biBitCount = (WORD)wBpp;		// from parameter
-    head.biCompression = BI_RGB;    
-    head.biSizeImage = info.dwEffWidth * dwHeight;
-//    head.biXPelsPerMeter = 0; See SetXDPI
-//    head.biYPelsPerMeter = 0; See SetYDPI
-//    head.biClrImportant = 0;  See SetClrImportant
+	head.biWidth = dwWidth;		// fill in width from parameter
+	head.biHeight = dwHeight;	// fill in height from parameter
+	head.biPlanes = 1;			// must be 1
+	head.biBitCount = (WORD)wBpp;		// from parameter
+	head.biCompression = BI_RGB;	
+	head.biSizeImage = info.dwEffWidth * dwHeight;
+//	head.biXPelsPerMeter = 0; See SetXDPI
+//	head.biYPelsPerMeter = 0; See SetYDPI
+//	head.biClrImportant = 0;  See SetClrImportant
 
 	pDib = cxalloc(GetSize());//malloc(GetSize()); // alloc memory block to store our bitmap
-    if (!pDib){
+	if (!pDib){
 		strcpy(info.szLastError,"CxImage::Create can't allocate memory");
 		return NULL;
 	}
@@ -238,15 +238,15 @@ void* CxImage::Create(DWORD dwWidth, DWORD dwHeight, DWORD wBpp, DWORD imagetype
 	if (pAlpha) AlphaDelete();
 #endif //CXIMAGE_SUPPORT_ALPHA
 
-    // use our bitmap info structure to fill in first part of
-    // our DIB with the BITMAPINFOHEADER
-    BITMAPINFOHEADER*  lpbi;
+	// use our bitmap info structure to fill in first part of
+	// our DIB with the BITMAPINFOHEADER
+	BITMAPINFOHEADER*  lpbi;
 	lpbi = (BITMAPINFOHEADER*)(pDib);
-    *lpbi = head;
+	*lpbi = head;
 
 	info.pImage=GetBits();
 
-    return pDib; //return handle to the DIB
+	return pDib; //return handle to the DIB
 }
 ////////////////////////////////////////////////////////////////////////////////
 /**

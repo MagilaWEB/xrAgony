@@ -10,12 +10,12 @@
 
 IC CScriptHit::CScriptHit()
 {
-    m_fPower = 0;
-    m_tDirection.set(1, 0, 0);
-    m_caBoneName = "";
-    m_tpDraftsman = 0;
-    m_fImpulse = 0;
-    m_tHitType = ALife::eHitTypeWound;
+	m_fPower = 0;
+	m_tDirection.set(1, 0, 0);
+	m_caBoneName = "";
+	m_tpDraftsman = 0;
+	m_fImpulse = 0;
+	m_tHitType = ALife::eHitTypeWound;
 }
 
 IC CScriptHit::CScriptHit(const CScriptHit* tpLuaHit) { *this = *tpLuaHit; }

@@ -8,18 +8,18 @@ extern "C"
 {
 XR_EXPORT void SetupEnv()
 {
-    ::Render = &RImplementation;
-    ::RenderFactory = &RenderFactoryImpl;
-    ::DU = &DUImpl;
-    ::UIRender = &UIRenderImpl;
+	::Render = &RImplementation;
+	::RenderFactory = &RenderFactoryImpl;
+	::DU = &DUImpl;
+	::UIRender = &UIRenderImpl;
 #ifdef DEBUG
-    ::DRender = &DebugRenderImpl;
+	::DRender = &DebugRenderImpl;
 #endif
-    xrRender_initconsole();
+	xrRender_initconsole();
 }
 
 XR_EXPORT bool CheckRendererSupport()
 {
-    return xrRender_test_hw() ? true : false;
+	return xrRender_test_hw() ? true : false;
 }
 }

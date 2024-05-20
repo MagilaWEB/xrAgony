@@ -22,40 +22,40 @@ TEMPLATE_SPECIALIZATION_D
 class CIni_Table
 {
 public:
-    CIni_Table();
-    ~CIni_Table();
+	CIni_Table();
+	~CIni_Table();
 
-    typedef xr_vector<T_ITEM> ITEM_VECTOR;
-    typedef xr_vector<ITEM_VECTOR> ITEM_TABLE;
+	typedef xr_vector<T_ITEM> ITEM_VECTOR;
+	typedef xr_vector<ITEM_VECTOR> ITEM_TABLE;
 
-    ITEM_TABLE& table();
-    void clear();
-    void set_table_params(LPCSTR sect, int width = -1)
-    {
-        table_sect = sect;
-        table_width = width;
-    }
+	ITEM_TABLE& table();
+	void clear();
+	void set_table_params(LPCSTR sect, int width = -1)
+	{
+		table_sect = sect;
+		table_width = width;
+	}
 
 private:
-    ITEM_TABLE* m_pTable;
-    LPCSTR table_sect;
-    //ширина таблицы, если -1 то таблица делается квадратной (ширина равна высоте)
-    int table_width;
+	ITEM_TABLE* m_pTable;
+	LPCSTR table_sect;
+	//ширина таблицы, если -1 то таблица делается квадратной (ширина равна высоте)
+	int table_width;
 
-    //перобразование из LPCSTR в T_ITEM
-    T_ITEM convert(LPCSTR str)
-    {
-        if constexpr (std::is_same<T_ITEM, int>::value)
-        {
-            return atoi(str);
-        }
-        else
-        {
-            static_assert(std::is_same_v<T_ITEM, float>,
-                "Specialization for convert in CIni_Table not found.");
-            return (float)atof(str);
-        }
-    }
+	//перобразование из LPCSTR в T_ITEM
+	T_ITEM convert(LPCSTR str)
+	{
+		if constexpr (std::is_same<T_ITEM, int>::value)
+		{
+			return atoi(str);
+		}
+		else
+		{
+			static_assert(std::is_same_v<T_ITEM, float>,
+				"Specialization for convert in CIni_Table not found.");
+			return (float)atof(str);
+		}
+	}
 };
 
 /*
@@ -72,9 +72,9 @@ int CSIni_Table::table_width = -1;
 TEMPLATE_SPECIALIZATION
 CSIni_Table::CIni_Table()
 {
-    m_pTable = NULL;
-    table_sect = NULL;
-    table_width = -1;
+	m_pTable = NULL;
+	table_sect = NULL;
+	table_width = -1;
 }
 
 TEMPLATE_SPECIALIZATION
@@ -82,40 +82,40 @@ CSIni_Table::~CIni_Table() { xr_delete(m_pTable); }
 TEMPLATE_SPECIALIZATION
 typename CSIni_Table::ITEM_TABLE& CSIni_Table::table()
 {
-    //	T_INI_LOADER::InitIdToIndex ();
+	//	T_INI_LOADER::InitIdToIndex ();
 
-    if (m_pTable)
-        return *m_pTable;
+	if (m_pTable)
+		return *m_pTable;
 
-    m_pTable = new ITEM_TABLE();
+	m_pTable = new ITEM_TABLE();
 
-    VERIFY(table_sect);
-    size_t table_size = T_INI_LOADER::GetMaxIndex() + 1;
-    size_t cur_table_width = (table_width == -1) ? table_size : (size_t)table_width;
+	VERIFY(table_sect);
+	size_t table_size = T_INI_LOADER::GetMaxIndex() + 1;
+	size_t cur_table_width = (table_width == -1) ? table_size : (size_t)table_width;
 
-    m_pTable->resize(table_size);
+	m_pTable->resize(table_size);
 
-    string64 buffer;
-    CInifile::Sect& table_ini = pSettings->r_section(table_sect);
+	string64 buffer;
+	CInifile::Sect& table_ini = pSettings->r_section(table_sect);
 
-    R_ASSERT3(table_ini.Data.size() == table_size, "wrong size for table in section", table_sect);
+	R_ASSERT3(table_ini.Data.size() == table_size, "wrong size for table in section", table_sect);
 
-    for (auto i = table_ini.Data.cbegin(); table_ini.Data.cend() != i; ++i)
-    {
-        typename T_INI_LOADER::index_type cur_index =
-            T_INI_LOADER::IdToIndex((*i).first, type_max<typename T_INI_LOADER::index_type>);
+	for (auto i = table_ini.Data.cbegin(); table_ini.Data.cend() != i; ++i)
+	{
+		typename T_INI_LOADER::index_type cur_index =
+			T_INI_LOADER::IdToIndex((*i).first, type_max<typename T_INI_LOADER::index_type>);
 
-        if (type_max<typename T_INI_LOADER::index_type> == cur_index)
-            xrDebug::Fatal(DEBUG_INFO, "wrong community %s in section [%s]", (*i).first.c_str(), table_sect);
+		if (type_max<typename T_INI_LOADER::index_type> == cur_index)
+			xrDebug::Fatal(DEBUG_INFO, "wrong community %s in section [%s]", (*i).first.c_str(), table_sect);
 
-        (*m_pTable)[cur_index].resize(cur_table_width);
-        for (size_t j = 0; j < cur_table_width; j++)
-        {
-            (*m_pTable)[cur_index][j] = convert(_GetItem(*(*i).second, (int)j, buffer));
-        }
-    }
+		(*m_pTable)[cur_index].resize(cur_table_width);
+		for (size_t j = 0; j < cur_table_width; j++)
+		{
+			(*m_pTable)[cur_index][j] = convert(_GetItem(*(*i).second, (int)j, buffer));
+		}
+	}
 
-    return *m_pTable;
+	return *m_pTable;
 }
 
 TEMPLATE_SPECIALIZATION

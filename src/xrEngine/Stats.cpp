@@ -89,10 +89,10 @@ static void DumpSpatialStatistics(IGameFont& font, IPerformanceAlert* alert, ISp
 	stats.FrameEnd();
 #define PPP(a) (100.f * float(a) / engineTotal)
 	font.OutNext("%s:", db.Name);
-	font.OutNext("- query:      %.2fms, %u", stats.Query.result, stats.Query.count);
+	font.OutNext("- query:	  %.2fms, %u", stats.Query.result, stats.Query.count);
 	font.OutNext("- nodes/obj:  %u/%u", stats.NodeCount, stats.ObjectCount);
-	font.OutNext("- insert:     %.2fms, %2.1f%%", stats.Insert.result, PPP(stats.Insert.result));
-	font.OutNext("- remove:     %.2fms, %2.1f%%", stats.Remove.result, PPP(stats.Remove.result));
+	font.OutNext("- insert:	 %.2fms, %2.1f%%", stats.Insert.result, PPP(stats.Insert.result));
+	font.OutNext("- remove:	 %.2fms, %2.1f%%", stats.Remove.result, PPP(stats.Remove.result));
 #undef PPP
 	stats.FrameStart();
 #endif
@@ -126,10 +126,10 @@ void CStats::Show()
 		font.SetColor(0xFFFFFFFF);
 		font.OutSet(0, 0);
 #if defined(FS_DEBUG)
-		font.OutNext("Mapped:       %d", g_file_mapped_memory);
+		font.OutNext("Mapped:		%d", g_file_mapped_memory);
 #endif
 		Device.DumpStatistics(font, alertPtr);
-		font.OutNext("Memory:       %2.2f", fMem_calls);
+		font.OutNext("Memory:		%2.2f", fMem_calls);
 		if (g_pGameLevel)
 			g_pGameLevel->DumpStatistics(font, alertPtr);
 		Engine.Sheduler.DumpStatistics(font, alertPtr);

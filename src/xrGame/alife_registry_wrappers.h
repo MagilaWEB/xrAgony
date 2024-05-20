@@ -28,16 +28,16 @@
 template <typename T>
 class CALifeRegistryWrapperObject
 {
-    T* m_registry;
+	T* m_registry;
 
 public:
-    IC CALifeRegistryWrapperObject() { m_registry = new T(); }
-    virtual ~CALifeRegistryWrapperObject() { xr_delete(m_registry); }
-    IC T& registry() const
-    {
-        VERIFY(m_registry);
-        return (*m_registry);
-    }
+	IC CALifeRegistryWrapperObject() { m_registry = new T(); }
+	virtual ~CALifeRegistryWrapperObject() { xr_delete(m_registry); }
+	IC T& registry() const
+	{
+		VERIFY(m_registry);
+		return (*m_registry);
+	}
 };
 
 // class CKnownContactsRegistryWrapper :	public

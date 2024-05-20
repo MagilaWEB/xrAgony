@@ -11,16 +11,16 @@
 IC void CScriptRTokenList::add(LPCSTR value) { m_values.push_back(shared_str(value)); }
 IC void CScriptRTokenList::remove(u32 index)
 {
-    if (index >= size())
-        return;
-    m_values.erase(m_values.begin() + index);
+	if (index >= size())
+		return;
+	m_values.erase(m_values.begin() + index);
 }
 
 IC LPCSTR CScriptRTokenList::get(u32 index)
 {
-    if (index >= size())
-        return (nullptr);
-    return (*m_values[index]);
+	if (index >= size())
+		return (nullptr);
+	return (*m_values[index]);
 }
 
 IC u32 CScriptRTokenList::size() { return (u32(m_values.size())); }

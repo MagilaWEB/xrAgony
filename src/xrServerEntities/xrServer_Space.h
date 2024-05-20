@@ -21,10 +21,10 @@
 
 enum EPOType
 {
-    epotBox,
-    epotFixedChain,
-    epotFreeChain,
-    epotSkeleton
+	epotBox,
+	epotFixedChain,
+	epotFreeChain,
+	epotSkeleton
 };
 
 using DWORD_VECTOR = xr_vector<u32>;
@@ -45,7 +45,7 @@ using FVECTOR_VECTOR = xr_vector<Fvector>;
 template <class T>
 void F_entity_Destroy(T*& P)
 {
-    xr_delete(P);
+	xr_delete(P);
 };
 #endif
 

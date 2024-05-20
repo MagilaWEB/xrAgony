@@ -93,7 +93,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	D3DFORMAT& fDepth = Caps.fDepth;
 
 	//  HACK: DX10: Embed hard target format.
-	fTarget = D3DFMT_X8R8G8B8; //   No match in DX10. D3DFMT_A8B8G8R8->DXGI_FORMAT_R8G8B8A8_UNORM
+	fTarget = D3DFMT_X8R8G8B8; //	No match in DX10. D3DFMT_A8B8G8R8->DXGI_FORMAT_R8G8B8A8_UNORM
 	fDepth = selectDepthStencil(fTarget);
 
 	// Set up the presentation parameters
@@ -104,7 +104,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 	// Back buffer
 	//  TODO: DX10: implement dynamic format selection
-	// sd.BufferDesc.Format     = fTarget;
+	// sd.BufferDesc.Format	 = fTarget;
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	sd.BufferCount = 2;
 
@@ -206,8 +206,8 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	UpdateViews();
 
 	const auto memory = Desc.DedicatedVideoMemory;
-	Msg("*   Texture memory: %d M", memory / (1024 * 1024));
-	//Msg("*        DDI-level: %2.1f", float(D3DXGetDriverLevel(pDevice)) / 100.f);
+	Msg("*	Texture memory: %d M", memory / (1024 * 1024));
+	//Msg("*		DDI-level: %2.1f", float(D3DXGetDriverLevel(pDevice)) / 100.f);
 #ifndef _EDITOR
 	updateWindowProps(m_hWnd);
 	fill_vid_mode_list(this);
@@ -535,7 +535,7 @@ void CHW::UpdateViews()
 
 	//  Create Depth/stencil buffer
 	//  HACK: DX10: hard depth buffer format
-	// R_CHK    (pDevice->GetDepthStencilSurface    (&pBaseZB));
+	// R_CHK	(pDevice->GetDepthStencilSurface	(&pBaseZB));
 	ID3DTexture2D* pDepthStencil = NULL;
 	D3D_TEXTURE2D_DESC descDepth;
 	descDepth.Width = sd.BufferDesc.Width;

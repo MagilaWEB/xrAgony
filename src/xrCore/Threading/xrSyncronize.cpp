@@ -77,9 +77,9 @@ BOOL xrCriticalSection::TryEnter()
 
 xrCriticalSection::raii::raii(xrCriticalSection& other)
 {
-    critical_section = std::move(&other);
-    VERIFY(critical_section);
-    critical_section->Enter();
+	critical_section = std::move(&other);
+	VERIFY(critical_section);
+	critical_section->Enter();
 }
 
 xrCriticalSection::raii::~raii()

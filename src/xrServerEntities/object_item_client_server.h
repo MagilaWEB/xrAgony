@@ -19,16 +19,16 @@ template <typename _client_type, typename _server_type>
 class CObjectItemClientServer : public CObjectItemAbstract
 {
 protected:
-    typedef CObjectItemAbstract inherited;
-    typedef _client_type CLIENT_TYPE;
-    typedef _server_type SERVER_TYPE;
+	typedef CObjectItemAbstract inherited;
+	typedef _client_type CLIENT_TYPE;
+	typedef _server_type SERVER_TYPE;
 
 public:
-    IC CObjectItemClientServer(const CLASS_ID& clsid, LPCSTR script_clsid);
+	IC CObjectItemClientServer(const CLASS_ID& clsid, LPCSTR script_clsid);
 #ifndef NO_XR_GAME
-    virtual ObjectFactory::ClientObjectBaseClass* client_object() const;
+	virtual ObjectFactory::ClientObjectBaseClass* client_object() const;
 #endif
-    virtual ObjectFactory::ServerObjectBaseClass* server_object(LPCSTR section) const;
+	virtual ObjectFactory::ServerObjectBaseClass* server_object(LPCSTR section) const;
 };
 
 #include "object_item_client_server_inline.h"

@@ -10,5 +10,5 @@
 
 IC CScriptEffector::CScriptEffector(int iType, float time) : CEffectorPP(EEffectorPPType(iType), time, false)
 {
-    m_tEffectorType = EEffectorPPType(iType);
+	m_tEffectorType = EEffectorPPType(iType);
 }

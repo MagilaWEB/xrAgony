@@ -8,67 +8,67 @@ class ILoadingScreen;
 // definition
 class ENGINE_API CApplication : public pureFrame, public IEventReceiver
 {
-    // levels
-    struct sLevelInfo
-    {
-        char* folder;
-        char* name;
-    };
+	// levels
+	struct sLevelInfo
+	{
+		char* folder;
+		char* name;
+	};
 
 private:
-    ILoadingScreen* loadingScreen;
+	ILoadingScreen* loadingScreen;
 
-    int max_load_stage;
+	int max_load_stage;
 
-    int load_stage;
+	int load_stage;
 
-    u32 ll_dwReference;
-    bool loaded;
+	u32 ll_dwReference;
+	bool loaded;
 
 private:
-    EVENT eQuit;
-    EVENT eStart;
-    EVENT eStartLoad;
-    EVENT eDisconnect;
-    EVENT eConsole;
+	EVENT eQuit;
+	EVENT eStart;
+	EVENT eStartLoad;
+	EVENT eDisconnect;
+	EVENT eConsole;
 
-    void Level_Append(LPCSTR lname);
+	void Level_Append(LPCSTR lname);
 
 public:
-    CGameFont* pFontSystem;
+	CGameFont* pFontSystem;
 
-    bool IsLoaded() { return loaded; }
-    // Levels
-    xr_vector<sLevelInfo> Levels;
-    u32 Level_Current;
-    void Level_Scan();
-    int Level_ID(LPCSTR name, LPCSTR ver, bool bSet);
-    void Level_Set(u32 ID);
-    void LoadAllArchives();
-    static CInifile* GetArchiveHeader(LPCSTR name, LPCSTR ver);
+	bool IsLoaded() { return loaded; }
+	// Levels
+	xr_vector<sLevelInfo> Levels;
+	u32 Level_Current;
+	void Level_Scan();
+	int Level_ID(LPCSTR name, LPCSTR ver, bool bSet);
+	void Level_Set(u32 ID);
+	void LoadAllArchives();
+	static CInifile* GetArchiveHeader(LPCSTR name, LPCSTR ver);
 
-    // Loading
-    void LoadBegin();
-    void LoadEnd();
-    void LoadTitleInt(LPCSTR str1, LPCSTR str2, LPCSTR str3);
-    void LoadStage();
-    void LoadSwitch();
-    void LoadDraw();
-    void LoadForceFinish();
+	// Loading
+	void LoadBegin();
+	void LoadEnd();
+	void LoadTitleInt(LPCSTR str1, LPCSTR str2, LPCSTR str3);
+	void LoadStage();
+	void LoadSwitch();
+	void LoadDraw();
+	void LoadForceFinish();
 
-    void SetLoadStageTitle(pcstr ls_title);
+	void SetLoadStageTitle(pcstr ls_title);
 
-    virtual void OnEvent(EVENT E, u64 P1, u64 P2);
+	virtual void OnEvent(EVENT E, u64 P1, u64 P2);
 
-    // Other
-    CApplication();
-    virtual ~CApplication();
+	// Other
+	CApplication();
+	virtual ~CApplication();
 
-    virtual void OnFrame();
-    void load_draw_internal();
+	virtual void OnFrame();
+	void load_draw_internal();
 
-    void SetLoadingScreen(ILoadingScreen* newScreen);
-    void DestroyLoadingScreen();
+	void SetLoadingScreen(ILoadingScreen* newScreen);
+	void DestroyLoadingScreen();
 };
 
 extern ENGINE_API CApplication* pApp;

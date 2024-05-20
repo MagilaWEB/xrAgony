@@ -751,7 +751,7 @@ void CWeapon::OnEvent(NET_Packet& P, u16 type)
 	default: {
 		inherited::OnEvent(P, type);
 	}
-		   break;
+			break;
 	}
 };
 

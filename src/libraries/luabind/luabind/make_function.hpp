@@ -104,7 +104,7 @@ namespace luabind {
 	}
 
 	template <class F, typename... PolicyInjectors >
-    object make_function(lua_State* L, F f, bool default_scope, meta::type_list< PolicyInjectors... >)
+	object make_function(lua_State* L, F f, bool default_scope, meta::type_list< PolicyInjectors... >)
 	{
 		return make_function(L, f, default_scope, deduce_signature_t<F>(), meta::type_list< PolicyInjectors... >());
 	}

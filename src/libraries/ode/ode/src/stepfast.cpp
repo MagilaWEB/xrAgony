@@ -1,25 +1,25 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
  * Fast iterative solver, David Whittaker. Email: david@csworkbench.com  *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 // This is the StepFast code by David Whittaker. This code is faster, but
@@ -48,8 +48,8 @@
 
 #define RANDOM_JOINT_ORDER
 //#define FAST_FACTOR	//use a factorization approximation to the LCP solver (fast, theoretically less accurate)
-#define SLOW_LCP      //use the old LCP solver
-#define NO_ISLANDS    //does not perform island creation code (3~4% of simulation time), body disabling doesn't work
+#define SLOW_LCP	  //use the old LCP solver
+#define NO_ISLANDS	//does not perform island creation code (3~4% of simulation time), body disabling doesn't work
 //#define TIMING
 
 
@@ -332,10 +332,10 @@ moveAndRotateBody (dxBody * b, dReal h)
 //mailing list:
 //
 //  for i=0..N-1 do
-//      for c = 0..C-1 do
-//          Solve constraint c-th
-//          Apply forces to constraint bodies
-//      next
+//	  for c = 0..C-1 do
+//		  Solve constraint c-th
+//		  Apply forces to constraint bodies
+//	  next
 //  next
 //  Integrate bodies
 
@@ -361,9 +361,9 @@ dInternalStepFast (dxWorld * world, dxBody * body[2], dReal * GI[2], dReal * Gin
 	// compute A = J*invM*J'. first compute JinvM = J*invM. this has the same
 	// format as J so we just go through the constraints in J multiplying by
 	// the appropriate scalars and matrices.
-#   ifdef TIMING
+#	ifdef TIMING
 	dTimerNow ("compute A");
-#   endif
+#	endif
 	dReal JinvM[2 * 6 * 8];
 	//dSetZero (JinvM, 2 * m * 8);
 
@@ -410,9 +410,9 @@ dInternalStepFast (dxWorld * world, dxBody * body[2], dReal * GI[2], dReal * Gin
 		A[i * mskip + i] += Jinfo.cfm[i] * stepsize1;
 
 	// compute the right hand side `rhs'
-#   ifdef TIMING
+#	ifdef TIMING
 	dTimerNow ("compute rhs");
-#   endif
+#	endif
 	dReal tmp1[16];
 	//dSetZero (tmp1, 16);
 	// put v/h + invM*fe into tmp1
@@ -545,9 +545,9 @@ inline void SwapJoints(int i,int j,dxJoint** joints,dxJoint::Info1* info,dxJoint
 void
 dInternalStepIslandFast (dxWorld * world, dxBody * const *bodies, int nb, dxJoint **joints, int nj, dReal stepsize, int maxiterations)
 {
-#   ifdef TIMING
+#	ifdef TIMING
 	dTimerNow ("preprocessing");
-#   endif
+#	endif
 	dxBody *bodyPair[2], *body;
 	dReal *GIPair[2], *GinvIPair[2];
 	dxJoint *joint;
@@ -627,22 +627,22 @@ dInternalStepIslandFast (dxWorld * world, dxBody * const *bodies, int nb, dxJoin
 	// to store the two jacobian blocks from each constraint. it has this
 	// format:
 	//
-	//   l l l 0 a a a 0  \    .
-	//   l l l 0 a a a 0   }-- jacobian body 1 block for joint 0 (3 rows)
-	//   l l l 0 a a a 0  /
-	//   l l l 0 a a a 0  \    .
-	//   l l l 0 a a a 0   }-- jacobian body 2 block for joint 0 (3 rows)
-	//   l l l 0 a a a 0  /
-	//   l l l 0 a a a 0  }--- jacobian body 1 block for joint 1 (1 row)
-	//   l l l 0 a a a 0  }--- jacobian body 2 block for joint 1 (1 row)
-	//   etc...
+	//	l l l 0 a a a 0  \	.
+	//	l l l 0 a a a 0	}-- jacobian body 1 block for joint 0 (3 rows)
+	//	l l l 0 a a a 0  /
+	//	l l l 0 a a a 0  \	.
+	//	l l l 0 a a a 0	}-- jacobian body 2 block for joint 0 (3 rows)
+	//	l l l 0 a a a 0  /
+	//	l l l 0 a a a 0  }--- jacobian body 1 block for joint 1 (1 row)
+	//	l l l 0 a a a 0  }--- jacobian body 2 block for joint 1 (1 row)
+	//	etc...
 	//
-	//   (lll) = linear jacobian data
-	//   (aaa) = angular jacobian data
+	//	(lll) = linear jacobian data
+	//	(aaa) = angular jacobian data
 	//
-#   ifdef TIMING
+#	ifdef TIMING
 	dTimerNow ("create J");
-#   endif
+#	endif
 		J = (dReal *) ALLOCA (2 * m * 8 * sizeof (dReal));
 		dSetZero (J, 2 * m * 8);
 		Jinfo = (dxJoint::Info2 *) ALLOCA (nj * sizeof (dxJoint::Info2));
@@ -676,7 +676,7 @@ dInternalStepIslandFast (dxWorld * world, dxBody * const *bodies, int nb, dxJoin
 			saveFacc[b * 4 + i] = bodies[b]->facc[i];
 			saveTacc[b * 4 + i] = bodies[b]->tacc[i];
 		}
-                bodies[b]->tag = b;
+				bodies[b]->tag = b;
 	}
 
 	for (iter = 0; iter < maxiterations; iter++)

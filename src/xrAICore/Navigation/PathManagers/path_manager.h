@@ -11,9 +11,9 @@
 #include "xrAICore/Navigation/PathManagers/path_manager_generic.h"
 
 template <typename _Graph, typename _DataStorage, typename _Parameters, typename _dist_type, typename _index_type,
-    typename _iteration_type>
+	typename _iteration_type>
 class CPathManager
-    : public CPathManagerGeneric<_Graph, _DataStorage, _Parameters, _dist_type, _index_type, _iteration_type>
+	: public CPathManagerGeneric<_Graph, _DataStorage, _Parameters, _dist_type, _index_type, _iteration_type>
 {
 };
 

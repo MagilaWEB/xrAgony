@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 /*
@@ -94,8 +94,8 @@ void dRFrom2Axes (dMatrix3 R, dReal ax, dReal ay, dReal az,
   dAASSERT (R);
   l = dSqrt (ax*ax + ay*ay + az*az);
   if (l <= REAL(0.0)) {
-    dDEBUGMSG ("zero length vector");
-    return;
+	dDEBUGMSG ("zero length vector");
+	return;
   }
   l = dRecip(l);
   ax *= l;
@@ -107,8 +107,8 @@ void dRFrom2Axes (dMatrix3 R, dReal ax, dReal ay, dReal az,
   bz -= k*az;
   l = dSqrt (bx*bx + by*by + bz*bz);
   if (l <= REAL(0.0)) {
-    dDEBUGMSG ("zero length vector");
-    return;
+	dDEBUGMSG ("zero length vector");
+	return;
   }
   l = dRecip(l);
   bx *= l;
@@ -162,18 +162,18 @@ void dQFromAxisAndAngle (dQuaternion q, dReal ax, dReal ay, dReal az,
   dAASSERT (q);
   dReal l = ax*ax + ay*ay + az*az;
   if (l > REAL(0.0)) {
-    angle *= REAL(0.5);
-    q[0] = dCos (angle);
-    l = dSin(angle) * dRecipSqrt(l);
-    q[1] = ax*l;
-    q[2] = ay*l;
-    q[3] = az*l;
+	angle *= REAL(0.5);
+	q[0] = dCos (angle);
+	l = dSin(angle) * dRecipSqrt(l);
+	q[1] = ax*l;
+	q[2] = ay*l;
+	q[3] = az*l;
   }
   else {
-    q[0] = 1;
-    q[1] = 0;
-    q[2] = 0;
-    q[3] = 0;
+	q[0] = 1;
+	q[1] = 0;
+	q[2] = 0;
+	q[3] = 0;
   }
 }
 
@@ -248,48 +248,48 @@ void dQfromR (dQuaternion q, const dMatrix3 R)
   dReal tr,s;
   tr = _R(0,0) + _R(1,1) + _R(2,2);
   if (tr >= 0) {
-    s = dSqrt (tr + 1);
-    q[0] = REAL(0.5) * s;
-    s = REAL(0.5) * dRecip(s);
-    q[1] = (_R(2,1) - _R(1,2)) * s;
-    q[2] = (_R(0,2) - _R(2,0)) * s;
-    q[3] = (_R(1,0) - _R(0,1)) * s;
+	s = dSqrt (tr + 1);
+	q[0] = REAL(0.5) * s;
+	s = REAL(0.5) * dRecip(s);
+	q[1] = (_R(2,1) - _R(1,2)) * s;
+	q[2] = (_R(0,2) - _R(2,0)) * s;
+	q[3] = (_R(1,0) - _R(0,1)) * s;
   }
   else {
-    // find the largest diagonal element and jump to the appropriate case
-    if (_R(1,1) > _R(0,0)) {
-      if (_R(2,2) > _R(1,1)) goto case_2;
-      goto case_1;
-    }
-    if (_R(2,2) > _R(0,0)) goto case_2;
-    goto case_0;
+	// find the largest diagonal element and jump to the appropriate case
+	if (_R(1,1) > _R(0,0)) {
+	  if (_R(2,2) > _R(1,1)) goto case_2;
+	  goto case_1;
+	}
+	if (_R(2,2) > _R(0,0)) goto case_2;
+	goto case_0;
 
-    case_0:
-    s = dSqrt((_R(0,0) - (_R(1,1) + _R(2,2))) + 1);
-    q[1] = REAL(0.5) * s;
-    s = REAL(0.5) * dRecip(s);
-    q[2] = (_R(0,1) + _R(1,0)) * s;
-    q[3] = (_R(2,0) + _R(0,2)) * s;
-    q[0] = (_R(2,1) - _R(1,2)) * s;
-    return;
+	case_0:
+	s = dSqrt((_R(0,0) - (_R(1,1) + _R(2,2))) + 1);
+	q[1] = REAL(0.5) * s;
+	s = REAL(0.5) * dRecip(s);
+	q[2] = (_R(0,1) + _R(1,0)) * s;
+	q[3] = (_R(2,0) + _R(0,2)) * s;
+	q[0] = (_R(2,1) - _R(1,2)) * s;
+	return;
 
-    case_1:
-    s = dSqrt((_R(1,1) - (_R(2,2) + _R(0,0))) + 1);
-    q[2] = REAL(0.5) * s;
-    s = REAL(0.5) * dRecip(s);
-    q[3] = (_R(1,2) + _R(2,1)) * s;
-    q[1] = (_R(0,1) + _R(1,0)) * s;
-    q[0] = (_R(0,2) - _R(2,0)) * s;
-    return;
+	case_1:
+	s = dSqrt((_R(1,1) - (_R(2,2) + _R(0,0))) + 1);
+	q[2] = REAL(0.5) * s;
+	s = REAL(0.5) * dRecip(s);
+	q[3] = (_R(1,2) + _R(2,1)) * s;
+	q[1] = (_R(0,1) + _R(1,0)) * s;
+	q[0] = (_R(0,2) - _R(2,0)) * s;
+	return;
 
-    case_2:
-    s = dSqrt((_R(2,2) - (_R(0,0) + _R(1,1))) + 1);
-    q[3] = REAL(0.5) * s;
-    s = REAL(0.5) * dRecip(s);
-    q[1] = (_R(2,0) + _R(0,2)) * s;
-    q[2] = (_R(1,2) + _R(2,1)) * s;
-    q[0] = (_R(1,0) - _R(0,1)) * s;
-    return;
+	case_2:
+	s = dSqrt((_R(2,2) - (_R(0,0) + _R(1,1))) + 1);
+	q[3] = REAL(0.5) * s;
+	s = REAL(0.5) * dRecip(s);
+	q[1] = (_R(2,0) + _R(0,2)) * s;
+	q[2] = (_R(1,2) + _R(2,1)) * s;
+	q[0] = (_R(1,0) - _R(0,1)) * s;
+	return;
   }
 }
 

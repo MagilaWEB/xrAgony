@@ -62,26 +62,26 @@ public:
 #define MAX_SECTIONS 20
 
 typedef struct tag_ExifInfo {
-	char  Version      [5];
-    char  CameraMake   [32];
-    char  CameraModel  [40];
-    char  DateTime     [20];
-    int   Height, Width;
-    int   Orientation;
-    int   IsColor;
-    int   Process;
-    int   FlashUsed;
-    float FocalLength;
-    float ExposureTime;
-    float ApertureFNumber;
-    float Distance;
-    float CCDWidth;
-    float ExposureBias;
-    int   Whitebalance;
-    int   MeteringMode;
-    int   ExposureProgram;
-    int   ISOequivalent;
-    int   CompressionLevel;
+	char  Version	  [5];
+	char  CameraMake	[32];
+	char  CameraModel  [40];
+	char  DateTime	 [20];
+	int	Height, Width;
+	int	Orientation;
+	int	IsColor;
+	int	Process;
+	int	FlashUsed;
+	float FocalLength;
+	float ExposureTime;
+	float ApertureFNumber;
+	float Distance;
+	float CCDWidth;
+	float ExposureBias;
+	int	Whitebalance;
+	int	MeteringMode;
+	int	ExposureProgram;
+	int	ISOequivalent;
+	int	CompressionLevel;
 	float FocalplaneXRes;
 	float FocalplaneYRes;
 	float FocalplaneUnits;
@@ -89,10 +89,10 @@ typedef struct tag_ExifInfo {
 	float Yresolution;
 	float ResolutionUnit;
 	float Brightness;
-    char  Comments[MAX_COMMENT];
+	char  Comments[MAX_COMMENT];
 
-    unsigned char * ThumbnailPointer;  /* Pointer at the thumbnail */
-    unsigned ThumbnailSize;     /* Size of thumbnail. */
+	unsigned char * ThumbnailPointer;  /* Pointer at the thumbnail */
+	unsigned ThumbnailSize;	 /* Size of thumbnail. */
 
 	bool  IsExif;
 } EXIFINFO;
@@ -103,11 +103,11 @@ typedef struct tag_ExifInfo {
 // in this program.  (See jdmarker.c for a more complete list.)
 //--------------------------------------------------------------------------
 
-#define M_SOF0  0xC0            // Start Of Frame N
-#define M_SOF1  0xC1            // N indicates which compression process
-#define M_SOF2  0xC2            // Only SOF0-SOF2 are now in common use
+#define M_SOF0  0xC0			// Start Of Frame N
+#define M_SOF1  0xC1			// N indicates which compression process
+#define M_SOF2  0xC2			// Only SOF0-SOF2 are now in common use
 #define M_SOF3  0xC3
-#define M_SOF5  0xC5            // NB: codes C4 and CC are NOT SOF markers
+#define M_SOF5  0xC5			// NB: codes C4 and CC are NOT SOF markers
 #define M_SOF6  0xC6
 #define M_SOF7  0xC7
 #define M_SOF9  0xC9
@@ -116,26 +116,26 @@ typedef struct tag_ExifInfo {
 #define M_SOF13 0xCD
 #define M_SOF14 0xCE
 #define M_SOF15 0xCF
-#define M_SOI   0xD8            // Start Of Image (beginning of datastream)
-#define M_EOI   0xD9            // End Of Image (end of datastream)
-#define M_SOS   0xDA            // Start Of Scan (begins compressed data)
-#define M_JFIF  0xE0            // Jfif marker
-#define M_EXIF  0xE1            // Exif marker
-#define M_COM   0xFE            // COMment 
+#define M_SOI	0xD8			// Start Of Image (beginning of datastream)
+#define M_EOI	0xD9			// End Of Image (end of datastream)
+#define M_SOS	0xDA			// Start Of Scan (begins compressed data)
+#define M_JFIF  0xE0			// Jfif marker
+#define M_EXIF  0xE1			// Exif marker
+#define M_COM	0xFE			// COMment 
 
 #define PSEUDO_IMAGE_MARKER 0x123; // Extra value.
 
 #define EXIF_READ_EXIF  0x01
 #define EXIF_READ_IMAGE 0x02
-#define EXIF_READ_ALL   0x03
+#define EXIF_READ_ALL	0x03
 
 class DLL_EXP CxExifInfo
 {
 
 typedef struct tag_Section_t{
-    BYTE*    Data;
-    int      Type;
-    unsigned Size;
+	BYTE*	Data;
+	int	  Type;
+	unsigned Size;
 } Section_t;
 
 public:
@@ -157,7 +157,7 @@ protected:
 	double ConvertAnyFormat(void * ValuePtr, int Format);
 	void* FindSection(int SectionType);
 	bool ProcessExifDir(unsigned char * DirStart, unsigned char * OffsetBase, unsigned ExifLength,
-                           EXIFINFO * const pInfo, unsigned char ** const LastExifRefdP, int NestingLevel=0);
+							EXIFINFO * const pInfo, unsigned char ** const LastExifRefdP, int NestingLevel=0);
 	int ExifImageWidth;
 	int MotorolaOrder;
 	Section_t Sections[MAX_SECTIONS];
@@ -173,7 +173,7 @@ protected:
 #endif //CXIMAGEJPG_SUPPORT_EXIF
 
 ////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////        C x F i l e J p g         ////////////////////////////////
+//////////////////////		C x F i l e J p g		 ////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
 // thanks to Chris Shearer Cooper <cscooper(at)frii(dot)com>
@@ -184,7 +184,7 @@ public:
 
 	CxFileJpg(CxFile* pFile)
 	{
-        m_pFile = pFile;
+		m_pFile = pFile;
 
 		init_destination = InitDestination;
 		empty_output_buffer = EmptyOutputBuffer;
@@ -283,7 +283,7 @@ public:
 		return;
 	}
 protected:
-    CxFile  *m_pFile;
+	CxFile  *m_pFile;
 	unsigned char *m_pBuffer;
 	bool m_bStartOfFile;
 };

@@ -12,7 +12,7 @@
 	Human-Computer Interaction Graduate Program
 */
 
-//          Copyright Iowa State University 2012.
+//		  Copyright Iowa State University 2012.
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
@@ -37,12 +37,12 @@
 
 // Internal Includes
 #include <luabind/set_package_preload.hpp>
-#include <luabind/config.hpp>           // for LUABIND_API
-#include <luabind/detail/object.hpp>    // for object, rawget, globals
+#include <luabind/config.hpp>			// for LUABIND_API
+#include <luabind/detail/object.hpp>	// for object, rawget, globals
 #include <luabind/detail/conversion_policies/conversion_policies.hpp>
 
 // Library/third-party includes
-#include <luabind/lua_include.hpp>      // for lua_pushstring, lua_rawset, etc
+#include <luabind/lua_include.hpp>	  // for lua_pushstring, lua_rawset, etc
 
 // Standard includes
 // - none

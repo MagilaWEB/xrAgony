@@ -11,8 +11,8 @@
 IC bool CMovementManager::actual() const { return (m_path_actuality); }
 IC void CMovementManager::set_path_type(EPathType path_type)
 {
-    m_path_actuality = m_path_actuality && (m_path_type == path_type);
-    m_path_type = path_type;
+	m_path_actuality = m_path_actuality && (m_path_type == path_type);
+	m_path_type = path_type;
 }
 
 IC bool CMovementManager::enabled() const { return (m_enabled); }
@@ -25,13 +25,13 @@ IC const CMovementManager::CBoneRotation& CMovementManager::body_orientation() c
 template <typename T>
 IC bool CMovementManager::accessible(T position_or_vertex_id, float radius) const
 {
-    return (restrictions().accessible(position_or_vertex_id, radius));
+	return (restrictions().accessible(position_or_vertex_id, radius));
 }
 
 IC void CMovementManager::extrapolate_path(bool value)
 {
-    m_path_actuality = m_path_actuality && (value == m_extrapolate_path);
-    m_extrapolate_path = value;
+	m_path_actuality = m_path_actuality && (value == m_extrapolate_path);
+	m_extrapolate_path = value;
 }
 
 IC bool CMovementManager::extrapolate_path() const { return (m_extrapolate_path); }
@@ -40,62 +40,62 @@ IC CMovementManager::CGameVertexParams* CMovementManager::base_game_params() con
 IC CMovementManager::CBaseParameters* CMovementManager::base_level_params() const { return (m_base_level_selector); }
 IC CMovementManager::CGameLocationSelector& CMovementManager::game_selector() const
 {
-    VERIFY(m_game_location_selector);
-    return (*m_game_location_selector);
+	VERIFY(m_game_location_selector);
+	return (*m_game_location_selector);
 }
 
 IC CMovementManager::CGamePathManager& CMovementManager::game_path() const
 {
-    VERIFY(m_game_path_manager);
-    return (*m_game_path_manager);
+	VERIFY(m_game_path_manager);
+	return (*m_game_path_manager);
 }
 
 IC CMovementManager::CLevelPathManager& CMovementManager::level_path() const
 {
-    VERIFY(m_level_path_manager);
-    return (*m_level_path_manager);
+	VERIFY(m_level_path_manager);
+	return (*m_level_path_manager);
 }
 
 IC CDetailPathManager& CMovementManager::detail() const
 {
-    VERIFY(m_detail_path_manager);
-    return (*m_detail_path_manager);
+	VERIFY(m_detail_path_manager);
+	return (*m_detail_path_manager);
 }
 
 IC CPatrolPathManager& CMovementManager::patrol() const
 {
-    VERIFY(m_patrol_path_manager);
-    return (*m_patrol_path_manager);
+	VERIFY(m_patrol_path_manager);
+	return (*m_patrol_path_manager);
 }
 
 IC CRestrictedObject& CMovementManager::restrictions() const
 {
-    VERIFY(m_restricted_object);
-    return (*m_restricted_object);
+	VERIFY(m_restricted_object);
+	return (*m_restricted_object);
 }
 
 IC CLocationManager& CMovementManager::locations() const
 {
-    VERIFY(m_location_manager);
-    return (*m_location_manager);
+	VERIFY(m_location_manager);
+	return (*m_location_manager);
 }
 
 IC CCustomMonster& CMovementManager::object() const
 {
-    VERIFY(m_object);
-    return (*m_object);
+	VERIFY(m_object);
+	return (*m_object);
 }
 
 IC CLevelPathBuilder& CMovementManager::level_path_builder() const
 {
-    VERIFY(m_level_path_builder);
-    return (*m_level_path_builder);
+	VERIFY(m_level_path_builder);
+	return (*m_level_path_builder);
 }
 
 IC CDetailPathBuilder& CMovementManager::detail_path_builder() const
 {
-    VERIFY(m_detail_path_builder);
-    return (*m_detail_path_builder);
+	VERIFY(m_detail_path_builder);
+	return (*m_detail_path_builder);
 }
 
 IC bool CMovementManager::wait_for_distributed_computation() const { return (m_wait_for_distributed_computation); }

@@ -165,7 +165,7 @@ CSkeletonX* CKinematics::LL_GetChild(u32 idx)
 
 void CKinematics::Load(const char* N, IReader* data, u32 dwFlags)
 {
-	// Msg              ("skeleton: %s",N);
+	// Msg			  ("skeleton: %s",N);
 	inherited::Load(N, data, dwFlags);
 
 	pUserData = nullptr;
@@ -184,7 +184,7 @@ void CKinematics::Load(const char* N, IReader* data, u32 dwFlags)
 		{
 			string_path lod_name;
 			LD->r_string(lod_name, sizeof(lod_name));
-			//.         strconcat       (sizeof(name_load),name_load, short_name, ":lod:", lod_name.c_str());
+			//.		 strconcat		(sizeof(name_load),name_load, short_name, ":lod:", lod_name.c_str());
 			m_lod = (dxRender_Visual*)::Render->model_CreateChild(lod_name, nullptr);
 
 			if (CKinematics* lod_kinematics = dynamic_cast<CKinematics*>(m_lod))
@@ -194,7 +194,7 @@ void CKinematics::Load(const char* N, IReader* data, u32 dwFlags)
 
 			VERIFY3(m_lod, "Cant create LOD model for", N);
 			//VERIFY2(m_lod->Type==MT_HIERRARHY || m_lod->Type==MT_PROGRESSIVE ||
-			//    m_lod->Type==MT_NORMAL,lod_name.c_str());
+			//	m_lod->Type==MT_NORMAL,lod_name.c_str());
 			/*
 				strconcat(name_load, short_name, ":lod:1");
 				m_lod = ::Render->model_CreateChild(name_load, LD);
@@ -228,7 +228,7 @@ void CKinematics::Load(const char* N, IReader* data, u32 dwFlags)
 	int dwCount = data->r_u32();
 	//Msg("!!! %d bones", dwCount);
 	//if (dwCount>=64)
-	//    Msg("!!! More than 64 bones is a crazy thing! (%d), %s", dwCount, N);
+	//	Msg("!!! More than 64 bones is a crazy thing! (%d), %s", dwCount, N);
 	VERIFY3(dwCount <= 64, "More than 64 bones is a crazy thing!", N);
 	for (; dwCount; dwCount--)
 	{
@@ -610,7 +610,7 @@ using OBBVec = xr_vector<Fobb>;
 bool CKinematics::PickBone(const Fmatrix& parent_xform, IKinematics::pick_result& r, float dist, const Fvector& start,
 	const Fvector& dir, u16 bone_id)
 {
-	Fvector S, D; // normal     = {0,0,0}
+	Fvector S, D; // normal	 = {0,0,0}
 	// transform ray from world to model
 	Fmatrix P;
 	P.invert(parent_xform);
@@ -749,7 +749,7 @@ void CKinematics::CalculateWallmarks()
 			{
 				// append wm to WallmarkEngine
 				if (::Render->ViewBase.testSphere_dirty(wm->m_Bounds.P, wm->m_Bounds.R))
-					// ::Render->add_SkeletonWallmark   (wm);
+					// ::Render->add_SkeletonWallmark	(wm);
 					::RImplementation.add_SkeletonWallmark(wm);
 			}
 			else
@@ -855,7 +855,7 @@ void CKinematics::RenderWallmark(intrusive_ptr<CSkeletonWallmark> wm, FVF::LIT*&
 void CKinematics::ClearWallmarks()
 {
 	//  for (auto it=wallmarks.begin(); it!=wallmarks.end(); it++)
-	//      xr_delete   (*it);
+	//	  xr_delete	(*it);
 	wallmarks.clear();
 }
 

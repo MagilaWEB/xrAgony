@@ -10,6 +10,6 @@ channels::channels() { init(); }
 void channels::init() { std::fill(factors, factors + max, 1.f); }
 void channels::set_factor(u16 channel, float factor)
 {
-    VERIFY(channel < max);
-    factors[channel] = factor;
+	VERIFY(channel < max);
+	factors[channel] = factor;
 }

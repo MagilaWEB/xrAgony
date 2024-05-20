@@ -10,14 +10,14 @@
 
 IC CAgentExplosiveManager::CAgentExplosiveManager(CAgentManager* object)
 {
-    VERIFY(object);
-    m_object = object;
+	VERIFY(object);
+	m_object = object;
 }
 
 IC CAgentManager& CAgentExplosiveManager::object() const
 {
-    VERIFY(m_object);
-    return (*m_object);
+	VERIFY(m_object);
+	return (*m_object);
 }
 
 IC CAgentExplosiveManager::EXPLOSIVES& CAgentExplosiveManager::explosives() { return (m_explosives); }

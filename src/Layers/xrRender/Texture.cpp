@@ -336,7 +336,7 @@ _DDS:
 	_DDS_2D:
 		{
 			xr_strlwr(fn);
-			// Load   SYS-MEM-surface, bound to device restrictions
+			// Load	SYS-MEM-surface, bound to device restrictions
 			ID3DTexture2D* T_sysmem;
 			HRESULT const result =
 				D3DXCreateTextureFromFileInMemoryEx(HW.pDevice, S->pointer(), S->length(), D3DX_DEFAULT, D3DX_DEFAULT,
@@ -466,7 +466,7 @@ _BUMP_from_base:
 		* strstr(fname, "_bump") = 0;
 		R_ASSERT2(FS.exist(fn, "$game_textures$", fname, ".dds"), fname);
 
-		// Load   SYS-MEM-surface, bound to device restrictions
+		// Load	SYS-MEM-surface, bound to device restrictions
 		D3DXIMAGE_INFO IMG;
 		S = FS.r_open(fn);
 		img_size = S->length();

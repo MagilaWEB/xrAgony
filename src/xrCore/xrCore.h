@@ -12,16 +12,16 @@
 
 #if defined(MASTER_GOLD)
 //  release master gold
-#   if defined(__cpp_exceptions) && defined(XR_PLATFORM_WINDOWS)
-#       error Please disable exceptions...
-#   endif
-#   define XRAY_EXCEPTIONS 0
+#	if defined(__cpp_exceptions) && defined(XR_PLATFORM_WINDOWS)
+#		error Please disable exceptions...
+#	endif
+#	define XRAY_EXCEPTIONS 0
 #else
 //  release, debug or mixed
-#   if !defined(__cpp_exceptions)
-#       error Please enable exceptions...
-#   endif
-#   define XRAY_EXCEPTIONS 1
+#	if !defined(__cpp_exceptions)
+#		error Please enable exceptions...
+#	endif
+#	define XRAY_EXCEPTIONS 1
 #endif
 
 #if !defined(DEBUG) && (defined(_DEBUG) || defined(MIXED))

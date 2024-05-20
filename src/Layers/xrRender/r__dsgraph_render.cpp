@@ -35,7 +35,7 @@ template <class T> IC bool cmp_textures_lex2(const T& lhs, const T& rhs)
 	if ((*t1)[0] < (*t2)[0]) return true;
 	if ((*t1)[0] > (*t2)[0]) return false;
 	if ((*t1)[1] < (*t2)[1]) return true;
-	else               return false;
+	else				return false;
 }
 template <class T> IC bool cmp_textures_lex3(const T& lhs, const T& rhs)
 {
@@ -47,7 +47,7 @@ template <class T> IC bool cmp_textures_lex3(const T& lhs, const T& rhs)
 	if ((*t1)[1] < (*t2)[1]) return true;
 	if ((*t1)[1] > (*t2)[1]) return false;
 	if ((*t1)[2] < (*t2)[2]) return true;
-	else               return false;
+	else				return false;
 }
 template <class T> IC bool cmp_textures_lexN(const T& lhs, const T& rhs)
 {
@@ -349,12 +349,12 @@ public:
 		// It should be something like this:
 		// float customFOV;
 		// if (isCustomFOV)
-		//     customFOV = V->getVisData().obj_data->m_hud_custom_fov;
+		//	 customFOV = V->getVisData().obj_data->m_hud_custom_fov;
 		// else
-		//     customFOV = psHUD_FOV * Device.fFOV;
+		//	 customFOV = psHUD_FOV * Device.fFOV;
 		//
 		// Device.mProject.build_projection(deg2rad(customFOV), Device.fASPECT,
-		//    VIEWPORT_NEAR, g_pGamePersistent->Environment().CurrentEnv->far_plane);
+		//	VIEWPORT_NEAR, g_pGamePersistent->Environment().CurrentEnv->far_plane);
 		//
 		// Look at the function:
 		// void __fastcall sorted_L1_HUD(mapSorted_Node* N)

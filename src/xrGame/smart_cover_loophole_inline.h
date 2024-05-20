@@ -24,7 +24,7 @@ IC void loophole::enterable(bool value) { m_enterable = value; }
 IC bool const& loophole::usable() const { return (m_usable); }
 IC bool loophole::is_action_available(shared_str const& action_id) const
 {
-    return (m_actions.find(action_id) != m_actions.end());
+	return (m_actions.find(action_id) != m_actions.end());
 }
 
 IC bool const& loophole::exitable() const { return (m_exitable); }

@@ -6,9 +6,9 @@
 # define LUABIND_SHARED_PTR_CONVERTER_090211_HPP
 
 #include <luabind/detail/policy.hpp>
-#include <luabind/detail/conversion_policies/value_converter.hpp>    // for default_converter, etc
+#include <luabind/detail/conversion_policies/value_converter.hpp>	// for default_converter, etc
 #include <luabind/get_main_thread.hpp>  // for get_main_thread
-#include <luabind/handle.hpp>           // for handle
+#include <luabind/handle.hpp>			// for handle
 #include <luabind/detail/decorate_type.hpp>  // for decorated_type
 #include <memory>
 

@@ -3,10 +3,10 @@
 
 class CUIScrollBox : public CUIFrameLineWnd
 {
-    typedef CUIFrameLineWnd inherited;
+	typedef CUIFrameLineWnd inherited;
 
 public:
-    CUIScrollBox();
+	CUIScrollBox();
 
-    virtual bool OnMouseAction(float x, float y, EUIMessages mouse_action);
+	virtual bool OnMouseAction(float x, float y, EUIMessages mouse_action);
 };

@@ -11,6 +11,6 @@
 IC CServerEntityWrapper::CServerEntityWrapper(CSE_Abstract* object) { m_object = object; }
 IC CSE_Abstract& CServerEntityWrapper::object() const
 {
-    VERIFY(m_object);
-    return (*m_object);
+	VERIFY(m_object);
+	return (*m_object);
 }

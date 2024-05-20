@@ -17,25 +17,25 @@
 
 enum PrimType
 {
-    PT_LIST,
-    PT_STRIP,
-    PT_FAN
+	PT_LIST,
+	PT_STRIP,
+	PT_FAN
 };
 
 struct PrimitiveGroup
 {
-    PrimType type;
-    unsigned int numIndices;
-    unsigned short* indices;
+	PrimType type;
+	unsigned int numIndices;
+	unsigned short* indices;
 
-    ////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
 
-    PrimitiveGroup() : type(PT_STRIP), numIndices(0), indices(nullptr) {}
-    ~PrimitiveGroup()
-    {
-        if (indices)
-            xr_free(indices);
-    }
+	PrimitiveGroup() : type(PT_STRIP), numIndices(0), indices(nullptr) {}
+	~PrimitiveGroup()
+	{
+		if (indices)
+			xr_free(indices);
+	}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -110,6 +110,6 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 // Credit goes to the MS Xbox crew for the idea for this interface.
 //
 void RemapIndices(
-    const xr_vector<PrimitiveGroup>& in_primGroups, const u16 numVerts, xr_vector<PrimitiveGroup>& remappedGroups);
+	const xr_vector<PrimitiveGroup>& in_primGroups, const u16 numVerts, xr_vector<PrimitiveGroup>& remappedGroups);
 
 #endif

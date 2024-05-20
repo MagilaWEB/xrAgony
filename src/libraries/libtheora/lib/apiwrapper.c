@@ -1,17 +1,17 @@
 /********************************************************************
- *                                                                  *
- * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.   *
- * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
+ *																  *
+ * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.	*
+ * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS	 *
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
- * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
- *                                                                  *
- * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009                *
+ * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.		*
+ *																  *
+ * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009				*
  * by the Xiph.Org Foundation and contributors http://www.xiph.org/ *
- *                                                                  *
+ *																  *
  ********************************************************************
 
   function:
-    last mod: $Id: apiwrapper.c 16503 2009-08-22 18:14:02Z giles $
+	last mod: $Id: apiwrapper.c 16503 2009-08-22 18:14:02Z giles $
 
  ********************************************************************/
 
@@ -39,18 +39,18 @@ void theora_info_clear(theora_info *_ci){
   api=(th_api_wrapper *)_ci->codec_setup;
   memset(_ci,0,sizeof(*_ci));
   if(api!=NULL){
-    if(api->clear!=NULL)(*api->clear)(api);
-    _ogg_free(api);
+	if(api->clear!=NULL)(*api->clear)(api);
+	_ogg_free(api);
   }
 }
 
 void theora_clear(theora_state *_th){
   /*Provide compatibility with mixed encoder and decoder shared lib versions.*/
   if(_th->internal_decode!=NULL){
-    (*((oc_state_dispatch_vtable *)_th->internal_decode)->clear)(_th);
+	(*((oc_state_dispatch_vtable *)_th->internal_decode)->clear)(_th);
   }
   if(_th->internal_encode!=NULL){
-    (*((oc_state_dispatch_vtable *)_th->internal_encode)->clear)(_th);
+	(*((oc_state_dispatch_vtable *)_th->internal_encode)->clear)(_th);
   }
   if(_th->i!=NULL)theora_info_clear(_th->i);
   memset(_th,0,sizeof(*_th));
@@ -59,12 +59,12 @@ void theora_clear(theora_state *_th){
 int theora_control(theora_state *_th,int _req,void *_buf,size_t _buf_sz){
   /*Provide compatibility with mixed encoder and decoder shared lib versions.*/
   if(_th->internal_decode!=NULL){
-    return (*((oc_state_dispatch_vtable *)_th->internal_decode)->control)(_th,
-     _req,_buf,_buf_sz);
+	return (*((oc_state_dispatch_vtable *)_th->internal_decode)->control)(_th,
+	 _req,_buf,_buf_sz);
   }
   else if(_th->internal_encode!=NULL){
-    return (*((oc_state_dispatch_vtable *)_th->internal_encode)->control)(_th,
-     _req,_buf,_buf_sz);
+	return (*((oc_state_dispatch_vtable *)_th->internal_encode)->control)(_th,
+	 _req,_buf,_buf_sz);
   }
   else return TH_EINVAL;
 }
@@ -72,12 +72,12 @@ int theora_control(theora_state *_th,int _req,void *_buf,size_t _buf_sz){
 ogg_int64_t theora_granule_frame(theora_state *_th,ogg_int64_t _gp){
   /*Provide compatibility with mixed encoder and decoder shared lib versions.*/
   if(_th->internal_decode!=NULL){
-    return (*((oc_state_dispatch_vtable *)_th->internal_decode)->granule_frame)(
-     _th,_gp);
+	return (*((oc_state_dispatch_vtable *)_th->internal_decode)->granule_frame)(
+	 _th,_gp);
   }
   else if(_th->internal_encode!=NULL){
-    return (*((oc_state_dispatch_vtable *)_th->internal_encode)->granule_frame)(
-     _th,_gp);
+	return (*((oc_state_dispatch_vtable *)_th->internal_encode)->granule_frame)(
+	 _th,_gp);
   }
   else return -1;
 }
@@ -85,12 +85,12 @@ ogg_int64_t theora_granule_frame(theora_state *_th,ogg_int64_t _gp){
 double theora_granule_time(theora_state *_th, ogg_int64_t _gp){
   /*Provide compatibility with mixed encoder and decoder shared lib versions.*/
   if(_th->internal_decode!=NULL){
-    return (*((oc_state_dispatch_vtable *)_th->internal_decode)->granule_time)(
-     _th,_gp);
+	return (*((oc_state_dispatch_vtable *)_th->internal_decode)->granule_time)(
+	 _th,_gp);
   }
   else if(_th->internal_encode!=NULL){
-    return (*((oc_state_dispatch_vtable *)_th->internal_encode)->granule_time)(
-     _th,_gp);
+	return (*((oc_state_dispatch_vtable *)_th->internal_encode)->granule_time)(
+	 _th,_gp);
   }
   else return -1;
 }
@@ -110,20 +110,20 @@ void oc_theora_info2th_info(th_info *_info,const theora_info *_ci){
   _info->aspect_numerator=_ci->aspect_numerator;
   _info->aspect_denominator=_ci->aspect_denominator;
   switch(_ci->colorspace){
-    case OC_CS_ITU_REC_470M:_info->colorspace=TH_CS_ITU_REC_470M;break;
-    case OC_CS_ITU_REC_470BG:_info->colorspace=TH_CS_ITU_REC_470BG;break;
-    default:_info->colorspace=TH_CS_UNSPECIFIED;break;
+	case OC_CS_ITU_REC_470M:_info->colorspace=TH_CS_ITU_REC_470M;break;
+	case OC_CS_ITU_REC_470BG:_info->colorspace=TH_CS_ITU_REC_470BG;break;
+	default:_info->colorspace=TH_CS_UNSPECIFIED;break;
   }
   switch(_ci->pixelformat){
-    case OC_PF_420:_info->pixel_fmt=TH_PF_420;break;
-    case OC_PF_422:_info->pixel_fmt=TH_PF_422;break;
-    case OC_PF_444:_info->pixel_fmt=TH_PF_444;break;
-    default:_info->pixel_fmt=TH_PF_RSVD;
+	case OC_PF_420:_info->pixel_fmt=TH_PF_420;break;
+	case OC_PF_422:_info->pixel_fmt=TH_PF_422;break;
+	case OC_PF_444:_info->pixel_fmt=TH_PF_444;break;
+	default:_info->pixel_fmt=TH_PF_RSVD;
   }
   _info->target_bitrate=_ci->target_bitrate;
   _info->quality=_ci->quality;
   _info->keyframe_granule_shift=_ci->keyframe_frequency_force>0?
-   OC_MINI(31,oc_ilog(_ci->keyframe_frequency_force-1)):0;
+	OC_MINI(31,oc_ilog(_ci->keyframe_frequency_force-1)):0;
 }
 
 int theora_packet_isheader(ogg_packet *_op){
@@ -136,8 +136,8 @@ int theora_packet_iskeyframe(ogg_packet *_op){
 
 int theora_granule_shift(theora_info *_ci){
   /*This breaks when keyframe_frequency_force is not positive or is larger than
-     2**31 (if your int is more than 32 bits), but that's what the original
-     function does.*/
+	 2**31 (if your int is more than 32 bits), but that's what the original
+	 function does.*/
   return oc_ilog(_ci->keyframe_frequency_force-1);
 }
 

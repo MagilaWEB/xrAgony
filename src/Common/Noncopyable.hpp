@@ -3,7 +3,7 @@
 class Noncopyable
 {
 public:
-    Noncopyable() = default;
-    Noncopyable(Noncopyable&) = delete;
-    Noncopyable& operator=(Noncopyable&) = delete;
+	Noncopyable() = default;
+	Noncopyable(Noncopyable&) = delete;
+	Noncopyable& operator=(Noncopyable&) = delete;
 };

@@ -30,26 +30,26 @@ constexpr double rad2deg(double val) noexcept { return val*180 / M_PI;}
 template <class T>
 constexpr void clamp(T& val, const T& _low, const T& _high)
 {
-    if (val<_low)
-        val = _low;
-    else if (val>_high)
-        val = _high;
+	if (val<_low)
+		val = _low;
+	else if (val>_high)
+		val = _high;
 }
 
 // XXX: Check usages and provide overloads for native types where arguments are NOT references.
 template <class T>
 constexpr T clampr(const T& val, const T& _low, const T& _high)
 {
-    if (val < _low)
-        return _low;
-    if (val > _high)
-        return _high;
-    return val;
+	if (val < _low)
+		return _low;
+	if (val > _high)
+		return _high;
+	return val;
 }
 
 inline float snapto(float value, float snap)
 {
-    if (snap <= 0.f)
-        return value;
-    return float(iFloor((value + (snap*0.5f)) / snap)) * snap;
+	if (snap <= 0.f)
+		return value;
+	return float(iFloor((value + (snap*0.5f)) / snap)) * snap;
 }

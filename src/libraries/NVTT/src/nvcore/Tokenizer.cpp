@@ -44,15 +44,15 @@ static int vsscanf(const char * buffer, const char * format, va_list argPtr)
 	void *savedESP;
 	__asm
 	{
-		mov     savedESP, esp
-		mov     esp, newStack
+		mov	 savedESP, esp
+		mov	 esp, newStack
 #if _MSC_VER >= 1400
 		call	DWORD PTR [sscanf_s]
 #else
 		call	DWORD PTR [sscanf]
 #endif
-		mov     esp, savedESP
-		mov     result, eax
+		mov	 esp, savedESP
+		mov	 result, eax
 	}
 	return result;
 }
@@ -116,7 +116,7 @@ bool Token::parse(const char * format, int count, ...) const
 	va_list arg;
 	va_start(arg, count);
 
-    int readCount = vsscanf(m_str, format, arg);
+	int readCount = vsscanf(m_str, format, arg);
 
 	va_end(arg);
 

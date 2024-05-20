@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 /*
@@ -57,9 +57,9 @@ static void space_geom_collider (void *data, dxGeom *o1, dxGeom *o2)
 {
   SpaceGeomColliderData *d = (SpaceGeomColliderData*) data;
   if (d->flags & NUMC_MASK) {
-    int n = dCollide (o1,o2,d->flags,d->contact,d->skip);
-    d->contact = CONTACT (d->contact,d->skip*n);
-    d->flags -= n;
+	int n = dCollide (o1,o2,d->flags,d->contact,d->skip);
+	d->contact = CONTACT (d->contact,d->skip*n);
+	d->flags -= n;
 #ifndef dNODEBUG
 	if(d->flags<=0)
 	{
@@ -76,7 +76,7 @@ static void space_geom_collider (void *data, dxGeom *o1, dxGeom *o2)
 
 
 static int dCollideSpaceGeom (dxGeom *o1, dxGeom *o2, int flags,
-			      dContactGeom *contact, int skip)
+				  dContactGeom *contact, int skip)
 {
   SpaceGeomColliderData data;
   data.flags = flags;
@@ -105,12 +105,12 @@ static int colliders_initialized = 0;
 static void setCollider (int i, int j, dColliderFn *fn)
 {
   if (colliders[i][j].fn == 0) {
-    colliders[i][j].fn = fn;
-    colliders[i][j].reverse = 0;
+	colliders[i][j].fn = fn;
+	colliders[i][j].reverse = 0;
   }
   if (colliders[j][i].fn == 0) {
-    colliders[j][i].fn = fn;
-    colliders[j][i].reverse = 1;
+	colliders[j][i].fn = fn;
+	colliders[j][i].reverse = 1;
   }
 }
 
@@ -132,9 +132,9 @@ static void initColliders()
 
   // setup space colliders
   for (i=dFirstSpaceClass; i <= dLastSpaceClass; i++) {
-    for (j=0; j < dGeomNumClasses; j++) {
-      setCollider (i,j,&dCollideSpaceGeom);
-    }
+	for (j=0; j < dGeomNumClasses; j++) {
+	  setCollider (i,j,&dCollideSpaceGeom);
+	}
   }
 
   setCollider (dSphereClass,dSphereClass,&dCollideSphereSphere);
@@ -162,7 +162,7 @@ static void initColliders()
 
 
 int dCollide (dxGeom *o1, dxGeom *o2, int flags, dContactGeom *contact,
-	      int skip)
+		  int skip)
 {
   dAASSERT(o1 && o2 && contact);
   dUASSERT(colliders_initialized,"colliders array not initialized");
@@ -178,9 +178,9 @@ int dCollide (dxGeom *o1, dxGeom *o2, int flags, dContactGeom *contact,
   dColliderEntry *ce = &colliders[o1->type][o2->type];
   int count = 0;
   if (ce->fn) {
-    if (ce->reverse) {
-      count = (*ce->fn) (o2,o1,flags,contact,skip);
-      for (int i=0; i<count; i++) {
+	if (ce->reverse) {
+	  count = (*ce->fn) (o2,o1,flags,contact,skip);
+	  for (int i=0; i<count; i++) {
 	dContactGeom *c = CONTACT(contact,skip*i);
 	c->normal[0] = -c->normal[0];
 	c->normal[1] = -c->normal[1];
@@ -188,11 +188,11 @@ int dCollide (dxGeom *o1, dxGeom *o2, int flags, dContactGeom *contact,
 	dxGeom *tmp = c->g1;
 	c->g1 = c->g2;
 	c->g2 = tmp;
-      }
-    }
-    else {
-      count = (*ce->fn) (o1,o2,flags,contact,skip);
-    }
+	  }
+	}
+	else {
+	  count = (*ce->fn) (o1,o2,flags,contact,skip);
+	}
   }
   return count;
 }
@@ -212,15 +212,15 @@ dxGeom::dxGeom (dSpaceID _space, int is_placeable)
   body = 0;
   body_next = 0;
   if (is_placeable) {
-    dxPosR *pr = (dxPosR*) dAlloc (sizeof(dxPosR));
-    pos = pr->pos;
-    R = pr->R;
-    dSetZero (pos,4);
-    dRSetIdentity (R);
+	dxPosR *pr = (dxPosR*) dAlloc (sizeof(dxPosR));
+	pos = pr->pos;
+	R = pr->R;
+	dSetZero (pos,4);
+	dRSetIdentity (R);
   }
   else {
-    pos = 0;
-    R = 0;
+	pos = 0;
+	R = 0;
   }
 
   // setup space vars
@@ -253,18 +253,18 @@ int dxGeom::AABBTest (dxGeom *o, dReal aabb[6])
 void dxGeom::bodyRemove()
 {
   if (body) {
-    // delete this geom from body list
-    dxGeom **last = &body->geom, *g = body->geom;
-    while (g) {
-      if (g == this) {
+	// delete this geom from body list
+	dxGeom **last = &body->geom, *g = body->geom;
+	while (g) {
+	  if (g == this) {
 	*last = g->body_next;
 	break;
-      }
-      last = &g->body_next;
-      g = g->body_next;
-    }
-    body = 0;
-    body_next = 0;
+	  }
+	  last = &g->body_next;
+	  g = g->body_next;
+	}
+	body = 0;
+	body_next = 0;
   }
 }
 
@@ -281,7 +281,7 @@ dxGeom *dGeomGetBodyNext (dxGeom *geom)
 
 #define CHECK_NOT_LOCKED(space) \
   dUASSERT (!(space && space->lock_count), \
-	    "invalid operation for geom in locked space");
+		"invalid operation for geom in locked space");
 
 
 void dGeomDestroy (dxGeom *g)
@@ -312,27 +312,27 @@ void dGeomSetBody (dxGeom *g, dxBody *b)
   CHECK_NOT_LOCKED (g->parent_space);
 
   if (b) {
-    if (!g->body) dFree (g->pos,sizeof(dxPosR));
-    g->pos = b->posr.pos;
-    g->R = b->posr.R;
-    dGeomMoved (g);
-    if (g->body != b) {
-      g->bodyRemove();
-      g->bodyAdd (b);
-    }
+	if (!g->body) dFree (g->pos,sizeof(dxPosR));
+	g->pos = b->posr.pos;
+	g->R = b->posr.R;
+	dGeomMoved (g);
+	if (g->body != b) {
+	  g->bodyRemove();
+	  g->bodyAdd (b);
+	}
   }
   else {
-    if (g->body) {
-      dxPosR *pr = (dxPosR*) dAlloc (sizeof(dxPosR));
-      g->pos = pr->pos;
-      g->R = pr->R;
-      memcpy (g->pos,g->body->posr.pos,sizeof(dVector3));
-      memcpy (g->R,g->body->posr.R,sizeof(dMatrix3));
-      g->bodyRemove();
-    }
-    // dGeomMoved() should not be called if the body is being set to 0, as the
-    // new position of the geom is set to the old position of the body, so the
-    // effective position of the geom remains unchanged.
+	if (g->body) {
+	  dxPosR *pr = (dxPosR*) dAlloc (sizeof(dxPosR));
+	  g->pos = pr->pos;
+	  g->R = pr->R;
+	  memcpy (g->pos,g->body->posr.pos,sizeof(dVector3));
+	  memcpy (g->R,g->body->posr.R,sizeof(dMatrix3));
+	  g->bodyRemove();
+	}
+	// dGeomMoved() should not be called if the body is being set to 0, as the
+	// new position of the geom is set to the old position of the body, so the
+	// effective position of the geom remains unchanged.
   }
 }
 
@@ -350,14 +350,14 @@ void dGeomSetPosition (dxGeom *g, dReal x, dReal y, dReal z)
   dUASSERT (g->gflags & GEOM_PLACEABLE,"geom must be placeable");
   CHECK_NOT_LOCKED (g->parent_space);
   if (g->body) {
-    // this will call dGeomMoved (g), so we don't have to
-    dBodySetPosition (g->body,x,y,z);
+	// this will call dGeomMoved (g), so we don't have to
+	dBodySetPosition (g->body,x,y,z);
   }
   else {
-    g->pos[0] = x;
-    g->pos[1] = y;
-    g->pos[2] = z;
-    dGeomMoved (g);
+	g->pos[0] = x;
+	g->pos[1] = y;
+	g->pos[2] = z;
+	dGeomMoved (g);
   }
 }
 
@@ -368,12 +368,12 @@ void dGeomSetRotation (dxGeom *g, const dMatrix3 R)
   dUASSERT (g->gflags & GEOM_PLACEABLE,"geom must be placeable");
   CHECK_NOT_LOCKED (g->parent_space);
   if (g->body) {
-    // this will call dGeomMoved (g), so we don't have to
-    dBodySetRotation (g->body,R);
+	// this will call dGeomMoved (g), so we don't have to
+	dBodySetRotation (g->body,R);
   }
   else {
-    memcpy (g->R,R,sizeof(dMatrix3));
-    dGeomMoved (g);
+	memcpy (g->R,R,sizeof(dMatrix3));
+	dGeomMoved (g);
   }
 }
 
@@ -384,12 +384,12 @@ void dGeomSetQuaternion (dxGeom *g, const dQuaternion quat)
   dUASSERT (g->gflags & GEOM_PLACEABLE,"geom must be placeable");
   CHECK_NOT_LOCKED (g->parent_space);
   if (g->body) {
-    // this will call dGeomMoved (g), so we don't have to
-    dBodySetQuaternion (g->body,quat);
+	// this will call dGeomMoved (g), so we don't have to
+	dBodySetQuaternion (g->body,quat);
   }
   else {
-    dQtoR (quat, g->R);
-    dGeomMoved (g);
+	dQtoR (quat, g->R);
+	dGeomMoved (g);
   }
 }
 
@@ -415,14 +415,14 @@ void dGeomGetQuaternion (dxGeom *g, dQuaternion quat)
   dAASSERT (g);
   dUASSERT (g->gflags & GEOM_PLACEABLE,"geom must be placeable");
   if (g->body) {
-    const dReal * body_quat = dBodyGetQuaternion (g->body);
-    quat[0] = body_quat[0];
-    quat[1] = body_quat[1];
-    quat[2] = body_quat[2];
-    quat[3] = body_quat[3];
+	const dReal * body_quat = dBodyGetQuaternion (g->body);
+	quat[0] = body_quat[0];
+	quat[1] = body_quat[1];
+	quat[2] = body_quat[2];
+	quat[3] = body_quat[3];
   }
   else {
-    dRtoQ (g->R, quat);
+	dRtoQ (g->R, quat);
   }
 }
 
@@ -557,7 +557,7 @@ int dxUserGeom::AABBTest (dxGeom *o, dReal aabb[6])
 
 
 static int dCollideUserGeomWithGeom (dxGeom *o1, dxGeom *o2, int flags,
-				     dContactGeom *contact, int skip)
+					 dContactGeom *contact, int skip)
 {
   // this generic collider function is called the first time that a user class
   // tries to collide against something. it will find out the correct collider
@@ -573,8 +573,8 @@ static int dCollideUserGeomWithGeom (dxGeom *o1, dxGeom *o2, int flags,
   dColliderFn *fn = user_classes[t1-dFirstUserClass].collider (t2);
   int reverse = 0;
   if (!fn && t2 >= dFirstUserClass && t2 <= dLastUserClass) {
-    fn = user_classes[t2-dFirstUserClass].collider (t1);
-    reverse = 1;
+	fn = user_classes[t2-dFirstUserClass].collider (t1);
+	reverse = 1;
   }
 
   // set the colliders array so that the correct function is called directly
@@ -596,8 +596,8 @@ int dCreateGeomClass (const dGeomClass *c)
   dUASSERT(c && c->bytes >= 0 && c->collider && c->aabb,"bad geom class");
 
   if (num_user_classes >= dMaxUserClasses) {
-    dDebug (0,"too many user classes, you must increase the limit and "
-	      "recompile ODE");
+	dDebug (0,"too many user classes, you must increase the limit and "
+		  "recompile ODE");
   }
   user_classes[num_user_classes] = *c;
   int class_number = num_user_classes + dFirstUserClass;
@@ -612,7 +612,7 @@ int dCreateGeomClass (const dGeomClass *c)
 void * dGeomGetClassData (dxGeom *g)
 {
   dUASSERT (g && g->type >= dFirstUserClass &&
-	    g->type <= dLastUserClass,"not a custom class");
+		g->type <= dLastUserClass,"not a custom class");
   dxUserGeom *user = (dxUserGeom*) g;
   return user->user_data;
 }
@@ -621,7 +621,7 @@ void * dGeomGetClassData (dxGeom *g)
 dGeomID dCreateGeom (int classnum)
 {
   dUASSERT (classnum >= dFirstUserClass &&
-	    classnum <= dLastUserClass,"not a custom class");
+		classnum <= dLastUserClass,"not a custom class");
   return new dxUserGeom (classnum);
 }
 

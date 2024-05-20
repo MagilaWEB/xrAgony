@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 #ifndef _ODE_COMMON_H_
@@ -60,13 +60,13 @@ extern "C" {
 
 
 /* debugging:
- *   IASSERT  is an internal assertion, i.e. a consistency check. if it fails
- *            we want to know where.
- *   UASSERT  is a user assertion, i.e. if it fails a nice error message
- *            should be printed for the user.
- *   AASSERT  is an arguments assertion, i.e. if it fails "bad argument(s)"
- *            is printed.
- *   DEBUGMSG just prints out a message
+ *	IASSERT  is an internal assertion, i.e. a consistency check. if it fails
+ *			we want to know where.
+ *	UASSERT  is a user assertion, i.e. if it fails a nice error message
+ *			should be printed for the user.
+ *	AASSERT  is an arguments assertion, i.e. if it fails "bad argument(s)"
+ *			is printed.
+ *	DEBUGMSG just prints out a message
  */
 
 #ifndef dNODEBUG
@@ -279,8 +279,8 @@ enum {
   D_ALL_PARAM_NAMES_X(0x200,3)
 
   /* add a multiple of this constant to the basic parameter numbers to get
-   * the parameters for the second, third etc axes.
-   */
+	* the parameters for the second, third etc axes.
+	*/
   dParamGroup=0x100
 };
 

@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
 
-	Copyright (c) 2006 Simon Brown                          si@sjbrown.co.uk
+	Copyright (c) 2006 Simon Brown						  si@sjbrown.co.uk
 
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the 
@@ -21,8 +21,8 @@
 	TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
-   -------------------------------------------------------------------------- */
-   
+	-------------------------------------------------------------------------- */
+	
 #include "maths.h"
 #include "simd.h"
 #include <cfloat>
@@ -77,7 +77,7 @@ static Vec3 EstimatePrincipleComponent( Sym3x3 const& matrix )
 }
 
 
-#define POWER_ITERATION_COUNT   8
+#define POWER_ITERATION_COUNT	8
 
 #if SQUISH_USE_SIMD
 

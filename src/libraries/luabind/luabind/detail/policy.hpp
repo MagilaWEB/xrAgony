@@ -64,7 +64,7 @@ namespace luabind
 	// A call policy injector instructs the call mechanism to call certain static function "postcall" on type T
 	// after having executed a call.
 	template< typename T >
-    struct call_policy_injector : policy_list<call_policy_injector<T>>
+	struct call_policy_injector : policy_list<call_policy_injector<T>>
 	{};
 
 	template< typename T, typename Enable = void >
@@ -105,11 +105,11 @@ namespace luabind
 				using type = ConverterPolicy;
 			};
 
-            template< unsigned int Index, typename ConverterPolicy >
-            struct get_converter_policy< Index, converter_policy_injector< Index, ConverterPolicy > >
-            {
-                using type = ConverterPolicy;
-            };
+			template< unsigned int Index, typename ConverterPolicy >
+			struct get_converter_policy< Index, converter_policy_injector< Index, ConverterPolicy > >
+			{
+				using type = ConverterPolicy;
+			};
 
 			template< unsigned int Index >
 			struct get_converter_policy< Index, meta::type_list< > >

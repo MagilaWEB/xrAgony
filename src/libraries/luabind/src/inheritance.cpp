@@ -38,7 +38,7 @@ namespace luabind {
 				{}
 
 				class_id id;
-                luabind::vector<edge> edges;
+				luabind::vector<edge> edges;
 			};
 
 			using cache_entry = std::pair<std::ptrdiff_t, int>;
@@ -91,7 +91,7 @@ namespace luabind {
 			void insert(class_id src, class_id target, cast_function cast);
 
 		private:
-            luabind::vector<vertex> m_vertices;
+			luabind::vector<vertex> m_vertices;
 			mutable cache m_cache;
 		};
 
@@ -128,7 +128,7 @@ namespace luabind {
 				return std::make_pair((char*)p + cached.first, cached.second);
 			}
 
-            luabind::queue<queue_entry> q;
+			luabind::queue<queue_entry> q;
 			q.push(queue_entry(p, src, 0));
 
 			// Original source used boost::dynamic_bitset but didn't make use
@@ -179,9 +179,9 @@ namespace luabind {
 					m_vertices.push_back(vertex(i));
 			}
 
-            luabind::vector<edge>& edges = m_vertices[src].edges;
+			luabind::vector<edge>& edges = m_vertices[src].edges;
 
-            luabind::vector<edge>::iterator i = std::lower_bound(
+			luabind::vector<edge>::iterator i = std::lower_bound(
 				edges.begin(), edges.end(), edge(target, 0)
 			);
 
@@ -211,8 +211,8 @@ namespace luabind {
 
 		LUABIND_API class_id allocate_class_id(type_id const& cls)
 		{
-            // use plain map here because this function is called by static initializers,
-            // so luabind::allocator is not set yet
+			// use plain map here because this function is called by static initializers,
+			// so luabind::allocator is not set yet
 			using map_type = std::map<type_id, class_id>;
 
 			static map_type registered;

@@ -80,9 +80,9 @@ public:
 };
 
 #define DEF_VECTOR(N, T)\
-    using N = xr_vector<T>;\
-    using N##_it = N::iterator;
+	using N = xr_vector<T>;\
+	using N##_it = N::iterator;
 
 #define DEFINE_VECTOR(T, N, I)\
-    using N = xr_vector<T>;\
-    using I = N::iterator;
+	using N = xr_vector<T>;\
+	using I = N::iterator;

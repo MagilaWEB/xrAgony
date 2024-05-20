@@ -18,7 +18,7 @@
  * "Licensee," "You" and/or "Your" shall mean, collectively and
  * individually, Original Equipment Manufacturers, Independent Hardware
  * Vendors, Independent Software Vendors, and End-Users of the Software
- * pursuant to the terms and conditions of this Agreement.   
+ * pursuant to the terms and conditions of this Agreement.	
  * 
  * "Derivative Works" shall mean derivatives of the Software created by You
  * or a third party on Your behalf, which term shall include:  (a) for
@@ -257,7 +257,7 @@
  * 
  * SECTION 8.6 - GOVERNMENT RESTRICTED RIGHTS. 
  * The parties acknowledge that the Software is subject to U.S. export
- * control laws and regulations.   The parties agree to comply with all
+ * control laws and regulations.	The parties agree to comply with all
  * applicable international and national laws that apply to the Software,
  * including the U.S. Export Administration Regulations, as well as
  * end-user, end-use and destination restrictions issued by U.S. and other
@@ -337,12 +337,12 @@ typedef oaInt OA_NATIVE_INT;
 
 static void Cleanup(void);
 static oaBool ParseInitStr(const oaChar *init_str, 
-                           oaChar *plugin_path, 
-                           oaChar *opt);
+							oaChar *plugin_path, 
+							oaChar *opt);
 
 static oaChar* SearchAndReplace(const oaChar* src, 
-                                oaChar* search, 
-                                oaChar* replace);
+								oaChar* search, 
+								oaChar* replace);
 static oaBool LoadPlugin(void);
 
 /*******************************************************************************
@@ -378,9 +378,9 @@ oaBool oaInit(const oaChar *init_str, oaVersion *version)
 
   if(InitFlag)
   {
-    OA_ERROR("oaInit() called more than once.");
-    Cleanup();
-    return(OA_FALSE);
+	OA_ERROR("oaInit() called more than once.");
+	Cleanup();
+	return(OA_FALSE);
   }
 
   InitStrLen = OA_STRLEN(init_str);
@@ -389,9 +389,9 @@ oaBool oaInit(const oaChar *init_str, oaVersion *version)
 
   if(!ParseInitStr(init_str, PluginPath, Opt))
   {
-    OA_ERROR("Couldn't parse initialization string.");
-    Cleanup();
-    return(OA_FALSE);
+	OA_ERROR("Couldn't parse initialization string.");
+	Cleanup();
+	return(OA_FALSE);
   }
 
   PluginInitFunc = NULL;
@@ -399,9 +399,9 @@ oaBool oaInit(const oaChar *init_str, oaVersion *version)
 
   if(!LoadPlugin())
   {
-    OA_ERROR("Couldn't load the plugin.");
-    Cleanup();
-    return(OA_FALSE);
+	OA_ERROR("Couldn't load the plugin.");
+	Cleanup();
+	return(OA_FALSE);
   }
 
   OA_ASSERT(PluginInitFunc);
@@ -410,33 +410,33 @@ oaBool oaInit(const oaChar *init_str, oaVersion *version)
   PluginFuncTable = PluginInitFunc(Opt, &PluginVersion, OAVersion);
 
   if(PluginVersion.Major < OA_MIN_REQUIRED_VERSION_MAJOR ||
-     PluginVersion.Major == OA_MIN_REQUIRED_VERSION_MAJOR &&
-     PluginVersion.Minor < OA_MIN_REQUIRED_VERSION_MINOR)
+	 PluginVersion.Major == OA_MIN_REQUIRED_VERSION_MAJOR &&
+	 PluginVersion.Minor < OA_MIN_REQUIRED_VERSION_MINOR)
   {
-    oaChar ErrorStr[1024];
-    sprintf(ErrorStr, 
-            "Minimum required version is %d.%d.  "
-            "Plugin version is %d.%d.", 
-            OA_MIN_REQUIRED_VERSION_MAJOR, 
-            OA_MIN_REQUIRED_VERSION_MINOR,
-            PluginVersion.Major,
-            PluginVersion.Minor);
+	oaChar ErrorStr[1024];
+	sprintf(ErrorStr, 
+			"Minimum required version is %d.%d.  "
+			"Plugin version is %d.%d.", 
+			OA_MIN_REQUIRED_VERSION_MAJOR, 
+			OA_MIN_REQUIRED_VERSION_MINOR,
+			PluginVersion.Major,
+			PluginVersion.Minor);
 
-    OA_ERROR(ErrorStr);
-    Cleanup();
-    return(OA_FALSE);
+	OA_ERROR(ErrorStr);
+	Cleanup();
+	return(OA_FALSE);
   }
 
   if(!PluginFuncTable || !PluginFuncTable->GetNextCommand)
   {
-    OA_ERROR("Plugin is misconfigured.");
-    Cleanup();
-    return(OA_FALSE);
+	OA_ERROR("Plugin is misconfigured.");
+	Cleanup();
+	return(OA_FALSE);
   }
 
   memcpy(&FuncTable, 
-         PluginFuncTable, 
-         OA_MIN(sizeof(FuncTable), PluginFuncTable->TableSize));
+		 PluginFuncTable, 
+		 OA_MIN(sizeof(FuncTable), PluginFuncTable->TableSize));
 
   InitFlag = OA_TRUE;
 
@@ -448,15 +448,15 @@ oaBool oaInit(const oaChar *init_str, oaVersion *version)
 #define INIT_CHECK_RET(ret) \
   if(!InitFlag) \
   { \
-    OA_ERROR("OA not initialized."); \
-    return ret; \
+	OA_ERROR("OA not initialized."); \
+	return ret; \
   }
 
 #define INIT_CHECK() \
   if(!InitFlag) \
   { \
-    OA_ERROR("OA not initialized."); \
-    return; \
+	OA_ERROR("OA not initialized."); \
+	return; \
   }
 
 void oaInitCommand(oaCommand *command)
@@ -479,7 +479,7 @@ oaCommandType oaGetNextCommand(oaCommand *command)
   NextCommand = FuncTable.GetNextCommand(command);
 
   if(NextCommand == OA_CMD_EXIT) 
-    Cleanup();
+	Cleanup();
 
   command->Type = NextCommand;
   return NextCommand;
@@ -490,7 +490,7 @@ oaNamedOption *oaGetNextOption(void)
   INIT_CHECK_RET(NULL);
   
   if(FuncTable.GetNextOption)
-    return(FuncTable.GetNextOption());
+	return(FuncTable.GetNextOption());
 
   return(NULL);
 }
@@ -511,17 +511,17 @@ void oaAddOption(const oaNamedOption *option)
   INIT_CHECK();
 
   if(FuncTable.AddOption)
-    FuncTable.AddOption(option);
+	FuncTable.AddOption(option);
 }
 
 void oaAddOptionValue(const oaChar *name, 
-                      oaOptionDataType value_type, 
-                      const oaValue *value)
+					  oaOptionDataType value_type, 
+					  const oaValue *value)
 {
   INIT_CHECK();
 
   if(FuncTable.AddOptionValue)
-    FuncTable.AddOptionValue(name, value_type, value);
+	FuncTable.AddOptionValue(name, value_type, value);
 }
 
 void oaAddBenchmark(const oaChar *benchmark_name)
@@ -529,17 +529,17 @@ void oaAddBenchmark(const oaChar *benchmark_name)
   INIT_CHECK();
 
   if(FuncTable.AddBenchmark)
-    FuncTable.AddBenchmark(benchmark_name);
+	FuncTable.AddBenchmark(benchmark_name);
 }
 
 void oaAddResultValue(const oaChar *name, 
-                      oaOptionDataType value_type,
-                      const oaValue *value)
+					  oaOptionDataType value_type,
+					  const oaValue *value)
 {
   INIT_CHECK();
 
   if(FuncTable.AddResultValue)
-    FuncTable.AddResultValue(name, value_type, value);
+	FuncTable.AddResultValue(name, value_type, value);
 }
 
 oaBool oaSendSignal(oaSignalType signal, void *param)
@@ -547,7 +547,7 @@ oaBool oaSendSignal(oaSignalType signal, void *param)
   INIT_CHECK_RET(OA_FALSE);
 
   if(FuncTable.SendSignal)
-    return(FuncTable.SendSignal(signal, param));
+	return(FuncTable.SendSignal(signal, param));
 
   return(OA_FALSE);
 }
@@ -563,7 +563,7 @@ void oaStartBenchmark(void)
   INIT_CHECK();
 
   if(FuncTable.StartBenchmark)
-    FuncTable.StartBenchmark();
+	FuncTable.StartBenchmark();
 }
 
 void oaDisplayFrame(oaFloat t)
@@ -571,7 +571,7 @@ void oaDisplayFrame(oaFloat t)
   INIT_CHECK();
 
   if(FuncTable.DisplayFrame)
-    FuncTable.DisplayFrame(t);
+	FuncTable.DisplayFrame(t);
 }
 
 void oaEndBenchmark(void)
@@ -579,7 +579,7 @@ void oaEndBenchmark(void)
   INIT_CHECK();
 
   if(FuncTable.EndBenchmark)
-    FuncTable.EndBenchmark();
+	FuncTable.EndBenchmark();
 }
 
 
@@ -603,14 +603,14 @@ static void Cleanup(void)
 {
   if(PluginPath)
   {
-    free(PluginPath);
-    PluginPath = NULL;
+	free(PluginPath);
+	PluginPath = NULL;
   }
 
   if(Opt)
   {
-    free(Opt);
-    Opt = NULL;
+	free(Opt);
+	Opt = NULL;
   }
 
   InitFlag = OA_FALSE;
@@ -620,25 +620,25 @@ static void Cleanup(void)
   if(PluginHandle)
   {
 #ifdef WIN32
-    FreeLibrary(PluginHandle);
+	FreeLibrary(PluginHandle);
 #else
-    dlclose(PluginHandle);
+	dlclose(PluginHandle);
 #endif
-    PluginHandle = NULL;
+	PluginHandle = NULL;
   }
 }
 
 static oaBool ParseInitStr(const oaChar *init_str, 
-                           oaChar *plugin_path, 
-                           oaChar *opt)
+							oaChar *plugin_path, 
+							oaChar *opt)
 {
   oaChar* InitStr = SearchAndReplace(init_str, "%20", " ");
 
   int i=0;
   for(i=0; InitStr[i]; ++i)
   {
-    if(InitStr[i] == ';')
-    {break;}
+	if(InitStr[i] == ';')
+	{break;}
   }
 
   OA_STRNCPY(plugin_path,InitStr,((i+1)*sizeof(oaChar)));
@@ -647,10 +647,10 @@ static oaBool ParseInitStr(const oaChar *init_str,
 
   if(InitStr[i] == ';')
   {
-    OA_STRCPY(opt, InitStr + i + 1);
+	OA_STRCPY(opt, InitStr + i + 1);
   }
   else
-    opt[0] = 0;
+	opt[0] = 0;
 
   return(OA_TRUE);
 }
@@ -672,8 +672,8 @@ static oaChar* SearchAndReplace(const oaChar* src, oaChar* search, oaChar* repla
 
   while ((Src2 = strstr(Src1, search)))
   { 
-    Src1 = Src2 + ReplaceLen;
-    SearchCnt++;
+	Src1 = Src2 + ReplaceLen;
+	SearchCnt++;
   }
 
   NewLen = SourceLen - SearchCnt*SearchLen + SearchCnt*ReplaceLen;
@@ -685,14 +685,14 @@ static oaChar* SearchAndReplace(const oaChar* src, oaChar* search, oaChar* repla
 
   while ((Src2 = strstr (Src1, search)))
   {
-    Num = Src2 - Src1;
-    memcpy (Dest, Src1, Num);
+	Num = Src2 - Src1;
+	memcpy (Dest, Src1, Num);
 
-    Src1 = Src2 + SearchLen;
+	Src1 = Src2 + SearchLen;
 
-    Dest += Num;
-    memcpy(Dest, replace, ReplaceLen);
-    Dest += ReplaceLen;
+	Dest += Num;
+	memcpy(Dest, replace, ReplaceLen);
+	Dest += ReplaceLen;
   }
 
   //OA_STRNCPY(Dest,Src1,((NewLen+1)*sizeof(oaChar)));
@@ -707,60 +707,60 @@ static oaBool LoadPlugin(void)
   WCHAR WidePluginPath[OA_MAX_PATH_LENGTH];
 
   int Length = MultiByteToWideChar(CP_UTF8, 0, 
-    PluginPath, (int)OA_STRLEN(PluginPath)+1, 
-    WidePluginPath, OA_MAX_PATH_LENGTH);
+	PluginPath, (int)OA_STRLEN(PluginPath)+1, 
+	WidePluginPath, OA_MAX_PATH_LENGTH);
 
   if( Length==0 )
   {
-    DWORD Error = GetLastError();
-    if(Error == ERROR_INSUFFICIENT_BUFFER )
-      OA_ERROR("OpenAutomate MultiByteToWideChar returned error: ERROR_INSUFFICIENT_BUFFER\n")
-    else if( Error == ERROR_INVALID_FLAGS )
-      OA_ERROR("OpenAutomate MultiByteToWideChar returned error: ERROR_INVALID_FLAGS\n")
-    else if( Error == ERROR_INVALID_PARAMETER  )
-      OA_ERROR("OpenAutomate MultiByteToWideChar returned error: ERROR_INVALID_PARAMETER\n")
-    else if( Error == ERROR_NO_UNICODE_TRANSLATION )
-      OA_ERROR("OpenAutomate MultiByteToWideChar returned error: ERROR_NO_UNICODE_TRANSLATION\n")
+	DWORD Error = GetLastError();
+	if(Error == ERROR_INSUFFICIENT_BUFFER )
+	  OA_ERROR("OpenAutomate MultiByteToWideChar returned error: ERROR_INSUFFICIENT_BUFFER\n")
+	else if( Error == ERROR_INVALID_FLAGS )
+	  OA_ERROR("OpenAutomate MultiByteToWideChar returned error: ERROR_INVALID_FLAGS\n")
+	else if( Error == ERROR_INVALID_PARAMETER  )
+	  OA_ERROR("OpenAutomate MultiByteToWideChar returned error: ERROR_INVALID_PARAMETER\n")
+	else if( Error == ERROR_NO_UNICODE_TRANSLATION )
+	  OA_ERROR("OpenAutomate MultiByteToWideChar returned error: ERROR_NO_UNICODE_TRANSLATION\n")
 
-    if( OA_STRLEN(PluginPath)==0 )
-      OA_ERROR("OpenAutomate PluginPath was undefined\n");
+	if( OA_STRLEN(PluginPath)==0 )
+	  OA_ERROR("OpenAutomate PluginPath was undefined\n");
 
-    return(OA_FALSE);
+	return(OA_FALSE);
   }
   else 
-    PluginHandle = LoadLibraryW(WidePluginPath);
+	PluginHandle = LoadLibraryW(WidePluginPath);
 #else
   PluginHandle = dlopen(PluginPath, RTLD_LAZY);
 #endif
 
   if(!PluginHandle)
   {
-    fprintf(stderr, "OpenAutomate Failed loading: '%s'\n", PluginPath);
-    return(OA_FALSE);
+	fprintf(stderr, "OpenAutomate Failed loading: '%s'\n", PluginPath);
+	return(OA_FALSE);
   }
 
   PluginInitFunc = 
 #ifdef WIN32
-    (oaiPluginInitFunc)GetProcAddress(PluginHandle, OA_PLUGIN_INIT_FUNC);
+	(oaiPluginInitFunc)GetProcAddress(PluginHandle, OA_PLUGIN_INIT_FUNC);
 #else
-    (oaiPluginInitFunc)dlsym(PluginHandle, OA_PLUGIN_INIT_FUNC);
+	(oaiPluginInitFunc)dlsym(PluginHandle, OA_PLUGIN_INIT_FUNC);
 #endif
 
   if(!PluginInitFunc)
   {
-    OA_ERROR("Plugin does not have the correct entry point.");
-    return(OA_FALSE);
+	OA_ERROR("Plugin does not have the correct entry point.");
+	return(OA_FALSE);
   }
 
   return(OA_TRUE);
 }
 
 void oaAddFrameValue(const oaChar *name, 
-                     oaOptionDataType value_type,
-                     const oaValue *value)
+					 oaOptionDataType value_type,
+					 const oaValue *value)
 {
   INIT_CHECK();
 
   if(FuncTable.AddFrameValue)
-    FuncTable.AddFrameValue(name, value_type, value);
+	FuncTable.AddFrameValue(name, value_type, value);
 }

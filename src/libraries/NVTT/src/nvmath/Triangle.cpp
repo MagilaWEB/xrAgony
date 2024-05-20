@@ -108,60 +108,60 @@ else
 /** 
  * Dan Sunday, parametric ray-triangle test.
  */
-//    Output: *I = intersection point (when it exists)
-//    Return: -1 = triangle is degenerate (a segment or point)
-//             0 = disjoint (no intersect)
-//             1 = intersect in unique point I1
-//             2 = are in the same plane
+//	Output: *I = intersection point (when it exists)
+//	Return: -1 = triangle is degenerate (a segment or point)
+//			 0 = disjoint (no intersect)
+//			 1 = intersect in unique point I1
+//			 2 = are in the same plane
 bool RayTriangleTest( const Vec3 &p0, const Vec3 &p1, 
 					  const Vec3 &v0, const Vec3 &v1, const Vec3 &v2, const Vec3 &n,
 					  Vec3 &I ) {
-    Vec3 u, v;					// triangle vectors
-    Vec3 dir, w0, w;			// ray vectors
-    float r, a, b;				// params to calc ray-plane intersect
+	Vec3 u, v;					// triangle vectors
+	Vec3 dir, w0, w;			// ray vectors
+	float r, a, b;				// params to calc ray-plane intersect
 
-    // get triangle edge vectors and plane normal
-    u.Sub( v1, v0 );
-    v.Sub( v2, v0 );
+	// get triangle edge vectors and plane normal
+	u.Sub( v1, v0 );
+	v.Sub( v2, v0 );
 
-    dir.Sub( p1, p0 );			// ray direction vector
+	dir.Sub( p1, p0 );			// ray direction vector
 	w0.Sub( p0, v0 );
-    a = Vec3DotProduct( n, w0 );
-    b = Vec3DotProduct( n, dir );
+	a = Vec3DotProduct( n, w0 );
+	b = Vec3DotProduct( n, dir );
 
-    if( fabs(b) < TI_EPSILON ) 	// ray is parallel to triangle plane
+	if( fabs(b) < TI_EPSILON ) 	// ray is parallel to triangle plane
 		return false;
 
 
-    // get intersect point of ray with triangle plane
-    r = -a / b;
-    if( r < 0.0f )				// ray goes away from triangle
-        return false;			// => no intersect
-    
+	// get intersect point of ray with triangle plane
+	r = -a / b;
+	if( r < 0.0f )				// ray goes away from triangle
+		return false;			// => no intersect
+	
 	// for a segment, also test if (r > 1.0) => no intersect
 
 	I.Mad( p0, dir, r );		// intersect point of ray and plane
 
-    // is I inside T?
-    float    uu, uv, vv, wu, wv, D;
-    uu = Vec3DotProduct( u, u );
-    uv = Vec3DotProduct( u, v );
-    vv = Vec3DotProduct( v, v );
-    w = I - v0;
-    wu = Vec3DotProduct( w, u );
-    wv = Vec3DotProduct( w, v );
-    D = uv * uv - uu * vv;
+	// is I inside T?
+	float	uu, uv, vv, wu, wv, D;
+	uu = Vec3DotProduct( u, u );
+	uv = Vec3DotProduct( u, v );
+	vv = Vec3DotProduct( v, v );
+	w = I - v0;
+	wu = Vec3DotProduct( w, u );
+	wv = Vec3DotProduct( w, v );
+	D = uv * uv - uu * vv;
 
-    // get and test parametric coords
-    float s, t;
-    s = (uv * wv - vv * wu) / D;
-    if( s<0.0 || s > 1.0)        // I is outside T
-        return false;
-    t = (uv * wu - uu * wv) / D;
-    if( t<0.0 || (s + t) > 1.0)  // I is outside T
-        return false;
+	// get and test parametric coords
+	float s, t;
+	s = (uv * wv - vv * wu) / D;
+	if( s<0.0 || s > 1.0)		// I is outside T
+		return false;
+	t = (uv * wu - uu * wv) / D;
+	if( t<0.0 || (s + t) > 1.0)  // I is outside T
+		return false;
 
-    return true;                      // I is in T
+	return true;					  // I is in T
 }
 
 

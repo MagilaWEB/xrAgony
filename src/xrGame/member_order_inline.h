@@ -10,19 +10,19 @@
 
 IC CMemberOrder::CMemberOrder(CAI_Stalker* object) : m_object(object), m_initialized(true)
 {
-    VERIFY(m_object);
-    m_cover = 0;
-    m_probability = 1.f;
-    m_processed = false;
-    m_selected_enemy = 0;
-    m_detour = false;
+	VERIFY(m_object);
+	m_cover = 0;
+	m_probability = 1.f;
+	m_processed = false;
+	m_selected_enemy = 0;
+	m_detour = false;
 }
 
 IC bool CMemberOrder::initialized() const { return (m_initialized); }
 IC CAI_Stalker& CMemberOrder::object() const
 {
-    VERIFY(m_object);
-    return (*m_object);
+	VERIFY(m_object);
+	return (*m_object);
 }
 
 IC float CMemberOrder::probability() const { return (m_probability); }

@@ -69,8 +69,8 @@ public:
 	DEFINE_VECTOR(SlotItem*, SlotItemVec, SlotItemVecIt);
 	struct	SlotPart {
 		u32							id;					// ID модельки
-		SlotItemVec					items;              // список кустиков
-		//SlotItemVec					r_items[3];         // список кустиков for render
+		SlotItemVec					items;			  // список кустиков
+		//SlotItemVec					r_items[3];		 // список кустиков for render
 	};
 	enum	SlotType {
 		stReady = 0,				// Ready to use
@@ -140,9 +140,9 @@ public:
 	vis_list						m_visibles_shadow_sun[3];	// 0=still, 1=Wave1, 2=Wave2
 	vis_list						m_visibles_shadow_light[3];	// 0=still, 1=Wave1, 2=Wave2
 
-#ifndef _EDITOR    
+#ifndef _EDITOR	
 	xrXRC							xrc;
-#endif    
+#endif	
 
 	CacheSlot1** cache_level1;
 	Slot*** cache;	// grid-cache itself

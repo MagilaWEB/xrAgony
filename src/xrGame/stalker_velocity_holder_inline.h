@@ -10,9 +10,9 @@
 
 IC CStalkerVelocityHolder& stalker_velocity_holder()
 {
-    if (g_stalker_velocity_holder)
-        return (*g_stalker_velocity_holder);
+	if (g_stalker_velocity_holder)
+		return (*g_stalker_velocity_holder);
 
-    g_stalker_velocity_holder = new CStalkerVelocityHolder();
-    return (*g_stalker_velocity_holder);
+	g_stalker_velocity_holder = new CStalkerVelocityHolder();
+	return (*g_stalker_velocity_holder);
 }

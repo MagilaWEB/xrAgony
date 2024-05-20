@@ -11,38 +11,38 @@
 #ifdef AI_COMPILER
 IC CGameLevelCrossTable::CGameLevelCrossTable(LPCSTR fName)
 {
-    m_tpCrossTableVFS = FS.r_open(fName);
-    R_ASSERT2(m_tpCrossTableVFS, "Can't open cross table!");
+	m_tpCrossTableVFS = FS.r_open(fName);
+	R_ASSERT2(m_tpCrossTableVFS, "Can't open cross table!");
 
-    IReader* chunk = m_tpCrossTableVFS->open_chunk(CROSS_TABLE_CHUNK_VERSION);
-    R_ASSERT2(chunk, "Cross table is corrupted!");
-    chunk->r(&m_tCrossTableHeader, sizeof(m_tCrossTableHeader));
-    chunk->close();
+	IReader* chunk = m_tpCrossTableVFS->open_chunk(CROSS_TABLE_CHUNK_VERSION);
+	R_ASSERT2(chunk, "Cross table is corrupted!");
+	chunk->r(&m_tCrossTableHeader, sizeof(m_tCrossTableHeader));
+	chunk->close();
 
-    R_ASSERT2(m_tCrossTableHeader.version() == XRAI_CURRENT_VERSION, "Cross table version mismatch!");
+	R_ASSERT2(m_tCrossTableHeader.version() == XRAI_CURRENT_VERSION, "Cross table version mismatch!");
 
-    m_chunk = m_tpCrossTableVFS->open_chunk(CROSS_TABLE_CHUNK_DATA);
-    R_ASSERT2(m_chunk, "Cross table is corrupted!");
-    m_tpaCrossTable = (CCell*)m_chunk->pointer();
+	m_chunk = m_tpCrossTableVFS->open_chunk(CROSS_TABLE_CHUNK_DATA);
+	R_ASSERT2(m_chunk, "Cross table is corrupted!");
+	m_tpaCrossTable = (CCell*)m_chunk->pointer();
 }
 #endif // AI_COMPILER
 
 IC CGameLevelCrossTable::CGameLevelCrossTable(const void* buffer, const u32& /*buffer_size*/)
 {
-    memcpy(&m_tCrossTableHeader, buffer, sizeof(m_tCrossTableHeader));
-    buffer = (const u8*)buffer + sizeof(m_tCrossTableHeader);
+	memcpy(&m_tCrossTableHeader, buffer, sizeof(m_tCrossTableHeader));
+	buffer = (const u8*)buffer + sizeof(m_tCrossTableHeader);
 
-    R_ASSERT2(m_tCrossTableHeader.version() == XRAI_CURRENT_VERSION, "Cross table version mismatch!");
+	R_ASSERT2(m_tCrossTableHeader.version() == XRAI_CURRENT_VERSION, "Cross table version mismatch!");
 
-    m_tpaCrossTable = (CCell*)buffer;
+	m_tpaCrossTable = (CCell*)buffer;
 }
 
 IC CGameLevelCrossTable::~CGameLevelCrossTable(){};
 
 IC const CGameLevelCrossTable::CCell& CGameLevelCrossTable::vertex(u32 level_vertex_id) const
 {
-    VERIFY(level_vertex_id < header().level_vertex_count());
-    return (m_tpaCrossTable[level_vertex_id]);
+	VERIFY(level_vertex_id < header().level_vertex_count());
+	return (m_tpaCrossTable[level_vertex_id]);
 }
 
 IC u32 CGameLevelCrossTable::CHeader::version() const { return (dwVersion); }

@@ -5,9 +5,9 @@
 class CWeaponAK74 : public CWeaponMagazinedWGrenade
 {
 private:
-    typedef CWeaponMagazinedWGrenade inherited;
+	typedef CWeaponMagazinedWGrenade inherited;
 
 public:
-    CWeaponAK74(ESoundTypes eSoundType = SOUND_TYPE_WEAPON_SUBMACHINEGUN);
-    virtual ~CWeaponAK74();
+	CWeaponAK74(ESoundTypes eSoundType = SOUND_TYPE_WEAPON_SUBMACHINEGUN);
+	virtual ~CWeaponAK74();
 };

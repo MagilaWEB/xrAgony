@@ -15,7 +15,7 @@
 
 #if defined(LINUX)
 #include <stdint.h>
-#define _A_HIDDEN      0x02
+#define _A_HIDDEN	  0x02
 #define _A_SUBDIR 0x00000010
 
 #ifdef XR_X64
@@ -48,7 +48,7 @@ struct _finddata32_t
 	char name[FILENAME_MAX];
 };
 
-#define _finddata_t     _finddata64i32_t
+#define _finddata_t	 _finddata64i32_t
 #endif
 
 class CStreamReader;

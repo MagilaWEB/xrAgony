@@ -13,17 +13,17 @@
 
 namespace luabind {
 
-    bool g_allow_nil_conversion = false;
+	bool g_allow_nil_conversion = false;
 
-    LUABIND_API bool is_nil_conversion_allowed()
-    {
-	    return g_allow_nil_conversion;
-    }
+	LUABIND_API bool is_nil_conversion_allowed()
+	{
+		return g_allow_nil_conversion;
+	}
 
-    LUABIND_API void allow_nil_conversion(bool allowed)
-    {
-	    g_allow_nil_conversion = allowed;
-    }
+	LUABIND_API void allow_nil_conversion(bool allowed)
+	{
+		g_allow_nil_conversion = allowed;
+	}
 
 	namespace detail {
 

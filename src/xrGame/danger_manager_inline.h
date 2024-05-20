@@ -10,14 +10,14 @@
 
 IC CDangerManager::CDangerManager(CCustomMonster* object)
 {
-    VERIFY(object);
-    m_object = object;
+	VERIFY(object);
+	m_object = object;
 }
 
 IC void CDangerManager::reset()
 {
-    m_objects.clear();
-    m_selected = 0;
+	m_objects.clear();
+	m_selected = 0;
 }
 
 IC const CDangerObject* CDangerManager::selected() const { return (m_selected); }

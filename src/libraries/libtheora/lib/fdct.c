@@ -1,13 +1,13 @@
 /********************************************************************
- *                                                                  *
- * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.   *
- * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
+ *																  *
+ * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.	*
+ * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS	 *
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
- * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
- *                                                                  *
- * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009                *
- * by the Xiph.Org Foundation http://www.xiph.org/                  *
- *                                                                  *
+ * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.		*
+ *																  *
+ * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009				*
+ * by the Xiph.Org Foundation http://www.xiph.org/				  *
+ *																  *
  ********************************************************************
 
   function:
@@ -21,11 +21,11 @@
 
 /*Performs a forward 8 point Type-II DCT transform.
   The output is scaled by a factor of 2 from the orthonormal version of the
-   transform.
+	transform.
   _y: The buffer to store the result in.
-      Data will be placed the first 8 entries (e.g., in a row of an 8x8 block).
+	  Data will be placed the first 8 entries (e.g., in a row of an 8x8 block).
   _x: The input coefficients.
-      Every 8th entry is used (e.g., from a column of an 8x8 block).*/
+	  Every 8th entry is used (e.g., from a column of an 8x8 block).*/
 static void oc_fdct8(ogg_int16_t _y[8],const ogg_int16_t *_x){
   int t0;
   int t1;
@@ -66,21 +66,21 @@ static void oc_fdct8(ogg_int16_t _y[8],const ogg_int16_t *_x){
   t5=t6-t5;
   t6=r;
   /*Stages 3 and 4 are where all the approximation occurs.
-    These are chosen to be as close to an exact inverse of the approximations
-     made in the iDCT as possible, while still using mostly 16-bit arithmetic.
-    We use some 16x16->32 signed MACs, but those still commonly execute in 1
-     cycle on a 16-bit DSP.
-    For example, s=(27146*t5+0x4000>>16)+t5+(t5!=0) is an exact inverse of
-     t5=(OC_C4S4*s>>16).
-    That is, applying the latter to the output of the former will recover t5
-     exactly (over the valid input range of t5, -23171...23169).
-    We increase the rounding bias to 0xB500 in this particular case so that
-     errors inverting the subsequent butterfly are not one-sided (e.g., the
-     mean error is very close to zero).
-    The (t5!=0) term could be replaced simply by 1, but we want to send 0 to 0.
-    The fDCT of an all-zeros block will still not be zero, because of the
-     biases we added at the very beginning of the process, but it will be close
-     enough that it is guaranteed to round to zero.*/
+	These are chosen to be as close to an exact inverse of the approximations
+	 made in the iDCT as possible, while still using mostly 16-bit arithmetic.
+	We use some 16x16->32 signed MACs, but those still commonly execute in 1
+	 cycle on a 16-bit DSP.
+	For example, s=(27146*t5+0x4000>>16)+t5+(t5!=0) is an exact inverse of
+	 t5=(OC_C4S4*s>>16).
+	That is, applying the latter to the output of the former will recover t5
+	 exactly (over the valid input range of t5, -23171...23169).
+	We increase the rounding bias to 0xB500 in this particular case so that
+	 errors inverting the subsequent butterfly are not one-sided (e.g., the
+	 mean error is very close to zero).
+	The (t5!=0) term could be replaced simply by 1, but we want to send 0 to 0.
+	The fDCT of an all-zeros block will still not be zero, because of the
+	 biases we added at the very beginning of the process, but it will be close
+	 enough that it is guaranteed to round to zero.*/
   /*Stage 3:*/
   /*4-5 butterfly.*/
   s=(27146*t5+0xB500>>16)+t5+(t5!=0)>>1;
@@ -127,21 +127,21 @@ void oc_enc_fdct8x8(const oc_enc_ctx *_enc,ogg_int16_t _y[64],
 
 /*Performs a forward 8x8 Type-II DCT transform.
   The output is scaled by a factor of 4 relative to the orthonormal version
-   of the transform.
+	of the transform.
   _y: The buffer to store the result in.
-      This may be the same as _x.
+	  This may be the same as _x.
   _x: The input coefficients. */
 void oc_enc_fdct8x8_c(ogg_int16_t _y[64],const ogg_int16_t _x[64]){
   const ogg_int16_t *in;
-  ogg_int16_t       *end;
-  ogg_int16_t       *out;
-  ogg_int16_t        w[64];
-  int                i;
+  ogg_int16_t		*end;
+  ogg_int16_t		*out;
+  ogg_int16_t		w[64];
+  int				i;
   /*Add two extra bits of working precision to improve accuracy; any more and
-     we could overflow.*/
+	 we could overflow.*/
   for(i=0;i<64;i++)w[i]=_x[i]<<2;
   /*These biases correct for some systematic error that remains in the full
-     fDCT->iDCT round trip.*/
+	 fDCT->iDCT round trip.*/
   w[0]+=(w[0]!=0)+1;
   w[1]++;
   w[8]--;
@@ -150,8 +150,8 @@ void oc_enc_fdct8x8_c(ogg_int16_t _y[64],const ogg_int16_t _x[64]){
   /*Transform columns of _y into rows of w.*/
   for(in=_y,out=w,end=out+64;out<end;in++,out+=8)oc_fdct8(out,in);
   /*Round the result back to the external working precision (which is still
-     scaled by four relative to the orthogonal result).
-    TODO: We should just update the external working precision.*/
+	 scaled by four relative to the orthogonal result).
+	TODO: We should just update the external working precision.*/
   for(i=0;i<64;i++)_y[i]=w[i]+2>>2;
 }
 
@@ -166,36 +166,36 @@ typedef struct oc_extension_info oc_extension_info;
 
 /*Information needed to pad boundary blocks.
   We multiply each row/column by an extension matrix that fills in the padding
-   values as a linear combination of the active values, so that an equivalent
-   number of coefficients are forced to zero.
+	values as a linear combination of the active values, so that an equivalent
+	number of coefficients are forced to zero.
   This costs at most 16 multiplies, the same as a 1-D fDCT itself, and as
-   little as 7 multiplies.
+	little as 7 multiplies.
   We compute the extension matrices for every possible shape in advance, as
-   there are only 35.
+	there are only 35.
   The coefficients for all matrices are stored in a single array to take
-   advantage of the overlap and repetitiveness of many of the shapes.
+	advantage of the overlap and repetitiveness of many of the shapes.
   A similar technique is applied to the offsets into this array.
   This reduces the required table storage by about 48%.
   See tools/extgen.c for details.
   We could conceivably do the same for all 256 possible shapes.*/
 struct oc_extension_info{
   /*The mask of the active pixels in the shape.*/
-  short                     mask;
+  short					 mask;
   /*The number of active pixels in the shape.*/
-  short                     na;
+  short					 na;
   /*The extension matrix.
-    This is (8-na)xna*/
+	This is (8-na)xna*/
   const ogg_int16_t *const *ext;
   /*The pixel indices: na active pixels followed by 8-na padding pixels.*/
-  unsigned char             pi[8];
+  unsigned char			 pi[8];
   /*The coefficient indices: na unconstrained coefficients followed by 8-na
-     coefficients to be forced to zero.*/
-  unsigned char             ci[8];
+	 coefficients to be forced to zero.*/
+  unsigned char			 ci[8];
 };
 
 
 /*The number of shapes we need.*/
-#define OC_NSHAPES   (35)
+#define OC_NSHAPES	(35)
 
 static const ogg_int16_t OC_EXT_COEFFS[229]={
   0x7FFF,0xE1F8,0x6903,0xAA79,0x5587,0x7FFF,0x1E08,0x7FFF,
@@ -230,8 +230,8 @@ static const ogg_int16_t OC_EXT_COEFFS[229]={
 };
 
 static const ogg_int16_t *const OC_EXT_ROWS[96]={
-  OC_EXT_COEFFS+   0,OC_EXT_COEFFS+   0,OC_EXT_COEFFS+   0,OC_EXT_COEFFS+   0,
-  OC_EXT_COEFFS+   0,OC_EXT_COEFFS+   0,OC_EXT_COEFFS+   0,OC_EXT_COEFFS+   6,
+  OC_EXT_COEFFS+	0,OC_EXT_COEFFS+	0,OC_EXT_COEFFS+	0,OC_EXT_COEFFS+	0,
+  OC_EXT_COEFFS+	0,OC_EXT_COEFFS+	0,OC_EXT_COEFFS+	0,OC_EXT_COEFFS+	6,
   OC_EXT_COEFFS+  27,OC_EXT_COEFFS+  38,OC_EXT_COEFFS+  43,OC_EXT_COEFFS+  32,
   OC_EXT_COEFFS+  49,OC_EXT_COEFFS+  58,OC_EXT_COEFFS+  67,OC_EXT_COEFFS+  71,
   OC_EXT_COEFFS+  62,OC_EXT_COEFFS+  53,OC_EXT_COEFFS+  12,OC_EXT_COEFFS+  15,
@@ -297,126 +297,126 @@ static const oc_extension_info OC_EXTENSION_INFO[OC_NSHAPES]={
 
 
 /*Pads a single column of a partial block and then performs a forward Type-II
-   DCT on the result.
+	DCT on the result.
   The input is scaled by a factor of 4 and biased appropriately for the current
-   fDCT implementation.
+	fDCT implementation.
   The output is scaled by an additional factor of 2 from the orthonormal
-   version of the transform.
+	version of the transform.
   _y: The buffer to store the result in.
-      Data will be placed the first 8 entries (e.g., in a row of an 8x8 block).
+	  Data will be placed the first 8 entries (e.g., in a row of an 8x8 block).
   _x: The input coefficients.
-      Every 8th entry is used (e.g., from a column of an 8x8 block).
+	  Every 8th entry is used (e.g., from a column of an 8x8 block).
   _e: The extension information for the shape.*/
 static void oc_fdct8_ext(ogg_int16_t _y[8],ogg_int16_t *_x,
  const oc_extension_info *_e){
   const unsigned char *pi;
-  int                  na;
+  int				  na;
   na=_e->na;
   pi=_e->pi;
   if(na==1){
-    int ci;
-    /*While the branch below is still correct for shapes with na==1, we can
-       perform the entire transform with just 1 multiply in this case instead
-       of 23.*/
-    _y[0]=(ogg_int16_t)(OC_DIV2_16(OC_C4S4*(_x[pi[0]])));
-    for(ci=1;ci<8;ci++)_y[ci]=0;
+	int ci;
+	/*While the branch below is still correct for shapes with na==1, we can
+		perform the entire transform with just 1 multiply in this case instead
+		of 23.*/
+	_y[0]=(ogg_int16_t)(OC_DIV2_16(OC_C4S4*(_x[pi[0]])));
+	for(ci=1;ci<8;ci++)_y[ci]=0;
   }
   else{
-    const ogg_int16_t *const *ext;
-    int                       zpi;
-    int                       api;
-    int                       nz;
-    /*First multiply by the extension matrix to compute the padding values.*/
-    nz=8-na;
-    ext=_e->ext;
-    for(zpi=0;zpi<nz;zpi++){
-      ogg_int32_t v;
-      v=0;
-      for(api=0;api<na;api++){
-        v+=ext[zpi][api]*(ogg_int32_t)(_x[pi[api]<<3]<<1);
-      }
-      _x[pi[na+zpi]<<3]=(ogg_int16_t)(v+0x8000>>16)+1>>1;
-    }
-    oc_fdct8(_y,_x);
+	const ogg_int16_t *const *ext;
+	int						zpi;
+	int						api;
+	int						nz;
+	/*First multiply by the extension matrix to compute the padding values.*/
+	nz=8-na;
+	ext=_e->ext;
+	for(zpi=0;zpi<nz;zpi++){
+	  ogg_int32_t v;
+	  v=0;
+	  for(api=0;api<na;api++){
+		v+=ext[zpi][api]*(ogg_int32_t)(_x[pi[api]<<3]<<1);
+	  }
+	  _x[pi[na+zpi]<<3]=(ogg_int16_t)(v+0x8000>>16)+1>>1;
+	}
+	oc_fdct8(_y,_x);
   }
 }
 
 /*Performs a forward 8x8 Type-II DCT transform on blocks which overlap the
-   border of the picture region.
+	border of the picture region.
   This method ONLY works with rectangular regions.
   _border: A description of which pixels are inside the border.
-  _y:      The buffer to store the result in.
-           This may be the same as _x.
-  _x:      The input pixel values.
-           Pixel values outside the border will be ignored.*/
+  _y:	  The buffer to store the result in.
+			This may be the same as _x.
+  _x:	  The input pixel values.
+			Pixel values outside the border will be ignored.*/
 void oc_fdct8x8_border(const oc_border_info *_border,
  ogg_int16_t _y[64],const ogg_int16_t _x[64]){
-  ogg_int16_t             *in;
-  ogg_int16_t             *out;
-  ogg_int16_t              w[64];
-  ogg_int64_t              mask;
+  ogg_int16_t			 *in;
+  ogg_int16_t			 *out;
+  ogg_int16_t			  w[64];
+  ogg_int64_t			  mask;
   const oc_extension_info *cext;
   const oc_extension_info *rext;
-  int                      cmask;
-  int                      rmask;
-  int                      ri;
-  int                      ci;
+  int					  cmask;
+  int					  rmask;
+  int					  ri;
+  int					  ci;
   /*Identify the shapes of the non-zero rows and columns.*/
   rmask=cmask=0;
   mask=_border->mask;
   for(ri=0;ri<8;ri++){
-    /*This aggregation is _only_ correct for rectangular masks.*/
-    cmask|=((mask&0xFF)!=0)<<ri;
-    rmask|=mask&0xFF;
-    mask>>=8;
+	/*This aggregation is _only_ correct for rectangular masks.*/
+	cmask|=((mask&0xFF)!=0)<<ri;
+	rmask|=mask&0xFF;
+	mask>>=8;
   }
   /*Find the associated extension info for these shapes.*/
   if(cmask==0xFF)cext=NULL;
   else for(cext=OC_EXTENSION_INFO;cext->mask!=cmask;){
-    /*If we somehow can't find the shape, then just do an unpadded fDCT.
-      It won't be efficient, but it should still be correct.*/
-    if(++cext>=OC_EXTENSION_INFO+OC_NSHAPES){
-      oc_enc_fdct8x8_c(_y,_x);
-      return;
-    }
+	/*If we somehow can't find the shape, then just do an unpadded fDCT.
+	  It won't be efficient, but it should still be correct.*/
+	if(++cext>=OC_EXTENSION_INFO+OC_NSHAPES){
+	  oc_enc_fdct8x8_c(_y,_x);
+	  return;
+	}
   }
   if(rmask==0xFF)rext=NULL;
   else for(rext=OC_EXTENSION_INFO;rext->mask!=rmask;){
-    /*If we somehow can't find the shape, then just do an unpadded fDCT.
-      It won't be efficient, but it should still be correct.*/
-    if(++rext>=OC_EXTENSION_INFO+OC_NSHAPES){
-      oc_enc_fdct8x8_c(_y,_x);
-      return;
-    }
+	/*If we somehow can't find the shape, then just do an unpadded fDCT.
+	  It won't be efficient, but it should still be correct.*/
+	if(++rext>=OC_EXTENSION_INFO+OC_NSHAPES){
+	  oc_enc_fdct8x8_c(_y,_x);
+	  return;
+	}
   }
   /*Add two extra bits of working precision to improve accuracy; any more and
-     we could overflow.*/
+	 we could overflow.*/
   for(ci=0;ci<64;ci++)w[ci]=_x[ci]<<2;
   /*These biases correct for some systematic error that remains in the full
-     fDCT->iDCT round trip.
-    We can safely add them before padding, since if these pixel values are
-     overwritten, we didn't care what they were anyway (and the unbiased values
-     will usually yield smaller DCT coefficient magnitudes).*/
+	 fDCT->iDCT round trip.
+	We can safely add them before padding, since if these pixel values are
+	 overwritten, we didn't care what they were anyway (and the unbiased values
+	 will usually yield smaller DCT coefficient magnitudes).*/
   w[0]+=(w[0]!=0)+1;
   w[1]++;
   w[8]--;
   /*Transform the columns.
-    We can ignore zero columns without a problem.*/
+	We can ignore zero columns without a problem.*/
   in=w;
   out=_y;
   if(cext==NULL)for(ci=0;ci<8;ci++)oc_fdct8(out+(ci<<3),in+ci);
   else for(ci=0;ci<8;ci++)if(rmask&(1<<ci))oc_fdct8_ext(out+(ci<<3),in+ci,cext);
   /*Transform the rows.
-    We transform even rows that are supposedly zero, because rounding errors
-     may make them slightly non-zero, and this will give a more precise
-     reconstruction with very small quantizers.*/
+	We transform even rows that are supposedly zero, because rounding errors
+	 may make them slightly non-zero, and this will give a more precise
+	 reconstruction with very small quantizers.*/
   in=_y;
   out=w;
   if(rext==NULL)for(ri=0;ri<8;ri++)oc_fdct8(out+(ri<<3),in+ri);
   else for(ri=0;ri<8;ri++)oc_fdct8_ext(out+(ri<<3),in+ri,rext);
   /*Round the result back to the external working precision (which is still
-     scaled by four relative to the orthogonal result).
-    TODO: We should just update the external working precision.*/
+	 scaled by four relative to the orthogonal result).
+	TODO: We should just update the external working precision.*/
   for(ci=0;ci<64;ci++)_y[ci]=w[ci]+2>>2;
 }
 #endif

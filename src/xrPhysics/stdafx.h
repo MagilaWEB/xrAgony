@@ -29,6 +29,6 @@
 class CGameMtlLibrary;
 IC CGameMtlLibrary& GMLibrary()
 {
-    VERIFY(::PGMLib);
-    return *::PGMLib;
+	VERIFY(::PGMLib);
+	return *::PGMLib;
 }

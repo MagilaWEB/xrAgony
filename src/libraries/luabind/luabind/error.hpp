@@ -54,7 +54,7 @@ namespace luabind
 		virtual const char* what() const throw();
 
 	private:
-        luabind::string m_message;
+		luabind::string m_message;
 	};
 
 	// if an object_cast<>() fails, this is thrown
@@ -84,12 +84,12 @@ namespace luabind
 	LUABIND_API void set_pcall_callback(pcall_callback_fun e);
 	LUABIND_API pcall_callback_fun get_pcall_callback();
 
-    // thrown when trying to use unregistered class or call nonexistent function
-    class LUABIND_API unresolved_name : public std::runtime_error
-    {
-    public:
-        unresolved_name(const char* desc, const char* name);
-    };
+	// thrown when trying to use unregistered class or call nonexistent function
+	class LUABIND_API unresolved_name : public std::runtime_error
+	{
+	public:
+		unresolved_name(const char* desc, const char* name);
+	};
 }
 
 #endif // LUABIND_ERROR_HPP_INCLUDED

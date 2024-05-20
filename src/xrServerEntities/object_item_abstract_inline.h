@@ -12,7 +12,7 @@
 #pragma once
 
 IC CObjectItemAbstract::CObjectItemAbstract(const CLASS_ID& clsid, LPCSTR script_clsid)
-    : m_clsid(clsid), m_script_clsid(script_clsid)
+	: m_clsid(clsid), m_script_clsid(script_clsid)
 {
 }
 

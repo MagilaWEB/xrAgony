@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 #include "objects.h"
@@ -442,15 +442,15 @@ static void SOR_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *
 #endif
 
 		//@@@ potential optimization: swap lambda and last_lambda pointers rather
-		//    than copying the data. we must make sure lambda is properly
-		//    returned to the caller
+		//	than copying the data. we must make sure lambda is properly
+		//	returned to the caller
 		memcpy (last_lambda,lambda,m*sizeof(dReal));
 
 		for (int i=0; i<m; i++) {
 			// @@@ potential optimization: we could pre-sort J and iMJ, thereby
-			//     linearizing access to those arrays. hmmm, this does not seem
-			//     like a win, but we should think carefully about our memory
-			//     access pattern.
+			//	 linearizing access to those arrays. hmmm, this does not seem
+			//	 like a win, but we should think carefully about our memory
+			//	 access pattern.
 
 			int index = order[i].index;
 			J_ptr = J + index*12;
@@ -478,7 +478,7 @@ static void SOR_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *
 				fc_ptr[2] * J_ptr[2] + fc_ptr[3] * J_ptr[3] +
 				fc_ptr[4] * J_ptr[4] + fc_ptr[5] * J_ptr[5];
 			// @@@ potential optimization: handle 1-body constraints in a separate
-			//     loop to avoid the cost of test & jump?
+			//	 loop to avoid the cost of test & jump?
 			if (b2 >= 0) {
 				fc_ptr = fc + 6*b2;
 				delta -=fc_ptr[0] * J_ptr[6] + fc_ptr[1] * J_ptr[7] +
@@ -488,7 +488,7 @@ static void SOR_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *
 
 			// compute lambda and clamp it to [lo,hi].
 			// @@@ potential optimization: does SSE have clamping instructions
-			//     to save test+jump penalties here?
+			//	 to save test+jump penalties here?
 			dReal new_lambda = lambda[index] + delta;
 			if (new_lambda < lo[index] && !isnan(lo[index])) {
 				delta = lo[index]-lambda[index];
@@ -516,7 +516,7 @@ static void SOR_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *
 			fc_ptr[4] += delta * iMJ_ptr[4];
 			fc_ptr[5] += delta * iMJ_ptr[5];
 			// @@@ potential optimization: handle 1-body constraints in a separate
-			//     loop to avoid the cost of test & jump?
+			//	 loop to avoid the cost of test & jump?
 			if (b2 >= 0) {
 				fc_ptr = fc + 6*b2;
 				fc_ptr[0] += delta * iMJ_ptr[6];
@@ -642,26 +642,26 @@ static void SOR_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *
 		qsort (order,m,sizeof(IndexError),&compare_index_error);
 #endif
 #ifdef RANDOMLY_REORDER_CONSTRAINTS
-                if ((iteration & 7) == 0) {
+				if ((iteration & 7) == 0) {
 			for (i=1; i<m; ++i) {
 				IndexError tmp = order[i];
 				int swapi = dRandInt(i+1);
 				order[i] = order[swapi];
 				order[swapi] = tmp;
 			}
-                }
+				}
 #endif
 
 		//@@@ potential optimization: swap lambda and last_lambda pointers rather
-		//    than copying the data. we must make sure lambda is properly
-		//    returned to the caller
+		//	than copying the data. we must make sure lambda is properly
+		//	returned to the caller
 		memcpy (last_lambda,lambda,m*sizeof(dReal));
 
 		for (int i=0; i<m; i++) {
 			// @@@ potential optimization: we could pre-sort J and iMJ, thereby
-			//     linearizing access to those arrays. hmmm, this does not seem
-			//     like a win, but we should think carefully about our memory
-			//     access pattern.
+			//	 linearizing access to those arrays. hmmm, this does not seem
+			//	 like a win, but we should think carefully about our memory
+			//	 access pattern.
 		
 			int index = order[i].index;
 			J_ptr = J + index*12;
@@ -686,7 +686,7 @@ static void SOR_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *
 				fc_ptr[2] * J_ptr[2] + fc_ptr[3] * J_ptr[3] +
 				fc_ptr[4] * J_ptr[4] + fc_ptr[5] * J_ptr[5];
 			// @@@ potential optimization: handle 1-body constraints in a separate
-			//     loop to avoid the cost of test & jump?
+			//	 loop to avoid the cost of test & jump?
 			if (b2 >= 0) {
 				fc_ptr = fc + 6*b2;
 				delta -=fc_ptr[0] * J_ptr[6] + fc_ptr[1] * J_ptr[7] +
@@ -696,7 +696,7 @@ static void SOR_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *
 
 			// compute lambda and clamp it to [lo,hi].
 			// @@@ potential optimization: does SSE have clamping instructions
-			//     to save test+jump penalties here?
+			//	 to save test+jump penalties here?
 
 			delta_lambda[index]=delta;
 			//@@@ a trick that may or may not help
@@ -743,7 +743,7 @@ static void SOR_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *
 			fc_ptr[4] += delta_lambda[index] * iMJ_ptr[4];//_lambda[index]
 			fc_ptr[5] += delta_lambda[index] * iMJ_ptr[5];//_lambda[index]
 			// @@@ potential optimization: handle 1-body constraints in a separate
-			//     loop to avoid the cost of test & jump?
+			//	 loop to avoid the cost of test & jump?
 			if (b2 >= 0) {
 				fc_ptr = fc + 6*b2;
 				fc_ptr[0] += delta_lambda[index] * iMJ_ptr[6];//_lambda[index]
@@ -759,7 +759,7 @@ static void SOR_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *
 */
 
 void dxQuickStepper (dxWorld *world, dxBody * const *body, int nb,
-		     dxJoint **joint, int nj, dReal stepsize)
+			 dxJoint **joint, int nj, dReal stepsize)
 {
 	
 	int i,j;
@@ -866,14 +866,14 @@ void dxQuickStepper (dxWorld *world, dxBody * const *body, int nb,
 		// to store the two jacobian blocks from each constraint. it has this
 		// format:
 		//
-		//   l1 l1 l1 a1 a1 a1 l2 l2 l2 a2 a2 a2 \    .
-		//   l1 l1 l1 a1 a1 a1 l2 l2 l2 a2 a2 a2  }-- jacobian for joint 0, body 1 and body 2 (3 rows)
-		//   l1 l1 l1 a1 a1 a1 l2 l2 l2 a2 a2 a2 /
-		//   l1 l1 l1 a1 a1 a1 l2 l2 l2 a2 a2 a2 }--- jacobian for joint 1, body 1 and body 2 (3 rows)
-		//   etc...
+		//	l1 l1 l1 a1 a1 a1 l2 l2 l2 a2 a2 a2 \	.
+		//	l1 l1 l1 a1 a1 a1 l2 l2 l2 a2 a2 a2  }-- jacobian for joint 0, body 1 and body 2 (3 rows)
+		//	l1 l1 l1 a1 a1 a1 l2 l2 l2 a2 a2 a2 /
+		//	l1 l1 l1 a1 a1 a1 l2 l2 l2 a2 a2 a2 }--- jacobian for joint 1, body 1 and body 2 (3 rows)
+		//	etc...
 		//
-		//   (lll) = linear jacobian data
-		//   (aaa) = angular jacobian data
+		//	(lll) = linear jacobian data
+		//	(aaa) = angular jacobian data
 		//
 		IFTIMING (dTimerNow ("create J");)
 		dSetZero (J,m*12);
@@ -989,7 +989,7 @@ void dxQuickStepper (dxWorld *world, dxBody * const *body, int nb,
 		// BUT: cforce is inv(M)*J'*lambda, whereas we want just J'*lambda,
 		// so we must compute M*cforce.
 		// @@@ if any joint has a feedback request we compute the entire
-		//     adjusted cforce, which is not the most efficient way to do it.
+		//	 adjusted cforce, which is not the most efficient way to do it.
 		for (j=0; j<nj; j++) {
 			if (joint[j]->feedback) {
 				// compute adjusted cforce

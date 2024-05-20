@@ -16,7 +16,7 @@ using Skin3WFunc = void (*)(vertRender* d, vertBoned3W* s, u32 vCount, CBoneInst
 using Skin4WFunc = void (*)(vertRender* d, vertBoned4W* s, u32 vCount, CBoneInstance* bones);
 
 using PLCCalcFunc = void (*)(int& c0, int& c1, int& c2, const Fvector& camPos, const Fvector* ps, const Fvector& n,
-    const light* l, float energy, const Fvector& obj);
+	const light* l, float energy, const Fvector& obj);
 
 namespace XRay
 {

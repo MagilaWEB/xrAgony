@@ -76,22 +76,22 @@ typedef int BOOL; //!<	Another boolean type.
 //! Union of a float and a sdword
 typedef union
 {
-    float f; //!<	The float
-    sdword d; //!<	The integer
+	float f; //!<	The float
+	sdword d; //!<	The integer
 } scell;
 
 //! Union of a float and a udword
 typedef union
 {
-    float f; //!<	The float
-    udword d; //!<	The integer
+	float f; //!<	The float
+	udword d; //!<	The integer
 } ucell;
 
 //! A generic couple structure
 struct Pair
 {
-    udword id0; //!<	First index of the pair
-    udword id1; //!<	Second index of the pair
+	udword id0; //!<	First index of the pair
+	udword id1; //!<	Second index of the pair
 };
 
 // Type ranges
@@ -119,24 +119,24 @@ struct Pair
 template <class T>
 inline_ const T& TMin(const T& a, const T& b)
 {
-    return b < a ? b : a;
+	return b < a ? b : a;
 }
 template <class T>
 inline_ const T& TMax(const T& a, const T& b)
 {
-    return a < b ? b : a;
+	return a < b ? b : a;
 }
 template <class T>
 inline_ void TSetMin(T& a, const T& b)
 {
-    if (a > b)
-        a = b;
+	if (a > b)
+		a = b;
 }
 template <class T>
 inline_ void TSetMax(T& a, const T& b)
 {
-    if (a < b)
-        a = b;
+	if (a < b)
+		a = b;
 }
 
 #define SQR(x) ((x) * (x)) //!<	Returns x square

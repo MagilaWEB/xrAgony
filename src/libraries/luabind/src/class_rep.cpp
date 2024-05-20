@@ -280,7 +280,7 @@ int luabind::detail::class_rep::static_class_gettable(lua_State* L)
 		return 1;
 	}
 
-    luabind::map<const char*, int, ltstr>::const_iterator j = crep->m_static_constants.find(key);
+	luabind::map<const char*, int, ltstr>::const_iterator j = crep->m_static_constants.find(key);
 
 	if(j != crep->m_static_constants.end())
 	{

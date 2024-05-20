@@ -190,88 +190,88 @@ namespace luabind {
 namespace luabind {
 
 #define LUABIND_BINARY_OPERATOR(name_, op) \
-    namespace operators { \
+	namespace operators { \
 \
-        struct name_ \
-        { \
-            template<class T0, class T1, class Policies> \
-            struct apply \
-            { \
-                static void execute(lua_State* L, T0 _0, T1 _1) \
-                { \
-                    detail::operator_result(L, _0 op _1, (Policies*)0); \
-                } \
-            }; \
+		struct name_ \
+		{ \
+			template<class T0, class T1, class Policies> \
+			struct apply \
+			{ \
+				static void execute(lua_State* L, T0 _0, T1 _1) \
+				{ \
+					detail::operator_result(L, _0 op _1, (Policies*)0); \
+				} \
+			}; \
 \
-            static char const* name() \
-            { \
-                return "__" # name_; \
-            } \
-        }; \
+			static char const* name() \
+			{ \
+				return "__" # name_; \
+			} \
+		}; \
 \
-    } \
-    \
-    template<class T, class U> \
-    detail::binary_operator< \
-        operators::name_ \
-      , U \
-      , T \
-    > \
-    inline operator op(self_base<U>, T const&) \
-    { \
-        return 0; \
-    } \
-    \
-    template<class T, class U> \
-    detail::binary_operator< \
-        operators::name_ \
-      , T \
-      , U \
-    > \
-    inline operator op(T const&, self_base<U>) \
-    { \
-        return 0; \
-    } \
-    \
-    detail::binary_operator< \
-        operators::name_ \
-      , self_type \
-      , self_type \
-    > \
-    inline operator op(self_type, self_type) \
-    { \
-        return 0; \
-    } \
-    \
-    detail::binary_operator< \
-        operators::name_ \
-      , self_type \
-      , const_self_type \
-    > \
-    inline operator op(self_type, const_self_type) \
-    { \
-        return 0; \
-    } \
-    \
-    detail::binary_operator< \
-        operators::name_ \
-      , const_self_type \
-      , self_type \
-    > \
-    inline operator op(const_self_type, self_type) \
-    { \
-        return 0; \
-    } \
-    \
-    detail::binary_operator< \
-        operators::name_ \
-      , const_self_type \
-      , const_self_type \
-    > \
-    inline operator op(const_self_type, const_self_type) \
-    { \
-        return 0; \
-    }
+	} \
+	\
+	template<class T, class U> \
+	detail::binary_operator< \
+		operators::name_ \
+	  , U \
+	  , T \
+	> \
+	inline operator op(self_base<U>, T const&) \
+	{ \
+		return 0; \
+	} \
+	\
+	template<class T, class U> \
+	detail::binary_operator< \
+		operators::name_ \
+	  , T \
+	  , U \
+	> \
+	inline operator op(T const&, self_base<U>) \
+	{ \
+		return 0; \
+	} \
+	\
+	detail::binary_operator< \
+		operators::name_ \
+	  , self_type \
+	  , self_type \
+	> \
+	inline operator op(self_type, self_type) \
+	{ \
+		return 0; \
+	} \
+	\
+	detail::binary_operator< \
+		operators::name_ \
+	  , self_type \
+	  , const_self_type \
+	> \
+	inline operator op(self_type, const_self_type) \
+	{ \
+		return 0; \
+	} \
+	\
+	detail::binary_operator< \
+		operators::name_ \
+	  , const_self_type \
+	  , self_type \
+	> \
+	inline operator op(const_self_type, self_type) \
+	{ \
+		return 0; \
+	} \
+	\
+	detail::binary_operator< \
+		operators::name_ \
+	  , const_self_type \
+	  , const_self_type \
+	> \
+	inline operator op(const_self_type, const_self_type) \
+	{ \
+		return 0; \
+	}
 
 	LUABIND_BINARY_OPERATOR(add, +)
 		LUABIND_BINARY_OPERATOR(sub, -)
@@ -288,36 +288,36 @@ namespace luabind {
 #undef LUABIND_BINARY_OPERATOR
 
 #define LUABIND_UNARY_OPERATOR(name_, op, fn) \
-    namespace operators { \
+	namespace operators { \
 \
-        struct name_ \
-        { \
-            template<class T, class Policies> \
-            struct apply \
-            { \
-                static void execute(lua_State* L, T x) \
-                { \
-                    detail::operator_result(L, op(x), (Policies*)0); \
-                } \
-            }; \
+		struct name_ \
+		{ \
+			template<class T, class Policies> \
+			struct apply \
+			{ \
+				static void execute(lua_State* L, T x) \
+				{ \
+					detail::operator_result(L, op(x), (Policies*)0); \
+				} \
+			}; \
 \
-            static char const* name() \
-            { \
-                return "__" # name_; \
-            } \
-        }; \
+			static char const* name() \
+			{ \
+				return "__" # name_; \
+			} \
+		}; \
 \
-    } \
-    \
-    template<class T> \
-    detail::unary_operator< \
-        operators::name_ \
-      , T \
-    > \
-    inline fn(self_base<T>) \
-    { \
-        return 0; \
-    }
+	} \
+	\
+	template<class T> \
+	detail::unary_operator< \
+		operators::name_ \
+	  , T \
+	> \
+	inline fn(self_base<T>) \
+	{ \
+		return 0; \
+	}
 
 		template<class T>
 	luabind::string tostring_operator(T const& x)

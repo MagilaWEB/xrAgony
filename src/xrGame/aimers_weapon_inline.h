@@ -11,8 +11,8 @@
 
 inline Fmatrix const& aimers::weapon::get_bone(u32 const& bone_id) const
 {
-    VERIFY(bone_id < 2);
-    return (m_result[bone_id]);
+	VERIFY(bone_id < 2);
+	return (m_result[bone_id]);
 }
 
 #endif // #ifndef AIMERS_WEAPON_INLINE_H_INCLUDED

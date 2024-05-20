@@ -13,9 +13,9 @@
 
 inline void CObjectList::o_crow(IGameObject* O)
 {
-    Objects& crows = get_crows();
-    VERIFY(std::find(crows.begin(), crows.end(), O) == crows.end());
-    crows.push_back(O);
+	Objects& crows = get_crows();
+	VERIFY(std::find(crows.begin(), crows.end(), O) == crows.end());
+	crows.push_back(O);
 
-    O->SetCrowUpdateFrame(Device.dwFrame);
+	O->SetCrowUpdateFrame(Device.dwFrame);
 }

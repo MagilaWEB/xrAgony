@@ -62,20 +62,20 @@ extern "C" {
 //
 typedef struct ALlistEntry_Struct
 {
-    //
-    // The previous list entry.
-    //
-    struct ALlistEntry_Struct* Previous;
+	//
+	// The previous list entry.
+	//
+	struct ALlistEntry_Struct* Previous;
 
-    //
-    // The next list entry.
-    //
-    struct ALlistEntry_Struct* Next;
+	//
+	// The next list entry.
+	//
+	struct ALlistEntry_Struct* Next;
 
-    //
-    // The data for the current entry.
-    //
-    ALvoid* Data;
+	//
+	// The data for the current entry.
+	//
+	ALvoid* Data;
 
 } ALlistEntry;
 
@@ -86,37 +86,37 @@ typedef struct ALlistEntry_Struct
 //
 typedef struct //ALlist_Struct
 {
-    //
-    // This is the pointer to the first item in the list.
-    //
-    ALlistEntry* Head;
+	//
+	// This is the pointer to the first item in the list.
+	//
+	ALlistEntry* Head;
 
-    //
-    // This is the pointer to the last item in the list.
-    //
-    ALlistEntry* Tail;
+	//
+	// This is the pointer to the last item in the list.
+	//
+	ALlistEntry* Tail;
 
-    //
-    // This is the list iterator.
-    //
-    ALlistEntry* Current;
+	//
+	// This is the list iterator.
+	//
+	ALlistEntry* Current;
 
-    //
-    // This is the list lock to prevent simultaneous addition and removal
-    // of entries.
-    //
-    CRITICAL_SECTION Lock;
+	//
+	// This is the list lock to prevent simultaneous addition and removal
+	// of entries.
+	//
+	CRITICAL_SECTION Lock;
 
-    //
-    // This maintains a count of the number of entries in the list.
-    //
-    ALint NumberOfEntries;
+	//
+	// This maintains a count of the number of entries in the list.
+	//
+	ALint NumberOfEntries;
 
-    //
-    // This is set if the list is locked.  For debug use only.
-    //
+	//
+	// This is set if the list is locked.  For debug use only.
+	//
 #if(DBG)
-    ALint Locked;
+	ALint Locked;
 #endif
 
 } ALlist;
@@ -138,8 +138,8 @@ typedef struct //ALlist_Struct
 //
 ALvoid alListAddEntry
 (
-    IN  ALlist* pList,
-    IN  ALlistEntry* pEntry
+	IN  ALlist* pList,
+	IN  ALlistEntry* pEntry
 );
 
 //*****************************************************************************
@@ -149,8 +149,8 @@ ALvoid alListAddEntry
 //
 ALvoid alListAddEntryToHead
 (
-    IN  ALlist* pList,
-    IN  ALlistEntry* pEntry
+	IN  ALlist* pList,
+	IN  ALlistEntry* pEntry
 );
 
 //*****************************************************************************
@@ -161,7 +161,7 @@ ALvoid alListAddEntryToHead
 //
 ALvoid alListAcquireLock
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -171,7 +171,7 @@ ALvoid alListAcquireLock
 //
 ALboolean alListCreate
 (
-    OUT ALlist** ppList
+	OUT ALlist** ppList
 );
 
 //*****************************************************************************
@@ -181,7 +181,7 @@ ALboolean alListCreate
 //
 ALvoid alListFree
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -191,7 +191,7 @@ ALvoid alListFree
 //
 ALvoid* alListGetData
 (
-    IN  ALlistEntry* pEntry
+	IN  ALlistEntry* pEntry
 );
 
 //*****************************************************************************
@@ -201,8 +201,8 @@ ALvoid* alListGetData
 //
 ALlistEntry* alListGetEntryAt
 (
-    IN  ALlist* pList,
-    IN  ALint Index
+	IN  ALlist* pList,
+	IN  ALint Index
 );
 
 //*****************************************************************************
@@ -212,7 +212,7 @@ ALlistEntry* alListGetEntryAt
 //
 ALint alListGetEntryCount
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -222,7 +222,7 @@ ALint alListGetEntryCount
 //
 ALlistEntry* alListGetHead
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -234,7 +234,7 @@ ALlistEntry* alListGetHead
 //
 ALlistEntry* alListGetNext
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -245,7 +245,7 @@ ALlistEntry* alListGetNext
 //
 ALlistEntry* alListGetPrevious
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -255,7 +255,7 @@ ALlistEntry* alListGetPrevious
 //
 ALlistEntry* alListGetTail
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -265,8 +265,8 @@ ALlistEntry* alListGetTail
 //
 ALvoid alListInitializeEntry
 (
-    IN  ALlistEntry* pListEntry,
-    IN  ALvoid* pData
+	IN  ALlistEntry* pListEntry,
+	IN  ALvoid* pData
 );
 
 //*****************************************************************************
@@ -276,7 +276,7 @@ ALvoid alListInitializeEntry
 //
 ALboolean alListIsEmpty
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -286,7 +286,7 @@ ALboolean alListIsEmpty
 //
 ALlistEntry* alListIteratorGet
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -297,8 +297,8 @@ ALlistEntry* alListIteratorGet
 //
 ALlistEntry* alListIteratorFindData
 (
-    IN  ALlist* pList,
-    IN  ALvoid* pData
+	IN  ALlist* pList,
+	IN  ALvoid* pData
 );
 
 //*****************************************************************************
@@ -309,7 +309,7 @@ ALlistEntry* alListIteratorFindData
 //
 ALlistEntry* alListIteratorNext
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -320,7 +320,7 @@ ALlistEntry* alListIteratorNext
 //
 ALlistEntry* alListIteratorPrevious
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -331,7 +331,7 @@ ALlistEntry* alListIteratorPrevious
 //
 ALlistEntry* alListIteratorReset
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -342,7 +342,7 @@ ALlistEntry* alListIteratorReset
 //
 ALlistEntry* alListIteratorRemove
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -353,8 +353,8 @@ ALlistEntry* alListIteratorRemove
 //
 ALlistEntry* alListIteratorSet
 (
-    IN  ALlist* pList,
-    IN  ALlistEntry* pEntry
+	IN  ALlist* pList,
+	IN  ALlistEntry* pEntry
 );
 
 //*****************************************************************************
@@ -365,8 +365,8 @@ ALlistEntry* alListIteratorSet
 //
 ALvoid* alListMatchEntry
 (
-    IN  ALlist* pList,
-    IN  ALlistEntry* pEntry
+	IN  ALlist* pList,
+	IN  ALlistEntry* pEntry
 );
 
 //*****************************************************************************
@@ -377,8 +377,8 @@ ALvoid* alListMatchEntry
 //
 ALlistEntry* alListMatchData
 (
-    IN  ALlist* pList,
-    IN  ALvoid* pData
+	IN  ALlist* pList,
+	IN  ALvoid* pData
 );
 
 //*****************************************************************************
@@ -388,7 +388,7 @@ ALlistEntry* alListMatchData
 //
 ALvoid alListReleaseLock
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -400,8 +400,8 @@ ALvoid alListReleaseLock
 //
 ALvoid* alListRemoveEntry
 (
-    IN  ALlist* pList,
-    IN  ALlistEntry* pEntry
+	IN  ALlist* pList,
+	IN  ALlistEntry* pEntry
 );
 
 //*****************************************************************************
@@ -412,7 +412,7 @@ ALvoid* alListRemoveEntry
 //
 ALlistEntry* alListRemoveHead
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 //*****************************************************************************
@@ -423,7 +423,7 @@ ALlistEntry* alListRemoveHead
 //
 ALlistEntry* alListRemoveTail
 (
-    IN  ALlist* pList
+	IN  ALlist* pList
 );
 
 #ifdef __cplusplus

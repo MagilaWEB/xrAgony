@@ -14,36 +14,36 @@ IC CALifeLevelRegistry::CALifeLevelRegistry(const GameGraph::_LEVEL_ID& level_id
 IC GameGraph::_LEVEL_ID CALifeLevelRegistry::level_id() const { return (m_level_id); }
 IC void CALifeLevelRegistry::add(CSE_ALifeDynamicObject* object)
 {
-    if (ai().game_graph().vertex(object->m_tGraphID)->level_id() != level_id())
-        return;
+	if (ai().game_graph().vertex(object->m_tGraphID)->level_id() != level_id())
+		return;
 
-    inherited::add(object->ID, object);
+	inherited::add(object->ID, object);
 }
 
 IC void CALifeLevelRegistry::remove(CSE_ALifeDynamicObject* object, bool no_assert)
 {
 
-    inherited::remove(object->ID, no_assert);
+	inherited::remove(object->ID, no_assert);
 }
 
 template <typename _update_predicate>
 IC void CALifeLevelRegistry::update(const _update_predicate& predicate, bool const iterate_as_first_time_next_time)
 {
-    //	u32					object_count =
-    inherited::update(predicate, iterate_as_first_time_next_time);
+	//	u32					object_count =
+	inherited::update(predicate, iterate_as_first_time_next_time);
 #ifdef FULL_LEVEL_UPDATE
-    m_first_update = true;
+	m_first_update = true;
 #endif
 
 }
 
 IC CSE_ALifeDynamicObject* CALifeLevelRegistry::object(const ALife::_OBJECT_ID& id, bool no_assert) const
 {
-    _REGISTRY::const_iterator I = objects().find(id);
-    if (I == objects().end())
-    {
-        THROW2(no_assert, "The spesified object hasn't been found in the current level!");
-        return (0);
-    }
-    return ((*I).second);
+	_REGISTRY::const_iterator I = objects().find(id);
+	if (I == objects().end())
+	{
+		THROW2(no_assert, "The spesified object hasn't been found in the current level!");
+		return (0);
+	}
+	return ((*I).second);
 }

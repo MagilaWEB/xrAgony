@@ -1,13 +1,13 @@
 /********************************************************************
- *                                                                  *
- * THIS FILE IS PART OF THE OggVorbis SOFTWARE CODEC SOURCE CODE.   *
- * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
+ *																  *
+ * THIS FILE IS PART OF THE OggVorbis SOFTWARE CODEC SOURCE CODE.	*
+ * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS	 *
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
- * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
- *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
- * by the Xiph.Org Foundation https://xiph.org/                     *
- *                                                                  *
+ * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.		*
+ *																  *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009			 *
+ * by the Xiph.Org Foundation https://xiph.org/					 *
+ *																  *
  ********************************************************************
 
  function: window functions
@@ -2100,36 +2100,36 @@ const float *_vorbis_window_get(int n){
 }
 
 void _vorbis_apply_window(float *d,int *winno,long *blocksizes,
-                          int lW,int W,int nW){
+						  int lW,int W,int nW){
   lW=(W?lW:0);
   nW=(W?nW:0);
 
   {
-    const float *windowLW=vwin[winno[lW]];
-    const float *windowNW=vwin[winno[nW]];
+	const float *windowLW=vwin[winno[lW]];
+	const float *windowNW=vwin[winno[nW]];
 
-    long n=blocksizes[W];
-    long ln=blocksizes[lW];
-    long rn=blocksizes[nW];
+	long n=blocksizes[W];
+	long ln=blocksizes[lW];
+	long rn=blocksizes[nW];
 
-    long leftbegin=n/4-ln/4;
-    long leftend=leftbegin+ln/2;
+	long leftbegin=n/4-ln/4;
+	long leftend=leftbegin+ln/2;
 
-    long rightbegin=n/2+n/4-rn/4;
-    long rightend=rightbegin+rn/2;
+	long rightbegin=n/2+n/4-rn/4;
+	long rightend=rightbegin+rn/2;
 
-    int i,p;
+	int i,p;
 
-    for(i=0;i<leftbegin;i++)
-      d[i]=0.f;
+	for(i=0;i<leftbegin;i++)
+	  d[i]=0.f;
 
-    for(p=0;i<leftend;i++,p++)
-      d[i]*=windowLW[p];
+	for(p=0;i<leftend;i++,p++)
+	  d[i]*=windowLW[p];
 
-    for(i=rightbegin,p=rn/2-1;i<rightend;i++,p--)
-      d[i]*=windowNW[p];
+	for(i=rightbegin,p=rn/2-1;i<rightend;i++,p--)
+	  d[i]*=windowNW[p];
 
-    for(;i<n;i++)
-      d[i]=0.f;
+	for(;i<n;i++)
+	  d[i]=0.f;
   }
 }

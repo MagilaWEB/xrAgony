@@ -4,18 +4,18 @@
 **
 ** File system manipulation library.
 ** This library offers these functions:
-**   lfs.attributes (filepath [, attributename])
-**   lfs.chdir (path)
-**   lfs.currentdir ()
-**   lfs.dir (path)
-**   lfs.lock (fh, mode)
-**   lfs.lock_dir (path)
-**   lfs.mkdir (path)
-**   lfs.rmdir (path)
-**   lfs.setmode (filepath, mode)
-**   lfs.symlinkattributes (filepath [, attributename]) -- thanks to Sam Roberts
-**   lfs.touch (filepath [, atime [, mtime]])
-**   lfs.unlock (fh)
+**	lfs.attributes (filepath [, attributename])
+**	lfs.chdir (path)
+**	lfs.currentdir ()
+**	lfs.dir (path)
+**	lfs.lock (fh, mode)
+**	lfs.lock_dir (path)
+**	lfs.mkdir (path)
+**	lfs.rmdir (path)
+**	lfs.setmode (filepath, mode)
+**	lfs.symlinkattributes (filepath [, attributename]) -- thanks to Sam Roberts
+**	lfs.touch (filepath [, atime [, mtime]])
+**	lfs.unlock (fh)
 **
 ** $Id: lfs.c,v 1.61 2009/07/04 02:10:16 mascarenhas Exp $
 */
@@ -90,17 +90,17 @@ typedef struct dir_data {
 
 #ifdef _WIN32
  #ifdef __BORLANDC__
-  #define lfs_setmode(L,file,m)   ((void)L, setmode(_fileno(file), m))
+  #define lfs_setmode(L,file,m)	((void)L, setmode(_fileno(file), m))
   #define STAT_STRUCT struct stati64
  #else
-  #define lfs_setmode(L,file,m)   ((void)L, _setmode(_fileno(file), m))
+  #define lfs_setmode(L,file,m)	((void)L, _setmode(_fileno(file), m))
   #define STAT_STRUCT struct _stati64
  #endif
 #define STAT_FUNC _stati64
 #else
-#define _O_TEXT               0
-#define _O_BINARY             0
-#define lfs_setmode(L,file,m)   ((void)((void)file,m),  \
+#define _O_TEXT				0
+#define _O_BINARY			 0
+#define lfs_setmode(L,file,m)	((void)((void)file,m),  \
 		 luaL_error(L, LUA_QL("setmode") " not supported on this platform"), -1)
 #define STAT_STRUCT struct stat
 #define STAT_FUNC stat
@@ -131,14 +131,14 @@ static int change_dir (lua_State *L) {
 static int get_dir (lua_State *L) {
   char *path;
   if ((path = getcwd(NULL, 0)) == NULL) {
-    lua_pushnil(L);
-    lua_pushstring(L, getcwd_error);
-    return 2;
+	lua_pushnil(L);
+	lua_pushstring(L, getcwd_error);
+	return 2;
   }
   else {
-    lua_pushstring(L, path);
-    free(path);
-    return 1;
+	lua_pushstring(L, path);
+	free(path);
+	return 1;
   }
 }
 
@@ -165,15 +165,15 @@ static int _file_lock (lua_State *L, FILE *fh, const char *mode, const long star
 	int code;
 #ifdef _WIN32
 	/* lkmode valid values are:
-	   LK_LOCK    Locks the specified bytes. If the bytes cannot be locked, the program immediately tries again after 1 second. If, after 10 attempts, the bytes cannot be locked, the constant returns an error.
-	   LK_NBLCK   Locks the specified bytes. If the bytes cannot be locked, the constant returns an error.
-	   LK_NBRLCK  Same as _LK_NBLCK.
-	   LK_RLCK    Same as _LK_LOCK.
-	   LK_UNLCK   Unlocks the specified bytes, which must have been previously locked.
+		LK_LOCK	Locks the specified bytes. If the bytes cannot be locked, the program immediately tries again after 1 second. If, after 10 attempts, the bytes cannot be locked, the constant returns an error.
+		LK_NBLCK	Locks the specified bytes. If the bytes cannot be locked, the constant returns an error.
+		LK_NBRLCK  Same as _LK_NBLCK.
+		LK_RLCK	Same as _LK_LOCK.
+		LK_UNLCK	Unlocks the specified bytes, which must have been previously locked.
 
-	   Regions should be locked only briefly and should be unlocked before closing a file or exiting the program.
+		Regions should be locked only briefly and should be unlocked before closing a file or exiting the program.
 
-	   http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vclib/html/_crt__locking.asp
+		http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vclib/html/_crt__locking.asp
 	*/
 	int lkmode;
 	switch (*mode) {
@@ -220,7 +220,7 @@ static int lfs_lock_dir(lua_State *L) {
   const char *path = luaL_checklstring(L, 1, &pathl);
   ln = (char*)malloc(pathl + strlen(lockfile) + 1);
   if(!ln) { 
-    lua_pushnil(L); lua_pushstring(L, strerror(errno)); return 2;
+	lua_pushnil(L); lua_pushstring(L, strerror(errno)); return 2;
   }
   strcpy(ln, path); strcat(ln, lockfile);
   if((fd = CreateFile(ln, GENERIC_WRITE, 0, NULL, CREATE_NEW, 
@@ -258,12 +258,12 @@ static int lfs_lock_dir(lua_State *L) {
   lock = (lfs_Lock*)lua_newuserdata(L, sizeof(lfs_Lock));
   ln = (char*)malloc(pathl + strlen(lockfile) + 1);
   if(!ln) { 
-    lua_pushnil(L); lua_pushstring(L, strerror(errno)); return 2;
+	lua_pushnil(L); lua_pushstring(L, strerror(errno)); return 2;
   }
   strcpy(ln, path); strcat(ln, lockfile);
   if(symlink("lock", ln) == -1) {
-    free(ln); lua_pushnil(L); 
-    lua_pushstring(L, strerror(errno)); return 2;
+	free(ln); lua_pushnil(L); 
+	lua_pushstring(L, strerror(errno)); return 2;
   }
   lock->ln = ln;
   luaL_getmetatable (L, LOCK_METATABLE);
@@ -273,9 +273,9 @@ static int lfs_lock_dir(lua_State *L) {
 static int lfs_unlock_dir(lua_State *L) {
   lfs_Lock *lock = luaL_checkudata(L, 1, LOCK_METATABLE);
   if(lock->ln) {
-    unlink(lock->ln);
-    free(lock->ln);
-    lock->ln = NULL;
+	unlink(lock->ln);
+	free(lock->ln);
+	lock->ln = NULL;
   }
   return 0;
 }
@@ -288,23 +288,23 @@ static int lfs_g_setmode (lua_State *L, FILE *f, int arg) {
   int op = luaL_checkoption(L, arg, NULL, modenames);
   int res = lfs_setmode(L, f, mode[op]);
   if (res != -1) {
-    int i;
-    lua_pushboolean(L, 1);
-    for (i = 0; modenames[i] != NULL; i++) {
-      if (mode[i] == res) {
-        lua_pushstring(L, modenames[i]);
-        goto exit;
-      }
-    }
-    lua_pushnil(L);
+	int i;
+	lua_pushboolean(L, 1);
+	for (i = 0; modenames[i] != NULL; i++) {
+	  if (mode[i] == res) {
+		lua_pushstring(L, modenames[i]);
+		goto exit;
+	  }
+	}
+	lua_pushnil(L);
   exit:
-    return 2;
+	return 2;
   } else {
-    int en = errno;
-    lua_pushnil(L);
-    lua_pushfstring(L, "%s", strerror(en));
-    lua_pushinteger(L, en);
-    return 3;
+	int en = errno;
+	lua_pushnil(L);
+	lua_pushfstring(L, "%s", strerror(en));
+	lua_pushinteger(L, en);
+	return 3;
   }
 }
 #else
@@ -372,11 +372,11 @@ static int make_dir (lua_State *L) {
 #else
 	mode_t oldmask = umask( (mode_t)0 );
 	fail =  mkdir (path, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP |
-	                     S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH );
+						 S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH );
 #endif
 	if (fail) {
 		lua_pushnil (L);
-        lua_pushfstring (L, "%s", strerror(errno));
+		lua_pushfstring (L, "%s", strerror(errno));
 		return 2;
 	}
 	umask (oldmask);
@@ -536,25 +536,25 @@ static int lock_create_meta (lua_State *L) {
 
 #ifdef _WIN32
  #ifndef S_ISDIR
-   #define S_ISDIR(mode)  (mode&_S_IFDIR)
+	#define S_ISDIR(mode)  (mode&_S_IFDIR)
  #endif
  #ifndef S_ISREG
-   #define S_ISREG(mode)  (mode&_S_IFREG)
+	#define S_ISREG(mode)  (mode&_S_IFREG)
  #endif
  #ifndef S_ISLNK
-   #define S_ISLNK(mode)  (0)
+	#define S_ISLNK(mode)  (0)
  #endif
  #ifndef S_ISSOCK
-   #define S_ISSOCK(mode)  (0)
+	#define S_ISSOCK(mode)  (0)
  #endif
  #ifndef S_ISFIFO
-   #define S_ISFIFO(mode)  (0)
+	#define S_ISFIFO(mode)  (0)
  #endif
  #ifndef S_ISCHR
-   #define S_ISCHR(mode)  (mode&_S_IFCHR)
+	#define S_ISCHR(mode)  (mode&_S_IFCHR)
  #endif
  #ifndef S_ISBLK
-   #define S_ISBLK(mode)  (0)
+	#define S_ISBLK(mode)  (0)
  #endif
 #endif
 /*
@@ -566,13 +566,13 @@ static const char *mode2string (unsigned short mode) {
 static const char *mode2string (mode_t mode) {
 #endif
   if ( S_ISREG(mode) )
-    return "file";
+	return "file";
   else if ( S_ISDIR(mode) )
-    return "directory";
+	return "directory";
   else if ( S_ISLNK(mode) )
 	return "link";
   else if ( S_ISSOCK(mode) )
-    return "socket";
+	return "socket";
   else if ( S_ISFIFO(mode) )
 	return "named pipe";
   else if ( S_ISCHR(mode) )
@@ -677,20 +677,20 @@ struct _stat_members {
 };
 
 struct _stat_members members[] = {
-	{ "mode",         push_st_mode },
-	{ "dev",          push_st_dev },
-	{ "ino",          push_st_ino },
-	{ "nlink",        push_st_nlink },
-	{ "uid",          push_st_uid },
-	{ "gid",          push_st_gid },
-	{ "rdev",         push_st_rdev },
-	{ "access",       push_st_atime },
+	{ "mode",		 push_st_mode },
+	{ "dev",		  push_st_dev },
+	{ "ino",		  push_st_ino },
+	{ "nlink",		push_st_nlink },
+	{ "uid",		  push_st_uid },
+	{ "gid",		  push_st_gid },
+	{ "rdev",		 push_st_rdev },
+	{ "access",		push_st_atime },
 	{ "modification", push_st_mtime },
-	{ "change",       push_st_ctime },
-	{ "size",         push_st_size },
+	{ "change",		push_st_ctime },
+	{ "size",		 push_st_size },
 #ifndef _WIN32
-	{ "blocks",       push_st_blocks },
-	{ "blksize",      push_st_blksize },
+	{ "blocks",		push_st_blocks },
+	{ "blksize",	  push_st_blksize },
 #endif
 	{ NULL, push_invalid }
 };

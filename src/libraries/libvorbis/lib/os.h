@@ -1,15 +1,15 @@
 #ifndef _OS_H
 #define _OS_H
 /********************************************************************
- *                                                                  *
- * THIS FILE IS PART OF THE OggVorbis SOFTWARE CODEC SOURCE CODE.   *
- * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
+ *																  *
+ * THIS FILE IS PART OF THE OggVorbis SOFTWARE CODEC SOURCE CODE.	*
+ * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS	 *
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
- * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
- *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2015             *
- * by the Xiph.Org Foundation https://xiph.org/                     *
- *                                                                  *
+ * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.		*
+ *																  *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2015			 *
+ * by the Xiph.Org Foundation https://xiph.org/					 *
+ *																  *
  ********************************************************************
 
  function: #ifdef jail to whip a few platforms into the UNIX ideal.
@@ -29,15 +29,15 @@
 #  define _V_IFDEFJAIL_H_
 
 #  ifdef __GNUC__
-#    define STIN static __inline__
+#	define STIN static __inline__
 #  elif defined(_WIN32)
-#    define STIN static __inline
+#	define STIN static __inline
 #  else
-#    define STIN static
+#	define STIN static
 #  endif
 
 #ifdef DJGPP
-#  define rint(x)   (floor((x)+0.5f))
+#  define rint(x)	(floor((x)+0.5f))
 #endif
 
 #ifndef M_PI
@@ -46,7 +46,7 @@
 
 #if defined(_WIN32) && !defined(__SYMBIAN32__)
 #  include <malloc.h>
-#  define rint(x)   (floor((x)+0.5f))
+#  define rint(x)	(floor((x)+0.5f))
 #  define NO_FLOAT_MATH_LIB
 #  define FAST_HYPOT(a, b) sqrt((a)*(a) + (b)*(b))
 #endif
@@ -83,9 +83,9 @@ void *_alloca(size_t size);
 #if defined(__i386__) && defined(__GNUC__) && !defined(__BEOS__) && !defined(__SSE2_MATH__)
 #  define VORBIS_FPU_CONTROL
 /* both GCC and MSVC are kinda stupid about rounding/casting to int.
-   Because of encapsulation constraints (GCC can't see inside the asm
-   block and so we end up doing stupid things like a store/load that
-   is collectively a noop), we do it this way */
+	Because of encapsulation constraints (GCC can't see inside the asm
+	block and so we end up doing stupid things like a store/load that
+	is collectively a noop), we do it this way */
 
 /* we must set up the fpu before this works!! */
 
@@ -95,10 +95,10 @@ static inline void vorbis_fpu_setround(vorbis_fpu_control *fpu){
   ogg_int16_t ret;
   ogg_int16_t temp;
   __asm__ __volatile__("fnstcw %0\n\t"
-          "movw %0,%%dx\n\t"
-          "andw $62463,%%dx\n\t"
-          "movw %%dx,%1\n\t"
-          "fldcw %1\n\t":"=m"(ret):"m"(temp): "dx");
+		  "movw %0,%%dx\n\t"
+		  "andw $62463,%%dx\n\t"
+		  "movw %%dx,%1\n\t"
+		  "fldcw %1\n\t":"=m"(ret):"m"(temp): "dx");
   *fpu=ret;
 }
 
@@ -108,8 +108,8 @@ static inline void vorbis_fpu_restore(vorbis_fpu_control fpu){
 
 /* assumes the FPU is in round mode! */
 static inline int vorbis_ftoi(double f){  /* yes, double!  Otherwise,
-                                             we get extra fst/fld to
-                                             truncate precision */
+											 we get extra fst/fld to
+											 truncate precision */
   int i;
   __asm__("fistl %0": "=m"(i) : "t"(f));
   return(i);
@@ -125,12 +125,12 @@ static inline int vorbis_ftoi(double f){  /* yes, double!  Otherwise,
 typedef ogg_int16_t vorbis_fpu_control;
 
 static __inline int vorbis_ftoi(double f){
-        int i;
-        __asm{
-                fld f
-                fistp i
-        }
-        return i;
+		int i;
+		__asm{
+				fld f
+				fistp i
+		}
+		return i;
 }
 
 static __inline void vorbis_fpu_setround(vorbis_fpu_control *fpu){
@@ -145,7 +145,7 @@ static __inline void vorbis_fpu_restore(vorbis_fpu_control fpu){
 
 
 /* Optimized code path for x86_64 builds. Uses SSE2 intrinsics. This can be
-   done safely because all x86_64 CPUs supports SSE2. */
+	done safely because all x86_64 CPUs supports SSE2. */
 #if (defined(_MSC_VER) && defined(_M_X64)) || (defined(__GNUC__) && defined (__SSE2_MATH__))
 #  define VORBIS_FPU_CONTROL
 
@@ -153,7 +153,7 @@ typedef ogg_int16_t vorbis_fpu_control;
 
 #include <emmintrin.h>
 static __inline int vorbis_ftoi(double f){
-        return _mm_cvtsd_si32(_mm_load_sd(&f));
+		return _mm_cvtsd_si32(_mm_load_sd(&f));
 }
 
 static __inline void vorbis_fpu_setround(vorbis_fpu_control *fpu){
@@ -168,16 +168,16 @@ static __inline void vorbis_fpu_restore(vorbis_fpu_control fpu){
 
 
 /* If no special implementation was found for the current compiler / platform,
-   use the default implementation here: */
+	use the default implementation here: */
 #ifndef VORBIS_FPU_CONTROL
 
 typedef int vorbis_fpu_control;
 
 STIN int vorbis_ftoi(double f){
-        /* Note: MSVC and GCC (at least on some systems) round towards zero, thus,
-           the floor() call is required to ensure correct roudning of
-           negative numbers */
-        return (int)floor(f+.5);
+		/* Note: MSVC and GCC (at least on some systems) round towards zero, thus,
+			the floor() call is required to ensure correct roudning of
+			negative numbers */
+		return (int)floor(f+.5);
 }
 
 /* We don't have special code for this compiler/arch, so do it the slow way */

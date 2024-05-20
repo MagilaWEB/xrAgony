@@ -24,8 +24,8 @@ IC LPCSTR Upgrade::description_text() const { return m_description.c_str(); }
 IC bool Upgrade::get_highlight() const { return m_highlight; }
 IC shared_str const& Upgrade::get_property_name(u8 index) const
 {
-    VERIFY(index < max_properties_count && index >= 0);
-    return m_properties[index];
+	VERIFY(index < max_properties_count && index >= 0);
+	return m_properties[index];
 }
 
 IC Ivector2 const& Upgrade::get_scheme_index() const { return m_scheme_index; }

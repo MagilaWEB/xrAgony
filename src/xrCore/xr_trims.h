@@ -25,9 +25,9 @@ XRCORE_API LPSTR _GetItem(LPCSTR, int, LPSTR, u32 const dst_size, char separator
 
 template <int count>
 inline LPSTR _GetItem(
-    LPCSTR src, int index, char (&dst)[count], char separator = ',', LPCSTR def = "", bool trim = true)
+	LPCSTR src, int index, char (&dst)[count], char separator = ',', LPCSTR def = "", bool trim = true)
 {
-    return _GetItem(src, index, dst, count, separator, def, trim);
+	return _GetItem(src, index, dst, count, separator, def, trim);
 }
 
 XRCORE_API LPSTR _GetItems(LPCSTR, int, int, LPSTR, char separator = ',');

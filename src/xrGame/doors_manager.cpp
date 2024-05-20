@@ -44,50 +44,50 @@ manager::~manager() { VERIFY2(m_doors.empty(), make_string("there are %d still r
 //
 door* manager::register_door(CPhysicObject& object)
 {
-    door* const result = new door(&object);
-    // if ( !xr_strcmp(result->get_name(),"shkaf_work_01_door_0000") ) {
-    //	Msg					( "registering door[\"shkaf_work_01_door_0000\"][%f][%f][%f]", VPUSH(result->position()) );
-    //}
-    // check_bug_door			( );
-    m_doors.insert(result);
-    // check_bug_door			( );
-    return result;
+	door* const result = new door(&object);
+	// if ( !xr_strcmp(result->get_name(),"shkaf_work_01_door_0000") ) {
+	//	Msg					( "registering door[\"shkaf_work_01_door_0000\"][%f][%f][%f]", VPUSH(result->position()) );
+	//}
+	// check_bug_door			( );
+	m_doors.insert(result);
+	// check_bug_door			( );
+	return result;
 }
 
 void manager::unregister_door(door*& door)
 {
-    // if ( !xr_strcmp(door->get_name(),"shkaf_work_01_door_0000") ) {
-    //	Msg					( "UNregistering door[\"shkaf_work_01_door_0000\"][%f][%f][%f]", VPUSH(door->position()) );
-    //}
-    // check_bug_door			( );
-    m_doors.remove(door);
-    // check_bug_door			( );
-    xr_delete(door);
+	// if ( !xr_strcmp(door->get_name(),"shkaf_work_01_door_0000") ) {
+	//	Msg					( "UNregistering door[\"shkaf_work_01_door_0000\"][%f][%f][%f]", VPUSH(door->position()) );
+	//}
+	// check_bug_door			( );
+	m_doors.remove(door);
+	// check_bug_door			( );
+	xr_delete(door);
 }
 
 bool manager::actualize_doors_state(actor& actor, float const average_speed)
 {
-    float const radius = average_speed * g_door_open_time + g_door_length;
-    Fvector const& position = actor.get_position();
-    // check_bug_door			( );
-    m_doors.nearest(position, radius, m_nearest_doors);
-    // check_bug_door			( );
-    if (m_nearest_doors.empty() && !actor.need_update())
-        return true;
+	float const radius = average_speed * g_door_open_time + g_door_length;
+	Fvector const& position = actor.get_position();
+	// check_bug_door			( );
+	m_doors.nearest(position, radius, m_nearest_doors);
+	// check_bug_door			( );
+	if (m_nearest_doors.empty() && !actor.need_update())
+		return true;
 
-    return actor.update_doors(m_nearest_doors, average_speed);
+	return actor.update_doors(m_nearest_doors, average_speed);
 }
 
 void manager::on_door_is_open(door* door) { door->on_change_state(door_state_open); }
 void manager::on_door_is_closed(door* door) { door->on_change_state(door_state_closed); }
 bool manager::is_door_locked(door const* door) const
 {
-    return door->is_locked(doors::door_state_open) || door->is_locked(doors::door_state_closed);
+	return door->is_locked(doors::door_state_open) || door->is_locked(doors::door_state_closed);
 }
 
 void manager::lock_door(door* const door) { door->lock(); }
 void manager::unlock_door(door* const door) { door->unlock(); }
 bool manager::is_door_blocked(door* const door) const
 {
-    return door->is_blocked(door_state_open) || door->is_blocked(door_state_closed);
+	return door->is_blocked(door_state_open) || door->is_blocked(door_state_closed);
 }

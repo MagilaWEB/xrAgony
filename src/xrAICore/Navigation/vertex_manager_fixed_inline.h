@@ -1,28 +1,28 @@
 ////////////////////////////////////////////////////////////////////////////
-//  Module      : vertex_manager_fixed_inline.h
-//  Created     : 21.03.2002
-//  Modified    : 01.03.2004
-//  Author      : Dmitriy Iassenev
+//  Module	  : vertex_manager_fixed_inline.h
+//  Created	 : 21.03.2002
+//  Modified	: 01.03.2004
+//  Author	  : Dmitriy Iassenev
 //  Description : Fixed vertex manager inline functions
 ////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
-#define TEMPLATE_SPECIALIZATION                           \
-    template <typename TPathId, typename TIndex, u8 Mask> \
-    template <typename TPathBuilder, typename TVertexAllocator, typename TCompoundVertex>
+#define TEMPLATE_SPECIALIZATION							\
+	template <typename TPathId, typename TIndex, u8 Mask> \
+	template <typename TPathBuilder, typename TVertexAllocator, typename TCompoundVertex>
 
 #define CFixedVertexManager \
-    CVertexManagerFixed<TPathId, TIndex, Mask>::CDataStorage<TPathBuilder, TVertexAllocator, TCompoundVertex>
+	CVertexManagerFixed<TPathId, TIndex, Mask>::CDataStorage<TPathBuilder, TVertexAllocator, TCompoundVertex>
 
 TEMPLATE_SPECIALIZATION
 inline CFixedVertexManager::CDataStorage(const u32 vertex_count)
-    : CDataStorageBase(vertex_count), CDataStorageAllocator()
+	: CDataStorageBase(vertex_count), CDataStorageAllocator()
 {
-    m_current_path_id = PathId(0);
-    m_max_node_count = vertex_count;
-    m_indexes = xr_alloc<IndexVertex>(vertex_count);
-    ZeroMemory(m_indexes, vertex_count * sizeof(IndexVertex));
+	m_current_path_id = PathId(0);
+	m_max_node_count = vertex_count;
+	m_indexes = xr_alloc<IndexVertex>(vertex_count);
+	ZeroMemory(m_indexes, vertex_count * sizeof(IndexVertex));
 }
 
 TEMPLATE_SPECIALIZATION
@@ -30,14 +30,14 @@ CFixedVertexManager::~CDataStorage() { xr_free(m_indexes); }
 TEMPLATE_SPECIALIZATION
 inline void CFixedVertexManager::init()
 {
-    CDataStorageBase::init();
-    CDataStorageAllocator::init();
-    m_current_path_id++;
-    if (!m_current_path_id)
-    {
-        ZeroMemory(m_indexes, m_max_node_count * sizeof(IndexVertex));
-        m_current_path_id++;
-    }
+	CDataStorageBase::init();
+	CDataStorageAllocator::init();
+	m_current_path_id++;
+	if (!m_current_path_id)
+	{
+		ZeroMemory(m_indexes, m_max_node_count * sizeof(IndexVertex));
+		m_current_path_id++;
+	}
 }
 
 TEMPLATE_SPECIALIZATION
@@ -45,32 +45,32 @@ inline bool CFixedVertexManager::is_opened(const Vertex& vertex) const { return 
 TEMPLATE_SPECIALIZATION
 inline bool CFixedVertexManager::is_visited(const Index& vertex_id) const
 {
-    VERIFY(vertex_id < m_max_node_count);
-    return m_indexes[vertex_id].m_path_id == m_current_path_id;
+	VERIFY(vertex_id < m_max_node_count);
+	return m_indexes[vertex_id].m_path_id == m_current_path_id;
 }
 
 TEMPLATE_SPECIALIZATION
 inline bool CFixedVertexManager::is_closed(const Vertex& vertex) const
 {
-    return is_visited(vertex) && !is_opened(vertex);
+	return is_visited(vertex) && !is_opened(vertex);
 }
 
 TEMPLATE_SPECIALIZATION
 inline typename CFixedVertexManager::Vertex& CFixedVertexManager::get_node(const Index& vertex_id) const
 {
-    VERIFY(vertex_id < m_max_node_count);
-    VERIFY(is_visited(vertex_id));
-    return *m_indexes[vertex_id].m_vertex;
+	VERIFY(vertex_id < m_max_node_count);
+	VERIFY(is_visited(vertex_id));
+	return *m_indexes[vertex_id].m_vertex;
 }
 
 TEMPLATE_SPECIALIZATION
 inline typename CFixedVertexManager::Vertex& CFixedVertexManager::create_vertex(Vertex& vertex, const Index& vertex_id)
 {
-    VERIFY(vertex_id < m_max_node_count);
-    m_indexes[vertex_id].m_vertex = &vertex;
-    m_indexes[vertex_id].m_path_id = m_current_path_id;
-    vertex._index = vertex_id;
-    return vertex;
+	VERIFY(vertex_id < m_max_node_count);
+	m_indexes[vertex_id].m_vertex = &vertex;
+	m_indexes[vertex_id].m_path_id = m_current_path_id;
+	vertex._index = vertex_id;
+	return vertex;
 }
 
 TEMPLATE_SPECIALIZATION

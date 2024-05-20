@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////
-//  Module      : alife_space.h
-//  Created     : 08.01.2002
-//  Modified    : 08.01.2003
-//  Author      : Dmitriy Iassenev
+//  Module	  : alife_space.h
+//  Created	 : 08.01.2002
+//  Modified	: 08.01.2003
+//  Author	  : Dmitriy Iassenev
 //  Description : ALife space
 ////////////////////////////////////////////////////////////////////////////
 
@@ -47,115 +47,115 @@ typedef u32 _SPAWN_STORY_ID; // Spawn Story ID
 
 struct SSumStackCell
 {
-    int i1;
-    int i2;
-    int iCurrentSum;
+	int i1;
+	int i2;
+	int iCurrentSum;
 };
 
 enum ECombatResult
 {
-    eCombatResultRetreat1 = u32(0),
-    eCombatResultRetreat2,
-    eCombatResultRetreat12,
-    eCombatResult1Kill2,
-    eCombatResult2Kill1,
-    eCombatResultBothKilled,
-    eCombatDummy = u32(-1),
+	eCombatResultRetreat1 = u32(0),
+	eCombatResultRetreat2,
+	eCombatResultRetreat12,
+	eCombatResult1Kill2,
+	eCombatResult2Kill1,
+	eCombatResultBothKilled,
+	eCombatDummy = u32(-1),
 };
 
 enum ECombatAction
 {
-    eCombatActionAttack = u32(0),
-    eCombatActionRetreat,
-    eCombatActionDummy = u32(-1),
+	eCombatActionAttack = u32(0),
+	eCombatActionRetreat,
+	eCombatActionDummy = u32(-1),
 };
 
 enum EMeetActionType
 {
-    eMeetActionTypeAttack = u32(0),
-    eMeetActionTypeInteract,
-    eMeetActionTypeIgnore,
-    eMeetActionSmartTerrain,
-    eMeetActionTypeDummy = u32(-1),
+	eMeetActionTypeAttack = u32(0),
+	eMeetActionTypeInteract,
+	eMeetActionTypeIgnore,
+	eMeetActionSmartTerrain,
+	eMeetActionTypeDummy = u32(-1),
 };
 
 enum ERelationType
 {
-    eRelationTypeFriend = u32(0),
-    eRelationTypeNeutral,
-    eRelationTypeEnemy,
-    eRelationTypeWorstEnemy,
-    eRelationTypeLast,
-    eRelationTypeDummy = u32(-1),
+	eRelationTypeFriend = u32(0),
+	eRelationTypeNeutral,
+	eRelationTypeEnemy,
+	eRelationTypeWorstEnemy,
+	eRelationTypeLast,
+	eRelationTypeDummy = u32(-1),
 };
 
 enum EHitType
 {
-    eHitTypeBurn = u32(0),
-    eHitTypeShock,
-    eHitTypeChemicalBurn,
-    eHitTypeRadiation,
-    eHitTypeTelepatic,
-    eHitTypeWound,
-    eHitTypeFireWound,
-    eHitTypeStrike,
-    eHitTypeExplosion,
-    eHitTypeWound_2, // knife's alternative fire
-    //      eHitTypePhysicStrike,
-    eHitTypeLightBurn,
-    eHitTypeMax,
+	eHitTypeBurn = u32(0),
+	eHitTypeShock,
+	eHitTypeChemicalBurn,
+	eHitTypeRadiation,
+	eHitTypeTelepatic,
+	eHitTypeWound,
+	eHitTypeFireWound,
+	eHitTypeStrike,
+	eHitTypeExplosion,
+	eHitTypeWound_2, // knife's alternative fire
+	//	  eHitTypePhysicStrike,
+	eHitTypeLightBurn,
+	eHitTypeMax,
 };
 
 enum EInfluenceType
 {
-    infl_rad = u32(0),
-    infl_fire,
-    infl_acid,
-    infl_psi,
-    infl_electra,
-    infl_max_count
+	infl_rad = u32(0),
+	infl_fire,
+	infl_acid,
+	infl_psi,
+	infl_electra,
+	infl_max_count
 };
 
 enum EConditionRestoreType
 {
-    eHealthRestoreSpeed = u32(0),
-    eSatietyRestoreSpeed,
-    ePowerRestoreSpeed,
-    eBleedingRestoreSpeed,
-    eRadiationRestoreSpeed,
-    eRestoreTypeMax,
+	eHealthRestoreSpeed = u32(0),
+	eSatietyRestoreSpeed,
+	ePowerRestoreSpeed,
+	eBleedingRestoreSpeed,
+	eRadiationRestoreSpeed,
+	eRestoreTypeMax,
 };
 
 enum ETakeType
 {
-    eTakeTypeAll,
-    eTakeTypeMin,
-    eTakeTypeRest,
+	eTakeTypeAll,
+	eTakeTypeMin,
+	eTakeTypeRest,
 };
 
 enum EWeaponPriorityType
 {
-    eWeaponPriorityTypeKnife = u32(0),
-    eWeaponPriorityTypeSecondary,
-    eWeaponPriorityTypePrimary,
-    eWeaponPriorityTypeGrenade,
-    eWeaponPriorityTypeDummy = u32(-1),
+	eWeaponPriorityTypeKnife = u32(0),
+	eWeaponPriorityTypeSecondary,
+	eWeaponPriorityTypePrimary,
+	eWeaponPriorityTypeGrenade,
+	eWeaponPriorityTypeDummy = u32(-1),
 };
 
 enum ECombatType
 {
-    eCombatTypeMonsterMonster = u32(0),
-    eCombatTypeMonsterAnomaly,
-    eCombatTypeAnomalyMonster,
-    eCombatTypeSmartTerrain,
-    eCombatTypeDummy = u32(-1),
+	eCombatTypeMonsterMonster = u32(0),
+	eCombatTypeMonsterAnomaly,
+	eCombatTypeAnomalyMonster,
+	eCombatTypeSmartTerrain,
+	eCombatTypeDummy = u32(-1),
 };
 
 enum EWeaponAddonStatus
 {
-    eAddonDisabled = 0,
-    eAddonPermanent = 1,
-    eAddonAttachable = 2
+	eAddonDisabled = 0,
+	eAddonPermanent = 1,
+	eAddonAttachable = 2
 };
 
 EHitType g_tfString2HitType(LPCSTR caHitType);

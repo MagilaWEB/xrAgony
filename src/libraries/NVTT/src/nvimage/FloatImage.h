@@ -228,8 +228,8 @@ inline uint FloatImage::indexClamp(int x, int y) const
 
 inline int repeat_remainder(int a, int b)
 {
-   if (a >= 0) return a % b;
-   else return (a + 1) % b + b - 1;
+	if (a >= 0) return a % b;
+	else return (a + 1) % b + b - 1;
 }
 
 inline uint FloatImage::indexRepeat(int x, int y) const

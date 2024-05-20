@@ -13,4 +13,4 @@
 using namespace luabind;
 
 SCRIPT_EXPORT(CALifeHumanBrain, (CALifeMonsterBrain),
-    { module(luaState)[class_<CALifeHumanBrain, CALifeMonsterBrain>("CALifeHumanBrain")]; });
+	{ module(luaState)[class_<CALifeHumanBrain, CALifeMonsterBrain>("CALifeHumanBrain")]; });

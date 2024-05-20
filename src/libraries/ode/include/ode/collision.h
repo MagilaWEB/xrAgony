@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 #ifndef _ODE_COLLISION_H_
@@ -173,8 +173,8 @@ ODE_API void dGeomSetQuaternion (dGeomID geom, const dQuaternion Q);
  * @param geom the geom to query.
  * @returns A pointer to the geom's position vector.
  * @remarks The returned value is a pointer to the geom's internal
- *          data structure. It is valid until any changes are made
- *          to the geom.
+ *		  data structure. It is valid until any changes are made
+ *		  to the geom.
  * @sa dBodyGetPosition
  * @ingroup collide
  */
@@ -192,8 +192,8 @@ ODE_API const dReal * dGeomGetPosition (dGeomID geom);
  * @param geom the geom to query.
  * @returns A pointer to the geom's rotation matrix.
  * @remarks The returned value is a pointer to the geom's internal
- *          data structure. It is valid until any changes are made
- *          to the geom.
+ *		  data structure. It is valid until any changes are made
+ *		  to the geom.
  * @sa dBodyGetRotation
  * @ingroup collide
  */
@@ -248,7 +248,7 @@ ODE_API int dGeomIsSpace (dGeomID geom);
  * @brief Query for the space containing a particular geom.
  * @param geom the geom to query
  * @returns The space that contains the geom, or NULL if the geom is
- *          not contained by a space.
+ *		  not contained by a space.
  * @ingroup collide
  */
 ODE_API dSpaceID dGeomGetSpace (dGeomID);
@@ -340,7 +340,7 @@ ODE_API unsigned long dGeomGetCollideBits (dGeomID);
  * although they can still be members of a space. New geoms are created in 
  * the enabled state. 
  *
- * @param geom   the geom to enable
+ * @param geom	the geom to enable
  * @sa dGeomDisable
  * @sa dGeomIsEnabled
  * @ingroup collide
@@ -355,7 +355,7 @@ ODE_API void dGeomEnable (dGeomID geom);
  * although they can still be members of a space. New geoms are created in 
  * the enabled state. 
  *
- * @param geom   the geom to disable
+ * @param geom	the geom to disable
  * @sa dGeomDisable
  * @sa dGeomIsEnabled
  * @ingroup collide
@@ -370,7 +370,7 @@ ODE_API void dGeomDisable (dGeomID geom);
  * although they can still be members of a space. New geoms are created in 
  * the enabled state. 
  *
- * @param geom   the geom to query
+ * @param geom	the geom to query
  * @returns Non-zero if the geom is enabled, zero otherwise.
  * @sa dGeomDisable
  * @sa dGeomIsEnabled
@@ -384,10 +384,10 @@ ODE_API int dGeomIsEnabled (dGeomID geom);
 /* collision detection */
 
 ODE_API int dCollide (dGeomID o1, dGeomID o2, int flags, dContactGeom *contact,
-	      int skip);
+		  int skip);
 ODE_API void dSpaceCollide (dSpaceID space, void *data, dNearCallback *callback);
 ODE_API void dSpaceCollide2 (dGeomID o1, dGeomID o2, void *data,
-		     dNearCallback *callback);
+			 dNearCallback *callback);
 
 /* ************************************************************************ */
 /* standard classes */
@@ -482,8 +482,8 @@ ODE_API void dClosestLineSegmentPoints (const dVector3 a1, const dVector3 a2,
 				dVector3 cp1, dVector3 cp2);
 
 ODE_API int dBoxTouchesBox (const dVector3 _p1, const dMatrix3 R1,
-		    const dVector3 side1, const dVector3 _p2,
-		    const dMatrix3 R2, const dVector3 side2);
+			const dVector3 side1, const dVector3 _p2,
+			const dMatrix3 R2, const dVector3 side2);
 
 ODE_API void dInfiniteAABB (dGeomID geom, dReal aabb[6]);
 ODE_API void dCloseODE(void);

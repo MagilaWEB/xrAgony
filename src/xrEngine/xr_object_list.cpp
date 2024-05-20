@@ -30,10 +30,10 @@ void CObjectList::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 	stats.FrameEnd();
 	float engineTotal = Device.GetStats().EngineTotal.result;
 	float percentage = 100.0f * stats.Update.result / engineTotal;
-	font.OutNext("Objects:      %2.2fms, %2.1f%%", stats.Update.result, percentage);
-	font.OutNext("- crow:       %d", stats.Crows);
-	font.OutNext("- active:     %d", stats.Active);
-	font.OutNext("- total:      %d", stats.Total);
+	font.OutNext("Objects:	  %2.2fms, %2.1f%%", stats.Update.result, percentage);
+	font.OutNext("- crow:		%d", stats.Crows);
+	font.OutNext("- active:	 %d", stats.Active);
+	font.OutNext("- total:	  %d", stats.Total);
 	if (alert && stats.Update.result > 3.0f)
 		alert->Print(font, "UpdateCL  > 3ms:  %3.1f", stats.Update.result);
 }

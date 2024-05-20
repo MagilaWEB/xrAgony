@@ -27,32 +27,32 @@
 
 CStateManagerController::CStateManagerController(CController* obj) : inherited(obj)
 {
-    add_state(eStateRest, new CStateMonsterRest<CController>(obj));
-    add_state(eStatePanic, new CStateMonsterPanic<CController>(obj));
-    add_state(eStateHearInterestingSound, new CStateMonsterHearInterestingSound<CController>(obj));
-    add_state(eStateHearDangerousSound, new CStateMonsterHearDangerousSound<CController>(obj));
-    add_state(eStateHitted, new CStateMonsterHitted<CController>(obj));
-    add_state(eStateAttack, new CStateControllerAttack<CController>(obj));
+	add_state(eStateRest, new CStateMonsterRest<CController>(obj));
+	add_state(eStatePanic, new CStateMonsterPanic<CController>(obj));
+	add_state(eStateHearInterestingSound, new CStateMonsterHearInterestingSound<CController>(obj));
+	add_state(eStateHearDangerousSound, new CStateMonsterHearDangerousSound<CController>(obj));
+	add_state(eStateHitted, new CStateMonsterHitted<CController>(obj));
+	add_state(eStateAttack, new CStateControllerAttack<CController>(obj));
 
-    add_state(eStateEat, new CStateMonsterEat<CController>(obj));
-    add_state(eStateCustom, new CStateControlHide<CController>(obj));
+	add_state(eStateEat, new CStateMonsterEat<CController>(obj));
+	add_state(eStateCustom, new CStateControlHide<CController>(obj));
 }
 
 bool CStateManagerController::check_control_start_conditions(ControlCom::EControlType type)
 {
-    if (type == ControlCom::eAntiAim)
-    {
-        return current_substate == eStateAttack_Run;
-    }
+	if (type == ControlCom::eAntiAim)
+	{
+		return current_substate == eStateAttack_Run;
+	}
 
-    return false;
+	return false;
 }
 
 CStateManagerController::~CStateManagerController() {}
 void CStateManagerController::reinit()
 {
-    inherited::reinit();
-    object->set_mental_state(CController::eStateIdle);
+	inherited::reinit();
+	object->set_mental_state(CController::eStateIdle);
 }
 
 #define FIND_ENEMY_TIME_ENEMY_HIDDEN 5000
@@ -60,38 +60,38 @@ void CStateManagerController::reinit()
 
 void CStateManagerController::execute()
 {
-    u32 state_id = u32(-1);
+	u32 state_id = u32(-1);
 
-    const CEntityAlive* enemy = object->EnemyMan.get_enemy();
+	const CEntityAlive* enemy = object->EnemyMan.get_enemy();
 
-    if (enemy)
-    {
-        state_id = eStateAttack;
-    }
-    else if (object->HitMemory.is_hit())
-    {
-        state_id = eStateHitted;
-    }
-    else if (object->hear_interesting_sound)
-    {
-        state_id = eStateHearInterestingSound;
-    }
-    else if (object->hear_dangerous_sound)
-    {
-        state_id = eStateHearDangerousSound;
-    }
-    else
-    {
-        if (can_eat())
-            state_id = eStateEat;
-        else
-            state_id = eStateRest;
-    }
+	if (enemy)
+	{
+		state_id = eStateAttack;
+	}
+	else if (object->HitMemory.is_hit())
+	{
+		state_id = eStateHitted;
+	}
+	else if (object->hear_interesting_sound)
+	{
+		state_id = eStateHearInterestingSound;
+	}
+	else if (object->hear_dangerous_sound)
+	{
+		state_id = eStateHearDangerousSound;
+	}
+	else
+	{
+		if (can_eat())
+			state_id = eStateEat;
+		else
+			state_id = eStateRest;
+	}
 
-    select_state(state_id);
+	select_state(state_id);
 
-    // выполнить текущее состояние
-    get_state_current()->execute();
+	// выполнить текущее состояние
+	get_state_current()->execute();
 
-    prev_substate = current_substate;
+	prev_substate = current_substate;
 }

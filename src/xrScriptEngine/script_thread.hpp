@@ -24,23 +24,23 @@ class XRSCRIPTENGINE_API CScriptThread : public CScriptStackTracker
 class XRSCRIPTENGINE_API CScriptThread
 #endif
 {
-    friend class CScriptEngine;
+	friend class CScriptEngine;
 
 private:
-    CScriptEngine* scriptEngine;
-    shared_str m_script_name;
-    int m_thread_reference;
-    bool m_active;
-    lua_State* m_virtual_machine;
+	CScriptEngine* scriptEngine;
+	shared_str m_script_name;
+	int m_thread_reference;
+	bool m_active;
+	lua_State* m_virtual_machine;
 
 private:
-    CScriptThread(CScriptEngine* scriptEngine, LPCSTR caNamespaceName, bool do_string = false, bool reload = false);
+	CScriptThread(CScriptEngine* scriptEngine, LPCSTR caNamespaceName, bool do_string = false, bool reload = false);
 
 public:
-    virtual ~CScriptThread();
-    bool update();
-    bool active() const { return m_active; }
-    shared_str script_name() const { return m_script_name; }
-    int thread_reference() const { return m_thread_reference; }
-    lua_State* lua() const { return m_virtual_machine; }
+	virtual ~CScriptThread();
+	bool update();
+	bool active() const { return m_active; }
+	shared_str script_name() const { return m_script_name; }
+	int thread_reference() const { return m_thread_reference; }
+	lua_State* lua() const { return m_virtual_machine; }
 };

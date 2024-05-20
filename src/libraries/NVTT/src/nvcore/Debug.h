@@ -31,17 +31,17 @@
 
 #else // NV_NO_ASSERT
 
-#   if NV_CC_MSVC
-        // @@ Does this work in msvc-6 and earlier?
-#       define nvDebugBreak()       __debugbreak()
-//#       define nvDebugBreak()        __asm { int 3 }
-#   elif NV_OS_ORBIS
-#       define nvDebugBreak()       __debugbreak()
-#   elif NV_CC_GNUC
-#       define nvDebugBreak()       __builtin_trap()
-#   else
-#       error "No nvDebugBreak()!"
-#   endif
+#	if NV_CC_MSVC
+		// @@ Does this work in msvc-6 and earlier?
+#		define nvDebugBreak()		__debugbreak()
+//#		define nvDebugBreak()		__asm { int 3 }
+#	elif NV_OS_ORBIS
+#		define nvDebugBreak()		__debugbreak()
+#	elif NV_CC_GNUC
+#		define nvDebugBreak()		__builtin_trap()
+#	else
+#		error "No nvDebugBreak()!"
+#	endif
 
 /*
 #	if NV_CC_MSVC

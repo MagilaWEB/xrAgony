@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////
-//  Module      : script_engine.cpp
-//  Created     : 01.04.2004
-//  Modified    : 01.04.2004
-//  Author      : Dmitriy Iassenev
+//  Module	  : script_engine.cpp
+//  Created	 : 01.04.2004
+//  Modified	: 01.04.2004
+//  Author	  : Dmitriy Iassenev
 //  Description : XRay Script Engine
 ////////////////////////////////////////////////////////////////////////////
 
@@ -131,7 +131,7 @@ void CScriptEngine::reinit()
 int CScriptEngine::vscript_log(LuaMessageType luaMessageType, LPCSTR caFormat, va_list marker)
 {
 	//if (!g_LuaDebug.test(1) && luaMessageType != LuaMessageType::Error)
-	//    return 0;
+	//	return 0;
 	LPCSTR S = "", SS = "";
 	LPSTR S1;
 	string4096 S2;
@@ -139,31 +139,31 @@ int CScriptEngine::vscript_log(LuaMessageType luaMessageType, LPCSTR caFormat, v
 	{
 	case LuaMessageType::Info:
 		S = "* [LUA] ";
-		SS = "[INFO]        ";
+		SS = "[INFO]		";
 		break;
 	case LuaMessageType::Error:
 		S = "! [LUA] ";
-		SS = "[ERROR]       ";
+		SS = "[ERROR]		";
 		break;
 	case LuaMessageType::Message:
 		S = "[LUA] ";
-		SS = "[MESSAGE]     ";
+		SS = "[MESSAGE]	 ";
 		break;
 	case LuaMessageType::HookCall:
 		S = "[LUA][HOOK_CALL] ";
-		SS = "[CALL]        ";
+		SS = "[CALL]		";
 		break;
 	case LuaMessageType::HookReturn:
 		S = "[LUA][HOOK_RETURN] ";
-		SS = "[RETURN]      ";
+		SS = "[RETURN]	  ";
 		break;
 	case LuaMessageType::HookLine:
 		S = "[LUA][HOOK_LINE] ";
-		SS = "[LINE]        ";
+		SS = "[LINE]		";
 		break;
 	case LuaMessageType::HookCount:
 		S = "[LUA][HOOK_COUNT] ";
-		SS = "[COUNT]       ";
+		SS = "[COUNT]		";
 		break;
 	case LuaMessageType::HookTailReturn:
 		S = "[LUA][HOOK_TAIL_RETURN] ";
@@ -177,7 +177,7 @@ int CScriptEngine::vscript_log(LuaMessageType luaMessageType, LPCSTR caFormat, v
 	Msg("%s", S2);
 	xr_strcpy(S2, SS);
 	S1 = S2 + xr_strlen(SS);
-	//    vsprintf(S1, caFormat, marker);
+	//	vsprintf(S1, caFormat, marker);
 	xr_strcat(S2, "\r\n");
 	m_output.w(S2, xr_strlen(S2));
 	return l_iResult;
@@ -246,7 +246,7 @@ void CScriptEngine::LogTable(lua_State* luaState, pcstr S, int level)
 		char sFullName[256];
 		lua_pushvalue(luaState, -2); //Debrovski: we should push clone of the key on top of stack
 		xr_sprintf(sname, "%s", lua_tostring(luaState, -1)); //...and execute lua_tostring on this clone, not original key
-		xr_sprintf(sFullName, "%s.%s", S, sname);            //..coz executing lua_tostring on original key(if not string) confuses lua_next
+		xr_sprintf(sFullName, "%s.%s", S, sname);			//..coz executing lua_tostring on original key(if not string) confuses lua_next
 		lua_pop(luaState, 1);
 		LogVariable(luaState, sFullName, level + 1);
 		lua_pop(luaState, 1); /* removes `value'; keeps `key' for next iteration */
@@ -1030,7 +1030,7 @@ void CScriptEngine::init(ExporterFunc exporterFunc, bool loadGlobalNamespace)
 	// is that lua hooks somehow make 'super' global unavailable (is's used all over the vanilla scripts).
 	// You can disable script profiler by commenting out the following lines in the beginning of _g.script:
 	// if (jit == nil) then
-	//     profiler.setup_hook()
+	//	 profiler.setup_hook()
 	// end
 	if (!strstr(Core.Params, "-nojit"))
 	{

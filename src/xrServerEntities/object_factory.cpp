@@ -14,8 +14,8 @@ CObjectFactory* g_object_factory = nullptr;
 
 CObjectFactory::CObjectFactory()
 {
-    m_actual = false;
-    register_classes();
+	m_actual = false;
+	register_classes();
 }
 
 CObjectFactory::~CObjectFactory() { delete_data(m_clsids); }

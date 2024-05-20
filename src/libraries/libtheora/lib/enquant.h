@@ -7,14 +7,14 @@ typedef struct oc_iquant oc_iquant;
 #define OC_QUANT_MAX_LOG (OC_Q57(OC_STATIC_ILOG_32(OC_QUANT_MAX)-1))
 
 /*Used to compute x/d via ((x*m>>16)+x>>l)+(x<0))
-   (i.e., one 16x16->16 mul, 2 shifts, and 2 adds).
+	(i.e., one 16x16->16 mul, 2 shifts, and 2 adds).
   This is not an approximation; for 16-bit x and d, it is exact.*/
 struct oc_iquant{
   ogg_int16_t m;
   ogg_int16_t l;
 };
 
-typedef oc_iquant        oc_iquant_table[64];
+typedef oc_iquant		oc_iquant_table[64];
 
 
 

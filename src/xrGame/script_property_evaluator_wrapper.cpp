@@ -14,44 +14,44 @@
 
 void CScriptPropertyEvaluatorWrapper::setup(CScriptGameObject* object, CPropertyStorage* storage)
 {
-    luabind::call_member<void>(this, "setup", object, storage);
+	luabind::call_member<void>(this, "setup", object, storage);
 }
 
 void CScriptPropertyEvaluatorWrapper::setup_static(
-    CScriptPropertyEvaluator* evaluator, CScriptGameObject* object, CPropertyStorage* storage)
+	CScriptPropertyEvaluator* evaluator, CScriptGameObject* object, CPropertyStorage* storage)
 {
-    evaluator->CScriptPropertyEvaluator::setup(object, storage);
+	evaluator->CScriptPropertyEvaluator::setup(object, storage);
 }
 
 bool CScriptPropertyEvaluatorWrapper::evaluate()
 {
-    try
-    {
-        return (luabind::call_member<bool>(this, "evaluate"));
-    }
+	try
+	{
+		return (luabind::call_member<bool>(this, "evaluate"));
+	}
 #ifdef DEBUG
-    catch (luabind::cast_failed& exception)
-    {
+	catch (luabind::cast_failed& exception)
+	{
 #ifdef LOG_ACTION
-        ::ScriptEngine->script_log(LuaMessageType::Error,
-            "SCRIPT RUNTIME ERROR : evaluator [%s] returns value with not a %s type!", m_evaluator_name,
-            exception.info().name());
+		::ScriptEngine->script_log(LuaMessageType::Error,
+			"SCRIPT RUNTIME ERROR : evaluator [%s] returns value with not a %s type!", m_evaluator_name,
+			exception.info().name());
 #else
-        ::ScriptEngine->script_log(LuaMessageType::Error,
-            "SCRIPT RUNTIME ERROR : evaluator returns value with not a %s type!", exception.info().name());
+		::ScriptEngine->script_log(LuaMessageType::Error,
+			"SCRIPT RUNTIME ERROR : evaluator returns value with not a %s type!", exception.info().name());
 #endif
-    }
+	}
 #endif
-    catch (...)
-    {
-        //Alundaio: m_evaluator_name
-        ::ScriptEngine->script_log(
-            LuaMessageType::Error, "SCRIPT RUNTIME ERROR : evaluator [%s] returns value with not a bool type!", m_evaluator_name);
-    }
-    return (false);
+	catch (...)
+	{
+		//Alundaio: m_evaluator_name
+		::ScriptEngine->script_log(
+			LuaMessageType::Error, "SCRIPT RUNTIME ERROR : evaluator [%s] returns value with not a bool type!", m_evaluator_name);
+	}
+	return (false);
 }
 
 bool CScriptPropertyEvaluatorWrapper::evaluate_static(CScriptPropertyEvaluator* evaluator)
 {
-    return (evaluator->CScriptPropertyEvaluator::evaluate());
+	return (evaluator->CScriptPropertyEvaluator::evaluate());
 }

@@ -4,53 +4,53 @@
 
 class XRCORE_API xrMemory
 {
-    // Additional 16 bytes of memory almost like in original xr_aligned_offset_malloc
-    // But for DEBUG we don't need this if we want to find memory problems
+	// Additional 16 bytes of memory almost like in original xr_aligned_offset_malloc
+	// But for DEBUG we don't need this if we want to find memory problems
 #ifdef DEBUG
-    const size_t reserved = 0;
+	const size_t reserved = 0;
 #else
-    const size_t reserved = 16;
+	const size_t reserved = 16;
 #endif
 
 public:
-    xrMemory();
-    void _initialize();
-    void _destroy();
+	xrMemory();
+	void _initialize();
+	void _destroy();
 
-    u32 stat_calls;
+	u32 stat_calls;
 
 public:
-    struct SProcessMemInfo
-    {
-        u64 PeakWorkingSetSize;
-        u64 WorkingSetSize;
-        u64 PagefileUsage;
-        u64 PeakPagefileUsage;
+	struct SProcessMemInfo
+	{
+		u64 PeakWorkingSetSize;
+		u64 WorkingSetSize;
+		u64 PagefileUsage;
+		u64 PeakPagefileUsage;
 
-        u64 TotalPhysicalMemory;
-        s64 FreePhysicalMemory;
-        u64 TotalVirtualMemory;
-        u32 MemoryLoad;
-    };
+		u64 TotalPhysicalMemory;
+		s64 FreePhysicalMemory;
+		u64 TotalVirtualMemory;
+		u32 MemoryLoad;
+	};
 
-    void GetProcessMemInfo(SProcessMemInfo& minfo);
-    size_t mem_usage();
-    void mem_compact();
-    inline void* mem_alloc(size_t size)
-    {
-        stat_calls++;
-        return malloc(size + reserved);
-    };
-    inline void* mem_realloc(void* ptr, size_t size)
-    {
-        stat_calls++;
-        return realloc(ptr, size + reserved);
-    };
-    inline void mem_free(void* ptr)
-    {
-        stat_calls++;
-        free(ptr);
-    };
+	void GetProcessMemInfo(SProcessMemInfo& minfo);
+	size_t mem_usage();
+	void mem_compact();
+	inline void* mem_alloc(size_t size)
+	{
+		stat_calls++;
+		return malloc(size + reserved);
+	};
+	inline void* mem_realloc(void* ptr, size_t size)
+	{
+		stat_calls++;
+		return realloc(ptr, size + reserved);
+	};
+	inline void mem_free(void* ptr)
+	{
+		stat_calls++;
+		free(ptr);
+	};
 };
 
 extern XRCORE_API xrMemory Memory;
@@ -73,24 +73,24 @@ inline void operator delete(void* ptr) noexcept { Memory.mem_free(ptr); }
 template <class T>
 inline void xr_delete(T*& ptr) noexcept
 {
-    delete ptr;
-    ptr = nullptr;
+	delete ptr;
+	ptr = nullptr;
 }
 
 // generic "C"-like allocations/deallocations
 template <class T>
 inline T* xr_alloc(size_t count)
 {
-    return (T*)Memory.mem_alloc(count * sizeof(T));
+	return (T*)Memory.mem_alloc(count * sizeof(T));
 }
 template <class T>
 inline void xr_free(T*& ptr) noexcept
 {
-    if (ptr)
-    {
-        Memory.mem_free((void*)ptr);
-        ptr = nullptr;
-    }
+	if (ptr)
+	{
+		Memory.mem_free((void*)ptr);
+		ptr = nullptr;
+	}
 }
 inline void* xr_malloc(size_t size) { return Memory.mem_alloc(size); }
 inline void* xr_realloc(void* ptr, size_t size) { return Memory.mem_realloc(ptr, size); }

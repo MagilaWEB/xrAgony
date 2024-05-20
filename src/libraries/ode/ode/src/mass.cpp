@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 #include <ode/config.h>
@@ -36,12 +36,12 @@ static int checkMass (dMass *m)
   int i;
 
   if (m->mass <= 0) {
-    dDEBUGMSG ("mass must be > 0");
-    return 0;
+	dDEBUGMSG ("mass must be > 0");
+	return 0;
   }
   if (!dIsPositiveDefinite (m->I,3)) {
-    dDEBUGMSG ("inertia must be positive definite");
-    return 0;
+	dDEBUGMSG ("inertia must be positive definite");
+	return 0;
   }
 
   // verify that the center of mass position is consistent with the mass
@@ -49,11 +49,11 @@ static int checkMass (dMass *m)
   // the center of mass is also positive definite. from the comment in
   // dMassTranslate(), if the body is translated so that its center of mass
   // is at the point of reference, then the new inertia is:
-  //   I + mass*crossmat(c)^2
+  //	I + mass*crossmat(c)^2
   // note that requiring this to be positive definite is exactly equivalent
   // to requiring that the spatial inertia matrix
-  //   [ mass*eye(3,3)   M*crossmat(c)^T ]
-  //   [ M*crossmat(c)   I               ]
+  //	[ mass*eye(3,3)	M*crossmat(c)^T ]
+  //	[ M*crossmat(c)	I				]
   // is positive definite, given that I is PD and mass>0. see the theorem
   // about partitioned PD matrices for proof.
 
@@ -65,8 +65,8 @@ static int checkMass (dMass *m)
   for (i=4; i<7; i++) I2[i] = m->I[i] + m->mass*I2[i];
   for (i=8; i<11; i++) I2[i] = m->I[i] + m->mass*I2[i];
   if (!dIsPositiveDefinite (I2,3)) {
-    dDEBUGMSG ("center of mass inconsistent with mass parameters");
-    return 0;
+	dDEBUGMSG ("center of mass inconsistent with mass parameters");
+	return 0;
   }
   return 1;
 }
@@ -129,7 +129,7 @@ void dMassSetSphereTotal (dMass *m, dReal total_mass, dReal radius)
 
 
 void dMassSetCapsule (dMass *m, dReal density, int direction,
-			     dReal radius, dReal length)
+				 dReal radius, dReal length)
 {
   dReal M1,M2,Ia,Ib;
   dAASSERT (m);
@@ -139,7 +139,7 @@ void dMassSetCapsule (dMass *m, dReal density, int direction,
   M2 = (REAL(4.0)/REAL(3.0))*M_PI*radius*radius*radius*density;	// total cap mass
   m->mass = M1+M2;
   Ia = M1*(REAL(0.25)*radius*radius + (REAL(1.0)/REAL(12.0))*length*length) +
-    M2*(REAL(0.4)*radius*radius + REAL(0.375)*radius*length + REAL(0.25)*length*length);
+	M2*(REAL(0.4)*radius*radius + REAL(0.375)*radius*length + REAL(0.25)*length*length);
   Ib = (M1*REAL(0.5) + M2*REAL(0.4))*radius*radius;
   m->_I(0,0) = Ia;
   m->_I(1,1) = Ia;
@@ -153,7 +153,7 @@ void dMassSetCapsule (dMass *m, dReal density, int direction,
 
 
 void dMassSetCapsuleTotal (dMass *m, dReal total_mass, int direction,
-			     dReal a, dReal b)
+				 dReal a, dReal b)
 {
   dMassSetCapsule (m, 1.0, direction, a, b);
   dMassAdjust (m, total_mass);
@@ -161,14 +161,14 @@ void dMassSetCapsuleTotal (dMass *m, dReal total_mass, int direction,
 
 
 void dMassSetCylinder (dMass *m, dReal density, int direction,
-		       dReal radius, dReal length)
+				dReal radius, dReal length)
 {
   dMassSetCylinderTotal (m, M_PI*radius*radius*length*density,
-			    direction, radius, length);
+				direction, radius, length);
 }
 
 void dMassSetCylinderTotal (dMass *m, dReal total_mass, int direction,
-			    dReal radius, dReal length)
+				dReal radius, dReal length)
 {
   dReal r2,I;
   dAASSERT (m);
@@ -195,7 +195,7 @@ void dMassSetBox (dMass *m, dReal density,
 
 
 void dMassSetBoxTotal (dMass *m, dReal total_mass,
-		       dReal lx, dReal ly, dReal lz)
+				dReal lx, dReal ly, dReal lz)
 {
   dAASSERT (m);
   dMassSetZero (m);
@@ -228,7 +228,7 @@ void dMassTranslate (dMass *m, dReal x, dReal y, dReal z)
   // if the body is translated by `a' relative to its point of reference,
   // the new inertia about the point of reference is:
   //
-  //   I + mass*(crossmat(c)^2 - crossmat(c+a)^2)
+  //	I + mass*(crossmat(c)^2 - crossmat(c+a)^2)
   //
   // where c is the existing center of mass and I is the old inertia.
 
@@ -249,7 +249,7 @@ void dMassTranslate (dMass *m, dReal x, dReal y, dReal z)
   dMULTIPLY0_333 (t1,ahat,ahat);
   dMULTIPLY0_333 (t2,chat,chat);
   for (i=0; i<3; i++) for (j=0; j<3; j++)
-    m->_I(i,j) += m->mass * (t2[i*4+j]-t1[i*4+j]);
+	m->_I(i,j) += m->mass * (t2[i*4+j]-t1[i*4+j]);
 
   // ensure perfect symmetry
   m->_I(1,0) = m->_I(0,1);
@@ -272,7 +272,7 @@ void dMassRotate (dMass *m, const dMatrix3 R)
   // if the body is rotated by `R' relative to its point of reference,
   // the new inertia about the point of reference is:
   //
-  //   R * I * R'
+  //	R * I * R'
   //
   // where I is the old inertia.
 

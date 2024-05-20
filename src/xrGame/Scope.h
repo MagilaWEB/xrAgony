@@ -10,9 +10,9 @@
 class CScope : public CInventoryItemObject
 {
 private:
-    typedef CInventoryItemObject inherited;
+	typedef CInventoryItemObject inherited;
 
 public:
-    CScope();
-    virtual ~CScope();
+	CScope();
+	virtual ~CScope();
 };

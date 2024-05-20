@@ -10,10 +10,10 @@
 
 IC void CEF_Storage::alife_evaluation(bool value)
 {
-    if (value)
-        non_alife().clear();
-    else
-        alife().clear();
+	if (value)
+		non_alife().clear();
+	else
+		alife().clear();
 }
 
 IC CNonALifeParams& CEF_Storage::non_alife() { return (m_non_alife_params); }

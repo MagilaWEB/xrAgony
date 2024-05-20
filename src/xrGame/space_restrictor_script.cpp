@@ -6,10 +6,10 @@ using namespace luabind;
 
 SCRIPT_EXPORT(CSpaceRestrictor, (CGameObject),
 {
-    module(luaState)
-    [
-        class_<CSpaceRestrictor, CGameObject>("CSpaceRestrictor")
-            .def(constructor<>())
-            .def("Radius", &CSpaceRestrictor::Radius)
-    ];
+	module(luaState)
+	[
+		class_<CSpaceRestrictor, CGameObject>("CSpaceRestrictor")
+			.def(constructor<>())
+			.def("Radius", &CSpaceRestrictor::Radius)
+	];
 });

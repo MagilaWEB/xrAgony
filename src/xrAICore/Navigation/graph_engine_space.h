@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////
-//  Module      : graph_engine_space.h
-//  Created     : 21.03.2002
-//  Modified    : 26.11.2003
-//  Author      : Dmitriy Iassenev
+//  Module	  : graph_engine_space.h
+//  Created	 : 21.03.2002
+//  Modified	: 26.11.2003
+//  Author	  : Dmitriy Iassenev
 //  Description : Graph engine
 ////////////////////////////////////////////////////////////////////////////
 
@@ -48,16 +48,16 @@ using _solver_value_type = bool;
 
 struct CSolverConditionValue
 {
-    _solver_condition_type m_condition;
-    _solver_value_type m_value;
+	_solver_condition_type m_condition;
+	_solver_value_type m_value;
 
-    CSolverConditionValue(const _solver_condition_type& condition, const _solver_value_type& value)
-    {
-        m_condition = condition;
-        m_value = value;
-    }
+	CSolverConditionValue(const _solver_condition_type& condition, const _solver_value_type& value)
+	{
+		m_condition = condition;
+		m_value = value;
+	}
 
-    bool operator==(const _solver_condition_type& condition) const { return condition == m_condition; }
+	bool operator==(const _solver_condition_type& condition) const { return condition == m_condition; }
 };
 
 using CSolverConditionStorage = xr_vector<CSolverConditionValue>;

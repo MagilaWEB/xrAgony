@@ -44,9 +44,9 @@ public:
 };
 
 #define DEF_LIST(N, T)\
-    using N = xr_list<T>;\
-    using N##_it = N::iterator;
+	using N = xr_list<T>;\
+	using N##_it = N::iterator;
 
 #define DEFINE_LIST(T, N, I)\
-    using N = xr_list<T>;\
-    using I = N::iterator;
+	using N = xr_list<T>;\
+	using I = N::iterator;

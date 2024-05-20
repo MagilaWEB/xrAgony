@@ -1,13 +1,13 @@
 /********************************************************************
- *                                                                  *
- * THIS FILE IS PART OF THE OggVorbis SOFTWARE CODEC SOURCE CODE.   *
- * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
+ *																  *
+ * THIS FILE IS PART OF THE OggVorbis SOFTWARE CODEC SOURCE CODE.	*
+ * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS	 *
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
- * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
- *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007             *
- * by the Xiph.Org Foundation https://xiph.org/                     *
- *                                                                  *
+ * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.		*
+ *																  *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007			 *
+ * by the Xiph.Org Foundation https://xiph.org/					 *
+ *																  *
  ********************************************************************
 
  function: registry for time, floor, res backends and channel mappings
@@ -24,8 +24,8 @@
 #define VI_RESB 3
 #define VI_MAPB 1
 
-extern const vorbis_func_floor     *const _floor_P[];
-extern const vorbis_func_residue   *const _residue_P[];
-extern const vorbis_func_mapping   *const _mapping_P[];
+extern const vorbis_func_floor	 *const _floor_P[];
+extern const vorbis_func_residue	*const _residue_P[];
+extern const vorbis_func_mapping	*const _mapping_P[];
 
 #endif

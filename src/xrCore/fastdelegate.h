@@ -1,58 +1,58 @@
-﻿//                      FastDelegate.hpp
+﻿//					  FastDelegate.hpp
 //  Efficient delegates in C++ that generate only two lines of asm code!
 //  Documentation is found at http://www.codeproject.com/cpp/FastDelegate.asp
 //
-//                      - Don Clugston, Mar 2004.
-//      Major contributions were made by Jody Hagins.
-//      Version 2.0 by Pa�l Jim�nez.
-//      Version 2.0.1 by Benjamin YanXiang Huang
+//					  - Don Clugston, Mar 2004.
+//	  Major contributions were made by Jody Hagins.
+//	  Version 2.0 by Pa�l Jim�nez.
+//	  Version 2.0.1 by Benjamin YanXiang Huang
 //
 // History:
 // 24-Apr-04 1.0  * Submitted to CodeProject.
 // 28-Apr-04 1.1  * Prevent most unsafe uses of evil static function hack.
-//                * Improved syntax for horrible_cast (thanks Paul Bludov).
-//                * Tested on Metrowerks MWCC and Intel ICL (IA32)
-//                * Compiled, but not run, on Comeau C++ and Intel Itanium ICL.
+//				* Improved syntax for horrible_cast (thanks Paul Bludov).
+//				* Tested on Metrowerks MWCC and Intel ICL (IA32)
+//				* Compiled, but not run, on Comeau C++ and Intel Itanium ICL.
 //  27-Jun-04 1.2 * Now works on Borland C++ Builder 5.5
-//                * Now works on /clr "managed C++" code on VC7, VC7.1
-//                * Comeau C++ now compiles without warnings.
-//                * Prevent the virtual inheritance case from being used on
-//                    VC6 and earlier, which generate incorrect code.
-//                * Improved warning and error messages. Non-standard hacks
-//                   now have compile-time checks to make them safer.
-//                * implicit_cast used instead of static_cast in many cases.
-//                * If calling a const member function, a const class pointer can be used.
-//                * MakeDelegate() global helper function added to simplify pass-by-value.
-//                * Added fastdelegate.clear()
+//				* Now works on /clr "managed C++" code on VC7, VC7.1
+//				* Comeau C++ now compiles without warnings.
+//				* Prevent the virtual inheritance case from being used on
+//					VC6 and earlier, which generate incorrect code.
+//				* Improved warning and error messages. Non-standard hacks
+//					now have compile-time checks to make them safer.
+//				* implicit_cast used instead of static_cast in many cases.
+//				* If calling a const member function, a const class pointer can be used.
+//				* MakeDelegate() global helper function added to simplify pass-by-value.
+//				* Added fastdelegate.clear()
 // 16-Jul-04 1.2.1* Workaround for gcc bug (const member function pointers in templates)
 // 30-Oct-04 1.3  * Support for (non-void) return values.
-//                * No more workarounds in client code!
-//                   MSVC and Intel now use a clever hack invented by John Dlugosz:
-//                   - The FASTDELEGATEDECLARE workaround is no longer necessary.
-//                   - No more warning messages for VC6
-//                * Less use of macros. Error messages should be more comprehensible.
-//                * Added include guards
-//                * Added FastDelegate::empty() to test if invocation is safe (Thanks Neville Franks).
-//                * Now tested on VS 2005 Express Beta, PGI C++
+//				* No more workarounds in client code!
+//					MSVC and Intel now use a clever hack invented by John Dlugosz:
+//					- The FASTDELEGATEDECLARE workaround is no longer necessary.
+//					- No more warning messages for VC6
+//				* Less use of macros. Error messages should be more comprehensible.
+//				* Added include guards
+//				* Added FastDelegate::empty() to test if invocation is safe (Thanks Neville Franks).
+//				* Now tested on VS 2005 Express Beta, PGI C++
 // 24-Dec-04 1.4  * Added DelegateMemento, to allow collections of disparate delegates.
-//                * <,>,<=,>= comparison operators to allow storage in ordered containers.
-//                * Substantial reduction of code size, especially the 'Closure' class.
-//                * Standardised all the compiler-specific workarounds.
-//                * MFP conversion now works for CodePlay (but not yet supported in the full code).
-//                * Now compiles without warnings on _any_ supported compiler, including BCC 5.5.1
-//                * New syntax: FastDelegate< int (char *, double) >.
+//				* <,>,<=,>= comparison operators to allow storage in ordered containers.
+//				* Substantial reduction of code size, especially the 'Closure' class.
+//				* Standardised all the compiler-specific workarounds.
+//				* MFP conversion now works for CodePlay (but not yet supported in the full code).
+//				* Now compiles without warnings on _any_ supported compiler, including BCC 5.5.1
+//				* New syntax: FastDelegate< int (char *, double) >.
 // 14-Feb-05 1.4.1* Now treats =0 as equivalent to .clear(), ==0 as equivalent to .empty(). (Thanks elfric).
-//                * Now tested on Intel ICL for AMD64, VS2005 Beta for AMD64 and Itanium.
+//				* Now tested on Intel ICL for AMD64, VS2005 Beta for AMD64 and Itanium.
 // 30-Mar-05 1.5  * Safebool idiom: "if (dg)" is now equivalent to "if (!dg.empty())"
-//                * Fully supported by CodePlay VectorC
-//                * Bugfix for Metrowerks: empty() was buggy because a valid MFP can be 0 on MWCC!
-//                * More optimal assignment,== and != operators for static function pointers.
+//				* Fully supported by CodePlay VectorC
+//				* Bugfix for Metrowerks: empty() was buggy because a valid MFP can be 0 on MWCC!
+//				* More optimal assignment,== and != operators for static function pointers.
 // 06-Feb-13 2.0  * GetMemento is now const
-//                * Added hash method that makes use of new unchecked function unsafe_horrible_cast
-//                * Removed VC6 code
-//                * Use variadic templates (C++11)
-//                * Added MakeDelegate for plain function pointers
-//                * Use static_assert for compile-time checks (C++11)
+//				* Added hash method that makes use of new unchecked function unsafe_horrible_cast
+//				* Removed VC6 code
+//				* Use variadic templates (C++11)
+//				* Added MakeDelegate for plain function pointers
+//				* Use static_assert for compile-time checks (C++11)
 // 21-Jan-14 2.0.1* Fixed 2 typos (line 393 & 429) where a static_cast should have been a static_assert.
 // 21-Jun-14 2.0.2* Fixed incorrect union member name in the SimplifyMemFunc struct.
 
@@ -61,7 +61,7 @@
 #include <cstring> // to allow <,> comparisons
 
 ////////////////////////////////////////////////////////////////////////////////
-//                      Configuration options
+//					  Configuration options
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -78,7 +78,7 @@
 //#define FASTDELEGATE_ALLOW_FUNCTION_TYPE_SYNTAX
 
 ////////////////////////////////////////////////////////////////////////////////
-//                      Compiler identification for workarounds
+//					  Compiler identification for workarounds
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -122,18 +122,18 @@
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-//                      General tricks used in this code
+//					  General tricks used in this code
 //
 // (a) Error messages are generated by typdefing an array of negative size to
-//     generate compile-time errors.
+//	 generate compile-time errors.
 // (b) Warning messages on MSVC are generated by declaring unused variables, and
-//      enabling the "variable XXX is never used" warning.
+//	  enabling the "variable XXX is never used" warning.
 // (c) Unions are used in a few compiler-specific cases to perform illegal casts.
 // (d) For Microsoft and Intel, when adjusting the 'this' pointer, it's cast to
-//     (char *) first to ensure that the correct number of *bytes* are added.
+//	 (char *) first to ensure that the correct number of *bytes* are added.
 //
 ////////////////////////////////////////////////////////////////////////////////
-//                      Helper templates
+//					  Helper templates
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -142,7 +142,7 @@ namespace fastdelegate
 	namespace detail
 	{ // we'll hide the implementation details in a nested namespace.
 
-	//      implicit_cast< >
+	//	  implicit_cast< >
 	// I believe this was originally going to be in the C++ standard but
 	// was left out by accident. It's even milder than static_cast.
 	// I use it instead of static_cast<> to emphasize that I'm not doing
@@ -154,7 +154,7 @@ namespace fastdelegate
 			return input;
 		}
 
-		//      horrible_cast< >
+		//	  horrible_cast< >
 		// This is truly evil. It completely subverts C++'s type system, allowing you
 		// to cast from any class to any other class. Technically, using a union
 		// to perform the cast is undefined behaviour (even in C). But we can see if
@@ -192,7 +192,7 @@ namespace fastdelegate
 		}
 
 		////////////////////////////////////////////////////////////////////////////////
-		//                      Workarounds
+		//					  Workarounds
 		//
 		////////////////////////////////////////////////////////////////////////////////
 
@@ -236,9 +236,9 @@ namespace fastdelegate
 		};
 
 		////////////////////////////////////////////////////////////////////////////////
-		//                      Fast Delegates, part 1:
+		//					  Fast Delegates, part 1:
 		//
-		//      Conversion of member function pointer to a standard form
+		//	  Conversion of member function pointer to a standard form
 		//
 		////////////////////////////////////////////////////////////////////////////////
 
@@ -271,7 +271,7 @@ namespace fastdelegate
 		// The size of a single inheritance member function pointer.
 		constexpr int SINGLE_MEMFUNCPTR_SIZE = sizeof(void(GenericClass::*)());
 
-		//                      SimplifyMemFunc< >::Convert()
+		//					  SimplifyMemFunc< >::Convert()
 		//
 		//  A template function that converts an arbitrary member function pointer into the
 		//  simplest possible form of member function pointer, using a supplied 'this' pointer.
@@ -317,9 +317,9 @@ namespace fastdelegate
 		};
 
 		////////////////////////////////////////////////////////////////////////////////
-		//                      Fast Delegates, part 1b:
+		//					  Fast Delegates, part 1b:
 		//
-		//                  Workarounds for Microsoft and Intel
+		//				  Workarounds for Microsoft and Intel
 		//
 		////////////////////////////////////////////////////////////////////////////////
 
@@ -474,7 +474,7 @@ namespace fastdelegate
 	} // namespace detail
 
 	////////////////////////////////////////////////////////////////////////////////
-	//                      Fast Delegates, part 2:
+	//					  Fast Delegates, part 2:
 	//
 	//  Define the delegate storage, and cope with static functions
 	//
@@ -485,37 +485,37 @@ namespace fastdelegate
 	// the function pointed to.
 	// It supplies comparison operators so that it can be stored in STL collections.
 	// It cannot be set to anything other than null, nor invoked directly:
-	//   it must be converted to a specific delegate.
+	//	it must be converted to a specific delegate.
 
 	// Implementation:
 	// There are two possible implementations: the Safe method and the Evil method.
-	//              DelegateMemento - Safe version
+	//			  DelegateMemento - Safe version
 	//
 	// This implementation is standard-compliant, but a bit tricky.
 	// A static function pointer is stored inside the class.
 	// Here are the valid values:
 	// +-- Static pointer --+--pThis --+-- pMemFunc-+-- Meaning------+
-	// |   0                |  0       |   0        | Empty          |
-	// |   !=0              |(dontcare)|  Invoker   | Static function|
-	// |   0                |  !=0     |  !=0*      | Method call    |
+	// |	0				|  0		|	0		| Empty		  |
+	// |	!=0			  |(dontcare)|  Invoker	| Static function|
+	// |	0				|  !=0	 |  !=0*	  | Method call	|
 	// +--------------------+----------+------------+----------------+
 	//  * For Metrowerks, this can be 0. (first virtual function in a
-	//       single_inheritance class).
+	//		single_inheritance class).
 	// When stored stored inside a specific delegate, the 'dontcare' entries are replaced
 	// with a reference to the delegate itself. This complicates the = and == operators
 	// for the delegate class.
 
-	//              DelegateMemento - Evil version
+	//			  DelegateMemento - Evil version
 	//
 	// For compilers where data pointers are at least as big as code pointers, it is
 	// possible to store the function pointer in the this pointer, using another
 	// horrible_cast. In this case the DelegateMemento implementation is simple:
 	// +--pThis --+-- pMemFunc-+-- Meaning---------------------+
-	// |    0     |  0         | Empty                         |
-	// |  !=0     |  !=0*      | Static function or method call|
+	// |	0	 |  0		 | Empty						 |
+	// |  !=0	 |  !=0*	  | Static function or method call|
 	// +----------+------------+-------------------------------+
 	//  * For Metrowerks, this can be 0. (first virtual function in a
-	//       single_inheritance class).
+	//		single_inheritance class).
 	// Note that the Sun C++ and MSVC documentation explicitly state that they
 	// support static_cast between void * and function pointers.
 
@@ -624,16 +624,16 @@ namespace fastdelegate
 		}
 	};
 
-	//                      ClosurePtr<>
+	//					  ClosurePtr<>
 	//
 	// A private wrapper class that adds function signatures to DelegateMemento.
 	// It's the class that does most of the actual work.
 	// The signatures are specified by:
 	// GenericMemFunc: must be a type of GenericClass member function pointer.
 	// StaticFuncPtr:  must be a type of function pointer with the same signature
-	//                 as GenericMemFunc.
+	//				 as GenericMemFunc.
 	// UnvoidStaticFuncPtr: is the same as StaticFuncPtr, except on VC6
-	//                 where it never returns void (returns DefaultVoid instead).
+	//				 where it never returns void (returns DefaultVoid instead).
 
 	// An outer class, FastDelegateN<>, handles the invoking and creates the
 	// necessary typedefs.
@@ -693,7 +693,7 @@ namespace fastdelegate
 
 #if !defined(FASTDELEGATE_USESTATICFUNCTIONHACK)
 
-	//              ClosurePtr<> - Safe version
+	//			  ClosurePtr<> - Safe version
 	//
 	// This implementation is standard-compliant, but a bit tricky.
 	// I store the function pointer inside the class, and the delegate then
@@ -732,7 +732,7 @@ namespace fastdelegate
 			inline UnvoidStaticFuncPtr GetStaticFunction() const { return reinterpret_cast<UnvoidStaticFuncPtr>(m_pStaticFunction); }
 #else
 
-	//              ClosurePtr<> - Evil version
+	//			  ClosurePtr<> - Evil version
 	//
 	// For compilers where data pointers are at least as big as code pointers, it is
 	// possible to store the function pointer in the this pointer, using another
@@ -772,9 +772,9 @@ namespace fastdelegate
 				static_assert(sizeof(GenericClass*) == sizeof(function_to_bind), "Cannot use evil method");
 				m_pthis = horrible_cast<GenericClass*>(function_to_bind);
 				// MSVC, SunC++ and DMC accept the following (non-standard) code:
-				//      m_pthis = static_cast<GenericClass *>(static_cast<void *>(function_to_bind));
+				//	  m_pthis = static_cast<GenericClass *>(static_cast<void *>(function_to_bind));
 				// BCC32, Comeau and DMC accept this method. MSVC7.1 needs __int64 instead of long
-				//      m_pthis = reinterpret_cast<GenericClass *>(reinterpret_cast<long>(function_to_bind));
+				//	  m_pthis = reinterpret_cast<GenericClass *>(reinterpret_cast<long>(function_to_bind));
 			}
 			// ******** EVIL, EVIL CODE! *******
 			// This function will be called with an invalid 'this' pointer!!
@@ -805,16 +805,16 @@ namespace fastdelegate
 	} // namespace detail
 
 	////////////////////////////////////////////////////////////////////////////////
-	//                      Fast Delegates, part 3:
+	//					  Fast Delegates, part 3:
 	//
-	//              Wrapper classes to ensure type safety
+	//			  Wrapper classes to ensure type safety
 	//
 	////////////////////////////////////////////////////////////////////////////////
 
 	// Once we have the member function conversion templates, it's easy to make the
 	// wrapper classes. So that they will work with as many compilers as possible,
 	// the classes are of the form
-	//   FastDelegate3<int, char *, double>
+	//	FastDelegate3<int, char *, double>
 	// They can cope with any combination of parameters. The max number of parameters
 	// allowed is 8, but it is trivial to increase this limit.
 	// Note that we need to treat const member functions seperately.
@@ -826,9 +826,9 @@ namespace fastdelegate
 	// This is the reason for the use of "implicit_cast<X*>(pthis)" in the code below.
 	// If CDerivedClass is derived from CBaseClass, but doesn't override SimpleVirtualFunction,
 	// without this trick you'd need to write:
-	//      MyDelegate(static_cast<CBaseClass *>(&d), &CDerivedClass::SimpleVirtualFunction);
+	//	  MyDelegate(static_cast<CBaseClass *>(&d), &CDerivedClass::SimpleVirtualFunction);
 	// but with the trick you can write
-	//      MyDelegate(&d, &CDerivedClass::SimpleVirtualFunction);
+	//	  MyDelegate(&d, &CDerivedClass::SimpleVirtualFunction);
 
 	// RetType is the type the compiler uses in compiling the template. For VC6,
 	// it cannot be void. DesiredRetType is the real type which is returned from
@@ -926,13 +926,13 @@ namespace fastdelegate
 	};
 
 	////////////////////////////////////////////////////////////////////////////////
-	//                      Fast Delegates, part 4:
+	//					  Fast Delegates, part 4:
 	//
-	//              FastDelegate<> class (Original author: Jody Hagins)
+	//			  FastDelegate<> class (Original author: Jody Hagins)
 	//  Allows boost::function style syntax like:
-	//          FastDelegate< double (int, long) >
+	//		  FastDelegate< double (int, long) >
 	// instead of:
-	//          FastDelegate2< int, long, double >
+	//		  FastDelegate2< int, long, double >
 	//
 	////////////////////////////////////////////////////////////////////////////////
 
@@ -973,13 +973,13 @@ namespace fastdelegate
 #endif // FASTDELEGATE_ALLOW_FUNCTION_TYPE_SYNTAX
 
 	////////////////////////////////////////////////////////////////////////////////
-	//                      Fast Delegates, part 5:
+	//					  Fast Delegates, part 5:
 	//
-	//              MakeDelegate() helper function
+	//			  MakeDelegate() helper function
 	//
-	//          MakeDelegate(&x, &X::func) returns a fastdelegate of the type
-	//          necessary for calling x.func() with the correct number of arguments.
-	//          This makes it possible to eliminate many typedefs from user code.
+	//		  MakeDelegate(&x, &X::func) returns a fastdelegate of the type
+	//		  necessary for calling x.func() with the correct number of arguments.
+	//		  This makes it possible to eliminate many typedefs from user code.
 	//
 	////////////////////////////////////////////////////////////////////////////////
 

@@ -26,13 +26,13 @@ enum EMovementType;
 class CStalkerActionGetItemToKill : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionGetItemToKill(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionGetItemToKill(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -42,13 +42,13 @@ public:
 class CStalkerActionMakeItemKilling : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionMakeItemKilling(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionMakeItemKilling(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -58,14 +58,14 @@ public:
 class CStalkerActionRetreatFromEnemy : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionRetreatFromEnemy(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
-    virtual _edge_value_type weight(const CSConditionState& condition0, const CSConditionState& condition1) const;
+	CStalkerActionRetreatFromEnemy(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
+	virtual _edge_value_type weight(const CSConditionState& condition0, const CSConditionState& condition1) const;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -75,19 +75,19 @@ public:
 class CStalkerActionGetReadyToKill : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 private:
-    MonsterSpace::EBodyState m_body_state;
-    MonsterSpace::EMovementType m_movement_type;
-    bool m_affect_properties;
-    bool m_enable_enemy_change;
+	MonsterSpace::EBodyState m_body_state;
+	MonsterSpace::EMovementType m_movement_type;
+	bool m_affect_properties;
+	bool m_enable_enemy_change;
 
 public:
-    CStalkerActionGetReadyToKill(bool affect_properties, CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionGetReadyToKill(bool affect_properties, CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -97,13 +97,13 @@ public:
 class CStalkerActionKillEnemy : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionKillEnemy(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionKillEnemy(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -113,17 +113,17 @@ public:
 class CStalkerActionTakeCover : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 private:
-    MonsterSpace::EBodyState m_body_state;
-    MonsterSpace::EMovementType m_movement_type;
+	MonsterSpace::EBodyState m_body_state;
+	MonsterSpace::EMovementType m_movement_type;
 
 public:
-    CStalkerActionTakeCover(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionTakeCover(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -133,17 +133,17 @@ public:
 class CStalkerActionLookOut : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 private:
-    u32 m_last_change_time;
-    CRandom32 m_crouch_look_out_random;
+	u32 m_last_change_time;
+	CRandom32 m_crouch_look_out_random;
 
 public:
-    CStalkerActionLookOut(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionLookOut(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -153,13 +153,13 @@ public:
 class CStalkerActionHoldPosition : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionHoldPosition(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionHoldPosition(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -169,13 +169,13 @@ public:
 class CStalkerActionGetDistance : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionGetDistance(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionGetDistance(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -185,16 +185,16 @@ public:
 class CStalkerActionDetourEnemy : public CStalkerActionCombatBase
 {
 private:
-    const CCoverPoint* m_enemy_cover;
+	const CCoverPoint* m_enemy_cover;
 
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionDetourEnemy(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionDetourEnemy(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -204,17 +204,17 @@ public:
 class CStalkerActionSearchEnemy : public CStalkerActionCombatBase
 {
 private:
-    const CCoverPoint* m_enemy_cover;
-    u32 m_last_hit_time;
+	const CCoverPoint* m_enemy_cover;
+	u32 m_last_hit_time;
 
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionSearchEnemy(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionSearchEnemy(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -224,13 +224,13 @@ public:
 class CStalkerActionPostCombatWait : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionPostCombatWait(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionPostCombatWait(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -240,13 +240,13 @@ public:
 class CStalkerActionHideFromGrenade : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionHideFromGrenade(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionHideFromGrenade(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -256,13 +256,13 @@ public:
 class CStalkerActionSuddenAttack : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionSuddenAttack(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionSuddenAttack(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -272,13 +272,13 @@ public:
 class CStalkerActionKillEnemyIfPlayerOnThePath : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionKillEnemyIfPlayerOnThePath(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionKillEnemyIfPlayerOnThePath(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -288,13 +288,13 @@ public:
 class CStalkerActionCriticalHit : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionCriticalHit(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionCriticalHit(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -304,15 +304,15 @@ public:
 class CStalkerCombatActionThrowGrenade : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
-    ALife::_OBJECT_ID m_grenade_id;
+	ALife::_OBJECT_ID m_grenade_id;
 
 public:
-    CStalkerCombatActionThrowGrenade(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerCombatActionThrowGrenade(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -322,14 +322,14 @@ public:
 class CStalkerCombatActionSmartCover : public CStalkerActionCombatBase
 {
 private:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerCombatActionSmartCover(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerCombatActionSmartCover(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 
 private:
-    bool m_check_can_kill_enemy;
+	bool m_check_can_kill_enemy;
 };

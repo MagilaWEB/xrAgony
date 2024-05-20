@@ -12,14 +12,14 @@
 // Constants
 // Epsilon's, to use as difference limit when comparing float's.
 constexpr float EPS_S = 0.0000001f;
-constexpr float EPS   = 0.0000100f;
+constexpr float EPS	= 0.0000100f;
 constexpr float EPS_L = 0.0010000f;
 
 #ifdef M_SQRT1_2
 #undef M_SQRT1_2
 #endif
 // XXX: The following section contains constants with a _tad_ many decimals to fit in a float. :-)
-//      They used to be macro's, so they could be used as double too.
+//	  They used to be macro's, so they could be used as double too.
 constexpr float M_SQRT1_2 = 0.7071067811865475244008443621048f;//490;
 
 constexpr float M_PI = 3.1415926535897932384626433832795f;

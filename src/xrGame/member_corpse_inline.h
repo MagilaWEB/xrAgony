@@ -10,9 +10,9 @@
 
 IC CMemberCorpse::CMemberCorpse(CAI_Stalker* corpse, CAI_Stalker* reactor, u32 time)
 {
-    m_corpse = corpse;
-    m_reactor = reactor;
-    m_time = time;
+	m_corpse = corpse;
+	m_reactor = reactor;
+	m_time = time;
 }
 
 IC bool CMemberCorpse::operator==(CAI_Stalker* corpse) const { return (m_corpse == corpse); }

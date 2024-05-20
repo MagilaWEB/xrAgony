@@ -122,12 +122,12 @@ ID3DBaseTexture* CRender::texture_load(LPCSTR fRName, u32& ret_msize, bool bStag
 	bStaging &= bAllowStaging;
 
 	ID3DBaseTexture* pTexture2D = NULL;
-	// IDirect3DCubeTexture9*   pTextureCUBE    = NULL;
+	// IDirect3DCubeTexture9*	pTextureCUBE	= NULL;
 	string_path fn;
-	// u32                      dwWidth,dwHeight;
+	// u32					  dwWidth,dwHeight;
 	u32 img_size = 0;
 	int img_loaded_lod = 0;
-	// D3DFORMAT                fmt;
+	// D3DFORMAT				fmt;
 	u32 mip_cnt = u32(-1);
 	// validation
 	R_ASSERT(fRName);
@@ -170,13 +170,13 @@ _DDS:
 #endif // DEBUG
 		img_size = S->length();
 		R_ASSERT(S);
-		// R_CHK2                   (D3DXGetImageInfoFromFileInMemory   (S->pointer(),S->length(),&IMG), fn);
+		// R_CHK2					(D3DXGetImageInfoFromFileInMemory	(S->pointer(),S->length(),&IMG), fn);
 #ifdef USE_DX11
 		R_CHK2(D3DX11GetImageInfoFromMemory(S->pointer(), S->length(), 0, &IMG, 0), fn);
 #else
 		R_CHK2(D3DX10GetImageInfoFromMemory(S->pointer(), S->length(), 0, &IMG, 0), fn);
 #endif
-		// if (IMG.ResourceType == D3DRTYPE_CUBETEXTURE)            goto _DDS_CUBE;
+		// if (IMG.ResourceType == D3DRTYPE_CUBETEXTURE)			goto _DDS_CUBE;
 		if (IMG.MiscFlags & D3D_RESOURCE_MISC_TEXTURECUBE)
 			goto _DDS_CUBE;
 		else
@@ -232,8 +232,8 @@ _DDS:
 			// Check for LMAP and compress if needed
 			xr_strlwr(fn);
 
-			// Load   SYS-MEM-surface, bound to device restrictions
-			// ID3DTexture2D*       T_sysmem;
+			// Load	SYS-MEM-surface, bound to device restrictions
+			// ID3DTexture2D*		T_sysmem;
 			// R_CHK2(D3DXCreateTextureFromFileInMemoryEx
 			//  (
 			//  HW.pDevice,S->pointer(),S->length(),
@@ -291,7 +291,7 @@ _DDS:
 
 _BUMP_from_base:
 	{
-		// Msg          ("! auto-generated bump map: %s",fname);
+		// Msg		  ("! auto-generated bump map: %s",fname);
 		Msg("! Fallback to default bump map: %s", fname);
 		//////////////////
 		if (strstr(fname, "_bump#"))

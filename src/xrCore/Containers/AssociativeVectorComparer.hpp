@@ -12,15 +12,15 @@
 template <typename TKey, typename TValue, typename TComparer>
 class AssociativeVectorComparer : public TComparer
 {
-    using inherited = TComparer;
+	using inherited = TComparer;
 
 public:
-    using TItem = std::pair<TKey, TValue>;
+	using TItem = std::pair<TKey, TValue>;
 
-    AssociativeVectorComparer() {}
-    AssociativeVectorComparer(const TComparer& comparer) : inherited(comparer) {}
-    bool operator()(const TKey& lhs, const TKey& rhs) const { return inherited::operator()(lhs, rhs); }
-    bool operator()(const TItem& lhs, const TItem& rhs) const { return operator()(lhs.first, rhs.first); }
-    bool operator()(const TItem& lhs, const TKey& rhs) const { return operator()(lhs.first, rhs); }
-    bool operator()(const TKey& lhs, const TItem& rhs) const { return operator()(lhs, rhs.first); }
+	AssociativeVectorComparer() {}
+	AssociativeVectorComparer(const TComparer& comparer) : inherited(comparer) {}
+	bool operator()(const TKey& lhs, const TKey& rhs) const { return inherited::operator()(lhs, rhs); }
+	bool operator()(const TItem& lhs, const TItem& rhs) const { return operator()(lhs.first, rhs.first); }
+	bool operator()(const TItem& lhs, const TKey& rhs) const { return operator()(lhs.first, rhs); }
+	bool operator()(const TKey& lhs, const TItem& rhs) const { return operator()(lhs, rhs.first); }
 };

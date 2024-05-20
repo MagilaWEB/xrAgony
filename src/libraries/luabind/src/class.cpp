@@ -34,12 +34,12 @@
 
 namespace
 {
-    bool custom_type_marking_disabled = false;
+	bool custom_type_marking_disabled = false;
 }
 
 LUABIND_API void luabind::set_custom_type_marking(bool enable)
 {
-    custom_type_marking_disabled = !enable;
+	custom_type_marking_disabled = !enable;
 }
 
 namespace luabind {
@@ -294,12 +294,12 @@ namespace luabind {
 		{
 			if (!custom_type_marking_disabled)
 			{
-			    s = "custom [";
-			    s += i.name();
-			    s += "]";
+				s = "custom [";
+				s += i.name();
+				s += "]";
 			}
 			else
-			    s = i.name();
+				s = i.name();
 		}
 
 		luabind::string get_class_name(lua_State* L, type_id const& i)

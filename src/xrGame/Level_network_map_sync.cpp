@@ -7,26 +7,26 @@
 
 bool CLevel::synchronize_map_data()
 {
-    deny_m_spawn = FALSE;
-    map_data.m_map_sync_received = true;
-    return synchronize_client();
+	deny_m_spawn = FALSE;
+	map_data.m_map_sync_received = true;
+	return synchronize_client();
 }
 
 bool CLevel::synchronize_client()
 {
-    Server->OnCL_Connected(Server->GetServerClient());
+	Server->OnCL_Connected(Server->GetServerClient());
 
-    if (game_configured)
-    {
-        deny_m_spawn = FALSE;
-        return true;
-    }
+	if (game_configured)
+	{
+		deny_m_spawn = FALSE;
+		return true;
+	}
 
-    if (Server)
-    {
-        ClientReceive();
-        Server->Update();
-    }
+	if (Server)
+	{
+		ClientReceive();
+		Server->Update();
+	}
 
-    return !!game_configured;
+	return !!game_configured;
 }

@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
 
-	Copyright (c) 2006 Simon Brown                          si@sjbrown.co.uk
+	Copyright (c) 2006 Simon Brown						  si@sjbrown.co.uk
 
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the 
@@ -21,8 +21,8 @@
 	TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
-   -------------------------------------------------------------------------- */
-   
+	-------------------------------------------------------------------------- */
+	
 #ifndef SQUISH_SIMD_3DNOW_H
 #define SQUISH_SIMD_3DNOW_H
 
@@ -190,10 +190,10 @@ public:
 /*	
 	friend Vec4 Select( Vec4::Arg off, Vec4::Arg on, Vec4::Arg bits )
 	{
-        __m128 a = _mm_andnot_ps( bits.m_v, off.m_v );
-        __m128 b = _mm_and_ps( bits.m_v, on.m_v );
+		__m128 a = _mm_andnot_ps( bits.m_v, off.m_v );
+		__m128 b = _mm_and_ps( bits.m_v, on.m_v );
 
-        return Vec4( _mm_or_ps( a, b ) );
+		return Vec4( _mm_or_ps( a, b ) );
 	}
 *//*
 	friend bool CompareAnyLessThan( Vec4::Arg left, Vec4::Arg right ) 

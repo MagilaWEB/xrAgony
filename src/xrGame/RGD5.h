@@ -4,9 +4,9 @@
 
 class CRGD5 : public CGrenade
 {
-    typedef CGrenade inherited;
+	typedef CGrenade inherited;
 
 public:
-    CRGD5() {}
-    virtual ~CRGD5() {}
+	CRGD5() {}
+	virtual ~CRGD5() {}
 };

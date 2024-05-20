@@ -190,7 +190,7 @@ namespace luabind {
 	}
 
 	template<class ValueWrapper>
-    luabind::string to_string(adl::lua_proxy_interface<ValueWrapper> const& v)
+	luabind::string to_string(adl::lua_proxy_interface<ValueWrapper> const& v)
 	{
 		using namespace luabind;
 		lua_State* interpreter = lua_proxy_traits<ValueWrapper>::interpreter(static_cast<ValueWrapper const&>(v));

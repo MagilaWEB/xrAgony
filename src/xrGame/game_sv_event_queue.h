@@ -8,31 +8,31 @@ class Lock;
 
 struct GameEvent
 {
-    u16 type;
-    u32 time;
-    ClientID sender;
-    NET_Packet P;
+	u16 type;
+	u32 time;
+	ClientID sender;
+	NET_Packet P;
 };
 
 class GameEventQueue : Noncopyable
 {
-    Lock* pcs;
-    xr_deque<GameEvent*> ready;
-    xr_vector<GameEvent*> unused;
-    xr_set<ClientID> m_blocked_clients;
+	Lock* pcs;
+	xr_deque<GameEvent*> ready;
+	xr_vector<GameEvent*> unused;
+	xr_set<ClientID> m_blocked_clients;
 
 public:
-    typedef fastdelegate::FastDelegate<bool(GameEvent*)> event_predicate;
+	typedef fastdelegate::FastDelegate<bool(GameEvent*)> event_predicate;
 
-    GameEventQueue();
-    ~GameEventQueue();
+	GameEventQueue();
+	~GameEventQueue();
 
-    GameEvent* Create();
-    GameEvent* Create(NET_Packet& P, u16 type, u32 time, ClientID clientID);
-    GameEvent* CreateSafe(NET_Packet& P, u16 type, u32 time, ClientID clientID);
-    GameEvent* Retreive();
-    void Release();
+	GameEvent* Create();
+	GameEvent* Create(NET_Packet& P, u16 type, u32 time, ClientID clientID);
+	GameEvent* CreateSafe(NET_Packet& P, u16 type, u32 time, ClientID clientID);
+	GameEvent* Retreive();
+	void Release();
 
-    u32 EraseEvents(event_predicate to_del);
-    void SetIgnoreEventsFor(bool ignore, ClientID clientID);
+	u32 EraseEvents(event_predicate to_del);
+	void SetIgnoreEventsFor(bool ignore, ClientID clientID);
 };

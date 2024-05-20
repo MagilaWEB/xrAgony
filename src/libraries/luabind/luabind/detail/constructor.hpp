@@ -34,7 +34,7 @@ namespace luabind {
 			{
 				object_rep* self = touserdata<object_rep>(self_);
 
-                luabind::unique_ptr<T> instance(luabind_new<T>(args...));
+				luabind::unique_ptr<T> instance(luabind_new<T>(args...));
 				inject_backref(self_.interpreter(), instance.get(), instance.get());
 
 				void* naked_ptr = instance.get();

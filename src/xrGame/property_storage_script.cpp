@@ -13,8 +13,8 @@
 using namespace luabind;
 
 SCRIPT_EXPORT(CPropertyStorage, (), {
-    module(luaState)[class_<CPropertyStorage>("property_storage")
-                         .def(constructor<>())
-                         .def("set_property", &CPropertyStorage::set_property)
-                         .def("property", &CPropertyStorage::property)];
+	module(luaState)[class_<CPropertyStorage>("property_storage")
+						 .def(constructor<>())
+						 .def("set_property", &CPropertyStorage::set_property)
+						 .def("property", &CPropertyStorage::property)];
 });

@@ -12,16 +12,16 @@ extern export_class& script_register_ui_window1(export_class&);
 extern export_class& script_register_ui_window2(export_class&);
 
 SCRIPT_EXPORT(CUIDialogWndEx, (), {
-    export_class instance("CUIScriptWnd");
+	export_class instance("CUIScriptWnd");
 
-    module(luaState)[script_register_ui_window2(script_register_ui_window1(instance)).def("Load", &BaseType::Load)];
+	module(luaState)[script_register_ui_window2(script_register_ui_window1(instance)).def("Load", &BaseType::Load)];
 });
 
 export_class& script_register_ui_window1(export_class& instance)
 {
-    instance.def(constructor<>())
-        .def("AddCallback", (void (BaseType::*)(LPCSTR, s16, const luabind::functor<void>&, const luabind::object&)) &
-                BaseType::AddCallback)
-        .def("Register", (void (BaseType::*)(CUIWindow*, LPCSTR)) & BaseType::Register);
-    return (instance);
+	instance.def(constructor<>())
+		.def("AddCallback", (void (BaseType::*)(LPCSTR, s16, const luabind::functor<void>&, const luabind::object&)) &
+				BaseType::AddCallback)
+		.def("Register", (void (BaseType::*)(CUIWindow*, LPCSTR)) & BaseType::Register);
+	return (instance);
 }

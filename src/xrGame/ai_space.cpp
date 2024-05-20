@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////
-//  Module      : ai_space.h
-//  Created     : 12.11.2003
-//  Modified    : 12.11.2003
-//  Author      : Dmitriy Iassenev
+//  Module	  : ai_space.h
+//  Created	 : 12.11.2003
+//  Modified	: 12.11.2003
+//  Author	  : Dmitriy Iassenev
 //  Description : AI space class
 ////////////////////////////////////////////////////////////////////////////
 

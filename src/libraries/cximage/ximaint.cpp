@@ -24,27 +24,27 @@ void CxImage::OverflowCoordinates(long &x, long &y, OverflowMethod const ofMetho
 {
   if (IsInside(x,y)) return;  //if pixel is within bounds, no change
   switch (ofMethod) {
-    case OM_REPEAT:
-      //clip coordinates
-      x=max(x,0); x=min(x, head.biWidth-1);
-      y=max(y,0); y=min(y, head.biHeight-1);
-      break;
-    case OM_WRAP:
-      //wrap coordinates
-      x = x % head.biWidth;
-      y = y % head.biHeight;
-      if (x<0) x = head.biWidth + x;
-      if (y<0) y = head.biHeight + y;
-      break;
-    case OM_MIRROR:
-      //mirror pixels near border
-      if (x<0) x=((-x) % head.biWidth);
-      else if (x>=head.biWidth) x=head.biWidth-(x % head.biWidth + 1);
-      if (y<0) y=((-y) % head.biHeight);
-      else if (y>=head.biHeight) y=head.biHeight-(y % head.biHeight + 1);
-      break;
-    default:
-      return;
+	case OM_REPEAT:
+	  //clip coordinates
+	  x=max(x,0); x=min(x, head.biWidth-1);
+	  y=max(y,0); y=min(y, head.biHeight-1);
+	  break;
+	case OM_WRAP:
+	  //wrap coordinates
+	  x = x % head.biWidth;
+	  y = y % head.biHeight;
+	  if (x<0) x = head.biWidth + x;
+	  if (y<0) y = head.biHeight + y;
+	  break;
+	case OM_MIRROR:
+	  //mirror pixels near border
+	  if (x<0) x=((-x) % head.biWidth);
+	  else if (x>=head.biWidth) x=head.biWidth-(x % head.biWidth + 1);
+	  if (y<0) y=((-y) % head.biHeight);
+	  else if (y>=head.biHeight) y=head.biHeight-(y % head.biHeight + 1);
+	  break;
+	default:
+	  return;
   }//switch
 }
 
@@ -57,27 +57,27 @@ void CxImage::OverflowCoordinates(float &x, float &y, OverflowMethod const ofMet
 {
   if (x>=0 && x<head.biWidth && y>=0 && y<head.biHeight) return;  //if pixel is within bounds, no change
   switch (ofMethod) {
-    case OM_REPEAT:
-      //clip coordinates
-      x=max(x,0); x=min(x, head.biWidth-1);
-      y=max(y,0); y=min(y, head.biHeight-1);
-      break;
-    case OM_WRAP:
-      //wrap coordinates
-      x = (float)fmod(x, (float) head.biWidth);
-      y = (float)fmod(y, (float) head.biHeight);
-      if (x<0) x = head.biWidth + x;
-      if (y<0) y = head.biHeight + y;
-      break;
-    case OM_MIRROR:
-      //mirror pixels near border
-      if (x<0) x=(float)fmod(-x, (float) head.biWidth);
-      else if (x>=head.biWidth) x=head.biWidth-((float)fmod(x, (float) head.biWidth) + 1);
-      if (y<0) y=(float)fmod(-y, (float) head.biHeight);
-      else if (y>=head.biHeight) y=head.biHeight-((float)fmod(y, (float) head.biHeight) + 1);
-      break;
-    default:
-      return;
+	case OM_REPEAT:
+	  //clip coordinates
+	  x=max(x,0); x=min(x, head.biWidth-1);
+	  y=max(y,0); y=min(y, head.biHeight-1);
+	  break;
+	case OM_WRAP:
+	  //wrap coordinates
+	  x = (float)fmod(x, (float) head.biWidth);
+	  y = (float)fmod(y, (float) head.biHeight);
+	  if (x<0) x = head.biWidth + x;
+	  if (y<0) y = head.biHeight + y;
+	  break;
+	case OM_MIRROR:
+	  //mirror pixels near border
+	  if (x<0) x=(float)fmod(-x, (float) head.biWidth);
+	  else if (x>=head.biWidth) x=head.biWidth-((float)fmod(x, (float) head.biWidth) + 1);
+	  if (y<0) y=(float)fmod(-y, (float) head.biHeight);
+	  else if (y>=head.biHeight) y=head.biHeight-((float)fmod(y, (float) head.biHeight) + 1);
+	  break;
+	default:
+	  return;
   }//switch
 }
 
@@ -88,11 +88,11 @@ void CxImage::OverflowCoordinates(float &x, float &y, OverflowMethod const ofMet
  *
  *  \param x,y : pixel coordinates
  *  \param ofMethod : out-of-bounds method:
- *    - OF_WRAP - wrap over to pixels on other side of the image
- *    - OF_REPEAT - repeat last pixel on the edge
- *    - OF_COLOR - return input value of color
- *    - OF_BACKGROUND - return background color (if not set, return input color)
- *    - OF_TRANSPARENT - return transparent pixel
+ *	- OF_WRAP - wrap over to pixels on other side of the image
+ *	- OF_REPEAT - repeat last pixel on the edge
+ *	- OF_COLOR - return input value of color
+ *	- OF_BACKGROUND - return background color (if not set, return input color)
+ *	- OF_TRANSPARENT - return transparent pixel
  *
  *  \param rplColor : input color (returned for out-of-bound coordinates in OF_COLOR mode and if other mode is not applicable)
  *
@@ -101,48 +101,48 @@ void CxImage::OverflowCoordinates(float &x, float &y, OverflowMethod const ofMet
  */
 RGBQUAD CxImage::GetPixelColorWithOverflow(long x, long y, OverflowMethod const ofMethod, RGBQUAD* const rplColor)
 {
-  RGBQUAD color;          //color to return
-  if ((!IsInside(x,y)) || pDib==NULL) {     //is pixel within bouns?:
-    //pixel is out of bounds or no DIB
-    if (rplColor!=NULL)
-      color=*rplColor;
-    else {
-      color.rgbRed=color.rgbGreen=color.rgbBlue=255; color.rgbReserved=0; //default replacement colour: white transparent
-    }//if
-    if (pDib==NULL) return color;
-    //pixel is out of bounds:
-    switch (ofMethod) {
-      case OM_TRANSPARENT:
+  RGBQUAD color;		  //color to return
+  if ((!IsInside(x,y)) || pDib==NULL) {	 //is pixel within bouns?:
+	//pixel is out of bounds or no DIB
+	if (rplColor!=NULL)
+	  color=*rplColor;
+	else {
+	  color.rgbRed=color.rgbGreen=color.rgbBlue=255; color.rgbReserved=0; //default replacement colour: white transparent
+	}//if
+	if (pDib==NULL) return color;
+	//pixel is out of bounds:
+	switch (ofMethod) {
+	  case OM_TRANSPARENT:
 #if CXIMAGE_SUPPORT_ALPHA
-        if (AlphaIsValid()) {
-          //alpha transparency is supported and image has alpha layer
-          color.rgbReserved=0;
-        } else {
+		if (AlphaIsValid()) {
+		  //alpha transparency is supported and image has alpha layer
+		  color.rgbReserved=0;
+		} else {
 #endif //CXIMAGE_SUPPORT_ALPHA
-          //no alpha transparency
-          if (GetTransIndex()>=0) {
-            color=GetTransColor();    //single color transparency enabled (return transparent color)
-          }//if
+		  //no alpha transparency
+		  if (GetTransIndex()>=0) {
+			color=GetTransColor();	//single color transparency enabled (return transparent color)
+		  }//if
 #if CXIMAGE_SUPPORT_ALPHA
-        }//if
+		}//if
 #endif //CXIMAGE_SUPPORT_ALPHA
-        return color;
-      case OM_BACKGROUND:
+		return color;
+	  case OM_BACKGROUND:
 		  //return background color (if it exists, otherwise input value)
 		  if (info.nBkgndIndex >= 0) {
 			  if (head.biBitCount<24) color = GetPaletteColor((BYTE)info.nBkgndIndex);
 			  else color = info.nBkgndColor;
 		  }//if
 		  return color;
-      case OM_REPEAT:
-      case OM_WRAP:
-      case OM_MIRROR:
-        OverflowCoordinates(x,y,ofMethod);
-        break;
-      default:
-        //simply return replacement color (OM_COLOR and others)
-        return color;
-    }//switch
+	  case OM_REPEAT:
+	  case OM_WRAP:
+	  case OM_MIRROR:
+		OverflowCoordinates(x,y,ofMethod);
+		break;
+	  default:
+		//simply return replacement color (OM_COLOR and others)
+		return color;
+	}//switch
   }//if
   //just return specified pixel (it's within bounds)
   return BlindGetPixelColor(x,y);
@@ -157,27 +157,27 @@ RGBQUAD CxImage::GetPixelColorWithOverflow(long x, long y, OverflowMethod const 
  * can often assume color value lying between source pixels.
  *
  *  \param (x,y) - coordinates of pixel to return
- *           GPCI method recreates "analogue" image back from digital data, so x and y
- *           are float values and color value of point (1.1,1) will generally not be same
- *           as (1,1). Center of first pixel is at (0,0) and center of pixel right to it is (1,0).
- *           (0.5,0) is half way between these two pixels.
+ *			GPCI method recreates "analogue" image back from digital data, so x and y
+ *			are float values and color value of point (1.1,1) will generally not be same
+ *			as (1,1). Center of first pixel is at (0,0) and center of pixel right to it is (1,0).
+ *			(0.5,0) is half way between these two pixels.
  *  \param inMethod - interpolation (reconstruction) method (kernel) to use:
- *    - IM_NEAREST_NEIGHBOUR - returns colour of nearest lying pixel (causes stairy look of 
- *                            processed images)
- *    - IM_BILINEAR - interpolates colour from four neighbouring pixels (softens image a bit)
- *    - IM_BICUBIC - interpolates from 16 neighbouring pixels (can produce "halo" artifacts)
- *    - IM_BICUBIC2 - interpolates from 16 neighbouring pixels (perhaps a bit less halo artifacts 
-                     than IM_BICUBIC)
- *    - IM_BSPLINE - interpolates from 16 neighbouring pixels (softens image, washes colours)
- *                  (As far as I know, image should be prefiltered for this method to give 
- *                   good results... some other time :) )
- *                  This method uses bicubic interpolation kernel from CXImage 5.99a and older
- *                  versions.
- *    - IM_LANCZOS - interpolates from 12*12 pixels (slow, ringing artifacts)
+ *	- IM_NEAREST_NEIGHBOUR - returns colour of nearest lying pixel (causes stairy look of 
+ *							processed images)
+ *	- IM_BILINEAR - interpolates colour from four neighbouring pixels (softens image a bit)
+ *	- IM_BICUBIC - interpolates from 16 neighbouring pixels (can produce "halo" artifacts)
+ *	- IM_BICUBIC2 - interpolates from 16 neighbouring pixels (perhaps a bit less halo artifacts 
+					 than IM_BICUBIC)
+ *	- IM_BSPLINE - interpolates from 16 neighbouring pixels (softens image, washes colours)
+ *				  (As far as I know, image should be prefiltered for this method to give 
+ *					good results... some other time :) )
+ *				  This method uses bicubic interpolation kernel from CXImage 5.99a and older
+ *				  versions.
+ *	- IM_LANCZOS - interpolates from 12*12 pixels (slow, ringing artifacts)
  *
  *  \param ofMethod - overflow method (see comments at GetPixelColorWithOverflow)
  *  \param rplColor - pointer to color used for out of borders pixels in OM_COLOR mode
- *              (and other modes if colour can't calculated in a specified way)
+ *			  (and other modes if colour can't calculated in a specified way)
  *
  *  \return interpolated color value (including interpolated alpha value, if image has alpha layer)
  * 
@@ -190,88 +190,88 @@ RGBQUAD CxImage::GetPixelColorInterpolated(
   RGBQUAD* const rplColor)
 {
   //calculate nearest pixel
-  int xi=(int)(x); if (x<0) xi--;   //these replace (incredibly slow) floor (Visual c++ 2003, AMD Athlon)
+  int xi=(int)(x); if (x<0) xi--;	//these replace (incredibly slow) floor (Visual c++ 2003, AMD Athlon)
   int yi=(int)(y); if (y<0) yi--;
-  RGBQUAD color;                    //calculated colour
+  RGBQUAD color;					//calculated colour
 
   switch (inMethod) {
-    case IM_NEAREST_NEIGHBOUR:
-      return GetPixelColorWithOverflow((long)(x+0.5f), (long)(y+0.5f), ofMethod, rplColor);
-    default: {
-      //IM_BILINEAR: bilinear interpolation
-      if (xi<-1 || xi>=head.biWidth || yi<-1 || yi>=head.biHeight) {  //all 4 points are outside bounds?:
-        switch (ofMethod) {
-          case OM_COLOR: case OM_TRANSPARENT: case OM_BACKGROUND:
-            //we don't need to interpolate anything with all points outside in this case
-            return GetPixelColorWithOverflow(-999, -999, ofMethod, rplColor);
-          default:
-            //recalculate coordinates and use faster method later on
-            OverflowCoordinates(x,y,ofMethod);
-            xi=(int)(x); if (x<0) xi--;   //x and/or y have changed ... recalculate xi and yi
-            yi=(int)(y); if (y<0) yi--;
-        }//switch
-      }//if
-      //get four neighbouring pixels
-      if ((xi+1)<head.biWidth && xi>=0 && (yi+1)<head.biHeight && yi>=0 && head.biClrUsed==0) {
-        //all pixels are inside RGB24 image... optimize reading (and use fixed point arithmetic)
-        WORD wt1=(WORD)((x-xi)*256.0f), wt2=(WORD)((y-yi)*256.0f);
-        WORD wd=wt1*wt2>>8;
-        WORD wb=wt1-wd;
-        WORD wc=wt2-wd;
-        WORD wa=256-wt1-wc;
-        WORD wrr,wgg,wbb;
-        BYTE *pxptr=(BYTE*)info.pImage+yi*info.dwEffWidth+xi*3;
-        wbb=wa*(*pxptr++); wgg=wa*(*pxptr++); wrr=wa*(*pxptr++);
-        wbb+=wb*(*pxptr++); wgg+=wb*(*pxptr++); wrr+=wb*(*pxptr);
-        pxptr+=(info.dwEffWidth-5); //move to next row
-        wbb+=wc*(*pxptr++); wgg+=wc*(*pxptr++); wrr+=wc*(*pxptr++); 
-        wbb+=wd*(*pxptr++); wgg+=wd*(*pxptr++); wrr+=wd*(*pxptr); 
-        color.rgbRed=(BYTE) (wrr>>8); color.rgbGreen=(BYTE) (wgg>>8); color.rgbBlue=(BYTE) (wbb>>8);
+	case IM_NEAREST_NEIGHBOUR:
+	  return GetPixelColorWithOverflow((long)(x+0.5f), (long)(y+0.5f), ofMethod, rplColor);
+	default: {
+	  //IM_BILINEAR: bilinear interpolation
+	  if (xi<-1 || xi>=head.biWidth || yi<-1 || yi>=head.biHeight) {  //all 4 points are outside bounds?:
+		switch (ofMethod) {
+		  case OM_COLOR: case OM_TRANSPARENT: case OM_BACKGROUND:
+			//we don't need to interpolate anything with all points outside in this case
+			return GetPixelColorWithOverflow(-999, -999, ofMethod, rplColor);
+		  default:
+			//recalculate coordinates and use faster method later on
+			OverflowCoordinates(x,y,ofMethod);
+			xi=(int)(x); if (x<0) xi--;	//x and/or y have changed ... recalculate xi and yi
+			yi=(int)(y); if (y<0) yi--;
+		}//switch
+	  }//if
+	  //get four neighbouring pixels
+	  if ((xi+1)<head.biWidth && xi>=0 && (yi+1)<head.biHeight && yi>=0 && head.biClrUsed==0) {
+		//all pixels are inside RGB24 image... optimize reading (and use fixed point arithmetic)
+		WORD wt1=(WORD)((x-xi)*256.0f), wt2=(WORD)((y-yi)*256.0f);
+		WORD wd=wt1*wt2>>8;
+		WORD wb=wt1-wd;
+		WORD wc=wt2-wd;
+		WORD wa=256-wt1-wc;
+		WORD wrr,wgg,wbb;
+		BYTE *pxptr=(BYTE*)info.pImage+yi*info.dwEffWidth+xi*3;
+		wbb=wa*(*pxptr++); wgg=wa*(*pxptr++); wrr=wa*(*pxptr++);
+		wbb+=wb*(*pxptr++); wgg+=wb*(*pxptr++); wrr+=wb*(*pxptr);
+		pxptr+=(info.dwEffWidth-5); //move to next row
+		wbb+=wc*(*pxptr++); wgg+=wc*(*pxptr++); wrr+=wc*(*pxptr++); 
+		wbb+=wd*(*pxptr++); wgg+=wd*(*pxptr++); wrr+=wd*(*pxptr); 
+		color.rgbRed=(BYTE) (wrr>>8); color.rgbGreen=(BYTE) (wgg>>8); color.rgbBlue=(BYTE) (wbb>>8);
 #if CXIMAGE_SUPPORT_ALPHA
-        if (pAlpha) {
-          WORD waa;
-          //image has alpha layer... we have to do the same for alpha data
-          pxptr=AlphaGetPointer(xi,yi);                           //pointer to first byte
-          waa=wa*(*pxptr++); waa+=wb*(*pxptr);   //first two pixels
-          pxptr+=(head.biWidth-1);                                //move to next row
-          waa+=wc*(*pxptr++); waa+=wd*(*pxptr);   //and second row pixels
-          color.rgbReserved=(BYTE) (waa>>8);
-        } else
+		if (pAlpha) {
+		  WORD waa;
+		  //image has alpha layer... we have to do the same for alpha data
+		  pxptr=AlphaGetPointer(xi,yi);							//pointer to first byte
+		  waa=wa*(*pxptr++); waa+=wb*(*pxptr);	//first two pixels
+		  pxptr+=(head.biWidth-1);								//move to next row
+		  waa+=wc*(*pxptr++); waa+=wd*(*pxptr);	//and second row pixels
+		  color.rgbReserved=(BYTE) (waa>>8);
+		} else
 #endif
 		{ //Alpha not supported or no alpha at all
 			color.rgbReserved = 0;
 		}
-        return color;
-      } else {
-        //default (slower) way to get pixels (not RGB24 or some pixels out of borders)
-        float t1=x-xi, t2=y-yi;
-        float d=t1*t2;
-        float b=t1-d;
-        float c=t2-d;
-        float a=1-t1-c;
-        RGBQUAD rgb11,rgb21,rgb12,rgb22;
-        rgb11=GetPixelColorWithOverflow(xi, yi, ofMethod, rplColor);
-        rgb21=GetPixelColorWithOverflow(xi+1, yi, ofMethod, rplColor);
-        rgb12=GetPixelColorWithOverflow(xi, yi+1, ofMethod, rplColor);
-        rgb22=GetPixelColorWithOverflow(xi+1, yi+1, ofMethod, rplColor);
-        //calculate linear interpolation
-        color.rgbRed=(BYTE) (a*rgb11.rgbRed+b*rgb21.rgbRed+c*rgb12.rgbRed+d*rgb22.rgbRed);
-        color.rgbGreen=(BYTE) (a*rgb11.rgbGreen+b*rgb21.rgbGreen+c*rgb12.rgbGreen+d*rgb22.rgbGreen);
-        color.rgbBlue=(BYTE) (a*rgb11.rgbBlue+b*rgb21.rgbBlue+c*rgb12.rgbBlue+d*rgb22.rgbBlue);
+		return color;
+	  } else {
+		//default (slower) way to get pixels (not RGB24 or some pixels out of borders)
+		float t1=x-xi, t2=y-yi;
+		float d=t1*t2;
+		float b=t1-d;
+		float c=t2-d;
+		float a=1-t1-c;
+		RGBQUAD rgb11,rgb21,rgb12,rgb22;
+		rgb11=GetPixelColorWithOverflow(xi, yi, ofMethod, rplColor);
+		rgb21=GetPixelColorWithOverflow(xi+1, yi, ofMethod, rplColor);
+		rgb12=GetPixelColorWithOverflow(xi, yi+1, ofMethod, rplColor);
+		rgb22=GetPixelColorWithOverflow(xi+1, yi+1, ofMethod, rplColor);
+		//calculate linear interpolation
+		color.rgbRed=(BYTE) (a*rgb11.rgbRed+b*rgb21.rgbRed+c*rgb12.rgbRed+d*rgb22.rgbRed);
+		color.rgbGreen=(BYTE) (a*rgb11.rgbGreen+b*rgb21.rgbGreen+c*rgb12.rgbGreen+d*rgb22.rgbGreen);
+		color.rgbBlue=(BYTE) (a*rgb11.rgbBlue+b*rgb21.rgbBlue+c*rgb12.rgbBlue+d*rgb22.rgbBlue);
 #if CXIMAGE_SUPPORT_ALPHA
-        if (AlphaIsValid())
+		if (AlphaIsValid())
 			color.rgbReserved=(BYTE) (a*rgb11.rgbReserved+b*rgb21.rgbReserved+c*rgb12.rgbReserved+d*rgb22.rgbReserved);
 		else
 #endif
 		{ //Alpha not supported or no alpha at all
 			color.rgbReserved = 0;
 		}
-        return color;
-      }//if
-    }//default
-    case IM_BICUBIC: 
-    case IM_BICUBIC2:
-    case IM_BSPLINE:
+		return color;
+	  }//if
+	}//default
+	case IM_BICUBIC: 
+	case IM_BICUBIC2:
+	case IM_BSPLINE:
 	case IM_BOX:
 	case IM_HERMITE:
 	case IM_HAMMING:
@@ -284,257 +284,257 @@ RGBQUAD CxImage::GetPixelColorInterpolated(
 	case IM_CATROM:
 	case IM_HANNING:
 	case IM_POWER:
-      //bicubic interpolation(s)
-      if (((xi+2)<0) || ((xi-1)>=head.biWidth) || ((yi+2)<0) || ((yi-1)>=head.biHeight)) { //all points are outside bounds?:
-        switch (ofMethod) {
-          case OM_COLOR: case OM_TRANSPARENT: case OM_BACKGROUND:
-            //we don't need to interpolate anything with all points outside in this case
-            return GetPixelColorWithOverflow(-999, -999, ofMethod, rplColor);
-            break;
-          default:
-            //recalculate coordinates and use faster method later on
-            OverflowCoordinates(x,y,ofMethod);
-            xi=(int)(x); if (x<0) xi--;   //x and/or y have changed ... recalculate xi and yi
-            yi=(int)(y); if (y<0) yi--;
-        }//switch
-      }//if
+	  //bicubic interpolation(s)
+	  if (((xi+2)<0) || ((xi-1)>=head.biWidth) || ((yi+2)<0) || ((yi-1)>=head.biHeight)) { //all points are outside bounds?:
+		switch (ofMethod) {
+		  case OM_COLOR: case OM_TRANSPARENT: case OM_BACKGROUND:
+			//we don't need to interpolate anything with all points outside in this case
+			return GetPixelColorWithOverflow(-999, -999, ofMethod, rplColor);
+			break;
+		  default:
+			//recalculate coordinates and use faster method later on
+			OverflowCoordinates(x,y,ofMethod);
+			xi=(int)(x); if (x<0) xi--;	//x and/or y have changed ... recalculate xi and yi
+			yi=(int)(y); if (y<0) yi--;
+		}//switch
+	  }//if
 
-      //some variables needed from here on
-      int xii,yii;                      //x any y integer indexes for loops
-      float kernel, kernelyc;           //kernel cache
-      float kernelx[12], kernely[4];    //precalculated kernel values
-      float rr,gg,bb,aa;                //accumulated color values
-      //calculate multiplication factors for all pixels
+	  //some variables needed from here on
+	  int xii,yii;					  //x any y integer indexes for loops
+	  float kernel, kernelyc;			//kernel cache
+	  float kernelx[12], kernely[4];	//precalculated kernel values
+	  float rr,gg,bb,aa;				//accumulated color values
+	  //calculate multiplication factors for all pixels
 	  int i;
-      switch (inMethod) {
-        case IM_BICUBIC:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelCubic((float)(xi+i-1-x));
-            kernely[i]=KernelCubic((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_BICUBIC2:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelGeneralizedCubic((float)(xi+i-1-x), -0.5);
-            kernely[i]=KernelGeneralizedCubic((float)(yi+i-1-y), -0.5);
-          }//for i
-          break;
-        case IM_BSPLINE:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelBSpline((float)(xi+i-1-x));
-            kernely[i]=KernelBSpline((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_BOX:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelBox((float)(xi+i-1-x));
-            kernely[i]=KernelBox((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_HERMITE:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelHermite((float)(xi+i-1-x));
-            kernely[i]=KernelHermite((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_HAMMING:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelHamming((float)(xi+i-1-x));
-            kernely[i]=KernelHamming((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_SINC:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelSinc((float)(xi+i-1-x));
-            kernely[i]=KernelSinc((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_BLACKMAN:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelBlackman((float)(xi+i-1-x));
-            kernely[i]=KernelBlackman((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_BESSEL:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelBessel((float)(xi+i-1-x));
-            kernely[i]=KernelBessel((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_GAUSSIAN:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelGaussian((float)(xi+i-1-x));
-            kernely[i]=KernelGaussian((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_QUADRATIC:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelQuadratic((float)(xi+i-1-x));
-            kernely[i]=KernelQuadratic((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_MITCHELL:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelMitchell((float)(xi+i-1-x));
-            kernely[i]=KernelMitchell((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_CATROM:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelCatrom((float)(xi+i-1-x));
-            kernely[i]=KernelCatrom((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_HANNING:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelHanning((float)(xi+i-1-x));
-            kernely[i]=KernelHanning((float)(yi+i-1-y));
-          }//for i
-          break;
-        case IM_POWER:
-          for (i=0; i<4; i++) {
-            kernelx[i]=KernelPower((float)(xi+i-1-x));
-            kernely[i]=KernelPower((float)(yi+i-1-y));
-          }//for i
-          break;
-      }//switch
-      rr=gg=bb=aa=0;
-      if (((xi+2)<head.biWidth) && xi>=1 && ((yi+2)<head.biHeight) && (yi>=1) && !IsIndexed()) {
-        //optimized interpolation (faster pixel reads) for RGB24 images with all pixels inside bounds
-        BYTE *pxptr, *pxptra;
-        for (yii=yi-1; yii<yi+3; yii++) {
-          pxptr=(BYTE *)BlindGetPixelPointer(xi-1, yii);    //calculate pointer to first byte in row
-          kernelyc=kernely[yii-(yi-1)];
+	  switch (inMethod) {
+		case IM_BICUBIC:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelCubic((float)(xi+i-1-x));
+			kernely[i]=KernelCubic((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_BICUBIC2:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelGeneralizedCubic((float)(xi+i-1-x), -0.5);
+			kernely[i]=KernelGeneralizedCubic((float)(yi+i-1-y), -0.5);
+		  }//for i
+		  break;
+		case IM_BSPLINE:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelBSpline((float)(xi+i-1-x));
+			kernely[i]=KernelBSpline((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_BOX:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelBox((float)(xi+i-1-x));
+			kernely[i]=KernelBox((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_HERMITE:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelHermite((float)(xi+i-1-x));
+			kernely[i]=KernelHermite((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_HAMMING:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelHamming((float)(xi+i-1-x));
+			kernely[i]=KernelHamming((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_SINC:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelSinc((float)(xi+i-1-x));
+			kernely[i]=KernelSinc((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_BLACKMAN:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelBlackman((float)(xi+i-1-x));
+			kernely[i]=KernelBlackman((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_BESSEL:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelBessel((float)(xi+i-1-x));
+			kernely[i]=KernelBessel((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_GAUSSIAN:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelGaussian((float)(xi+i-1-x));
+			kernely[i]=KernelGaussian((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_QUADRATIC:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelQuadratic((float)(xi+i-1-x));
+			kernely[i]=KernelQuadratic((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_MITCHELL:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelMitchell((float)(xi+i-1-x));
+			kernely[i]=KernelMitchell((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_CATROM:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelCatrom((float)(xi+i-1-x));
+			kernely[i]=KernelCatrom((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_HANNING:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelHanning((float)(xi+i-1-x));
+			kernely[i]=KernelHanning((float)(yi+i-1-y));
+		  }//for i
+		  break;
+		case IM_POWER:
+		  for (i=0; i<4; i++) {
+			kernelx[i]=KernelPower((float)(xi+i-1-x));
+			kernely[i]=KernelPower((float)(yi+i-1-y));
+		  }//for i
+		  break;
+	  }//switch
+	  rr=gg=bb=aa=0;
+	  if (((xi+2)<head.biWidth) && xi>=1 && ((yi+2)<head.biHeight) && (yi>=1) && !IsIndexed()) {
+		//optimized interpolation (faster pixel reads) for RGB24 images with all pixels inside bounds
+		BYTE *pxptr, *pxptra;
+		for (yii=yi-1; yii<yi+3; yii++) {
+		  pxptr=(BYTE *)BlindGetPixelPointer(xi-1, yii);	//calculate pointer to first byte in row
+		  kernelyc=kernely[yii-(yi-1)];
 #if CXIMAGE_SUPPORT_ALPHA
-          if (AlphaIsValid()) {
-            //alpha is supported and valid (optimized bicubic int. for image with alpha)
-            pxptra=AlphaGetPointer(xi-1, yii);
-            kernel=kernelyc*kernelx[0];
-            bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++); aa+=kernel*(*pxptra++);
-            kernel=kernelyc*kernelx[1];
-            bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++); aa+=kernel*(*pxptra++);
-            kernel=kernelyc*kernelx[2];
-            bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++); aa+=kernel*(*pxptra++);
-            kernel=kernelyc*kernelx[3];
-            bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr); aa+=kernel*(*pxptra);
-          } else
+		  if (AlphaIsValid()) {
+			//alpha is supported and valid (optimized bicubic int. for image with alpha)
+			pxptra=AlphaGetPointer(xi-1, yii);
+			kernel=kernelyc*kernelx[0];
+			bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++); aa+=kernel*(*pxptra++);
+			kernel=kernelyc*kernelx[1];
+			bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++); aa+=kernel*(*pxptra++);
+			kernel=kernelyc*kernelx[2];
+			bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++); aa+=kernel*(*pxptra++);
+			kernel=kernelyc*kernelx[3];
+			bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr); aa+=kernel*(*pxptra);
+		  } else
 #endif
-          //alpha not supported or valid (optimized bicubic int. for no alpha channel)
-          {
-            kernel=kernelyc*kernelx[0];
-            bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++);
-            kernel=kernelyc*kernelx[1];
-            bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++);
-            kernel=kernelyc*kernelx[2];
-            bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++);
-            kernel=kernelyc*kernelx[3];
-            bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr);
-          }
-        }//yii
-      } else {
-        //slower more flexible interpolation for border pixels and paletted images
-        RGBQUAD rgbs;
-        for (yii=yi-1; yii<yi+3; yii++) {
-          kernelyc=kernely[yii-(yi-1)];
-          for (xii=xi-1; xii<xi+3; xii++) {
-            kernel=kernelyc*kernelx[xii-(xi-1)];
-            rgbs=GetPixelColorWithOverflow(xii, yii, ofMethod, rplColor);
-            rr+=kernel*rgbs.rgbRed;
-            gg+=kernel*rgbs.rgbGreen;
-            bb+=kernel*rgbs.rgbBlue;
+		  //alpha not supported or valid (optimized bicubic int. for no alpha channel)
+		  {
+			kernel=kernelyc*kernelx[0];
+			bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++);
+			kernel=kernelyc*kernelx[1];
+			bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++);
+			kernel=kernelyc*kernelx[2];
+			bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++);
+			kernel=kernelyc*kernelx[3];
+			bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr);
+		  }
+		}//yii
+	  } else {
+		//slower more flexible interpolation for border pixels and paletted images
+		RGBQUAD rgbs;
+		for (yii=yi-1; yii<yi+3; yii++) {
+		  kernelyc=kernely[yii-(yi-1)];
+		  for (xii=xi-1; xii<xi+3; xii++) {
+			kernel=kernelyc*kernelx[xii-(xi-1)];
+			rgbs=GetPixelColorWithOverflow(xii, yii, ofMethod, rplColor);
+			rr+=kernel*rgbs.rgbRed;
+			gg+=kernel*rgbs.rgbGreen;
+			bb+=kernel*rgbs.rgbBlue;
 #if CXIMAGE_SUPPORT_ALPHA
-            aa+=kernel*rgbs.rgbReserved;
+			aa+=kernel*rgbs.rgbReserved;
 #endif
-          }//xii
-        }//yii
-      }//if
-      //for all colors, clip to 0..255 and assign to RGBQUAD
-      if (rr>255) rr=255; if (rr<0) rr=0; color.rgbRed=(BYTE) rr;
-      if (gg>255) gg=255; if (gg<0) gg=0; color.rgbGreen=(BYTE) gg;
-      if (bb>255) bb=255; if (bb<0) bb=0; color.rgbBlue=(BYTE) bb;
+		  }//xii
+		}//yii
+	  }//if
+	  //for all colors, clip to 0..255 and assign to RGBQUAD
+	  if (rr>255) rr=255; if (rr<0) rr=0; color.rgbRed=(BYTE) rr;
+	  if (gg>255) gg=255; if (gg<0) gg=0; color.rgbGreen=(BYTE) gg;
+	  if (bb>255) bb=255; if (bb<0) bb=0; color.rgbBlue=(BYTE) bb;
 #if CXIMAGE_SUPPORT_ALPHA
-      if (AlphaIsValid()) {
-        if (aa>255) aa=255; if (aa<0) aa=0; color.rgbReserved=(BYTE) aa;
-      } else
-#endif
-		{ //Alpha not supported or no alpha at all
-			color.rgbReserved = 0;
-		}
-      return color;
-    case IM_LANCZOS:
-      //lanczos window (16*16) sinc interpolation
-      if (((xi+6)<0) || ((xi-5)>=head.biWidth) || ((yi+6)<0) || ((yi-5)>=head.biHeight)) {
-        //all points are outside bounds
-        switch (ofMethod) {
-          case OM_COLOR: case OM_TRANSPARENT: case OM_BACKGROUND:
-            //we don't need to interpolate anything with all points outside in this case
-            return GetPixelColorWithOverflow(-999, -999, ofMethod, rplColor);
-            break;
-          default:
-            //recalculate coordinates and use faster method later on
-            OverflowCoordinates(x,y,ofMethod);
-            xi=(int)(x); if (x<0) xi--;   //x and/or y have changed ... recalculate xi and yi
-            yi=(int)(y); if (y<0) yi--;
-        }//switch
-      }//if
-
-      for (xii=xi-5; xii<xi+7; xii++) kernelx[xii-(xi-5)]=KernelLanczosSinc((float)(xii-x), 6.0f);
-      rr=gg=bb=aa=0;
-
-      if (((xi+6)<head.biWidth) && ((xi-5)>=0) && ((yi+6)<head.biHeight) && ((yi-5)>=0) && !IsIndexed()) {
-        //optimized interpolation (faster pixel reads) for RGB24 images with all pixels inside bounds
-        BYTE *pxptr, *pxptra;
-        for (yii=yi-5; yii<yi+7; yii++) {
-          pxptr=(BYTE *)BlindGetPixelPointer(xi-5, yii);    //calculate pointer to first byte in row
-          kernelyc=KernelLanczosSinc((float)(yii-y),6.0f);
-#if CXIMAGE_SUPPORT_ALPHA
-          if (AlphaIsValid()) {
-            //alpha is supported and valid
-            pxptra=AlphaGetPointer(xi-1, yii);
-            for (xii=0; xii<12; xii++) {
-              kernel=kernelyc*kernelx[xii];
-              bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++); aa+=kernel*(*pxptra++);
-            }//for xii
-          } else
-#endif
-          //alpha not supported or valid
-          {
-            for (xii=0; xii<12; xii++) {
-              kernel=kernelyc*kernelx[xii];
-              bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++);
-            }//for xii
-          }
-        }//yii
-      } else {
-        //slower more flexible interpolation for border pixels and paletted images
-        RGBQUAD rgbs;
-        for (yii=yi-5; yii<yi+7; yii++) {
-          kernelyc=KernelLanczosSinc((float)(yii-y),6.0f);
-          for (xii=xi-5; xii<xi+7; xii++) {
-            kernel=kernelyc*kernelx[xii-(xi-5)];
-            rgbs=GetPixelColorWithOverflow(xii, yii, ofMethod, rplColor);
-            rr+=kernel*rgbs.rgbRed;
-            gg+=kernel*rgbs.rgbGreen;
-            bb+=kernel*rgbs.rgbBlue;
-#if CXIMAGE_SUPPORT_ALPHA
-            aa+=kernel*rgbs.rgbReserved;
-#endif
-          }//xii
-        }//yii
-      }//if
-      //for all colors, clip to 0..255 and assign to RGBQUAD
-      if (rr>255) rr=255; if (rr<0) rr=0; color.rgbRed=(BYTE) rr;
-      if (gg>255) gg=255; if (gg<0) gg=0; color.rgbGreen=(BYTE) gg;
-      if (bb>255) bb=255; if (bb<0) bb=0; color.rgbBlue=(BYTE) bb;
-#if CXIMAGE_SUPPORT_ALPHA
-      if (AlphaIsValid()) {
-        if (aa>255) aa=255; if (aa<0) aa=0; color.rgbReserved=(BYTE) aa;   
-      } else
+	  if (AlphaIsValid()) {
+		if (aa>255) aa=255; if (aa<0) aa=0; color.rgbReserved=(BYTE) aa;
+	  } else
 #endif
 		{ //Alpha not supported or no alpha at all
 			color.rgbReserved = 0;
 		}
-      return color;
+	  return color;
+	case IM_LANCZOS:
+	  //lanczos window (16*16) sinc interpolation
+	  if (((xi+6)<0) || ((xi-5)>=head.biWidth) || ((yi+6)<0) || ((yi-5)>=head.biHeight)) {
+		//all points are outside bounds
+		switch (ofMethod) {
+		  case OM_COLOR: case OM_TRANSPARENT: case OM_BACKGROUND:
+			//we don't need to interpolate anything with all points outside in this case
+			return GetPixelColorWithOverflow(-999, -999, ofMethod, rplColor);
+			break;
+		  default:
+			//recalculate coordinates and use faster method later on
+			OverflowCoordinates(x,y,ofMethod);
+			xi=(int)(x); if (x<0) xi--;	//x and/or y have changed ... recalculate xi and yi
+			yi=(int)(y); if (y<0) yi--;
+		}//switch
+	  }//if
+
+	  for (xii=xi-5; xii<xi+7; xii++) kernelx[xii-(xi-5)]=KernelLanczosSinc((float)(xii-x), 6.0f);
+	  rr=gg=bb=aa=0;
+
+	  if (((xi+6)<head.biWidth) && ((xi-5)>=0) && ((yi+6)<head.biHeight) && ((yi-5)>=0) && !IsIndexed()) {
+		//optimized interpolation (faster pixel reads) for RGB24 images with all pixels inside bounds
+		BYTE *pxptr, *pxptra;
+		for (yii=yi-5; yii<yi+7; yii++) {
+		  pxptr=(BYTE *)BlindGetPixelPointer(xi-5, yii);	//calculate pointer to first byte in row
+		  kernelyc=KernelLanczosSinc((float)(yii-y),6.0f);
+#if CXIMAGE_SUPPORT_ALPHA
+		  if (AlphaIsValid()) {
+			//alpha is supported and valid
+			pxptra=AlphaGetPointer(xi-1, yii);
+			for (xii=0; xii<12; xii++) {
+			  kernel=kernelyc*kernelx[xii];
+			  bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++); aa+=kernel*(*pxptra++);
+			}//for xii
+		  } else
+#endif
+		  //alpha not supported or valid
+		  {
+			for (xii=0; xii<12; xii++) {
+			  kernel=kernelyc*kernelx[xii];
+			  bb+=kernel*(*pxptr++); gg+=kernel*(*pxptr++); rr+=kernel*(*pxptr++);
+			}//for xii
+		  }
+		}//yii
+	  } else {
+		//slower more flexible interpolation for border pixels and paletted images
+		RGBQUAD rgbs;
+		for (yii=yi-5; yii<yi+7; yii++) {
+		  kernelyc=KernelLanczosSinc((float)(yii-y),6.0f);
+		  for (xii=xi-5; xii<xi+7; xii++) {
+			kernel=kernelyc*kernelx[xii-(xi-5)];
+			rgbs=GetPixelColorWithOverflow(xii, yii, ofMethod, rplColor);
+			rr+=kernel*rgbs.rgbRed;
+			gg+=kernel*rgbs.rgbGreen;
+			bb+=kernel*rgbs.rgbBlue;
+#if CXIMAGE_SUPPORT_ALPHA
+			aa+=kernel*rgbs.rgbReserved;
+#endif
+		  }//xii
+		}//yii
+	  }//if
+	  //for all colors, clip to 0..255 and assign to RGBQUAD
+	  if (rr>255) rr=255; if (rr<0) rr=0; color.rgbRed=(BYTE) rr;
+	  if (gg>255) gg=255; if (gg<0) gg=0; color.rgbGreen=(BYTE) gg;
+	  if (bb>255) bb=255; if (bb<0) bb=0; color.rgbBlue=(BYTE) bb;
+#if CXIMAGE_SUPPORT_ALPHA
+	  if (AlphaIsValid()) {
+		if (aa>255) aa=255; if (aa<0) aa=0; color.rgbReserved=(BYTE) aa;	
+	  } else
+#endif
+		{ //Alpha not supported or no alpha at all
+			color.rgbReserved = 0;
+		}
+	  return color;
   }//switch
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -582,50 +582,50 @@ RGBQUAD CxImage::GetAreaColorInterpolated(
   OverflowMethod const ofMethod, 
   RGBQUAD* const rplColor)
 {
-	RGBQUAD color;      //calculated colour
+	RGBQUAD color;	  //calculated colour
 	
 	if (h<=1 && w<=1) {
 		//both width and height are less than one... we will use interpolation of center point
 		return GetPixelColorInterpolated(xc, yc, inMethod, ofMethod, rplColor);
 	} else {
 		//area is wider and/or taller than one pixel:
-		CxRect2 area(xc-w/2.0f, yc-h/2.0f, xc+w/2.0f, yc+h/2.0f);   //area
-		int xi1=(int)(area.botLeft.x+0.49999999f);                //low x
-		int yi1=(int)(area.botLeft.y+0.49999999f);                //low y
+		CxRect2 area(xc-w/2.0f, yc-h/2.0f, xc+w/2.0f, yc+h/2.0f);	//area
+		int xi1=(int)(area.botLeft.x+0.49999999f);				//low x
+		int yi1=(int)(area.botLeft.y+0.49999999f);				//low y
 		
 		
-		int xi2=(int)(area.topRight.x+0.5f);                      //top x
-		int yi2=(int)(area.topRight.y+0.5f);                      //top y (for loops)
+		int xi2=(int)(area.topRight.x+0.5f);					  //top x
+		int yi2=(int)(area.topRight.y+0.5f);					  //top y (for loops)
 		
-		float rr,gg,bb,aa;                                        //red, green, blue and alpha components
+		float rr,gg,bb,aa;										//red, green, blue and alpha components
 		rr=gg=bb=aa=0;
-		int x,y;                                                  //loop counters
-		float s=0;                                                //surface of all pixels
-		float cps;                                                //surface of current crosssection
+		int x,y;												  //loop counters
+		float s=0;												//surface of all pixels
+		float cps;												//surface of current crosssection
 		if (h>1 && w>1) {
 			//width and height of area are greater than one pixel, so we can employ "ordinary" averaging
-			CxRect2 intBL, intTR;     //bottom left and top right intersection
+			CxRect2 intBL, intTR;	 //bottom left and top right intersection
 			intBL=area.CrossSection(CxRect2(((float)xi1)-0.5f, ((float)yi1)-0.5f, ((float)xi1)+0.5f, ((float)yi1)+0.5f));
 			intTR=area.CrossSection(CxRect2(((float)xi2)-0.5f, ((float)yi2)-0.5f, ((float)xi2)+0.5f, ((float)yi2)+0.5f));
 			float wBL, wTR, hBL, hTR;
-			wBL=intBL.Width();            //width of bottom left pixel-area intersection
-			hBL=intBL.Height();           //height of bottom left...
-			wTR=intTR.Width();            //width of top right...
-			hTR=intTR.Height();           //height of top right...
+			wBL=intBL.Width();			//width of bottom left pixel-area intersection
+			hBL=intBL.Height();			//height of bottom left...
+			wTR=intTR.Width();			//width of top right...
+			hTR=intTR.Height();			//height of top right...
 			
-			AddAveragingCont(GetPixelColorWithOverflow(xi1,yi1,ofMethod,rplColor), wBL*hBL, rr, gg, bb, aa);    //bottom left pixel
-			AddAveragingCont(GetPixelColorWithOverflow(xi2,yi1,ofMethod,rplColor), wTR*hBL, rr, gg, bb, aa);    //bottom right pixel
-			AddAveragingCont(GetPixelColorWithOverflow(xi1,yi2,ofMethod,rplColor), wBL*hTR, rr, gg, bb, aa);    //top left pixel
-			AddAveragingCont(GetPixelColorWithOverflow(xi2,yi2,ofMethod,rplColor), wTR*hTR, rr, gg, bb, aa);    //top right pixel
+			AddAveragingCont(GetPixelColorWithOverflow(xi1,yi1,ofMethod,rplColor), wBL*hBL, rr, gg, bb, aa);	//bottom left pixel
+			AddAveragingCont(GetPixelColorWithOverflow(xi2,yi1,ofMethod,rplColor), wTR*hBL, rr, gg, bb, aa);	//bottom right pixel
+			AddAveragingCont(GetPixelColorWithOverflow(xi1,yi2,ofMethod,rplColor), wBL*hTR, rr, gg, bb, aa);	//top left pixel
+			AddAveragingCont(GetPixelColorWithOverflow(xi2,yi2,ofMethod,rplColor), wTR*hTR, rr, gg, bb, aa);	//top right pixel
 			//bottom and top row
 			for (x=xi1+1; x<xi2; x++) {
-				AddAveragingCont(GetPixelColorWithOverflow(x,yi1,ofMethod,rplColor), hBL, rr, gg, bb, aa);    //bottom row
-				AddAveragingCont(GetPixelColorWithOverflow(x,yi2,ofMethod,rplColor), hTR, rr, gg, bb, aa);    //top row
+				AddAveragingCont(GetPixelColorWithOverflow(x,yi1,ofMethod,rplColor), hBL, rr, gg, bb, aa);	//bottom row
+				AddAveragingCont(GetPixelColorWithOverflow(x,yi2,ofMethod,rplColor), hTR, rr, gg, bb, aa);	//top row
 			}
 			//leftmost and rightmost column
 			for (y=yi1+1; y<yi2; y++) {
-				AddAveragingCont(GetPixelColorWithOverflow(xi1,y,ofMethod,rplColor), wBL, rr, gg, bb, aa);    //left column
-				AddAveragingCont(GetPixelColorWithOverflow(xi2,y,ofMethod,rplColor), wTR, rr, gg, bb, aa);    //right column
+				AddAveragingCont(GetPixelColorWithOverflow(xi1,y,ofMethod,rplColor), wBL, rr, gg, bb, aa);	//left column
+				AddAveragingCont(GetPixelColorWithOverflow(xi2,y,ofMethod,rplColor), wTR, rr, gg, bb, aa);	//right column
 			}
 			for (y=yi1+1; y<yi2; y++) {
 				for (x=xi1+1; x<xi2; x++) { 
@@ -640,7 +640,7 @@ RGBQUAD CxImage::GetAreaColorInterpolated(
 			}//for y
 		} else {
 			//width or height greater than one:
-			CxRect2 intersect;                                          //intersection with current pixel
+			CxRect2 intersect;										  //intersection with current pixel
 			CxPoint2 center;
 			for (y=yi1; y<=yi2; y++) {
 				for (x=xi1; x<=xi2; x++) {
@@ -655,7 +655,7 @@ RGBQUAD CxImage::GetAreaColorInterpolated(
 					aa+=color.rgbReserved*cps;
 #endif
 				}//for x
-			}//for y      
+			}//for y	  
 		}//if
 		
 		s=area.Surface();
@@ -708,11 +708,11 @@ float CxImage::KernelBSpline(const float x)
 /**
  * Bilinear interpolation kernel:
   \verbatim
-          /
-         | 1-t           , if  0 <= t <= 1
-  h(t) = | t+1           , if -1 <= t <  0
-         | 0             , otherwise
-          \
+		  /
+		 | 1-t			, if  0 <= t <= 1
+  h(t) = | t+1			, if -1 <= t <  0
+		 | 0			 , otherwise
+		  \
   \endverbatim
  * ***bd*** 2.2004
  */
@@ -736,11 +736,11 @@ float CxImage::KernelLinear(const float t)
 /**
  * Bicubic interpolation kernel (a=-1):
   \verbatim
-          /
-         | 1-2|t|**2+|t|**3          , if |t| < 1
-  h(t) = | 4-8|t|+5|t|**2-|t|**3     , if 1<=|t|<2
-         | 0                         , otherwise
-          \
+		  /
+		 | 1-2|t|**2+|t|**3		  , if |t| < 1
+  h(t) = | 4-8|t|+5|t|**2-|t|**3	 , if 1<=|t|<2
+		 | 0						 , otherwise
+		  \
   \endverbatim
  * ***bd*** 2.2004
  */
@@ -757,11 +757,11 @@ float CxImage::KernelCubic(const float t)
 /**
  * Bicubic kernel (for a=-1 it is the same as BicubicKernel):
   \verbatim
-          /
-         | (a+2)|t|**3 - (a+3)|t|**2 + 1     , |t| <= 1
-  h(t) = | a|t|**3 - 5a|t|**2 + 8a|t| - 4a   , 1 < |t| <= 2
-         | 0                                 , otherwise
-          \
+		  /
+		 | (a+2)|t|**3 - (a+3)|t|**2 + 1	 , |t| <= 1
+  h(t) = | a|t|**3 - 5a|t|**2 + 8a|t| - 4a	, 1 < |t| <= 2
+		 | 0								 , otherwise
+		  \
   \endverbatim
  * Often used values for a are -1 and -1/2.
  */
@@ -778,10 +778,10 @@ float CxImage::KernelGeneralizedCubic(const float t, const float a)
 /**
  * Lanczos windowed sinc interpolation kernel with radius r.
   \verbatim
-          /
-  h(t) = | sinc(t)*sinc(t/r)       , if |t|<r
-         | 0                       , otherwise
-          \
+		  /
+  h(t) = | sinc(t)*sinc(t/r)		, if |t|<r
+		 | 0						, otherwise
+		  \
   \endverbatim
  * ***bd*** 2.2004
  */

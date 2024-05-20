@@ -10,16 +10,16 @@
 
 IC CAgentEnemyManager::CAgentEnemyManager(CAgentManager* object)
 {
-    VERIFY(object);
-    m_object = object;
-    m_only_wounded_left = false;
-    m_is_any_wounded = false;
+	VERIFY(object);
+	m_object = object;
+	m_only_wounded_left = false;
+	m_is_any_wounded = false;
 }
 
 IC CAgentManager& CAgentEnemyManager::object() const
 {
-    VERIFY(m_object);
-    return (*m_object);
+	VERIFY(m_object);
+	return (*m_object);
 }
 
 IC CAgentEnemyManager::ENEMIES& CAgentEnemyManager::enemies() { return (m_enemies); }

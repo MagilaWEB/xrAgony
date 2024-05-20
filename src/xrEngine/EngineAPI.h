@@ -14,9 +14,9 @@
 class IFactoryObject
 {
 public:
-    virtual ~IFactoryObject() = 0;
-    virtual CLASS_ID& GetClassId() = 0;
-    virtual IFactoryObject* _construct() = 0;
+	virtual ~IFactoryObject() = 0;
+	virtual CLASS_ID& GetClassId() = 0;
+	virtual IFactoryObject* _construct() = 0;
 };
 
 inline IFactoryObject::~IFactoryObject() {}
@@ -24,13 +24,13 @@ inline IFactoryObject* IFactoryObject::_construct() { return this; }
 class ENGINE_API FactoryObjectBase : public virtual IFactoryObject
 {
 public:
-    CLASS_ID CLS_ID;
+	CLASS_ID CLS_ID;
 
-    FactoryObjectBase(void* params) { CLS_ID = 0; };
-    FactoryObjectBase() { CLS_ID = 0; };
-    virtual CLASS_ID& GetClassId() override { return CLS_ID; }
-    virtual IFactoryObject* _construct() override { return IFactoryObject::_construct(); }
-    virtual ~FactoryObjectBase(){};
+	FactoryObjectBase(void* params) { CLS_ID = 0; };
+	FactoryObjectBase() { CLS_ID = 0; };
+	virtual CLASS_ID& GetClassId() override { return CLS_ID; }
+	virtual IFactoryObject* _construct() override { return IFactoryObject::_construct(); }
+	virtual ~FactoryObjectBase(){};
 };
 
 // Class creation/destroying interface
@@ -47,41 +47,41 @@ using VTResume = void __cdecl(void);
 
 class ENGINE_API CEngineAPI
 {
-    using SupportCheck = bool(*)();
-    using SetupEnv = void(*)();
+	using SupportCheck = bool(*)();
+	using SetupEnv = void(*)();
 
-    XRay::Module hGame;
-    XRay::Module hTuner;
-    xr_vector<XRay::Module> m_renderers;
+	XRay::Module hGame;
+	XRay::Module hTuner;
+	xr_vector<XRay::Module> m_renderers;
 
-    SetupEnv m_setupSelectedRenderer;
+	SetupEnv m_setupSelectedRenderer;
 
 public:
-    BENCH_SEC_SCRAMBLEMEMBER1
-    Factory_Create* pCreate;
-    Factory_Destroy* pDestroy;
-    bool tune_enabled;
-    VTPause* tune_pause;
-    VTResume* tune_resume;
-    void Initialize();
-    void CloseUnusedLibraries();
+	BENCH_SEC_SCRAMBLEMEMBER1
+	Factory_Create* pCreate;
+	Factory_Destroy* pDestroy;
+	bool tune_enabled;
+	VTPause* tune_pause;
+	VTResume* tune_resume;
+	void Initialize();
+	void CloseUnusedLibraries();
 
-    void InitializeRenderers();
-    void SelectRenderer();
+	void InitializeRenderers();
+	void SelectRenderer();
 
-    void Destroy();
+	void Destroy();
 
-    void CreateRendererList();
+	void CreateRendererList();
 
-    CEngineAPI();
-    ~CEngineAPI();
+	CEngineAPI();
+	~CEngineAPI();
 };
 
 ENGINE_API bool is_enough_address_space_available();
 
 #define NEW_INSTANCE(a) Engine.External.pCreate(a)
 #define DEL_INSTANCE(a)\
-    {\
-        Engine.External.pDestroy(a);\
-        a = NULL;\
-    }
+	{\
+		Engine.External.pDestroy(a);\
+		a = NULL;\
+	}

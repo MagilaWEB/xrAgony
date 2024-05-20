@@ -26,7 +26,7 @@ namespace luabind {
 		template <class U>
 		struct lua_proxy_converter
 		{
-			using type      = lua_proxy_converter<U>;
+			using type	  = lua_proxy_converter<U>;
 			using is_native = std::true_type;
 
 			enum { consumed_args = 1 };

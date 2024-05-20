@@ -182,21 +182,21 @@ struct rgb_color { BYTE r,g,b; };
 typedef struct tagCxTextInfo
 {
 #if defined (_WIN32_WCE)
-	TCHAR    text[256];  ///< text for windows CE
+	TCHAR	text[256];  ///< text for windows CE
 #else
-	TCHAR    text[4096]; ///< text (char -> TCHAR for UNICODE [Cesar M])
+	TCHAR	text[4096]; ///< text (char -> TCHAR for UNICODE [Cesar M])
 #endif
-	LOGFONT  lfont;      ///< font and codepage data
-    COLORREF fcolor;     ///< foreground color
-    long     align;      ///< DT_CENTER, DT_RIGHT, DT_LEFT aligment for multiline text
-    BYTE     smooth;     ///< text smoothing option. Default is false.
-    BYTE     opaque;     ///< text has background or hasn't. Default is true.
+	LOGFONT  lfont;	  ///< font and codepage data
+	COLORREF fcolor;	 ///< foreground color
+	long	 align;	  ///< DT_CENTER, DT_RIGHT, DT_LEFT aligment for multiline text
+	BYTE	 smooth;	 ///< text smoothing option. Default is false.
+	BYTE	 opaque;	 ///< text has background or hasn't. Default is true.
 						 ///< data for background (ignored if .opaque==FALSE) 
-    COLORREF bcolor;     ///< background color
-    float    b_opacity;  ///< opacity value for background between 0.0-1.0 Default is 0. (opaque)
-    BYTE     b_outline;  ///< outline width for background (zero: no outline)
-    BYTE     b_round;    ///< rounding radius for background rectangle. % of the height, between 0-50. Default is 10.
-                         ///< (backgr. always has a frame: width = 3 pixel + 10% of height by default.)
+	COLORREF bcolor;	 ///< background color
+	float	b_opacity;  ///< opacity value for background between 0.0-1.0 Default is 0. (opaque)
+	BYTE	 b_outline;  ///< outline width for background (zero: no outline)
+	BYTE	 b_round;	///< rounding radius for background rectangle. % of the height, between 0-50. Default is 10.
+						 ///< (backgr. always has a frame: width = 3 pixel + 10% of height by default.)
 } CXTEXTINFO;
 #endif
 
@@ -440,8 +440,8 @@ public:
 	//long	DrawString(HDC hdc, long x, long y, const char* text, RGBQUAD color, const char* font, long lSize=0, long lWeight=400, BYTE bItalic=0, BYTE bUnderline=0, bool bSetAlpha=false);
 	long	DrawString(HDC hdc, long x, long y, const TCHAR* text, RGBQUAD color, const TCHAR* font, long lSize=0, long lWeight=400, BYTE bItalic=0, BYTE bUnderline=0, bool bSetAlpha=false);
 	// <VATI> extensions
-	long    DrawStringEx(HDC hdc, long x, long y, CXTEXTINFO *pTextType, bool bSetAlpha=false );
-	void    InitTextInfo( CXTEXTINFO *txt );
+	long	DrawStringEx(HDC hdc, long x, long y, CXTEXTINFO *pTextType, bool bSetAlpha=false );
+	void	InitTextInfo( CXTEXTINFO *txt );
 #endif //CXIMAGE_SUPPORT_WINDOWS
 //@}
 
@@ -517,8 +517,8 @@ public:
 	// image operations
 	bool Rotate(float angle, CxImage* iDst = NULL);
 	bool Rotate2(float angle, CxImage *iDst = NULL, InterpolationMethod inMethod=IM_BILINEAR,
-                OverflowMethod ofMethod=OM_BACKGROUND, RGBQUAD *replColor=0,
-                bool const optimizeRightAngles=true, bool const bKeepOriginalSize=false);
+				OverflowMethod ofMethod=OM_BACKGROUND, RGBQUAD *replColor=0,
+				bool const optimizeRightAngles=true, bool const bKeepOriginalSize=false);
 	bool Rotate180(CxImage* iDst = NULL);
 	bool Resample(long newx, long newy, int mode = 1, CxImage* iDst = NULL);
 	bool Resample2(long newx, long newy, InterpolationMethod const inMethod=IM_BICUBIC2,
@@ -722,7 +722,7 @@ protected:
 	void bihtoh(BITMAPINFOHEADER* bih);
 
 	void*				pDib; //contains the header, the palette, the pixels
-    BITMAPINFOHEADER    head; //standard header
+	BITMAPINFOHEADER	head; //standard header
 	CXIMAGEINFO			info; //extended information
 	BYTE*				pSelection;	//selected region
 	BYTE*				pAlpha; //alpha channel

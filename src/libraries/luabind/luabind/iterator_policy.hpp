@@ -5,11 +5,11 @@
 #ifndef LUABIND_ITERATOR_POLICY__071111_HPP
 # define LUABIND_ITERATOR_POLICY__071111_HPP
 
-# include <luabind/config.hpp>           // for LUABIND_ANONYMOUS_FIX
+# include <luabind/config.hpp>			// for LUABIND_ANONYMOUS_FIX
 # include <luabind/detail/push_to_lua.hpp>  // for convert_to_lua
-# include <luabind/detail/policy.hpp>    // for index_map, etc
+# include <luabind/detail/policy.hpp>	// for index_map, etc
 
-# include <new>                          // for operator new
+# include <new>						  // for operator new
 
 namespace luabind {
 	namespace detail {

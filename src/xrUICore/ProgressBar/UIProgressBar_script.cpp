@@ -6,14 +6,14 @@ using namespace luabind;
 
 SCRIPT_EXPORT(CUIProgressBar, (CUIWindow),
 {
-    module(luaState)
-    [
-        class_<CUIProgressBar, CUIWindow>("CUIProgressBar")
-            .def(constructor<>())
-            .def("SetProgressPos", &CUIProgressBar::SetProgressPos)
-            .def("GetProgressPos", &CUIProgressBar::GetProgressPos)
+	module(luaState)
+	[
+		class_<CUIProgressBar, CUIWindow>("CUIProgressBar")
+			.def(constructor<>())
+			.def("SetProgressPos", &CUIProgressBar::SetProgressPos)
+			.def("GetProgressPos", &CUIProgressBar::GetProgressPos)
 
-            .def("GetRange_min", &CUIProgressBar::GetRange_min)
-            .def("GetRange_max", &CUIProgressBar::GetRange_max)
-    ];
+			.def("GetRange_min", &CUIProgressBar::GetRange_min)
+			.def("GetRange_max", &CUIProgressBar::GetRange_max)
+	];
 });

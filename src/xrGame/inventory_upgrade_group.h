@@ -18,33 +18,33 @@ namespace upgrade
 class Group : private Noncopyable
 {
 public:
-    Group();
-    virtual ~Group();
-    void construct(const shared_str& group_id, UpgradeBase& parent_upgrade, Manager& manager_r);
-    void add_parent_upgrade(UpgradeBase& parent_upgrade);
+	Group();
+	virtual ~Group();
+	void construct(const shared_str& group_id, UpgradeBase& parent_upgrade, Manager& manager_r);
+	void add_parent_upgrade(UpgradeBase& parent_upgrade);
 
-    IC const shared_str& id() const;
-    IC LPCSTR id_str() const;
+	IC const shared_str& id() const;
+	IC LPCSTR id_str() const;
 
 #ifdef DEBUG
-    void log_hierarchy(LPCSTR nesting);
+	void log_hierarchy(LPCSTR nesting);
 #endif // DEBUG
 
-    void fill_root(Root* root);
+	void fill_root(Root* root);
 
-    UpgradeStateResult can_install(CInventoryItem& item, UpgradeBase& test_upgrade, bool loading);
+	UpgradeStateResult can_install(CInventoryItem& item, UpgradeBase& test_upgrade, bool loading);
 
-    void highlight_up();
-    void highlight_down();
-
-private:
-    typedef xr_vector<UpgradeBase*> Upgrades_type;
+	void highlight_up();
+	void highlight_down();
 
 private:
-    shared_str m_id;
+	typedef xr_vector<UpgradeBase*> Upgrades_type;
 
-    Upgrades_type m_parent_upgrades;
-    Upgrades_type m_included_upgrades;
+private:
+	shared_str m_id;
+
+	Upgrades_type m_parent_upgrades;
+	Upgrades_type m_included_upgrades;
 
 }; // class group
 

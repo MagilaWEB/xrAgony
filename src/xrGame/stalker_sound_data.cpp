@@ -14,10 +14,10 @@
 CStalkerSoundData::~CStalkerSoundData() {}
 void CStalkerSoundData::accept(CSound_UserDataVisitor* visitor)
 {
-    if (!m_object || m_object->getDestroy())
-        return;
+	if (!m_object || m_object->getDestroy())
+		return;
 
-    visitor->visit(this);
+	visitor->visit(this);
 }
 
 void CStalkerSoundData::invalidate() { m_object = 0; }

@@ -16,19 +16,19 @@ extern void CCC_RegisterInput();
 
 struct _conCmd
 {
-    shared_str cmd;
+	shared_str cmd;
 };
 
 class ConsoleBindCmds
 {
 public:
-    xr_map<int, _conCmd> m_bindConsoleCmds;
+	xr_map<int, _conCmd> m_bindConsoleCmds;
 
-    void bind(int dik, LPCSTR N);
-    void unbind(int dik);
-    bool execute(int dik);
-    void clear();
-    void save(IWriter* F);
+	void bind(int dik, LPCSTR N);
+	void unbind(int dik);
+	bool execute(int dik);
+	void clear();
+	void save(IWriter* F);
 };
 
 extern ConsoleBindCmds bindConsoleCmds;

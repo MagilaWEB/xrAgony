@@ -152,7 +152,7 @@ void IGame_Persistent::Prefetch()
 
 	const auto memoryAfter = Memory.mem_usage() - memoryBefore;
 
-	Msg("* [prefetch] time:   %d ms", timer.GetElapsed_ms());
+	Msg("* [prefetch] time:	%d ms", timer.GetElapsed_ms());
 	Msg("* [prefetch] memory: %d Kb", memoryAfter / 1024);
 }
 #endif
@@ -236,8 +236,8 @@ void IGame_Persistent::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 	// XXX: move to particle engine
 	stats.FrameEnd();
 	font.OutNext("Particles:");
-	font.OutNext("- starting:   %u", stats.Starting);
-	font.OutNext("- active:     %u", stats.Active);
+	font.OutNext("- starting:	%u", stats.Starting);
+	font.OutNext("- active:	 %u", stats.Active);
 	font.OutNext("- destroying: %u", stats.Destroying);
 	stats.FrameStart();
 }

@@ -1,7 +1,7 @@
 /* -----------------------------------------------------------------------------
 
-	Copyright (c) 2006 Simon Brown                          si@sjbrown.co.uk
-	Copyright (c) 2006 Ignacio Castano                      icastano@nvidia.com
+	Copyright (c) 2006 Simon Brown						  si@sjbrown.co.uk
+	Copyright (c) 2006 Ignacio Castano					  icastano@nvidia.com
 
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the 
@@ -22,7 +22,7 @@
 	TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
-   -------------------------------------------------------------------------- */
+	-------------------------------------------------------------------------- */
 
 #include "fastclusterfit.h"
 #include "colourset.h"

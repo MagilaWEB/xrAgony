@@ -13,6 +13,6 @@
 CScriptObjectAction::~CScriptObjectAction() {}
 void CScriptObjectAction::SetObject(CScriptGameObject* tpLuaGameObject)
 {
-    m_tpObject = tpLuaGameObject->operator IGameObject*();
-    m_bCompleted = false;
+	m_tpObject = tpLuaGameObject->operator IGameObject*();
+	m_bCompleted = false;
 }

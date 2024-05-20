@@ -16,58 +16,58 @@
 
 CScriptSound::CScriptSound(LPCSTR caSoundName, ESoundTypes sound_type)
 {
-    m_bIsNoSound = strstr(Core.Params, "-nosound");
-    m_caSoundToPlay = caSoundName;
-    string_path l_caFileName;
-    VERIFY(::Sound);
-    if (FS.exist(l_caFileName, "$game_sounds$", caSoundName, ".ogg"))
-        m_sound.create(caSoundName, st_Effect, sound_type);
-    else
-        ::ScriptEngine->script_log(LuaMessageType::Error, "File not found \"%s\"!", l_caFileName);
+	m_bIsNoSound = strstr(Core.Params, "-nosound");
+	m_caSoundToPlay = caSoundName;
+	string_path l_caFileName;
+	VERIFY(::Sound);
+	if (FS.exist(l_caFileName, "$game_sounds$", caSoundName, ".ogg"))
+		m_sound.create(caSoundName, st_Effect, sound_type);
+	else
+		::ScriptEngine->script_log(LuaMessageType::Error, "File not found \"%s\"!", l_caFileName);
 }
 
 CScriptSound::~CScriptSound()
 {
 #ifdef DEBUG
-    if (m_sound._feedback())
-        ::ScriptEngine->script_log(LuaMessageType::Error, "Playing sound is not completed, but is destroying \"%s\"!", 
-            m_sound._handle() ? m_sound._handle()->file_name() : "unknown");
+	if (m_sound._feedback())
+		::ScriptEngine->script_log(LuaMessageType::Error, "Playing sound is not completed, but is destroying \"%s\"!", 
+			m_sound._handle() ? m_sound._handle()->file_name() : "unknown");
 #endif
-    m_sound.destroy();
+	m_sound.destroy();
 }
 
 Fvector CScriptSound::GetPosition() const
 {
-    VERIFY(m_sound._handle() || m_bIsNoSound);
-    const CSound_params* l_tpSoundParams = m_sound.get_params();
-    if (l_tpSoundParams)
-        return (l_tpSoundParams->position);
-    else
-    {
-        ::ScriptEngine->script_log(LuaMessageType::Error, "Sound was not launched, can't get position!");
-        return (Fvector().set(0, 0, 0));
-    }
+	VERIFY(m_sound._handle() || m_bIsNoSound);
+	const CSound_params* l_tpSoundParams = m_sound.get_params();
+	if (l_tpSoundParams)
+		return (l_tpSoundParams->position);
+	else
+	{
+		::ScriptEngine->script_log(LuaMessageType::Error, "Sound was not launched, can't get position!");
+		return (Fvector().set(0, 0, 0));
+	}
 }
 
 void CScriptSound::Play(CScriptGameObject* object, float delay, int flags)
 {
-    THROW3(m_sound._handle() || m_bIsNoSound, "There is no sound", *m_caSoundToPlay);
-    //	Msg							("%6d : CScriptSound::Play (%s), delay %f, flags
-    //%d",Device.dwTimeGlobal,m_sound._handle()->file_name(),delay,flags);
-    m_sound.play((object) ? &object->object() : NULL, flags, delay);
+	THROW3(m_sound._handle() || m_bIsNoSound, "There is no sound", *m_caSoundToPlay);
+	//	Msg							("%6d : CScriptSound::Play (%s), delay %f, flags
+	//%d",Device.dwTimeGlobal,m_sound._handle()->file_name(),delay,flags);
+	m_sound.play((object) ? &object->object() : NULL, flags, delay);
 }
 
 void CScriptSound::PlayAtPos(CScriptGameObject* object, const Fvector& position, float delay, int flags)
 {
-    THROW3(m_sound._handle() || m_bIsNoSound, "There is no sound", *m_caSoundToPlay);
-    //	Msg							("%6d : CScriptSound::Play (%s), delay %f, flags
-    //%d",m_sound._handle()->file_name(),delay,flags);
-    m_sound.play_at_pos((object) ? &object->object() : NULL, position, flags, delay);
+	THROW3(m_sound._handle() || m_bIsNoSound, "There is no sound", *m_caSoundToPlay);
+	//	Msg							("%6d : CScriptSound::Play (%s), delay %f, flags
+	//%d",m_sound._handle()->file_name(),delay,flags);
+	m_sound.play_at_pos((object) ? &object->object() : NULL, position, flags, delay);
 }
 
 void CScriptSound::PlayNoFeedback(
-    CScriptGameObject* object, u32 flags /*!< Looping */, float delay /*!< Delay */, Fvector pos, float vol)
+	CScriptGameObject* object, u32 flags /*!< Looping */, float delay /*!< Delay */, Fvector pos, float vol)
 {
-    THROW3(m_sound._handle() || m_bIsNoSound, "There is no sound", *m_caSoundToPlay);
-    m_sound.play_no_feedback((object) ? &object->object() : NULL, flags, delay, &pos, &vol);
+	THROW3(m_sound._handle() || m_bIsNoSound, "There is no sound", *m_caSoundToPlay);
+	m_sound.play_no_feedback((object) ? &object->object() : NULL, flags, delay, &pos, &vol);
 }

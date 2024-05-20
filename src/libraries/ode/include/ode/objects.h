@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 #ifndef _ODE_OBJECTS_H_
@@ -171,11 +171,11 @@ ODE_API void dWorldImpulseToForce
  * There are ways to help overcome QuickStep's inaccuracy problems:
  * \li Increase CFM.
  * \li Reduce the number of contacts in your system (e.g. use the minimum
- *     number of contacts for the feet of a robot or creature).
+ *	 number of contacts for the feet of a robot or creature).
  * \li Don't use excessive friction in the contacts. 
  * \li Use contact slip if appropriate
  * \li Avoid kinematic loops (however, kinematic loops are inevitable in
- *     legged creatures).
+ *	 legged creatures).
  * \li Don't use excessive motor strength.
  * \liUse force-based motors instead of velocity-based motors.
  *
@@ -187,7 +187,7 @@ ODE_API void dWorldQuickStep (dWorldID w, dReal stepsize);
 
 /**
  * @brief Set the number of iterations that the QuickStep method performs per
- *        step.
+ *		step.
  * @ingroup world
  * @remarks
  * More iterations will give a more accurate solution, but will take 
@@ -199,7 +199,7 @@ ODE_API void dWorldSetQuickStepNumIterations (dWorldID, int num);
 
 /**
  * @brief Get the number of iterations that the QuickStep method performs per
- *        step.
+ *		step.
  * @ingroup world
  * @return nr of iterations
  */
@@ -285,8 +285,8 @@ ODE_API void dWorldStepFast1(dWorldID, dReal stepsize, int maxiterations);
  *
  * If a body has its auto-disable flag turned on, it will automatically disable 
  * itself when
- *   @li It has been idle for a given number of simulation steps.
- *   @li It has also been idle for a given amount of simulation time. 
+ *	@li It has been idle for a given number of simulation steps.
+ *	@li It has also been idle for a given amount of simulation time. 
  *
  * A body is considered to be idle when the magnitudes of both its linear velocity 
  * and angular velocity are below given thresholds.
@@ -387,22 +387,22 @@ ODE_API void dWorldSetAutoDisableFlag (dWorldID, int do_auto_disable);
  * simulation. Some properties change over time:
  *
  *  @li Position vector (x,y,z) of the body's point of reference. 
- *      Currently the point of reference must correspond to the body's center of mass.
+ *	  Currently the point of reference must correspond to the body's center of mass.
  *  @li Linear velocity of the point of reference, a vector (vx,vy,vz).
  *  @li Orientation of a body, represented by a quaternion (qs,qx,qy,qz) or 
- *      a 3x3 rotation matrix.
+ *	  a 3x3 rotation matrix.
  *  @li Angular velocity vector (wx,wy,wz) which describes how the orientation 
- *      changes over time. 
+ *	  changes over time. 
  *
  * Other body properties are usually constant over time:
  *
  *  @li Mass of the body.
  *  @li Position of the center of mass with respect to the point of reference. 
- *      In the current implementation the center of mass and the point of 
- *      reference must coincide.
+ *	  In the current implementation the center of mass and the point of 
+ *	  reference must coincide.
  *  @li Inertia matrix. This is a 3x3 matrix that describes how the body's mass 
- *      is distributed around the center of mass. Conceptually each body has an 
- *      x-y-z coordinate frame embedded in it that moves and rotates with the body.
+ *	  is distributed around the center of mass. Conceptually each body has an 
+ *	  x-y-z coordinate frame embedded in it that moves and rotates with the body.
  *
  * The origin of this coordinate frame is the body's point of reference. Some values 
  * in ODE (vectors, matrices etc) are relative to the body coordinate frame, and others 
@@ -512,8 +512,8 @@ ODE_API dBodyID dBodyCreate (dWorldID);
  */
 ODE_API void dBodyDestroy (dBodyID);
 
-void dWorldAddBody     (dWorldID,dBodyID); // X-Ray custom probably
-void dWorldAddJoint    (dWorldID,dJointID); // X-Ray custom probably
+void dWorldAddBody	 (dWorldID,dBodyID); // X-Ray custom probably
+void dWorldAddJoint	(dWorldID,dJointID); // X-Ray custom probably
 void dWorldRemoveBody  (dWorldID,dBodyID); // X-Ray custom probably
 void dWorldRemoveJoint (dWorldID,dJointID); // X-Ray custom probably
 
@@ -539,7 +539,7 @@ ODE_API void *dBodyGetData (dBodyID);
  * that are present.
  * @ingroup bodies
  */
-ODE_API void dBodySetPosition   (dBodyID, dReal x, dReal y, dReal z);
+ODE_API void dBodySetPosition	(dBodyID, dReal x, dReal y, dReal z);
 
 /**
  * @brief Set the orientation of a body.
@@ -549,7 +549,7 @@ ODE_API void dBodySetPosition   (dBodyID, dReal x, dReal y, dReal z);
  * if the new configuration is inconsistent with the joints/constraints 
  * that are present.
  */
-ODE_API void dBodySetRotation   (dBodyID, const dMatrix3 R);
+ODE_API void dBodySetRotation	(dBodyID, const dMatrix3 R);
 
 /**
  * @brief Set the orientation of a body.
@@ -581,14 +581,14 @@ ODE_API void dBodySetAngularVel (dBodyID, dReal x, dReal y, dReal z);
  * so the vectors are valid until any changes are made to the rigid body 
  * system structure.
  */
-ODE_API const dReal * dBodyGetPosition   (dBodyID);
+ODE_API const dReal * dBodyGetPosition	(dBodyID);
 
 /**
  * @brief Get the rotation of a body.
  * @ingroup bodies
  * @return pointer to a 4x3 rotation matrix.
  */
-ODE_API const dReal * dBodyGetRotation   (dBodyID); /* ptr to 4x3 rot matrix */
+ODE_API const dReal * dBodyGetRotation	(dBodyID); /* ptr to 4x3 rot matrix */
 
 /**
  * @brief Get the rotation of a body.
@@ -625,50 +625,50 @@ ODE_API void dBodyGetMass (dBodyID, dMass *mass);
  * @brief Add force at centre of mass of body in absolute coordinates.
  * @ingroup bodies
  */
-ODE_API void dBodyAddForce            (dBodyID, dReal fx, dReal fy, dReal fz);
+ODE_API void dBodyAddForce			(dBodyID, dReal fx, dReal fy, dReal fz);
 
 /**
  * @brief Add torque at centre of mass of body in absolute coordinates.
  * @ingroup bodies
  */
-ODE_API void dBodyAddTorque           (dBodyID, dReal fx, dReal fy, dReal fz);
+ODE_API void dBodyAddTorque			(dBodyID, dReal fx, dReal fy, dReal fz);
 
 /**
  * @brief Add force at centre of mass of body in coordinates relative to body.
  * @ingroup bodies
  */
-ODE_API void dBodyAddRelForce         (dBodyID, dReal fx, dReal fy, dReal fz);
+ODE_API void dBodyAddRelForce		 (dBodyID, dReal fx, dReal fy, dReal fz);
 
 /**
  * @brief Add torque at centre of mass of body in coordinates relative to body.
  * @ingroup bodies
  */
-ODE_API void dBodyAddRelTorque        (dBodyID, dReal fx, dReal fy, dReal fz);
+ODE_API void dBodyAddRelTorque		(dBodyID, dReal fx, dReal fy, dReal fz);
 
 /**
  * @brief Add force at specified point in body in global coordinates.
  * @ingroup bodies
  */
-ODE_API void dBodyAddForceAtPos       (dBodyID, dReal fx, dReal fy, dReal fz,
-			                dReal px, dReal py, dReal pz);
+ODE_API void dBodyAddForceAtPos		(dBodyID, dReal fx, dReal fy, dReal fz,
+							dReal px, dReal py, dReal pz);
 /**
  * @brief Add force at specified point in body in local coordinates.
  * @ingroup bodies
  */
-ODE_API void dBodyAddForceAtRelPos    (dBodyID, dReal fx, dReal fy, dReal fz,
-			                dReal px, dReal py, dReal pz);
+ODE_API void dBodyAddForceAtRelPos	(dBodyID, dReal fx, dReal fy, dReal fz,
+							dReal px, dReal py, dReal pz);
 /**
  * @brief Add force at specified point in body in global coordinates.
  * @ingroup bodies
  */
-ODE_API void dBodyAddRelForceAtPos    (dBodyID, dReal fx, dReal fy, dReal fz,
-			                dReal px, dReal py, dReal pz);
+ODE_API void dBodyAddRelForceAtPos	(dBodyID, dReal fx, dReal fy, dReal fz,
+							dReal px, dReal py, dReal pz);
 /**
  * @brief Add force at specified point in body in local coordinates.
  * @ingroup bodies
  */
 ODE_API void dBodyAddRelForceAtRelPos (dBodyID, dReal fx, dReal fy, dReal fz,
-			                dReal px, dReal py, dReal pz);
+							dReal px, dReal py, dReal pz);
 
 /**
  * @brief Return the current accumulated force vector.
@@ -679,7 +679,7 @@ ODE_API void dBodyAddRelForceAtRelPos (dBodyID, dReal fx, dReal fy, dReal fz,
  * body system.
  * @ingroup bodies
  */
-ODE_API const dReal * dBodyGetForce   (dBodyID);
+ODE_API const dReal * dBodyGetForce	(dBodyID);
 
 /**
  * @brief Return the current accumulated torque vector.

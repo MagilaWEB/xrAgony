@@ -1,5 +1,5 @@
 // hit_immunity.h: класс для тех объектов, которые поддерживают
-//				   коэффициенты иммунитета для разных типов хитов
+//					коэффициенты иммунитета для разных типов хитов
 //////////////////////////////////////////////////////////////////////
 
 #pragma once
@@ -11,18 +11,18 @@ class CInifile;
 
 class CHitImmunity
 {
-    //коэффициенты на которые домножается хит
-    //при соответствующем типе воздействия
-    //(для защитных костюмов и специфичных животных)
+	//коэффициенты на которые домножается хит
+	//при соответствующем типе воздействия
+	//(для защитных костюмов и специфичных животных)
 private:
-    HitImmunity::HitTypeSVec m_HitImmunityKoefs;
+	HitImmunity::HitTypeSVec m_HitImmunityKoefs;
 
 public:
-    CHitImmunity();
-    virtual ~CHitImmunity();
+	CHitImmunity();
+	virtual ~CHitImmunity();
 
-    void LoadImmunities(const char* section, const CInifile* ini);
-    void AddImmunities(const char* section, const CInifile* ini);
-    float GetHitImmunity(ALife::EHitType hit_type) const { return m_HitImmunityKoefs[hit_type]; }
-    float AffectHit(float power, ALife::EHitType hit_type) const { return power * GetHitImmunity(hit_type); }
+	void LoadImmunities(const char* section, const CInifile* ini);
+	void AddImmunities(const char* section, const CInifile* ini);
+	float GetHitImmunity(ALife::EHitType hit_type) const { return m_HitImmunityKoefs[hit_type]; }
+	float AffectHit(float power, ALife::EHitType hit_type) const { return power * GetHitImmunity(hit_type); }
 };

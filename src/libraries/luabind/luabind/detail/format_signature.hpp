@@ -71,18 +71,18 @@ namespace luabind {
 		};
 
 # define LUABIND_TYPE_TO_STRING(x) \
-    template <> \
-    struct type_to_string<x> \
-    { \
-        static void get(lua_State* L) \
-        { \
-            lua_pushstring(L, #x); \
-        } \
-    };
+	template <> \
+	struct type_to_string<x> \
+	{ \
+		static void get(lua_State* L) \
+		{ \
+			lua_pushstring(L, #x); \
+		} \
+	};
 
 # define LUABIND_INTEGRAL_TYPE_TO_STRING(x) \
-    LUABIND_TYPE_TO_STRING(x) \
-    LUABIND_TYPE_TO_STRING(unsigned x)
+	LUABIND_TYPE_TO_STRING(x) \
+	LUABIND_TYPE_TO_STRING(unsigned x)
 
 		LUABIND_INTEGRAL_TYPE_TO_STRING(char)
 			LUABIND_INTEGRAL_TYPE_TO_STRING(short)
@@ -142,8 +142,8 @@ namespace luabind {
 			size_t ncat = meta::size<Signature>::value * 2 + 2 + (meta::size<Signature>::value == 1 ? 1 : 0);
 			if (concat)
 			{
-			    lua_concat(L, static_cast<int>(ncat));
-			    ncat = 1;
+				lua_concat(L, static_cast<int>(ncat));
+				ncat = 1;
 			}
 			return ncat;
 		}

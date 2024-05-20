@@ -13,15 +13,15 @@
 #include "xrAICore/Navigation/graph_engine_space.h"
 #endif
 
-#define TEMPLATE_SPECIALIZATION                                                                                  \
-    template <typename _operator_condition, typename _operator, typename _condition_state,                       \
-        typename _condition_evaluator, typename _operator_id_type, bool _reverse_search, typename _operator_ptr, \
-        typename _condition_evaluator_ptr\
+#define TEMPLATE_SPECIALIZATION																				  \
+	template <typename _operator_condition, typename _operator, typename _condition_state,						\
+		typename _condition_evaluator, typename _operator_id_type, bool _reverse_search, typename _operator_ptr, \
+		typename _condition_evaluator_ptr\
 >
 
-#define CProblemSolverAbstract                                                                                \
-    CProblemSolver<_operator_condition, _operator, _condition_state, _condition_evaluator, _operator_id_type, \
-        _reverse_search, _operator_ptr, _condition_evaluator_ptr>
+#define CProblemSolverAbstract																				\
+	CProblemSolver<_operator_condition, _operator, _condition_state, _condition_evaluator, _operator_id_type, \
+		_reverse_search, _operator_ptr, _condition_evaluator_ptr>
 
 TEMPLATE_SPECIALIZATION
 IC CProblemSolverAbstract::CProblemSolver() { init(); }

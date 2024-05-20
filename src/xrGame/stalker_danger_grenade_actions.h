@@ -17,13 +17,13 @@
 class CStalkerActionDangerGrenadeTakeCover : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionDangerGrenadeTakeCover(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionDangerGrenadeTakeCover(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -33,13 +33,13 @@ public:
 class CStalkerActionDangerGrenadeWaitForExplosion : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionDangerGrenadeWaitForExplosion(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionDangerGrenadeWaitForExplosion(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,16 +49,16 @@ public:
 class CStalkerActionDangerGrenadeTakeCoverAfterExplosion : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 private:
-    bool m_direction_sight;
+	bool m_direction_sight;
 
 public:
-    CStalkerActionDangerGrenadeTakeCoverAfterExplosion(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionDangerGrenadeTakeCoverAfterExplosion(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -68,13 +68,13 @@ public:
 class CStalkerActionDangerGrenadeLookAround : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionDangerGrenadeLookAround(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionDangerGrenadeLookAround(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -84,11 +84,11 @@ public:
 class CStalkerActionDangerGrenadeSearch : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionDangerGrenadeSearch(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionDangerGrenadeSearch(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };

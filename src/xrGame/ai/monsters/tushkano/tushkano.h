@@ -4,14 +4,14 @@
 
 class CTushkano : public CBaseMonster, public CControlledEntity<CTushkano>
 {
-    typedef CBaseMonster inherited;
-    typedef CControlledEntity<CTushkano> CControlled;
+	typedef CBaseMonster inherited;
+	typedef CControlledEntity<CTushkano> CControlled;
 
 public:
-    CTushkano();
-    virtual ~CTushkano();
+	CTushkano();
+	virtual ~CTushkano();
 
-    virtual void Load(LPCSTR section);
-    virtual void CheckSpecParams(u32 spec_params);
-    pcstr get_monster_class_name() override { return "tushkano"; }
+	virtual void Load(LPCSTR section);
+	virtual void CheckSpecParams(u32 spec_params);
+	pcstr get_monster_class_name() override { return "tushkano"; }
 };

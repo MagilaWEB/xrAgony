@@ -75,7 +75,7 @@ In Detail (not sorted by any kind of priority):
 	- Results in increased speed of development (and especially team development)
 * Powerful scripting
 	- Full realization of C-language 
-	- Only 6-8 times slower than real (x86) code   (isn't great? :)
+	- Only 6-8 times slower than real (x86) code	(isn't great? :)
 	- Enables fast AI development and almost infinite number of texturing effects
 * The most important part of the mathematics is optimized for PIII SSE & K6/K7 3DNow instructions
 

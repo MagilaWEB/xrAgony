@@ -12,14 +12,14 @@
 
 CScriptParticleAction::~CScriptParticleAction()
 {
-    // xr_delete			(m_tpParticleSystem);
+	// xr_delete			(m_tpParticleSystem);
 }
 
 void CScriptParticleAction::SetParticle(LPCSTR caParticleToRun, bool bAutoRemove)
 {
-    m_caParticleToRun = caParticleToRun;
-    m_tGoalType = eGoalTypeParticleAttached;
-    m_tpParticleSystem = CParticlesObject::Create(*m_caParticleToRun, BOOL(m_bAutoRemove = bAutoRemove));
-    m_bStartedToPlay = false;
-    m_bCompleted = false;
+	m_caParticleToRun = caParticleToRun;
+	m_tGoalType = eGoalTypeParticleAttached;
+	m_tpParticleSystem = CParticlesObject::Create(*m_caParticleToRun, BOOL(m_bAutoRemove = bAutoRemove));
+	m_bStartedToPlay = false;
+	m_bCompleted = false;
 }

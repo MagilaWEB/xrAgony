@@ -348,7 +348,7 @@ void CGameObject::OnEvent(NET_Packet& P, u16 type)
 					IGameObject*	Weapon = Level().Objects.net_Find(weapon_id);
 
 					SHit	HDS = SHit(power, dir, Hitter, element, position_in_bone_space, impulse,
-		   (ALife::EHitType)hit_type, ap);
+			(ALife::EHitType)hit_type, ap);
 		*/
 		SHit HDS;
 		HDS.PACKET_TYPE = type;
@@ -371,7 +371,7 @@ void CGameObject::OnEvent(NET_Packet& P, u16 type)
 		break;
 		default: {
 		}
-			   break;
+				break;
 		}
 		SetHitInfo(Hitter, Weapon, HDS.bone(), HDS.p_in_bone_space, HDS.dir);
 		Hit(&HDS);

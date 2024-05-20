@@ -656,73 +656,73 @@ void CActor::Die(IGameObject* who)
 
 	//if (OnServer())
 	//{
-	//    u16 I = inventory().FirstSlot();
-	//    u16 E = inventory().LastSlot();
+	//	u16 I = inventory().FirstSlot();
+	//	u16 E = inventory().LastSlot();
 
-	//    for (; I <= E; ++I)
-	//    {
-	//        PIItem item_in_slot = inventory().ItemFromSlot(I);
-	//        if (I == inventory().GetActiveSlot())
-	//        {
-	//            if (item_in_slot)
-	//            {
-	//                if (IsGameTypeSingle())
-	//                {
-	//                    CGrenade* grenade = smart_cast<CGrenade*>(item_in_slot);
-	//                    if (grenade)
-	//                        grenade->DropGrenade();
-	//                    else
-	//                        item_in_slot->SetDropManual(TRUE);
-	//                }
-	//                else
-	//                {
-	//                    // This logic we do on a server site
-	//                    /*
-	//                    if ((*I).m_pIItem->object().CLS_ID != CLSID_OBJECT_W_KNIFE)
-	//                    {
-	//                        (*I).m_pIItem->SetDropManual(TRUE);
-	//                    }*/
-	//                }
-	//            };
-	//            continue;
-	//        }
-	//        else
-	//        {
-	//            CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(item_in_slot);
-	//            if (pOutfit)
-	//                continue;
-	//        };
-	//        if (item_in_slot)
-	//            inventory().Ruck(item_in_slot);
-	//    };
+	//	for (; I <= E; ++I)
+	//	{
+	//		PIItem item_in_slot = inventory().ItemFromSlot(I);
+	//		if (I == inventory().GetActiveSlot())
+	//		{
+	//			if (item_in_slot)
+	//			{
+	//				if (IsGameTypeSingle())
+	//				{
+	//					CGrenade* grenade = smart_cast<CGrenade*>(item_in_slot);
+	//					if (grenade)
+	//						grenade->DropGrenade();
+	//					else
+	//						item_in_slot->SetDropManual(TRUE);
+	//				}
+	//				else
+	//				{
+	//					// This logic we do on a server site
+	//					/*
+	//					if ((*I).m_pIItem->object().CLS_ID != CLSID_OBJECT_W_KNIFE)
+	//					{
+	//						(*I).m_pIItem->SetDropManual(TRUE);
+	//					}*/
+	//				}
+	//			};
+	//			continue;
+	//		}
+	//		else
+	//		{
+	//			CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(item_in_slot);
+	//			if (pOutfit)
+	//				continue;
+	//		};
+	//		if (item_in_slot)
+	//			inventory().Ruck(item_in_slot);
+	//	};
 
-	//    ///!!! чистка пояса
-	//    TIItemContainer& l_blist = inventory().m_belt;
-	//    while (!l_blist.empty())
-	//        inventory().Ruck(l_blist.front());
+	//	///!!! чистка пояса
+	//	TIItemContainer& l_blist = inventory().m_belt;
+	//	while (!l_blist.empty())
+	//		inventory().Ruck(l_blist.front());
 
-	//    if (!IsGameTypeSingle())
-	//    {
-	//        // if we are on server and actor has PDA - destroy PDA
-	//        for (auto& l_it : inventory().m_ruck)
-	//        {
-	//            if (GameID() == eGameIDArtefactHunt)
-	//            {
-	//                auto pArtefact = smart_cast<CArtefact*>(l_it);
-	//                if (pArtefact)
-	//                {
-	//                    l_it->SetDropManual(true);
-	//                    continue;
-	//                }
-	//            }
+	//	if (!IsGameTypeSingle())
+	//	{
+	//		// if we are on server and actor has PDA - destroy PDA
+	//		for (auto& l_it : inventory().m_ruck)
+	//		{
+	//			if (GameID() == eGameIDArtefactHunt)
+	//			{
+	//				auto pArtefact = smart_cast<CArtefact*>(l_it);
+	//				if (pArtefact)
+	//				{
+	//					l_it->SetDropManual(true);
+	//					continue;
+	//				}
+	//			}
 
-	//            if (l_it->object().CLS_ID == CLSID_OBJECT_PLAYERS_BAG)
-	//            {
-	//                l_it->SetDropManual(true);
-	//                continue;
-	//            }
-	//        }
-	//    }
+	//			if (l_it->object().CLS_ID == CLSID_OBJECT_PLAYERS_BAG)
+	//			{
+	//				l_it->SetDropManual(true);
+	//				continue;
+	//			}
+	//		}
+	//	}
 	//}
 
 	::Sound->play_at_pos(sndDie[Random.randI(SND_DIE_COUNT)], this, Position());
@@ -1245,7 +1245,7 @@ void CActor::shedule_Update(u32 DT)
 				m_DangerSnd.set_position(snd_pos);
 
 			float v = bs + 0.25f;
-			//			Msg( "bs            = %.2f", bs );
+			//			Msg( "bs			= %.2f", bs );
 
 			m_DangerSnd.set_volume(v);
 		}
@@ -1367,7 +1367,7 @@ void CActor::renderable_Render()
 
 	//if (1 /*!HUDview()*/)
 	//{
-	//    CInventoryOwner::renderable_Render();
+	//	CInventoryOwner::renderable_Render();
 	//}
 	//VERIFY(_valid(XFORM()));
 }
@@ -1453,10 +1453,10 @@ void CActor::RenderIndicator(Fvector dpos, float r1, float r2, const ui_shader& 
 	::UIRender->PushPoint(a.x + pos.x, a.y + pos.y, a.z + pos.z, 0xffffffff, 0.f, 0.f);
 	::UIRender->PushPoint(c.x + pos.x, c.y + pos.y, c.z + pos.z, 0xffffffff, 1.f, 1.f);
 	::UIRender->PushPoint(b.x + pos.x, b.y + pos.y, b.z + pos.z, 0xffffffff, 1.f, 0.f);
-	// pv->set         (d.x+pos.x,d.y+pos.y,d.z+pos.z, 0xffffffff, 0.f,1.f);        pv++;
-	// pv->set         (a.x+pos.x,a.y+pos.y,a.z+pos.z, 0xffffffff, 0.f,0.f);        pv++;
-	// pv->set         (c.x+pos.x,c.y+pos.y,c.z+pos.z, 0xffffffff, 1.f,1.f);        pv++;
-	// pv->set         (b.x+pos.x,b.y+pos.y,b.z+pos.z, 0xffffffff, 1.f,0.f);        pv++;
+	// pv->set		 (d.x+pos.x,d.y+pos.y,d.z+pos.z, 0xffffffff, 0.f,1.f);		pv++;
+	// pv->set		 (a.x+pos.x,a.y+pos.y,a.z+pos.z, 0xffffffff, 0.f,0.f);		pv++;
+	// pv->set		 (c.x+pos.x,c.y+pos.y,c.z+pos.z, 0xffffffff, 1.f,1.f);		pv++;
+	// pv->set		 (b.x+pos.x,b.y+pos.y,b.z+pos.z, 0xffffffff, 1.f,0.f);		pv++;
 	// render
 	// dwCount 				= u32(pv-pv_start);
 	// RCache.Vertex.Unlock	(dwCount,hFriendlyIndicator->vb_stride);
@@ -1466,7 +1466,7 @@ void CActor::RenderIndicator(Fvector dpos, float r1, float r2, const ui_shader& 
 	::UIRender->SetShader(*IndShader);
 	// RCache.set_Shader			(IndShader);
 	// RCache.set_Geometry			(hFriendlyIndicator);
-	// RCache.Render	   			(D3DPT_TRIANGLESTRIP,dwOffset,0, dwCount, 0, 2);
+	// RCache.Render					(D3DPT_TRIANGLESTRIP,dwOffset,0, dwCount, 0, 2);
 	::UIRender->FlushPrimitive();
 };
 
@@ -1700,7 +1700,7 @@ void CActor::UpdateArtefactsOnBeltAndOutfit()
 	CHelmet* pHelmet = smart_cast<CHelmet*>(inventory().ItemFromSlot(HELMET_SLOT));
 	if (!outfit && !pHelmet)
 	{
-		/*      if (GetNightVisionStatus())
+		/*	  if (GetNightVisionStatus())
 				{
 						SwitchNightVision(false);
 				} */

@@ -17,13 +17,13 @@
 class CStalkerActionRunToCover : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionRunToCover(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionRunToCover(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -33,11 +33,11 @@ public:
 class CStalkerActionWaitInCover : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionWaitInCover(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionWaitInCover(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };

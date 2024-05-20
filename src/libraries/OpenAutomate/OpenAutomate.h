@@ -18,7 +18,7 @@
  * "Licensee," "You" and/or "Your" shall mean, collectively and
  * individually, Original Equipment Manufacturers, Independent Hardware
  * Vendors, Independent Software Vendors, and End-Users of the Software
- * pursuant to the terms and conditions of this Agreement.   
+ * pursuant to the terms and conditions of this Agreement.	
  * 
  * "Derivative Works" shall mean derivatives of the Software created by You
  * or a third party on Your behalf, which term shall include:  (a) for
@@ -257,7 +257,7 @@
  * 
  * SECTION 8.6 - GOVERNMENT RESTRICTED RIGHTS. 
  * The parties acknowledge that the Software is subject to U.S. export
- * control laws and regulations.   The parties agree to comply with all
+ * control laws and regulations.	The parties agree to comply with all
  * applicable international and national laws that apply to the Software,
  * including the U.S. Export Administration Regulations, as well as
  * end-user, end-use and destination restrictions issued by U.S. and other
@@ -338,9 +338,9 @@ extern "C"
 typedef enum
 {
   OA_FALSE = 0,
-  OA_OFF   = 0,
+  OA_OFF	= 0,
   OA_TRUE  = 1,
-  OA_ON    = 1
+  OA_ON	= 1
 } oaBool;
 
 typedef OA_CHAR oaChar;
@@ -368,32 +368,32 @@ typedef enum
 {
   OA_TYPE_INVALID  = 0,
   OA_TYPE_STRING  = 1,
-  OA_TYPE_INT     = 2,
-  OA_TYPE_FLOAT   = 3,
-  OA_TYPE_ENUM    = 4,
-  OA_TYPE_BOOL    = 5
+  OA_TYPE_INT	 = 2,
+  OA_TYPE_FLOAT	= 3,
+  OA_TYPE_ENUM	= 4,
+  OA_TYPE_BOOL	= 5
 } oaOptionDataType;
 
 typedef enum
 {
-  OA_COMP_OP_INVALID           = 0,
-  OA_COMP_OP_EQUAL             = 1,
-  OA_COMP_OP_NOT_EQUAL         = 2,
-  OA_COMP_OP_GREATER           = 3,
-  OA_COMP_OP_LESS              = 4,
+  OA_COMP_OP_INVALID			= 0,
+  OA_COMP_OP_EQUAL			 = 1,
+  OA_COMP_OP_NOT_EQUAL		 = 2,
+  OA_COMP_OP_GREATER			= 3,
+  OA_COMP_OP_LESS			  = 4,
   OA_COMP_OP_GREATER_OR_EQUAL  = 5,
-  OA_COMP_OP_LESS_OR_EQUAL     = 6,
+  OA_COMP_OP_LESS_OR_EQUAL	 = 6,
 } oaComparisonOpType;
 
 typedef struct oaValueStruct
 {
   union
   {
-    oaString String;      
-    oaInt Int;
-    oaFloat Float;
-    oaString Enum;
-    oaBool Bool;
+	oaString String;	  
+	oaInt Int;
+	oaFloat Float;
+	oaString Enum;
+	oaBool Bool;
   };
 } oaValue;
 
@@ -402,38 +402,38 @@ typedef enum
   OA_SIGNAL_SYSTEM_UNDEFINED = 0x0,  /* Should never be used */
 
   /* used for errors, warnings, and log messages */
-  OA_SIGNAL_ERROR     = 0x1,         
+  OA_SIGNAL_ERROR	 = 0x1,		 
 
   /* requests a reboot of the system */
-  OA_SIGNAL_SYSTEM_REBOOT    = 0xF,
+  OA_SIGNAL_SYSTEM_REBOOT	= 0xF,
 } oaSignalType;
 
 typedef enum
 {
-  OA_ERROR_NONE                 = 0x00, /* no error */
-  OA_ERROR_WARNING              = 0x01, /* not an error, just a warning*/
-  OA_ERROR_LOG                  = 0x02, /* not an error, just a log message */
+  OA_ERROR_NONE				 = 0x00, /* no error */
+  OA_ERROR_WARNING			  = 0x01, /* not an error, just a warning*/
+  OA_ERROR_LOG				  = 0x02, /* not an error, just a log message */
 
-  OA_ERROR_INVALID_OPTION       = 0x10, /* option is invalid (wrong name) */
+  OA_ERROR_INVALID_OPTION		= 0x10, /* option is invalid (wrong name) */
   OA_ERROR_INVALID_OPTION_VALUE = 0x11, /* option value is out of range */
 
-  OA_ERROR_INVALID_BENCHMARK    = 0x21, /* chosen benchmark is invalid */
+  OA_ERROR_INVALID_BENCHMARK	= 0x21, /* chosen benchmark is invalid */
 
-  OA_ERROR_OTHER                = 0xFF, /* unknown error */
+  OA_ERROR_OTHER				= 0xFF, /* unknown error */
 } oaErrorType;
 
 typedef struct oaMessageStruct
 {
   oaInt StructSize; /* Size in bytes of the whole struct */
 
-  oaErrorType Error;     /* Only used for OA_SIGNAL_ERROR */ 
+  oaErrorType Error;	 /* Only used for OA_SIGNAL_ERROR */ 
   const oaChar *Message; 
 } oaMessage;
 
 
 /* Used when a parameter is only enabled if another parameter value meets
-   a certain condition.  For example, the "AA Level" parameter may only be
-   enabled if the "AA" parameter is equal to "On" */
+	a certain condition.  For example, the "AA Level" parameter may only be
+	enabled if the "AA" parameter is equal to "On" */
 typedef struct oaOptionDependencyStruct
 {
   oaInt StructSize; /* Size in bytes of the whole struct */
@@ -457,7 +457,7 @@ typedef struct oaNamedOptionStruct
   oaInt StructSize; /* Size in bytes of the whole struct */
 
   oaOptionDataType DataType;  
-  const oaChar *Name;             
+  const oaChar *Name;			 
 
   /* Currently only used for OA_TYPE_ENUM */
   oaValue Value;
@@ -466,28 +466,28 @@ typedef struct oaNamedOptionStruct
   oaValue MinValue;
   oaValue MaxValue;
 
-  /* determines the allowable values for an option given min/max              */
-  /*   NumSteps == -1  range is [-inf, inf]                                   */
-  /*   NumSteps ==  0  range is continuous within [MinValue, MaxValue]        */
-  /*   NumSteps >   0  assumes NumSteps uniform increments between min/max    */
-  /*                   eg, if min = 0, max = 8, and NumSteps = 4, then our    */
-  /*                   option can accept any value in the set {0, 2, 4, 6, 8} */
-  oaInt NumSteps;   
+  /* determines the allowable values for an option given min/max			  */
+  /*	NumSteps == -1  range is [-inf, inf]									*/
+  /*	NumSteps ==  0  range is continuous within [MinValue, MaxValue]		*/
+  /*	NumSteps >	0  assumes NumSteps uniform increments between min/max	*/
+  /*					eg, if min = 0, max = 8, and NumSteps = 4, then our	*/
+  /*					option can accept any value in the set {0, 2, 4, 6, 8} */
+  oaInt NumSteps;	
   
   /* If Dependency is defined, the parameter is only enabled if the 
-     condition defined within OptionDependency is true */
+	 condition defined within OptionDependency is true */
   oaOptionDependency Dependency;
 } oaNamedOption;
 
 typedef enum
 {
-  OA_CMD_EXIT                = 0, /* The app should exit */
-  OA_CMD_RUN                 = 1, /* Run as normal */
-  OA_CMD_GET_ALL_OPTIONS     = 2, /* Return all available options to OA */
+  OA_CMD_EXIT				= 0, /* The app should exit */
+  OA_CMD_RUN				 = 1, /* Run as normal */
+  OA_CMD_GET_ALL_OPTIONS	 = 2, /* Return all available options to OA */
   OA_CMD_GET_CURRENT_OPTIONS = 3, /* Return the option values currently set */
-  OA_CMD_SET_OPTIONS         = 4, /* Persistantly set given options */
-  OA_CMD_GET_BENCHMARKS      = 5, /* Return all known benchmark names to OA */
-  OA_CMD_RUN_BENCHMARK       = 6, /* Run a given benchmark */
+  OA_CMD_SET_OPTIONS		 = 4, /* Persistantly set given options */
+  OA_CMD_GET_BENCHMARKS	  = 5, /* Return all known benchmark names to OA */
+  OA_CMD_RUN_BENCHMARK		= 6, /* Run a given benchmark */
 } oaCommandType;
 
 typedef struct oaCommandStruct
@@ -504,29 +504,29 @@ typedef struct oaCommandStruct
 
 #define OA_RAISE_ERROR(error_type, message_str) \
   { \
-    oaMessage Message; \
-    oaInitMessage(&Message); \
-    Message.Error = OA_ERROR_##error_type; \
-    Message.Message = message_str; \
-    oaSendSignal(OA_SIGNAL_ERROR, &Message); \
+	oaMessage Message; \
+	oaInitMessage(&Message); \
+	Message.Error = OA_ERROR_##error_type; \
+	Message.Message = message_str; \
+	oaSendSignal(OA_SIGNAL_ERROR, &Message); \
   }
 
 #define OA_RAISE_WARNING(message_str) \
   { \
-    oaMessage Message; \
-    oaInitMessage(&Message); \
-    Message.Error = OA_ERROR_WARNING; \
-    Message.Message = message_str; \
-    oaSendSignal(OA_SIGNAL_ERROR, &Message); \
+	oaMessage Message; \
+	oaInitMessage(&Message); \
+	Message.Error = OA_ERROR_WARNING; \
+	Message.Message = message_str; \
+	oaSendSignal(OA_SIGNAL_ERROR, &Message); \
   }
 
 #define OA_RAISE_LOG(message_str) \
   { \
-    oaMessage Message; \
-    oaInitMessage(&Message); \
-    Message.Error = OA_ERROR_LOG; \
-    Message.Message = message_str; \
-    oaSendSignal(OA_SIGNAL_ERROR, &Message); \
+	oaMessage Message; \
+	oaInitMessage(&Message); \
+	Message.Error = OA_ERROR_LOG; \
+	Message.Message = message_str; \
+	oaSendSignal(OA_SIGNAL_ERROR, &Message); \
   }
 
 
@@ -535,14 +535,14 @@ typedef struct oaCommandStruct
  ******************************************************************************/
 
 /* Called when initializing OA mode.  init_str should be the string passed
-   to the app as an option to the -openautomate command-line option */
+	to the app as an option to the -openautomate command-line option */
 oaBool oaInit(const oaChar *init_str, oaVersion *version);
 
 /* Resets all values in the command to defaults */
 void oaInitCommand(oaCommand *command);
 
 /* Returns the next command for the app to execute.  If there are no commands
-   left OA_CMD_EXIT will be returned. */
+	left OA_CMD_EXIT will be returned. */
 oaCommandType oaGetNextCommand(oaCommand *command);
 
 /* Returns the next option for the app to set when in OA_CMD_SET_OPTIONS */
@@ -555,18 +555,18 @@ void oaInitOption(oaNamedOption *option);
 void oaAddOption(const oaNamedOption *option);
 
 /* Adds an option value to the option value list when in 
-   OA_CMD_GET_CURRENT_OPTIONS */
+	OA_CMD_GET_CURRENT_OPTIONS */
 void oaAddOptionValue(const oaChar *name, 
-                      oaOptionDataType value_type,
-                      const oaValue *value);
+					  oaOptionDataType value_type,
+					  const oaValue *value);
 
 /* Adds a benchmark name to the list when in OA_CMD_GET_BENCHMARKS mode */
 void oaAddBenchmark(const oaChar *benchmark_name);
 
 /* Allows the application to send various signals.  Some signals may have 
-   associated an associated parameter, passed in via the void *param.  See
-   the the "Signals" section of the documentation for more info. Returns
-   true if the signal was handled*/
+	associated an associated parameter, passed in via the void *param.  See
+	the the "Signals" section of the documentation for more info. Returns
+	true if the signal was handled*/
 oaBool oaSendSignal(oaSignalType signal, void *param);
 
 /* Resets all values in option to defaults */
@@ -577,28 +577,28 @@ void oaInitMessage(oaMessage *message);
  ******************************************************************************/
 
 /* The application should call this right before the benchmark starts.  It 
-   should be called before any CPU or GPU computation is done for the first 
-   frame. */
+	should be called before any CPU or GPU computation is done for the first 
+	frame. */
 void oaStartBenchmark(void);
 
 /* This should be called right before the final present call for each frame is 
-   called. The t parameter should be set to the point in time the frame is 
-   related to, in the application's time scale.*/
+	called. The t parameter should be set to the point in time the frame is 
+	related to, in the application's time scale.*/
 void oaDisplayFrame(oaFloat t);
 
 /* Adds an optional result value from a benchmark run.  It can be called 
-   multiple times, but 'name' must be different each time.  Also, it must be 
-   called after the last call to oaDisplayFrame(), and before oaEndBenchmark() 
-   */
+	multiple times, but 'name' must be different each time.  Also, it must be 
+	called after the last call to oaDisplayFrame(), and before oaEndBenchmark() 
+	*/
 void oaAddResultValue(const oaChar *name, 
-                      oaOptionDataType value_type,
-                      const oaValue *value);
+					  oaOptionDataType value_type,
+					  const oaValue *value);
 
 /* Similar to oaAddResultValue(), but called per frame.  This call should be 
-   made once for each value, before each call to oaDisplayFrame() */
+	made once for each value, before each call to oaDisplayFrame() */
 void oaAddFrameValue(const oaChar *name, 
-                     oaOptionDataType value_type,
-                     const oaValue *value);
+					 oaOptionDataType value_type,
+					 const oaValue *value);
 
 /* This should be called after the last frame is rendered in the benchmark */
 void oaEndBenchmark(void);

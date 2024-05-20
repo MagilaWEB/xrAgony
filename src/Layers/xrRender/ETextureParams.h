@@ -4,169 +4,169 @@
 #pragma pack(push, 1)
 struct ECORE_API STextureParams
 {
-    enum ETType
-    {
-        ttImage = 0,
-        ttCubeMap,
-        ttBumpMap,
-        ttNormalMap,
-        ttTerrain,
-        ttForceU32 = u32(-1)
-    };
-    enum ETFormat
-    {
-        tfDXT1 = 0,
-        tfADXT1,
-        tfDXT3,
-        tfDXT5,
-        tf4444,
-        tf1555,
-        tf565,
-        tfRGB,
-        tfRGBA,
-        tfNVHS,
-        tfNVHU,
-        tfA8,
-        tfL8,
-        tfA8L8,
-        tfForceU32 = u32(-1)
-    };
-    enum ETBumpMode
-    {
-        tbmResereved = 0,
-        tbmNone,
-        tbmUse,
-        tbmUseParallax,
-        tbmForceU32 = u32(-1)
-    };
-    enum ETMaterial
-    {
-        tmOrenNayar_Blin = 0,
-        tmBlin_Phong,
-        tmPhong_Metal,
-        tmMetal_OrenNayar,
-        tmForceU32 = u32(-1)
-    };
-    enum
-    {
-        kMIPFilterAdvanced = 5,
+	enum ETType
+	{
+		ttImage = 0,
+		ttCubeMap,
+		ttBumpMap,
+		ttNormalMap,
+		ttTerrain,
+		ttForceU32 = u32(-1)
+	};
+	enum ETFormat
+	{
+		tfDXT1 = 0,
+		tfADXT1,
+		tfDXT3,
+		tfDXT5,
+		tf4444,
+		tf1555,
+		tf565,
+		tfRGB,
+		tfRGBA,
+		tfNVHS,
+		tfNVHU,
+		tfA8,
+		tfL8,
+		tfA8L8,
+		tfForceU32 = u32(-1)
+	};
+	enum ETBumpMode
+	{
+		tbmResereved = 0,
+		tbmNone,
+		tbmUse,
+		tbmUseParallax,
+		tbmForceU32 = u32(-1)
+	};
+	enum ETMaterial
+	{
+		tmOrenNayar_Blin = 0,
+		tmBlin_Phong,
+		tmPhong_Metal,
+		tmMetal_OrenNayar,
+		tmForceU32 = u32(-1)
+	};
+	enum
+	{
+		kMIPFilterAdvanced = 5,
 
-        kMIPFilterPoint = 2,
-        kMIPFilterBox = 0,
-        kMIPFilterTriangle = 3,
-        kMIPFilterQuadratic = 4,
-        kMIPFilterCubic = 1,
+		kMIPFilterPoint = 2,
+		kMIPFilterBox = 0,
+		kMIPFilterTriangle = 3,
+		kMIPFilterQuadratic = 4,
+		kMIPFilterCubic = 1,
 
-        kMIPFilterCatrom = 6,
-        kMIPFilterMitchell = 7,
+		kMIPFilterCatrom = 6,
+		kMIPFilterMitchell = 7,
 
-        kMIPFilterGaussian = 8,
-        kMIPFilterSinc = 9,
-        kMIPFilterBessel = 10,
+		kMIPFilterGaussian = 8,
+		kMIPFilterSinc = 9,
+		kMIPFilterBessel = 10,
 
-        kMIPFilterHanning = 11,
-        kMIPFilterHamming = 12,
-        kMIPFilterBlackman = 13,
-        kMIPFilterKaiser = 14,
-    };
+		kMIPFilterHanning = 11,
+		kMIPFilterHamming = 12,
+		kMIPFilterBlackman = 13,
+		kMIPFilterKaiser = 14,
+	};
 
-    enum
-    {
-        flGenerateMipMaps = (1 << 0),
-        flBinaryAlpha = (1 << 1),
-        flAlphaBorder = (1 << 4),
-        flColorBorder = (1 << 5),
-        flFadeToColor = (1 << 6),
-        flFadeToAlpha = (1 << 7),
-        flDitherColor = (1 << 8),
-        flDitherEachMIPLevel = (1 << 9),
-        //		flGreyScale			= (1<<10),	// obsolette
+	enum
+	{
+		flGenerateMipMaps = (1 << 0),
+		flBinaryAlpha = (1 << 1),
+		flAlphaBorder = (1 << 4),
+		flColorBorder = (1 << 5),
+		flFadeToColor = (1 << 6),
+		flFadeToAlpha = (1 << 7),
+		flDitherColor = (1 << 8),
+		flDitherEachMIPLevel = (1 << 9),
+		//		flGreyScale			= (1<<10),	// obsolette
 
-        flDiffuseDetail = (1 << 23),
-        flImplicitLighted = (1 << 24),
-        flHasAlpha = (1 << 25),
-        flBumpDetail = (1 << 26),
+		flDiffuseDetail = (1 << 23),
+		flImplicitLighted = (1 << 24),
+		flHasAlpha = (1 << 25),
+		flBumpDetail = (1 << 26),
 
-        flForceU32 = u32(-1)
-    };
+		flForceU32 = u32(-1)
+	};
 
-    // texture part
-    ETFormat fmt;
-    Flags32 flags;
-    u32 border_color;
-    u32 fade_color;
-    u32 fade_amount;
-    u8 fade_delay;
-    u32 mip_filter;
-    int width;
-    int height;
-    // detail ext
-    shared_str detail_name;
-    float detail_scale;
-    ETType type;
-    // material
-    ETMaterial material;
-    float material_weight;
-    // bump
-    float bump_virtual_height;
-    ETBumpMode bump_mode;
-    shared_str bump_name;
-    shared_str ext_normal_map_name;
+	// texture part
+	ETFormat fmt;
+	Flags32 flags;
+	u32 border_color;
+	u32 fade_color;
+	u32 fade_amount;
+	u8 fade_delay;
+	u32 mip_filter;
+	int width;
+	int height;
+	// detail ext
+	shared_str detail_name;
+	float detail_scale;
+	ETType type;
+	// material
+	ETMaterial material;
+	float material_weight;
+	// bump
+	float bump_virtual_height;
+	ETBumpMode bump_mode;
+	shared_str bump_name;
+	shared_str ext_normal_map_name;
 
-    STextureParams() { Clear(); }
-    void destroy_shared_str(shared_str& object) { object.~shared_str(); }
-    void construct_shared_str(shared_str& object) { ::new (&object) shared_str(); }
+	STextureParams() { Clear(); }
+	void destroy_shared_str(shared_str& object) { object.~shared_str(); }
+	void construct_shared_str(shared_str& object) { ::new (&object) shared_str(); }
 
-    void Clear()
-    {
-        destroy_shared_str(detail_name);
-        destroy_shared_str(bump_name);
-        destroy_shared_str(ext_normal_map_name);
+	void Clear()
+	{
+		destroy_shared_str(detail_name);
+		destroy_shared_str(bump_name);
+		destroy_shared_str(ext_normal_map_name);
 
-        ZeroMemory(this, sizeof(STextureParams));
+		ZeroMemory(this, sizeof(STextureParams));
 
-        construct_shared_str(detail_name);
-        construct_shared_str(bump_name);
-        construct_shared_str(ext_normal_map_name);
+		construct_shared_str(detail_name);
+		construct_shared_str(bump_name);
+		construct_shared_str(ext_normal_map_name);
 
-        flags.set(flGenerateMipMaps | flDitherColor, TRUE);
-        mip_filter = kMIPFilterBox;
-        width = 0;
-        height = 0;
-        detail_scale = 1;
-        bump_mode = tbmNone;
-        material = tmBlin_Phong;
-        bump_virtual_height = 0.05f;
-    }
+		flags.set(flGenerateMipMaps | flDitherColor, TRUE);
+		mip_filter = kMIPFilterBox;
+		width = 0;
+		height = 0;
+		detail_scale = 1;
+		bump_mode = tbmNone;
+		material = tmBlin_Phong;
+		bump_virtual_height = 0.05f;
+	}
 
-    BOOL HasAlpha()
-    {
-        // исходная текстура содержит альфа канал
-        return flags.is(flHasAlpha);
-    }
+	BOOL HasAlpha()
+	{
+		// исходная текстура содержит альфа канал
+		return flags.is(flHasAlpha);
+	}
 
-    BOOL HasAlphaChannel() // игровая текстура содержит альфа канал
-    {
-        switch (fmt)
-        {
-        case tfADXT1:
-        case tfDXT3:
-        case tfDXT5:
-        case tf4444:
-        case tf1555:
-        case tfRGBA: return TRUE;
-        default: return FALSE;
-        }
-    }
-    void Load(IReader& F);
-    void Save(IWriter& F);
+	BOOL HasAlphaChannel() // игровая текстура содержит альфа канал
+	{
+		switch (fmt)
+		{
+		case tfADXT1:
+		case tfDXT3:
+		case tfDXT5:
+		case tf4444:
+		case tf1555:
+		case tfRGBA: return TRUE;
+		default: return FALSE;
+		}
+	}
+	void Load(IReader& F);
+	void Save(IWriter& F);
 #ifdef _EDITOR
-    PropValue::TOnChange OnTypeChangeEvent;
-    void __stdcall OnTypeChange(PropValue* v);
-    void FillProp(LPCSTR base_name, PropItemVec& items, PropValue::TOnChange OnChangeEvent);
-    LPCSTR FormatString();
-    u32 MemoryUsage(LPCSTR base_name);
-    BOOL similar(STextureParams& tp1, xr_vector<AnsiString>& sel_params);
+	PropValue::TOnChange OnTypeChangeEvent;
+	void __stdcall OnTypeChange(PropValue* v);
+	void FillProp(LPCSTR base_name, PropItemVec& items, PropValue::TOnChange OnChangeEvent);
+	LPCSTR FormatString();
+	u32 MemoryUsage(LPCSTR base_name);
+	BOOL similar(STextureParams& tp1, xr_vector<AnsiString>& sel_params);
 
 #endif
 };

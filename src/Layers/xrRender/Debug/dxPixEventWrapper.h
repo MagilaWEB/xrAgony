@@ -5,8 +5,8 @@
 class CScopedPixEvent
 {
 public:
-    CScopedPixEvent(LPCWSTR eventName);
-    ~CScopedPixEvent();
+	CScopedPixEvent(LPCWSTR eventName);
+	~CScopedPixEvent();
 };
 
 #define PIX_EVENT(Name) CScopedPixEvent pixEvent##Name(L#Name)
@@ -22,7 +22,7 @@ void dxPixSetDebugName(ID3DDeviceChild* resource, const shared_str& name);
 #define SET_DEBUG_NAME(resource, name) {}
 #endif
 
-#else //    DEBUG
+#else //	DEBUG
 
 #define PIX_EVENT(Name) {}
 
@@ -31,4 +31,4 @@ void dxPixSetDebugName(ID3DDeviceChild* resource, const shared_str& name);
 
 #define SET_DEBUG_NAME(resource, name) {}
 
-#endif //   DEBUG
+#endif //	DEBUG

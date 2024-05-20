@@ -13,9 +13,9 @@
 //////////////////////////////////////////////////////////////////////////
 MONSTER_COMMUNITY_DATA::MONSTER_COMMUNITY_DATA(MONSTER_COMMUNITY_INDEX idx, MONSTER_COMMUNITY_ID idn, LPCSTR team_str)
 {
-    index = idx;
-    id = idn;
-    team = (u8)atoi(team_str);
+	index = idx;
+	id = idn;
+	team = (u8)atoi(team_str);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -31,22 +31,22 @@ MONSTER_COMMUNITY_INDEX MONSTER_COMMUNITY::index() const { return m_current_inde
 u8 MONSTER_COMMUNITY::team() const { return (*m_pItemDataVector)[m_current_index].team; }
 void MONSTER_COMMUNITY::InitIdToIndex()
 {
-    section_name = MONSTER_RELATIONS_SECT;
-    line_name = MONSTER_COMMUNITIES;
-    m_relation_table.set_table_params(MONSTER_RELATIONS_TABLE);
+	section_name = MONSTER_RELATIONS_SECT;
+	line_name = MONSTER_COMMUNITIES;
+	m_relation_table.set_table_params(MONSTER_RELATIONS_TABLE);
 }
 
 int MONSTER_COMMUNITY::relation(MONSTER_COMMUNITY_INDEX to) { return relation(m_current_index, to); }
 int MONSTER_COMMUNITY::relation(MONSTER_COMMUNITY_INDEX from, MONSTER_COMMUNITY_INDEX to)
 {
-    VERIFY(from >= 0 && from < (int)m_relation_table.table().size());
-    VERIFY(to >= 0 && to < (int)m_relation_table.table().size());
+	VERIFY(from >= 0 && from < (int)m_relation_table.table().size());
+	VERIFY(to >= 0 && to < (int)m_relation_table.table().size());
 
-    return m_relation_table.table()[from][to];
+	return m_relation_table.table()[from][to];
 }
 
 void MONSTER_COMMUNITY::DeleteIdToIndexData()
 {
-    m_relation_table.clear();
-    inherited::DeleteIdToIndexData();
+	m_relation_table.clear();
+	inherited::DeleteIdToIndexData();
 }

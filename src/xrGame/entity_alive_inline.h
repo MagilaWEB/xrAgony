@@ -2,8 +2,8 @@
 
 IC CEntityCondition& CEntityAlive::conditions() const
 {
-    VERIFY(m_entity_condition);
-    return (*m_entity_condition);
+	VERIFY(m_entity_condition);
+	return (*m_entity_condition);
 }
 
 IC bool const& CEntityAlive::is_agresive() const { return (m_is_agresive); }

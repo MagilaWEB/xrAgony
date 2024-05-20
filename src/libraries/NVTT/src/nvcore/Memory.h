@@ -57,13 +57,13 @@ inline void operator delete [] (void * p) noexcept
 
 #if 0
 /*
-    File:	main.cpp
-    
-    Version:	1.0
+	File:	main.cpp
+	
+	Version:	1.0
 
 	Abstract: Overrides the C++ 'operator new' and 'operator delete'.
 
-    Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc.
+	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc.
 		("Apple") in consideration of your agreement to the following terms, and your
 		use, installation, modification or redistribution of this Apple software
 		constitutes acceptance of these terms.  If you do not agree with these terms,
@@ -120,17 +120,17 @@ namespace {
 }
 
 /* These are the overridden new and delete routines.
-   Most applications will want to override at least these four versions of new/delete if they override any of them.
+	Most applications will want to override at least these four versions of new/delete if they override any of them.
 
-   In Mac OS, it's not necessary to override the array versions of operator new and delete if all
-   they would do is call the non-array versions; the C++ standard library, as an extension
-   to the C++ standard, does this for you.
+	In Mac OS, it's not necessary to override the array versions of operator new and delete if all
+	they would do is call the non-array versions; the C++ standard library, as an extension
+	to the C++ standard, does this for you.
 
-   Developers should consult the section [lib.support.dynamic] in the C++ standard to see the requirements
-   on the generic operators new and delete; the system may expect that your overridden operators meet all these
-   requirements.
+	Developers should consult the section [lib.support.dynamic] in the C++ standard to see the requirements
+	on the generic operators new and delete; the system may expect that your overridden operators meet all these
+	requirements.
 
-   Your operators may be called by the system, even early in start-up before constructors have been executed.  */
+	Your operators may be called by the system, even early in start-up before constructors have been executed.  */
 void* operator new(std::size_t sz) throw (std::bad_alloc)
 {
 	void *result = std::malloc (sz == 0 ? 1 : sz);
@@ -148,8 +148,8 @@ void operator delete(void* p) noexcept
 }
 
 /* These are the 'nothrow' versions of the above operators.
-   The system version will try to call a std::new_handler if they
-   fail, but your overriding versions are not required to do this.  */
+	The system version will try to call a std::new_handler if they
+	fail, but your overriding versions are not required to do this.  */
 void* operator new(std::size_t sz, const std::nothrow_t&) noexcept
 {
 	try {
@@ -165,10 +165,10 @@ void operator delete(void* p, const std::nothrow_t&) noexcept
 }
 
 /* Bug 4067110 is that if your program has no weak symbols at all, the linker will not set the
-   WEAK_DEFINES bit in the Mach-O header and as a result the new and delete operators above won't
-   be seen by system libraries.  This is mostly a problem for test programs and small examples,
-   since almost all real C++ programs complicated enough to override new and delete will have at
-   least one weak symbol.  However, this is a small example, so:  */
+	WEAK_DEFINES bit in the Mach-O header and as a result the new and delete operators above won't
+	be seen by system libraries.  This is mostly a problem for test programs and small examples,
+	since almost all real C++ programs complicated enough to override new and delete will have at
+	least one weak symbol.  However, this is a small example, so:  */
 void __attribute__((weak, visibility("default"))) workaroundFor4067110 () { }
 
 /* This is a simple test program that causes the runtime library to call new and delete.  */

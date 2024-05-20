@@ -182,7 +182,7 @@ void CWalmarkManager::Load(LPCSTR section)
 float Distance(
 	const Fvector& rkPoint, const Fvector rkTri[3], float& pfSParam, float& pfTParam, Fvector& closest, Fvector& dir)
 {
-	//.    Fvector kDiff = rkTri.Origin() - rkPoint;
+	//.	Fvector kDiff = rkTri.Origin() - rkPoint;
 	Fvector kDiff;
 	kDiff.sub(rkTri[0], rkPoint); //
 
@@ -191,22 +191,22 @@ float Distance(
 	Fvector Edge1;
 	Edge1.sub(rkTri[2], rkTri[0]); //
 
-	//.    float fA00 = rkTri.Edge0().SquaredLength();
+	//.	float fA00 = rkTri.Edge0().SquaredLength();
 	float fA00 = Edge0.square_magnitude();
 
-	//.    float fA01 = rkTri.Edge0().Dot(rkTri.Edge1());
+	//.	float fA01 = rkTri.Edge0().Dot(rkTri.Edge1());
 	float fA01 = Edge0.dotproduct(Edge1);
 
-	//.    float fA11 = rkTri.Edge1().SquaredLength();
+	//.	float fA11 = rkTri.Edge1().SquaredLength();
 	float fA11 = Edge1.square_magnitude();
 
-	//.    float fB0 = kDiff.Dot(rkTri.Edge0());
+	//.	float fB0 = kDiff.Dot(rkTri.Edge0());
 	float fB0 = kDiff.dotproduct(Edge0);
 
 	//.	float fB1 = kDiff.Dot(rkTri.Edge1());
 	float fB1 = kDiff.dotproduct(Edge1);
 
-	//.    float fC = kDiff.SquaredLength();
+	//.	float fC = kDiff.SquaredLength();
 	float fC = kDiff.square_magnitude();
 
 	float fDet = _abs(fA00 * fA11 - fA01 * fA01);

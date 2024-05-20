@@ -55,37 +55,37 @@ sizeof(DDS_PIXELFORMAT), DDS_RGB, 0, 16, 0x0000f800, 0x000007e0, 0x0000001f, 0x0
 #define DDS_CUBEMAP_NEGATIVEZ 0x00008200 // DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_NEGATIVEZ
 
 #define DDS_CUBEMAP_ALLFACES\
-    (DDS_CUBEMAP_POSITIVEX | DDS_CUBEMAP_NEGATIVEX | DDS_CUBEMAP_POSITIVEY | DDS_CUBEMAP_NEGATIVEY |\
-    DDS_CUBEMAP_POSITIVEZ | DDS_CUBEMAP_NEGATIVEZ)
+	(DDS_CUBEMAP_POSITIVEX | DDS_CUBEMAP_NEGATIVEX | DDS_CUBEMAP_POSITIVEY | DDS_CUBEMAP_NEGATIVEY |\
+	DDS_CUBEMAP_POSITIVEZ | DDS_CUBEMAP_NEGATIVEZ)
 
 #define DDS_FLAGS_VOLUME 0x00200000 // DDSCAPS2_VOLUME
 
 struct DDS_HEADER
 {
-    DWORD dwSize;
-    DWORD dwHeaderFlags;
-    DWORD dwHeight;
-    DWORD dwWidth;
-    DWORD dwPitchOrLinearSize;
-    DWORD dwDepth; // only if DDS_HEADER_FLAGS_VOLUME is set in dwHeaderFlags
-    DWORD dwMipMapCount;
-    DWORD dwReserved1[11];
-    DDS_PIXELFORMAT ddspf;
-    DWORD dwSurfaceFlags;
-    DWORD dwCubemapFlags;
-    DWORD dwReserved2[3];
+	DWORD dwSize;
+	DWORD dwHeaderFlags;
+	DWORD dwHeight;
+	DWORD dwWidth;
+	DWORD dwPitchOrLinearSize;
+	DWORD dwDepth; // only if DDS_HEADER_FLAGS_VOLUME is set in dwHeaderFlags
+	DWORD dwMipMapCount;
+	DWORD dwReserved1[11];
+	DDS_PIXELFORMAT ddspf;
+	DWORD dwSurfaceFlags;
+	DWORD dwCubemapFlags;
+	DWORD dwReserved2[3];
 };
 
 enum DDS_HEADER_FLAGS
 {
-    DDSD_CAPS = 1 << 0,
-    DDSD_HEIGHT = 1 << 1,
-    DDSD_WIDTH = 1 << 2,
-    DDSD_PITCH = 1 << 3,
-    DDSD_PIXELFORMAT = 1 << 12,
-    DDSD_MIPMAPCOUNT = 1 << 17,
-    DDSD_LINEARSIZE = 1 << 19,
-    DDSD_DEPTH = 1 << 23,
+	DDSD_CAPS = 1 << 0,
+	DDSD_HEIGHT = 1 << 1,
+	DDSD_WIDTH = 1 << 2,
+	DDSD_PITCH = 1 << 3,
+	DDSD_PIXELFORMAT = 1 << 12,
+	DDSD_MIPMAPCOUNT = 1 << 17,
+	DDSD_LINEARSIZE = 1 << 19,
+	DDSD_DEPTH = 1 << 23,
 };
 
 #endif

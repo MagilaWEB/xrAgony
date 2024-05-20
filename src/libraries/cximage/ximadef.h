@@ -97,13 +97,13 @@ typedef struct tagcomplex {
 typedef unsigned char  BYTE;
 typedef unsigned short WORD;
 typedef unsigned long  DWORD;
-typedef unsigned int   UINT;
+typedef unsigned int	UINT;
 typedef const char* LPCTSTR;
 
-typedef DWORD          COLORREF;
-typedef unsigned int   HANDLE;
-typedef void*          HRGN;
-typedef void*          HDC;
+typedef DWORD		  COLORREF;
+typedef unsigned int	HANDLE;
+typedef void*		  HRGN;
+typedef void*		  HDC;
 
 typedef int boolean;
 
@@ -128,10 +128,10 @@ typedef int boolean;
 
 typedef struct tagRECT
 {
-	long    left;
-	long    top;
-	long    right;
-	long    bottom;
+	long	left;
+	long	top;
+	long	right;
+	long	bottom;
 } RECT;
 
 typedef struct tagPOINT
@@ -141,61 +141,61 @@ typedef struct tagPOINT
 } POINT;
 
 typedef struct tagRGBQUAD {
-	BYTE    rgbBlue;
-	BYTE    rgbGreen;
-	BYTE    rgbRed;
-	BYTE    rgbReserved;
+	BYTE	rgbBlue;
+	BYTE	rgbGreen;
+	BYTE	rgbRed;
+	BYTE	rgbReserved;
 } RGBQUAD;
 
 #pragma pack(1)
 
 typedef struct tagBITMAPINFOHEADER{
-	DWORD      biSize;
-	long       biWidth;
-	long       biHeight;
-	WORD       biPlanes;
-	WORD       biBitCount;
-	DWORD      biCompression;
-	DWORD      biSizeImage;
-	long       biXPelsPerMeter;
-	long       biYPelsPerMeter;
-	DWORD      biClrUsed;
-	DWORD      biClrImportant;
+	DWORD	  biSize;
+	long		biWidth;
+	long		biHeight;
+	WORD		biPlanes;
+	WORD		biBitCount;
+	DWORD	  biCompression;
+	DWORD	  biSizeImage;
+	long		biXPelsPerMeter;
+	long		biYPelsPerMeter;
+	DWORD	  biClrUsed;
+	DWORD	  biClrImportant;
 } BITMAPINFOHEADER;
 
 typedef struct tagBITMAPFILEHEADER {
-	WORD    bfType;
-	DWORD   bfSize;
-	WORD    bfReserved1;
-	WORD    bfReserved2;
-	DWORD   bfOffBits;
+	WORD	bfType;
+	DWORD	bfSize;
+	WORD	bfReserved1;
+	WORD	bfReserved2;
+	DWORD	bfOffBits;
 } BITMAPFILEHEADER;
 
 typedef struct tagBITMAPCOREHEADER {
-	DWORD   bcSize;
-	WORD    bcWidth;
-	WORD    bcHeight;
-	WORD    bcPlanes;
-	WORD    bcBitCount;
+	DWORD	bcSize;
+	WORD	bcWidth;
+	WORD	bcHeight;
+	WORD	bcPlanes;
+	WORD	bcBitCount;
 } BITMAPCOREHEADER;
 
 typedef struct tagRGBTRIPLE {
-	BYTE    rgbtBlue;
-	BYTE    rgbtGreen;
-	BYTE    rgbtRed;
+	BYTE	rgbtBlue;
+	BYTE	rgbtGreen;
+	BYTE	rgbtRed;
 } RGBTRIPLE;
 
 #pragma pack()
 
-#define BI_RGB        0L
-#define BI_RLE8       1L
-#define BI_RLE4       2L
+#define BI_RGB		0L
+#define BI_RLE8		1L
+#define BI_RLE4		2L
 #define BI_BITFIELDS  3L
 
-#define GetRValue(rgb)      ((BYTE)(rgb))
-#define GetGValue(rgb)      ((BYTE)(((WORD)(rgb)) >> 8))
-#define GetBValue(rgb)      ((BYTE)((rgb)>>16))
-#define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
+#define GetRValue(rgb)	  ((BYTE)(rgb))
+#define GetGValue(rgb)	  ((BYTE)(((WORD)(rgb)) >> 8))
+#define GetBValue(rgb)	  ((BYTE)((rgb)>>16))
+#define RGB(r,g,b)		  ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
 
 #ifndef _COMPLEX_DEFINED
 

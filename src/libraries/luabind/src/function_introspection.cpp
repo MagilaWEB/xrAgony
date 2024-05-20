@@ -12,7 +12,7 @@
 	Human-Computer Interaction Graduate Program
 */
 
-//          Copyright Iowa State University 2012.
+//		  Copyright Iowa State University 2012.
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
@@ -37,17 +37,17 @@
 
 // Internal Includes
 #include <luabind/function_introspection.hpp>
-#include <luabind/config.hpp>           // for LUABIND_API
+#include <luabind/config.hpp>			// for LUABIND_API
 
 #include <luabind/wrapper_base.hpp>
 #include <luabind/detail/call_member.hpp>
 
 #include <luabind/detail/stack_utils.hpp>  // for stack_pop
-#include <luabind/function.hpp>         // for def, is_luabind_function
-#include <luabind/detail/call.hpp>      // for function_object
-#include <luabind/detail/object.hpp>    // for argument, object, etc
-#include <luabind/from_stack.hpp>       // for from_stack
-#include <luabind/scope.hpp>            // for module, module_, scope
+#include <luabind/function.hpp>		 // for def, is_luabind_function
+#include <luabind/detail/call.hpp>	  // for function_object
+#include <luabind/detail/object.hpp>	// for argument, object, etc
+#include <luabind/from_stack.hpp>		// for from_stack
+#include <luabind/scope.hpp>			// for module, module_, scope
 #include <luabind/lua_argument_proxy.hpp>
 #include <luabind/detail/conversion_policies/conversion_policies.hpp>
 
@@ -55,8 +55,8 @@
 // - none
 
 // Standard includes
-#include <string>                       // for string
-#include <cstddef>                      // for NULL
+#include <string>						// for string
+#include <cstddef>					  // for NULL
 
 namespace luabind {
 

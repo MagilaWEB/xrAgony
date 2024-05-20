@@ -10,8 +10,8 @@
 
 IC CAI_Stalker& CObjectHandlerPlanner::object() const
 {
-    VERIFY(m_object);
-    return (*m_object);
+	VERIFY(m_object);
+	return (*m_object);
 }
 
 IC u32 CObjectHandlerPlanner::action_state_id(_condition_type action_id) const { return (action_id & 0xffff); }

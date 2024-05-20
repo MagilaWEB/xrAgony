@@ -23,7 +23,7 @@
 #endif // NVMATH_SHARED
 
 #ifndef PI
-#define PI      			float(3.1415926535897932384626433833)
+#define PI	  			float(3.1415926535897932384626433833)
 #endif
 
 #define NV_EPSILON			(0.0001f)

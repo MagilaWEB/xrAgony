@@ -9,15 +9,15 @@
 #pragma once
 
 IC CSpaceRestrictionComposition::CSpaceRestrictionComposition(
-    CSpaceRestrictionHolder* space_restriction_holder, shared_str space_restrictors)
+	CSpaceRestrictionHolder* space_restriction_holder, shared_str space_restrictors)
 {
-    VERIFY(space_restriction_holder);
-    m_space_restriction_holder = space_restriction_holder;
-    m_space_restrictors = space_restrictors;
+	VERIFY(space_restriction_holder);
+	m_space_restriction_holder = space_restriction_holder;
+	m_space_restrictors = space_restrictors;
 #ifdef DEBUG
-    check_restrictor_type();
+	check_restrictor_type();
 #endif // DEBUG
-    ++g_restriction_checker;
+	++g_restriction_checker;
 }
 
 IC shared_str CSpaceRestrictionComposition::name() const { return (m_space_restrictors); }

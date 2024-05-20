@@ -19,11 +19,11 @@ namespace steering_behaviour
 class alignment final : public base, private Noncopyable
 {
 public:
-    alignment(CAI_Rat const* object);
-    virtual Fvector direction();
+	alignment(CAI_Rat const* object);
+	virtual Fvector direction();
 
 private:
-    typedef base inherited;
+	typedef base inherited;
 };
 
 } // namespace steering_behaviour

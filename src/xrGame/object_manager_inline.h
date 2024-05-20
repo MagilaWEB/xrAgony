@@ -9,7 +9,7 @@
 #pragma once
 
 #define TEMPLATE_SPECIALIZATION \
-    template <typename T\
+	template <typename T\
 >
 
 #define CAbstractObjectManager CObjectManager<T>

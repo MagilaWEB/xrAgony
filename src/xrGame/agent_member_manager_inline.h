@@ -11,53 +11,53 @@
 class CMemberPredicate
 {
 protected:
-    const CAI_Stalker* m_object;
+	const CAI_Stalker* m_object;
 
 public:
-    IC CMemberPredicate(const CAI_Stalker* object) { m_object = object; }
-    IC bool operator()(const CMemberOrder* order) const { return (&order->object() == m_object); }
+	IC CMemberPredicate(const CAI_Stalker* object) { m_object = object; }
+	IC bool operator()(const CMemberOrder* order) const { return (&order->object() == m_object); }
 };
 
 IC CAgentMemberManager::CAgentMemberManager(CAgentManager* object) : m_last_throw_time(0), m_throw_time_interval(0)
 {
-    VERIFY(object);
-    m_object = object;
-    m_actuality = true;
-    m_combat_mask = 0;
+	VERIFY(object);
+	m_object = object;
+	m_actuality = true;
+	m_combat_mask = 0;
 }
 
 IC CAgentManager& CAgentMemberManager::object() const
 {
-    VERIFY(m_object);
-    return (*m_object);
+	VERIFY(m_object);
+	return (*m_object);
 }
 
 IC const CAgentMemberManager::MEMBER_STORAGE& CAgentMemberManager::members() const { return (m_members); }
 IC CAgentMemberManager::MEMBER_STORAGE& CAgentMemberManager::members() { return (m_members); }
 IC CMemberOrder& CAgentMemberManager::member(const CAI_Stalker* object)
 {
-    iterator I = std::find_if(members().begin(), members().end(), CMemberPredicate(object));
-    VERIFY(I != members().end());
-    return (**I);
+	iterator I = std::find_if(members().begin(), members().end(), CMemberPredicate(object));
+	VERIFY(I != members().end());
+	return (**I);
 }
 
 IC MemorySpace::squad_mask_type CAgentMemberManager::mask(const CAI_Stalker* object) const
 {
-    const_iterator I = std::find_if(members().begin(), members().end(), CMemberPredicate(object));
-    VERIFY(I != members().end());
-    return (MemorySpace::squad_mask_type(1) << (I - members().begin()));
+	const_iterator I = std::find_if(members().begin(), members().end(), CMemberPredicate(object));
+	VERIFY(I != members().end());
+	return (MemorySpace::squad_mask_type(1) << (I - members().begin()));
 }
 
 IC CAgentMemberManager::iterator CAgentMemberManager::member(MemorySpace::squad_mask_type mask)
 {
-    iterator I = m_members.begin();
-    iterator E = m_members.end();
-    for (; I != E; ++I, mask >>= 1)
-        if (mask == 1)
-            return (I);
-    NODEFAULT;
+	iterator I = m_members.begin();
+	iterator E = m_members.end();
+	for (; I != E; ++I, mask >>= 1)
+		if (mask == 1)
+			return (I);
+	NODEFAULT;
 #ifdef DEBUG
-    return (E);
+	return (E);
 #endif
 }
 

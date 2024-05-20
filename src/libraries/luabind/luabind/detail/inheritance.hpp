@@ -17,7 +17,7 @@ namespace luabind {
 	namespace detail {
 
 		using cast_function = void*(*)(void*);
-		using class_id      = std::size_t;
+		using class_id	  = std::size_t;
 
 		constexpr class_id unknown_class = std::numeric_limits<class_id>::max();
 
@@ -109,7 +109,7 @@ namespace luabind {
 			void put(class_id id, class_rep* cls);
 
 		private:
-            luabind::vector<class_rep*> m_classes;
+			luabind::vector<class_rep*> m_classes;
 		};
 
 		inline class_rep* class_map::get(class_id id) const

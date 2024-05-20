@@ -22,24 +22,24 @@ class IGameObject;
 class ENGINE_API CCustomHUD : public FactoryObjectBase, public IEventReceiver, public pureScreenResolutionChanged
 {
 public:
-    CCustomHUD();
-    virtual ~CCustomHUD();
+	CCustomHUD();
+	virtual ~CCustomHUD();
 
-    BENCH_SEC_SCRAMBLEVTBL2
+	BENCH_SEC_SCRAMBLEVTBL2
 
-    virtual void Render_First() { ; }
-    virtual void Render_Last() { ; }
-    virtual void Render_Actor_Shadow() {}
-    BENCH_SEC_SCRAMBLEVTBL1
+	virtual void Render_First() { ; }
+	virtual void Render_Last() { ; }
+	virtual void Render_Actor_Shadow() {}
+	BENCH_SEC_SCRAMBLEVTBL1
 
-    virtual void OnFrame() { ; }
-    virtual void OnEvent(EVENT /*E*/, u64 /*P1*/, u64 /*P2*/) { ; }
-    virtual void Load() { ; }
-    virtual void OnDisconnected() = 0;
-    virtual void OnConnected() = 0;
-    virtual void RenderActiveItemUI() = 0;
-    virtual bool RenderActiveItemUIQuery() = 0;
-    virtual void net_Relcase(IGameObject* object) = 0;
+	virtual void OnFrame() { ; }
+	virtual void OnEvent(EVENT /*E*/, u64 /*P1*/, u64 /*P2*/) { ; }
+	virtual void Load() { ; }
+	virtual void OnDisconnected() = 0;
+	virtual void OnConnected() = 0;
+	virtual void RenderActiveItemUI() = 0;
+	virtual bool RenderActiveItemUIQuery() = 0;
+	virtual void net_Relcase(IGameObject* object) = 0;
 };
 
 extern ENGINE_API CCustomHUD* g_hud;

@@ -14,19 +14,19 @@
 CScriptSoundAction::~CScriptSoundAction() {}
 void CScriptSoundAction::SetSound(LPCSTR caSoundToPlay)
 {
-    m_caSoundToPlay = caSoundToPlay;
-    m_tGoalType = eGoalTypeSoundAttached;
-    m_bStartedToPlay = false;
-    string_path l_caFileName;
-    if (FS.exist(l_caFileName, "$game_sounds$", *m_caSoundToPlay, ".ogg"))
-    {
-        m_bStartedToPlay = false;
-        m_bCompleted = false;
-    }
-    else
-    {
-        ::ScriptEngine->script_log(LuaMessageType::Error, "File not found \"%s\"!", l_caFileName);
-        m_bStartedToPlay = true;
-        m_bCompleted = true;
-    }
+	m_caSoundToPlay = caSoundToPlay;
+	m_tGoalType = eGoalTypeSoundAttached;
+	m_bStartedToPlay = false;
+	string_path l_caFileName;
+	if (FS.exist(l_caFileName, "$game_sounds$", *m_caSoundToPlay, ".ogg"))
+	{
+		m_bStartedToPlay = false;
+		m_bCompleted = false;
+	}
+	else
+	{
+		::ScriptEngine->script_log(LuaMessageType::Error, "File not found \"%s\"!", l_caFileName);
+		m_bStartedToPlay = true;
+		m_bCompleted = true;
+	}
 }

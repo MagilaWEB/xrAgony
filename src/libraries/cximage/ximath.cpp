@@ -69,9 +69,9 @@ CxRect2 CxRect2::CrossSection(CxRect2 const &r2) const
   cs.topRight.x=min(topRight.x, r2.topRight.x);
   cs.topRight.y=min(topRight.y, r2.topRight.y);
   if (cs.botLeft.x<=cs.topRight.x && cs.botLeft.y<=cs.topRight.y) {
-    return cs;
+	return cs;
   } else {
-    return CxRect2(0,0,0,0);
+	return CxRect2(0,0,0,0);
   }//if
 }
 

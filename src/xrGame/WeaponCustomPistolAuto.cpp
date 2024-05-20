@@ -7,22 +7,22 @@ CWeaponCustomPistolAuto::~CWeaponCustomPistolAuto() {}
 
 void CWeaponCustomPistolAuto::switch2_Fire()
 {
-    m_bFireSingleShot = true;
-    //bWorking = false;
-    m_iShotNum = 0;
-    m_bStopedAfterQueueFired = false;
+	m_bFireSingleShot = true;
+	//bWorking = false;
+	m_iShotNum = 0;
+	m_bStopedAfterQueueFired = false;
 }
 
 void CWeaponCustomPistolAuto::FireEnd()
 {
-    //if (fShotTimeCounter <= 0)
-    {
-        //SetPending(false);
-        inherited::FireEnd();
-    }
+	//if (fShotTimeCounter <= 0)
+	{
+		//SetPending(false);
+		inherited::FireEnd();
+	}
 }
 
 void CWeaponCustomPistolAuto::PlayAnimReload()
 {
-    inherited::PlayAnimReload();
+	inherited::PlayAnimReload();
 } 

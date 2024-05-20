@@ -37,42 +37,42 @@ pcstr icon_name_script(CSE_ALifeTraderAbstract* ta)
 #ifdef XRGAME_EXPORTS
 SCRIPT_EXPORT(CSE_ALifeTraderAbstract, (),
 {
-    module(luaState)
-    [
-        class_<CSE_ALifeTraderAbstract>("cse_alife_trader_abstract")
-            //.def(constructor<pcstr>())
-            .def("community", &CSE_ALifeTraderAbstract::CommunityName)
-            .def("profile_name", &profile_name_script)
-            .def("set_profile_name", &profile_name_set_script)
-            .def("character_name", &character_name_script)
-            .def("set_character_name", &set_character_name_script)
-            .def("rank", &CSE_ALifeTraderAbstract::Rank)
-            .def("set_rank", &CSE_ALifeTraderAbstract::SetRank)
-            .def("reputation", &CSE_ALifeTraderAbstract::Reputation)
-            .def("character_icon", &icon_name_script)
-    ];
+	module(luaState)
+	[
+		class_<CSE_ALifeTraderAbstract>("cse_alife_trader_abstract")
+			//.def(constructor<pcstr>())
+			.def("community", &CSE_ALifeTraderAbstract::CommunityName)
+			.def("profile_name", &profile_name_script)
+			.def("set_profile_name", &profile_name_set_script)
+			.def("character_name", &character_name_script)
+			.def("set_character_name", &set_character_name_script)
+			.def("rank", &CSE_ALifeTraderAbstract::Rank)
+			.def("set_rank", &CSE_ALifeTraderAbstract::SetRank)
+			.def("reputation", &CSE_ALifeTraderAbstract::Reputation)
+			.def("character_icon", &icon_name_script)
+	];
 });
 #else
 SCRIPT_EXPORT(CSE_ALifeTraderAbstract, (),
 {
-    module(luaState)
-    [
-        class_<CSE_ALifeTraderAbstract>("cse_alife_trader_abstract")
-            //.def(constructor<pcstr>())
-            //.def("community", &CSE_ALifeTraderAbstract::CommunityName)
-            .def("profile_name", &profile_name_script)
-            //.def("rank", &CSE_ALifeTraderAbstract::Rank)
-            //.def("reputation", &CSE_ALifeTraderAbstract::Reputation)
-    ];
+	module(luaState)
+	[
+		class_<CSE_ALifeTraderAbstract>("cse_alife_trader_abstract")
+			//.def(constructor<pcstr>())
+			//.def("community", &CSE_ALifeTraderAbstract::CommunityName)
+			.def("profile_name", &profile_name_script)
+			//.def("rank", &CSE_ALifeTraderAbstract::Rank)
+			//.def("reputation", &CSE_ALifeTraderAbstract::Reputation)
+	];
 });
 #endif
 
 SCRIPT_EXPORT(CSE_ALifeTrader, (CSE_ALifeDynamicObjectVisual, CSE_ALifeTraderAbstract),
 {
-    module(luaState)
-    [
-        luabind_class_dynamic_alife2(CSE_ALifeTrader, "cse_alife_trader", CSE_ALifeDynamicObjectVisual, CSE_ALifeTraderAbstract)
-    ];
+	module(luaState)
+	[
+		luabind_class_dynamic_alife2(CSE_ALifeTrader, "cse_alife_trader", CSE_ALifeDynamicObjectVisual, CSE_ALifeTraderAbstract)
+	];
 });
 
 SCRIPT_EXPORT(CSE_ALifeCustomZone, (CSE_ALifeSpaceRestrictor),
@@ -87,17 +87,17 @@ SCRIPT_EXPORT(CSE_ALifeCustomZone, (CSE_ALifeSpaceRestrictor),
 });
 
 SCRIPT_EXPORT(CSE_ALifeAnomalousZone, (CSE_ALifeCustomZone), {
-    module(luaState)
-    [
-        luabind_class_dynamic_alife1(CSE_ALifeAnomalousZone, "cse_anomalous_zone", CSE_ALifeCustomZone)
-    ];
+	module(luaState)
+	[
+		luabind_class_dynamic_alife1(CSE_ALifeAnomalousZone, "cse_anomalous_zone", CSE_ALifeCustomZone)
+	];
 });
 
 SCRIPT_EXPORT(CSE_ALifeMonsterRat, (CSE_ALifeMonsterAbstract, CSE_ALifeInventoryItem),
 {
-    module(luaState)
-    [
-        luabind_class_monster2(
-        CSE_ALifeMonsterRat, "cse_alife_monster_rat", CSE_ALifeMonsterAbstract, CSE_ALifeInventoryItem)
-    ];
+	module(luaState)
+	[
+		luabind_class_monster2(
+		CSE_ALifeMonsterRat, "cse_alife_monster_rat", CSE_ALifeMonsterAbstract, CSE_ALifeInventoryItem)
+	];
 });

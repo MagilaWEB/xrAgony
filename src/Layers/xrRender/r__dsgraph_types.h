@@ -8,35 +8,35 @@ namespace R_dsgraph
 // Elementary types
 struct _NormalItem
 {
-    float ssa;
-    dxRender_Visual* pVisual;
+	float ssa;
+	dxRender_Visual* pVisual;
 };
 
 struct _MatrixItem
 {
-    float ssa;
-    IRenderable* pObject;
-    dxRender_Visual* pVisual;
-    Fmatrix Matrix; // matrix (copy)
+	float ssa;
+	IRenderable* pObject;
+	dxRender_Visual* pVisual;
+	Fmatrix Matrix; // matrix (copy)
 };
 
 struct _MatrixItemS
 {
-    // Хак для использования списков инициализации
-    // Не используем наследование
-    // _MatrixItem begin
-    float ssa;
-    IRenderable* pObject;
-    dxRender_Visual* pVisual;
-    Fmatrix Matrix; // matrix (copy)
-    // _MatrixItem end
-    ShaderElement* se;
+	// Хак для использования списков инициализации
+	// Не используем наследование
+	// _MatrixItem begin
+	float ssa;
+	IRenderable* pObject;
+	dxRender_Visual* pVisual;
+	Fmatrix Matrix; // matrix (copy)
+	// _MatrixItem end
+	ShaderElement* se;
 };
 
 struct _LodItem
 {
-    float ssa;
-    dxRender_Visual* pVisual;
+	float ssa;
+	dxRender_Visual* pVisual;
 };
 
 using state_type = SState*;
@@ -55,47 +55,47 @@ using mapNormalDirect = xr_vector<_NormalItem>;
 
 struct mapNormalItems : public mapNormalDirect
 {
-    float ssa;
+	float ssa;
 };
 
 struct mapNormalTextures : public xr_fixed_map<STextureList*, mapNormalItems>
 {
-    float ssa;
+	float ssa;
 };
 
 struct mapNormalStates : public xr_fixed_map<state_type, mapNormalTextures>
 {
-    float ssa;
+	float ssa;
 };
 
 struct mapNormalCS : public xr_fixed_map<R_constant_table*, mapNormalStates>
 {
-    float ssa;
+	float ssa;
 };
 
 #ifdef USE_DX11
 struct mapNormalAdvStages
 {
-    hs_type hs;
-    ds_type ds;
-    mapNormalCS mapCS;
+	hs_type hs;
+	ds_type ds;
+	mapNormalCS mapCS;
 };
 
 struct mapNormalPS : public xr_fixed_map<ps_type, mapNormalAdvStages>
 {
-    float ssa;
+	float ssa;
 };
 #else
 struct mapNormalPS : public xr_fixed_map<ps_type, mapNormalCS>
 {
-    float ssa;
+	float ssa;
 };
 #endif
 
 #if defined(USE_DX11)
 struct mapNormalGS : public xr_fixed_map<gs_type, mapNormalPS>
 {
-    float ssa;
+	float ssa;
 };
 
 struct mapNormalVS : public xr_fixed_map<vs_type, mapNormalGS> {};
@@ -113,47 +113,47 @@ using mapMatrixDirect = xr_vector<_MatrixItem>;
 
 struct mapMatrixItems : public mapMatrixDirect
 {
-    float ssa;
+	float ssa;
 };
 
 struct mapMatrixTextures : public xr_fixed_map<STextureList*, mapMatrixItems>
 {
-    float ssa;
+	float ssa;
 };
 
 struct mapMatrixStates : public xr_fixed_map<state_type, mapMatrixTextures>
 {
-    float ssa;
+	float ssa;
 };
 
 struct mapMatrixCS : public xr_fixed_map<R_constant_table*, mapMatrixStates>
 {
-    float ssa;
+	float ssa;
 };
 
 #ifdef USE_DX11
 struct mapMatrixAdvStages
 {
-    hs_type hs;
-    ds_type ds;
-    mapMatrixCS mapCS;
+	hs_type hs;
+	ds_type ds;
+	mapMatrixCS mapCS;
 };
 
 struct mapMatrixPS : public xr_fixed_map<ps_type, mapMatrixAdvStages>
 {
-    float ssa;
+	float ssa;
 };
 #else
 struct mapMatrixPS : public xr_fixed_map<ps_type, mapMatrixCS>
 {
-    float ssa;
+	float ssa;
 };
 #endif
 
 #if defined(USE_DX11)
 struct mapMatrixGS : public xr_fixed_map<gs_type, mapMatrixPS>
 {
-    float ssa;
+	float ssa;
 };
 
 struct mapMatrixVS : public xr_fixed_map<vs_type, mapMatrixGS> {};
@@ -166,6 +166,6 @@ using mapMatrixPasses_T = mapMatrix_T[SHADER_PASSES_MAX];
 
 // Top level
 using mapSorted_T = xr_fixed_map<float, _MatrixItemS>;
-using mapHUD_T    = xr_fixed_map<float, _MatrixItemS>;
-using mapLOD_T    = xr_fixed_map<float, _LodItem>;
+using mapHUD_T	= xr_fixed_map<float, _MatrixItemS>;
+using mapLOD_T	= xr_fixed_map<float, _LodItem>;
 }

@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 #include <ode/config.h>
@@ -54,8 +54,8 @@ int dTestRand()
   int ret = 1;
   seed = 0;
   if (dRand() != 0x3c6ef35f || dRand() != 0x47502932 ||
-      dRand() != 0xd1ccf6e9 || dRand() != 0xaaf95334 ||
-      dRand() != 0x6252e503) ret = 0;
+	  dRand() != 0xd1ccf6e9 || dRand() != 0xaaf95334 ||
+	  dRand() != 0x6252e503) ret = 0;
   seed = oldseed;
   return ret;
 }
@@ -81,8 +81,8 @@ void dPrintMatrix (const dReal *A, int n, int m, const char *fmt, FILE *f)
   int i,j;
   int skip = dPAD(m);
   for (i=0; i<n; i++) {
-    for (j=0; j<m; j++) fprintf (f,fmt,A[i*skip+j]);
-    fprintf (f,"\n");
+	for (j=0; j<m; j++) fprintf (f,fmt,A[i*skip+j]);
+	fprintf (f,"\n");
   }
 }
 
@@ -100,7 +100,7 @@ void dMakeRandomMatrix (dReal *A, int n, int m, dReal range)
   int skip = dPAD(m);
   dSetZero (A,n*skip);
   for (i=0; i<n; i++) {
-    for (j=0; j<m; j++) A[i*skip+j] = (dRandReal()*REAL(2.0)-REAL(1.0))*range;
+	for (j=0; j<m; j++) A[i*skip+j] = (dRandReal()*REAL(2.0)-REAL(1.0))*range;
   }
 }
 
@@ -110,7 +110,7 @@ void dClearUpperTriangle (dReal *A, int n)
   int i,j;
   int skip = dPAD(n);
   for (i=0; i<n; i++) {
-    for (j=i+1; j<n; j++) A[i*skip+j] = 0;
+	for (j=i+1; j<n; j++) A[i*skip+j] = 0;
   }
 }
 
@@ -122,10 +122,10 @@ dReal dMaxDifference (const dReal *A, const dReal *B, int n, int m)
   dReal diff,max;
   max = 0;
   for (i=0; i<n; i++) {
-    for (j=0; j<m; j++) {
-      diff = dFabs(A[i*skip+j] - B[i*skip+j]);
-      if (diff > max) max = diff;
-    }
+	for (j=0; j<m; j++) {
+	  diff = dFabs(A[i*skip+j] - B[i*skip+j]);
+	  if (diff > max) max = diff;
+	}
   }
   return max;
 }
@@ -138,10 +138,10 @@ dReal dMaxDifferenceLowerTriangle (const dReal *A, const dReal *B, int n)
   dReal diff,max;
   max = 0;
   for (i=0; i<n; i++) {
-    for (j=0; j<=i; j++) {
-      diff = dFabs(A[i*skip+j] - B[i*skip+j]);
-      if (diff > max) max = diff;
-    }
+	for (j=0; j<=i; j++) {
+	  diff = dFabs(A[i*skip+j] - B[i*skip+j]);
+	  if (diff > max) max = diff;
+	}
   }
   return max;
 }

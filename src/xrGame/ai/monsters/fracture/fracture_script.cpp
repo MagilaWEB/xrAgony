@@ -5,4 +5,4 @@
 using namespace luabind;
 
 SCRIPT_EXPORT(
-    CFracture, (CGameObject), { module(luaState)[class_<CFracture, CGameObject>("CFracture").def(constructor<>())]; });
+	CFracture, (CGameObject), { module(luaState)[class_<CFracture, CGameObject>("CFracture").def(constructor<>())]; });

@@ -12,17 +12,17 @@
 
 u16 CALifeHumanObjectHandler::get_available_ammo_count(const CSE_ALifeItemWeapon* weapon, ALife::OBJECT_VECTOR& objects)
 {
-    return (0);
+	return (0);
 }
 
 u16 CALifeHumanObjectHandler::get_available_ammo_count(
-    const CSE_ALifeItemWeapon* weapon, ALife::ITEM_P_VECTOR& items, ALife::OBJECT_VECTOR* objects)
+	const CSE_ALifeItemWeapon* weapon, ALife::ITEM_P_VECTOR& items, ALife::OBJECT_VECTOR* objects)
 {
-    return (0);
+	return (0);
 }
 
 void CALifeHumanObjectHandler::attach_available_ammo(
-    CSE_ALifeItemWeapon* weapon, ALife::ITEM_P_VECTOR& items, ALife::OBJECT_VECTOR* objects)
+	CSE_ALifeItemWeapon* weapon, ALife::ITEM_P_VECTOR& items, ALife::OBJECT_VECTOR* objects)
 {
 }
 
@@ -30,9 +30,9 @@ bool CALifeHumanObjectHandler::can_take_item(CSE_ALifeInventoryItem* inventory_i
 void CALifeHumanObjectHandler::collect_ammo_boxes() {}
 int CALifeHumanObjectHandler::choose_equipment(ALife::OBJECT_VECTOR* objects) { return (-1); }
 int CALifeHumanObjectHandler::choose_weapon(
-    const ALife::EWeaponPriorityType& weapon_priority_type, ALife::OBJECT_VECTOR* objects)
+	const ALife::EWeaponPriorityType& weapon_priority_type, ALife::OBJECT_VECTOR* objects)
 {
-    return (-1);
+	return (-1);
 }
 
 int CALifeHumanObjectHandler::choose_food(ALife::OBJECT_VECTOR* objects) { return (-1); }

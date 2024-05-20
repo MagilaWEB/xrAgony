@@ -1,13 +1,13 @@
 /********************************************************************
- *                                                                  *
- * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.   *
- * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
+ *																  *
+ * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.	*
+ * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS	 *
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
- * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
- *                                                                  *
- * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009                *
- * by the Xiph.Org Foundation http://www.xiph.org/                  *
- *                                                                  *
+ * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.		*
+ *																  *
+ * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009				*
+ * by the Xiph.Org Foundation http://www.xiph.org/				  *
+ *																  *
  ********************************************************************
 
   function:
@@ -58,42 +58,42 @@ extern "C"
  *
  * Decoding can be separated into the following steps:
  * -# initialise theora_info and theora_comment structures using 
- *    theora_info_init() and theora_comment_init():
+ *	theora_info_init() and theora_comment_init():
  \verbatim
- theora_info     info;
+ theora_info	 info;
  theora_comment  comment;
-   
+	
  theora_info_init(&info);
  theora_comment_init(&comment);
  \endverbatim
  * -# retrieve header packets from Ogg stream (there should be 3) and decode 
- *    into theora_info and theora_comment structures using 
- *    theora_decode_header().  See \ref identification for more information on 
- *    identifying which packets are theora packets.
+ *	into theora_info and theora_comment structures using 
+ *	theora_decode_header().  See \ref identification for more information on 
+ *	identifying which packets are theora packets.
  \verbatim
  int i;
  for (i = 0; i < 3; i++)
  {
-   (get a theora packet "op" from the Ogg stream)
-   theora_decode_header(&info, &comment, op);
+	(get a theora packet "op" from the Ogg stream)
+	theora_decode_header(&info, &comment, op);
  }
  \endverbatim
  * -# initialise the decoder based on the information retrieved into the
- *    theora_info struct by theora_decode_header().  You will need a 
- *    theora_state struct.
+ *	theora_info struct by theora_decode_header().  You will need a 
+ *	theora_state struct.
  \verbatim
  theora_state state;
  
  theora_decode_init(&state, &info);
  \endverbatim
  * -# pass in packets and retrieve decoded frames!  See the yuv_buffer 
- *    documentation for information on how to retrieve raw YUV data.
+ *	documentation for information on how to retrieve raw YUV data.
  \verbatim
  yuf_buffer buffer;
  while (last packet was not e_o_s) {
-   (get a theora packet "op" from the Ogg stream)
-   theora_decode_packetin(&state, op);
-   theora_decode_YUVout(&state, &buffer);
+	(get a theora packet "op" from the Ogg stream)
+	theora_decode_packetin(&state, op);
+	theora_decode_YUVout(&state, &buffer);
  }
  \endverbatim
  *  
@@ -103,11 +103,11 @@ extern "C"
  * All streams inside an Ogg file have a unique serial_no attached to the 
  * stream.  Typically, you will want to 
  *  - retrieve the serial_no for each b_o_s (beginning of stream) page 
- *    encountered within the Ogg file; 
+ *	encountered within the Ogg file; 
  *  - test the first (only) packet on that page to determine if it is a theora 
- *    packet;
+ *	packet;
  *  - once you have found a theora b_o_s page then use the retrieved serial_no 
- *    to identify future packets belonging to the same theora stream.
+ *	to identify future packets belonging to the same theora stream.
  * 
  * Note that you \e cannot use theora_packet_isheader() to determine if a 
  * packet is a theora packet or not, as this function does not perform any
@@ -145,16 +145,16 @@ extern "C"
  * theora/examples/ for more information.
  */
 typedef struct {
-    int   y_width;      /**< Width of the Y' luminance plane */
-    int   y_height;     /**< Height of the luminance plane */
-    int   y_stride;     /**< Offset in bytes between successive rows */
+	int	y_width;	  /**< Width of the Y' luminance plane */
+	int	y_height;	 /**< Height of the luminance plane */
+	int	y_stride;	 /**< Offset in bytes between successive rows */
 
-    int   uv_width;     /**< Width of the Cb and Cr chroma planes */
-    int   uv_height;    /**< Height of the chroma planes */
-    int   uv_stride;    /**< Offset between successive chroma rows */
-    unsigned char *y;   /**< Pointer to start of luminance data */
-    unsigned char *u;   /**< Pointer to start of Cb data */
-    unsigned char *v;   /**< Pointer to start of Cr data */
+	int	uv_width;	 /**< Width of the Cb and Cr chroma planes */
+	int	uv_height;	/**< Height of the chroma planes */
+	int	uv_stride;	/**< Offset between successive chroma rows */
+	unsigned char *y;	/**< Pointer to start of luminance data */
+	unsigned char *u;	/**< Pointer to start of Cb data */
+	unsigned char *v;	/**< Pointer to start of Cr data */
 
 } yuv_buffer;
 
@@ -162,10 +162,10 @@ typedef struct {
  * A Colorspace.
  */
 typedef enum {
-  OC_CS_UNSPECIFIED,    /**< The colorspace is unknown or unspecified */
-  OC_CS_ITU_REC_470M,   /**< This is the best option for 'NTSC' content */
+  OC_CS_UNSPECIFIED,	/**< The colorspace is unknown or unspecified */
+  OC_CS_ITU_REC_470M,	/**< This is the best option for 'NTSC' content */
   OC_CS_ITU_REC_470BG,  /**< This is the best option for 'PAL' content */
-  OC_CS_NSPACES         /**< This marks the end of the defined colorspaces */
+  OC_CS_NSPACES		 /**< This marks the end of the defined colorspaces */
 } theora_colorspace;
 
 /**
@@ -176,10 +176,10 @@ typedef enum {
  * exact definitions.
  */
 typedef enum {
-  OC_PF_420,    /**< Chroma subsampling by 2 in each direction (4:2:0) */
-  OC_PF_RSVD,   /**< Reserved value */
-  OC_PF_422,    /**< Horizonatal chroma subsampling by 2 (4:2:2) */
-  OC_PF_444,    /**< No chroma subsampling at all (4:4:4) */
+  OC_PF_420,	/**< Chroma subsampling by 2 in each direction (4:2:0) */
+  OC_PF_RSVD,	/**< Reserved value */
+  OC_PF_422,	/**< Horizonatal chroma subsampling by 2 (4:2:2) */
+  OC_PF_444,	/**< No chroma subsampling at all (4:4:4) */
 } theora_pixelformat;
 
 /**
@@ -210,14 +210,14 @@ typedef struct {
   ogg_uint32_t  frame_height;	/**< display frame height */
   ogg_uint32_t  offset_x;	/**< horizontal offset of the displayed frame */
   ogg_uint32_t  offset_y;	/**< vertical offset of the displayed frame */
-  ogg_uint32_t  fps_numerator;	    /**< frame rate numerator **/
-  ogg_uint32_t  fps_denominator;    /**< frame rate denominator **/
-  ogg_uint32_t  aspect_numerator;   /**< pixel aspect ratio numerator */
+  ogg_uint32_t  fps_numerator;		/**< frame rate numerator **/
+  ogg_uint32_t  fps_denominator;	/**< frame rate denominator **/
+  ogg_uint32_t  aspect_numerator;	/**< pixel aspect ratio numerator */
   ogg_uint32_t  aspect_denominator; /**< pixel aspect ratio denominator */
-  theora_colorspace colorspace;	    /**< colorspace */
-  int           target_bitrate;	    /**< nominal bitrate in bits per second */
-  int           quality;  /**< Nominal quality setting, 0-63 */
-  int           quick_p;  /**< Quick encode/decode */
+  theora_colorspace colorspace;		/**< colorspace */
+  int			target_bitrate;		/**< nominal bitrate in bits per second */
+  int			quality;  /**< Nominal quality setting, 0-63 */
+  int			quick_p;  /**< Quick encode/decode */
 
   /* decode only */
   unsigned char version_major;
@@ -227,16 +227,16 @@ typedef struct {
   void *codec_setup;
 
   /* encode only */
-  int           dropframes_p;
-  int           keyframe_auto_p;
+  int			dropframes_p;
+  int			keyframe_auto_p;
   ogg_uint32_t  keyframe_frequency;
   ogg_uint32_t  keyframe_frequency_force;  /* also used for decode init to
-                                              get granpos shift correct */
+											  get granpos shift correct */
   ogg_uint32_t  keyframe_data_target_bitrate;
-  ogg_int32_t   keyframe_auto_threshold;
+  ogg_int32_t	keyframe_auto_threshold;
   ogg_uint32_t  keyframe_mindistance;
-  ogg_int32_t   noise_sensitivity;
-  ogg_int32_t   sharpness;
+  ogg_int32_t	noise_sensitivity;
+  ogg_int32_t	sharpness;
 
   theora_pixelformat pixelformat;	/**< chroma subsampling mode to expect */
 
@@ -273,10 +273,10 @@ typedef struct{
  * for their length.
  */
 typedef struct theora_comment{
-  char **user_comments;         /**< An array of comment string vectors */
-  int   *comment_lengths;       /**< An array of corresponding string vector lengths in bytes */
-  int    comments;              /**< The total number of comment string vectors */
-  char  *vendor;                /**< The vendor string identifying the encoder, null terminated */
+  char **user_comments;		 /**< An array of comment string vectors */
+  int	*comment_lengths;		/**< An array of corresponding string vector lengths in bytes */
+  int	comments;			  /**< The total number of comment string vectors */
+  char  *vendor;				/**< The vendor string identifying the encoder, null terminated */
 
 } theora_comment;
 
@@ -319,11 +319,11 @@ typedef struct theora_comment{
  *  be enlarged appropriately.
  *
  * \param[in]  buf <tt>ogg_uint32_t</tt>: The maximum distance between key
- *                   frames.
+ *					frames.
  * \param[out] buf <tt>ogg_uint32_t</tt>: The actual maximum distance set.
  * \retval OC_FAULT  \a theora_state or \a buf is <tt>NULL</tt>.
  * \retval OC_EINVAL \a buf_sz is not <tt>sizeof(ogg_uint32_t)</tt>.
- * \retval OC_IMPL   Not supported by this implementation.*/
+ * \retval OC_IMPL	Not supported by this implementation.*/
 #define TH_ENCCTL_SET_KEYFRAME_FREQUENCY_FORCE (4)
 
 /**Set the granule position.
@@ -345,11 +345,11 @@ typedef struct theora_comment{
  * \param[in] buf #th_quant_info
  * \retval OC_FAULT  \a theora_state is <tt>NULL</tt>.
  * \retval OC_EINVAL Encoding has already begun, the quantization parameters
- *                    are not acceptable to this version of the encoder, 
- *                    \a buf is <tt>NULL</tt> and \a buf_sz is not zero, 
- *                    or \a buf is non-<tt>NULL</tt> and \a buf_sz is 
- *                    not <tt>sizeof(#th_quant_info)</tt>.
- * \retval OC_IMPL   Not supported by this implementation.*/
+ *					are not acceptable to this version of the encoder, 
+ *					\a buf is <tt>NULL</tt> and \a buf_sz is not zero, 
+ *					or \a buf is non-<tt>NULL</tt> and \a buf_sz is 
+ *					not <tt>sizeof(#th_quant_info)</tt>.
+ * \retval OC_IMPL	Not supported by this implementation.*/
 #define TH_ENCCTL_SET_QUANT_PARAMS (2)
 
 /**Disables any encoder features that would prevent lossless transcoding back
@@ -369,16 +369,16 @@ typedef struct theora_comment{
  *  be enabled or disabled as requested.
  *
  * \param[in]  buf <tt>int</tt>: a non-zero value to enable VP3 compatibility,
- *                   or 0 to disable it (the default).
+ *					or 0 to disable it (the default).
  * \param[out] buf <tt>int</tt>: 1 if all bitstream features required for
- *                   VP3-compatibility could be set, and 0 otherwise.
- *                  The latter will be returned if the pixel format is not
- *                   4:2:0, the picture region is smaller than the full frame,
- *                   or if encoding has begun, preventing the quantization
- *                   tables and codebooks from being set.
+ *					VP3-compatibility could be set, and 0 otherwise.
+ *				  The latter will be returned if the pixel format is not
+ *					4:2:0, the picture region is smaller than the full frame,
+ *					or if encoding has begun, preventing the quantization
+ *					tables and codebooks from being set.
  * \retval OC_FAULT  \a theora_state or \a buf is <tt>NULL</tt>.
  * \retval OC_EINVAL \a buf_sz is not <tt>sizeof(int)</tt>.
- * \retval OC_IMPL   Not supported by this implementation.*/
+ * \retval OC_IMPL	Not supported by this implementation.*/
 #define TH_ENCCTL_SET_VP3_COMPATIBLE (10)
 
 /**Gets the maximum speed level.
@@ -392,37 +392,37 @@ typedef struct theora_comment{
  * \param[out] buf int: The maximum encoding speed level.
  * \retval OC_FAULT  \a theora_state or \a buf is <tt>NULL</tt>.
  * \retval OC_EINVAL \a buf_sz is not <tt>sizeof(int)</tt>.
- * \retval OC_IMPL   Not supported by this implementation in the current
- *                    encoding mode.*/
+ * \retval OC_IMPL	Not supported by this implementation in the current
+ *					encoding mode.*/
 #define TH_ENCCTL_GET_SPLEVEL_MAX (12)
 
 /**Sets the speed level.
  * By default a speed value of 1 is used.
  *
  * \param[in] buf int: The new encoding speed level.
- *                      0 is slowest, larger values use less CPU.
+ *					  0 is slowest, larger values use less CPU.
  * \retval OC_FAULT  \a theora_state or \a buf is <tt>NULL</tt>.
  * \retval OC_EINVAL \a buf_sz is not <tt>sizeof(int)</tt>, or the
- *                    encoding speed level is out of bounds.
- *                   The maximum encoding speed level may be
- *                    implementation- and encoding mode-specific, and can be
- *                    obtained via #TH_ENCCTL_GET_SPLEVEL_MAX.
- * \retval OC_IMPL   Not supported by this implementation in the current
- *                    encoding mode.*/
+ *					encoding speed level is out of bounds.
+ *					The maximum encoding speed level may be
+ *					implementation- and encoding mode-specific, and can be
+ *					obtained via #TH_ENCCTL_GET_SPLEVEL_MAX.
+ * \retval OC_IMPL	Not supported by this implementation in the current
+ *					encoding mode.*/
 #define TH_ENCCTL_SET_SPLEVEL (14)
 
 /*@}*/
 
-#define OC_FAULT       -1       /**< General failure */
-#define OC_EINVAL      -10      /**< Library encountered invalid internal data */
-#define OC_DISABLED    -11      /**< Requested action is disabled */
-#define OC_BADHEADER   -20      /**< Header packet was corrupt/invalid */
-#define OC_NOTFORMAT   -21      /**< Packet is not a theora packet */
-#define OC_VERSION     -22      /**< Bitstream version is not handled */
-#define OC_IMPL        -23      /**< Feature or action not implemented */
-#define OC_BADPACKET   -24      /**< Packet is corrupt */
-#define OC_NEWPACKET   -25      /**< Packet is an (ignorable) unhandled extension */
-#define OC_DUPFRAME    1        /**< Packet is a dropped frame */
+#define OC_FAULT		-1		/**< General failure */
+#define OC_EINVAL	  -10	  /**< Library encountered invalid internal data */
+#define OC_DISABLED	-11	  /**< Requested action is disabled */
+#define OC_BADHEADER	-20	  /**< Header packet was corrupt/invalid */
+#define OC_NOTFORMAT	-21	  /**< Packet is not a theora packet */
+#define OC_VERSION	 -22	  /**< Bitstream version is not handled */
+#define OC_IMPL		-23	  /**< Feature or action not implemented */
+#define OC_BADPACKET	-24	  /**< Packet is corrupt */
+#define OC_NEWPACKET	-25	  /**< Packet is an (ignorable) unhandled extension */
+#define OC_DUPFRAME	1		/**< Packet is a dropped frame */
 
 /** 
  * Retrieve a human-readable string to identify the encoder vendor and version.
@@ -435,7 +435,7 @@ extern const char *theora_version_string(void);
  * This number is composed of a 16-bit major version, 8-bit minor version
  * and 8 bit sub-version, composed as follows:
 <pre>
-   (VERSION_MAJOR<<16) + (VERSION_MINOR<<8) + (VERSION_SUB)
+	(VERSION_MAJOR<<16) + (VERSION_MINOR<<8) + (VERSION_SUB)
 </pre>
 * \returns The version number.
 */
@@ -453,8 +453,8 @@ extern int theora_encode_init(theora_state *th, theora_info *ti);
  * Submit a YUV buffer to the theora encoder.
  * \param t A theora_state handle previously initialized for encoding.
  * \param yuv A buffer of YUV data to encode.  Note that both the yuv_buffer
- *            struct and the luma/chroma buffers within should be allocated by
- *            the user.
+ *			struct and the luma/chroma buffers within should be allocated by
+ *			the user.
  * \retval OC_EINVAL Encoder is not ready, or is finished.
  * \retval -1 The size of the given frame differs from those previously input
  * \retval 0 Success
@@ -467,14 +467,14 @@ extern int theora_encode_YUVin(theora_state *t, yuv_buffer *yuv);
  * \param t A theora_state handle previously initialized for encoding.
  * \param last_p whether this is the last packet the encoder should produce.
  * \param op An ogg_packet structure to fill. libtheora will set all
- *           elements of this structure, including a pointer to encoded
- *           data. The memory for the encoded data is owned by libtheora.
+ *			elements of this structure, including a pointer to encoded
+ *			data. The memory for the encoded data is owned by libtheora.
  * \retval 0 No internal storage exists OR no packet is ready
  * \retval -1 The encoding process has completed
  * \retval 1 Success
  */
 extern int theora_encode_packetout( theora_state *t, int last_p,
-                                    ogg_packet *op);
+									ogg_packet *op);
 
 /**
  * Request a packet containing the initial header.
@@ -482,8 +482,8 @@ extern int theora_encode_packetout( theora_state *t, int last_p,
  * structure.
  * \param t A theora_state handle previously initialized for encoding.
  * \param op An ogg_packet structure to fill. libtheora will set all
- *           elements of this structure, including a pointer to the header
- *           data. The memory for the header data is owned by libtheora.
+ *			elements of this structure, including a pointer to the header
+ *			data. The memory for the header data is owned by libtheora.
  * \retval 0 Success
  */
 extern int theora_encode_header(theora_state *t, ogg_packet *op);
@@ -494,9 +494,9 @@ extern int theora_encode_header(theora_state *t, ogg_packet *op);
  * structure.
  * \param tc A theora_comment structure filled with the desired metadata
  * \param op An ogg_packet structure to fill. libtheora will set all
- *           elements of this structure, including a pointer to the encoded
- *           comment data. The memory for the comment data is owned by
- *           libtheora.
+ *			elements of this structure, including a pointer to the encoded
+ *			comment data. The memory for the comment data is owned by
+ *			libtheora.
  * \retval 0 Success
  */
 extern int theora_encode_comment(theora_comment *tc, ogg_packet *op);
@@ -507,8 +507,8 @@ extern int theora_encode_comment(theora_comment *tc, ogg_packet *op);
  * structure.
  * \param t A theora_state handle previously initialized for encoding.
  * \param op An ogg_packet structure to fill. libtheora will set all
- *           elements of this structure, including a pointer to the codebook
- *           data. The memory for the header data is owned by libtheora.
+ *			elements of this structure, including a pointer to the codebook
+ *			data. The memory for the header data is owned by libtheora.
  * \retval 0 Success
  */
 extern int theora_encode_tables(theora_state *t, ogg_packet *op);
@@ -518,51 +518,51 @@ extern int theora_encode_tables(theora_state *t, ogg_packet *op);
  * an initial header, comment data or codebook tables.
  *
  * \param ci A theora_info structure to fill. This must have been previously
- *           initialized with theora_info_init(). If \a op contains an initial
- *           header, theora_decode_header() will fill \a ci with the
- *           parsed header values. If \a op contains codebook tables,
- *           theora_decode_header() will parse these and attach an internal
- *           representation to \a ci->codec_setup.
+ *			initialized with theora_info_init(). If \a op contains an initial
+ *			header, theora_decode_header() will fill \a ci with the
+ *			parsed header values. If \a op contains codebook tables,
+ *			theora_decode_header() will parse these and attach an internal
+ *			representation to \a ci->codec_setup.
  * \param cc A theora_comment structure to fill. If \a op contains comment
- *           data, theora_decode_header() will fill \a cc with the parsed
- *           comments.
+ *			data, theora_decode_header() will fill \a cc with the parsed
+ *			comments.
  * \param op An ogg_packet structure which you expect contains an initial
- *           header, comment data or codebook tables.
+ *			header, comment data or codebook tables.
  *
  * \retval OC_BADHEADER \a op is NULL; OR the first byte of \a op->packet
- *                      has the signature of an initial packet, but op is
- *                      not a b_o_s packet; OR this packet has the signature
- *                      of an initial header packet, but an initial header
- *                      packet has already been seen; OR this packet has the
- *                      signature of a comment packet, but the initial header
- *                      has not yet been seen; OR this packet has the signature
- *                      of a comment packet, but contains invalid data; OR
- *                      this packet has the signature of codebook tables,
- *                      but the initial header or comments have not yet
- *                      been seen; OR this packet has the signature of codebook
- *                      tables, but contains invalid data;
- *                      OR the stream being decoded has a compatible version
- *                      but this packet does not have the signature of a
- *                      theora initial header, comments, or codebook packet
- * \retval OC_VERSION   The packet data of \a op is an initial header with
- *                      a version which is incompatible with this version of
- *                      libtheora.
+ *					  has the signature of an initial packet, but op is
+ *					  not a b_o_s packet; OR this packet has the signature
+ *					  of an initial header packet, but an initial header
+ *					  packet has already been seen; OR this packet has the
+ *					  signature of a comment packet, but the initial header
+ *					  has not yet been seen; OR this packet has the signature
+ *					  of a comment packet, but contains invalid data; OR
+ *					  this packet has the signature of codebook tables,
+ *					  but the initial header or comments have not yet
+ *					  been seen; OR this packet has the signature of codebook
+ *					  tables, but contains invalid data;
+ *					  OR the stream being decoded has a compatible version
+ *					  but this packet does not have the signature of a
+ *					  theora initial header, comments, or codebook packet
+ * \retval OC_VERSION	The packet data of \a op is an initial header with
+ *					  a version which is incompatible with this version of
+ *					  libtheora.
  * \retval OC_NEWPACKET the stream being decoded has an incompatible (future)
- *                      version and contains an unknown signature.
- * \retval 0            Success
+ *					  version and contains an unknown signature.
+ * \retval 0			Success
  *
  * \note The normal usage is that theora_decode_header() be called on the
- *       first three packets of a theora logical bitstream in succession.
+ *		first three packets of a theora logical bitstream in succession.
  */
 extern int theora_decode_header(theora_info *ci, theora_comment *cc,
-                                ogg_packet *op);
+								ogg_packet *op);
 
 /**
  * Initialize a theora_state handle for decoding.
  * \param th The theora_state handle to initialize.
  * \param c  A theora_info struct filled with the desired decoding parameters.
- *           This is of course usually obtained from a previous call to
- *           theora_decode_header().
+ *			This is of course usually obtained from a previous call to
+ *			theora_decode_header().
  * \retval 0 Success
  */
 extern int theora_decode_init(theora_state *th, theora_info *c);
@@ -580,10 +580,10 @@ extern int theora_decode_packetin(theora_state *th,ogg_packet *op);
  * Output the next available frame of decoded YUV data.
  * \param th A theora_state handle previously initialized for decoding.
  * \param yuv A yuv_buffer in which libtheora should place the decoded data.
- *            Note that the buffer struct itself is allocated by the user, but
- *            that the luma and chroma pointers will be filled in by the 
- *            library.  Also note that these luma and chroma regions should be 
- *            considered read-only by the user.
+ *			Note that the buffer struct itself is allocated by the user, but
+ *			that the luma and chroma pointers will be filled in by the 
+ *			library.  Also note that these luma and chroma regions should be 
+ *			considered read-only by the user.
  * \retval 0 Success
  */
 extern int theora_decode_YUVout(theora_state *th,yuv_buffer *yuv);
@@ -667,12 +667,12 @@ extern ogg_int64_t theora_granule_frame(theora_state *th,ogg_int64_t granulepos)
  * \param th A previously initialized theora_state handle (encode or decode)
  * \param granulepos The granulepos to convert.
  * \returns The absolute time in seconds corresponding to \a granulepos.
- *          This is the "end time" for the frame, or the latest time it should
- *           be displayed.
- *          It is not the presentation time.
+ *		  This is the "end time" for the frame, or the latest time it should
+ *			be displayed.
+ *		  It is not the presentation time.
  * \retval -1. The given granulepos is undefined (i.e. negative), or
  * \retval -1. The function has been disabled because floating 
- *              point support is not available.
+ *			  point support is not available.
  */
 extern double theora_granule_time(theora_state *th,ogg_int64_t granulepos);
 
@@ -707,7 +707,7 @@ extern void theora_comment_init(theora_comment *tc);
  * Add a comment to an initialized theora_comment structure
  * \param tc A previously initialized theora comment structure
  * \param comment A null-terminated string encoding the comment in the form
- *                "TAG=the value"
+ *				"TAG=the value"
  *
  * Neither theora_comment_add() nor theora_comment_add_tag() support
  * comments containing null values, although the bitstream format
@@ -721,7 +721,7 @@ extern void theora_comment_add(theora_comment *tc, char *comment);
  * Add a comment to an initialized theora_comment structure.
  * \param tc A previously initialized theora comment structure
  * \param tag A null-terminated string containing the tag 
- *            associated with the comment.
+ *			associated with the comment.
  * \param value The corresponding value as a null-terminated string
  *
  * Neither theora_comment_add() nor theora_comment_add_tag() support
@@ -730,15 +730,15 @@ extern void theora_comment_add(theora_comment *tc, char *comment);
  * the theora_comment structure directly.
  **/
 extern void theora_comment_add_tag(theora_comment *tc,
-                                       char *tag, char *value);
+										char *tag, char *value);
 
 /**
  * Look up a comment value by tag.
  * \param tc Tn initialized theora_comment structure
  * \param tag The tag to look up
  * \param count The instance of the tag. The same tag can appear multiple
- *              times, each with a distinct and ordered value, so an index
- *              is required to retrieve them all.
+ *			  times, each with a distinct and ordered value, so an index
+ *			  is required to retrieve them all.
  * \returns A pointer to the queried tag's value
  * \retval NULL No matching tag is found
  *
@@ -757,7 +757,7 @@ extern char *theora_comment_query(theora_comment *tc, char *tag, int count);
  *  over the number of instances with separate calls to 
  *  theora_comment_query() to retrieve all instances in order.
  **/
-extern int   theora_comment_query_count(theora_comment *tc, char *tag);
+extern int	theora_comment_query_count(theora_comment *tc, char *tag);
 
 /**
  * Clear an allocated theora_comment struct so that it can be freed.
@@ -767,11 +767,11 @@ extern void  theora_comment_clear(theora_comment *tc);
 
 /**Encoder control function.
  * This is used to provide advanced control the encoding process.
- * \param th     A #theora_state handle.
- * \param req    The control code to process.
- *                See \ref encctlcodes_old "the list of available 
+ * \param th	 A #theora_state handle.
+ * \param req	The control code to process.
+ *				See \ref encctlcodes_old "the list of available 
  *			control codes" for details.
- * \param buf    The parameters for this control code.
+ * \param buf	The parameters for this control code.
  * \param buf_sz The size of the parameter buffer.*/
 extern int theora_control(theora_state *th,int req,void *buf,size_t buf_sz);
 

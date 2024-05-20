@@ -15,18 +15,18 @@ IC void CEnemyManager::enable_enemy_change(const bool& value) { m_enable_enemy_c
 IC bool CEnemyManager::enable_enemy_change() const { return (m_enable_enemy_change); }
 IC CEntityAlive const* CEnemyManager::selected() const
 {
-    if (m_smart_cover_enemy && m_smart_cover_enemy->g_Alive())
-        return (m_smart_cover_enemy);
+	if (m_smart_cover_enemy && m_smart_cover_enemy->g_Alive())
+		return (m_smart_cover_enemy);
 
-    return (inherited::selected());
+	return (inherited::selected());
 }
 
 IC void CEnemyManager::set_enemy(CEntityAlive const* enemy)
 {
-    VERIFY2(enemy, "Bad enemy!");
-    VERIFY2(enemy->g_Alive(), "Enemy is already dead!");
+	VERIFY2(enemy, "Bad enemy!");
+	VERIFY2(enemy->g_Alive(), "Enemy is already dead!");
 
-    m_smart_cover_enemy = enemy;
+	m_smart_cover_enemy = enemy;
 }
 
 IC void CEnemyManager::invalidate_enemy() { m_smart_cover_enemy = 0; }

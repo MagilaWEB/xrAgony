@@ -25,50 +25,50 @@ called inside the process space.  Any version of DBGHELP.DLL from WinDBG
 #include <DbgHelp.h>
 
 /*//////////////////////////////////////////////////////////////////////
-                         Typedefs and Structures
+						 Typedefs and Structures
 //////////////////////////////////////////////////////////////////////*/
 // The return values for CreateCurrentProcMiniDump.
 enum class WriteMiniDumpResult
 {
-    // Everything worked.
-    DumpSucceeded,
-    // DBGHELP.DLL could not be found at all in the path.
-    DbghelpNotFound,
-    // The mini dump exports are not in the version of DBGHELP.DLL in memory.
-    DbghelpMissingExports,
-    // A parameter was bad.
-    BadParameter,
-    // Unable to open the dump file requested.
-    OpenDumpFailed,
-    // MiniDumpWriteDump failed.  Call GetLastError to see why.
-    MiniDumpWriteDumpFailed,
-    // Death error.  Thread failed to crank up.
-    eDEATH_ERROR,
-    // The invalid error value.
-    InvalidError,
+	// Everything worked.
+	DumpSucceeded,
+	// DBGHELP.DLL could not be found at all in the path.
+	DbghelpNotFound,
+	// The mini dump exports are not in the version of DBGHELP.DLL in memory.
+	DbghelpMissingExports,
+	// A parameter was bad.
+	BadParameter,
+	// Unable to open the dump file requested.
+	OpenDumpFailed,
+	// MiniDumpWriteDump failed.  Call GetLastError to see why.
+	MiniDumpWriteDumpFailed,
+	// Death error.  Thread failed to crank up.
+	eDEATH_ERROR,
+	// The invalid error value.
+	InvalidError,
 };
 
 /*----------------------------------------------------------------------
-FUNCTION        :   CreateCurrentProcessMiniDump
-DISCUSSION      :
-    Creates a minidump of the current process.
-PARAMETERS      :
-    eType       - The type of mini dump to do.
-    szFileName  - The complete path and filename to write the dump.
-                  Traditionally, the extension for dump files is .DMP.
-                  If the file exists, it will be overwritten.
-    dwThread    - The optional id of the thread that crashed.
-    pExceptInfo - The optional exception information.  This can be NULL
-                  to indicate no exception information is to be added
-                  to the dump.
-RETURNS         :
-    FALSE - Mini dump functions are not available.
-    TRUE  - Mini dump functions are there.
+FUNCTION		:	CreateCurrentProcessMiniDump
+DISCUSSION	  :
+	Creates a minidump of the current process.
+PARAMETERS	  :
+	eType		- The type of mini dump to do.
+	szFileName  - The complete path and filename to write the dump.
+				  Traditionally, the extension for dump files is .DMP.
+				  If the file exists, it will be overwritten.
+	dwThread	- The optional id of the thread that crashed.
+	pExceptInfo - The optional exception information.  This can be NULL
+				  to indicate no exception information is to be added
+				  to the dump.
+RETURNS		 :
+	FALSE - Mini dump functions are not available.
+	TRUE  - Mini dump functions are there.
 ----------------------------------------------------------------------*/
 WriteMiniDumpResult __stdcall WriteMiniDumpA(
-    MINIDUMP_TYPE eType, char* szFileName, DWORD dwThread, EXCEPTION_POINTERS* pExceptInfo);
+	MINIDUMP_TYPE eType, char* szFileName, DWORD dwThread, EXCEPTION_POINTERS* pExceptInfo);
 WriteMiniDumpResult __stdcall WriteMiniDumpW(
-    MINIDUMP_TYPE eType, wchar_t* szFileName, DWORD dwThread, EXCEPTION_POINTERS* pExceptInfo);
+	MINIDUMP_TYPE eType, wchar_t* szFileName, DWORD dwThread, EXCEPTION_POINTERS* pExceptInfo);
 
 #ifdef UNICODE
 #define WriteMiniDump WriteMiniDumpW

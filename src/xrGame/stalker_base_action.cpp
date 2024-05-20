@@ -20,14 +20,14 @@ using namespace StalkerSpace;
 CStalkerActionBase::CStalkerActionBase(CAI_Stalker* object, LPCSTR action_name) : inherited(object, action_name) {}
 void CStalkerActionBase::initialize()
 {
-    inherited::initialize();
-    object().animation().clear_script_animations();
-    object().brain().affect_cover(false);
+	inherited::initialize();
+	object().animation().clear_script_animations();
+	object().brain().affect_cover(false);
 }
 
 void CStalkerActionBase::execute() { inherited::execute(); }
 void CStalkerActionBase::finalize()
 {
-    inherited::finalize();
-    object().animation().clear_script_animations();
+	inherited::finalize();
+	object().animation().clear_script_animations();
 }

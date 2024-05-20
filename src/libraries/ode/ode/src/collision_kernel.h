@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 /*
@@ -113,31 +113,31 @@ struct dxGeom : public dBase {
   // the GEOM_AABB_BAD flag.
 
   void recomputeAABB() {
-    if (gflags & GEOM_AABB_BAD) {
-      computeAABB();
-      gflags &= ~GEOM_AABB_BAD;
-    }
+	if (gflags & GEOM_AABB_BAD) {
+	  computeAABB();
+	  gflags &= ~GEOM_AABB_BAD;
+	}
   }
 
   // add and remove this geom from a linked list maintained by a space.
 
   void spaceAdd (dxGeom **first_ptr) {
-    next = *first_ptr;
-    tome = first_ptr;
-    if (*first_ptr) (*first_ptr)->tome = &next;
-    *first_ptr = this;
+	next = *first_ptr;
+	tome = first_ptr;
+	if (*first_ptr) (*first_ptr)->tome = &next;
+	*first_ptr = this;
   }
   void spaceRemove() {
-    if (next) next->tome = tome;
-    *tome = next;
+	if (next) next->tome = tome;
+	*tome = next;
   }
 
   // add and remove this geom from a linked list maintained by a body.
 
   void bodyAdd (dxBody *b) {
-    body = b;
-    body_next = b->geom;
-    b->geom = this;
+	body = b;
+	body_next = b->geom;
+	b->geom = this;
   }
   void bodyRemove();
 };

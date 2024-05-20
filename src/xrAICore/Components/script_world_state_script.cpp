@@ -12,18 +12,18 @@
 #include "xrScriptEngine/ScriptExporter.hpp"
 
 SCRIPT_EXPORT(CScriptWorldState, (), {
-    module(
-        luaState)[class_<CScriptWorldState>("world_state")
-                      .def(constructor<>())
-                      .def(constructor<CScriptWorldState>())
-                      .def("add_property", (void (CScriptWorldState::*)(const CScriptWorldState::COperatorCondition&))(
-                                               &CScriptWorldState::add_condition))
-                      .def("remove_property",
-                          (void (CScriptWorldState::*)(const CScriptWorldState::COperatorCondition::_condition_type&))(
-                              &CScriptWorldState::remove_condition))
-                      .def("clear", &CScriptWorldState::clear)
-                      .def("includes", &CScriptWorldState::includes)
-                      .def("property", &CScriptWorldState::property)
-                      .def(const_self < CScriptWorldState())
-                      .def(const_self == CScriptWorldState())];
+	module(
+		luaState)[class_<CScriptWorldState>("world_state")
+					  .def(constructor<>())
+					  .def(constructor<CScriptWorldState>())
+					  .def("add_property", (void (CScriptWorldState::*)(const CScriptWorldState::COperatorCondition&))(
+												&CScriptWorldState::add_condition))
+					  .def("remove_property",
+						  (void (CScriptWorldState::*)(const CScriptWorldState::COperatorCondition::_condition_type&))(
+							  &CScriptWorldState::remove_condition))
+					  .def("clear", &CScriptWorldState::clear)
+					  .def("includes", &CScriptWorldState::includes)
+					  .def("property", &CScriptWorldState::property)
+					  .def(const_self < CScriptWorldState())
+					  .def(const_self == CScriptWorldState())];
 });

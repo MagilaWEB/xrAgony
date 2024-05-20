@@ -271,10 +271,10 @@ void xrDebug::GatherInfo(char* assertionInfo, const ErrorLocation& loc, const ch
 	bool extendedDesc = desc && strchr(desc, '\n');
 	pcstr prefix = "[error] ";
 	buffer += sprintf(buffer, "\nFATAL ERROR\n\n");
-	buffer += sprintf(buffer, "%sExpression    : %s\n", prefix, expr);
-	buffer += sprintf(buffer, "%sFunction      : %s\n", prefix, loc.Function);
-	buffer += sprintf(buffer, "%sFile          : %s\n", prefix, loc.File);
-	buffer += sprintf(buffer, "%sLine          : %d\n", prefix, loc.Line);
+	buffer += sprintf(buffer, "%sExpression	: %s\n", prefix, expr);
+	buffer += sprintf(buffer, "%sFunction	  : %s\n", prefix, loc.Function);
+	buffer += sprintf(buffer, "%sFile		  : %s\n", prefix, loc.File);
+	buffer += sprintf(buffer, "%sLine		  : %d\n", prefix, loc.Line);
 	if (extendedDesc)
 	{
 		buffer += sprintf(buffer, "\n%s\n", desc);
@@ -287,16 +287,16 @@ void xrDebug::GatherInfo(char* assertionInfo, const ErrorLocation& loc, const ch
 	}
 	else
 	{
-		buffer += sprintf(buffer, "%sDescription   : %s\n", prefix, desc);
+		buffer += sprintf(buffer, "%sDescription	: %s\n", prefix, desc);
 		if (arg1)
 		{
 			if (arg2)
 			{
-				buffer += sprintf(buffer, "%sArgument 0    : %s\n", prefix, arg1);
-				buffer += sprintf(buffer, "%sArgument 1    : %s\n", prefix, arg2);
+				buffer += sprintf(buffer, "%sArgument 0	: %s\n", prefix, arg1);
+				buffer += sprintf(buffer, "%sArgument 1	: %s\n", prefix, arg2);
 			}
 			else
-				buffer += sprintf(buffer, "%sArguments     : %s\n", prefix, arg1);
+				buffer += sprintf(buffer, "%sArguments	 : %s\n", prefix, arg1);
 		}
 	}
 	buffer += sprintf(buffer, "\n");

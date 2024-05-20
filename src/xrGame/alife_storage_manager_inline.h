@@ -10,6 +10,6 @@
 
 IC CALifeStorageManager::CALifeStorageManager(xrServer* server, LPCSTR section) : inherited(server, section)
 {
-    m_section = section;
-    xr_strcpy(m_save_name, "");
+	m_section = section;
+	xr_strcpy(m_save_name, "");
 }

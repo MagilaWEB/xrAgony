@@ -24,16 +24,16 @@ int main(int argc, char* argv[])
 	// start the program up
 	CreateProcessA
 	(
-		pathToExe.c_str(),   // the path
-		(LPSTR)command_line.c_str(),                // Command line
-		NULL,                   // Process handle not inheritable
-		NULL,                   // Thread handle not inheritable
-		FALSE,                  // Set handle inheritance to FALSE
+		pathToExe.c_str(),	// the path
+		(LPSTR)command_line.c_str(),				// Command line
+		NULL,					// Process handle not inheritable
+		NULL,					// Thread handle not inheritable
+		FALSE,				  // Set handle inheritance to FALSE
 		DETACHED_PROCESS,
-		NULL,           // Use parent's environment block
-		NULL,           // Use parent's starting directory 
-		&si,            // Pointer to STARTUPINFO structure
-		&pi           // Pointer to PROCESS_INFORMATION structure
+		NULL,			// Use parent's environment block
+		NULL,			// Use parent's starting directory 
+		&si,			// Pointer to STARTUPINFO structure
+		&pi			// Pointer to PROCESS_INFORMATION structure
 	);
 	// Close process and thread handles.
 	CloseHandle(pi.hProcess);

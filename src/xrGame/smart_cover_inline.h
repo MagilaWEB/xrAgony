@@ -14,40 +14,40 @@ IC smart_cover::object const& cover::object() const { return (m_object); }
 IC cover::Loopholes const& cover::loopholes() const { return (m_loopholes); }
 IC Fvector cover::fov_position(loophole const& loophole) const
 {
-    Fvector position;
-    m_object.XFORM().transform_tiny(position, loophole.fov_position());
-    return (position);
+	Fvector position;
+	m_object.XFORM().transform_tiny(position, loophole.fov_position());
+	return (position);
 }
 
 IC Fvector cover::fov_direction(loophole const& loophole) const
 {
-    Fvector direction;
-    m_object.XFORM().transform_dir(direction, loophole.fov_direction());
-    direction.normalize();
-    return (direction);
+	Fvector direction;
+	m_object.XFORM().transform_dir(direction, loophole.fov_direction());
+	direction.normalize();
+	return (direction);
 }
 
 IC Fvector cover::danger_fov_direction(loophole const& loophole) const
 {
-    Fvector direction;
-    m_object.XFORM().transform_dir(direction, loophole.danger_fov_direction());
-    direction.normalize();
-    return (direction);
+	Fvector direction;
+	m_object.XFORM().transform_dir(direction, loophole.danger_fov_direction());
+	direction.normalize();
+	return (direction);
 }
 
 IC Fvector cover::enter_direction(loophole const& loophole) const
 {
-    Fvector direction;
-    m_object.XFORM().transform_dir(direction, loophole.enter_direction());
-    direction.normalize();
-    return (direction);
+	Fvector direction;
+	m_object.XFORM().transform_dir(direction, loophole.enter_direction());
+	direction.normalize();
+	return (direction);
 }
 
 IC Fvector cover::position(Fvector const& position) const
 {
-    Fvector pos;
-    m_object.XFORM().transform_tiny(pos, position);
-    return (pos);
+	Fvector pos;
+	m_object.XFORM().transform_tiny(pos, position);
+	return (pos);
 }
 
 IC cover::DescriptionPtr const& cover::description() const { return (m_description); }

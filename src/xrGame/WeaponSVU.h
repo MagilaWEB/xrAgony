@@ -4,9 +4,9 @@
 
 class CWeaponSVU : public CWeaponCustomPistol
 {
-    typedef CWeaponCustomPistol inherited;
+	typedef CWeaponCustomPistol inherited;
 
 public:
-    CWeaponSVU() {}
-    virtual ~CWeaponSVU() {}
+	CWeaponSVU() {}
+	virtual ~CWeaponSVU() {}
 };

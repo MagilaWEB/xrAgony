@@ -37,8 +37,8 @@
 
 namespace luabind {
 
-    LUABIND_API bool is_nil_conversion_allowed();
-    LUABIND_API void allow_nil_conversion(bool allowed);
+	LUABIND_API bool is_nil_conversion_allowed();
+	LUABIND_API void allow_nil_conversion(bool allowed);
 
 	template <class T, class Derived = default_converter<T> >
 	struct native_converter_base
@@ -187,17 +187,17 @@ namespace luabind {
 #ifndef LUABIND_XRAY_NO_BACKWARDS_COMPATIBILITY
 			int type = lua_type(L, index);
 
-		    switch (type)
-		    {
+			switch (type)
+			{
 			case LUA_TSTRING:
 				return 0;
 			case LUA_TNUMBER:
 				return 1;
-		    // XXX: Do we need to convert nil here?
+			// XXX: Do we need to convert nil here?
 			/*case LUA_TNIL:
 				if (is_nil_conversion_allowed())
 					return 0;*/
-		    }
+			}
 
 			return no_match;
 #else
@@ -252,7 +252,7 @@ namespace luabind {
 				return 1;
 			case LUA_TNIL:
 				if (is_nil_conversion_allowed())
-			        return 0;
+					return 0;
 			}
 
 			return no_match;

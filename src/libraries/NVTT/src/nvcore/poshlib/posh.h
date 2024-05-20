@@ -32,17 +32,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
+	* Redistributions of source code must retain the above copyright
+	  notice, this list of conditions and the following disclaimer.
 
-    * Redistributions in binary form must reproduce the above
-      copyright notice, this list of conditions and the following
-      disclaimer in the documentation and/or other materials provided
-      with the distribution.
+	* Redistributions in binary form must reproduce the above
+	  copyright notice, this list of conditions and the following
+	  disclaimer in the documentation and/or other materials provided
+	  with the distribution.
 
-    * The names of this package'ss contributors contributors may not
-      be used to endorse or promote products derived from this
-      software without specific prior written permission.
+	* The names of this package'ss contributors contributors may not
+	  be used to endorse or promote products derived from this
+	  software without specific prior written permission.
 
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -63,9 +63,9 @@ I've been lax about revision histories, so this starts at, um, 1.3.001.
 Sorry for any inconveniences.
 
 1.3.001 - 2/23/2006 - Incorporated fix for bug reported by Bill Cary,
-                      where I was not detecting Visual Studio
-                      compilation on x86-64 systems.  Added check for
-                      _M_X64 which should fix that.
+					  where I was not detecting Visual Studio
+					  compilation on x86-64 systems.  Added check for
+					  _M_X64 which should fix that.
 
 */
 /*
@@ -73,135 +73,135 @@ I have yet to find an authoritative reference on preprocessor
 symbols, but so far this is what I've gleaned:
 
 GNU GCC/G++:
-   - __GNUC__: GNU C version
-   - __GNUG__: GNU C++ compiler
-   - __sun__ : on Sun platforms
-   - __svr4__: on Solaris and other SysV R4 platforms
-   - __mips__: on MIPS processor platforms
-   - __sparc_v9__: on Sparc 64-bit CPUs
-   - __sparcv9: 64-bit Solaris
-   - __MIPSEL__: mips processor, compiled for little endian
-   - __MIPSEB__: mips processor, compiled for big endian
-   - _R5900: MIPS/Sony/Toshiba R5900 (PS2)
-   - mc68000: 68K
-   - m68000: 68K
-   - m68k: 68K
-   - __palmos__: PalmOS
+	- __GNUC__: GNU C version
+	- __GNUG__: GNU C++ compiler
+	- __sun__ : on Sun platforms
+	- __svr4__: on Solaris and other SysV R4 platforms
+	- __mips__: on MIPS processor platforms
+	- __sparc_v9__: on Sparc 64-bit CPUs
+	- __sparcv9: 64-bit Solaris
+	- __MIPSEL__: mips processor, compiled for little endian
+	- __MIPSEB__: mips processor, compiled for big endian
+	- _R5900: MIPS/Sony/Toshiba R5900 (PS2)
+	- mc68000: 68K
+	- m68000: 68K
+	- m68k: 68K
+	- __palmos__: PalmOS
 
 Intel C/C++ Compiler:
-   - __ECC      : compiler version, IA64 only
-   - __EDG__
-   - __ELF__
-   - __GXX_ABI_VERSION
-   - __i386     : IA-32 only
-   - __i386__   : IA-32 only
-   - i386       : IA-32 only
-   - __ia64     : IA-64 only
-   - __ia64__   : IA-64 only
-   - ia64       : IA-64 only
-   - __ICC      : IA-32 only
-   - __INTEL_COMPILER : IA-32 or IA-64, newer versions only
+	- __ECC	  : compiler version, IA64 only
+	- __EDG__
+	- __ELF__
+	- __GXX_ABI_VERSION
+	- __i386	 : IA-32 only
+	- __i386__	: IA-32 only
+	- i386		: IA-32 only
+	- __ia64	 : IA-64 only
+	- __ia64__	: IA-64 only
+	- ia64		: IA-64 only
+	- __ICC	  : IA-32 only
+	- __INTEL_COMPILER : IA-32 or IA-64, newer versions only
 
 Apple's C/C++ Compiler for OS X:
-   - __APPLE_CC__
-   - __APPLE__
-   - __BIG_ENDIAN__
-   - __APPLE__
-   - __ppc__
-   - __MACH__
+	- __APPLE_CC__
+	- __APPLE__
+	- __BIG_ENDIAN__
+	- __APPLE__
+	- __ppc__
+	- __MACH__
 
 DJGPP:
-   - __MSDOS__
-   - __unix__
-   - __unix
-   - __GNUC__
-   - __GO32
-   - DJGPP
-   - __i386, __i386, i386
+	- __MSDOS__
+	- __unix__
+	- __unix
+	- __GNUC__
+	- __GO32
+	- DJGPP
+	- __i386, __i386, i386
 
 Cray's C compiler:
-   - _ADDR64: if 64-bit pointers
-   - _UNICOS: 
-   - __unix:
+	- _ADDR64: if 64-bit pointers
+	- _UNICOS: 
+	- __unix:
 
 SGI's CC compiler predefines the following (and more) with -ansi:
-   - __sgi
-   - __unix
-   - __host_mips
-   - _SYSTYPE_SVR4
-   - __mips
-   - _MIPSEB
-   - anyone know if there is a predefined symbol for the compiler?!
+	- __sgi
+	- __unix
+	- __host_mips
+	- _SYSTYPE_SVR4
+	- __mips
+	- _MIPSEB
+	- anyone know if there is a predefined symbol for the compiler?!
 
 MinGW:
-   - as GnuC but also defines _WIN32, __WIN32, WIN32, _X86_, __i386, __i386__, and several others
-   - __MINGW32__
+	- as GnuC but also defines _WIN32, __WIN32, WIN32, _X86_, __i386, __i386__, and several others
+	- __MINGW32__
 
 Cygwin:
-   - as Gnu C, but also
-   - __unix__
-   - __CYGWIN32__
+	- as Gnu C, but also
+	- __unix__
+	- __CYGWIN32__
 
 Microsoft Visual Studio predefines the following:
-   - _MSC_VER
-   - _WIN32: on Win32
-   - _M_IX6 (on x86 systems)
-   - _M_X64: on x86-64 systems
-   - _M_ALPHA (on DEC AXP systems)
-   - _SH3: WinCE, Hitachi SH-3
-   - _MIPS: WinCE, MIPS
-   - _ARM: WinCE, ARM
+	- _MSC_VER
+	- _WIN32: on Win32
+	- _M_IX6 (on x86 systems)
+	- _M_X64: on x86-64 systems
+	- _M_ALPHA (on DEC AXP systems)
+	- _SH3: WinCE, Hitachi SH-3
+	- _MIPS: WinCE, MIPS
+	- _ARM: WinCE, ARM
 
 Sun's C Compiler:
-   - sun and _sun
-   - unix and _unix
-   - sparc and _sparc (SPARC systems only)
-   - i386 and _i386 (x86 systems only)
-   - __SVR4 (Solaris only)
-   - __sparcv9: 64-bit solaris
-   - __SUNPRO_C
-   - _LP64: defined in 64-bit LP64 mode, but only if <sys/types.h> is included
+	- sun and _sun
+	- unix and _unix
+	- sparc and _sparc (SPARC systems only)
+	- i386 and _i386 (x86 systems only)
+	- __SVR4 (Solaris only)
+	- __sparcv9: 64-bit solaris
+	- __SUNPRO_C
+	- _LP64: defined in 64-bit LP64 mode, but only if <sys/types.h> is included
 
 Borland C/C++ predefines the following:
-   - __BORLANDC__:
+	- __BORLANDC__:
 
 DEC/Compaq C/C++ on Alpha:
-   - __alpha
-   - __arch64__
-   - __unix__ (on Tru64 Unix)
-   - __osf__
-   - __DECC
-   - __DECCXX (C++ compilation)
-   - __DECC_VER
-   - __DECCXX_VER
+	- __alpha
+	- __arch64__
+	- __unix__ (on Tru64 Unix)
+	- __osf__
+	- __DECC
+	- __DECCXX (C++ compilation)
+	- __DECC_VER
+	- __DECCXX_VER
 
 IBM's AIX compiler:
-   - __64BIT__ if 64-bit mode
-   - _AIX
-   - __IBMC__: C compiler version
-   - __IBMCPP__: C++ compiler version
-   - _LONG_LONG: compiler allows long long
+	- __64BIT__ if 64-bit mode
+	- _AIX
+	- __IBMC__: C compiler version
+	- __IBMCPP__: C++ compiler version
+	- _LONG_LONG: compiler allows long long
 
 Watcom:
-   - __WATCOMC__
-   - __DOS__ : if targeting DOS
-   - __386__ : if 32-bit support
-   - __WIN32__ : if targetin 32-bit Windows
+	- __WATCOMC__
+	- __DOS__ : if targeting DOS
+	- __386__ : if 32-bit support
+	- __WIN32__ : if targetin 32-bit Windows
 
 HP-UX C/C++ Compiler:
-   - __hpux
-   - __unix
-   - __hppa (on PA-RISC)
-   - __LP64__: if compiled in 64-bit mode
+	- __hpux
+	- __unix
+	- __hppa (on PA-RISC)
+	- __LP64__: if compiled in 64-bit mode
 
 Metrowerks:
-   - __MWERKS__
-   - __powerpc__
-   - _powerc
-   - __MC68K__
-   - macintosh when compiling for MacOS
-   - __INTEL__ for x86 targets
-   - __POWERPC__
+	- __MWERKS__
+	- __powerpc__
+	- _powerc
+	- __MC68K__
+	- macintosh when compiling for MacOS
+	- __INTEL__ for x86 targets
+	- __POWERPC__
 
 */
 
@@ -225,7 +225,7 @@ Metrowerks:
 #endif
 
 #if ( defined __host_mips || defined __sgi ) && !defined __GNUC__
-#  define POSH_COMPILER_STRING    "MIPSpro C/C++"
+#  define POSH_COMPILER_STRING	"MIPSpro C/C++"
 #  define POSH_COMPILER_MIPSPRO 1 
 #endif
 
@@ -240,7 +240,7 @@ Metrowerks:
 #endif
 
 #if defined __APPLE_CC__
-   /* we don't define the compiler string here, let it be GNU */
+	/* we don't define the compiler string here, let it be GNU */
 #  define POSH_COMPILER_APPLECC 1
 #endif
 
@@ -265,7 +265,7 @@ Metrowerks:
 #endif
 
 #if defined __MWERKS__
-#  define POSH_COMPILER_STRING     "MetroWerks CodeWarrior"
+#  define POSH_COMPILER_STRING	 "MetroWerks CodeWarrior"
 #  define POSH_COMPILER_METROWERKS 1
 #endif
 
@@ -315,7 +315,7 @@ Metrowerks:
 #endif
 
 /* NOTE: make sure you use /bt=DOS if compiling for 32-bit DOS,
-   otherwise Watcom assumes host=target */
+	otherwise Watcom assumes host=target */
 #if defined __WATCOMC__  && defined __386__ && defined __DOS__
 #  define POSH_OS_DOS32 1
 #  define POSH_OS_STRING "DOS/32-bit"
@@ -333,12 +333,12 @@ Metrowerks:
 
 #if defined __sun__ || defined sun || defined __sun || defined __solaris__
 #  if defined __SVR4 || defined __svr4__ || defined __solaris__
-#     define POSH_OS_STRING "Solaris"
-#     define POSH_OS_SOLARIS 1
+#	 define POSH_OS_STRING "Solaris"
+#	 define POSH_OS_SOLARIS 1
 #  endif
 #  if !defined POSH_OS_STRING
-#     define POSH_OS_STRING "SunOS"
-#     define POSH_OS_SUNOS 1
+#	 define POSH_OS_STRING "SunOS"
+#	 define POSH_OS_SUNOS 1
 #  endif
 #endif
 
@@ -375,7 +375,7 @@ Metrowerks:
 #if defined __unix__
 #  define POSH_OS_UNIX 1 
 #  if !defined POSH_OS_STRING
-#     define POSH_OS_STRING "Unix-like(generic)"
+#	 define POSH_OS_STRING "Unix-like(generic)"
 #  endif
 #endif
 
@@ -392,14 +392,14 @@ Metrowerks:
 #if defined _WIN32 || defined WIN32 || defined __NT__ || defined __WIN32__
 #  define POSH_OS_WIN32 1
 #  if !defined POSH_OS_XBOX
-#     if defined _WIN64
-#        define POSH_OS_WIN64 1
-#        define POSH_OS_STRING "Win64"
-#     else
-#        if !defined POSH_OS_STRING
-#           define POSH_OS_STRING "Win32"
-#        endif
-#     endif
+#	 if defined _WIN64
+#		define POSH_OS_WIN64 1
+#		define POSH_OS_STRING "Win64"
+#	 else
+#		if !defined POSH_OS_STRING
+#			define POSH_OS_STRING "Win32"
+#		endif
+#	 endif
 #  endif
 #endif
 
@@ -432,11 +432,11 @@ Metrowerks:
 #if defined __PPC__ || defined __POWERPC__  || defined powerpc || defined _POWER || defined __ppc__ || defined __powerpc__
 #  define POSH_CPU_PPC 1
 #  if !defined POSH_CPU_STRING
-#    if defined __powerpc64__
-#       define POSH_CPU_STRING "PowerPC64"
-#    else
-#       define POSH_CPU_STRING "PowerPC"
-#    endif
+#	if defined __powerpc64__
+#		define POSH_CPU_STRING "PowerPC64"
+#	else
+#		define POSH_CPU_STRING "PowerPC"
+#	endif
 #  endif
 #endif
 
@@ -462,10 +462,10 @@ Metrowerks:
 
 #if defined __sparc__ || defined __sparc
 #  if defined __arch64__ || defined __sparcv9 || defined __sparc_v9__
-#     define POSH_CPU_SPARC64 1 
-#     define POSH_CPU_STRING "Sparc/64"
+#	 define POSH_CPU_SPARC64 1 
+#	 define POSH_CPU_STRING "Sparc/64"
 #  else
-#     define POSH_CPU_STRING "Sparc/32"
+#	 define POSH_CPU_STRING "Sparc/32"
 #  endif
 #  define POSH_CPU_SPARC 1
 #endif
@@ -478,9 +478,9 @@ Metrowerks:
 #if defined mips || defined __mips__ || defined __MIPS__ || defined _MIPS
 #  define POSH_CPU_MIPS 1 
 #  if defined _R5900
-#    define POSH_CPU_STRING "MIPS R5900 (PS2)"
+#	define POSH_CPU_STRING "MIPS R5900 (PS2)"
 #  else
-#    define POSH_CPU_STRING "MIPS"
+#	define POSH_CPU_STRING "MIPS"
 #  endif
 #endif
 
@@ -492,12 +492,12 @@ Metrowerks:
 #if defined __X86__ || defined __i386__ || defined i386 || defined _M_IX86 || defined __386__ || defined __x86_64__ || defined _M_X64
 #  define POSH_CPU_X86 1
 #  if defined __x86_64__ || defined _M_X64
-#     define POSH_CPU_X86_64 1 
+#	 define POSH_CPU_X86_64 1 
 #  endif
 #  if defined POSH_CPU_X86_64
-#     define POSH_CPU_STRING "AMD x86-64"
+#	 define POSH_CPU_STRING "AMD x86-64"
 #  else
-#     define POSH_CPU_STRING "Intel 386+"
+#	 define POSH_CPU_STRING "Intel 386+"
 #  endif
 #endif
 
@@ -523,12 +523,12 @@ Metrowerks:
 */
 #if !defined POSH_OS_STRING
 #  if !defined FORCE_DOXYGEN
-#    define POSH_OS_EMBEDDED 1 
+#	define POSH_OS_EMBEDDED 1 
 #  endif
 #  if defined _R5900
-#     define POSH_OS_STRING "Sony PS2(embedded)"
+#	 define POSH_OS_STRING "Sony PS2(embedded)"
 #  else
-#     define POSH_OS_STRING "Embedded/Unknown"
+#	 define POSH_OS_STRING "Embedded/Unknown"
 #  endif
 #endif
 
@@ -539,16 +539,16 @@ Metrowerks:
 */
 #if defined POSH_CPU_X86 && !defined POSH_CPU_X86_64
 #  if defined __GNUC__
-#     define POSH_CDECL __attribute__((cdecl))
-#     define POSH_STDCALL __attribute__((stdcall))
-#     define POSH_FASTCALL __attribute__((fastcall))
+#	 define POSH_CDECL __attribute__((cdecl))
+#	 define POSH_STDCALL __attribute__((stdcall))
+#	 define POSH_FASTCALL __attribute__((fastcall))
 #  elif ( defined _MSC_VER || defined __WATCOMC__ || defined __BORLANDC__ || defined __MWERKS__ )
-#     define POSH_CDECL    __cdecl
-#     define POSH_STDCALL  __stdcall
-#     define POSH_FASTCALL __fastcall
+#	 define POSH_CDECL	__cdecl
+#	 define POSH_STDCALL  __stdcall
+#	 define POSH_FASTCALL __fastcall
 #  endif
 #else
-#  define POSH_CDECL    
+#  define POSH_CDECL	
 #  define POSH_STDCALL  
 #  define POSH_FASTCALL 
 #endif
@@ -567,49 +567,49 @@ Metrowerks:
 #endif
 
 #if defined POSH_DLL
-#   if defined POSH_OS_WIN32
-#      if defined _MSC_VER 
-#         if ( _MSC_VER >= 800 )
-#            if defined POSH_BUILDING_LIB
-#               define POSH_IMPORTEXPORT __declspec( dllexport )
-#            else
-#               define POSH_IMPORTEXPORT __declspec( dllimport )
-#            endif
-#         else
-#            if defined POSH_BUILDING_LIB
-#               define POSH_IMPORTEXPORT __export
-#            else
-#               define POSH_IMPORTEXPORT 
-#            endif
-#         endif
-#      endif  /* defined _MSC_VER */
-#      if defined __BORLANDC__
-#         if ( __BORLANDC__ >= 0x500 )
-#            if defined POSH_BUILDING_LIB 
-#               define POSH_IMPORTEXPORT __declspec( dllexport )
-#            else
-#               define POSH_IMPORTEXPORT __declspec( dllimport )
-#            endif
-#         else
-#            if defined POSH_BUILDING_LIB
-#               define POSH_IMPORTEXPORT __export
-#            else
-#               define POSH_IMPORTEXPORT 
-#            endif
-#         endif
-#      endif /* defined __BORLANDC__ */
-       /* for all other compilers, we're just making a blanket assumption */
-#      if defined __GNUC__ || defined __WATCOMC__ || defined __MWERKS__
-#         if defined POSH_BUILDING_LIB
-#            define POSH_IMPORTEXPORT __declspec( dllexport )
-#         else
-#            define POSH_IMPORTEXPORT __declspec( dllimport )
-#         endif
-#      endif /* all other compilers */
-#      if !defined POSH_IMPORTEXPORT
-#         error Building DLLs not supported on this compiler (poshlib@poshlib.org if you know how)
-#      endif
-#   endif /* defined POSH_OS_WIN32 */
+#	if defined POSH_OS_WIN32
+#	  if defined _MSC_VER 
+#		 if ( _MSC_VER >= 800 )
+#			if defined POSH_BUILDING_LIB
+#				define POSH_IMPORTEXPORT __declspec( dllexport )
+#			else
+#				define POSH_IMPORTEXPORT __declspec( dllimport )
+#			endif
+#		 else
+#			if defined POSH_BUILDING_LIB
+#				define POSH_IMPORTEXPORT __export
+#			else
+#				define POSH_IMPORTEXPORT 
+#			endif
+#		 endif
+#	  endif  /* defined _MSC_VER */
+#	  if defined __BORLANDC__
+#		 if ( __BORLANDC__ >= 0x500 )
+#			if defined POSH_BUILDING_LIB 
+#				define POSH_IMPORTEXPORT __declspec( dllexport )
+#			else
+#				define POSH_IMPORTEXPORT __declspec( dllimport )
+#			endif
+#		 else
+#			if defined POSH_BUILDING_LIB
+#				define POSH_IMPORTEXPORT __export
+#			else
+#				define POSH_IMPORTEXPORT 
+#			endif
+#		 endif
+#	  endif /* defined __BORLANDC__ */
+		/* for all other compilers, we're just making a blanket assumption */
+#	  if defined __GNUC__ || defined __WATCOMC__ || defined __MWERKS__
+#		 if defined POSH_BUILDING_LIB
+#			define POSH_IMPORTEXPORT __declspec( dllexport )
+#		 else
+#			define POSH_IMPORTEXPORT __declspec( dllimport )
+#		 endif
+#	  endif /* all other compilers */
+#	  if !defined POSH_IMPORTEXPORT
+#		 error Building DLLs not supported on this compiler (poshlib@poshlib.org if you know how)
+#	  endif
+#	endif /* defined POSH_OS_WIN32 */
 #endif
 
 /* On pretty much everything else, we can thankfully just ignore this */
@@ -618,7 +618,7 @@ Metrowerks:
 #endif
 
 #if defined FORCE_DOXYGEN
-#  define POSH_DLL    
+#  define POSH_DLL	
 #  define POSH_BUILDING_LIB
 #  undef POSH_DLL
 #  undef POSH_BUILDING_LIB
@@ -737,73 +737,73 @@ typedef unsigned long posh_u64_t;
 #define POSH_FALSE 0 
 #define POSH_TRUE  1 
 
-typedef int            posh_bool_t;
+typedef int			posh_bool_t;
 typedef unsigned char  posh_byte_t;
 
 /* NOTE: These assume that CHAR_BIT is 8!! */
 typedef unsigned char  posh_u8_t;
-typedef signed char    posh_i8_t;
+typedef signed char	posh_i8_t;
 
 #if defined POSH_USE_LIMITS_H
 #  if CHAR_BITS > 8
-#    error This machine uses 9-bit characters.  This is a warning, you can comment this out now.
+#	error This machine uses 9-bit characters.  This is a warning, you can comment this out now.
 #  endif /* CHAR_BITS > 8 */
 
 /* 16-bit */
 #  if ( USHRT_MAX == 65535 ) 
-   typedef unsigned short posh_u16_t;
-   typedef short          posh_i16_t;
+	typedef unsigned short posh_u16_t;
+	typedef short		  posh_i16_t;
 #  else
-   /* Yes, in theory there could still be a 16-bit character type and shorts are
-      32-bits in size...if you find such an architecture, let me know =P */
-#    error No 16-bit type found
+	/* Yes, in theory there could still be a 16-bit character type and shorts are
+	  32-bits in size...if you find such an architecture, let me know =P */
+#	error No 16-bit type found
 #  endif
 
 /* 32-bit */
 #  if ( INT_MAX == 2147483647 )
-  typedef unsigned       posh_u32_t;
-  typedef int            posh_i32_t;
+  typedef unsigned		posh_u32_t;
+  typedef int			posh_i32_t;
 #  elif ( LONG_MAX == 2147483647 )
   typedef unsigned long  posh_u32_t;
-  typedef long           posh_i32_t;
+  typedef long			posh_i32_t;
 #  else
-      error No 32-bit type found
+	  error No 32-bit type found
 #  endif
 
 #else /* POSH_USE_LIMITS_H */
 
   typedef unsigned short posh_u16_t;
-  typedef short          posh_i16_t;
+  typedef short		  posh_i16_t;
 
 #  if !defined POSH_OS_PALM
-  typedef unsigned       posh_u32_t;
-  typedef int            posh_i32_t;
+  typedef unsigned		posh_u32_t;
+  typedef int			posh_i32_t;
 #  else
   typedef unsigned long  posh_u32_t;
-  typedef long           posh_i32_t;
+  typedef long			posh_i32_t;
 #  endif
 #endif
 
 /** Minimum value for a byte */
-#define POSH_BYTE_MIN    0
+#define POSH_BYTE_MIN	0
 /** Maximum value for an 8-bit unsigned value */
-#define POSH_BYTE_MAX    255
+#define POSH_BYTE_MAX	255
 /** Minimum value for a byte */
-#define POSH_I16_MIN     ( ( posh_i16_t ) 0x8000 )
+#define POSH_I16_MIN	 ( ( posh_i16_t ) 0x8000 )
 /** Maximum value for a 16-bit signed value */
-#define POSH_I16_MAX     ( ( posh_i16_t ) 0x7FFF ) 
+#define POSH_I16_MAX	 ( ( posh_i16_t ) 0x7FFF ) 
 /** Minimum value for a 16-bit unsigned value */
-#define POSH_U16_MIN     0
+#define POSH_U16_MIN	 0
 /** Maximum value for a 16-bit unsigned value */
-#define POSH_U16_MAX     ( ( posh_u16_t ) 0xFFFF )
+#define POSH_U16_MAX	 ( ( posh_u16_t ) 0xFFFF )
 /** Minimum value for a 32-bit signed value */
-#define POSH_I32_MIN     ( ( posh_i32_t ) 0x80000000 )
+#define POSH_I32_MIN	 ( ( posh_i32_t ) 0x80000000 )
 /** Maximum value for a 32-bit signed value */
-#define POSH_I32_MAX     ( ( posh_i32_t ) 0x7FFFFFFF )
+#define POSH_I32_MAX	 ( ( posh_i32_t ) 0x7FFFFFFF )
 /** Minimum value for a 32-bit unsigned value */
-#define POSH_U32_MIN     0
+#define POSH_U32_MIN	 0
 /** Maximum value for a 32-bit unsigned value */
-#define POSH_U32_MAX     ( ( posh_u32_t ) 0xFFFFFFFF )
+#define POSH_U32_MAX	 ( ( posh_u32_t ) 0xFFFFFFFF )
 
 /*
 ** ----------------------------------------------------------------------------
@@ -821,13 +821,13 @@ POSH_COMPILE_TIME_ASSERT(posh_u32_t, sizeof(posh_u32_t) == 4);
 POSH_COMPILE_TIME_ASSERT(posh_i32_t, sizeof(posh_i32_t) == 4);
 
 #if !defined POSH_NO_FLOAT
-   POSH_COMPILE_TIME_ASSERT(posh_testfloat_t, sizeof(float)==4 );
-   POSH_COMPILE_TIME_ASSERT(posh_testdouble_t, sizeof(double)==8);
+	POSH_COMPILE_TIME_ASSERT(posh_testfloat_t, sizeof(float)==4 );
+	POSH_COMPILE_TIME_ASSERT(posh_testdouble_t, sizeof(double)==8);
 #endif
 
 #if defined POSH_64BIT_INTEGER
-   POSH_COMPILE_TIME_ASSERT(posh_u64_t, sizeof(posh_u64_t) == 8);
-   POSH_COMPILE_TIME_ASSERT(posh_i64_t, sizeof(posh_i64_t) == 8);
+	POSH_COMPILE_TIME_ASSERT(posh_u64_t, sizeof(posh_u64_t) == 8);
+	POSH_COMPILE_TIME_ASSERT(posh_i64_t, sizeof(posh_i64_t) == 8);
 #endif
 
 #endif
@@ -846,21 +846,21 @@ POSH_COMPILE_TIME_ASSERT(posh_i32_t, sizeof(posh_i32_t) == 4);
 #endif
 
 #if defined POSH_CPU_SPARC64 || defined POSH_OS_WIN64 || defined __64BIT__ || defined __LP64 || defined _LP64 || defined __LP64__ || defined _ADDR64 || defined _CRAYC
-#   define POSH_64BIT_POINTER 1
+#	define POSH_64BIT_POINTER 1
 #endif
 
 #if defined POSH_64BIT_POINTER
-   POSH_COMPILE_TIME_ASSERT( posh_64bit_pointer, sizeof( void * ) == 8 );
+	POSH_COMPILE_TIME_ASSERT( posh_64bit_pointer, sizeof( void * ) == 8 );
 #elif !defined FORCE_DOXYGEN
 /* if this assertion is hit then you're on a system that either has 64-bit
-   addressing and we didn't catch it, or you're on a system with 16-bit
-   pointers.  In the latter case, POSH doesn't actually care, we're just
-   triggering this assertion to make sure you're aware of the situation,
-   so feel free to delete it.
+	addressing and we didn't catch it, or you're on a system with 16-bit
+	pointers.  In the latter case, POSH doesn't actually care, we're just
+	triggering this assertion to make sure you're aware of the situation,
+	so feel free to delete it.
 
-   If this assertion is triggered on a known 32 or 64-bit platform, 
-   please let us know (poshlib@poshlib.org) */
-   POSH_COMPILE_TIME_ASSERT( posh_32bit_pointer, sizeof( void * ) == 4 );
+	If this assertion is triggered on a known 32 or 64-bit platform, 
+	please let us know (poshlib@poshlib.org) */
+	POSH_COMPILE_TIME_ASSERT( posh_32bit_pointer, sizeof( void * ) == 4 );
 #endif
 
 #if defined FORCE_DOXYGEN
@@ -888,22 +888,22 @@ const char *POSH_GetArchString( void );
 
 posh_u32_t  POSH_LittleFloatBits( float f );
 posh_u32_t  POSH_BigFloatBits( float f );
-float       POSH_FloatFromLittleBits( posh_u32_t bits );
-float       POSH_FloatFromBigBits( posh_u32_t bits );
+float		POSH_FloatFromLittleBits( posh_u32_t bits );
+float		POSH_FloatFromBigBits( posh_u32_t bits );
 
-void        POSH_DoubleBits( double d, posh_byte_t dst[ 8 ] );
-double      POSH_DoubleFromBits( const posh_byte_t src[ 8 ] );
+void		POSH_DoubleBits( double d, posh_byte_t dst[ 8 ] );
+double	  POSH_DoubleFromBits( const posh_byte_t src[ 8 ] );
 
 /* unimplemented
-float      *POSH_WriteFloatToLittle( void *dst, float f );
-float      *POSH_WriteFloatToBig( void *dst, float f );
-float       POSH_ReadFloatFromLittle( const void *src );
-float       POSH_ReadFloatFromBig( const void *src );
+float	  *POSH_WriteFloatToLittle( void *dst, float f );
+float	  *POSH_WriteFloatToBig( void *dst, float f );
+float		POSH_ReadFloatFromLittle( const void *src );
+float		POSH_ReadFloatFromBig( const void *src );
 
-double     *POSH_WriteDoubleToLittle( void *dst, double d );
-double     *POSH_WriteDoubleToBig( void *dst, double d );
-double      POSH_ReadDoubleFromLittle( const void *src );
-double      POSH_ReadDoubleFromBig( const void *src );
+double	 *POSH_WriteDoubleToLittle( void *dst, double d );
+double	 *POSH_WriteDoubleToBig( void *dst, double d );
+double	  POSH_ReadDoubleFromLittle( const void *src );
+double	  POSH_ReadDoubleFromBig( const void *src );
 */
 #endif /* !defined POSH_NO_FLOAT */
 
@@ -963,8 +963,8 @@ extern posh_i64_t  POSH_ReadI64FromBig( const void *src );
 #  define POSH_LittleI16(x) (x)
 #  define POSH_LittleI32(x) (x)
 #  if defined POSH_64BIT_INTEGER
-#    define POSH_LittleU64(x) (x)
-#    define POSH_LittleI64(x) (x)
+#	define POSH_LittleU64(x) (x)
+#	define POSH_LittleI64(x) (x)
 #  endif /* defined POSH_64BIT_INTEGER */
 
 #  define POSH_BigU16(x) POSH_SwapU16(x)
@@ -972,8 +972,8 @@ extern posh_i64_t  POSH_ReadI64FromBig( const void *src );
 #  define POSH_BigI16(x) POSH_SwapI16(x)
 #  define POSH_BigI32(x) POSH_SwapI32(x)
 #  if defined POSH_64BIT_INTEGER
-#    define POSH_BigU64(x) POSH_SwapU64(x)
-#    define POSH_BigI64(x) POSH_SwapI64(x)
+#	define POSH_BigU64(x) POSH_SwapU64(x)
+#	define POSH_BigI64(x) POSH_SwapI64(x)
 #  endif /* defined POSH_64BIT_INTEGER */
 
 #else
@@ -984,8 +984,8 @@ extern posh_i64_t  POSH_ReadI64FromBig( const void *src );
 #  define POSH_BigI32(x) (x)
 
 #  if defined POSH_64BIT_INTEGER
-#    define POSH_BigU64(x) (x)
-#    define POSH_BigI64(x) (x)
+#	define POSH_BigU64(x) (x)
+#	define POSH_BigI64(x) (x)
 #  endif /* POSH_64BIT_INTEGER */
 
 #  define POSH_LittleU16(x) POSH_SwapU16(x)
@@ -994,8 +994,8 @@ extern posh_i64_t  POSH_ReadI64FromBig( const void *src );
 #  define POSH_LittleI32(x) POSH_SwapI32(x)
 
 #  if defined POSH_64BIT_INTEGER
-#    define POSH_LittleU64(x) POSH_SwapU64(x)
-#    define POSH_LittleI64(x) POSH_SwapI64(x)
+#	define POSH_LittleU64(x) POSH_SwapU64(x)
+#	define POSH_LittleI64(x) POSH_SwapI64(x)
 #  endif /* POSH_64BIT_INTEGER */
 
 #endif

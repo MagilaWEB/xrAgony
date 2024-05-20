@@ -115,7 +115,7 @@ bool ColorBlock::isSingleColor() const
 {
 	Color32 mask(0xFF, 0xFF, 0xFF, 0x00);
 	uint u = m_color[0].u & mask.u;
-        
+		
 	for (int i = 1; i < 16; i++)
 	{
 		if (u != (m_color[i].u & mask.u))
@@ -123,7 +123,7 @@ bool ColorBlock::isSingleColor() const
 			return false;
 		}
 	}
-        
+		
 	return true;
 }
 

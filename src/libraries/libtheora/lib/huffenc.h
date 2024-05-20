@@ -4,7 +4,7 @@
 
 
 
-typedef th_huff_code                  th_huff_table[TH_NDCT_TOKENS];
+typedef th_huff_code				  th_huff_table[TH_NDCT_TOKENS];
 
 
 

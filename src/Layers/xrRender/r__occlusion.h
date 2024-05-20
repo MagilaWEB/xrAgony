@@ -15,9 +15,9 @@ class R_occlusion
 private:
 	struct	_Q
 	{
-		u32        order;
+		u32		order;
 		Microsoft::WRL::ComPtr<ID3DQuery> Q;
-		u32        ttl;
+		u32		ttl;
 	};
 
 	static constexpr u32 iInvalidHandle = 0xFFFFFFFF;

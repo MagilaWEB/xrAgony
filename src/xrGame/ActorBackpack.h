@@ -23,15 +23,15 @@ public:
 	float m_fPowerRestoreSpeed;
 	float m_fPowerLoss;
 
-    float m_fJumpSpeed;
-    float m_fWalkAccel;
-    float m_fOverweightWalkK;
+	float m_fJumpSpeed;
+	float m_fWalkAccel;
+	float m_fOverweightWalkK;
 
 	virtual BOOL net_Spawn(CSE_Abstract* DC);
 	virtual void net_Export(NET_Packet& P);
 	virtual void net_Import(NET_Packet& P);
 
 protected:
-    virtual bool install_upgrade_impl(LPCSTR section, bool test);
+	virtual bool install_upgrade_impl(LPCSTR section, bool test);
 };
 #endif

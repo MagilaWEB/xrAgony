@@ -10,11 +10,11 @@
 #include "xrCore/xrDebug_macros.h"
 
 #define TEMPLATE_SPECIALIZATION \
-    template <typename _data_type, typename _edge_weight_type, typename _vertex_id_type, typename _edge_data_type\
+	template <typename _data_type, typename _edge_weight_type, typename _vertex_id_type, typename _edge_data_type\
 >
 
 #define CAbstractGraph \
-    CGraphAbstract<_data_type, _edge_weight_type, _vertex_id_type, _edge_data_type\
+	CGraphAbstract<_data_type, _edge_weight_type, _vertex_id_type, _edge_data_type\
 >
 
 TEMPLATE_SPECIALIZATION
@@ -171,11 +171,11 @@ IC void CAbstractGraph::begin(_vertex_id_type const& vertex_index, const_iterato
 #undef CAbstractGraph
 
 #define TEMPLATE_SPECIALIZATION \
-    template <typename _data_type, typename _edge_weight_type, typename _vertex_id_type\
+	template <typename _data_type, typename _edge_weight_type, typename _vertex_id_type\
 >
 
 #define CAbstractGraph \
-    CGraphAbstractSerialize<_data_type, _edge_weight_type, _vertex_id_type\
+	CGraphAbstractSerialize<_data_type, _edge_weight_type, _vertex_id_type\
 >
 
 TEMPLATE_SPECIALIZATION

@@ -60,11 +60,11 @@
 #define THIS_FILE __FILE__
 #endif
 /*
-    #ifdef ICECORE_EXPORTS
-        #define ICECORE_API			__declspec(dllexport)
-    #else
-        #define ICECORE_API			__declspec(dllimport)
-    #endif
+	#ifdef ICECORE_EXPORTS
+		#define ICECORE_API			__declspec(dllexport)
+	#else
+		#define ICECORE_API			__declspec(dllimport)
+	#endif
 */
 #define FUNCTION extern "C"
 

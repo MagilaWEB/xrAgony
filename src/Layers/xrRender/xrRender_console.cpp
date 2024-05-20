@@ -181,7 +181,7 @@ float ps_r2_sun_tsm_projection = 0.3f; // 0.18f
 float ps_r2_sun_tsm_bias = -0.01f; //
 float ps_r2_sun_near = 20.f; // 12.0f
 
-extern float OLES_SUN_LIMIT_27_01_07; //    actually sun_far
+extern float OLES_SUN_LIMIT_27_01_07; //	actually sun_far
 
 float ps_r2_sun_near_border = 0.75f; // 1.0f
 float ps_r2_sun_depth_far_scale = 1.00000f; // 1.00001f
@@ -205,7 +205,7 @@ float ps_r2_slight_fade = 0.5f; // 1.f
 
 //  x - min (0), y - focus (1.4), z - max (100)
 Fvector3 ps_r2_dof = Fvector3().set(-1.25f, 1.4f, 600.f);
-float ps_r2_dof_sky = 30; //    distance to sky
+float ps_r2_dof_sky = 30; //	distance to sky
 float ps_r2_dof_kernel_size = 5.0f; //  7.0f
 
 float ps_r3_dyn_wet_surf_near = 10.f; // 10.0f
@@ -500,7 +500,7 @@ public:
 
 		RImplementation.ResourcesGetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
 
-		Msg("memory usage  mb \t \t video    \t managed      \t system \n");
+		Msg("memory usage  mb \t \t video	\t managed	  \t system \n");
 
 		const float MiB = 1024 * 1024; // XXX: use it as common enum value (like in X-Ray 2.0)
 		const u32* mem_usage = HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_vertex];
@@ -508,23 +508,23 @@ public:
 		float vb_video = mem_usage[D3DPOOL_DEFAULT] / MiB;
 		float vb_managed = mem_usage[D3DPOOL_MANAGED] / MiB;
 		float vb_system = mem_usage[D3DPOOL_SYSTEMMEM] / MiB;
-		Msg("vertex buffer      \t \t %f \t %f \t %f ", vb_video, vb_managed, vb_system);
+		Msg("vertex buffer	  \t \t %f \t %f \t %f ", vb_video, vb_managed, vb_system);
 
 		float ib_video = mem_usage[D3DPOOL_DEFAULT] / MiB;
 		float ib_managed = mem_usage[D3DPOOL_MANAGED] / MiB;
 		float ib_system = mem_usage[D3DPOOL_SYSTEMMEM] / MiB;
-		Msg("index buffer      \t \t %f \t %f \t %f ", ib_video, ib_managed, ib_system);
+		Msg("index buffer	  \t \t %f \t %f \t %f ", ib_video, ib_managed, ib_system);
 
 		float textures_managed = (m_base + m_lmaps) / MiB;
-		Msg("textures          \t \t %f \t %f \t %f ", 0.f, textures_managed, 0.f);
+		Msg("textures		  \t \t %f \t %f \t %f ", 0.f, textures_managed, 0.f);
 
 		mem_usage = HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_rtarget];
 		float rt_video = mem_usage[D3DPOOL_DEFAULT] / MiB;
 		float rt_managed = mem_usage[D3DPOOL_MANAGED] / MiB;
 		float rt_system = mem_usage[D3DPOOL_SYSTEMMEM] / MiB;
-		Msg("R-Targets         \t \t %f \t %f \t %f ", rt_video, rt_managed, rt_system);
+		Msg("R-Targets		 \t \t %f \t %f \t %f ", rt_video, rt_managed, rt_system);
 
-		Msg("\nTotal             \t \t %f \t %f \t %f ", vb_video + ib_video + rt_video,
+		Msg("\nTotal			 \t \t %f \t %f \t %f ", vb_video + ib_video + rt_video,
 			textures_managed + vb_managed + ib_managed + rt_managed, vb_system + ib_system + rt_system);
 	}
 };
@@ -878,7 +878,7 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r2_ls_depth_bias", &ps_r2_ls_depth_bias, -0.5, +0.5);
 
 	CMD4(CCC_Float, "r2_parallax_h", &ps_r2_df_parallax_h, .0f, .5f);
-	//  CMD4(CCC_Float,     "r2_parallax_range",    &ps_r2_df_parallax_range,   5.0f,   175.0f  );
+	//  CMD4(CCC_Float,	 "r2_parallax_range",	&ps_r2_df_parallax_range,	5.0f,	175.0f  );
 
 	CMD4(CCC_Float, "r2_slight_fade", &ps_r2_slight_fade, .2f, 1.f);
 

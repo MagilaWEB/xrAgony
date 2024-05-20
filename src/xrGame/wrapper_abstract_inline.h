@@ -21,25 +21,25 @@
 TEMPLATE_SPECIALIZATION
 IC	_object_type &CWrapper2::object() const
 {
-    VERIFY(m_object);
-    return				(*m_object);
+	VERIFY(m_object);
+	return				(*m_object);
 }
 
 TEMPLATE_SPECIALIZATION
 void CWrapper2::setup(_object_type *object, CPropertyStorage *storage)
 {
-    VERIFY(object);
-    inherited::setup(object->lua_game_object(), storage);
-    m_object = object;
+	VERIFY(object);
+	inherited::setup(object->lua_game_object(), storage);
+	m_object = object;
 }
 
 TEMPLATE_SPECIALIZATION
 void CWrapper2::setup(CScriptGameObject *object, CPropertyStorage *storage)
 {
-    VERIFY(object);
-    inherited::setup(object, storage);
-    m_object = smart_cast<_object_type*>(&object->object());
-    VERIFY(m_object);
+	VERIFY(object);
+	inherited::setup(object, storage);
+	m_object = smart_cast<_object_type*>(&object->object());
+	VERIFY(m_object);
 }
 
 #undef CWrapper2

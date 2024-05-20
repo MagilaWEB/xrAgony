@@ -626,7 +626,7 @@ void CxImage::SetProgress(long p)
 /**
  * Used to quit the slow loops or the codecs.
  * - SetEscape(-1) before Decode forces the function to exit, right after  
- *   the image width and height are available ( for bmp, jpg, gif, tif )
+ *	the image width and height are available ( for bmp, jpg, gif, tif )
  */
 void CxImage::SetEscape(long i)
 {
@@ -692,16 +692,16 @@ void CxImage::SetDisposalMethod(BYTE dm)
 ////////////////////////////////////////////////////////////////////////////////
 /**
  * Gets the method for drawing the frame related to others
- * Values :    0 -   No disposal specified. The decoder is
- *                   not required to take any action.
- *             1 -   Do not dispose. The graphic is to be left
- *                   in place.
- *             2 -   Restore to background color. The area used by the
- *                   graphic must be restored to the background color.
- *             3 -   Restore to previous. The decoder is required to
- *                   restore the area overwritten by the graphic with
- *                   what was there prior to rendering the graphic.
- *             4-7 -    To be defined.
+ * Values :	0 -	No disposal specified. The decoder is
+ *					not required to take any action.
+ *			 1 -	Do not dispose. The graphic is to be left
+ *					in place.
+ *			 2 -	Restore to background color. The area used by the
+ *					graphic must be restored to the background color.
+ *			 3 -	Restore to previous. The decoder is required to
+ *					restore the area overwritten by the graphic with
+ *					what was there prior to rendering the graphic.
+ *			 4-7 -	To be defined.
  */
 BYTE CxImage::GetDisposalMethod() const
 {	return info.dispmeth; }

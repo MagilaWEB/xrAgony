@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 /*
@@ -130,8 +130,8 @@ dReal dGeomSpherePointDepth (dGeomID g, dReal x, dReal y, dReal z)
   dUASSERT (g && g->type == dSphereClass,"argument not a sphere");
   dxSphere *s = (dxSphere*) g;
   return s->radius - dSqrt ((x-s->pos[0])*(x-s->pos[0]) +
-			    (y-s->pos[1])*(y-s->pos[1]) +
-			    (z-s->pos[2])*(z-s->pos[2]));
+				(y-s->pos[1])*(y-s->pos[1]) +
+				(z-s->pos[2])*(z-s->pos[2]));
 }
 
 //****************************************************************************
@@ -150,11 +150,11 @@ dxBox::dxBox (dSpaceID space, dReal lx, dReal ly, dReal lz) : dxGeom (space,1)
 void dxBox::computeAABB()
 {
   dReal xrange = REAL(0.5) * (dFabs (R[0] * side[0]) +
-    dFabs (R[1] * side[1]) + dFabs (R[2] * side[2]));
+	dFabs (R[1] * side[1]) + dFabs (R[2] * side[2]));
   dReal yrange = REAL(0.5) * (dFabs (R[4] * side[0]) +
-    dFabs (R[5] * side[1]) + dFabs (R[6] * side[2]));
+	dFabs (R[5] * side[1]) + dFabs (R[6] * side[2]));
   dReal zrange = REAL(0.5) * (dFabs (R[8] * side[0]) +
-    dFabs (R[9] * side[1]) + dFabs (R[10] * side[2]));
+	dFabs (R[9] * side[1]) + dFabs (R[10] * side[2]));
   aabb[0] = pos[0] - xrange;
   aabb[1] = pos[0] + xrange;
   aabb[2] = pos[1] - yrange;
@@ -205,10 +205,10 @@ dReal dGeomBoxPointDepth (dGeomID g, dReal x, dReal y, dReal z)
   dReal dy = b->side[1]*REAL(0.5) - dFabs(q[1]);
   dReal dz = b->side[2]*REAL(0.5) - dFabs(q[2]);
   if (dx < dy) {
-    if (dx < dz) return dx; else return dz;
+	if (dx < dz) return dx; else return dz;
   }
   else {
-    if (dy < dz) return dy; else return dz;
+	if (dy < dz) return dy; else return dz;
   }
 }
 
@@ -281,7 +281,7 @@ dReal dGeomCapsulePointDepth (dGeomID g, dReal x, dReal y, dReal z)
   a[1] = c->pos[1] + beta*c->R[1*4+2];
   a[2] = c->pos[2] + beta*c->R[2*4+2];
   return c->radius -
-    dSqrt ((x-a[0])*(x-a[0]) + (y-a[1])*(y-a[1]) + (z-a[2])*(z-a[2]));
+	dSqrt ((x-a[0])*(x-a[0]) + (y-a[1])*(y-a[1]) + (z-a[2])*(z-a[2]));
 }
 
 //****************************************************************************
@@ -291,17 +291,17 @@ static void make_sure_plane_normal_has_unit_length (dxPlane *g)
 {
   dReal l = g->p[0]*g->p[0] + g->p[1]*g->p[1] + g->p[2]*g->p[2];
   if (l > 0) {
-    l = dRecipSqrt(l);
-    g->p[0] *= l;
-    g->p[1] *= l;
-    g->p[2] *= l;
-    g->p[3] *= l;
+	l = dRecipSqrt(l);
+	g->p[0] *= l;
+	g->p[1] *= l;
+	g->p[2] *= l;
+	g->p[3] *= l;
   }
   else {
-    g->p[0] = 1;
-    g->p[1] = 0;
-    g->p[2] = 0;
-    g->p[3] = 0;
+	g->p[0] = 1;
+	g->p[1] = 0;
+	g->p[2] = 0;
+	g->p[3] = 0;
   }
 }
 
@@ -332,7 +332,7 @@ void dxPlane::computeAABB()
 
 
 dGeomID dCreatePlane (dSpaceID space,
-		      dReal a, dReal b, dReal c, dReal d)
+			  dReal a, dReal b, dReal c, dReal d)
 {
   return new dxPlane (space,a,b,c,d);
 }
@@ -387,30 +387,30 @@ void dxRay::computeAABB()
   e[2] = pos[2] + R[2*4+2]*length;
 
   if (pos[0] < e[0]){
-    aabb[0] = pos[0];
-    aabb[1] = e[0];
+	aabb[0] = pos[0];
+	aabb[1] = e[0];
   }
   else{
-    aabb[0] = e[0];
-    aabb[1] = pos[0];
+	aabb[0] = e[0];
+	aabb[1] = pos[0];
   }
   
   if (pos[1] < e[1]){
-    aabb[2] = pos[1];
-    aabb[3] = e[1];
+	aabb[2] = pos[1];
+	aabb[3] = e[1];
   }
   else{
-    aabb[2] = e[1];
-    aabb[3] = pos[1];
+	aabb[2] = e[1];
+	aabb[3] = pos[1];
   }
 
   if (pos[2] < e[2]){
-    aabb[4] = pos[2];
-    aabb[5] = e[2];
+	aabb[4] = pos[2];
+	aabb[5] = e[2];
   }
   else{
-    aabb[4] = e[2];
-    aabb[5] = pos[2];
+	aabb[4] = e[2];
+	aabb[5] = pos[2];
   }
 }
 
@@ -466,12 +466,12 @@ void dGeomRaySetParams (dxGeom *g, int FirstContact, int BackfaceCull)
   dUASSERT (g && g->type == dRayClass,"argument not a ray");
 
   if (FirstContact){
-    g->gflags |= RAY_FIRSTCONTACT;
+	g->gflags |= RAY_FIRSTCONTACT;
   }
   else g->gflags &= ~RAY_FIRSTCONTACT;
 
   if (BackfaceCull){
-    g->gflags |= RAY_BACKFACECULL;
+	g->gflags |= RAY_BACKFACECULL;
   }
   else g->gflags &= ~RAY_BACKFACECULL;
 }
@@ -490,7 +490,7 @@ void dGeomRaySetClosestHit (dxGeom *g, int closestHit)
 {
   dUASSERT (g && g->type == dRayClass,"argument not a ray");
   if (closestHit){
-    g->gflags |= RAY_CLOSEST_HIT;
+	g->gflags |= RAY_CLOSEST_HIT;
   }
   else g->gflags &= ~RAY_CLOSEST_HIT;
 }
@@ -573,13 +573,13 @@ static int intersectRectQuad (dReal h[2], dReal p[8], dReal ret[16])
   dReal *q = p;
   dReal *r = ret;
   for (int dir=0; dir <= 1; dir++) {
-    // direction notation: xy[0] = x axis, xy[1] = y axis
-    for (int sign=-1; sign <= 1; sign += 2) {
-      // chop q along the line xy[dir] = sign*h[dir]
-      dReal *pq = q;
-      dReal *pr = r;
-      nr = 0;
-      for (int i=nq; i > 0; i--) {
+	// direction notation: xy[0] = x axis, xy[1] = y axis
+	for (int sign=-1; sign <= 1; sign += 2) {
+	  // chop q along the line xy[dir] = sign*h[dir]
+	  dReal *pq = q;
+	  dReal *pr = r;
+	  nr = 0;
+	  for (int i=nq; i > 0; i--) {
 	// go through all points in q and all lines between adjacent points
 	if (sign*pq[dir] < h[dir]) {
 	  // this point is inside the chopping line
@@ -588,29 +588,29 @@ static int intersectRectQuad (dReal h[2], dReal p[8], dReal ret[16])
 	  pr += 2;
 	  nr++;
 	  if (nr & 8) {
-	    q = r;
-	    goto done;
+		q = r;
+		goto done;
 	  }
 	}
 	dReal *nextq = (i > 1) ? pq+2 : q;
 	if ((sign*pq[dir] < h[dir]) ^ (sign*nextq[dir] < h[dir])) {
 	  // this line crosses the chopping line
 	  pr[1-dir] = pq[1-dir] + (nextq[1-dir]-pq[1-dir]) /
-	    (nextq[dir]-pq[dir]) * (sign*h[dir]-pq[dir]);
+		(nextq[dir]-pq[dir]) * (sign*h[dir]-pq[dir]);
 	  pr[dir] = sign*h[dir];
 	  pr += 2;
 	  nr++;
 	  if (nr & 8) {
-	    q = r;
-	    goto done;
+		q = r;
+		goto done;
 	  }
 	}
 	pq += 2;
-      }
-      q = r;
-      r = (q==ret) ? buffer : ret;
-      nq = nr;
-    }
+	  }
+	  q = r;
+	  r = (q==ret) ? buffer : ret;
+	  nq = nr;
+	}
   }
  done:
   if (q != ret) memcpy (ret,q,nr*2*sizeof(dReal));
@@ -632,27 +632,27 @@ void cullPoints (int n, dReal p[], int m, int i0, int iret[])
   int i,j;
   dReal a,cx,cy,q;
   if (n==1) {
-    cx = p[0];
-    cy = p[1];
+	cx = p[0];
+	cy = p[1];
   }
   else if (n==2) {
-    cx = REAL(0.5)*(p[0] + p[2]);
-    cy = REAL(0.5)*(p[1] + p[3]);
+	cx = REAL(0.5)*(p[0] + p[2]);
+	cy = REAL(0.5)*(p[1] + p[3]);
   }
   else {
-    a = 0;
-    cx = 0;
-    cy = 0;
-    for (i=0; i<(n-1); i++) {
-      q = p[i*2]*p[i*2+3] - p[i*2+2]*p[i*2+1];
-      a += q;
-      cx += q*(p[i*2]+p[i*2+2]);
-      cy += q*(p[i*2+1]+p[i*2+3]);
-    }
-    q = p[n*2-2]*p[1] - p[0]*p[n*2-1];
-    a = dRecip(REAL(3.0)*(a+q));
-    cx = a*(cx + q*(p[n*2-2]+p[0]));
-    cy = a*(cy + q*(p[n*2-1]+p[1]));
+	a = 0;
+	cx = 0;
+	cy = 0;
+	for (i=0; i<(n-1); i++) {
+	  q = p[i*2]*p[i*2+3] - p[i*2+2]*p[i*2+1];
+	  a += q;
+	  cx += q*(p[i*2]+p[i*2+2]);
+	  cy += q*(p[i*2+1]+p[i*2+3]);
+	}
+	q = p[n*2-2]*p[1] - p[0]*p[n*2-1];
+	a = dRecip(REAL(3.0)*(a+q));
+	cx = a*(cx + q*(p[n*2-2]+p[0]));
+	cy = a*(cy + q*(p[n*2-1]+p[1]));
   }
 
   // compute the angle of each point w.r.t. the centroid
@@ -666,21 +666,21 @@ void cullPoints (int n, dReal p[], int m, int i0, int iret[])
   iret[0] = i0;
   iret++;
   for (j=1; j<m; j++) {
-    a = dReal(j)*(2*M_PI/m) + A[i0];
-    if (a > M_PI) a -= 2*M_PI;
-    dReal maxdiff=1e9,diff;
-    for (i=0; i<n; i++) {
-      if (avail[i]) {
+	a = dReal(j)*(2*M_PI/m) + A[i0];
+	if (a > M_PI) a -= 2*M_PI;
+	dReal maxdiff=1e9,diff;
+	for (i=0; i<n; i++) {
+	  if (avail[i]) {
 	diff = dFabs (A[i]-a);
 	if (diff > M_PI) diff = 2*M_PI - diff;
 	if (diff < maxdiff) {
 	  maxdiff = diff;
 	  *iret = i;
 	}
-      }
-    }
-    avail[*iret] = 0;
-    iret++;
+	  }
+	}
+	avail[*iret] = 0;
+	iret++;
   }
 }
 
@@ -692,9 +692,9 @@ void cullPoints (int n, dReal p[], int m, int i0, int iret[])
 // `depth' returns the maximum penetration depth along that normal.
 // `return_code' returns a number indicating the type of contact that was
 // detected:
-//        1,2,3 = box 2 intersects with a face of box 1
-//        4,5,6 = box 1 intersects with a face of box 2
-//        7..15 = edge-edge contact
+//		1,2,3 = box 2 intersects with a face of box 1
+//		4,5,6 = box 1 intersects with a face of box 2
+//		7..15 = edge-edge contact
 // `maxc' is the maximum number of contacts allowed to be generated, i.e.
 // the size of the `contact' array.
 // `contact' and `skip' are the contact array information provided to the
@@ -733,8 +733,8 @@ inline bool CrossBoxSide(const dReal* point,const dReal* dir,
 }
 
 inline bool CrossBoxSide44(const dReal* point,const dReal* R1,const int ax_num,
-						   const dReal* p,const dReal* R2,const dReal* side,
-						   const int side_num,const float sign,dReal* out_p)
+							const dReal* p,const dReal* R2,const dReal* side,
+							const int side_num,const float sign,dReal* out_p)
 {
 	dVector3 plane_point={p[0],p[1],p[2]};
 	int i;
@@ -790,9 +790,9 @@ int dBoxBox (const dVector3 p1, const dMatrix3 R1,
 	Q31 = dFabs(R31); Q32 = dFabs(R32); Q33 = dFabs(R33);
 
 	// for all 15 possible separating axes:
-	//   * see if the axis separates the boxes. if so, return 0.
-	//   * find the depth of the penetration along the separating axis (s2)
-	//   * if this is the largest depth so far, record it.
+	//	* see if the axis separates the boxes. if so, return 0.
+	//	* find the depth of the penetration along the separating axis (s2)
+	//	* if this is the largest depth so far, record it.
 	// the normal vector will be set to the separating axis with the smallest
 	// depth. note: normalR is set to point to a column of R1 or R2 if that is
 	// the smallest depth normal so far. otherwise normalR is 0 and normalC is
@@ -1259,7 +1259,7 @@ int dCollideSphereSphere (dxGeom *o1, dxGeom *o2, int flags,
 
 
 int dCollideSphereBox (dxGeom *o1, dxGeom *o2, int flags,
-		       dContactGeom *contact, int skip)
+				dContactGeom *contact, int skip)
 {
   // this is easy. get the sphere center `p' relative to the box, and then clip
   // that to the boundary of the box (call that point `q'). if q is on the
@@ -1300,30 +1300,30 @@ int dCollideSphereBox (dxGeom *o1, dxGeom *o2, int flags,
   if (t[2] >  l[2]) { t[2] =  l[2]; onborder = 1; }
 
   if (!onborder) {
-    // sphere center inside box. find closest face to `t'
-    dReal min_distance = l[0] - dFabs(t[0]);
-    int mini = 0;
-    for (int i=1; i<3; i++) {
-      dReal face_distance = l[i] - dFabs(t[i]);
-      if (face_distance < min_distance) {
+	// sphere center inside box. find closest face to `t'
+	dReal min_distance = l[0] - dFabs(t[0]);
+	int mini = 0;
+	for (int i=1; i<3; i++) {
+	  dReal face_distance = l[i] - dFabs(t[i]);
+	  if (face_distance < min_distance) {
 	min_distance = face_distance;
 	mini = i;
-      }
-    }
-    // contact position = sphere center
-    contact->pos[0] = o1->pos[0];
-    contact->pos[1] = o1->pos[1];
-    contact->pos[2] = o1->pos[2];
-    // contact normal points to closest face
-    dVector3 tmp;
-    tmp[0] = 0;
-    tmp[1] = 0;
-    tmp[2] = 0;
-    tmp[mini] = (t[mini] > 0) ? REAL(1.0) : REAL(-1.0);
-    dMULTIPLY0_331 (contact->normal,o2->R,tmp);
-    // contact depth = distance to wall along normal plus radius
-    contact->depth = min_distance + sphere->radius;
-    return 1;
+	  }
+	}
+	// contact position = sphere center
+	contact->pos[0] = o1->pos[0];
+	contact->pos[1] = o1->pos[1];
+	contact->pos[2] = o1->pos[2];
+	// contact normal points to closest face
+	dVector3 tmp;
+	tmp[0] = 0;
+	tmp[1] = 0;
+	tmp[2] = 0;
+	tmp[mini] = (t[mini] > 0) ? REAL(1.0) : REAL(-1.0);
+	dMULTIPLY0_331 (contact->normal,o2->R,tmp);
+	// contact depth = distance to wall along normal plus radius
+	contact->depth = min_distance + sphere->radius;
+	return 1;
   }
 
   t[3] = 0;			//@@@ hmmm
@@ -1359,21 +1359,21 @@ int dCollideSpherePlane (dxGeom *o1, dxGeom *o2, int flags,
   dReal k = dDOT (o1->pos,plane->p);
   dReal depth = plane->p[3] - k + sphere->radius;
   if (depth >= 0) {
-    contact->normal[0] = plane->p[0];
-    contact->normal[1] = plane->p[1];
-    contact->normal[2] = plane->p[2];
-    contact->pos[0] = o1->pos[0] - plane->p[0] * sphere->radius;
-    contact->pos[1] = o1->pos[1] - plane->p[1] * sphere->radius;
-    contact->pos[2] = o1->pos[2] - plane->p[2] * sphere->radius;
-    contact->depth = depth;
-    return 1;
+	contact->normal[0] = plane->p[0];
+	contact->normal[1] = plane->p[1];
+	contact->normal[2] = plane->p[2];
+	contact->pos[0] = o1->pos[0] - plane->p[0] * sphere->radius;
+	contact->pos[1] = o1->pos[1] - plane->p[1] * sphere->radius;
+	contact->pos[2] = o1->pos[2] - plane->p[2] * sphere->radius;
+	contact->depth = depth;
+	return 1;
   }
   else return 0;
 }
 
 
 int dCollideBoxBox (dxGeom *o1, dxGeom *o2, int flags,
-		    dContactGeom *contact, int skip)
+			dContactGeom *contact, int skip)
 {
   dIASSERT (skip >= (int)sizeof(dContactGeom));
   dIASSERT (o1->type == dBoxClass);
@@ -1384,20 +1384,20 @@ int dCollideBoxBox (dxGeom *o1, dxGeom *o2, int flags,
   dxBox *b1 = (dxBox*) o1;
   dxBox *b2 = (dxBox*) o2;
   int num = dBoxBox (o1->pos,o1->R,b1->side, o2->pos,o2->R,b2->side,
-		     normal,&depth,&code,flags & NUMC_MASK,contact,skip);
+			 normal,&depth,&code,flags & NUMC_MASK,contact,skip);
   for (int i=0; i<num; i++) {
-    CONTACT(contact,i*skip)->normal[0] = -normal[0];
-    CONTACT(contact,i*skip)->normal[1] = -normal[1];
-    CONTACT(contact,i*skip)->normal[2] = -normal[2];
-    CONTACT(contact,i*skip)->g1 = o1;
-    CONTACT(contact,i*skip)->g2 = o2;
+	CONTACT(contact,i*skip)->normal[0] = -normal[0];
+	CONTACT(contact,i*skip)->normal[1] = -normal[1];
+	CONTACT(contact,i*skip)->normal[2] = -normal[2];
+	CONTACT(contact,i*skip)->g1 = o1;
+	CONTACT(contact,i*skip)->g2 = o2;
   }
   return num;
 }
 
 
 int dCollideBoxPlane (dxGeom *o1, dxGeom *o2,
-		      int flags, dContactGeom *contact, int skip)
+			  int flags, dContactGeom *contact, int skip)
 {
   dIASSERT (skip >= (int)sizeof(dContactGeom));
   dIASSERT (o1->type == dBoxClass);
@@ -1478,30 +1478,30 @@ int dCollideBoxPlane (dxGeom *o1, dxGeom *o2,
   CONTACT(contact,skip)->normal[1] = n[1];
   CONTACT(contact,skip)->normal[2] = n[2];
   if (maxc == 3) {
-    CONTACT(contact,2*skip)->normal[0] = n[0];
-    CONTACT(contact,2*skip)->normal[1] = n[1];
-    CONTACT(contact,2*skip)->normal[2] = n[2];
+	CONTACT(contact,2*skip)->normal[0] = n[0];
+	CONTACT(contact,2*skip)->normal[1] = n[1];
+	CONTACT(contact,2*skip)->normal[2] = n[2];
   }
 
   if (B1 < B2) {
-    if (B3 < B1) goto use_side_3; else {
-      BAR(1,0,1);	// use side 1
-      if (maxc == 2) goto done;
-      if (B2 < B3) goto contact2_2; else goto contact2_3;
-    }
+	if (B3 < B1) goto use_side_3; else {
+	  BAR(1,0,1);	// use side 1
+	  if (maxc == 2) goto done;
+	  if (B2 < B3) goto contact2_2; else goto contact2_3;
+	}
   }
   else {
-    if (B3 < B2) {
-      use_side_3:	// use side 3
-      BAR(1,2,3);
-      if (maxc == 2) goto done;
-      if (B1 < B2) goto contact2_1; else goto contact2_2;
-    }
-    else {
-      BAR(1,1,2);	// use side 2
-      if (maxc == 2) goto done;
-      if (B1 < B3) goto contact2_1; else goto contact2_3;
-    }
+	if (B3 < B2) {
+	  use_side_3:	// use side 3
+	  BAR(1,2,3);
+	  if (maxc == 2) goto done;
+	  if (B1 < B2) goto contact2_1; else goto contact2_2;
+	}
+	else {
+	  BAR(1,1,2);	// use side 2
+	  if (maxc == 2) goto done;
+	  if (B1 < B3) goto contact2_1; else goto contact2_3;
+	}
   }
 
   contact2_1: BAR(2,0,1); goto done;
@@ -1512,15 +1512,15 @@ int dCollideBoxPlane (dxGeom *o1, dxGeom *o2,
 
  done:
   for (int i=0; i<ret; i++) {
-    CONTACT(contact,i*skip)->g1 = o1;
-    CONTACT(contact,i*skip)->g2 = o2;
+	CONTACT(contact,i*skip)->g1 = o1;
+	CONTACT(contact,i*skip)->g2 = o2;
   }
   return ret;
 }
 
 
 int dCollideCapsuleSphere (dxGeom *o1, dxGeom *o2, int flags,
-			     dContactGeom *contact, int skip)
+				 dContactGeom *contact, int skip)
 {
   dIASSERT (skip >= (int)sizeof(dContactGeom));
   dIASSERT (o1->type == dCapsuleClass);
@@ -1533,9 +1533,9 @@ int dCollideCapsuleSphere (dxGeom *o1, dxGeom *o2, int flags,
 
   // find the point on the cylinder axis that is closest to the sphere
   dReal alpha = 
-    o1->R[2]  * (o2->pos[0] - o1->pos[0]) +
-    o1->R[6]  * (o2->pos[1] - o1->pos[1]) +
-    o1->R[10] * (o2->pos[2] - o1->pos[2]);
+	o1->R[2]  * (o2->pos[0] - o1->pos[0]) +
+	o1->R[6]  * (o2->pos[1] - o1->pos[1]) +
+	o1->R[10] * (o2->pos[2] - o1->pos[2]);
   dReal lz2 = ccyl->lz * REAL(0.5);
   if (alpha > lz2) alpha = lz2;
   if (alpha < -lz2) alpha = -lz2;
@@ -1625,28 +1625,28 @@ int dCollideCapsuleCapsule (dxGeom *o1, dxGeom *o2,
   dReal a1a2 = dDOT (axis1,axis2);
   dReal det = REAL(1.0)-a1a2*a1a2;
   if (det < tolerance) {
-    // the cylinder axes (almost) parallel, so we will generate up to two
-    // contacts. alpha1 and alpha2 (line position parameters) are related by:
-    //       alpha2 =   alpha1 + (pos1-pos2)'*axis1   (if axis1==axis2)
-    //    or alpha2 = -(alpha1 + (pos1-pos2)'*axis1)  (if axis1==-axis2)
-    // first compute where the two cylinders overlap in alpha1 space:
-    if (a1a2 < 0) {
-      axis2[0] = -axis2[0];
-      axis2[1] = -axis2[1];
-      axis2[2] = -axis2[2];
-    }
-    dReal q[3];
-    for (i=0; i<3; i++) q[i] = pos1[i]-pos2[i];
-    dReal k = dDOT (axis1,q);
-    dReal a1lo = -lz1;
-    dReal a1hi = lz1;
-    dReal a2lo = -lz2 - k;
-    dReal a2hi = lz2 - k;
-    dReal lo = (a1lo > a2lo) ? a1lo : a2lo;
-    dReal hi = (a1hi < a2hi) ? a1hi : a2hi;
-    if (lo <= hi) {
-      int num_contacts = flags & NUMC_MASK;
-      if (num_contacts >= 2 && lo < hi) {
+	// the cylinder axes (almost) parallel, so we will generate up to two
+	// contacts. alpha1 and alpha2 (line position parameters) are related by:
+	//		alpha2 =	alpha1 + (pos1-pos2)'*axis1	(if axis1==axis2)
+	//	or alpha2 = -(alpha1 + (pos1-pos2)'*axis1)  (if axis1==-axis2)
+	// first compute where the two cylinders overlap in alpha1 space:
+	if (a1a2 < 0) {
+	  axis2[0] = -axis2[0];
+	  axis2[1] = -axis2[1];
+	  axis2[2] = -axis2[2];
+	}
+	dReal q[3];
+	for (i=0; i<3; i++) q[i] = pos1[i]-pos2[i];
+	dReal k = dDOT (axis1,q);
+	dReal a1lo = -lz1;
+	dReal a1hi = lz1;
+	dReal a2lo = -lz2 - k;
+	dReal a2hi = lz2 - k;
+	dReal lo = (a1lo > a2lo) ? a1lo : a2lo;
+	dReal hi = (a1hi < a2hi) ? a1hi : a2hi;
+	if (lo <= hi) {
+	  int num_contacts = flags & NUMC_MASK;
+	  if (num_contacts >= 2 && lo < hi) {
 	// generate up to two contacts. if one of those contacts is
 	// not made, fall back on the one-contact strategy.
 	for (i=0; i<3; i++) sphere1[i] = pos1[i] + lo*axis1[i];
@@ -1658,24 +1658,24 @@ int dCollideCapsuleCapsule (dxGeom *o1, dxGeom *o2,
 	  for (i=0; i<3; i++) sphere2[i] = pos2[i] + (hi+k)*axis2[i];
 	  dContactGeom *c2 = CONTACT(contact,skip);
 	  int n2 = dCollideSpheres (sphere1,cyl1->radius,
-				    sphere2,cyl2->radius, c2);
+					sphere2,cyl2->radius, c2);
 	  if (n2) {
-	    c2->g1 = o1;
-	    c2->g2 = o2;
-	    return 2;
+		c2->g1 = o1;
+		c2->g2 = o2;
+		return 2;
 	  }
 	}
-      }
+	  }
 
-      // just one contact to generate, so put it in the middle of
-      // the range
-      dReal alpha1 = (lo + hi) * REAL(0.5);
-      dReal alpha2 = alpha1 + k;
-      for (i=0; i<3; i++) sphere1[i] = pos1[i] + alpha1*axis1[i];
-      for (i=0; i<3; i++) sphere2[i] = pos2[i] + alpha2*axis2[i];
-      return dCollideSpheres (sphere1,cyl1->radius,
-			      sphere2,cyl2->radius,contact);
-    }
+	  // just one contact to generate, so put it in the middle of
+	  // the range
+	  dReal alpha1 = (lo + hi) * REAL(0.5);
+	  dReal alpha2 = alpha1 + k;
+	  for (i=0; i<3; i++) sphere1[i] = pos1[i] + alpha1*axis1[i];
+	  for (i=0; i<3; i++) sphere2[i] = pos2[i] + alpha2*axis2[i];
+	  return dCollideSpheres (sphere1,cyl1->radius,
+				  sphere2,cyl2->radius,contact);
+	}
   }
 	  
   // use the closest point algorithm
@@ -1699,7 +1699,7 @@ int dCollideCapsuleCapsule (dxGeom *o1, dxGeom *o2,
 
 
 int dCollideCapsulePlane (dxGeom *o1, dxGeom *o2, int flags,
-			    dContactGeom *contact, int skip)
+				dContactGeom *contact, int skip)
 {
   dIASSERT (skip >= (int)sizeof(dContactGeom));
   dIASSERT (o1->type == dCapsuleClass);
@@ -1727,29 +1727,29 @@ int dCollideCapsulePlane (dxGeom *o1, dxGeom *o2, int flags,
 
   int ncontacts = 1;
   if ((flags & NUMC_MASK) >= 2) {
-    // collide the other capping sphere with the plane
-    p[0] = o1->pos[0] - o1->R[2]  * ccyl->lz * REAL(0.5) * sign;
-    p[1] = o1->pos[1] - o1->R[6]  * ccyl->lz * REAL(0.5) * sign;
-    p[2] = o1->pos[2] - o1->R[10] * ccyl->lz * REAL(0.5) * sign;
+	// collide the other capping sphere with the plane
+	p[0] = o1->pos[0] - o1->R[2]  * ccyl->lz * REAL(0.5) * sign;
+	p[1] = o1->pos[1] - o1->R[6]  * ccyl->lz * REAL(0.5) * sign;
+	p[2] = o1->pos[2] - o1->R[10] * ccyl->lz * REAL(0.5) * sign;
 
-    k = dDOT (p,plane->p);
-    depth = plane->p[3] - k + ccyl->radius;
-    if (depth >= 0) {
-      dContactGeom *c2 = CONTACT(contact,skip);
-      c2->normal[0] = plane->p[0];
-      c2->normal[1] = plane->p[1];
-      c2->normal[2] = plane->p[2];
-      c2->pos[0] = p[0] - plane->p[0] * ccyl->radius;
-      c2->pos[1] = p[1] - plane->p[1] * ccyl->radius;
-      c2->pos[2] = p[2] - plane->p[2] * ccyl->radius;
-      c2->depth = depth;
-      ncontacts = 2;
-    }
+	k = dDOT (p,plane->p);
+	depth = plane->p[3] - k + ccyl->radius;
+	if (depth >= 0) {
+	  dContactGeom *c2 = CONTACT(contact,skip);
+	  c2->normal[0] = plane->p[0];
+	  c2->normal[1] = plane->p[1];
+	  c2->normal[2] = plane->p[2];
+	  c2->pos[0] = p[0] - plane->p[0] * ccyl->radius;
+	  c2->pos[1] = p[1] - plane->p[1] * ccyl->radius;
+	  c2->pos[2] = p[2] - plane->p[2] * ccyl->radius;
+	  c2->depth = depth;
+	  ncontacts = 2;
+	}
   }
 
   for (int i=0; i < ncontacts; i++) {
-    CONTACT(contact,i*skip)->g1 = o1;
-    CONTACT(contact,i*skip)->g2 = o2;
+	CONTACT(contact,i*skip)->g1 = o1;
+	CONTACT(contact,i*skip)->g2 = o2;
   }
   return ncontacts;
 }
@@ -1758,7 +1758,7 @@ int dCollideCapsulePlane (dxGeom *o1, dxGeom *o2, int flags,
 // if mode==1 then use the sphere exit contact, not the entry contact
 
 static int ray_sphere_helper (dxRay *ray, dVector3 sphere_pos, dReal radius,
-			      dContactGeom *contact, int mode)
+				  dContactGeom *contact, int mode)
 {
   dVector3 q;
   q[0] = ray->pos[0] - sphere_pos[0];
@@ -1772,15 +1772,15 @@ static int ray_sphere_helper (dxRay *ray, dVector3 sphere_pos, dReal radius,
   k = dSqrt(k);
   dReal alpha;
   if (mode && C >= 0) {
-    alpha = -B + k;
-    if (alpha < 0) return 0;
+	alpha = -B + k;
+	if (alpha < 0) return 0;
   }
   else {
-    alpha = -B - k;
-    if (alpha < 0) {
-      alpha = -B + k;
-      if (alpha < 0) return 0;
-    }
+	alpha = -B - k;
+	if (alpha < 0) {
+	  alpha = -B + k;
+	  if (alpha < 0) return 0;
+	}
   }
   if (alpha > ray->length) return 0;
   contact->pos[0] = ray->pos[0] + alpha*ray->R[0*4+2];
@@ -1797,7 +1797,7 @@ static int ray_sphere_helper (dxRay *ray, dVector3 sphere_pos, dReal radius,
 
 
 int dCollideRaySphere (dxGeom *o1, dxGeom *o2, int flags,
-		       dContactGeom *contact, int skip)
+				dContactGeom *contact, int skip)
 {
   dIASSERT (skip >= (int)sizeof(dContactGeom));
   dIASSERT (o1->type == dRayClass);
@@ -1811,7 +1811,7 @@ int dCollideRaySphere (dxGeom *o1, dxGeom *o2, int flags,
 
 
 int dCollideRayBox (dxGeom *o1, dxGeom *o2, int flags,
-		    dContactGeom *contact, int skip)
+			dContactGeom *contact, int skip)
 {
   dIASSERT (skip >= (int)sizeof(dContactGeom));
   dIASSERT (o1->type == dRayClass);
@@ -1840,12 +1840,12 @@ int dCollideRayBox (dxGeom *o1, dxGeom *o2, int flags,
   // mirror the line so that v has all components >= 0
   dVector3 sign;
   for (i=0; i<3; i++) {
-    if (v[i] < 0) {
-      s[i] = -s[i];
-      v[i] = -v[i];
-      sign[i] = 1;
-    }
-    else sign[i] = -1;
+	if (v[i] < 0) {
+	  s[i] = -s[i];
+	  v[i] = -v[i];
+	  sign[i] = 1;
+	}
+	else sign[i] = -1;
   }
 
   // compute the half-sides of the box
@@ -1856,10 +1856,10 @@ int dCollideRayBox (dxGeom *o1, dxGeom *o2, int flags,
 
   // do a few early exit tests
   if ((s[0] < -h[0] && v[0] <= 0) || s[0] >  h[0] ||
-      (s[1] < -h[1] && v[1] <= 0) || s[1] >  h[1] ||
-      (s[2] < -h[2] && v[2] <= 0) || s[2] >  h[2] ||
-      (v[0] == 0 && v[1] == 0 && v[2] == 0)) {
-    return 0;
+	  (s[1] < -h[1] && v[1] <= 0) || s[1] >  h[1] ||
+	  (s[2] < -h[2] && v[2] <= 0) || s[2] >  h[2] ||
+	  (v[0] == 0 && v[1] == 0 && v[2] == 0)) {
+	return 0;
   }
 
   // compute the t=[lo..hi] range for where s+v*t intersects the box
@@ -1867,18 +1867,18 @@ int dCollideRayBox (dxGeom *o1, dxGeom *o2, int flags,
   dReal hi = dInfinity;
   int nlo = 0, nhi = 0;
   for (i=0; i<3; i++) {
-    if (v[i] != 0) {
-      dReal k = (-h[i] - s[i])/v[i];
-      if (k > lo) {
+	if (v[i] != 0) {
+	  dReal k = (-h[i] - s[i])/v[i];
+	  if (k > lo) {
 	lo = k;
 	nlo = i;
-      }
-      k = (h[i] - s[i])/v[i];
-      if (k < hi) {
+	  }
+	  k = (h[i] - s[i])/v[i];
+	  if (k < hi) {
 	hi = k;
 	nhi = i;
-      }
-    }
+	  }
+	}
   }
 
   // check if the ray intersects
@@ -1886,12 +1886,12 @@ int dCollideRayBox (dxGeom *o1, dxGeom *o2, int flags,
   dReal alpha;
   int n;
   if (lo >= 0) {
-    alpha = lo;
-    n = nlo;
+	alpha = lo;
+	n = nlo;
   }
   else {
-    alpha = hi;
-    n = nhi;
+	alpha = hi;
+	n = nhi;
   }
   if (alpha < 0 || alpha > ray->length) return 0;
   contact->pos[0] = ray->pos[0] + alpha*ray->R[0*4+2];
@@ -1934,76 +1934,76 @@ int dCollideRayCapsule (dxGeom *o1, dxGeom *o2,
   // see if ray start position is inside the capped cylinder
   int inside_ccyl = 0;
   if (C < 0) {
-    if (k < -lz2) k = -lz2;
-    else if (k > lz2) k = lz2;
-    r[0] = ccyl->pos[0] + k*ccyl->R[0*4+2];
-    r[1] = ccyl->pos[1] + k*ccyl->R[1*4+2];
-    r[2] = ccyl->pos[2] + k*ccyl->R[2*4+2];
-    if ((ray->pos[0]-r[0])*(ray->pos[0]-r[0]) +
+	if (k < -lz2) k = -lz2;
+	else if (k > lz2) k = lz2;
+	r[0] = ccyl->pos[0] + k*ccyl->R[0*4+2];
+	r[1] = ccyl->pos[1] + k*ccyl->R[1*4+2];
+	r[2] = ccyl->pos[2] + k*ccyl->R[2*4+2];
+	if ((ray->pos[0]-r[0])*(ray->pos[0]-r[0]) +
 	(ray->pos[1]-r[1])*(ray->pos[1]-r[1]) +
 	(ray->pos[2]-r[2])*(ray->pos[2]-r[2]) < ccyl->radius*ccyl->radius) {
-      inside_ccyl = 1;
-    }
+	  inside_ccyl = 1;
+	}
   }
 
   // compute ray collision with infinite cylinder, except for the case where
   // the ray is outside the capped cylinder but within the infinite cylinder
   // (it that case the ray can only hit endcaps)
   if (!inside_ccyl && C < 0) {
-    // set k to cap position to check
-    if (k < 0) k = -lz2; else k = lz2;
+	// set k to cap position to check
+	if (k < 0) k = -lz2; else k = lz2;
   }
   else {
-    dReal uv = dDOT44(ccyl->R+2,ray->R+2);
-    r[0] = uv*ccyl->R[0*4+2] - ray->R[0*4+2];
-    r[1] = uv*ccyl->R[1*4+2] - ray->R[1*4+2];
-    r[2] = uv*ccyl->R[2*4+2] - ray->R[2*4+2];
-    dReal A = dDOT(r,r);
-    dReal B = 2*dDOT(q,r);
-    k = B*B-4*A*C;
-    if (k < 0) {
-      // the ray does not intersect the infinite cylinder, but if the ray is
-      // inside and parallel to the cylinder axis it may intersect the end
-      // caps. set k to cap position to check.
-      if (!inside_ccyl) return 0;
-      if (uv < 0) k = -lz2; else k = lz2;
-    }
-    else {
-      k = dSqrt(k);
-      A = dRecip (2*A);
-      dReal alpha = (-B-k)*A;
-      if (alpha < 0) {
+	dReal uv = dDOT44(ccyl->R+2,ray->R+2);
+	r[0] = uv*ccyl->R[0*4+2] - ray->R[0*4+2];
+	r[1] = uv*ccyl->R[1*4+2] - ray->R[1*4+2];
+	r[2] = uv*ccyl->R[2*4+2] - ray->R[2*4+2];
+	dReal A = dDOT(r,r);
+	dReal B = 2*dDOT(q,r);
+	k = B*B-4*A*C;
+	if (k < 0) {
+	  // the ray does not intersect the infinite cylinder, but if the ray is
+	  // inside and parallel to the cylinder axis it may intersect the end
+	  // caps. set k to cap position to check.
+	  if (!inside_ccyl) return 0;
+	  if (uv < 0) k = -lz2; else k = lz2;
+	}
+	else {
+	  k = dSqrt(k);
+	  A = dRecip (2*A);
+	  dReal alpha = (-B-k)*A;
+	  if (alpha < 0) {
 	alpha = (-B+k)*A;
 	if (alpha < 0) return 0;
-      }
-      if (alpha > ray->length) return 0;
+	  }
+	  if (alpha > ray->length) return 0;
 
-      // the ray intersects the infinite cylinder. check to see if the
-      // intersection point is between the caps
-      contact->pos[0] = ray->pos[0] + alpha*ray->R[0*4+2];
-      contact->pos[1] = ray->pos[1] + alpha*ray->R[1*4+2];
-      contact->pos[2] = ray->pos[2] + alpha*ray->R[2*4+2];
-      q[0] = contact->pos[0] - ccyl->pos[0];
-      q[1] = contact->pos[1] - ccyl->pos[1];
-      q[2] = contact->pos[2] - ccyl->pos[2];
-      k = dDOT14(q,ccyl->R+2);
-      dReal nsign = inside_ccyl ? -1.0 : 1.0;
-      if (k >= -lz2 && k <= lz2) {
+	  // the ray intersects the infinite cylinder. check to see if the
+	  // intersection point is between the caps
+	  contact->pos[0] = ray->pos[0] + alpha*ray->R[0*4+2];
+	  contact->pos[1] = ray->pos[1] + alpha*ray->R[1*4+2];
+	  contact->pos[2] = ray->pos[2] + alpha*ray->R[2*4+2];
+	  q[0] = contact->pos[0] - ccyl->pos[0];
+	  q[1] = contact->pos[1] - ccyl->pos[1];
+	  q[2] = contact->pos[2] - ccyl->pos[2];
+	  k = dDOT14(q,ccyl->R+2);
+	  dReal nsign = inside_ccyl ? -1.0 : 1.0;
+	  if (k >= -lz2 && k <= lz2) {
 	contact->normal[0] = nsign * (contact->pos[0] -
-				      (ccyl->pos[0] + k*ccyl->R[0*4+2]));
+					  (ccyl->pos[0] + k*ccyl->R[0*4+2]));
 	contact->normal[1] = nsign * (contact->pos[1] -
-				      (ccyl->pos[1] + k*ccyl->R[1*4+2]));
+					  (ccyl->pos[1] + k*ccyl->R[1*4+2]));
 	contact->normal[2] = nsign * (contact->pos[2] -
-				      (ccyl->pos[2] + k*ccyl->R[2*4+2]));
+					  (ccyl->pos[2] + k*ccyl->R[2*4+2]));
 	dNormalize3 (contact->normal);
 	contact->depth = alpha;
 	return 1;
-      }
+	  }
 
-      // the infinite cylinder intersection point is not between the caps.
-      // set k to cap position to check.
-      if (k < 0) k = -lz2; else k = lz2;
-    }
+	  // the infinite cylinder intersection point is not between the caps.
+	  // set k to cap position to check.
+	  if (k < 0) k = -lz2; else k = lz2;
+	}
   }
 
   // check for ray intersection with the caps. k must indicate the cap
@@ -2016,7 +2016,7 @@ int dCollideRayCapsule (dxGeom *o1, dxGeom *o2,
 
 
 int dCollideRayPlane (dxGeom *o1, dxGeom *o2, int flags,
-		      dContactGeom *contact, int skip)
+			  dContactGeom *contact, int skip)
 {
   dIASSERT (skip >= (int)sizeof(dContactGeom));
   dIASSERT (o1->type == dRayClass);

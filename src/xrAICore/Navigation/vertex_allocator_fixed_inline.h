@@ -1,16 +1,16 @@
 ////////////////////////////////////////////////////////////////////////////
-//  Module      : vertex_allocator_fixed_inline.h
-//  Created     : 21.03.2002
-//  Modified    : 27.02.2004
-//  Author      : Dmitriy Iassenev
+//  Module	  : vertex_allocator_fixed_inline.h
+//  Created	 : 21.03.2002
+//  Modified	: 27.02.2004
+//  Author	  : Dmitriy Iassenev
 //  Description : Fixed vertex allocator inline functions
 ////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
 #define TEMPLATE_SPECIALIZATION \
-    template <u32 ReserveSize>  \
-    template <typename TCompoundVertex>
+	template <u32 ReserveSize>  \
+	template <typename TCompoundVertex>
 
 #define CFixedVertexAllocator CVertexAllocatorFixed<ReserveSize>::CDataStorage<TCompoundVertex>
 
@@ -25,8 +25,8 @@ inline u32 CFixedVertexAllocator::get_visited_node_count() const { return m_vert
 TEMPLATE_SPECIALIZATION
 inline typename CFixedVertexAllocator::Vertex& CFixedVertexAllocator::create_vertex()
 {
-    VERIFY(m_vertex_count < ReserveSize - 1);
-    return *(m_vertices.begin() + m_vertex_count++);
+	VERIFY(m_vertex_count < ReserveSize - 1);
+	return *(m_vertices.begin() + m_vertex_count++);
 }
 
 #undef TEMPLATE_SPECIALIZATION

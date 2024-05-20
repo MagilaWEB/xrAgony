@@ -38,18 +38,18 @@
 
 CALifeOnlineOfflineGroupBrain::CALifeOnlineOfflineGroupBrain(object_type* object)
 {
-    VERIFY(object);
-    m_object = object;
+	VERIFY(object);
+	m_object = object;
 
 #ifdef XRGAME_EXPORTS
-    m_movement_manager = new CALifeMonsterMovementManager(object);
+	m_movement_manager = new CALifeMonsterMovementManager(object);
 #endif
 }
 
 CALifeOnlineOfflineGroupBrain::~CALifeOnlineOfflineGroupBrain()
 {
 #ifdef XRGAME_EXPORTS
-    xr_delete(m_movement_manager);
+	xr_delete(m_movement_manager);
 #endif
 }
 
@@ -62,11 +62,11 @@ void CALifeOnlineOfflineGroupBrain::on_unregister() {}
 void CALifeOnlineOfflineGroupBrain::on_location_change() {}
 void CALifeOnlineOfflineGroupBrain::update()
 {
-    CALifeSmartTerrainTask* const task = object().get_current_task();
-    THROW2(task, "CALifeOnlineOfflineGroupBrain returned nil task, while npc is registered in it");
-    movement().path_type(MovementManager::ePathTypeGamePath);
-    movement().detail().target(*task);
-    movement().update();
+	CALifeSmartTerrainTask* const task = object().get_current_task();
+	THROW2(task, "CALifeOnlineOfflineGroupBrain returned nil task, while npc is registered in it");
+	movement().path_type(MovementManager::ePathTypeGamePath);
+	movement().detail().target(*task);
+	movement().update();
 }
 
 void CALifeOnlineOfflineGroupBrain::on_switch_online() { movement().on_switch_online(); }

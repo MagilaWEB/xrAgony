@@ -49,26 +49,26 @@ void CreateShaders();
 // Точность возвращаемого функцией GetGameDateTimeAsString значения: до часов, до минут, до секунд
 enum ETimePrecision
 {
-    etpTimeToHours = 0,
-    etpTimeToMinutes,
-    etpTimeToSeconds,
-    etpTimeToMilisecs,
-    etpTimeToSecondsAndDay
+	etpTimeToHours = 0,
+	etpTimeToMinutes,
+	etpTimeToSeconds,
+	etpTimeToMilisecs,
+	etpTimeToSecondsAndDay
 };
 
 // Точность возвращаемого функцией GetGameDateTimeAsString значения: до года, до месяца, до дня
 enum EDatePrecision
 {
-    edpDateToDay,
-    edpDateToMonth,
-    edpDateToYear
+	edpDateToDay,
+	edpDateToMonth,
+	edpDateToYear
 };
 
 const shared_str GetGameDateAsString(EDatePrecision datePrec, char dateSeparator = ',');
 const shared_str GetGameTimeAsString(ETimePrecision timePrec, char timeSeparator = ':');
 const shared_str GetDateAsString(ALife::_TIME_ID time, EDatePrecision datePrec, char dateSeparator = ',');
 const shared_str GetTimeAsString(
-    ALife::_TIME_ID time, ETimePrecision timePrec, char timeSeparator = ':', bool full_mode = true);
+	ALife::_TIME_ID time, ETimePrecision timePrec, char timeSeparator = ':', bool full_mode = true);
 const shared_str GetTimeAndDateAsString(ALife::_TIME_ID time);
 const shared_str Get_GameTimeAndDate_AsString();
 

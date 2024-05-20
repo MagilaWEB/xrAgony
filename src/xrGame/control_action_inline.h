@@ -11,8 +11,8 @@
 IC CControlAction::CControlAction() {}
 IC void CControlAction::set_object(CAI_Stalker* object)
 {
-    VERIFY(object);
-    m_object = object;
+	VERIFY(object);
+	m_object = object;
 }
 
 IC bool CControlAction::applicable() const { return (true); }
@@ -22,8 +22,8 @@ IC void CControlAction::execute() {}
 IC void CControlAction::finalize() {}
 IC CAI_Stalker& CControlAction::object() const
 {
-    VERIFY(m_object);
-    return (*m_object);
+	VERIFY(m_object);
+	return (*m_object);
 }
 
 IC void CControlAction::remove_links(IGameObject* object) {}

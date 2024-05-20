@@ -14,99 +14,99 @@ class CUITalkWnd;
 class CUITalkDialogWnd : public CUIWindow, public CUIWndCallback
 {
 private:
-    typedef CUIWindow inherited;
-    CUIXml* m_uiXml;
+	typedef CUIWindow inherited;
+	CUIXml* m_uiXml;
 
 public:
-    CUITalkDialogWnd();
-    virtual ~CUITalkDialogWnd();
+	CUITalkDialogWnd();
+	virtual ~CUITalkDialogWnd();
 
-    void InitTalkDialogWnd();
+	void InitTalkDialogWnd();
 
-    virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 
-    virtual void Show();
-    virtual void Hide();
-    CUITalkWnd* m_pParent;
-    u32 GetHeaderColor() { return m_iNameTextColor; }
-    CGameFont* GetHeaderFont() { return m_pNameTextFont; }
-    u32 GetOurReplicsColor() { return m_uOurReplicsColor; }
-    bool mechanic_mode; // for inventory upgrades
+	virtual void Show();
+	virtual void Hide();
+	CUITalkWnd* m_pParent;
+	u32 GetHeaderColor() { return m_iNameTextColor; }
+	CGameFont* GetHeaderFont() { return m_pNameTextFont; }
+	u32 GetOurReplicsColor() { return m_uOurReplicsColor; }
+	bool mechanic_mode; // for inventory upgrades
 
-    //номер выбранного вопроса
-    shared_str m_ClickedQuestionID;
+	//номер выбранного вопроса
+	shared_str m_ClickedQuestionID;
 
-    //список вопросов, которые мы можем задавать персонажу
+	//список вопросов, которые мы можем задавать персонажу
 
-    //	Fvector2			m_btn_pos[3];
-    CUI3tButton UIToTradeButton;
-    //	CUI3tButton			UIToExitButton;
+	//	Fvector2			m_btn_pos[3];
+	CUI3tButton UIToTradeButton;
+	//	CUI3tButton			UIToExitButton;
 
-    CUICharacterInfo UICharacterInfoLeft;
-    CUICharacterInfo UICharacterInfoRight;
+	CUICharacterInfo UICharacterInfoLeft;
+	CUICharacterInfo UICharacterInfoRight;
 
-    void AddQuestion(LPCSTR str, LPCSTR value, int number, bool b_finalizer);
-    void AddAnswer(LPCSTR SpeakerName, const char* str, bool bActor);
-    void AddIconedAnswer(LPCSTR caption, LPCSTR text, LPCSTR texture_name, LPCSTR templ_name);
-    void ClearAll();
-    void ClearQuestions();
+	void AddQuestion(LPCSTR str, LPCSTR value, int number, bool b_finalizer);
+	void AddAnswer(LPCSTR SpeakerName, const char* str, bool bActor);
+	void AddIconedAnswer(LPCSTR caption, LPCSTR text, LPCSTR texture_name, LPCSTR templ_name);
+	void ClearAll();
+	void ClearQuestions();
 
-    void SetOsoznanieMode(bool b);
-    void SetTradeMode();
-    void UpdateButtonsLayout(bool b_disable_break, bool trade_enabled);
+	void SetOsoznanieMode(bool b);
+	void SetTradeMode();
+	void UpdateButtonsLayout(bool b_disable_break, bool trade_enabled);
 
 private:
-    CUIScrollView* UIQuestionsList;
-    CUIScrollView* UIAnswersList;
+	CUIScrollView* UIQuestionsList;
+	CUIScrollView* UIAnswersList;
 
-    // Шрифт и цвет текста с именем персонажа
-    CGameFont* m_pNameTextFont;
-    u32 m_iNameTextColor;
-    // Цвет тeкста и шрифт наших реплик
-    u32 m_uOurReplicsColor;
+	// Шрифт и цвет текста с именем персонажа
+	CGameFont* m_pNameTextFont;
+	u32 m_iNameTextColor;
+	// Цвет тeкста и шрифт наших реплик
+	u32 m_uOurReplicsColor;
 
-    void OnTradeClicked(CUIWindow* w, void*);
-    void OnUpgradeClicked(CUIWindow* w, void*);
-    void OnQuestionClicked(CUIWindow* w, void*);
-    void OnExitClicked(CUIWindow* w, void*);
+	void OnTradeClicked(CUIWindow* w, void*);
+	void OnUpgradeClicked(CUIWindow* w, void*);
+	void OnQuestionClicked(CUIWindow* w, void*);
+	void OnExitClicked(CUIWindow* w, void*);
 };
 
 class CUIQuestionItem : public CUIWindow, public CUIWndCallback
 {
-    typedef CUIWindow inherited;
-    float m_min_height;
+	typedef CUIWindow inherited;
+	float m_min_height;
 
 public:
-    CUITextWnd* m_num_text;
-    CUI3tButton* m_text;
-    shared_str m_s_value;
-    CUIQuestionItem(CUIXml* xml_doc, LPCSTR path);
-    void Init(LPCSTR val, LPCSTR text);
+	CUITextWnd* m_num_text;
+	CUI3tButton* m_text;
+	shared_str m_s_value;
+	CUIQuestionItem(CUIXml* xml_doc, LPCSTR path);
+	void Init(LPCSTR val, LPCSTR text);
 
-    virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
-    void OnTextClicked(CUIWindow* w, void*);
+	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	void OnTextClicked(CUIWindow* w, void*);
 };
 
 class CUIAnswerItem : public CUIWindow
 {
-    typedef CUIWindow inherited;
+	typedef CUIWindow inherited;
 
-    float m_min_height;
-    float m_bottom_footer;
-    CUITextWnd* m_text;
-    CUITextWnd* m_name;
+	float m_min_height;
+	float m_bottom_footer;
+	CUITextWnd* m_text;
+	CUITextWnd* m_name;
 
 public:
-    CUIAnswerItem(CUIXml* xml_doc, LPCSTR path);
-    void Init(LPCSTR text, LPCSTR name);
+	CUIAnswerItem(CUIXml* xml_doc, LPCSTR path);
+	void Init(LPCSTR text, LPCSTR name);
 };
 
 class CUIAnswerItemIconed : public CUIAnswerItem
 {
-    typedef CUIAnswerItem inherited;
-    CUIStatic* m_icon;
+	typedef CUIAnswerItem inherited;
+	CUIStatic* m_icon;
 
 public:
-    CUIAnswerItemIconed(CUIXml* xml_doc, LPCSTR path);
-    void Init(LPCSTR text, LPCSTR name, LPCSTR texture_name);
+	CUIAnswerItemIconed(CUIXml* xml_doc, LPCSTR path);
+	void Init(LPCSTR text, LPCSTR name, LPCSTR texture_name);
 };

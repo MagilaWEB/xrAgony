@@ -318,11 +318,11 @@ namespace
 			
 			StringBuilder error_string;
 			if( func != NULL ) {
-				error_string.format( "*** Assertion failed: %s\n    On file: %s\n    On function: %s\n    On line: %d\n ", exp, file, func, line );
+				error_string.format( "*** Assertion failed: %s\n	On file: %s\n	On function: %s\n	On line: %d\n ", exp, file, func, line );
 				nvDebug( error_string );
 			}
 			else {
-				error_string.format( "*** Assertion failed: %s\n    On file: %s\n    On line: %d\n ", exp, file, line );
+				error_string.format( "*** Assertion failed: %s\n	On file: %s\n	On line: %d\n ", exp, file, line );
 				nvDebug( error_string );
 			}
 			
@@ -390,10 +390,10 @@ namespace
 		virtual int assert(const char * exp, const char * file, int line, const char * func)
 		{
 			if( func != NULL ) {
-				nvDebug( "*** Assertion failed: %s\n    On file: %s\n    On function: %s\n    On line: %d\n ", exp, file, func, line );
+				nvDebug( "*** Assertion failed: %s\n	On file: %s\n	On function: %s\n	On line: %d\n ", exp, file, func, line );
 			}
 			else {
-				nvDebug( "*** Assertion failed: %s\n    On file: %s\n    On line: %d\n ", exp, file, line );
+				nvDebug( "*** Assertion failed: %s\n	On file: %s\n	On line: %d\n ", exp, file, line );
 			}
 			
 #		if _DEBUG

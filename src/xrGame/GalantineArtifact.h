@@ -9,13 +9,13 @@
 class CGalantineArtefact : public CArtefact
 {
 private:
-    typedef CArtefact inherited;
+	typedef CArtefact inherited;
 
 public:
-    CGalantineArtefact(void);
-    virtual ~CGalantineArtefact(void);
+	CGalantineArtefact(void);
+	virtual ~CGalantineArtefact(void);
 
-    virtual void Load(LPCSTR section);
+	virtual void Load(LPCSTR section);
 
 protected:
 };

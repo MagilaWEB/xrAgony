@@ -60,7 +60,7 @@ namespace luabind {
 	
 	namespace policy
 	{
-        template<unsigned int N>
+		template<unsigned int N>
 		using raw = converter_policy_injector<N, detail::raw_policy>;
 	}
 } // namespace luabind

@@ -38,7 +38,7 @@ public:
 	/// Random number on [0.0, 1.0] interval.
 	float getFloat()
 	{
-    	union
+		union
 		{
 			uint32 i;
 			float f;
@@ -112,7 +112,7 @@ class MTRand : public Rand
 {
 public:
 
-	enum { N = 624 };       // length of state vector
+	enum { N = 624 };		// length of state vector
 	enum { M = 397 };
 
 	/// Constructor that uses the current time as the seed.

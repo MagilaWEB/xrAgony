@@ -18,8 +18,8 @@ const float CharacterEffectPars::vel_cret_wallmark = 100.f;
 
 void LoadPhysicsGameParams()
 {
-    collide_volume_min = pSettings->r_float("sound", "snd_collide_min_volume");
-    collide_volume_max = pSettings->r_float("sound", "snd_collide_max_volume");
-    // object_damage_factor=pSettings->r_float("physics","object_damage_factor");
-    // object_damage_factor*=object_damage_factor;
+	collide_volume_min = pSettings->r_float("sound", "snd_collide_min_volume");
+	collide_volume_max = pSettings->r_float("sound", "snd_collide_max_volume");
+	// object_damage_factor=pSettings->r_float("physics","object_damage_factor");
+	// object_damage_factor*=object_damage_factor;
 }

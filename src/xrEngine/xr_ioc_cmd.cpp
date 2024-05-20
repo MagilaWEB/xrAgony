@@ -170,23 +170,23 @@ public:
 
 			Msg("%-20s (%-10s) --- %s", C.Name(), _S, _I);
 		}
-		Log("Key: Ctrl + A         === Select all ");
-		Log("Key: Ctrl + C         === Copy to clipboard ");
-		Log("Key: Ctrl + V         === Paste from clipboard ");
-		Log("Key: Ctrl + X         === Cut to clipboard ");
-		Log("Key: Ctrl + Z         === Undo ");
-		Log("Key: Ctrl + Insert    === Copy to clipboard ");
-		Log("Key: Shift + Insert   === Paste from clipboard ");
-		Log("Key: Shift + Delete   === Cut to clipboard ");
-		Log("Key: Insert           === Toggle mode <Insert> ");
-		Log("Key: Back / Delete          === Delete symbol left / right ");
+		Log("Key: Ctrl + A		 === Select all ");
+		Log("Key: Ctrl + C		 === Copy to clipboard ");
+		Log("Key: Ctrl + V		 === Paste from clipboard ");
+		Log("Key: Ctrl + X		 === Cut to clipboard ");
+		Log("Key: Ctrl + Z		 === Undo ");
+		Log("Key: Ctrl + Insert	=== Copy to clipboard ");
+		Log("Key: Shift + Insert	=== Paste from clipboard ");
+		Log("Key: Shift + Delete	=== Cut to clipboard ");
+		Log("Key: Insert			=== Toggle mode <Insert> ");
+		Log("Key: Back / Delete		  === Delete symbol left / right ");
 
-		Log("Key: Up   / Down            === Prev / Next command in tips list ");
+		Log("Key: Up	/ Down			=== Prev / Next command in tips list ");
 		Log("Key: Ctrl + Up / Ctrl + Down === Prev / Next executing command ");
-		Log("Key: Left, Right, Home, End {+Shift/+Ctrl}       === Navigation in text ");
-		Log("Key: PageUp / PageDown      === Scrolling history ");
-		Log("Key: Tab  / Shift + Tab     === Next / Prev possible command from list");
-		Log("Key: Enter  / NumEnter      === Execute current command ");
+		Log("Key: Left, Right, Home, End {+Shift/+Ctrl}		=== Navigation in text ");
+		Log("Key: PageUp / PageDown	  === Scrolling history ");
+		Log("Key: Tab  / Shift + Tab	 === Next / Prev possible command from list");
+		Log("Key: Enter  / NumEnter	  === Execute current command ");
 
 		Log("- --- Command listing: end ----");
 	}

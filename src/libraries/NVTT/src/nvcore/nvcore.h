@@ -108,9 +108,9 @@
 /// Disable copy constructor and assignment operator. 
 /// @hideinitializer
 #define NV_FORBID_COPY(C) \
-    private: \
-    C( const C & ); \
-    C &operator=( const C & );
+	private: \
+	C( const C & ); \
+	C &operator=( const C & );
 
 
 /// Disable dynamic allocation on the heap. 

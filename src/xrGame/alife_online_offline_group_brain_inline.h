@@ -10,12 +10,12 @@
 
 IC CALifeOnlineOfflineGroupBrain::object_type& CALifeOnlineOfflineGroupBrain::object() const
 {
-    VERIFY(m_object);
-    return (*m_object);
+	VERIFY(m_object);
+	return (*m_object);
 }
 
 IC CALifeOnlineOfflineGroupBrain::movement_manager_type& CALifeOnlineOfflineGroupBrain::movement() const
 {
-    VERIFY(m_movement_manager);
-    return (*m_movement_manager);
+	VERIFY(m_movement_manager);
+	return (*m_movement_manager);
 }

@@ -16,7 +16,7 @@
 
 TEMPLATE_SPECIALIZATION
 IC CSObjectItemClientServer::CObjectItemClientServer(const CLASS_ID& clsid, LPCSTR script_clsid)
-    : inherited(clsid, script_clsid)
+	: inherited(clsid, script_clsid)
 {
 }
 
@@ -24,16 +24,16 @@ IC CSObjectItemClientServer::CObjectItemClientServer(const CLASS_ID& clsid, LPCS
 TEMPLATE_SPECIALIZATION
 ObjectFactory::ClientObjectBaseClass* CSObjectItemClientServer::client_object() const
 {
-    return (new CLIENT_TYPE())->_construct();
+	return (new CLIENT_TYPE())->_construct();
 }
 #endif
 
 TEMPLATE_SPECIALIZATION
 ObjectFactory::ServerObjectBaseClass* CSObjectItemClientServer::server_object(LPCSTR section) const
 {
-    ObjectFactory::ServerObjectBaseClass* o = (new SERVER_TYPE(section))->init();
-    R_ASSERT(o);
-    return (o);
+	ObjectFactory::ServerObjectBaseClass* o = (new SERVER_TYPE(section))->init();
+	R_ASSERT(o);
+	return (o);
 }
 
 #undef TEMPLATE_SPECIALIZATION

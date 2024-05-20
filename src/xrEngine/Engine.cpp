@@ -17,14 +17,14 @@ extern void msCreate(LPCSTR name);
 
 void CEngine::Initialize(void)
 {
-    Engine.Sheduler.Initialize();
+	Engine.Sheduler.Initialize();
 #ifdef DEBUG
-    msCreate("game");
+	msCreate("game");
 #endif
 }
 
 void CEngine::Destroy()
 {
-    Engine.Sheduler.Destroy();
-    Engine.External.Destroy();
+	Engine.Sheduler.Destroy();
+	Engine.External.Destroy();
 }

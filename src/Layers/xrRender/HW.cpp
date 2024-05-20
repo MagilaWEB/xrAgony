@@ -171,9 +171,9 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	_SHOW_REF("* CREATE: DeviceREF:", HW.pDevice);
 	switch (GPU)
 	{
-	case D3DCREATE_SOFTWARE_VERTEXPROCESSING:                        Log("* Vertex Processor: SOFTWARE"); break;
-	case D3DCREATE_MIXED_VERTEXPROCESSING:                           Log("* Vertex Processor: MIXED"); break;
-	case D3DCREATE_HARDWARE_VERTEXPROCESSING:                        Log("* Vertex Processor: HARDWARE"); break;
+	case D3DCREATE_SOFTWARE_VERTEXPROCESSING:						Log("* Vertex Processor: SOFTWARE"); break;
+	case D3DCREATE_MIXED_VERTEXPROCESSING:							Log("* Vertex Processor: MIXED"); break;
+	case D3DCREATE_HARDWARE_VERTEXPROCESSING:						Log("* Vertex Processor: HARDWARE"); break;
 	case D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE: Log("* Vertex Processor: PURE HARDWARE"); break;
 	}
 
@@ -184,8 +184,8 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	R_CHK(pDevice->GetRenderTarget(0, &pBaseRT));
 	R_CHK(pDevice->GetDepthStencilSurface(&pBaseZB));
 	u32 memory = pDevice->GetAvailableTextureMem();
-	Msg("*   Texture memory: %d M", memory / (1024 * 1024));
-	Msg("*        DDI-level: %2.1f", float(D3DXGetDriverLevel(pDevice)) / 100.f);
+	Msg("*	Texture memory: %d M", memory / (1024 * 1024));
+	Msg("*		DDI-level: %2.1f", float(D3DXGetDriverLevel(pDevice)) / 100.f);
 
 	updateWindowProps(m_hWnd);
 	fill_vid_mode_list(this);
@@ -367,14 +367,14 @@ void CheckForIntelGMA(CHWCaps& Caps)
 		case 1: Log("* Using software skinning"); break;
 		case 2:
 			Log("* WARNING: Using hardware skinning");
-			Log("*   setting 'r1_software_skinning' to '1' may improve performance");
+			Log("*	setting 'r1_software_skinning' to '1' may improve performance");
 			break;
 		}
 	}
 	else if (ps_r1_SoftwareSkinning == 1)
 	{
 		Msg("* WARNING: Using software skinning");
-		Msg("*   setting 'r1_software_skinning' to '0' should improve performance");
+		Msg("*	setting 'r1_software_skinning' to '0' should improve performance");
 	}
 }
 
@@ -413,7 +413,7 @@ u32 CHW::selectRefresh(u32 dwWidth, u32 dwHeight, D3DFORMAT fmt)
 		if (Mode.Width == dwWidth && Mode.Height == dwHeight)
 		{
 			//if (Mode.RefreshRate > selected)
-			//    selected = Mode.RefreshRate;
+			//	selected = Mode.RefreshRate;
 			if (Mode.RefreshRate <= maxRefreshRate && Mode.RefreshRate > selected)
 				selected = Mode.RefreshRate;  //ECO_RENDER modif.
 		}

@@ -48,9 +48,9 @@ IC float Spring(float cfm, float erp, float s = fixed_step) { return ((erp) / (c
 IC float Damping(float cfm, float erp) { return ((1.f - (erp)) / (cfm)); }
 IC void MulSprDmp(float& cfm, float& erp, float mul_spring, float mul_damping)
 {
-    float factor = 1.f / (mul_spring * erp + mul_damping * (1 - erp));
-    cfm *= factor;
-    erp *= (factor * mul_spring);
+	float factor = 1.f / (mul_spring * erp + mul_damping * (1 - erp));
+	cfm *= factor;
+	erp *= (factor * mul_spring);
 }
 
 #endif // PHYSICS_COMMON_H

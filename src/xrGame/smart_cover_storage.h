@@ -16,16 +16,16 @@ namespace smart_cover
 class storage final : private Noncopyable
 {
 public:
-    typedef xr_vector<smart_cover::description*> Descriptions;
-    typedef cover::DescriptionPtr DescriptionPtr;
+	typedef xr_vector<smart_cover::description*> Descriptions;
+	typedef cover::DescriptionPtr DescriptionPtr;
 
 private:
-    Descriptions m_descriptions;
+	Descriptions m_descriptions;
 
 public:
-    ~storage();
-    DescriptionPtr description(shared_str const& table_id);
-    void collect_garbage();
+	~storage();
+	DescriptionPtr description(shared_str const& table_id);
+	void collect_garbage();
 };
 
 } // namespace smart_cover

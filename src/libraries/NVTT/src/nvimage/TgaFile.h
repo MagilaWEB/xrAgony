@@ -10,12 +10,12 @@ namespace nv
 	
 // TGA types
 enum TGAType {
-    TGA_TYPE_INDEXED		= 1,
-    TGA_TYPE_RGB			= 2,
-    TGA_TYPE_GREY			= 3,
-    TGA_TYPE_RLE_INDEXED	= 9,
-    TGA_TYPE_RLE_RGB		= 10,
-    TGA_TYPE_RLE_GREY		= 11
+	TGA_TYPE_INDEXED		= 1,
+	TGA_TYPE_RGB			= 2,
+	TGA_TYPE_GREY			= 3,
+	TGA_TYPE_RLE_INDEXED	= 9,
+	TGA_TYPE_RLE_RGB		= 10,
+	TGA_TYPE_RLE_GREY		= 11
 };
 
 #define TGA_INTERLEAVE_MASK	0xc0

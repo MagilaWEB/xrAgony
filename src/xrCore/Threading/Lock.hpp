@@ -18,55 +18,55 @@ void XRCORE_API set_add_profile_portion(add_profile_portion_callback callback);
 class XRCORE_API FastLock : Noncopyable
 {
 public:
-    enum EFastLockType : ULONG
-    {
-        Exclusive = 0,
-        Shared = CONDITION_VARIABLE_LOCKMODE_SHARED
-    };
+	enum EFastLockType : ULONG
+	{
+		Exclusive = 0,
+		Shared = CONDITION_VARIABLE_LOCKMODE_SHARED
+	};
 
 public:
-    FastLock();
-    ~FastLock(){};
+	FastLock();
+	~FastLock(){};
 
-    void Enter();
-    bool TryEnter();
-    void Leave();
+	void Enter();
+	bool TryEnter();
+	void Leave();
 
-    void EnterShared();
-    bool TryEnterShared();
-    void LeaveShared();
+	void EnterShared();
+	bool TryEnterShared();
+	void LeaveShared();
 
-    void* GetHandle();
+	void* GetHandle();
 
 private:
-    SRWLOCK srw;
+	SRWLOCK srw;
 };
 
 /////////////////////////////////////////////////////
 
 class XRCORE_API Lock : Noncopyable
 {
-    CRITICAL_SECTION cs;
+	CRITICAL_SECTION cs;
 
 public:
 #ifdef CONFIG_PROFILE_LOCKS
-    Lock(const char* id);
+	Lock(const char* id);
 #else
-    Lock();
+	Lock();
 #endif
-    ~Lock();
+	~Lock();
 
-    void Enter();
-    bool TryEnter();
-    void Leave();
+	void Enter();
+	bool TryEnter();
+	void Leave();
 
-    bool IsLocked() const { return !!lockCounter; }
+	bool IsLocked() const { return !!lockCounter; }
 
-    void* GetHandle();
+	void* GetHandle();
 
 private:
-    std::atomic_int lockCounter;
+	std::atomic_int lockCounter;
 #ifdef CONFIG_PROFILE_LOCKS
-    const char* id;
+	const char* id;
 #endif
 };

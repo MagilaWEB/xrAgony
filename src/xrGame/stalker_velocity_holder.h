@@ -15,15 +15,15 @@ class CStalkerVelocityCollection;
 class CStalkerVelocityHolder
 {
 public:
-    typedef CStalkerVelocityCollection COLLECTION;
-    typedef AssociativeVector<shared_str, COLLECTION*> COLLECTIONS;
+	typedef CStalkerVelocityCollection COLLECTION;
+	typedef AssociativeVector<shared_str, COLLECTION*> COLLECTIONS;
 
 private:
-    COLLECTIONS m_collections;
+	COLLECTIONS m_collections;
 
 public:
-    ~CStalkerVelocityHolder();
-    const COLLECTION& collection(const shared_str& section);
+	~CStalkerVelocityHolder();
+	const COLLECTION& collection(const shared_str& section);
 };
 
 IC CStalkerVelocityHolder& stalker_velocity_holder();

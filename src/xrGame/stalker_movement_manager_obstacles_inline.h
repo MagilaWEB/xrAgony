@@ -11,8 +11,8 @@
 
 IC CRestrictedObjectObstacle& stalker_movement_manager_obstacles::restricted_object() const
 {
-    VERIFY(m_restricted_object);
-    return (*m_restricted_object);
+	VERIFY(m_restricted_object);
+	return (*m_restricted_object);
 }
 
 #endif // #ifndef STALKER_MOVEMENT_MANAGER_OBSTACLES_INLINE_H_INCLUDED

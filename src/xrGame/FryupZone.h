@@ -4,13 +4,13 @@
 
 class CFryupZone : public CScriptObject
 {
-    typedef CScriptObject inherited;
+	typedef CScriptObject inherited;
 
 public:
-    CFryupZone();
-    virtual ~CFryupZone();
+	CFryupZone();
+	virtual ~CFryupZone();
 
 #ifdef DEBUG
-    virtual void OnRender();
+	virtual void OnRender();
 #endif
 };

@@ -20,25 +20,25 @@ class animation_planner;
 class target_selector final : public CActionPlannerAction<animation_planner>, private Noncopyable
 {
 private:
-    typedef CActionPlannerAction<animation_planner> inherited;
+	typedef CActionPlannerAction<animation_planner> inherited;
 
 public:
-    typedef CScriptCallbackEx<void> callback_type;
+	typedef CScriptCallbackEx<void> callback_type;
 
 private:
-    callback_type m_script_callback;
-    CRandom m_random;
+	callback_type m_script_callback;
+	CRandom m_random;
 
 private:
-    void add_evaluators();
-    void add_actions();
+	void add_evaluators();
+	void add_actions();
 
 public:
-    virtual void setup(animation_planner* object, CPropertyStorage* storage);
-    virtual void update();
-    virtual LPCSTR object_name() const;
-    void callback(callback_type const& callback);
-    IC callback_type const& callback() const;
+	virtual void setup(animation_planner* object, CPropertyStorage* storage);
+	virtual void update();
+	virtual LPCSTR object_name() const;
+	void callback(callback_type const& callback);
+	IC callback_type const& callback() const;
 };
 
 } // namespace smart_cover

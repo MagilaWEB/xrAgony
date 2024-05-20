@@ -84,16 +84,16 @@ static void convertToBlockLinear(const Image * image, uint * blockLinearImage)
 CudaCompressor::CudaCompressor() : m_bitmapTable(NULL), m_data(NULL), m_result(NULL)
 {
 #if defined HAVE_CUDA
-    // Allocate and upload bitmaps.
-    cudaMalloc((void**) &m_bitmapTable, 992 * sizeof(uint));
+	// Allocate and upload bitmaps.
+	cudaMalloc((void**) &m_bitmapTable, 992 * sizeof(uint));
 	if (m_bitmapTable != NULL)
 	{
 		cudaMemcpy(m_bitmapTable, s_bitmapTable, 992 * sizeof(uint), cudaMemcpyHostToDevice);
 	}
 
 	// Allocate scratch buffers.
-    cudaMalloc((void**) &m_data, MAX_BLOCKS * 64U);
-    cudaMalloc((void**) &m_result, MAX_BLOCKS * 8U);
+	cudaMalloc((void**) &m_data, MAX_BLOCKS * 64U);
+	cudaMalloc((void**) &m_result, MAX_BLOCKS * 8U);
 #endif
 }
 
@@ -111,7 +111,7 @@ bool CudaCompressor::isValid() const
 {
 #if defined HAVE_CUDA
 	if (cudaGetLastError() != cudaSuccess)
-   	{
+		{
 		return false;
 	}
 #endif
@@ -137,7 +137,7 @@ void CudaCompressor::compressDXT1(const CompressionOptions::Private & compressio
 	const uint h = (m_image->height() + 3) / 4;
 
 	uint imageSize = w * h * 16 * sizeof(Color32);
-    uint * blockLinearImage = (uint *) malloc(imageSize);
+	uint * blockLinearImage = (uint *) malloc(imageSize);
 	convertToBlockLinear(m_image, blockLinearImage);	// @@ Do this in parallel with the GPU, or in the GPU!
 
 	const uint blockNum = w * h;
@@ -153,7 +153,7 @@ void CudaCompressor::compressDXT1(const CompressionOptions::Private & compressio
 	{
 		uint count = min(blockNum - bn, MAX_BLOCKS);
 
-	    cudaMemcpy(m_data, blockLinearImage + bn * 16, count * 64, cudaMemcpyHostToDevice);
+		cudaMemcpy(m_data, blockLinearImage + bn * 16, count * 64, cudaMemcpyHostToDevice);
 
 		// Launch kernel.
 		compressKernelDXT1(count, m_data, m_result, m_bitmapTable);
@@ -207,7 +207,7 @@ void CudaCompressor::compressDXT3(const CompressionOptions::Private & compressio
 	const uint h = (m_image->height() + 3) / 4;
 
 	uint imageSize = w * h * 16 * sizeof(Color32);
-    uint * blockLinearImage = (uint *) malloc(imageSize);
+	uint * blockLinearImage = (uint *) malloc(imageSize);
 	convertToBlockLinear(m_image, blockLinearImage);
 
 	const uint blockNum = w * h;
@@ -225,7 +225,7 @@ void CudaCompressor::compressDXT3(const CompressionOptions::Private & compressio
 	{
 		uint count = min(blockNum - bn, MAX_BLOCKS);
 
-	    cudaMemcpy(m_data, blockLinearImage + bn * 16, count * 64, cudaMemcpyHostToDevice);
+		cudaMemcpy(m_data, blockLinearImage + bn * 16, count * 64, cudaMemcpyHostToDevice);
 
 		// Launch kernel.
 		if (m_alphaMode == AlphaMode_Transparency)
@@ -298,7 +298,7 @@ void CudaCompressor::compressDXT5(const CompressionOptions::Private & compressio
 	const uint h = (m_image->height() + 3) / 4;
 
 	uint imageSize = w * h * 16 * sizeof(Color32);
-    uint * blockLinearImage = (uint *) malloc(imageSize);
+	uint * blockLinearImage = (uint *) malloc(imageSize);
 	convertToBlockLinear(m_image, blockLinearImage);
 
 	const uint blockNum = w * h;
@@ -316,7 +316,7 @@ void CudaCompressor::compressDXT5(const CompressionOptions::Private & compressio
 	{
 		uint count = min(blockNum - bn, MAX_BLOCKS);
 
-	    cudaMemcpy(m_data, blockLinearImage + bn * 16, count * 64, cudaMemcpyHostToDevice);
+		cudaMemcpy(m_data, blockLinearImage + bn * 16, count * 64, cudaMemcpyHostToDevice);
 
 		// Launch kernel.
 		if (m_alphaMode == AlphaMode_Transparency)

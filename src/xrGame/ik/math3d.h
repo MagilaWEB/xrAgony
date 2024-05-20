@@ -67,54 +67,54 @@ void set_translation(Matrix M, float x, float y, float z);
 
 inline void vecscalarmult(float u[], float v[], float f)
 {
-    u[0] = v[0] * f;
-    u[1] = v[1] * f;
-    u[2] = v[2] * f;
+	u[0] = v[0] * f;
+	u[1] = v[1] * f;
+	u[2] = v[2] * f;
 }
 
 inline float unitize(float u[])
 {
-    float f, m;
+	float f, m;
 
-    f = u[0] * u[0] + u[1] * u[1] + u[2] * u[2];
+	f = u[0] * u[0] + u[1] * u[1] + u[2] * u[2];
 
-    //    if (f == 0) {
-    //        return(0.0);
-    //    }
+	//	if (f == 0) {
+	//		return(0.0);
+	//	}
 
-    if (f != 0.0)
-    {
-        m = (float)_sqrt(f);
+	if (f != 0.0)
+	{
+		m = (float)_sqrt(f);
 
-        u[0] = u[0] / m;
-        u[1] = u[1] / m;
-        u[2] = u[2] / m;
-    }
-    else
-        m = 0.0;
+		u[0] = u[0] / m;
+		u[1] = u[1] / m;
+		u[2] = u[2] / m;
+	}
+	else
+		m = 0.0;
 
-    return (m);
+	return (m);
 }
 
 void inline crossproduct(float r[3], const float a[3], const float b[3])
 {
-    r[0] = a[1] * b[2] - a[2] * b[1];
-    r[1] = a[2] * b[0] - a[0] * b[2];
-    r[2] = a[0] * b[1] - a[1] * b[0];
+	r[0] = a[1] * b[2] - a[2] * b[1];
+	r[1] = a[2] * b[0] - a[0] * b[2];
+	r[2] = a[0] * b[1] - a[1] * b[0];
 }
 
 inline void vecsub(float t[], float u[], float v[])
 {
-    t[0] = u[0] - v[0];
-    t[1] = u[1] - v[1];
-    t[2] = u[2] - v[2];
+	t[0] = u[0] - v[0];
+	t[1] = u[1] - v[1];
+	t[2] = u[2] - v[2];
 }
 
 inline void vecadd(float t[], float u[], float v[])
 {
-    t[0] = u[0] + v[0];
-    t[1] = u[1] + v[1];
-    t[2] = u[2] + v[2];
+	t[0] = u[0] + v[0];
+	t[1] = u[1] + v[1];
+	t[2] = u[2] + v[2];
 }
 
 #define DOT(u, v) (u[0] * v[0] + u[1] * v[1] + u[2] * v[2])
@@ -132,7 +132,7 @@ float norm(float v[3]);
 //
 inline float norm(float v[3])
 {
-    return sqrt(DOT(v,v));
+	return sqrt(DOT(v,v));
 }
 
 //
@@ -141,44 +141,44 @@ inline float norm(float v[3])
 
 inline void get_translation(const Matrix M, float p[3])
 {
-    p[0] = M[3][0];
-    p[1] = M[3][1];
-    p[2] = M[3][2];
+	p[0] = M[3][0];
+	p[1] = M[3][1];
+	p[2] = M[3][2];
 }
 
 inline void set_translation(Matrix M, const float p[3])
 {
-    M[3][0] = p[0];
-    M[3][1] = p[1];
-    M[3][2] = p[2];
+	M[3][0] = p[0];
+	M[3][1] = p[1];
+	M[3][2] = p[2];
 }
 
 inline void get_translation(const Matrix M, float &x, float &y, float &z)
 {
-    x = M[3][0];
-    y = M[3][1];
-    z = M[3][2];
+	x = M[3][0];
+	y = M[3][1];
+	z = M[3][2];
 }
 
 inline void set_translation(Matrix M, float x, float y, float z)
 {
-    M[3][0] = x;
-    M[3][1] = y;
-    M[3][2] = z;
+	M[3][0] = x;
+	M[3][1] = y;
+	M[3][2] = z;
 }
 
 inline void set_row(Matrix M, int row, const float v[3])
 {
-    M[row][0] = v[0];
-    M[row][1] = v[1];
-    M[row][2] = v[2];
+	M[row][0] = v[0];
+	M[row][1] = v[1];
+	M[row][2] = v[2];
 }
 
 inline void get_row(Matrix M, int row,  float v[3])
 {
-    v[0] = M[row][0];
-    v[1] = M[row][1];
-    v[2] = M[row][2];
+	v[0] = M[row][0];
+	v[1] = M[row][1];
+	v[2] = M[row][2];
 }
 **********************************************************/
 
@@ -226,10 +226,10 @@ void axisangletomatrix(Matrix m, float axis[], float theta);
 /***************
 inline float vecdist(const float t[], const float t2[])
 {
-    float t3[3];
+	float t3[3];
 
-    vecsub(t3, (float*)t, (float*)t2);
-    return sqrt(DOT(t3,t3));
+	vecsub(t3, (float*)t, (float*)t2);
+	return sqrt(DOT(t3,t3));
 }
 
 ****************************/

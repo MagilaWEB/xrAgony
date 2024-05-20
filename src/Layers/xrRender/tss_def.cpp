@@ -126,7 +126,7 @@ void SimulatorStates::UpdateDesc(D3D_RASTERIZER_DESC& desc) const
 		const State& S = States[it];
 		if (S.type == 0)
 		{
-			// CHK_DX(HW.pDevice->SetRenderState        ((D3DRENDERSTATETYPE)S.v1,S.v2));
+			// CHK_DX(HW.pDevice->SetRenderState		((D3DRENDERSTATETYPE)S.v1,S.v2));
 			switch (S.v1)
 			{
 			case D3DRS_FILLMODE:

@@ -58,8 +58,8 @@ double angle_distance(float x, float y);
 int solve_trig1(float a, float b, float c, float theta[2]);
 
 // Solves
-//      a*cos(theta) - b*sin(theta) = c
-//      a*sin(theta) + b*cos(theta) = d
+//	  a*cos(theta) - b*sin(theta) = c
+//	  a*sin(theta) + b*cos(theta) = d
 float solve_trig2(float a, float b, float c, float d);
 
 //
@@ -73,14 +73,14 @@ int myasin(float x, float solns[2]);
 //
 inline int law_of_cosines(float a, float b, float c, float& angle)
 {
-    float temp = (a * a + b * b - c * c) / (2 * a * b);
+	float temp = (a * a + b * b - c * c) / (2 * a * b);
 
-    if (_abs(temp) > 1.0)
-        return 0;
-    else
-        angle = (float)acos(temp);
+	if (_abs(temp) > 1.0)
+		return 0;
+	else
+		angle = (float)acos(temp);
 
-    return 1;
+	return 1;
 }
 
 #endif

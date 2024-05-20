@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 /*
@@ -52,8 +52,8 @@ void dClosestLineSegmentPoints (const dVector3 a1, const dVector3 a2,
 				dVector3 cp1, dVector3 cp2);
 
 int dBoxTouchesBox (const dVector3 _p1, const dMatrix3 R1,
-		    const dVector3 side1, const dVector3 _p2,
-		    const dMatrix3 R2, const dVector3 side2);
+			const dVector3 side1, const dVector3 _p2,
+			const dMatrix3 R2, const dVector3 side2);
 
 void dInfiniteAABB (dGeomID geom, dReal aabb[6]);
 void dCloseODE();
@@ -83,12 +83,12 @@ void dGeomPlaneSetParams (dGeomID plane, dReal a, dReal b, dReal c, dReal d);
 void dGeomCapsuleSetParams (dGeomID ccylinder, dReal radius, dReal length);
 
 /* get geometry parameters */
-int   dGeomGetClass (dGeomID);
+int	dGeomGetClass (dGeomID);
 dReal dGeomSphereGetRadius (dGeomID sphere);
 void  dGeomBoxGetLengths (dGeomID box, dVector3 result);
 void  dGeomPlaneGetParams (dGeomID plane, dVector4 result);
 void  dGeomCapsuleGetParams (dGeomID ccylinder,
-			       dReal *radius, dReal *length);
+					dReal *radius, dReal *length);
 
 /* general functions */
 void dGeomSetData (dGeomID, void *);
@@ -126,7 +126,7 @@ int dGeomTransformGetInfo (dGeomID g);
 /* general collision */
 
 int dCollide (dGeomID o1, dGeomID o2, int flags, dContactGeom *contact,
-	      int skip);
+		  int skip);
 
 /* ************************************************************************ */
 /* custom classes */

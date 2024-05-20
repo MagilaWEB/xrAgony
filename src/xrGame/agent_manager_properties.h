@@ -24,11 +24,11 @@ typedef CPropertyEvaluatorMember<CAgentManager> CAgentManagerPropertyEvaluatorMe
 class CAgentManagerPropertyEvaluatorItem : public CAgentManagerPropertyEvaluator
 {
 protected:
-    typedef CAgentManagerPropertyEvaluator inherited;
+	typedef CAgentManagerPropertyEvaluator inherited;
 
 public:
-    IC CAgentManagerPropertyEvaluatorItem(CAgentManager* object = 0, LPCSTR evaluator_name = "");
-    virtual _value_type evaluate();
+	IC CAgentManagerPropertyEvaluatorItem(CAgentManager* object = 0, LPCSTR evaluator_name = "");
+	virtual _value_type evaluate();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,11 +38,11 @@ public:
 class CAgentManagerPropertyEvaluatorEnemy : public CAgentManagerPropertyEvaluator
 {
 protected:
-    typedef CAgentManagerPropertyEvaluator inherited;
+	typedef CAgentManagerPropertyEvaluator inherited;
 
 public:
-    IC CAgentManagerPropertyEvaluatorEnemy(CAgentManager* object = 0, LPCSTR evaluator_name = "");
-    virtual _value_type evaluate();
+	IC CAgentManagerPropertyEvaluatorEnemy(CAgentManager* object = 0, LPCSTR evaluator_name = "");
+	virtual _value_type evaluate();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -52,11 +52,11 @@ public:
 class CAgentManagerPropertyEvaluatorDanger : public CAgentManagerPropertyEvaluator
 {
 protected:
-    typedef CAgentManagerPropertyEvaluator inherited;
+	typedef CAgentManagerPropertyEvaluator inherited;
 
 public:
-    IC CAgentManagerPropertyEvaluatorDanger(CAgentManager* object = 0, LPCSTR evaluator_name = "");
-    virtual _value_type evaluate();
+	IC CAgentManagerPropertyEvaluatorDanger(CAgentManager* object = 0, LPCSTR evaluator_name = "");
+	virtual _value_type evaluate();
 };
 
 #include "agent_manager_properties_inline.h"

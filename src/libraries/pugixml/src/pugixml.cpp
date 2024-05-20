@@ -1103,7 +1103,7 @@ namespace pugi
 
 		impl::compact_pointer<xml_node_struct, 8, 0> first_child;
 
-		impl::compact_pointer<xml_node_struct,  9>    prev_sibling_c;
+		impl::compact_pointer<xml_node_struct,  9>	prev_sibling_c;
 		impl::compact_pointer<xml_node_struct, 10, 0> next_sibling;
 
 		impl::compact_pointer<xml_attribute_struct, 11, 0> first_attribute;
@@ -1874,29 +1874,29 @@ PUGI_IMPL_NS_BEGIN
 
 	static const unsigned char chartype_table[256] =
 	{
-		55,  0,   0,   0,   0,   0,   0,   0,      0,   12,  12,  0,   0,   63,  0,   0,   // 0-15
-		0,   0,   0,   0,   0,   0,   0,   0,      0,   0,   0,   0,   0,   0,   0,   0,   // 16-31
-		8,   0,   6,   0,   0,   0,   7,   6,      0,   0,   0,   0,   0,   96,  64,  0,   // 32-47
-		64,  64,  64,  64,  64,  64,  64,  64,     64,  64,  192, 0,   1,   0,   48,  0,   // 48-63
-		0,   192, 192, 192, 192, 192, 192, 192,    192, 192, 192, 192, 192, 192, 192, 192, // 64-79
-		192, 192, 192, 192, 192, 192, 192, 192,    192, 192, 192, 0,   0,   16,  0,   192, // 80-95
-		0,   192, 192, 192, 192, 192, 192, 192,    192, 192, 192, 192, 192, 192, 192, 192, // 96-111
-		192, 192, 192, 192, 192, 192, 192, 192,    192, 192, 192, 0, 0, 0, 0, 0,           // 112-127
+		55,  0,	0,	0,	0,	0,	0,	0,	  0,	12,  12,  0,	0,	63,  0,	0,	// 0-15
+		0,	0,	0,	0,	0,	0,	0,	0,	  0,	0,	0,	0,	0,	0,	0,	0,	// 16-31
+		8,	0,	6,	0,	0,	0,	7,	6,	  0,	0,	0,	0,	0,	96,  64,  0,	// 32-47
+		64,  64,  64,  64,  64,  64,  64,  64,	 64,  64,  192, 0,	1,	0,	48,  0,	// 48-63
+		0,	192, 192, 192, 192, 192, 192, 192,	192, 192, 192, 192, 192, 192, 192, 192, // 64-79
+		192, 192, 192, 192, 192, 192, 192, 192,	192, 192, 192, 0,	0,	16,  0,	192, // 80-95
+		0,	192, 192, 192, 192, 192, 192, 192,	192, 192, 192, 192, 192, 192, 192, 192, // 96-111
+		192, 192, 192, 192, 192, 192, 192, 192,	192, 192, 192, 0, 0, 0, 0, 0,			// 112-127
 
-		192, 192, 192, 192, 192, 192, 192, 192,    192, 192, 192, 192, 192, 192, 192, 192, // 128+
-		192, 192, 192, 192, 192, 192, 192, 192,    192, 192, 192, 192, 192, 192, 192, 192,
-		192, 192, 192, 192, 192, 192, 192, 192,    192, 192, 192, 192, 192, 192, 192, 192,
-		192, 192, 192, 192, 192, 192, 192, 192,    192, 192, 192, 192, 192, 192, 192, 192,
-		192, 192, 192, 192, 192, 192, 192, 192,    192, 192, 192, 192, 192, 192, 192, 192,
-		192, 192, 192, 192, 192, 192, 192, 192,    192, 192, 192, 192, 192, 192, 192, 192,
-		192, 192, 192, 192, 192, 192, 192, 192,    192, 192, 192, 192, 192, 192, 192, 192,
-		192, 192, 192, 192, 192, 192, 192, 192,    192, 192, 192, 192, 192, 192, 192, 192
+		192, 192, 192, 192, 192, 192, 192, 192,	192, 192, 192, 192, 192, 192, 192, 192, // 128+
+		192, 192, 192, 192, 192, 192, 192, 192,	192, 192, 192, 192, 192, 192, 192, 192,
+		192, 192, 192, 192, 192, 192, 192, 192,	192, 192, 192, 192, 192, 192, 192, 192,
+		192, 192, 192, 192, 192, 192, 192, 192,	192, 192, 192, 192, 192, 192, 192, 192,
+		192, 192, 192, 192, 192, 192, 192, 192,	192, 192, 192, 192, 192, 192, 192, 192,
+		192, 192, 192, 192, 192, 192, 192, 192,	192, 192, 192, 192, 192, 192, 192, 192,
+		192, 192, 192, 192, 192, 192, 192, 192,	192, 192, 192, 192, 192, 192, 192, 192,
+		192, 192, 192, 192, 192, 192, 192, 192,	192, 192, 192, 192, 192, 192, 192, 192
 	};
 
 	enum chartypex_t
 	{
-		ctx_special_pcdata = 1,   // Any symbol >= 0 and < 32 (except \t, \r, \n), &, <, >
-		ctx_special_attr = 2,     // Any symbol >= 0 and < 32, &, <, ", '
+		ctx_special_pcdata = 1,	// Any symbol >= 0 and < 32 (except \t, \r, \n), &, <, >
+		ctx_special_attr = 2,	 // Any symbol >= 0 and < 32, &, <, ", '
 		ctx_start_symbol = 4,	  // Any symbol > 127, a-z, A-Z, _
 		ctx_digit = 8,			  // 0-9
 		ctx_symbol = 16			  // Any symbol > 127, a-z, A-Z, 0-9, _, -, .
@@ -1904,24 +1904,24 @@ PUGI_IMPL_NS_BEGIN
 
 	static const unsigned char chartypex_table[256] =
 	{
-		3,  3,  3,  3,  3,  3,  3,  3,     3,  2,  2,  3,  3,  2,  3,  3,     // 0-15
-		3,  3,  3,  3,  3,  3,  3,  3,     3,  3,  3,  3,  3,  3,  3,  3,     // 16-31
-		0,  0,  2,  0,  0,  0,  3,  2,     0,  0,  0,  0,  0, 16, 16,  0,     // 32-47
-		24, 24, 24, 24, 24, 24, 24, 24,    24, 24, 0,  0,  3,  0,  1,  0,     // 48-63
+		3,  3,  3,  3,  3,  3,  3,  3,	 3,  2,  2,  3,  3,  2,  3,  3,	 // 0-15
+		3,  3,  3,  3,  3,  3,  3,  3,	 3,  3,  3,  3,  3,  3,  3,  3,	 // 16-31
+		0,  0,  2,  0,  0,  0,  3,  2,	 0,  0,  0,  0,  0, 16, 16,  0,	 // 32-47
+		24, 24, 24, 24, 24, 24, 24, 24,	24, 24, 0,  0,  3,  0,  1,  0,	 // 48-63
 
-		0,  20, 20, 20, 20, 20, 20, 20,    20, 20, 20, 20, 20, 20, 20, 20,    // 64-79
-		20, 20, 20, 20, 20, 20, 20, 20,    20, 20, 20, 0,  0,  0,  0,  20,    // 80-95
-		0,  20, 20, 20, 20, 20, 20, 20,    20, 20, 20, 20, 20, 20, 20, 20,    // 96-111
-		20, 20, 20, 20, 20, 20, 20, 20,    20, 20, 20, 0,  0,  0,  0,  0,     // 112-127
+		0,  20, 20, 20, 20, 20, 20, 20,	20, 20, 20, 20, 20, 20, 20, 20,	// 64-79
+		20, 20, 20, 20, 20, 20, 20, 20,	20, 20, 20, 0,  0,  0,  0,  20,	// 80-95
+		0,  20, 20, 20, 20, 20, 20, 20,	20, 20, 20, 20, 20, 20, 20, 20,	// 96-111
+		20, 20, 20, 20, 20, 20, 20, 20,	20, 20, 20, 0,  0,  0,  0,  0,	 // 112-127
 
-		20, 20, 20, 20, 20, 20, 20, 20,    20, 20, 20, 20, 20, 20, 20, 20,    // 128+
-		20, 20, 20, 20, 20, 20, 20, 20,    20, 20, 20, 20, 20, 20, 20, 20,
-		20, 20, 20, 20, 20, 20, 20, 20,    20, 20, 20, 20, 20, 20, 20, 20,
-		20, 20, 20, 20, 20, 20, 20, 20,    20, 20, 20, 20, 20, 20, 20, 20,
-		20, 20, 20, 20, 20, 20, 20, 20,    20, 20, 20, 20, 20, 20, 20, 20,
-		20, 20, 20, 20, 20, 20, 20, 20,    20, 20, 20, 20, 20, 20, 20, 20,
-		20, 20, 20, 20, 20, 20, 20, 20,    20, 20, 20, 20, 20, 20, 20, 20,
-		20, 20, 20, 20, 20, 20, 20, 20,    20, 20, 20, 20, 20, 20, 20, 20
+		20, 20, 20, 20, 20, 20, 20, 20,	20, 20, 20, 20, 20, 20, 20, 20,	// 128+
+		20, 20, 20, 20, 20, 20, 20, 20,	20, 20, 20, 20, 20, 20, 20, 20,
+		20, 20, 20, 20, 20, 20, 20, 20,	20, 20, 20, 20, 20, 20, 20, 20,
+		20, 20, 20, 20, 20, 20, 20, 20,	20, 20, 20, 20, 20, 20, 20, 20,
+		20, 20, 20, 20, 20, 20, 20, 20,	20, 20, 20, 20, 20, 20, 20, 20,
+		20, 20, 20, 20, 20, 20, 20, 20,	20, 20, 20, 20, 20, 20, 20, 20,
+		20, 20, 20, 20, 20, 20, 20, 20,	20, 20, 20, 20, 20, 20, 20, 20,
+		20, 20, 20, 20, 20, 20, 20, 20,	20, 20, 20, 20, 20, 20, 20, 20
 	};
 
 #ifdef PUGIXML_WCHAR_MODE
@@ -2104,7 +2104,7 @@ PUGI_IMPL_NS_BEGIN
 	PUGI_IMPL_FN bool need_endian_swap_utf(xml_encoding le, xml_encoding re)
 	{
 		return (le == encoding_utf16_be && re == encoding_utf16_le) || (le == encoding_utf16_le && re == encoding_utf16_be) ||
-			   (le == encoding_utf32_be && re == encoding_utf32_le) || (le == encoding_utf32_le && re == encoding_utf32_be);
+				(le == encoding_utf32_be && re == encoding_utf32_le) || (le == encoding_utf32_le && re == encoding_utf32_be);
 	}
 
 	PUGI_IMPL_FN bool convert_buffer_endian_swap(char_t*& out_buffer, size_t& out_length, const void* contents, size_t size, bool is_mutable)
@@ -2621,17 +2621,17 @@ PUGI_IMPL_NS_BEGIN
 	}
 
 	// Parser utilities
-	#define PUGI_IMPL_ENDSWITH(c, e)        ((c) == (e) || ((c) == 0 && endch == (e)))
-	#define PUGI_IMPL_SKIPWS()              { while (PUGI_IMPL_IS_CHARTYPE(*s, ct_space)) ++s; }
-	#define PUGI_IMPL_OPTSET(OPT)           ( optmsk & (OPT) )
-	#define PUGI_IMPL_PUSHNODE(TYPE)        { cursor = append_new_node(cursor, *alloc, TYPE); if (!cursor) PUGI_IMPL_THROW_ERROR(status_out_of_memory, s); }
-	#define PUGI_IMPL_POPNODE()             { cursor = cursor->parent; }
-	#define PUGI_IMPL_SCANFOR(X)            { while (*s != 0 && !(X)) ++s; }
-	#define PUGI_IMPL_SCANWHILE(X)          { while (X) ++s; }
-	#define PUGI_IMPL_SCANWHILE_UNROLL(X)   { for (;;) { char_t ss = s[0]; if (PUGI_IMPL_UNLIKELY(!(X))) { break; } ss = s[1]; if (PUGI_IMPL_UNLIKELY(!(X))) { s += 1; break; } ss = s[2]; if (PUGI_IMPL_UNLIKELY(!(X))) { s += 2; break; } ss = s[3]; if (PUGI_IMPL_UNLIKELY(!(X))) { s += 3; break; } s += 4; } }
-	#define PUGI_IMPL_ENDSEG()              { ch = *s; *s = 0; ++s; }
-	#define PUGI_IMPL_THROW_ERROR(err, m)   return error_offset = m, error_status = err, static_cast<char_t*>(NULL)
-	#define PUGI_IMPL_CHECK_ERROR(err, m)   { if (*s == 0) PUGI_IMPL_THROW_ERROR(err, m); }
+	#define PUGI_IMPL_ENDSWITH(c, e)		((c) == (e) || ((c) == 0 && endch == (e)))
+	#define PUGI_IMPL_SKIPWS()			  { while (PUGI_IMPL_IS_CHARTYPE(*s, ct_space)) ++s; }
+	#define PUGI_IMPL_OPTSET(OPT)			( optmsk & (OPT) )
+	#define PUGI_IMPL_PUSHNODE(TYPE)		{ cursor = append_new_node(cursor, *alloc, TYPE); if (!cursor) PUGI_IMPL_THROW_ERROR(status_out_of_memory, s); }
+	#define PUGI_IMPL_POPNODE()			 { cursor = cursor->parent; }
+	#define PUGI_IMPL_SCANFOR(X)			{ while (*s != 0 && !(X)) ++s; }
+	#define PUGI_IMPL_SCANWHILE(X)		  { while (X) ++s; }
+	#define PUGI_IMPL_SCANWHILE_UNROLL(X)	{ for (;;) { char_t ss = s[0]; if (PUGI_IMPL_UNLIKELY(!(X))) { break; } ss = s[1]; if (PUGI_IMPL_UNLIKELY(!(X))) { s += 1; break; } ss = s[2]; if (PUGI_IMPL_UNLIKELY(!(X))) { s += 2; break; } ss = s[3]; if (PUGI_IMPL_UNLIKELY(!(X))) { s += 3; break; } s += 4; } }
+	#define PUGI_IMPL_ENDSEG()			  { ch = *s; *s = 0; ++s; }
+	#define PUGI_IMPL_THROW_ERROR(err, m)	return error_offset = m, error_status = err, static_cast<char_t*>(NULL)
+	#define PUGI_IMPL_CHECK_ERROR(err, m)	{ if (*s == 0) PUGI_IMPL_THROW_ERROR(err, m); }
 
 	PUGI_IMPL_FN char_t* strconv_comment(char_t* s, char_t endch)
 	{
@@ -10454,7 +10454,7 @@ PUGI_IMPL_NS_BEGIN
 			bool once =
 				(axis == axis_attribute && _test == nodetest_name) ||
 				(!_right && eval_once(axis_type, eval)) ||
-			    // coverity[mixed_enums]
+				// coverity[mixed_enums]
 				(_right && !_right->_next && _right->_test == predicate_constant_one);
 
 			xpath_node_set_raw ns;
@@ -11309,7 +11309,7 @@ PUGI_IMPL_NS_BEGIN
 			// Use optimized path for @attr = 'value' or @attr = $value
 			if (_type == ast_op_equal &&
 				_left && _right && // workaround for clang static analyzer and Coverity (_left and _right are never null for ast_op_equal)
-                // coverity[mixed_enums]
+				// coverity[mixed_enums]
 				_left->_type == ast_step && _left->_axis == axis_attribute && _left->_test == nodetest_name && !_left->_left && !_left->_right &&
 				(_right->_type == ast_string_constant || (_right->_type == ast_variable && _right->_rettype == xpath_type_string)))
 			{

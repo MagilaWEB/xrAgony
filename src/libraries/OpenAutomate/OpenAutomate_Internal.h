@@ -18,7 +18,7 @@
  * "Licensee," "You" and/or "Your" shall mean, collectively and
  * individually, Original Equipment Manufacturers, Independent Hardware
  * Vendors, Independent Software Vendors, and End-Users of the Software
- * pursuant to the terms and conditions of this Agreement.   
+ * pursuant to the terms and conditions of this Agreement.	
  * 
  * "Derivative Works" shall mean derivatives of the Software created by You
  * or a third party on Your behalf, which term shall include:  (a) for
@@ -257,7 +257,7 @@
  * 
  * SECTION 8.6 - GOVERNMENT RESTRICTED RIGHTS. 
  * The parties acknowledge that the Software is subject to U.S. export
- * control laws and regulations.   The parties agree to comply with all
+ * control laws and regulations.	The parties agree to comply with all
  * applicable international and national laws that apply to the Software,
  * including the U.S. Export Administration Regulations, as well as
  * end-user, end-use and destination restrictions issued by U.S. and other
@@ -328,18 +328,18 @@ extern "C"
 #define OA_MIN_REQUIRED_VERSION_MINOR 6
 
 #define OA_INIT_VERSION_STRUCT(ver) \
-         { \
-         (ver).Major  = OA_VERSION_MAJOR; \
-         (ver).Minor  = OA_VERSION_MINOR; \
-         (ver).Custom = OA_VERSION_CUSTOM; \
-         (ver).Build  = OA_VERSION_BUILD; \
-         }
+		 { \
+		 (ver).Major  = OA_VERSION_MAJOR; \
+		 (ver).Minor  = OA_VERSION_MINOR; \
+		 (ver).Custom = OA_VERSION_CUSTOM; \
+		 (ver).Build  = OA_VERSION_BUILD; \
+		 }
 
 #define OA_PLUGIN_INIT_VERSION_STRUCT(plugin_version, app_version) \
-        { \
-          if(!oaiPluginInitVersionStruct(plugin_version, app_version)) \
-            return(NULL); \
-        }
+		{ \
+		  if(!oaiPluginInitVersionStruct(plugin_version, app_version)) \
+			return(NULL); \
+		}
 
 #ifdef WIN32
 # define OA_FUNC_DECL __cdecl
@@ -355,25 +355,25 @@ typedef struct oaiFunctionTableStruct
   oaNamedOption* (OA_FUNC_DECL *GetNextOption)(void);
   void (OA_FUNC_DECL *AddOption)(const oaNamedOption *option);
   void (OA_FUNC_DECL *AddOptionValue)(const oaChar *name,
-                                      oaOptionDataType value_type,
-                                      const oaValue *value);
+									  oaOptionDataType value_type,
+									  const oaValue *value);
   void (OA_FUNC_DECL *AddBenchmark)(const oaChar *benchmark_name);
   void (OA_FUNC_DECL *AddResultValue)(const oaChar *name, 
-                                        oaOptionDataType value_type,
-                                        const oaValue *value);
+										oaOptionDataType value_type,
+										const oaValue *value);
   void (OA_FUNC_DECL *StartBenchmark)(void);
   void (OA_FUNC_DECL *DisplayFrame)(oaFloat t);
   void (OA_FUNC_DECL *EndBenchmark)(void);
   void (OA_FUNC_DECL *AddFrameValue)(const oaChar *name, 
-                                     oaOptionDataType value_type,
-                                     const oaValue *value);
+									 oaOptionDataType value_type,
+									 const oaValue *value);
   oaBool (OA_FUNC_DECL *SendSignal)(oaSignalType signal, void *param);
 } oaiFunctionTable;
 
 typedef oaiFunctionTable *
 (OA_FUNC_DECL *oaiPluginInitFunc)(const oaChar *init_str, 
-                                  oaVersion *plugin_version, 
-                                  const oaVersion app_version);
+								  oaVersion *plugin_version, 
+								  const oaVersion app_version);
 
 
 /* Initializes the function table */
@@ -385,18 +385,18 @@ static void oaiInitFuncTable(oaiFunctionTable *table)
 }
 
 /* Does version checking for plugins, and initializes the version struct 
-   returned to the app appropriately */
+	returned to the app appropriately */
 static int oaiPluginInitVersionStruct(oaVersion *plugin_version, 
-                                      oaVersion app_version)
+									  oaVersion app_version)
 {
   /* Apps built against 0.6 of the SDK are compatible with plugins of 1.X,
-     so we can fool the apps into thinking the plugin is the same version
-     as the app */
+	 so we can fool the apps into thinking the plugin is the same version
+	 as the app */
   if(OA_VERSION_MAJOR == 1 && 
-     app_version.Major == 0 && app_version.Minor == 6)
+	 app_version.Major == 0 && app_version.Minor == 6)
   {
-    *plugin_version = app_version;
-    return(1);
+	*plugin_version = app_version;
+	return(1);
   }
 
   plugin_version->Major  = OA_VERSION_MAJOR; 
@@ -408,7 +408,7 @@ static int oaiPluginInitVersionStruct(oaVersion *plugin_version,
 }
 
 /* Returns the current function table, presumably returned from the plugin 
-   init*/
+	init*/
 oaiFunctionTable *oaiGetCurrentFuncTable(void);
 
 #ifdef __cplusplus

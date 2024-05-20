@@ -92,11 +92,11 @@ void CWeaponMagazined::Load(LPCSTR section)
 #ifdef LAYERED_SND_SHOOT
 	m_layered_sounds.LoadSound(section, "snd_shoot", "sndShot", true, m_eSoundShot);
 	//if (WeaponSoundExist(section, "snd_shoot_actor"))
-	//    m_layered_sounds.LoadSound(section, "snd_shoot_actor", "sndShotActor", false, m_eSoundShot);
+	//	m_layered_sounds.LoadSound(section, "snd_shoot_actor", "sndShotActor", false, m_eSoundShot);
 #else
 	m_sounds.LoadSound(section, "snd_shoot", "sndShot", true, m_eSoundShot);  //Alundaio: Set exclusive to true
 	//if (WeaponSoundExist(section, "snd_shoot_actor"))
-	//    m_sounds.LoadSound(section, "snd_shoot_actor", "sndShot", false, m_eSoundShot);
+	//	m_sounds.LoadSound(section, "snd_shoot_actor", "sndShot", false, m_eSoundShot);
 #endif
 	//-Alundaio
 
@@ -705,7 +705,7 @@ void CWeaponMagazined::OnAnimationEnd(u32 state)
 	switch (state)
 	{
 	case eReload:	ReloadMagazine();	SwitchState(eIdle); break;  // End of reload animation
-	case eHiding:	SwitchState(eHidden);   break; // End of Hide
+	case eHiding:	SwitchState(eHidden);	break; // End of Hide
 	case eShowing:	SwitchState(eIdle);		break; // End of Show
 	case eIdle:		switch2_Idle();			break; // Keep showing idle
 	}
@@ -940,7 +940,7 @@ bool CWeaponMagazined::CanDetach(const char* item_section_name)
 		}
 		return false;
 	}
-	//	   return true;
+	//		return true;
 	else if (m_eSilencerStatus == ALife::eAddonAttachable &&
 		0 != (m_flagsAddOnState & CSE_ALifeItemWeapon::eWeaponAddonSilencer)) /* &&
 		(m_sSilencerName == item_section_name))*/
@@ -1577,9 +1577,9 @@ bool CWeaponMagazined::install_upgrade_impl(LPCSTR section, bool test)
 	result |= result2;
 #endif //-NEW_SOUNDS
 
-	// snd_shoot1     = weapons\ak74u_shot_1 ??
-	// snd_shoot2     = weapons\ak74u_shot_2 ??
-	// snd_shoot3     = weapons\ak74u_shot_3 ??
+	// snd_shoot1	 = weapons\ak74u_shot_1 ??
+	// snd_shoot2	 = weapons\ak74u_shot_2 ??
+	// snd_shoot3	 = weapons\ak74u_shot_3 ??
 
 	if (m_eSilencerStatus == ALife::eAddonAttachable || m_eSilencerStatus == ALife::eAddonPermanent)
 	{

@@ -84,9 +84,9 @@ public:
 };
 
 #define DEF_DEQUE(N, T)\
-    using N = xr_deque<T>;\
-    using N##_it = N::iterator;
+	using N = xr_deque<T>;\
+	using N##_it = N::iterator;
 
 #define DEFINE_DEQUE(T, N, I)\
-    using N = xr_deque<T>;\
-    using I = N::iterator;
+	using N = xr_deque<T>;\
+	using I = N::iterator;

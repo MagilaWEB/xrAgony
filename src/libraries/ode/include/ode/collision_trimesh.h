@@ -1,23 +1,23 @@
 /*************************************************************************
- *                                                                       *
- * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.       *
- * All rights reserved.  Email: russ@q12.org   Web: www.q12.org          *
- *                                                                       *
- * This library is free software; you can redistribute it and/or         *
- * modify it under the terms of EITHER:                                  *
- *   (1) The GNU Lesser General Public License as published by the Free  *
- *       Software Foundation; either version 2.1 of the License, or (at  *
- *       your option) any later version. The text of the GNU Lesser      *
- *       General Public License is included with this library in the     *
- *       file LICENSE.TXT.                                               *
- *   (2) The BSD-style license that is included with this library in     *
- *       the file LICENSE-BSD.TXT.                                       *
- *                                                                       *
- * This library is distributed in the hope that it will be useful,       *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files    *
- * LICENSE.TXT and LICENSE-BSD.TXT for more details.                     *
- *                                                                       *
+ *																		*
+ * Open Dynamics Engine, Copyright (C) 2001-2003 Russell L. Smith.		*
+ * All rights reserved.  Email: russ@q12.org	Web: www.q12.org		  *
+ *																		*
+ * This library is free software; you can redistribute it and/or		 *
+ * modify it under the terms of EITHER:								  *
+ *	(1) The GNU Lesser General Public License as published by the Free  *
+ *		Software Foundation; either version 2.1 of the License, or (at  *
+ *		your option) any later version. The text of the GNU Lesser	  *
+ *		General Public License is included with this library in the	 *
+ *		file LICENSE.TXT.												*
+ *	(2) The BSD-style license that is included with this library in	 *
+ *		the file LICENSE-BSD.TXT.										*
+ *																		*
+ * This library is distributed in the hope that it will be useful,		*
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of		*
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the files	*
+ * LICENSE.TXT and LICENSE-BSD.TXT for more details.					 *
+ *																		*
  *************************************************************************/
 
 /*
@@ -59,36 +59,36 @@ ODE_API void dGeomTriMeshDataSet(dTriMeshDataID g, int data_id, void* in_data);
  * Build TriMesh data with single pricision used in vertex data .
  */
 ODE_API void dGeomTriMeshDataBuildSingle(dTriMeshDataID g,
-                                 const void* Vertices, int VertexStride, int VertexCount, 
-                                 const void* Indices, int IndexCount, int TriStride);
+								 const void* Vertices, int VertexStride, int VertexCount, 
+								 const void* Indices, int IndexCount, int TriStride);
 /* same again with a normals array (used as trimesh-trimesh optimization) */
 ODE_API void dGeomTriMeshDataBuildSingle1(dTriMeshDataID g,
-                                  const void* Vertices, int VertexStride, int VertexCount, 
-                                  const void* Indices, int IndexCount, int TriStride,
-                                  const void* Normals);
+								  const void* Vertices, int VertexStride, int VertexCount, 
+								  const void* Indices, int IndexCount, int TriStride,
+								  const void* Normals);
 /*
 * Build TriMesh data with double pricision used in vertex data .
 */
 ODE_API void dGeomTriMeshDataBuildDouble(dTriMeshDataID g, 
-                                 const void* Vertices,  int VertexStride, int VertexCount, 
-                                 const void* Indices, int IndexCount, int TriStride);
+								 const void* Vertices,  int VertexStride, int VertexCount, 
+								 const void* Indices, int IndexCount, int TriStride);
 /* same again with a normals array (used as trimesh-trimesh optimization) */
 ODE_API void dGeomTriMeshDataBuildDouble1(dTriMeshDataID g, 
-                                  const void* Vertices,  int VertexStride, int VertexCount, 
-                                  const void* Indices, int IndexCount, int TriStride,
-                                  const void* Normals);
+								  const void* Vertices,  int VertexStride, int VertexCount, 
+								  const void* Indices, int IndexCount, int TriStride,
+								  const void* Normals);
 
 /*
  * Simple build. Single/double precision based on dSINGLE/dDOUBLE!
  */
 ODE_API void dGeomTriMeshDataBuildSimple(dTriMeshDataID g,
-                                 const dReal* Vertices, int VertexCount,
-                                 const int* Indices, int IndexCount);
+								 const dReal* Vertices, int VertexCount,
+								 const int* Indices, int IndexCount);
 /* same again with a normals array (used as trimesh-trimesh optimization) */
 ODE_API void dGeomTriMeshDataBuildSimple1(dTriMeshDataID g,
-                                  const dReal* Vertices, int VertexCount,
-                                  const int* Indices, int IndexCount,
-                                  const int* Normals);
+								  const dReal* Vertices, int VertexCount,
+								  const int* Indices, int IndexCount,
+								  const int* Normals);
 /*
  * Per triangle callback. Allows the user to say if he wants a collision with
  * a particular triangle.

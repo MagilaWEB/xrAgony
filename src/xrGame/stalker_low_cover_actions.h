@@ -26,13 +26,13 @@ enum EMovementType;
 class CStalkerActionGetReadyToKillLowCover : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 public:
-    CStalkerActionGetReadyToKillLowCover(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionGetReadyToKillLowCover(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -42,17 +42,17 @@ public:
 class CStalkerActionKillEnemyLowCover : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 private:
-    u32 m_last_change_time;
-    CRandom32 m_crouch_look_out_random;
+	u32 m_last_change_time;
+	CRandom32 m_crouch_look_out_random;
 
 public:
-    CStalkerActionKillEnemyLowCover(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionKillEnemyLowCover(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -62,17 +62,17 @@ public:
 class CStalkerActionHoldPositionLowCover : public CStalkerActionCombatBase
 {
 protected:
-    typedef CStalkerActionCombatBase inherited;
+	typedef CStalkerActionCombatBase inherited;
 
 private:
-    u32 m_last_change_time;
-    CRandom32 m_crouch_look_out_random;
+	u32 m_last_change_time;
+	CRandom32 m_crouch_look_out_random;
 
 public:
-    CStalkerActionHoldPositionLowCover(CAI_Stalker* object, LPCSTR action_name = "");
-    virtual void initialize();
-    virtual void execute();
-    virtual void finalize();
+	CStalkerActionHoldPositionLowCover(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void initialize();
+	virtual void execute();
+	virtual void finalize();
 };
 
 #endif // STALKER_LOW_COVER_ACTIONS_H_INCLUDED

@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////
-//  Module      : ai_debug.h
-//  Created     : 02.10.2001
-//  Modified    : 11.11.2003
-//  Author      : Oles Shihkovtsov, Dmitriy Iassenev
+//  Module	  : ai_debug.h
+//  Created	 : 02.10.2001
+//  Modified	: 11.11.2003
+//  Author	  : Oles Shihkovtsov, Dmitriy Iassenev
 //  Description : Debug functions
 ////////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +32,7 @@
 #define aiDrawGameGraphStalkers (1 << 21)
 #define aiDrawGameGraphObjects (1 << 22)
 // XXX: restore (move to script engine)
-//# define aiNilObjectAccess            (1<<23)
+//# define aiNilObjectAccess			(1<<23)
 #define aiDebugOnFrameAllocs (1 << 25)
 #define aiDrawVisibilityRays (1 << 26)
 #define aiAnimationStats (1 << 27)

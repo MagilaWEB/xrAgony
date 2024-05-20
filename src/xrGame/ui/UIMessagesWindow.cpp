@@ -18,7 +18,7 @@
 
 CUIMessagesWindow::CUIMessagesWindow() : m_pChatLog(NULL), m_pChatWnd(NULL), m_pGameLog(NULL)
 {
-    Init(0, 0, UI_BASE_WIDTH, UI_BASE_HEIGHT);
+	Init(0, 0, UI_BASE_WIDTH, UI_BASE_HEIGHT);
 }
 
 CUIMessagesWindow::~CUIMessagesWindow() {}
@@ -45,38 +45,38 @@ void CUIMessagesWindow::PendingMode(bool const is_pending_mode)
 #define CHAT_LOG_LIST_PENDING "chat_log_list_pending"
 void CUIMessagesWindow::Init(float x, float y, float width, float height)
 {
-    CUIXml xml;
-    xml.Load(CONFIG_PATH, UI_PATH, UI_PATH_DEFAULT, "messages_window.xml");
-    m_pGameLog = new CUIGameLog();
-    m_pGameLog->SetAutoDelete(true);
-    m_pGameLog->Show(true);
-    AttachChild(m_pGameLog);
-    CUIXmlInit::InitScrollView(xml, "sp_log_list", 0, m_pGameLog);
+	CUIXml xml;
+	xml.Load(CONFIG_PATH, UI_PATH, UI_PATH_DEFAULT, "messages_window.xml");
+	m_pGameLog = new CUIGameLog();
+	m_pGameLog->SetAutoDelete(true);
+	m_pGameLog->Show(true);
+	AttachChild(m_pGameLog);
+	CUIXmlInit::InitScrollView(xml, "sp_log_list", 0, m_pGameLog);
 }
 
 void CUIMessagesWindow::AddIconedPdaMessage(GAME_NEWS_DATA* news)
 {
-    CUIPdaMsgListItem* pItem = m_pGameLog->AddPdaMessage();
+	CUIPdaMsgListItem* pItem = m_pGameLog->AddPdaMessage();
 
-    LPCSTR time_str =
-        InventoryUtilities::GetTimeAsString(news->receive_time, InventoryUtilities::etpTimeToMinutes).c_str();
-    pItem->UITimeText.SetText(time_str);
-    pItem->UITimeText.AdjustWidthToText();
-    Fvector2 p = pItem->UICaptionText.GetWndPos();
-    p.x = pItem->UITimeText.GetWndPos().x + pItem->UITimeText.GetWidth() + 3.0f;
-    pItem->UICaptionText.SetWndPos(p);
-    pItem->UICaptionText.SetTextST(news->news_caption.c_str());
-    pItem->UIMsgText.SetTextST(news->news_text.c_str());
-    pItem->UIMsgText.AdjustHeightToText();
+	LPCSTR time_str =
+		InventoryUtilities::GetTimeAsString(news->receive_time, InventoryUtilities::etpTimeToMinutes).c_str();
+	pItem->UITimeText.SetText(time_str);
+	pItem->UITimeText.AdjustWidthToText();
+	Fvector2 p = pItem->UICaptionText.GetWndPos();
+	p.x = pItem->UITimeText.GetWndPos().x + pItem->UITimeText.GetWidth() + 3.0f;
+	pItem->UICaptionText.SetWndPos(p);
+	pItem->UICaptionText.SetTextST(news->news_caption.c_str());
+	pItem->UIMsgText.SetTextST(news->news_text.c_str());
+	pItem->UIMsgText.AdjustHeightToText();
 
-    pItem->SetColorAnimation(
-        "ui_main_msgs_short", LA_ONLYALPHA | LA_TEXTCOLOR | LA_TEXTURECOLOR, float(news->show_time));
-    pItem->UIIcon.InitTexture(news->texture_name.c_str());
+	pItem->SetColorAnimation(
+		"ui_main_msgs_short", LA_ONLYALPHA | LA_TEXTCOLOR | LA_TEXTURECOLOR, float(news->show_time));
+	pItem->UIIcon.InitTexture(news->texture_name.c_str());
 
-    float h1 = _max(pItem->UIIcon.GetHeight(), pItem->UIMsgText.GetWndPos().y + pItem->UIMsgText.GetHeight());
-    pItem->SetHeight(h1 + 3.0f);
+	float h1 = _max(pItem->UIIcon.GetHeight(), pItem->UIMsgText.GetWndPos().y + pItem->UIMsgText.GetHeight());
+	pItem->SetHeight(h1 + 3.0f);
 
-    m_pGameLog->SendMessage(pItem, CHILD_CHANGED_SIZE);
+	m_pGameLog->SendMessage(pItem, CHILD_CHANGED_SIZE);
 }
 
 void CUIMessagesWindow::AddChatMessage(shared_str msg, shared_str author)

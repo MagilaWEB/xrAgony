@@ -10,22 +10,22 @@
 class CBottleItem : public CFoodItem
 {
 private:
-    typedef CFoodItem inherited;
+	typedef CFoodItem inherited;
 
 public:
-    CBottleItem();
-    virtual ~CBottleItem();
+	CBottleItem();
+	virtual ~CBottleItem();
 
-    virtual void Load(LPCSTR section);
+	virtual void Load(LPCSTR section);
 
-    void OnEvent(NET_Packet& P, u16 type);
+	void OnEvent(NET_Packet& P, u16 type);
 
-    virtual void Hit(SHit* pHDS);
+	virtual void Hit(SHit* pHDS);
 
-    void BreakToPieces();
+	void BreakToPieces();
 
 protected:
-    //партиклы разбивания бутылки
-    shared_str m_sBreakParticles;
-    ref_sound sndBreaking;
+	//партиклы разбивания бутылки
+	shared_str m_sBreakParticles;
+	ref_sound sndBreaking;
 };
