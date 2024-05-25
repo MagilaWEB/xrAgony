@@ -7,10 +7,7 @@
 //	Description : Creation control and management of auxiliary threads
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef E_EDITOR
 #include <tbb.h>
-#endif
-
 #include "xrCore/_types.h"
 #include "xrCore/Threading/xrSyncronize.hpp"
 #include <xrCommon\xr_list.h>
@@ -105,6 +102,7 @@ private:
 	DWORD thread_id{ 0 };
 	Event process;
 	Event done;
+	std::jthread * Thread;
 	bool thread_infinity{ false };
 	bool thread_locked{ false };
 	bool b_init{ false };
@@ -170,7 +168,7 @@ public:
 			b_init = true;
 			all_obj_thread.push_back(std::move(this));
 
-			std::thread{ [this]() { worker_main(); } }.detach();
+			Thread = new std::jthread{ [this]() { worker_main(); } };
 
 			global_parallel = state;
 		}

@@ -148,6 +148,9 @@ void xrThread::Stop()
 			process.Set();
 
 		done.Wait();
+
+		Thread->request_stop();
+		xr_delete(Thread);
 	}
 }
 
