@@ -431,9 +431,8 @@ void CROS_impl::prepare_lights(Fvector& position, IRenderable* O)
 
 		g_SpatialSpace->q_box(RImplementation.lstSpatial, 0, STYPE_LIGHTSOURCEHEMI, position, bb_size);
 
-		for (u32 o_it = 0; o_it < RImplementation.lstSpatial.size(); o_it++)
+		for (ISpatial* spatial : RImplementation.lstSpatial)
 		{
-			ISpatial* spatial = RImplementation.lstSpatial[o_it];
 			light* source = (light*)(spatial->dcast_Light());
 			VERIFY(source); // sanity check
 			float R = radius + source->range;
@@ -492,6 +491,6 @@ void CROS_impl::prepare_lights(Fvector& position, IRenderable* O)
 		}
 
 		// Sort lights by importance - important for R1-shadows
-		std::sort(lights.begin(), lights.end(), pred_energy);
+		//std::sort(lights.begin(), lights.end(), pred_energy);
 	}
 }

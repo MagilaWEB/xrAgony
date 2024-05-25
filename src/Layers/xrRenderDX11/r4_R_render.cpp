@@ -289,6 +289,7 @@ void CRender::Render()
 		LP_normal.v_spot = LP.v_spot;
 		LP_normal.vis_prepare();
 	}
+	LP_normal.sort();
 
 	//******* Main render :: PART-1 (second)
 	if (split_the_scene_to_minimize_wait)
@@ -317,26 +318,6 @@ void CRender::Render()
 		Target->phase_wallmarks();
 		g_r = 0;
 		Wallmarks->Render(); // wallmarks has priority as normal geometry
-	}
-
-	// Update incremental shadowmap-visibility solver
-	{
-		PIX_EVENT(DEFER_FLUSH_OCCLUSION);
-		u32 it = 0;
-		for (it = 0; it < Lights_LastFrame.size(); it++)
-		{
-			if (0 == Lights_LastFrame[it])
-				continue;
-			try
-			{
-				Lights_LastFrame[it]->svis.flushoccq();
-			}
-			catch (...)
-			{
-				Msg("! Failed to flush-OCCq on light [%d] %X", it, *(u32*)(&Lights_LastFrame[it]));
-			}
-		}
-		Lights_LastFrame.clear();
 	}
 
 	// full screen pass to mark msaa-edge pixels in highest stencil bit
@@ -389,7 +370,6 @@ void CRender::Render()
 		Target->phase_accumulator();
 		HOM.Disable();
 		LP_normal.vis_update();
-		LP_normal.sort();
 		render_lights(LP_normal);
 	}
 

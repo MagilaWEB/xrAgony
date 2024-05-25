@@ -44,13 +44,7 @@ light::~light()
 		xr_delete(omnipart[f]);
 	set_active(false);
 
-	// remove from Lights_LastFrame
-	for (u32 it = 0; it < RImplementation.Lights_LastFrame.size(); it++)
-	{
-		if (RImplementation.Lights_LastFrame[it] == this)
-			RImplementation.Lights_LastFrame[it]->svis.resetoccq();
-		RImplementation.Lights_LastFrame[it] = 0;
-	}
+	svis.resetoccq();
 
 	if (vis.pending)
 		RImplementation.occq_free(vis.query_id);

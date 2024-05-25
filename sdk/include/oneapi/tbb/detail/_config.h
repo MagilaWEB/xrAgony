@@ -476,11 +476,11 @@
 #define __TBB_STRICT_CONSTRAINTS 1
 #endif
 
-#if __TBB_CPP20_CONCEPTS_PRESENT && __TBB_USE_CONSTRAINTS
-    #define __TBB_requires(...) requires __VA_ARGS__
-#else // __TBB_CPP20_CONCEPTS_PRESENT
+//#if __TBB_CPP20_CONCEPTS_PRESENT && __TBB_USE_CONSTRAINTS
+//    #define __TBB_requires(...) requires __VA_ARGS__
+//#else // __TBB_CPP20_CONCEPTS_PRESENT
     #define __TBB_requires(...)
-#endif // __TBB_CPP20_CONCEPTS_PRESENT
+//#endif // __TBB_CPP20_CONCEPTS_PRESENT
 
 /** Macros of the form __TBB_XXX_BROKEN denote known issues that are caused by
     the bugs in compilers, standard or OS specific libraries. They should be

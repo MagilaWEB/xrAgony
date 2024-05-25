@@ -174,7 +174,6 @@ public:
 
 	CLight_DB Lights;
 	CLight_Compute_XFORM_and_VIS LR;
-	xr_vector<light*> Lights_LastFrame;
 	SMAP_Allocator LP_smap_pool;
 	light_Package LP_normal;
 	//light_Package LP_pending;
@@ -196,7 +195,6 @@ private:
 	void LoadBuffers(CStreamReader* fs, BOOL _alternative);
 	void LoadVisuals(IReader* fs);
 	void LoadLights(IReader* fs);
-	void LoadPortals(IReader* fs);
 	void LoadSectors(IReader* fs);
 	void LoadSWIs(CStreamReader* fs);
 	void Load3DFluid();
@@ -243,9 +241,9 @@ public:
 			return;
 		CROS_impl& LT = *((CROS_impl*)O->renderable_ROS());
 		LT.update_smooth(O);
-		o_hemi = 0.75f * LT.get_hemi();
+		o_hemi = 0.5f * LT.get_hemi();
 		// o_hemi						= 0.5f*LT.get_hemi			()	;
-		o_sun = 0.75f * LT.get_sun();
+		o_sun = 0.5f * LT.get_sun();
 		CopyMemory(o_hemi_cube, LT.get_hemi_cube(), CROS_impl::NUM_FACES * sizeof(float));
 	}
 	IC void apply_lmaterial()

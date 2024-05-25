@@ -70,7 +70,10 @@ void light::vis_update()
 	//		. shedule for 'next-frame' interval
 
 	if (!vis.pending)
+	{
+		svis.flushoccq();
 		return;
+	}
 
 	u32 frame = Device.dwFrame;
 	u32 fragments = RImplementation.occq_get(vis.query_id);
@@ -78,11 +81,7 @@ void light::vis_update()
 	vis.visible = (fragments > cullfragments);
 	vis.pending = false;
 	if (vis.visible)
-	{
 		vis.frame2test = frame + ::Random.randI(delay_large_min, delay_large_max);
-	}
 	else
-	{
 		vis.frame2test = frame + 1;
-	}
 }

@@ -1,19 +1,16 @@
 #include "stdafx.h"
 
-IC bool pred_area(light* _1, light* _2)
-{
-	return _1->X.S.size > _2->X.S.size; // reverse -> descending
-}
-
 void CRender::render_lights(light_Package& LP)
 {
 	//////////////////////////////////////////////////////////////////////////
 	// Refactor order based on ability to pack shadow-maps
 	// 1. calculate area + sort in descending order
 	// const	u16		smap_unassigned		= u16(-1);
-	for (light* L : LP.v_shadowed)
+	tbb::parallel_for_each(LP.v_shadowed, [&](light* L)
+	{
 		if (L->vis.visible)
 			LR.compute_xf_spot(L);
+	});
 
 	// 2. refactor - infact we could go from the backside and sort in ascending order
 	{
@@ -24,6 +21,7 @@ void CRender::render_lights(light_Package& LP)
 		for (size_t smap_ID = 0; refactored.size() != total; ++smap_ID)
 		{
 			LP_smap_pool.initialize(RImplementation.o.smapsize);
+
 			for (auto test = LP.v_shadowed.begin(); test != LP.v_shadowed.end(); ++test)
 			{
 				if ((*test)->vis.visible)
@@ -85,7 +83,6 @@ void CRender::render_lights(light_Package& LP)
 			if (L->vis.smap_ID != sid)
 				break;
 			LP.v_shadowed.pop_back();
-			Lights_LastFrame.push_back(L);
 
 			// render
 			phase = PHASE_SMAP;

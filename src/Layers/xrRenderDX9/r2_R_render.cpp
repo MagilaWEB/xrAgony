@@ -316,25 +316,6 @@ void CRender::Render()
 		Wallmarks->Render(); // wallmarks has priority as normal geometry
 	}
 
-	// Update incremental shadowmap-visibility solver
-	{
-		u32 it = 0;
-		for (it = 0; it < Lights_LastFrame.size(); it++)
-		{
-			if (0 == Lights_LastFrame[it])
-				continue;
-			try
-			{
-				Lights_LastFrame[it]->svis.flushoccq();
-			}
-			catch (...)
-			{
-				Msg("! Failed to flush-OCCq on light [%d] %X", it, *(u32*)(&Lights_LastFrame[it]));
-			}
-		}
-		Lights_LastFrame.clear();
-	}
-
 	// Directional light - fucking sun
 	if (bSUN)
 	{
@@ -367,7 +348,6 @@ void CRender::Render()
 	Target->phase_accumulator();
 	HOM.Disable();
 	LP_normal.vis_update();
-	LP_normal.sort();
 	render_lights(LP_normal);
 
 	// Lighting, dependant on OCCQ

@@ -8,13 +8,13 @@ void light_Package::clear()
 	v_shadowed.clear();
 }
 
-IC bool pred_light_cmp(light* _1, light* _2)
-{
-	return _1->range > _2->range; // sort by range
-}
-
 void light_Package::sort()
 {
+	const auto pred_light_cmp = [](const light* l1, const light* l2)
+	{
+		return l1->range > l2->range;
+	};
+
 	// resort lights (pending -> at the end), maintain stable order
 	std::stable_sort(v_point.begin(), v_point.end(), pred_light_cmp);
 	std::stable_sort(v_spot.begin(), v_spot.end(), pred_light_cmp);
@@ -35,28 +35,12 @@ void light_Package::vis_prepare()
 // самого свежего запроса, к самому старому. См. комментарии выше.
 void light_Package::vis_update()
 {
-	if (!v_spot.empty())
-	{
-		for (int it = v_spot.size() - 1; it >= 0; it--)
-		{
-			light* L = v_spot[it];
-			L->vis_update();
-		}
-	}
-	if (!v_shadowed.empty())
-	{
-		for (int it = v_shadowed.size() - 1; it >= 0; it--)
-		{
-			light* L = v_shadowed[it];
-			L->vis_update();
-		}
-	}
-	if (!v_point.empty())
-	{
-		for (int it = v_point.size() - 1; it >= 0; it--)
-		{
-			light* L = v_point[it];
-			L->vis_update();
-		}
-	}
+	for (auto it = v_spot.cbegin(); it != v_spot.cend(); it++)
+		(*it)->vis_update();
+
+	for (auto it = v_shadowed.cbegin(); it != v_shadowed.cend(); it++)
+		(*it)->vis_update();
+
+	for (auto it = v_point.cbegin(); it != v_point.cend(); it++)
+		(*it)->vis_update();
 }
