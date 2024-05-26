@@ -74,11 +74,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrMiscMath", "utils\xrMiscM
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OPCODE", "libraries\OPCODE\OPCODE.vcxproj", "{DAFD6D98-3DCD-40AD-BC85-EC71797B6767}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xr_3da", "xr_3da\xr_3da.vcxproj", "{F4757631-E6E8-469B-AD5A-516BAA01DABD}"
-	ProjectSection(ProjectDependencies) = postProject
-		{44F716E7-05BD-4390-AB02-5F7DAF7FEFDE} = {44F716E7-05BD-4390-AB02-5F7DAF7FEFDE}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrUICore", "xrUICore\xrUICore.vcxproj", "{37B3642C-B706-4C93-BC54-BADADC8FC9B1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libraries", "libraries", "{42CA646D-3227-49BD-AC30-1E92E1DA0316}"
@@ -119,11 +114,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ODE", "libraries\ode\ODE.vcxproj", "{1BF75FEB-87DD-486C-880B-227987D191C2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua_extensions", "libraries\lua-extensions\lua_extensions.vcxproj", "{44F716E7-05BD-4390-AB02-5F7DAF7FEFDE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{98E07A2E-DCAC-4E3F-9A9B-CFEC14D449E1}"
-	ProjectSection(SolutionItems) = preProject
-		Common.props = Common.props
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -168,8 +158,6 @@ Global
 		{7885CF3C-EE04-4C67-9467-1FBF9A36B037}.Release|x86.Build.0 = Release|Win32
 		{DAFD6D98-3DCD-40AD-BC85-EC71797B6767}.Release|x86.ActiveCfg = Release|Win32
 		{DAFD6D98-3DCD-40AD-BC85-EC71797B6767}.Release|x86.Build.0 = Release|Win32
-		{F4757631-E6E8-469B-AD5A-516BAA01DABD}.Release|x86.ActiveCfg = Release|Win32
-		{F4757631-E6E8-469B-AD5A-516BAA01DABD}.Release|x86.Build.0 = Release|Win32
 		{37B3642C-B706-4C93-BC54-BADADC8FC9B1}.Release|x86.ActiveCfg = Release|Win32
 		{37B3642C-B706-4C93-BC54-BADADC8FC9B1}.Release|x86.Build.0 = Release|Win32
 		{632AEEB6-DC06-4E15-9551-B2B09A4B73C5}.Release|x86.ActiveCfg = Release|Win32

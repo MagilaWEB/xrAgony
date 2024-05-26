@@ -1,21 +1,20 @@
-// Entry point is in xr_3da/entry_point.cpp
 #include "stdafx.h"
 #include "main.h"
-
-#include <process.h>
+#include "resource.h"
+#include "StickyKeyFilter.hpp"
 #include <locale.h>
-
+#include <process.h>
 #include "IGame_Persistent.h"
-#include "xr_input.h"
-#include "XR_IOConsole.h"
-#include "x_ray.h"
-#include "std_classes.h"
-#include "splash.h"
 #include "LightAnimLibrary.h"
-#include "xrCDB/ISpatial.h"
+#include "splash.h"
+#include "std_classes.h"
 #include "Text_Console.h"
-#include "xrSASH.h"
+#include "x_ray.h"
+#include "xr_input.h"
 #include "xr_ioc_cmd.h"
+#include "XR_IOConsole.h"
+#include "xrCDB/ISpatial.h"
+#include "xrSASH.h"
 
 #ifdef MASTER_GOLD
 #define NO_MULTI_INSTANCES
@@ -265,3 +264,59 @@ namespace
 		}
 	}
 } // namespace
+
+int entry_point(pcstr commandLine)
+{
+	if (strstr(commandLine, "-nosplash") == nullptr)
+	{
+#ifndef DEBUG
+		const bool topmost = strstr(commandLine, "-splashnotop") == nullptr ? true : false;
+#else
+		constexpr bool topmost = false;
+#endif
+		splash::show(topmost);
+	}
+
+	xrDebug::Initialize();
+
+	StickyKeyFilter filter;
+	filter.initialize();
+
+	pcstr fsltx = "-fsltx ";
+	string_path fsgame = "";
+	if (strstr(commandLine, fsltx))
+	{
+		const u32 sz = xr_strlen(fsltx);
+		sscanf(strstr(commandLine, fsltx) + sz, "%[^ ] ", fsgame);
+	}
+	Core.Initialize("xrAgony", nullptr, true, *fsgame ? fsgame : nullptr);
+
+	auto result = RunApplication();
+
+	Core._destroy();
+
+	return result;
+}
+
+int StackoverflowFilter(const int exceptionCode)
+{
+	if (exceptionCode == EXCEPTION_STACK_OVERFLOW)
+		return EXCEPTION_EXECUTE_HANDLER;
+	return EXCEPTION_CONTINUE_SEARCH;
+}
+
+int APIENTRY WinMain(HINSTANCE inst, HINSTANCE prevInst, char* commandLine, int cmdShow)
+{
+	int result = 0;
+	// BugTrap can't handle stack overflow exception, so handle it here
+	__try
+	{
+		result = entry_point(commandLine);
+	}
+	__except (StackoverflowFilter(GetExceptionCode()))
+	{
+		_resetstkoflw();
+		FATAL("stack overflow");
+	}
+	return result;
+}

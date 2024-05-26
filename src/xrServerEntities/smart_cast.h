@@ -28,13 +28,13 @@ static constexpr ptrdiff_t Uncached = PTRDIFF_MAX;
 static constexpr ptrdiff_t Bad = PTRDIFF_MAX - 1;
 
 template <typename T>
-__forceinline vtable_ptr getVTable(const T* obj) noexcept
+ICF vtable_ptr getVTable(const T* obj) noexcept
 {
 	return reinterpret_cast<vtable_ptr>(*reinterpret_cast<class_ptr>(obj));
 }
 
 template <typename To, typename From>
-__forceinline To smart_cast(From* from) noexcept
+ICF To smart_cast(From* from) noexcept
 {
 	thread_local static ptrdiff_t cacheOffset = Uncached;
 	thread_local static vtable_ptr cacheVtable = nullptr;
@@ -69,7 +69,7 @@ __forceinline To smart_cast(From* from) noexcept
 }
 
 template <typename To, typename From>
-__forceinline To smart_cast(From& from)
+ICF To smart_cast(From& from)
 {
 	using Ptr = std::add_pointer_t<std::remove_reference_t<To>>;
 	using ToPtr = std::conditional_t<std::is_const_v<To>, std::add_const_t<Ptr>, Ptr>;

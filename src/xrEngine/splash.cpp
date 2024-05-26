@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "xr_3da/resource.h"
+#include "resource.h"
 #include "splash.h"
 
 HWND logoWindow = nullptr;

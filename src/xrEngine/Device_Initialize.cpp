@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "xr_3da/resource.h"
+#include "resource.h"
 
 #include "GameFont.h"
 #include "PerformanceAlert.hpp"
