@@ -203,7 +203,7 @@ public:
 	};
 
 private:
-	xrCriticalSection pcs;
+	IC static xrCriticalSection pcs;
 
 	poolSS<ISpatial_NODE, 128> allocator;
 

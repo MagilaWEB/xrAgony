@@ -40,8 +40,10 @@ bool CRenderDevice::on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	}
 	case WM_CLOSE:
 	{
-		PostQuitMessage(WM_QUIT);
-		result = 0;
+		xrThread::GlobalState(xrThread::dsOK);
+		Engine.Event.Defer("KERNEL:disconnect");
+		Engine.Event.Defer("KERNEL:quit");
+		result = 1;
 		return (true);
 	}
 	}
