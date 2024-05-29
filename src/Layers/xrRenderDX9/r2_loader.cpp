@@ -77,10 +77,10 @@ void CRender::level_Load(IReader* fs)
 	LoadVisuals(chunk);
 	chunk->close();
 
-	static tbb::task_group parallel;
+	tbb::task_group parallel;
 
 	// Details
-	static Event Details_Load;
+	Event Details_Load;
 	parallel.run([&]()
 	{
 		Details->Load();
@@ -88,7 +88,7 @@ void CRender::level_Load(IReader* fs)
 	});
 
 	// Sectors
-	static Event Sectors_Load;
+	Event Sectors_Load;
 	parallel.run([&]()
 	{
 		LoadSectors(fs);
@@ -102,12 +102,9 @@ void CRender::level_Load(IReader* fs)
 	});
 
 	// Lights
-	static Event Lights_Load;
-	parallel.run([&]()
-	{
-		LoadLights(fs);
-		Lights_Load.Set();
-	});
+	g_pGamePersistent->SetLoadStageTitle("st_loading_lights");
+	g_pGamePersistent->LoadTitle();
+	LoadLights(fs);
 
 	// state
 	{
@@ -118,10 +115,6 @@ void CRender::level_Load(IReader* fs)
 		g_pGamePersistent->SetLoadStageTitle("st_loading_sectors_portals");
 		g_pGamePersistent->LoadTitle();
 		Sectors_Load.Wait();
-
-		g_pGamePersistent->SetLoadStageTitle("st_loading_lights");
-		g_pGamePersistent->LoadTitle();
-		Lights_Load.Wait();
 	}
 
 	parallel.wait();
