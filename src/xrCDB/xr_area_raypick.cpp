@@ -230,6 +230,7 @@ BOOL CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_de
 				}
 				catch (...)
 				{
+					VERIFY(false)
 					continue;
 				}
 				
