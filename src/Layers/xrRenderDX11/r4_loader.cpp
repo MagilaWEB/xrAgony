@@ -92,12 +92,9 @@ void CRender::level_Load(IReader* fs)
 	});
 
 	// Sectors
-	Event Sectors_Load;
-	parallel.run([&]()
-	{
-		LoadSectors(fs);
-		Sectors_Load.Set();
-	});
+	g_pGamePersistent->SetLoadStageTitle("st_loading_sectors_portals");
+	g_pGamePersistent->LoadTitle();
+	LoadSectors(fs);
 
 	// 3D Fluid
 	parallel.run([&]()
@@ -121,10 +118,6 @@ void CRender::level_Load(IReader* fs)
 		g_pGamePersistent->SetLoadStageTitle("st_loading_details");
 		g_pGamePersistent->LoadTitle();
 		Details_Load.Wait();
-
-		g_pGamePersistent->SetLoadStageTitle("st_loading_sectors_portals");
-		g_pGamePersistent->LoadTitle();
-		Sectors_Load.Wait();
 	}
 
 	parallel.wait();

@@ -151,6 +151,8 @@ void xrThread::Stop()
 
 		Thread->request_stop();
 		xr_delete(Thread);
+
+		lambda_function = nullptr;
 	}
 }
 

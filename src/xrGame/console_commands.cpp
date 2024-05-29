@@ -1716,6 +1716,124 @@ public:
 	}
 };
 
+#include "xrAICore/Navigation/ai_object_location.h"
+class CCC_Spawn : public IConsole_Command {
+public:
+	CCC_Spawn(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
+	virtual void	Execute(LPCSTR args)
+	{
+		if (!g_pGameLevel) return;
+		if (!Level().CurrentControlEntity()) return;
+		if (!pSettings->section_exist(args))
+		{
+			Msg("! Section [%s] doesn`t exist...", args);
+			return;
+		}
+		if (!pSettings->line_exist(args, "class") || !pSettings->line_exist(args, "visual"))
+		{
+			Msg("!Failed to load section!");
+			return;
+		}
+
+		char    Name[128];
+		Name[0] = 0;
+		sscanf(args, "%s", Name);
+
+		collide::rq_result RQ;
+		//RayPick(начало луча, направление, максимальная дистанция, тип коллизии, тип столкновения, игнорируемый объект)
+		BOOL HasPick = Level().ObjectSpace.RayPick(Device.vCameraPosition, Device.vCameraDirection, 1000.0f, collide::rqtBoth, RQ, Level().CurrentControlEntity());
+		if (HasPick)
+		{
+			Fvector normal;
+			Fvector* pVerts = Level().ObjectSpace.GetStaticVerts();
+			CDB::TRI* pTri = Level().ObjectSpace.GetStaticTris() + RQ.element;
+			normal.mknormal(pVerts[pTri->verts[0]], pVerts[pTri->verts[1]], pVerts[pTri->verts[2]]);
+
+
+			Fvector result;
+			result = Device.vCameraPosition; //начальна¤ позиция
+			result.add(Fvector(Device.vCameraDirection).mul(RQ.range)); //умножаем диреккцию столкновения на дистанцию до столкновения добавл¤ем в вектор начальной позиции
+
+			Fmatrix matrix;
+			matrix.identity();
+			matrix.j.set(normal);
+			Fvector::generate_orthonormal_basis(matrix.j, matrix.i, matrix.k);
+			Fvector normal_dir;
+			matrix.getXYZ(normal_dir);
+			// result == место куда смотрит камера
+			if (OnServer())
+			{
+				game_sv_Single* tpGame = smart_cast<game_sv_Single*>(Level().Server->GetGameState());
+				if (tpGame)
+					tpGame->alife().spawn_item(Name, result, Actor()->ai_location().level_vertex_id(), Actor()->ai_location().game_vertex_id(), ALife::_OBJECT_ID(-1));
+			}
+
+		}
+
+	}
+	virtual void fill_tips(vecTips& tips, u32 mode)
+	{
+		CInifile::Root const& data = pSettings->sections();
+		for (CInifile::RootCIt it = data.begin(); it != data.end(); it++)
+		{
+			if (!pSettings->line_exist((*it)->Name.c_str(), "class"))
+				continue;
+			tips.push_back((*it)->Name.c_str());
+		}
+	}
+	virtual void Info(TInfo& I)
+	{
+		strcpy(I, "name,team,squad,group");
+	}
+};
+
+class CCC_Spawn_to_inventory : public IConsole_Command {
+public:
+	CCC_Spawn_to_inventory(LPCSTR N) : IConsole_Command(N) { };
+	virtual void Execute(LPCSTR args) {
+		if (!g_pGameLevel || !Level().CurrentControlEntity()) return;
+		CInventoryOwner* pCurOwnr = smart_cast<CInventoryOwner*>(Level().CurrentControlEntity());
+
+		if (!pSettings->section_exist(args))
+		{
+			Msg("! Section [%s] doesn`t exist...", args);
+			return;
+		}
+		if (!pSettings->line_exist(args, "class") || !pSettings->line_exist(args, "inv_weight") || !pSettings->line_exist(args, "visual"))
+		{
+			Msg("!Failed to load section!");
+			return;
+		}
+
+		char	Name[128];	Name[0] = 0;
+		sscanf(args, "%s", Name);
+
+		if (pCurOwnr)
+		{
+			Level().spawn_item(Name, Level().CurrentControlEntity()->Position(), false, Level().CurrentControlEntity()->ID());
+		}
+		else
+		{
+			Msg("! You a not owner!", args);
+			return;
+		}
+	}
+	virtual void	fill_tips(vecTips& tips, u32 mode)
+	{
+		CInifile::Root const& data = pSettings->sections();
+		for (CInifile::RootCIt it = data.begin(); it != data.end(); it++)
+		{
+			if (!pSettings->line_exist((*it)->Name.c_str(), "class") || !pSettings->line_exist((*it)->Name.c_str(), "inv_weight") || !pSettings->line_exist((*it)->Name.c_str(), "visual"))
+				continue;
+			tips.push_back((*it)->Name.c_str());
+		}
+	}
+	virtual void	Info(TInfo& I)
+	{
+		strcpy(I, "name,team,squad,group");
+	}
+};
+
 // Give money to actor
 class CCC_GiveMoney : public IConsole_Command
 {
@@ -1920,6 +2038,9 @@ void CCC_RegisterCommands()
 
 	if (Core.ParamFlags.test(Core.dev))
 	{
+		CMD1(CCC_Spawn, "g_spawn");
+		CMD1(CCC_GiveMoney, "g_give_money");
+		CMD1(CCC_Spawn_to_inventory, "g_spawn_to_inventory");
 		CMD1(CCC_JumpToLevel, "jump_to_level");
 		CMD3(CCC_Mask, "g_god", &psActorFlags, AF_GODMODE);
 		CMD3(CCC_Mask, "g_unlimitedammo", &psActorFlags, AF_UNLIMITEDAMMO);
@@ -1928,7 +2049,6 @@ void CCC_RegisterCommands()
 		CMD1(CCC_ScriptCommand, "run_string");
 		CMD3(CCC_Mask, "g_no_clip", &psActorFlags, AF_NO_CLIP);
 		CMD1(CCC_SetWeather, "set_weather");
-		CMD1(CCC_GiveMoney, "give_money");
 	}
 
 	CMD3(CCC_Mask, "g_use_tracers", &psActorFlags, AF_USE_TRACERS);

@@ -46,6 +46,8 @@ public:
 	};
 
 	using Root = xr_vector<Sect*>;
+	using RootIt = Root::iterator;
+	using RootCIt = Root::const_iterator;
 
 	using allow_include_func_t = fastdelegate::FastDelegate<bool(pcstr)>;
 

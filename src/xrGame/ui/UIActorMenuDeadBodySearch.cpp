@@ -160,12 +160,8 @@ bool CUIActorMenu::ToDeadBodyBag(CUICellItem* itm, bool b_use_cursor_pos)
 		if (!m_pInvBox->can_take())
 			return false;
 
-		luabind::functor<bool> funct;
-		if (::ScriptEngine->functor("_G.CInventoryBox_CanTake", funct))
-		{
-			if (funct(m_pInvBox->cast_game_object()->lua_game_object(), quest_item->cast_game_object()->lua_game_object()) == false)
-				return false;
-		}
+		if (::ScriptEngine->function_event<bool>("_G.CInventoryBox_CanTake", m_pInvBox->cast_game_object()->lua_game_object(), quest_item->cast_game_object()->lua_game_object()) == false)
+			return false;
 	}
 
 	CUIDragDropListEx* old_owner = itm->OwnerList();

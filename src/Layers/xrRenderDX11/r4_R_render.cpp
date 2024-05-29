@@ -7,12 +7,16 @@
 
 IC bool pred_sp_sort(ISpatial* _1, ISpatial* _2)
 {
-	if ((!_1) || (!_2))
+	try
+	{
+		float d1 = _1->GetSpatialData().sphere.P.distance_to_sqr(Device.vCameraPosition);
+		float d2 = _2->GetSpatialData().sphere.P.distance_to_sqr(Device.vCameraPosition);
+		return d1 < d2;
+	}
+	catch (...)
+	{
 		return false;
-
-	float d1 = _1->GetSpatialData().sphere.P.distance_to_sqr(Device.vCameraPosition);
-	float d2 = _2->GetSpatialData().sphere.P.distance_to_sqr(Device.vCameraPosition);
-	return d1 < d2;
+	}
 }
 
 void CRender::render_main(Fmatrix& m_ViewProjection, bool _fportals)

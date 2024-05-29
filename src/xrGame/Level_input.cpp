@@ -147,6 +147,9 @@ void CLevel::IR_OnKeyboardPress(int key)
 		return;
 	}
 
+	if (::ScriptEngine->function_event<bool>("level_input.on_key_press", key, _curr, g_bDisableAllInput))
+		return;
+
 	if (g_bDisableAllInput)
 		return;
 
@@ -194,13 +197,6 @@ void CLevel::IR_OnKeyboardPress(int key)
 
 	if (game && game->OnKeyboardPress(get_binded_action(key)))
 		return;
-
-	luabind::functor<bool> funct;
-	if (::ScriptEngine->functor("level_input.on_key_press", funct))
-	{
-		if (funct(key, _curr))
-			return;
-	}
 
 	if (_curr == kQUICK_SAVE && IsGameTypeSingle())
 	{
