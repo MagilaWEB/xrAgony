@@ -77,23 +77,54 @@ void CRender::level_Load(IReader* fs)
 	LoadVisuals(chunk);
 	chunk->close();
 
+	static tbb::task_group parallel;
+
 	// Details
-	g_pGamePersistent->SetLoadStageTitle("st_loading_details");
-	g_pGamePersistent->LoadTitle();
-	Details->Load();
+	static Event Details_Load;
+	parallel.run([&]()
+	{
+		Details->Load();
+		Details_Load.Set();
+	});
 
 	// Sectors
-	g_pGamePersistent->SetLoadStageTitle("st_loading_sectors_portals");
-	g_pGamePersistent->LoadTitle();
-	LoadSectors(fs);
+	static Event Sectors_Load;
+	parallel.run([&]()
+	{
+		LoadSectors(fs);
+		Sectors_Load.Set();
+	});
 
 	// HOM
-	HOM.Load();
+	parallel.run([&]()
+	{
+		HOM.Load();
+	});
 
 	// Lights
-	g_pGamePersistent->SetLoadStageTitle("st_loading_lights");
-	g_pGamePersistent->LoadTitle();
-	LoadLights(fs);
+	static Event Lights_Load;
+	parallel.run([&]()
+	{
+		LoadLights(fs);
+		Lights_Load.Set();
+	});
+
+	// state
+	{
+		g_pGamePersistent->SetLoadStageTitle("st_loading_details");
+		g_pGamePersistent->LoadTitle();
+		Details_Load.Wait();
+
+		g_pGamePersistent->SetLoadStageTitle("st_loading_sectors_portals");
+		g_pGamePersistent->LoadTitle();
+		Sectors_Load.Wait();
+
+		g_pGamePersistent->SetLoadStageTitle("st_loading_lights");
+		g_pGamePersistent->LoadTitle();
+		Lights_Load.Wait();
+	}
+
+	parallel.wait();
 
 	// End
 	pApp->LoadEnd();

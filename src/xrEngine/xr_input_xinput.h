@@ -29,9 +29,13 @@ enum EGameActions
 	kCAM_ZOOM_IN,
 	kCAM_ZOOM_OUT,
 	kFLASH,	//Romann
+
 	kTORCH,
+	kTORCH_MODE,
 	kNIGHT_VISION,
 	kDETECTOR,
+	kTURN_ENGINE,
+	kSWITCH_HORN,
 	kWPN_1,
 	kWPN_2,
 	kWPN_3,
@@ -48,6 +52,7 @@ enum EGameActions
 	kWPN_FUNC,
 	kWPN_FIREMODE_PREV,
 	kWPN_FIREMODE_NEXT,
+	kWPN_SAFEMODE,
 
 	kPAUSE,
 	kDROP,
@@ -83,7 +88,7 @@ enum EGameActions
 
 	kQUICK_SAVE,
 	kQUICK_LOAD,
-//	kALIFE_CMD,
+	//kALIFE_CMD,
 
 	kCUSTOM1,
 	kCUSTOM2,
@@ -100,6 +105,11 @@ enum EGameActions
 	kCUSTOM13,
 	kCUSTOM14,
 	kCUSTOM15,
+	kCUSTOM16,
+	kCUSTOM17,
+	kCUSTOM18,
+	kCUSTOM19,
+	kCUSTOM20,
 
 	kCAM_AUTOAIM,
 
@@ -109,10 +119,10 @@ enum EGameActions
 	kPDA_TAB4,
 	kPDA_TAB5,
 	kPDA_TAB6,
+	kPDA_TAB7,
 
-#ifdef COC_KICK
-	kKICK, // alpet: kick dynamic objects
-#endif
+	kKICK,
+	kHEADROTATION,
 
 	kLASTACTION,
 	kNOTBINDED,

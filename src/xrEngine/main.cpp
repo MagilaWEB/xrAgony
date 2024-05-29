@@ -265,39 +265,6 @@ namespace
 	}
 } // namespace
 
-int entry_point(pcstr commandLine)
-{
-	if (strstr(commandLine, "-nosplash") == nullptr)
-	{
-#ifndef DEBUG
-		const bool topmost = strstr(commandLine, "-splashnotop") == nullptr ? true : false;
-#else
-		constexpr bool topmost = false;
-#endif
-		splash::show(topmost);
-	}
-
-	xrDebug::Initialize();
-
-	StickyKeyFilter filter;
-	filter.initialize();
-
-	pcstr fsltx = "-fsltx ";
-	string_path fsgame = "";
-	if (strstr(commandLine, fsltx))
-	{
-		const u32 sz = xr_strlen(fsltx);
-		sscanf(strstr(commandLine, fsltx) + sz, "%[^ ] ", fsgame);
-	}
-	Core.Initialize("xrAgony", nullptr, true, *fsgame ? fsgame : nullptr);
-
-	auto result = RunApplication();
-
-	Core._destroy();
-
-	return result;
-}
-
 int StackoverflowFilter(const int exceptionCode)
 {
 	if (exceptionCode == EXCEPTION_STACK_OVERFLOW)
@@ -308,10 +275,43 @@ int StackoverflowFilter(const int exceptionCode)
 int APIENTRY WinMain(HINSTANCE inst, HINSTANCE prevInst, char* commandLine, int cmdShow)
 {
 	int result = 0;
+
+	auto entry_point = [commandLine]()
+	{
+		if (strstr(commandLine, "-nosplash") == nullptr)
+		{
+#ifndef DEBUG
+			const bool topmost = strstr(commandLine, "-splashnotop") == nullptr ? true : false;
+#else
+			constexpr bool topmost = false;
+#endif
+			splash::show(topmost);
+		}
+
+		xrDebug::Initialize();
+
+		StickyKeyFilter filter;
+		filter.initialize();
+
+		pcstr fsltx = "-fsltx ";
+		string_path fsgame = "";
+		if (strstr(commandLine, fsltx))
+		{
+			const u32 sz = xr_strlen(fsltx);
+			sscanf(strstr(commandLine, fsltx) + sz, "%[^ ] ", fsgame);
+		}
+		Core.Initialize("xrAgony", nullptr, true, *fsgame ? fsgame : nullptr);
+
+		auto result = RunApplication();
+
+		Core._destroy();
+
+		return result;
+	};
 	// BugTrap can't handle stack overflow exception, so handle it here
 	__try
 	{
-		result = entry_point(commandLine);
+		result = entry_point();
 	}
 	__except (StackoverflowFilter(GetExceptionCode()))
 	{
