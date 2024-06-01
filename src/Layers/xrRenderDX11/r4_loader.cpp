@@ -202,15 +202,6 @@ void CRender::level_Unload()
 	//*** Shaders
 	Shaders.clear();
 
-	if (ps_clear_models_on_unload == TRUE)
-	{
-		Models->ClearPool(true);
-		Visuals.clear();
-		RImplementation.Resources->Dump(false);
-		//static int unload_counter = 0;
-		//Msg("The Level Unloaded.======================== %d", ++unload_counter);
-	}
-
 	b_loaded = false;
 }
 

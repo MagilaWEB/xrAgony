@@ -143,16 +143,18 @@ bool CUIActorMenu::ToDeadBodyBag(CUICellItem* itm, bool b_use_cursor_pos)
 		if (m_pPartnerInvOwner->is_alive())
 		{
 			//Alundaio:
-			luabind::functor<bool> funct;
-			if (::ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_CanMoveToPartner", funct))
-			{
-				float itmWeight = quest_item->Weight();
-				float partner_inv_weight = m_pPartnerInvOwner->inventory().CalcTotalWeight();
-				float partner_max_weight = m_pPartnerInvOwner->MaxCarryWeight();
-
-				if (funct(m_pPartnerInvOwner->cast_game_object()->lua_game_object(), quest_item->object().lua_game_object(), 0, 0, itmWeight, partner_inv_weight, partner_max_weight) == false)
-					return false;
-			}
+			const float itmWeight = quest_item->Weight();
+			const float partner_inv_weight = m_pPartnerInvOwner->inventory().CalcTotalWeight();
+			const float partner_max_weight = m_pPartnerInvOwner->MaxCarryWeight();
+			if (::ScriptEngine->function_event<bool>(
+				"actor_menu_inventory.CUIActorMenu_CanMoveToPartner",
+				m_pPartnerInvOwner->cast_game_object()->lua_game_object(),
+				quest_item->object().lua_game_object(),
+				itmWeight,
+				partner_inv_weight,
+				partner_max_weight
+			))
+				return false;
 		}
 	}
 	else // box

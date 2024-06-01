@@ -224,8 +224,8 @@ void CDetailManager::spawn_Slots(Fvector& view)
 			}
 			FOR_END
 
-				// Decompress and remove task
-				cache_Decompress(cache_task[cache_id]);
+			// Decompress and remove task
+			cache_Decompress(cache_task[cache_id]);
 			cache_task.erase(cache_task.begin() + cache_id);
 		}
 	}

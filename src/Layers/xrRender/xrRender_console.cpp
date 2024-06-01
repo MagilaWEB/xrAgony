@@ -156,7 +156,6 @@ R2FLAG_STEEP_PARALLAX | R2FLAG_SUN_FOCUS | R2FLAG_SUN_TSM | R2FLAG_TONEMAP | R2F
 Flags32 ps_r2_ls_flags_ext = {
 	/*R2FLAGEXT_SSAO_OPT_DATA |*/ R2FLAGEXT_SSAO_HALF_DATA | R2FLAGEXT_ENABLE_TESSELLATION };
 
-BOOL ps_clear_models_on_unload = 0; // Alundaio
 BOOL ps_use_precompiled_shaders = 0; // Alundaio
 
 float ps_r2_df_parallax_h = 0.02f;
@@ -935,7 +934,6 @@ void xrRender_initconsole()
 	CMD3(CCC_Token, "r3_msaa_alphatest", &ps_r3_msaa_atest, qmsaa__atest_token);
 	CMD3(CCC_Token, "r3_minmax_sm", &ps_r3_minmax_sm, qminmax_sm_token);
 
-	CMD2(CCC_BOOL, "r__clear_models_on_unload", &ps_clear_models_on_unload); //Alundaio
 	CMD2(CCC_BOOL, "r__use_precompiled_shaders", &ps_use_precompiled_shaders); //Alundaio
 	CMD4(CCC_Float, "r__detail_density", &ps_r__Detail_density, .15f, 1.f);
 	CMD4(CCC_Float, "r__detail_height", &ps_r__detail_height, 0.4f, 1.f);

@@ -526,12 +526,8 @@ void CActor::Hit(SHit* pHDS)
 			tLuaHit.m_tHitType = HDS.hit_type;
 			tLuaHit.m_tpDraftsman = smart_cast<const CGameObject*>(HDS.who)->lua_game_object();
 
-			luabind::functor<bool> funct;
-			if (::ScriptEngine->functor("_G.CActor__BeforeHitCallback", funct))
-			{
-				if (!funct(this->lua_game_object(), &tLuaHit, HDS.boneID))
-					return;
-			}
+			if (::ScriptEngine->function_event<bool>("_G.CActor__BeforeHitCallback", this->lua_game_object(), &tLuaHit, HDS.boneID))
+				return;
 
 			HDS.power = tLuaHit.m_fPower;
 			HDS.impulse = tLuaHit.m_fImpulse;

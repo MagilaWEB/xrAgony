@@ -502,9 +502,9 @@ void CDetailManager::Frame()
 	VisiblesClear();
 
 	UpdateVisibleM(EYE);
-	if (Device.dwFrame % ps_r__detail_limit_update == 0)
-		cache_Update(s_x, s_z, EYE);
+
 	xrCriticalSection::raii mt{ MT };
+	LIMIT_UPDATE_FPS_CODE(detail_cache_Update, ps_r__detail_limit_update, cache_Update(s_x, s_z, EYE);)
 	spawn_Slots(EYE);
 	RImplementation.BasicStats.DetailCache.End();
 }
