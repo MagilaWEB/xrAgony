@@ -20,7 +20,7 @@ xr_vector<xr_token> vid_quality_token;
 int g_process_priority = 3;
 int g_GlobalFPSlimit = 121;//Limit fps global.
 int g_PausedFPSlimit = 30;//Limit fps to Pause.
-int g_MainFPSlimit = 60;//Limit fps to main.
+int g_MainFPSlimit = 127;//Limit fps to main.
 int r_scope_fps_limit = 0;
 
 const xr_token vid_bpp_token[] =

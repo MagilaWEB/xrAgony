@@ -168,23 +168,6 @@ void CRenderDevice::PreCache(u32 amount, bool b_draw_loadscreen, bool b_wait_use
 	}
 }
 
-//Frame per second counter, updated every 333 ms
-void CRenderDevice::FpsCalc()
-{
-	//the inaccuracy is about ~0.1%
-	static u16 HFPS = 0;
-	static CTimer timer;
-
-	HFPS++;
-
-	if ((timer.GetElapsed_sec() * 1000) >= float(1000 / 3))
-	{
-		FPS = HFPS > 3 ? (HFPS * 3) - 3 : HFPS;
-		HFPS = 0;
-		timer.Start();
-	}
-}
-
 void CRenderDevice::CalcFrameStats()
 {
 	stats.RenderTotal.FrameEnd();
@@ -196,6 +179,7 @@ void CRenderDevice::CalcFrameStats()
 		float fOne = 0.3f;
 		float fInv = 1.0f - fOne;
 		stats.fFPS = fInv * stats.fFPS + fOne * fps;
+		FPS = u16(stats.fFPS);
 		if (stats.RenderTotal.result > EPS_S)
 		{
 			u32 renderedPolys = ::Render->GetCacheStatPolys();
@@ -371,7 +355,6 @@ void CRenderDevice::GlobalUpdate()
 		d_Render();
 
 		xrThread::WaitGlobal();
-		FpsCalc();
 	}
 }
 

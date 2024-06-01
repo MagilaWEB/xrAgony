@@ -312,7 +312,6 @@ private:
 	void d_Render();
 	void d_SVPRender();
 	void GlobalUpdate();
-	void FpsCalc();
 
 	void message_loop();
 	virtual void AddSeqFrame(pureFrame* f, bool mt);
