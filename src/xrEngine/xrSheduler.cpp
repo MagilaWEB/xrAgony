@@ -383,9 +383,6 @@ void CSheduler::ProcessStep()
 		auto itemName = item.Object->shedule_Name().c_str();
 		const u32 delta_ms = dwTime - item.dwTimeForExecute;
 		const u32 execTime = eTimer.GetElapsed_ms();
-		VERIFY3(item.Object->dbg_update_shedule == item.Object->dbg_startframe,
-			"Broken sequence of calls to 'shedule_Update'", itemName);
-
 		if (delta_ms > 3 * dwUpdate)
 			Msg("! xrSheduler: failed to shedule object [%s] (%dms)", itemName, delta_ms);
 
@@ -450,10 +447,6 @@ void CSheduler::Update()
 		}
 
 		const u32 Elapsed = dwTime - item.dwTimeOfLastExecute;
-#ifdef DEBUG
-		VERIFY(item.Object->GetSchedulerData().dbg_startframe != Device.dwFrame);
-		item.Object->GetSchedulerData().dbg_startframe = Device.dwFrame;
-#endif
 		item.Object->shedule_Update(Elapsed);
 		item.dwTimeOfLastExecute = dwTime;
 	}

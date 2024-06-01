@@ -22,26 +22,27 @@ void CRender::render_lights(light_Package& LP)
 		{
 			LP_smap_pool.initialize(RImplementation.o.smapsize);
 
-			for (auto test = LP.v_shadowed.begin(); test != LP.v_shadowed.end(); ++test)
+			for (size_t i = 0; i < LP.v_shadowed.size(); i++)
 			{
-				if ((*test)->vis.visible)
+				light *& _light = LP.v_shadowed[i];
+				if (_light->vis.visible)
 				{
 					SMAP_Rect R{};
-					if (LP_smap_pool.push(R, (*test)->X.S.size))
+					if (LP_smap_pool.push(R, _light->X.S.size))
 					{
 						// OK
-						(*test)->X.S.posX = R.min.x;
-						(*test)->X.S.posY = R.min.y;
-						(*test)->vis.smap_ID = smap_ID;
-						refactored.push_back(*test);
-						LP.v_shadowed.erase(test);
-						--test;
+						_light->X.S.posX = R.min.x;
+						_light->X.S.posY = R.min.y;
+						_light->vis.smap_ID = smap_ID;
+						refactored.push_back(std::move(_light));
+						LP.v_shadowed.erase(LP.v_shadowed.begin() + i);
+						i--;
 					}
 				}
 				else
 				{
-					LP.v_shadowed.erase(test);
-					--test;
+					LP.v_shadowed.erase(LP.v_shadowed.begin() + i);
+					i--;
 					--total;
 				}
 			}

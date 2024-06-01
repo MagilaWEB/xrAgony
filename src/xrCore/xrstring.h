@@ -161,14 +161,10 @@ public:
 	}
 };
 
-#ifdef BREAK_AT_STRCMP
-XRCORE_API int xr_strcmp(const char* S1, const char* S2);
-#else
 inline int xr_strcmp(const char* S1, const char* S2)
 {
 	return (int)strcmp(S1, S2);
 }
-#endif
 
 // res_ptr == res_ptr
 // res_ptr != res_ptr

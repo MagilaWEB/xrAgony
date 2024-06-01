@@ -62,7 +62,6 @@ CGameObject::CGameObject() : SpatialBase(g_SpatialSpace), scriptBinder(this)
 	NameSection = nullptr;
 	NameVisual = nullptr;
 #ifdef DEBUG
-	shedule.dbg_update_shedule = u32(-1) / 2;
 	dbg_update_cl = u32(-1) / 2;
 #endif
 	// ~IGameObject ctor

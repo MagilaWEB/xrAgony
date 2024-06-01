@@ -6,6 +6,12 @@
 	  </ClCompile>
   </ItemDefinitionGroup>
 
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <PreprocessorDefinitions>DEBUG_COC;COC_EDITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
   <PropertyGroup Label="UserMacros" Condition="'$(Platform)'=='x86'">
 	<xrPlatform>Win32</xrPlatform>
   </PropertyGroup>

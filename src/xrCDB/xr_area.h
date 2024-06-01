@@ -11,7 +11,6 @@
 class ISpatial;
 class ICollisionForm;
 class IGameObject;
-class Lock;
 
 //-----------------------------------------------------------------------------------------------------------
 // Space Area
@@ -21,7 +20,7 @@ class XRCDB_API CObjectSpace : Noncopyable
 {
 private:
 	// Debug
-	Lock* lock;
+	xrCriticalSection lock;
 	CDB::MODEL Static;
 	Fbox m_BoundingVolume;
 	xrXRC xrc; // MT: dangerous

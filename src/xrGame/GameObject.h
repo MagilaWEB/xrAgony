@@ -310,8 +310,10 @@ public:
 	virtual CScriptGameObject* lua_game_object() const override;
 	virtual int clsid() const override
 	{
+		if (getDestroy())
+			return 0;
 #ifdef DEBUG
-		THROW2(m_script_clsid >= 0, make_string("Sect = %s, clsid = %d", NameSection.c_str(), m_script_clsid).c_str());
+		THROW(m_script_clsid >= 0);
 #endif
 		return m_script_clsid;
 	}

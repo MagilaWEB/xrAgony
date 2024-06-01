@@ -13,8 +13,8 @@
 #include "xrCore/xrDebug_macros.h" // only for the todo on the next line
 #pragma todo("This file is using std:: containers. Everything else uses xr_* specializations.")
 
-#include <vector>
-#include <set>
+#include "xrCommon/xr_vector.h"
+#include "xrCommon/xr_set.h"
 #include "xrCore/_vector3d_ext.h"
 
 //----------------------------------------------------------

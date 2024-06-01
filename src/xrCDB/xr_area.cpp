@@ -13,11 +13,6 @@ using namespace collide;
 //----------------------------------------------------------------------
 CObjectSpace::CObjectSpace()
 	: xrc("object space")
-#ifdef CONFIG_PROFILE_LOCKS
-	  , lock(new Lock(MUTEX_PROFILE_ID(CObjectSpace::Lock)))
-#else
-	  , lock(new Lock)
-#endif // CONFIG_PROFILE_LOCKS
 #ifdef DEBUG
 	  , m_pRender(0)
 #endif
@@ -41,7 +36,6 @@ CObjectSpace::~CObjectSpace()
 	// sh_debug.destroy			();
 	xr_delete(m_pRender);
 #endif
-	delete lock;
 }
 //----------------------------------------------------------------------
 
@@ -49,6 +43,7 @@ CObjectSpace::~CObjectSpace()
 int CObjectSpace::GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<IGameObject*>& q_nearest, const Fvector& point,
 	float range, IGameObject* ignore_object)
 {
+	xrCriticalSection::raii mt{ lock };
 	q_spatial.clear();
 	// Query objects
 	q_nearest.clear();
@@ -59,18 +54,23 @@ int CObjectSpace::GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<IGameObj
 	g_SpatialSpace->q_box(q_spatial, 0, STYPE_COLLIDEABLE, point, B);
 
 	// Iterate
-	for (auto& it : q_spatial)
+	for (size_t i = 0; i < q_spatial.size(); i++)
 	{
-		IGameObject* O = it->dcast_GameObject();
-		if (0 == O)
+		ISpatial* spatial = q_spatial[i];
+		if (!spatial)
 			continue;
+
+		IGameObject* O = spatial->dcast_GameObject();
+		if (!O)
+			continue;
+
 		if (O == ignore_object)
 			continue;
+
 		Fsphere mS = {O->GetSpatialData().sphere.P, O->GetSpatialData().sphere.R};
 		if (Q.intersect(mS))
 			q_nearest.push_back(O);
 	}
-
 	return q_nearest.size();
 }
 

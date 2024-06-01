@@ -527,7 +527,9 @@ bool CScriptEngine::namespace_loaded(LPCSTR name, bool remove_from_stack)
 			break;
 	}
 	if (!remove_from_stack)
-		VERIFY(lua_gettop(lua()) == start + 1);
+	{
+		VERIFY(lua_gettop(lua()) == start + 1)
+	}
 	else
 	{
 		VERIFY(lua_gettop(lua()) >= 1);
