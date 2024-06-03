@@ -42,12 +42,12 @@ public:
 	SCartridgeParam param_s;
 
 	u8 m_LocalAmmoType;
-	bool m_4to1_tracer;
+	bool m_4to1_tracer{};
 
-	u16 bullet_material_idx;
+	u16 bullet_material_idx{ 0xFFFF };
 	Flags8 m_flags;
 
-	shared_str m_InvShortName;
+	shared_str m_InvShortName{};
 
 	LPCSTR GetInventoryName() { return m_InvShortName.c_str(); };
 };

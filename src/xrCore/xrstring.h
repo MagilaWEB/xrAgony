@@ -68,85 +68,129 @@ XRCORE_API extern str_container* g_pStringContainer;
 //////////////////////////////////////////////////////////////////////////
 class shared_str
 {
-	str_value* p_;
+	str_value* p_{};
 
 protected:
 	// ref-counting
-	void _dec()
+	void _dec() noexcept
 	{
-		if (0 == p_)
+		if (nullptr == p_)
 			return;
 		p_->dwReference--;
 		if (0 == p_->dwReference)
-			p_ = 0;
+			p_ = nullptr;
 	}
 
 public:
 	void _set(pcstr rhs)
 	{
 		str_value* v = g_pStringContainer->dock(rhs);
-		if (0 != v)
+		if (nullptr != v)
 			v->dwReference++;
 		_dec();
 		p_ = v;
 	}
-	void _set(shared_str const& rhs)
+	void _set(shared_str const& rhs) noexcept
 	{
 		str_value* v = rhs.p_;
-		if (0 != v)
+		if (nullptr != v)
 			v->dwReference++;
 		_dec();
 		p_ = v;
 	}
-	// void _set (shared_str const &rhs) { str_value* v = g_pStringContainer->dock(rhs.c_str()); if (0!=v)
-	// v->dwReference++; _dec(); p_ = v; }
+	void _set(nullptr_t) noexcept
+	{
+		_dec();
+		p_ = nullptr;
+	}
 
+	[[nodiscard]]
 	const str_value* _get() const { return p_; }
 public:
 	// construction
-	shared_str() { p_ = 0; }
+	shared_str() = default;
 	shared_str(pcstr rhs)
 	{
-		p_ = 0;
+		p_ = nullptr;
 		_set(rhs);
 	}
-	shared_str(shared_str const& rhs)
+	shared_str(shared_str const& rhs) noexcept
 	{
-		p_ = 0;
+		p_ = nullptr;
 		_set(rhs);
+	}
+	shared_str(shared_str&& rhs) noexcept
+		: p_(rhs.p_)
+	{
+		rhs.p_ = nullptr;
 	}
 	~shared_str() { _dec(); }
 	// assignment & accessors
 	shared_str& operator=(pcstr rhs)
 	{
 		_set(rhs);
-		return (shared_str&)*this;
+		return *this;
 	}
-	shared_str& operator=(shared_str const& rhs)
+	shared_str& operator=(shared_str const& rhs) noexcept
 	{
 		_set(rhs);
-		return (shared_str&)*this;
+		return *this;
 	}
-	// XXX tamlin: Remove operator*(). It may be convenient, but it's dangerous. Use 
-	pcstr operator*() const { return p_ ? p_->value : 0; }
-	bool operator!() const { return p_ == 0; }
-	char operator[](size_t id) { return p_->value[id]; }
-	pcstr c_str() const { return p_ ? p_->value : 0; }
-	// misc func
-	u32 size() const
+	shared_str& operator=(shared_str&& rhs) noexcept
 	{
-		if (0 == p_)
-			return 0;
-		else
-			return p_->dwLength;
+		p_ = rhs.p_;
+		rhs.p_ = nullptr;
+		return *this;
 	}
-	void swap(shared_str& rhs)
+	shared_str& operator=(nullptr_t) noexcept
+	{
+		_set(nullptr);
+		return *this;
+	}
+	// XXX tamlin: Remove operator*(). It may be convenient, but it's dangerous. Use
+	[[nodiscard]]
+	pcstr operator*() const { return p_ ? p_->value : nullptr; }
+
+	[[nodiscard]]
+	bool operator!() const { return p_ == nullptr; }
+
+	[[nodiscard]]
+	char operator[](size_t id) { return p_->value[id]; }
+
+	[[nodiscard]]
+	char operator[](size_t id) const { return p_->value[id]; }
+
+	[[nodiscard]]
+	pcstr c_str() const { return p_ ? p_->value : nullptr; }
+
+	// misc func
+	[[nodiscard]]
+	size_t size() const
+	{
+		if (nullptr == p_)
+			return 0;
+		return p_->dwLength;
+	}
+
+	[[nodiscard]]
+	bool empty() const
+	{
+		return size() == 0;
+	}
+
+	void swap(shared_str& rhs) noexcept
 	{
 		str_value* tmp = p_;
 		p_ = rhs.p_;
 		rhs.p_ = tmp;
 	}
-	bool equal(const shared_str& rhs) const { return (p_ == rhs.p_); }
+
+	[[nodiscard]]
+	bool equal(const shared_str& rhs) const
+	{
+		return (p_ == rhs.p_);
+	}
+
 	shared_str& __cdecl printf(const char* format, ...)
 	{
 		string4096 buf;
@@ -200,23 +244,23 @@ IC void xr_strlwr(shared_str& src)
 		xr_strlwr(lp);
 #elif defined(LINUX)
 		int i = 0;
-		while(lp[i])
+		while (lp[i])
 		{
-			lp[i] = (char) std::toupper(lp[i], std::locale());
+			lp[i] = (char)std::toupper(lp[i], std::locale());
 			i++;
-		}
+	}
 #endif
 		src = lp;
 		xr_free(lp);
-	}
+}
 }
 
-IC char * xr_strlwr(char * src)
+IC char* xr_strlwr(char* src)
 {
 	int i = 0;
-	while(src[i])
+	while (src[i])
 	{
-		src[i] = (char) toupper(src[i]);// TODO rewrite locale-independent toupper_l()
+		src[i] = (char)toupper(src[i]);// TODO rewrite locale-independent toupper_l()
 		i++;
 	}
 	return src;

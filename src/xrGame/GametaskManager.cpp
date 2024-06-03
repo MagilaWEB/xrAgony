@@ -60,7 +60,7 @@ CGameTaskManager::CGameTaskManager()
 CGameTaskManager::~CGameTaskManager()
 {
 	delete_data(m_gametasks_wrapper);
-	g_active_task_id = NULL;
+	g_active_task_id = nullptr;
 }
 
 vGameTasks& CGameTaskManager::GetGameTasks()

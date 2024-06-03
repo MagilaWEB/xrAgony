@@ -16,10 +16,7 @@
 CCartridge::CCartridge()
 {
 	m_flags.assign(cfTracer | cfRicochet);
-	m_InvShortName = NULL;
 	param_s.Init();
-	bullet_material_idx = u16(-1);
-	m_4to1_tracer = false;
 }
 
 void CCartridge::Load(LPCSTR section, u8 LocalAmmoType, float ap_mod) 

@@ -85,7 +85,6 @@ CGameObject::CGameObject() : SpatialBase(g_SpatialSpace), scriptBinder(this)
 	m_bObjectRemoved = false;
 
 	m_bNonscriptUsable = true;
-	m_sTipText = NULL;
 }
 
 CGameObject::~CGameObject()

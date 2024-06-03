@@ -89,14 +89,14 @@ protected:
 	virtual void load_shared(LPCSTR);
 
 	//индекс загруженного профиля
-	shared_str m_ProfileId;
+	shared_str m_ProfileId{};
 
 	//индекс данных о конкретном персонаже, который
 	//используется в данном экземпляре класса
-	shared_str m_SpecificCharacterId;
+	shared_str m_SpecificCharacterId{};
 
 #ifdef XRGAME_EXPORTS
-	shared_str m_StartDialog;
+	shared_str m_StartDialog{};
 
 	//загруженная информация о конкретном персонаже
 	CSpecificCharacter m_SpecificCharacter;
@@ -131,6 +131,6 @@ protected:
 	CHARACTER_RANK m_CurrentRank;
 	CHARACTER_REPUTATION m_CurrentReputation;
 	CHARACTER_COMMUNITY m_CurrentCommunity;
-	float m_Sympathy; // % влияния на группировку
+	float m_Sympathy{}; // % влияния на группировку
 #endif
 };

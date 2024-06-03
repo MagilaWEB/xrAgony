@@ -77,7 +77,7 @@ protected:
 	u32 dwFrame_AsCrow;
 
 private:
-	shared_str m_sTipText;
+	shared_str m_sTipText{};
 	bool m_bNonscriptUsable;
 	bool m_spawned;
 	Flags32 m_server_flags;

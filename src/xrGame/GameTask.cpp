@@ -75,18 +75,14 @@ void CGameTask::CreateMapLocation(bool on_load)
 	{
 		xr_vector<CMapLocation*> res;
 		Level().MapManager().GetMapLocations(m_map_location, m_map_object_id, res);
-		xr_vector<CMapLocation*>::iterator it = res.begin();
-		xr_vector<CMapLocation*>::iterator it_e = res.end();
-		for (; it != it_e; ++it)
+		for (CMapLocation* ml : res)
 		{
-			CMapLocation* ml = *it;
 			if (ml->m_owner_task_id == m_ID)
 			{
 				m_linked_map_location = ml;
 				break;
 			}
 		}
-		//.		m_linked_map_location =	Level().MapManager().GetMapLocation(m_map_location, m_map_object_id);
 	}
 	else
 	{
@@ -94,9 +90,8 @@ void CGameTask::CreateMapLocation(bool on_load)
 		m_linked_map_location->m_owner_task_id = m_ID;
 
 		if (m_map_hint.size())
-		{
 			m_linked_map_location->SetHint(m_map_hint);
-		}
+
 		m_linked_map_location->DisablePointer();
 		m_linked_map_location->SetSerializable(true);
 	}
@@ -104,9 +99,7 @@ void CGameTask::CreateMapLocation(bool on_load)
 	VERIFY(m_linked_map_location);
 
 	if (m_linked_map_location->complex_spot())
-	{
 		m_linked_map_location->complex_spot()->SetTimerFinish(m_timer_finish);
-	}
 }
 
 void CGameTask::RemoveMapLocations(bool notify)
@@ -114,8 +107,8 @@ void CGameTask::RemoveMapLocations(bool notify)
 	if (m_linked_map_location && !notify)
 		Level().MapManager().RemoveMapLocation(m_linked_map_location);
 
-	m_map_location = 0;
-	m_linked_map_location = NULL;
+	m_map_location = nullptr;
+	m_linked_map_location = nullptr;
 	m_map_object_id = u16(-1);
 }
 
@@ -130,16 +123,17 @@ void CGameTask::ChangeMapLocation(LPCSTR new_map_location, u16 new_map_object_id
 	CreateMapLocation(false);
 }
 
-void CGameTask::ChangeStateCallback() { Actor()->callback(GameObject::eTaskStateChange)(this, GetTaskState()); }
+void CGameTask::ChangeStateCallback()
+{
+	Actor()->callback(GameObject::eTaskStateChange)(this, GetTaskState());
+}
+
 ETaskState CGameTask::UpdateState()
 {
 	if ((m_ReceiveTime != m_TimeToComplete))
-	{
 		if (Level().GetGameTime() > m_TimeToComplete)
-		{
 			return eTaskStateFail;
-		}
-	}
+
 	// check fail infos
 	if (CheckInfo(m_failInfos))
 		return eTaskStateFail;
@@ -162,10 +156,9 @@ ETaskState CGameTask::UpdateState()
 bool CGameTask::CheckInfo(const xr_vector<shared_str>& v) const
 {
 	bool res = false;
-	xr_vector<shared_str>::const_iterator it = v.begin();
-	for (; it != v.end(); ++it)
+	for (shared_str srt : v)
 	{
-		res = Actor()->HasInfo(*it);
+		res = Actor()->HasInfo(srt);
 		if (!res)
 			break;
 	}
@@ -175,11 +168,11 @@ bool CGameTask::CheckInfo(const xr_vector<shared_str>& v) const
 bool CGameTask::CheckFunctions(const task_state_functors& v) const
 {
 	bool res = false;
-	task_state_functors::const_iterator it = v.begin();
-	for (; it != v.end(); ++it)
+	for (luabind::functor<bool> functor : v)
 	{
-		if ((*it).is_valid())
-			res = (*it)(m_ID.c_str());
+		if (functor.is_valid())
+			res = functor(m_ID.c_str());
+
 		if (!res)
 			break;
 	}
@@ -187,18 +180,14 @@ bool CGameTask::CheckFunctions(const task_state_functors& v) const
 }
 void CGameTask::CallAllFuncs(const task_state_functors& v)
 {
-	task_state_functors::const_iterator it = v.begin();
-	for (; it != v.end(); ++it)
-	{
-		if ((*it).is_valid())
-			(*it)(m_ID.c_str());
-	}
+	for (luabind::functor<bool> functor : v)
+		if (functor.is_valid())
+			functor(m_ID.c_str());
 }
 void CGameTask::SendInfo(const xr_vector<shared_str>& v)
 {
-	xr_vector<shared_str>::const_iterator it = v.begin();
-	for (; it != v.end(); ++it)
-		Actor()->TransferInfo((*it), true);
+	for (shared_str srt : v)
+		Actor()->TransferInfo(srt, true);
 }
 
 void CGameTask::save_task(IWriter& stream)
@@ -259,15 +248,13 @@ void CGameTask::AddOnCompleteFunc_script(LPCSTR _str) { m_pScriptHelper.m_s_lua_
 void CGameTask::AddOnFailFunc_script(LPCSTR _str) { m_pScriptHelper.m_s_lua_functions_on_fail.push_back(_str); }
 void SScriptTaskHelper::init_functors(xr_vector<shared_str>& v_src, task_state_functors& v_dest)
 {
-	xr_vector<shared_str>::iterator it = v_src.begin();
-	xr_vector<shared_str>::iterator it_e = v_src.end();
 	v_dest.resize(v_src.size());
 
-	for (u32 idx = 0; it != it_e; ++it, ++idx)
+	for (u32 it = 0; it < v_src.size(); ++it)
 	{
-		bool functor_exists = ::ScriptEngine->functor(*(*it), v_dest[idx]);
+		bool functor_exists = ::ScriptEngine->functor(v_src[it].c_str(), v_dest[it]);
 		if (!functor_exists)
-			Log("Cannot find script function described in task objective  ", *(*it));
+			Log("Cannot find script function described in task objective  ", v_src[it].c_str());
 	}
 }
 

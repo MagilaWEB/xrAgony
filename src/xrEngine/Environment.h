@@ -271,14 +271,14 @@ public:
 	Fquaternion wind_blast_current;
 	// Environments
 	BENCH_SEC_SCRAMBLEMEMBER2
-	CEnvDescriptorMixer* CurrentEnv;
-	CEnvDescriptor* Current[2]{};
+	CEnvDescriptorMixer* CurrentEnv{ nullptr };
+	CEnvDescriptor* Current[2]{ nullptr };
 
 	bool bWFX{};
 	float wfx_time;
 	CEnvDescriptor* WFX_end_desc[2];
 
-	EnvVec* CurrentWeather{};
+	EnvVec* CurrentWeather;
 	shared_str CurrentWeatherName;
 	shared_str CurrentCycleName;
 
@@ -287,9 +287,9 @@ public:
 	xr_vector<CEnvModifier> Modifiers;
 	EnvAmbVec Ambients;
 
-	CEffect_Rain* eff_Rain{};
-	CLensFlare* eff_LensFlare{};
-	CEffect_Thunderbolt* eff_Thunderbolt{};
+	CEffect_Rain* eff_Rain{ nullptr };
+	CLensFlare* eff_LensFlare{ nullptr };
+	CEffect_Thunderbolt* eff_Thunderbolt{ nullptr };
 
 	float fTimeFactor;
 
@@ -332,8 +332,6 @@ public:
 	void OnDeviceDestroy();
 
 	float GetGameTime() { return fGameTime; }
-
-	bool m_paused;
 
 	CInifile* m_ambients_config;
 	CInifile* m_sound_channels_config;

@@ -756,7 +756,7 @@ void CEnvironment::unload()
 	xr_delete(eff_LensFlare);
 	xr_delete(eff_Thunderbolt);
 	CurrentWeather = 0;
-	CurrentWeatherName = 0;
+	CurrentWeatherName = nullptr;
 	CurrentEnv->clear();
 	Invalidate();
 

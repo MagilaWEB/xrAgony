@@ -38,11 +38,12 @@ const float MAX_DIST_FACTOR = 0.95f;
 
 //////////////////////////////////////////////////////////////////////////
 // environment
-CEnvironment::CEnvironment() : PerlinNoise1D(new CPerlinNoise1D(Random.randI(0, 0xFFFF)))
+CEnvironment::CEnvironment()
 {
-	OnDeviceCreate();
+	bNeed_re_create_env = FALSE;
+	bWFX = false;
 
-	m_paused = false;
+	OnDeviceCreate();
 
 	fTimeFactor = 12.f;
 
@@ -57,6 +58,7 @@ CEnvironment::CEnvironment() : PerlinNoise1D(new CPerlinNoise1D(Random.randI(0, 
 	CopyMemory(&CloudsIndices.front(), indices, CloudsIndices.size() * sizeof(u16));
 
 	// perlin noise
+	PerlinNoise1D = new CPerlinNoise1D(Random.randI(0, 0xFFFF));
 	PerlinNoise1D->SetOctaves(2);
 	PerlinNoise1D->SetAmplitude(0.66666f);
 
@@ -168,12 +170,6 @@ float CEnvironment::TimeWeight(float val, float min_t, float max_t)
 void CEnvironment::ChangeGameTime(float game_time) { fGameTime = NormalizeTime(fGameTime + game_time); };
 void CEnvironment::SetGameTime(float game_time, float time_factor)
 {
-	if (m_paused) // BUG nitrocaster: g_pGameLevel may be null (game not started) -> crash
-	{
-		g_pGameLevel->SetEnvironmentGameTimeFactor(iFloor(fGameTime * 1000.f), fTimeFactor);
-		return;
-	}
-
 	if (bWFX)
 		wfx_time -= TimeDiff(fGameTime, game_time);
 	fGameTime = game_time;
