@@ -105,7 +105,6 @@ BOOL CRenderDevice::Begin()
 		Reset();
 
 	::Render->Begin();
-	FPU::m24r();
 	g_bRendering = TRUE;
 
 	return TRUE;

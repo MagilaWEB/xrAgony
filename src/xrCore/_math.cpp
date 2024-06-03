@@ -7,73 +7,6 @@ XRCORE_API Fmatrix Fidentity;
 XRCORE_API Dmatrix Didentity;
 XRCORE_API CRandom Random;
 
-/*
-Функции управления точностью вычислений с плавающей точкой.
-Более подробную информацию можно получить здесь:
-https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/control87-controlfp-control87-2
-Число 24, 53 и 64 - определяют ограничение точности в битах.
-Наличие 'r' - включает округление результатов.
-Реально в движке используются только m24r и m64r.
-*/
-namespace FPU
-{
-	XRCORE_API void m24()
-	{
-#ifdef _M_IX86
-		_controlfp(_PC_24, MCW_PC);
-#endif
-		_controlfp(_RC_CHOP, MCW_RC);
-	}
-
-	XRCORE_API void m24r()
-	{
-#ifdef _M_IX86
-		_controlfp(_PC_24, MCW_PC);
-#endif
-		_controlfp(_RC_NEAR, MCW_RC);
-	}
-
-	XRCORE_API void m53()
-	{
-#ifdef _M_IX86
-		_controlfp(_PC_53, MCW_PC);
-#endif
-		_controlfp(_RC_CHOP, MCW_RC);
-	}
-
-	void m53r()
-	{
-#ifdef _M_IX86
-		_controlfp(_PC_53, MCW_PC);
-#endif
-		_controlfp(_RC_NEAR, MCW_RC);
-	}
-
-	XRCORE_API void m64()
-	{
-#ifdef _M_IX86
-		_controlfp(_PC_64, MCW_PC);
-#endif
-		_controlfp(_RC_CHOP, MCW_RC);
-	}
-
-	XRCORE_API void m64r()
-	{
-#ifdef _M_IX86
-		_controlfp(_PC_64, MCW_PC);
-#endif
-		_controlfp(_RC_NEAR, MCW_RC);
-	}
-
-	void initialize()
-	{
-		_clearfp();
-		// По-умолчанию для плагинов экспорта из 3D-редакторов включена высокая точность вычислений с плавающей точкой
-		m24r();
-		::Random.seed(u32(CPU::GetCLK() % (1i64 << 32i64)));
-	}
-};
-
 namespace CPU
 {
 	XRCORE_API u64 qpc_freq = 0;
@@ -110,8 +43,6 @@ namespace CPU
 	}
 } // namespace CPU
 
-bool g_initialize_cpu_called = false;
-
 //------------------------------------------------------------------------------------
 typedef struct _PROCESSOR_POWER_INFORMATION
 {
@@ -123,7 +54,7 @@ typedef struct _PROCESSOR_POWER_INFORMATION
 	ULONG CurrentIdleState;
 } PROCESSOR_POWER_INFORMATION, * PPROCESSOR_POWER_INFORMATION;
 
-void _initialize_cpu(void)
+void _initialize_cpu()
 {
 	Msg("* Detected CPU: %s [%s], F%d/M%d/S%d",
 		_Trim(CPU::ID.brand),
@@ -211,10 +142,10 @@ void _initialize_cpu(void)
 
 	Fidentity.identity(); // Identity matrix
 	Didentity.identity(); // Identity matrix
-	pvInitializeStatics(); // Lookup table for compressed normals
-	FPU::initialize();
 
-	g_initialize_cpu_called = true;
+	Random.seed(u32(CPU::QPC() % (s64(1) << s32(32))));
+
+	pvInitializeStatics(); // Lookup table for compressed normals
 }
 
 void spline1(float t, Fvector* p, Fvector* ret)

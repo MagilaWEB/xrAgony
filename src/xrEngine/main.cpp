@@ -176,7 +176,6 @@ ENGINE_API int RunApplication()
 		xr_strcpy(Core.CompName, sizeof(Core.CompName), "Computer");
 	}
 
-	FPU::m24r();
 	InitEngine();
 	InitInput();
 	InitConsole();

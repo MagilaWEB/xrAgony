@@ -162,7 +162,7 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
 			0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, fRange, 0.0f, 0.5f, 0.5f, fBias, 1.0f};
 
 		// compute xforms
-		FPU::m64r();
+
 		// shadow xform
 		Fmatrix m_shadow;
 		{
@@ -179,7 +179,6 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
 				bias_t.translate(bias);
 				m_shadow.mulB_44(bias_t);
 			}
-			FPU::m24r();
 		}
 
 		// clouds xform
@@ -620,7 +619,6 @@ void CRenderTarget::accum_direct_f(u32 sub_phase)
 		// compute xforms
 		Fmatrix m_shadow;
 		{
-			FPU::m64r();
 			Fmatrix xf_project;
 			xf_project.mul(m_TexelAdjust, fuckingsun->X.D.combine);
 			m_shadow.mul(xf_project, Device.mInvView);
@@ -634,7 +632,6 @@ void CRenderTarget::accum_direct_f(u32 sub_phase)
 				bias_t.translate(bias);
 				m_shadow.mulB_44(bias_t);
 			}
-			FPU::m24r();
 		}
 
 		// Make jitter texture

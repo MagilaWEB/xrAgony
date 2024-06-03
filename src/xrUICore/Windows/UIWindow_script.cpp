@@ -70,8 +70,9 @@ SCRIPT_EXPORT(CUIWindow, (), {
 			.def("Show", &CUIWindow::Show)
 			.def("IsShown", &CUIWindow::IsShown)
 
-			.def("WindowName", &CUIWindow::WindowName_script)
-			.def("SetWindowName", &CUIWindow::SetWindowName)
+			.def("WindowName",				&CUIWindow::WindowName_script)
+			.def("SetWindowName",			&CUIWindow::SetWindowName)
+			.def("Reset",					&CUIWindow::Reset)
 	];
 });
 

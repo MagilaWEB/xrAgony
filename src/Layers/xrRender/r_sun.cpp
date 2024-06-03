@@ -261,7 +261,6 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 	CSector* cull_sector;
 	Fmatrix cull_xform;
 	{
-		FPU::m64r();
 		// Lets begin from base frustum
 		Fmatrix fullxform_inv = ex_full_inverse;
 #ifdef _DEBUG
@@ -464,7 +463,6 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 		fuckingsun->X.D.maxY = limit;
 
 		// full-xform
-		FPU::m24r();
 	}
 
 	// Begin SMAP-render
