@@ -56,6 +56,9 @@ public:
 	CGamePersistent();
 	virtual ~CGamePersistent();
 
+	IGame_Level* CreateLevel() override;
+	void DestroyLevel(IGame_Level*& lvl) override;
+
 	void PreStart(LPCSTR op) override;
 	virtual void Start(LPCSTR op);
 	virtual void Disconnect();

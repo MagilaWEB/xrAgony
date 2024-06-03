@@ -167,6 +167,16 @@ CGamePersistent::~CGamePersistent(void)
 	Engine.Event.Handler_Detach(eQuickLoad, this);
 }
 
+IGame_Level* CGamePersistent::CreateLevel()
+{
+	return new CLevel();
+}
+
+void CGamePersistent::DestroyLevel(IGame_Level*& lvl)
+{
+	xr_delete(lvl);
+}
+
 void CGamePersistent::PreStart(LPCSTR op)
 {
 	pApp->SetLoadingScreen(new UILoadingScreen());

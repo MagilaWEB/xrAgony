@@ -181,7 +181,7 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 		//-----------------------------------------------------------
 		g_pGamePersistent->PreStart(op_server);
 		//-----------------------------------------------------------
-		g_pGameLevel = dynamic_cast<IGame_Level*>(NEW_INSTANCE(CLSID_GAME_LEVEL));
+		g_pGameLevel = g_pGamePersistent->CreateLevel();
 		R_ASSERT(g_pGameLevel);
 		LoadBegin();
 		g_pGamePersistent->Start(op_server);
@@ -199,7 +199,7 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 		{
 			Console->Hide();
 			g_pGameLevel->net_Stop();
-			DEL_INSTANCE(g_pGameLevel);
+			g_pGamePersistent->DestroyLevel(g_pGameLevel);
 			Console->Show();
 
 			if ((FALSE == Engine.Event.Peek("KERNEL:quit")) && (FALSE == Engine.Event.Peek("KERNEL:start")))

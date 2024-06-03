@@ -154,12 +154,13 @@ bool CLevel::net_start6()
 			STRCONCAT(level_id_string, StringTable().translate("st_level"), ":", map_data.m_name.c_str(), "(", tmp_map_ver, "). ");
 			STRCONCAT(dialog_string, level_id_string, StringTable().translate("ui_st_map_not_found"));
 
-			DEL_INSTANCE(g_pGameLevel);
+
+			g_pGamePersistent->DestroyLevel(g_pGameLevel);
 			Console->Execute("main_menu on");
 		}
 		else
 		{
-			DEL_INSTANCE(g_pGameLevel);
+			g_pGamePersistent->DestroyLevel(g_pGameLevel);
 			Console->Execute("main_menu on");
 		}
 

@@ -14,6 +14,7 @@
 #endif
 #include "ShadersExternalData.h" //--#SM+#--
 
+class IGame_Level;
 class IRenderVisual;
 class IMainMenu;
 class ENGINE_API CPS_Instance;
@@ -84,6 +85,9 @@ public:
 	void destroy_particles(const bool& all_particles);
 
 public:
+	virtual IGame_Level* CreateLevel() { return nullptr; };
+	virtual void DestroyLevel(IGame_Level*& lvl) { VERIFY(lvl == nullptr); };
+
 	virtual void PreStart(LPCSTR op);
 	virtual void Start(LPCSTR op);
 	virtual void Disconnect();
