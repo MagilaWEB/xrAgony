@@ -1,6 +1,4 @@
 #pragma once
-#ifndef EnvironmentH
-#define EnvironmentH
 
 #include "Include/xrRender/FactoryPtr.h"
 #include "Include/xrRender/EnvironmentRender.h"
@@ -254,33 +252,33 @@ public:
 protected:
 	CPerlinNoise1D* PerlinNoise1D;
 
-	float fGameTime;
+	float fGameTime{};
 
 public:
 	FactoryPtr<IEnvironmentRender> m_pRender;
 	BOOL bNeed_re_create_env;
 
-	float wind_strength_factor;
-	float wind_gust_factor;
+	float wind_strength_factor{};
+	float wind_gust_factor{};
 
 	// wind blast params
-	float wind_blast_strength;
-	Fvector wind_blast_direction;
+	float wind_blast_strength{};
+	Fvector wind_blast_direction{};
 	Fquaternion wind_blast_start_time;
 	Fquaternion wind_blast_stop_time;
-	float wind_blast_strength_start_value;
-	float wind_blast_strength_stop_value;
+	float wind_blast_strength_start_value{};
+	float wind_blast_strength_stop_value{};
 	Fquaternion wind_blast_current;
 	// Environments
 	BENCH_SEC_SCRAMBLEMEMBER2
 	CEnvDescriptorMixer* CurrentEnv;
-	CEnvDescriptor* Current[2];
+	CEnvDescriptor* Current[2]{};
 
-	bool bWFX;
+	bool bWFX{};
 	float wfx_time;
 	CEnvDescriptor* WFX_end_desc[2];
 
-	EnvVec* CurrentWeather;
+	EnvVec* CurrentWeather{};
 	shared_str CurrentWeatherName;
 	shared_str CurrentCycleName;
 
@@ -289,15 +287,14 @@ public:
 	xr_vector<CEnvModifier> Modifiers;
 	EnvAmbVec Ambients;
 
-	CEffect_Rain* eff_Rain;
-	CLensFlare* eff_LensFlare;
-	CEffect_Thunderbolt* eff_Thunderbolt;
+	CEffect_Rain* eff_Rain{};
+	CLensFlare* eff_LensFlare{};
+	CEffect_Thunderbolt* eff_Thunderbolt{};
 
 	float fTimeFactor;
 
 	void SelectEnvs(float gt);
 
-	void UpdateAmbient();
 	virtual CEnvAmbient* AppendEnvAmb(const shared_str& sect);
 
 	void Invalidate();
@@ -334,20 +331,9 @@ public:
 	void OnDeviceCreate();
 	void OnDeviceDestroy();
 
-// editor-related
-#ifdef _EDITOR
-public:
-	float ed_from_time;
-	float ed_to_time;
-
-public:
-	void ED_Reload();
-	float GetGameTime() { return fGameTime; }
-#else // #ifdef _EDITOR
 	float GetGameTime() { return fGameTime; }
 
 	bool m_paused;
-#endif // #ifdef _EDITOR
 
 	CInifile* m_ambients_config;
 	CInifile* m_sound_channels_config;
@@ -388,5 +374,3 @@ public:
 ENGINE_API extern Flags32 psEnvFlags;
 ENGINE_API extern float psVisDistance;
 ENGINE_API extern float ccSunshaftsIntensity;
-
-#endif // EnvironmentH

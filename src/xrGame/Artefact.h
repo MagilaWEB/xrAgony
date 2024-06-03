@@ -55,8 +55,8 @@ protected:
 	virtual void UpdateCLChild(){};
 	virtual void CreateArtefactActivation();
 
-	SArtefactActivation* m_activationObj;
-	SArtefactDetectorsSupport* m_detectorObj;
+	SArtefactActivation* m_activationObj{};
+	SArtefactDetectorsSupport* m_detectorObj{};
 
 	u16 m_CarringBoneID;
 	shared_str m_sParticlesName;
@@ -66,7 +66,7 @@ protected:
 	float m_fTrailLightRange;
 	u8 m_af_rank;
 	bool m_bLightsEnabled;
-	float m_additional_weight;
+	float m_additional_weight{};
 
 	virtual void UpdateLights();
 

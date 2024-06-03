@@ -33,10 +33,7 @@ public:
 
 	T& operator*() const { return *m_pObject; }
 	T* operator->() const { return m_pObject; }
-	// unspecified bool type
-	typedef T const* (FactoryPtr::*unspecified_bool_type)() const;
-	operator unspecified_bool_type() const { return (!m_pObject ? 0 : &FactoryPtr::get); }
-	bool operator!() const { return m_pObject == nullptr; }
+	operator bool() const { return m_pObject; }
 private:
 	void CreateObject();
 	void DestroyObject();

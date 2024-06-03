@@ -38,38 +38,15 @@ const float MAX_DIST_FACTOR = 0.95f;
 
 //////////////////////////////////////////////////////////////////////////
 // environment
-CEnvironment::CEnvironment() : CurrentEnv(0), m_ambients_config(0)
+CEnvironment::CEnvironment() : PerlinNoise1D(new CPerlinNoise1D(Random.randI(0, 0xFFFF)))
 {
-	bNeed_re_create_env = FALSE;
-	bWFX = false;
-	Current[0] = 0;
-	Current[1] = 0;
-	CurrentWeather = 0;
-	CurrentWeatherName = 0;
-	eff_Rain = 0;
-	eff_LensFlare = 0;
-	eff_Thunderbolt = 0;
 	OnDeviceCreate();
-#ifdef _EDITOR
-	ed_from_time = 0.f;
-	ed_to_time = DAY_LENGTH;
-#endif
 
-#ifndef _EDITOR
 	m_paused = false;
-#endif
 
-	fGameTime = 0.f;
 	fTimeFactor = 12.f;
 
-	wind_strength_factor = 0.f;
-	wind_gust_factor = 0.f;
-
-	wind_blast_strength = 0.f;
 	wind_blast_direction.set(1.f, 0.f, 0.f);
-
-	wind_blast_strength_start_value = 0.f;
-	wind_blast_strength_stop_value = 0.f;
 
 	// fill clouds hemi verts & faces
 	const Fvector* verts;
@@ -80,7 +57,6 @@ CEnvironment::CEnvironment() : CurrentEnv(0), m_ambients_config(0)
 	CopyMemory(&CloudsIndices.front(), indices, CloudsIndices.size() * sizeof(u16));
 
 	// perlin noise
-	PerlinNoise1D = new CPerlinNoise1D(Random.randI(0, 0xFFFF));
 	PerlinNoise1D->SetOctaves(2);
 	PerlinNoise1D->SetAmplitude(0.66666f);
 
@@ -192,13 +168,12 @@ float CEnvironment::TimeWeight(float val, float min_t, float max_t)
 void CEnvironment::ChangeGameTime(float game_time) { fGameTime = NormalizeTime(fGameTime + game_time); };
 void CEnvironment::SetGameTime(float game_time, float time_factor)
 {
-#ifndef _EDITOR
 	if (m_paused) // BUG nitrocaster: g_pGameLevel may be null (game not started) -> crash
 	{
 		g_pGameLevel->SetEnvironmentGameTimeFactor(iFloor(fGameTime * 1000.f), fTimeFactor);
 		return;
 	}
-#endif
+
 	if (bWFX)
 		wfx_time -= TimeDiff(fGameTime, game_time);
 	fGameTime = game_time;

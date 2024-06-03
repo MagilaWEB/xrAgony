@@ -17,26 +17,25 @@ class CBaseGraviZone : public CCustomZone
 	typedef CCustomZone inherited;
 
 public:
-	CBaseGraviZone(void);
-	virtual ~CBaseGraviZone(void);
+	CBaseGraviZone();
 
-	virtual void Load(LPCSTR section);
+	virtual void Load(LPCSTR section) override;
 
-	virtual BOOL net_Spawn(CSE_Abstract* DC);
-	virtual void net_Destroy();
-	virtual void net_Relcase(IGameObject* O);
+	virtual BOOL net_Spawn(CSE_Abstract* DC) override;
+	virtual void net_Destroy() override;
+	virtual void net_Relcase(IGameObject* O) override;
 
 	//воздействие зоной на объект
-	virtual void Affect(SZoneObjectInfo* O);
+	virtual void Affect(SZoneObjectInfo* O) override;
 	virtual void AffectPull(CPhysicsShellHolder* GO, const Fvector& throw_in_dir, float dist);
 	virtual void AffectPullAlife(CEntityAlive* EA, const Fvector& throw_in_dir, float dist);
 	virtual void AffectPullDead(CPhysicsShellHolder* GO, const Fvector& throw_in_dir, float dist);
 	virtual void AffectThrow(SZoneObjectInfo* O, CPhysicsShellHolder* GO, const Fvector& throw_in_dir, float dist);
 	virtual void ThrowInCenter(Fvector& C);
 	virtual bool CheckAffectField(CPhysicsShellHolder* GO, float dist_to_radius);
-	virtual void shedule_Update(u32 dt);
-	virtual bool BlowoutState();
-	virtual bool IdleState();
+	virtual void shedule_Update(u32 dt) override;
+	virtual bool BlowoutState() override;
+	virtual bool IdleState() override;
 
 	virtual float BlowoutRadiusPercent(CPhysicsShellHolder* /*GO*/) { return m_fBlowoutRadiusPercent; }
 protected:
@@ -56,7 +55,7 @@ protected:
 	float m_fTeleHeight;
 	u32 m_dwTimeToTele;
 	u32 m_dwTelePause;
-	u32 m_dwTeleTime;
+	u32 m_dwTeleTime{};
 
 	//имя партиклов телекинеза
 	void PlayTeleParticles(CGameObject* pObject);
@@ -73,7 +72,4 @@ class CGraviZone : public CBaseGraviZone
 
 protected:
 	virtual CTelekinesis& Telekinesis() { return m_telekinesis; }
-public:
-	CGraviZone(void) {}
-	virtual ~CGraviZone(void) {}
 };

@@ -16,7 +16,6 @@
 CCartridge::CCartridge()
 {
 	m_flags.assign(cfTracer | cfRicochet);
-	m_ammoSect = NULL;
 	m_InvShortName = NULL;
 	param_s.Init();
 	bullet_material_idx = u16(-1);

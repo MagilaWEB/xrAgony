@@ -1213,8 +1213,6 @@
     <ClInclude Include="UIGameSP.h" />
     <ClInclude Include="UIZoneMap.h" />
     <ClInclude Include="ui\ArtefactDetectorUI.h" />
-    <ClInclude Include="ui\FactionState.h" />
-    <ClInclude Include="ui\FractionState.h" />
     <ClInclude Include="ui\map_hint.h" />
     <ClInclude Include="ui\MMSound.h" />
     <ClInclude Include="ui\UIAchievements.h" />
@@ -1268,7 +1266,6 @@
     <ClInclude Include="ui\UITalkDialogWnd.h" />
     <ClInclude Include="ui\UITalkWnd.h" />
     <ClInclude Include="ui\UITaskWnd.h" />
-    <ClInclude Include="ui\UIWarState.h" />
     <ClInclude Include="ui\UIWpnParams.h" />
     <ClInclude Include="ui\UIXmlInit.h" />
     <ClInclude Include="ui\ui_af_params.h" />

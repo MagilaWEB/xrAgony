@@ -34,7 +34,6 @@ UIUpgrade::UIUpgrade(CUIInventoryUpgradeWnd* parent_wnd) : m_point(NULL)
 	m_color->SetAutoDelete(true);
 	AttachChild(m_color);
 
-	m_upgrade_id = NULL;
 	Reset();
 }
 

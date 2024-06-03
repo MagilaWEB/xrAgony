@@ -245,7 +245,7 @@ public:
 	u16								get_ammo_elapsed() { return a_elapsed.type1; };
 	void							set_ammo_elapsed(u16 count) { a_elapsed.type1 = count; };
 	u16								get_ammo_elapsed2() { return a_elapsed.type2; };
-	void							set_ammo_elapsed2(u16 count) {a_elapsed.type2 = count; };
+	void							set_ammo_elapsed2(u16 count) { a_elapsed.type2 = count; };
 	u8								get_ammo_type() { return ammo_type.type1; };
 	void							set_ammo_type(u8 count) { ammo_type.type1 = count; };
 	u8								get_ammo_type2() { return ammo_type.type2; };
@@ -371,12 +371,11 @@ class CSE_ALifeItemPDA : public CSE_ALifeItem
 	using inherited = CSE_ALifeItem;
 
 public:
-	u16 m_original_owner;
+	u16 m_original_owner{ 0xffff };
 	shared_str m_specific_character;
 	shared_str m_info_portion;
 
 	CSE_ALifeItemPDA(LPCSTR caSection);
-	virtual ~CSE_ALifeItemPDA();
 	virtual CSE_ALifeItemPDA* cast_item_pda() { return this; };
 	virtual void UPDATE_Read(NET_Packet& P);
 	virtual void UPDATE_Write(NET_Packet& P);
@@ -392,7 +391,6 @@ class CSE_ALifeItemDocument : public CSE_ALifeItem
 public:
 	shared_str m_wDoc;
 	CSE_ALifeItemDocument(LPCSTR caSection);
-	virtual ~CSE_ALifeItemDocument();
 	virtual void UPDATE_Read(NET_Packet& P);
 	virtual void UPDATE_Write(NET_Packet& P);
 	virtual void STATE_Read(NET_Packet& P, u16 size);

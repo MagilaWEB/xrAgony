@@ -101,15 +101,6 @@ CConsole::CConsole() : m_hShader_back(NULL)
 
 void CConsole::Initialize()
 {
-	scroll_delta = 0;
-	bVisible = false;
-	pFont = NULL;
-	pFont2 = NULL;
-
-	m_mouse_pos.x = 0;
-	m_mouse_pos.y = 0;
-	m_last_cmd = NULL;
-
 	m_cmd_history.reserve(m_cmd_history_max + 2);
 	m_cmd_history.clear();
 	reset_cmd_history_idx();
@@ -119,9 +110,6 @@ void CConsole::Initialize()
 	m_temp_tips.reserve(MAX_TIPS_COUNT + 1);
 	m_temp_tips.clear();
 
-	m_tips_mode = 0;
-	m_prev_length_str = 0;
-	m_cur_cmd = NULL;
 	reset_selected_tip();
 
 	// Commands
@@ -804,7 +792,7 @@ void CConsole::update_tips()
 	m_temp_tips.clear();
 	m_tips.clear();
 
-	m_cur_cmd = NULL;
+	m_cur_cmd = nullptr;
 	if (!bVisible)
 	{
 		return;

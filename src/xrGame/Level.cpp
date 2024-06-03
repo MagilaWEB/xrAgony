@@ -349,9 +349,6 @@ void CLevel::OnFrame()
 	// Inherited update
 	inherited::OnFrame();
 
-#ifdef DEBUG
-	g_pGamePersistent->Environment().m_paused = m_bEnvPaused;
-#endif
 	g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
 
 	m_ph_commander->update();

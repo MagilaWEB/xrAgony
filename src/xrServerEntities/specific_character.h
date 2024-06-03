@@ -37,10 +37,10 @@ struct SSpecificCharacterData : CSharedResource
 	//имя секции конфигурации звука для NPC персонажа
 	xr_string m_sound_voice_prefix;
 
-	float m_fPanic_threshold;
-	float m_fHitProbabilityFactor;
-	int m_crouch_type;
-	bool m_upgrade_mechanic;
+	float m_fPanic_threshold{};
+	float m_fHitProbabilityFactor{ 1.f };
+	int m_crouch_type{};
+	bool m_upgrade_mechanic{};
 
 	xr_string m_critical_wound_weights;
 #endif
@@ -63,20 +63,20 @@ struct SSpecificCharacterData : CSharedResource
 #endif
 
 	//ранг
-	CHARACTER_RANK_VALUE m_Rank;
+	CHARACTER_RANK_VALUE m_Rank{ NO_RANK };
 	//репутация
-	CHARACTER_REPUTATION_VALUE m_Reputation;
+	CHARACTER_REPUTATION_VALUE m_Reputation{ NO_REPUTATION };
 
 	//Alun
 	struct SRankDef
 	{
-		CHARACTER_RANK_VALUE min;
-		CHARACTER_RANK_VALUE max;
+		CHARACTER_RANK_VALUE min{ NO_RANK };
+		CHARACTER_RANK_VALUE max{ NO_RANK };
 	};
 	struct SReputationDef
 	{
-		CHARACTER_REPUTATION_VALUE min;
-		CHARACTER_REPUTATION_VALUE max;
+		CHARACTER_REPUTATION_VALUE min{ NO_REPUTATION };
+		CHARACTER_REPUTATION_VALUE max{ NO_REPUTATION };
 	};
 
 	SRankDef rank_def;
@@ -95,9 +95,9 @@ struct SSpecificCharacterData : CSharedResource
 #ifdef XRGAME_EXPORTS
 	struct SMoneyDef
 	{
-		u32 min_money;
-		u32 max_money;
-		bool inf_money;
+		u32 min_money{};
+		u32 max_money{};
+		bool inf_money{ false };
 	};
 	SMoneyDef money_def;
 #endif
@@ -108,7 +108,7 @@ class CCharacterInfo;
 class CSE_ALifeTraderAbstract;
 
 class CSpecificCharacter : public CSharedClass<SSpecificCharacterData, shared_str, false>,
-							public CXML_IdToIndex<CSpecificCharacter>
+	public CXML_IdToIndex<CSpecificCharacter>
 {
 private:
 	typedef CSharedClass<SSpecificCharacterData, shared_str, false> inherited_shared;

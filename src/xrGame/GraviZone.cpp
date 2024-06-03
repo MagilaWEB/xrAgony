@@ -10,8 +10,7 @@
 #include "Level.h"
 #include "CharacterPhysicsSupport.h"
 
-CBaseGraviZone::CBaseGraviZone(void) { m_dwTeleTime = 0; }
-CBaseGraviZone::~CBaseGraviZone(void) {}
+CBaseGraviZone::CBaseGraviZone() { }
 void CBaseGraviZone::Load(LPCSTR section)
 {
 	inherited::Load(section);
