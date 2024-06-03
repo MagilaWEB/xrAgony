@@ -751,7 +751,7 @@ bool CWeaponKnife::SelectBestHitVictim(
 	query_sphere.set(fendpos_dest, m_splash_radius);
 
 #ifdef DEBUG
-	m_dbg_data.m_spheres.push_back(std::make_pair(fendpos_dest, m_splash_radius));
+	m_dbg_data.m_spheres.emplace_back(fendpos_dest, m_splash_radius);
 #endif
 
 	m_spartial_query_res.clear();

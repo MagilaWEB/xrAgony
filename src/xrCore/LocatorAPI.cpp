@@ -704,12 +704,11 @@ void CLocatorAPI::setup_fs_path(pcstr fs_name)
 	realpath(fs_path, full_current_directory);
 #endif
 
-	FS_Path* path = new FS_Path(full_current_directory, "", "", "", 0);
 #ifdef DEBUG
 	Msg("$fs_root$ = %s", full_current_directory);
 #endif // #ifdef DEBUG
 
-	pathes.insert(std::make_pair(xr_strdup("$fs_root$"), path));
+	pathes.emplace(xr_strdup("$fs_root$"), new FS_Path(full_current_directory, "", "", "", 0));
 }
 
 IReader* CLocatorAPI::setup_fs_ltx(pcstr fs_name)
@@ -848,7 +847,7 @@ void CLocatorAPI::_initialize(u32 flags, pcstr target_folder, pcstr fs_name)
 			FS_Path* P = new FS_Path(p_it != pathes.end() ? p_it->second->m_Path : root, lp_add, lp_def, lp_capt, fl);
 			bNoRecurse = !(fl & FS_Path::flRecurse);
 			Recurse(P->m_Path);
-			auto I = pathes.insert(std::make_pair(xr_strdup(id), P));
+			auto I = pathes.emplace(xr_strdup(id), P);
 #ifndef DEBUG
 			m_Flags.set(flCacheFiles, false);
 #endif // DEBUG
@@ -1690,7 +1689,7 @@ FS_Path* CLocatorAPI::append_path(pcstr path_alias, pcstr root, pcstr add, bool 
 	FS_Path* P = new FS_Path(root, add, nullptr, nullptr, 0);
 	bNoRecurse = !recursive;
 	Recurse(P->m_Path);
-	pathes.insert(std::make_pair(xr_strdup(path_alias), P));
+	pathes.emplace(xr_strdup(path_alias), P);
 	return P;
 }
 

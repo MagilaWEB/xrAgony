@@ -396,8 +396,8 @@ void CEnvDescriptorMixer::lerp(
 
 	sky_r_textures_env.clear ();
 
-	sky_r_textures_env.push_back(std::make_pair(0,A.sky_texture_env));
-	sky_r_textures_env.push_back(std::make_pair(1,B.sky_texture_env));
+	sky_r_textures_env.emplace_back(0,A.sky_texture_env);
+	sky_r_textures_env.emplace_back(1,B.sky_texture_env);
 
 	clouds_r_textures.clear ();
 	clouds_r_textures.push_back (std::make_pair(0,A.clouds_texture));

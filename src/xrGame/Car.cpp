@@ -732,7 +732,7 @@ void CCar::ParseDefinitions()
 	bone_map.clear();
 
 	IKinematics* pKinematics = smart_cast<IKinematics*>(Visual());
-	bone_map.insert(std::make_pair(pKinematics->LL_GetBoneRoot(), physicsBone()));
+	bone_map.emplace(pKinematics->LL_GetBoneRoot(), physicsBone());
 	CInifile* ini = pKinematics->LL_UserData();
 	R_ASSERT2(ini, "Car has no description !!! See ActorEditor Object - UserData");
 	CExplosive::Load(ini, "explosion");
@@ -1839,9 +1839,9 @@ IC void CCar::fill_wheel_vector(LPCSTR S, xr_vector<T>& type_wheels)
 		auto J = bone_map.find(bone_id);
 		if (J == bone_map.end())
 		{
-			bone_map.insert(std::make_pair(bone_id, physicsBone()));
+			bone_map.emplace(bone_id, physicsBone());
 
-			SWheel& wheel = (m_wheels_map.insert(std::make_pair(bone_id, SWheel(this)))).first->second;
+			SWheel& wheel = (m_wheels_map.emplace(bone_id, SWheel(this))).first->second;
 			wheel.bone_id = bone_id;
 			twheel.pwheel = &wheel;
 			wheel.Load(S1);
@@ -1872,7 +1872,7 @@ IC void CCar::fill_exhaust_vector(LPCSTR S, xr_vector<SExhaust>& exhausts)
 
 		auto J = bone_map.find(bone_id);
 		if (J == bone_map.end())
-			bone_map.insert(std::make_pair(bone_id, physicsBone()));
+			bone_map.emplace(bone_id, physicsBone());
 	}
 }
 
@@ -1888,10 +1888,10 @@ IC void CCar::fill_doors_map(LPCSTR S, xr_map<u16, SDoor>& doors)
 		u16 bone_id = pKinematics->LL_BoneID(S1);
 		SDoor door(this);
 		door.bone_id = bone_id;
-		doors.insert(std::make_pair(bone_id, door));
+		doors.emplace(bone_id, door);
 		auto J = bone_map.find(bone_id);
 		if (J == bone_map.end())
-			bone_map.insert(std::make_pair(bone_id, physicsBone()));
+			bone_map.emplace(bone_id, physicsBone());
 	}
 }
 

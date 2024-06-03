@@ -142,7 +142,7 @@ void CMonsterEnemyMemory::add_enemy(const CEntityAlive* enemy)
 	else
 	{
 		// добавить врага в список объектов
-		m_objects.insert(std::make_pair(enemy, enemy_info));
+		m_objects.emplace(enemy, enemy_info);
 	}
 }
 
@@ -164,7 +164,7 @@ void CMonsterEnemyMemory::add_enemy(const CEntityAlive* enemy, const Fvector& po
 	else
 	{
 		// добавить врага в список объектов
-		m_objects.insert(std::make_pair(enemy, enemy_info));
+		m_objects.emplace(enemy, enemy_info);
 	}
 }
 

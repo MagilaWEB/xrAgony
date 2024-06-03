@@ -275,7 +275,7 @@ CRT* CResourceManager::_CreateRT(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 Sam
 	{
 		CRT* RT = new CRT();
 		RT->dwFlags |= xr_resource_flagged::RF_REGISTERED;
-		m_rtargets.insert(std::make_pair(RT->set_name(Name), RT));
+		m_rtargets.emplace(RT->set_name(Name), RT);
 #ifdef USE_DX11
 		if (Device.b_is_Ready)
 			RT->create(Name, w, h, f, SampleCount, useUAV);
@@ -407,7 +407,7 @@ CTexture* CResourceManager::_CreateTexture(LPCSTR _Name)
 
 	CTexture* T = new CTexture();
 	T->dwFlags |= xr_resource_flagged::RF_REGISTERED;
-	m_textures.insert(std::make_pair(T->set_name(Name), T));
+	m_textures.emplace(T->set_name(Name), T);
 	T->Preload();
 	if (Device.b_is_Ready && !bDeferredLoad)
 		T->Load();
@@ -460,7 +460,7 @@ CMatrix* CResourceManager::_CreateMatrix(LPCSTR Name)
 		CMatrix* M = new CMatrix();
 		M->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 		M->dwReference = 1;
-		m_matrices.insert(std::make_pair(M->set_name(Name), M));
+		m_matrices.emplace(M->set_name(Name), M);
 		return M;
 	}
 }
@@ -498,7 +498,7 @@ CConstant* CResourceManager::_CreateConstant(LPCSTR Name)
 		CConstant* C = new CConstant();
 		C->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 		C->dwReference = 1;
-		m_constants.insert(std::make_pair(C->set_name(Name), C));
+		m_constants.emplace(C->set_name(Name), C);
 		return C;
 	}
 }
