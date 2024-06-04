@@ -7,11 +7,21 @@
 #endif
 
 #if defined(__GNUC__)
+#define XR_ASSUME(expr)  if (expr){} else __builtin_unreachable()
+
 #define XR_EXPORT __attribute__ ((visibility("default")))
 #define XR_IMPORT __attribute__ ((visibility("default")))
+
+#define XR_NOVTABLE
 #elif defined(_MSC_VER)
+#define XR_ASSUME(expr) __assume(expr)
+
 #define XR_EXPORT __declspec(dllexport)
 #define XR_IMPORT __declspec(dllimport)
+
+#define XR_NOVTABLE __declspec(novtable)
+#else
+#error Provide your definitions here
 #endif
 
 #include "xrCommon/inlining_macros.h"

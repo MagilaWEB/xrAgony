@@ -11,6 +11,8 @@
 #include "xrCore/clsid.h"
 #include "xrCore/xrCore_benchmark_macros.h"
 
+class IGame_Persistent;
+
 class IFactoryObject
 {
 public:
@@ -37,6 +39,8 @@ public:
 extern "C" {
 using Factory_Create = DLL_API IFactoryObject* __cdecl(CLASS_ID CLS_ID);
 using Factory_Destroy = DLL_API void __cdecl(IFactoryObject* O);
+using CreateGamePersistent = DLL_API IGame_Persistent* __cdecl();
+using DestroyGamePersistent = DLL_API void __cdecl(IGame_Persistent*& O);
 };
 
 // Tuning interface
@@ -60,6 +64,10 @@ public:
 	BENCH_SEC_SCRAMBLEMEMBER1
 	Factory_Create* pCreate;
 	Factory_Destroy* pDestroy;
+
+	CreateGamePersistent* pCreateGamePersisten;
+	DestroyGamePersistent* pDestroyGamePersistent;
+
 	bool tune_enabled;
 	VTPause* tune_pause;
 	VTResume* tune_resume;

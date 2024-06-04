@@ -7,28 +7,46 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+
+
+
+#include "GamePersistent.h"
 #include "object_factory.h"
-#include "xrUICore/XML/xrUIXmlParser.h"
+
 #include "xr_level_controller.h"
 #include "xrEngine/profiler.h"
+#include "xrEngine/EngineAPI.h"
+
+#include "xrUICore/XML/xrUIXmlParser.h"
 
 extern void FillUIStyleToken();
 extern void CleanupUIStyleToken();
 
 extern "C" {
-DLL_API IFactoryObject* __cdecl xrFactory_Create(CLASS_ID clsid)
-{
-	IFactoryObject* object = object_factory().client_object(clsid);
+	DLL_API IFactoryObject* __cdecl xrFactory_Create(CLASS_ID clsid)
+	{
+		IFactoryObject* object = object_factory().client_object(clsid);
 #ifdef DEBUG
-	if (!object)
-		return (0);
+		if (!object)
+			return (0);
 #endif
-	// XXX nitrocaster XRFACTORY: set clsid during factory initialization
-	object->GetClassId() = clsid;
-	return (object);
-}
+		// XXX nitrocaster XRFACTORY: set clsid during factory initialization
+		object->GetClassId() = clsid;
+		return (object);
+	}
 
-DLL_API void __cdecl xrFactory_Destroy(IFactoryObject* O) { xr_delete(O); }
+	DLL_API void __cdecl xrFactory_Destroy(IFactoryObject* O) { xr_delete(O); }
+
+	DLL_API IGame_Persistent* __cdecl xrCreateGamePersistent()
+	{
+		object_factory(); // XXX: remove this call
+		return new CGamePersistent();
+	}
+
+	DLL_API void __cdecl xrDestroyGamePersistent(IGame_Persistent*& O)
+	{
+		xr_delete(O);
+	}
 };
 
 void CCC_RegisterCommands();
@@ -46,8 +64,8 @@ BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 		// keyboard binding
 		CCC_RegisterInput();
 #ifdef DEBUG
-// XXX nitrocaster PROFILER: temporarily disabled due to linkage issues
-// g_profiler			= new CProfiler();
+		// XXX nitrocaster PROFILER: temporarily disabled due to linkage issues
+		// g_profiler			= new CProfiler();
 #endif
 		gStringTable = new CStringTable();
 		StringTable().Init();

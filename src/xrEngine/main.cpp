@@ -123,7 +123,7 @@ ENGINE_API void Startup()
 	Device.Create();
 	LALib.OnCreate();
 	pApp = new CApplication();
-	g_pGamePersistent = dynamic_cast<IGame_Persistent*>(NEW_INSTANCE(CLSID_GAME_PERSISTANT));
+	g_pGamePersistent = Engine.External.pCreateGamePersisten();
 	R_ASSERT(g_pGamePersistent);
 	g_SpatialSpace = new ISpatial_DB("Spatial obj");
 	g_SpatialSpacePhysic = new ISpatial_DB("Spatial phys");
@@ -136,7 +136,7 @@ ENGINE_API void Startup()
 	// Destroy APP
 	xr_delete(g_SpatialSpacePhysic);
 	xr_delete(g_SpatialSpace);
-	DEL_INSTANCE(g_pGamePersistent);
+	Engine.External.pDestroyGamePersistent(g_pGamePersistent);
 	xr_delete(pApp);
 	Engine.Event.Dump();
 	// Destroying

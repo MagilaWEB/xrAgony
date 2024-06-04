@@ -20,9 +20,6 @@ class IMainMenu;
 class ENGINE_API CPS_Instance;
 //-----------------------------------------------------------------------------------------------------------
 class ENGINE_API IGame_Persistent :
-#ifndef _EDITOR
-	public FactoryObjectBase,
-#endif
 	public pureAppStart,
 	public pureAppEnd,
 	public pureAppActivate,

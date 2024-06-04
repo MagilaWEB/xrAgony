@@ -103,6 +103,12 @@ void CEngineAPI::Initialize(void)
 	pDestroy = (Factory_Destroy*)hGame->GetProcAddress("xrFactory_Destroy");
 	R_ASSERT(pDestroy);
 
+	pCreateGamePersisten = (CreateGamePersistent*)hGame->GetProcAddress("xrCreateGamePersistent");
+	R_ASSERT(pCreateGamePersisten);
+
+	pDestroyGamePersistent = (DestroyGamePersistent*)hGame->GetProcAddress("xrDestroyGamePersistent");
+	R_ASSERT(pDestroyGamePersistent);
+
 	//////////////////////////////////////////////////////////////////////////
 	// vTune
 	tune_enabled = false;
