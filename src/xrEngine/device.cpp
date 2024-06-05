@@ -479,35 +479,30 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 	if (isWndActive != b_is_Active)
 	{
 		b_is_Active = isWndActive;
-
-		xrThread::GlobalState(xrThread::dsSleep);
-		seqParallel.clear();
-		seqParallel2.clear();
+		pInput->ClipCursor(b_is_Active);
 
 		if (b_is_Active)
 		{
-			pInput->ClipCursor(true);
-
-			if ((!IsQUIT()) && mt_global_update.IsInit() && ::Render->GetDeviceState() == DeviceState::Lost)
-				ResetStart();
-
+			Reset();
 			ShowWindow(m_hWnd, SW_SHOW);
 			xrThread::GlobalState(xrThread::dsOK);
 		}
 		else
-		{
-			pInput->ClipCursor(false);
 			ShowWindow(m_hWnd, SW_MINIMIZE); //Fixes a glitch with some applications when the window does not collapse if you quickly switch to another window.
-		}
 
 		functionPointer.push_back([&]() {
+			seqParallel.clear();
+			seqParallel2.clear();
+
 			if (b_is_Active)
 			{
+				xrThread::GlobalState(xrThread::dsOK);
 				seqAppActivate.Process();
 				app_inactive_time += TimerMM.GetElapsed_ms() - app_inactive_time_start;
 			}
 			else
 			{
+				xrThread::GlobalState(xrThread::dsSleep);
 				app_inactive_time_start = TimerMM.GetElapsed_ms();
 				seqAppDeactivate.Process();
 			}
