@@ -60,15 +60,9 @@ void CSoundRender_Emitter::Event_ReleaseOwner()
 {
 	if (!owner_data)
 		return;
-
-	for (u32 it = 0; it < SoundRender->s_events.size(); it++)
-	{
-		if (owner_data == SoundRender->s_events[it].first)
-		{
-			SoundRender->s_events.erase(SoundRender->s_events.begin() + it);
-			it--;
-		}
-	}
+	std::erase_if(SoundRender->s_events, [&](auto _event) {
+		return owner_data == _event.first;
+	});
 }
 
 void CSoundRender_Emitter::Event_Propagade()

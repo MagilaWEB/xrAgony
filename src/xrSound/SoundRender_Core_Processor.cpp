@@ -21,7 +21,6 @@ CSoundRender_Emitter* CSoundRender_Core::i_play(ref_sound* S, bool _loop, float 
 
 void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector& N)
 {
-	u32 it;
 	if (0 == bReady)
 		return;
 	Stats.Update.Begin();
@@ -37,9 +36,8 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 
 	// Firstly update emitters, which are now being rendered
 	// Msg("! update: r-emitters");
-	for (it = 0; it < s_targets.size(); it++)
+	for (CSoundRender_Target*& T : s_targets)
 	{
-		CSoundRender_Target* T = s_targets[it];
 		CSoundRender_Emitter* E = T->get_emitter();
 		if (E)
 		{
@@ -52,38 +50,35 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 				T->priority = -1;
 		}
 		else
-		{
 			T->priority = -1;
-		}
 	}
 
 	// Update emitters
 	// Msg("! update: emitters");
-	for (it = 0; it < s_emitters.size(); it++)
-	{
-		CSoundRender_Emitter* pEmitter = s_emitters[it];
+	std::erase_if(s_emitters, [&](CSoundRender_Emitter*& pEmitter) {
 		if (pEmitter->marker != s_emitters_u)
 		{
 			pEmitter->update(dt_sec);
 			pEmitter->marker = s_emitters_u;
 		}
+
 		if (!pEmitter->isPlaying())
 		{
 			// Stopped
 			xr_delete(pEmitter);
-			s_emitters.erase(s_emitters.begin() + it);
-			it--;
+			return true;
 		}
-	}
+
+		return false;
+	});
 
 	// Get currently rendering emitters
 	// Msg("! update: targets");
 	s_targets_defer.clear();
 	s_targets_pu++;
 	// u32 PU				= s_targets_pu%s_targets.size();
-	for (it = 0; it < s_targets.size(); it++)
+	for (CSoundRender_Target*& T : s_targets)
 	{
-		CSoundRender_Target* T = s_targets[it];
 		if (T->get_emitter())
 		{
 			// Has emmitter, maybe just not started rendering
@@ -102,8 +97,8 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 	{
 		// Msg	("! update: start render - commit");
 		s_targets_defer.erase(std::unique(s_targets_defer.begin(), s_targets_defer.end()), s_targets_defer.end());
-		for (it = 0; it < s_targets_defer.size(); it++)
-			s_targets_defer[it]->fill_parameters();
+		for (CSoundRender_Target*& target_defer : s_targets_defer)
+			target_defer->fill_parameters();
 	}
 
 	// update EAX
@@ -128,8 +123,8 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 	if (!s_targets_defer.empty())
 	{
 		// Msg	("! update: start render");
-		for (it = 0; it < s_targets_defer.size(); it++)
-			s_targets_defer[it]->render();
+		for (CSoundRender_Target*& target_defer : s_targets_defer)
+			target_defer->render();
 	}
 
 	// Events
@@ -143,11 +138,10 @@ static u32 g_saved_event_count = 0;
 void CSoundRender_Core::update_events()
 {
 	g_saved_event_count = s_events.size();
-	for (u32 it = 0; it < s_events.size(); it++)
-	{
-		event& E = s_events[it];
+
+	for (event& E : s_events)
 		Handler(E.first, E.second);
-	}
+
 	s_events.clear();
 }
 
@@ -156,12 +150,9 @@ void CSoundRender_Core::statistic(CSound_stats* dest, CSound_stats_ext* ext)
 	if (dest)
 	{
 		dest->_rendered = 0;
-		for (u32 it = 0; it < s_targets.size(); it++)
-		{
-			CSoundRender_Target* T = s_targets[it];
+		for (CSoundRender_Target* T : s_targets)
 			if (T->get_emitter() && T->get_Rendering())
 				dest->_rendered++;
-		}
 		dest->_simulated = s_emitters.size();
 		dest->_cache_hits = cache._stat_hit;
 		dest->_cache_misses = cache._stat_miss;
@@ -170,9 +161,8 @@ void CSoundRender_Core::statistic(CSound_stats* dest, CSound_stats_ext* ext)
 	}
 	if (ext)
 	{
-		for (u32 it = 0; it < s_emitters.size(); it++)
+		for (CSoundRender_Emitter* _E : s_emitters)
 		{
-			CSoundRender_Emitter* _E = s_emitters[it];
 			CSound_stats_ext::SItem _I;
 			_I._3D = !_E->b2D;
 			_I._rendered = !!_E->target;

@@ -311,9 +311,7 @@ public:
 public:
 	void compute_planes()
 	{
-		for (int it = 0; it < polys.size(); it++)
-		{
-			_poly& P = polys[it];
+		std::erase_if(polys, [&](_poly& P) {
 			Fvector3 t1, t2;
 			float len;
 
@@ -340,9 +338,7 @@ public:
 				{
 					//	HACK:	Remove plane.
 					// VERIFY(!"Can't build normal to plane!");
-					polys.erase(polys.begin() + it);
-					--it;
-					continue;
+					return true;
 				}
 			}
 
@@ -392,7 +388,8 @@ public:
 				VERIFY	(p012.n.similar(p123.n) && p012.n.similar(p230.n) && p012.n.similar(p301.n));
 			}
 			*/
-		}
+			return false;
+		});
 	}
 	void compute_caster_model(xr_vector<Fplane>& dest, Fvector3 direction)
 	{
@@ -412,15 +409,13 @@ public:
 
 		// remove faceforward polys, build list of edges -> find open ones
 		compute_planes();
-		for (int it = 0; it < polys.size(); it++)
-		{
-			_poly& base = polys[it];
+		std::erase_if(polys, [&](_poly& base) {
 			VERIFY(base.classify(cog) < 0); // debug
 
 			int marker = (base.planeN.dotproduct(direction) <= 0) ? -1 : 1;
 
 			// register edges
-			xr_vector<int>& plist = polys[it].points;
+			xr_vector<int>& plist = base.points;
 			for (int p = 0; p < int(plist.size()); p++)
 			{
 				_edge E(plist[p], plist[(p + 1) % plist.size()], marker);
@@ -442,11 +437,9 @@ public:
 
 			// remove if unused
 			if (marker < 0)
-			{
-				polys.erase(polys.begin() + it);
-				it--;
-			}
-		}
+				return true;
+			return false;
+		});
 
 		// Extend model to infinity, the volume is not capped, so this is indeed up to infinity
 		for (_edge & E : edges)

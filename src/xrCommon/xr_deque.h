@@ -71,16 +71,6 @@ public:
 	{
 		tbb::parallel_sort(inherited::begin(), inherited::end(), _Pred);
 	}
-
-	void clear_and_free() { inherited::clear(); }
-	void clear_not_free() { inherited::erase(inherited::begin(), inherited::end()); }
-	void clear_and_reserve() { if (inherited::capacity() <= (size() + size() / 4)) clear_not_free(); else { u32 old = size(); clear_and_free(); inherited::reserve(old); } }
-
-#ifdef M_DONTDEFERCLEAR_EXT
-	void clear() { clear_and_free(); }
-#else
-	void clear() { clear_not_free(); }
-#endif
 };
 
 #define DEF_DEQUE(N, T)\

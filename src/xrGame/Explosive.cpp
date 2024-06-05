@@ -726,14 +726,13 @@ void CExplosive::ExplodeWaveProcessObject(collide::rq_results& storage, CPhysics
 	}
 #endif
 }
-struct SRemovePred
-{
-	bool operator()(CGameObject* O) { return !!O->getDestroy(); }
-};
+
 void CExplosive::ExplodeWaveProcess()
 {
-	auto I = std::remove_if(m_blasted_objects.begin(), m_blasted_objects.end(), SRemovePred());
-	m_blasted_objects.erase(I, m_blasted_objects.end());
+	std::erase_if(m_blasted_objects, [&](CGameObject* O) {
+		return !!O->getDestroy();
+	});
+
 	rq_storage.r_clear();
 	u16 i = BLASTED_OBJ_PROCESSED_PER_FRAME;
 	while (m_blasted_objects.size() && 0 != i)

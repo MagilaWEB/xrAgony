@@ -426,11 +426,9 @@ void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& 
 		// remove if stopped
 		if (rem_cnt)
 		{
-			VisualVecIt new_end = std::remove_if(_children_free.begin(), _children_free.end(), [](const dxRender_Visual* x)
-			{
+			std::erase_if(_children_free, [&](const dxRender_Visual* x) {
 				return x == nullptr;
 			});
-			_children_free.erase(new_end, _children_free.end());
 		}
 	}
 	//Msg("C: %d CS: %d",_children.size(),_children_stopped.size());

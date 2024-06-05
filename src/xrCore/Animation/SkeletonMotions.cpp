@@ -288,39 +288,32 @@ motions_value* motions_container::dock(shared_str key, IReader* data, vecBones* 
 	}
 	return result;
 }
+
 void motions_container::clean(bool force_destroy)
 {
-	auto it = container.begin();
-	auto _E = container.end();
 	if (force_destroy)
 	{
-		for (; it != _E; it++)
+		for (auto & it : container)
 		{
-			motions_value* sv = it->second;
+			motions_value* sv = it.second;
 			xr_delete(sv);
 		}
 		container.clear();
 	}
 	else
 	{
-		for (; it != _E;)
-		{
-			motions_value* sv = it->second;
+		std::erase_if(container, [](const auto & it) {
+			motions_value* sv = it.second;
 			if (0 == sv->m_dwReference)
 			{
-				auto i_current = it;
-				auto i_next = ++it;
 				xr_delete(sv);
-				container.erase(i_current);
-				it = i_next;
+				return true;
 			}
-			else
-			{
-				it++;
-			}
-		}
+			return false;
+		});
 	}
 }
+
 void motions_container::dump()
 {
 	auto it = container.begin();

@@ -270,13 +270,13 @@ void CBinocularsVision::Update()
 	*/
 	// death or invis
 	for_each(m_active_objects.begin(), m_active_objects.end(), check_pred());
-	m_active_objects.erase(remove_if(m_active_objects.begin(), m_active_objects.end(),
-			  [](SBinocVisibleObj* _it) {
-				  bool res = _it->m_flags.test(flVisObjNotValid);
-				  if (res)xr_delete(_it);
-				  return res;
-			  }),
-	m_active_objects.end());
+
+	std::erase_if(m_active_objects, [](SBinocVisibleObj*& _it) {
+		bool res = _it->m_flags.test(flVisObjNotValid);
+		if (res)
+			xr_delete(_it);
+		return res;
+	});
 
 	it = m_active_objects.begin();
 	for (; it != m_active_objects.end(); ++it)

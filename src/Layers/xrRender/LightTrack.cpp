@@ -443,52 +443,48 @@ void CROS_impl::prepare_lights(Fvector& position, IRenderable* O)
 		// Trace visibility
 		lights.clear();
 
-		for (s32 id = 0; id < s32(track.size()); id++)
-		{
+		std::erase_if(track, [&](CROS_impl::Item& cros_item) {
 			// remove untouched lights
-			xr_vector<CROS_impl::Item>::iterator I = track.begin() + id;
-			if (I->frame_touched != Device.dwFrame)
-			{
-				track.erase(I);
-				id--;
-				continue;
-			}
+			if (cros_item.frame_touched != Device.dwFrame)
+				return true;
 
 			// Trace visibility
 			Fvector P, D;
 			float amount = 0;
-			light* xrL = I->source;
+			light* xrL = cros_item.source;
 			Fvector& LP = xrL->position;
 
 			P = position;
 
 			// point/spot
 			float f = D.sub(P, LP).magnitude();
-			if (g_pGameLevel->ObjectSpace.RayTest(LP, D.div(f), f, collide::rqtStatic, &I->cache, _object))
+			if (g_pGameLevel->ObjectSpace.RayTest(LP, D.div(f), f, collide::rqtStatic, &cros_item.cache, _object))
 				amount -= lt_dec;
 			else
 				amount += lt_inc;
-			I->test += amount * dt;
-			clamp(I->test, -.5f, 1.f);
-			I->energy = .9f * I->energy + .1f * I->test;
+			cros_item.test += amount * dt;
+			clamp(cros_item.test, -.5f, 1.f);
+			cros_item.energy = .9f * cros_item.energy + .1f * cros_item.test;
 
 			//
-			float E = I->energy * xrL->color.intensity();
+			float E = cros_item.energy * xrL->color.intensity();
 			if (E > EPS)
 			{
 				// Select light
 				lights.push_back(CROS_impl::Light());
 				CROS_impl::Light& L = lights.back();
 				L.source = xrL;
-				L.color.mul_rgb(xrL->color, I->energy / 2);
-				L.energy = I->energy / 2;
+				L.color.mul_rgb(xrL->color, cros_item.energy / 2);
+				L.energy = cros_item.energy / 2;
 				if (!xrL->flags.bStatic)
 				{
 					L.color.mul_rgb(.5f);
 					L.energy *= .5f;
 				}
 			}
-		}
+
+			return false;
+		});
 
 		// Sort lights by importance - important for R1-shadows
 		//std::sort(lights.begin(), lights.end(), pred_energy);

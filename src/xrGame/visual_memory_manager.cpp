@@ -657,7 +657,7 @@ void CVisualMemoryManager::update(float time_delta)
 {
 	START_PROFILE("Memory Manager/visuals/update")
 
-		clear_delayed_objects();
+	clear_delayed_objects();
 
 	if (!enabled())
 		return;
@@ -678,7 +678,7 @@ void CVisualMemoryManager::update(float time_delta)
 		}
 	STOP_PROFILE
 
-		START_PROFILE("Memory Manager/visuals/update/make_invisible")
+	START_PROFILE("Memory Manager/visuals/update/make_invisible")
 	{
 		xr_vector<CVisibleObject>::iterator I = m_objects->begin();
 		xr_vector<CVisibleObject>::iterator E = m_objects->end();
@@ -688,37 +688,30 @@ void CVisualMemoryManager::update(float time_delta)
 	}
 	STOP_PROFILE
 
-		START_PROFILE("Memory Manager/visuals/update/add_visibles")
+	START_PROFILE("Memory Manager/visuals/update/add_visibles")
 	{
-		xr_vector<IGameObject*>::const_iterator I = m_visible_objects.begin();
-		xr_vector<IGameObject*>::const_iterator E = m_visible_objects.end();
-		for (; I != E; ++I)
-			add_visible_object(*I, time_delta);
+		for (IGameObject* _object: m_visible_objects)
+			add_visible_object(_object, time_delta);
 	}
 	STOP_PROFILE
 
-		START_PROFILE("Memory Manager/visuals/update/make_not_yet_visible")
+	START_PROFILE("Memory Manager/visuals/update/make_not_yet_visible")
 	{
-		xr_vector<CNotYetVisibleObject>::iterator I = m_not_yet_visible_objects.begin();
-		xr_vector<CNotYetVisibleObject>::iterator E = m_not_yet_visible_objects.end();
-		for (; I != E; ++I)
-			if ((*I).m_update_time < Device.dwTimeGlobal)
-				(*I).m_value = 0.f;
+		for (CNotYetVisibleObject & not_yet_visible_object : m_not_yet_visible_objects)
+			if (not_yet_visible_object.m_update_time < Device.dwTimeGlobal)
+				not_yet_visible_object.m_value = 0.f;
 	}
 	STOP_PROFILE
 
-		START_PROFILE("Memory Manager/visuals/update/removing_offline")
-		// verifying if object is online
+	START_PROFILE("Memory Manager/visuals/update/removing_offline")
+	// verifying if object is online
 	{
-		m_objects->erase(
-			std::remove_if(m_objects->begin(), m_objects->end(), SRemoveOfflinePredicate()), m_objects->end());
+		std::erase_if(*m_objects, SRemoveOfflinePredicate());
 	}
 
 	// verifying if object is online
 	{
-		m_not_yet_visible_objects.erase(std::remove_if(m_not_yet_visible_objects.begin(),
-			m_not_yet_visible_objects.end(), SRemoveOfflinePredicate()),
-			m_not_yet_visible_objects.end());
+		std::erase_if(m_not_yet_visible_objects, SRemoveOfflinePredicate());
 	}
 	STOP_PROFILE
 
@@ -728,7 +721,7 @@ void CVisualMemoryManager::update(float time_delta)
 			CAgentMemberManager::MEMBER_STORAGE::const_iterator	E = m_stalker->agent_manager().member().members().end();
 			for (; I != E; ++I)
 				(*I)->object().memory().visual().check_visibles();
-		}
+}
 #endif
 
 	if (m_object && g_actor)
@@ -899,9 +892,9 @@ void CVisualMemoryManager::load(IReader& packet)
 			{
 				VERIFY(spawn_callback->m_object_callback == callback);
 			}
-		}
-#endif // DEBUG
 	}
+#endif // DEBUG
+}
 }
 
 void CVisualMemoryManager::clear_delayed_objects()

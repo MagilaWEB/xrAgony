@@ -150,33 +150,17 @@ bool CScriptEngine::RemoveUniqueCallScript(const luabind::functor<bool>& functio
 
 void CScriptEngine::UpdateUniqueCall()
 {
-	for (size_t i = 0; i < UniqueCall.size(); i++)
-	{
-		luabind::functor<bool> _functor = UniqueCall[i];
+	std::erase_if(UniqueCall, [&](luabind::functor<bool> _functor) {
 		try
 		{
-			if (_functor())
-			{
-				UniqueCall.erase(UniqueCall.begin() + i);
-				i--;
-			}
+			return _functor();
 		}
 		catch (...)
 		{
-			try
-			{
-				::ScriptEngine->print_stack();
-				UniqueCall.erase(UniqueCall.begin() + i);
-				i--;
-				continue;
-			}
-			catch (...)
-			{
-				::ScriptEngine->print_stack();
-				break;
-			}
+			::ScriptEngine->print_stack();
+			return true;
 		}
-	}
+	});
 }
 
 void CScriptEngine::ScriptLimitUpdate(LPCSTR name, u16 fps, const luabind::functor<void> & fn)

@@ -22,9 +22,7 @@ void CRender::render_lights(light_Package& LP)
 		{
 			LP_smap_pool.initialize(RImplementation.o.smapsize);
 
-			for (size_t i = 0; i < LP.v_shadowed.size(); i++)
-			{
-				light *& _light = LP.v_shadowed[i];
+			std::erase_if(LP.v_shadowed, [&](light*& _light) {
 				if (_light->vis.visible)
 				{
 					SMAP_Rect R{};
@@ -35,17 +33,14 @@ void CRender::render_lights(light_Package& LP)
 						_light->X.S.posY = R.min.y;
 						_light->vis.smap_ID = smap_ID;
 						refactored.push_back(std::move(_light));
-						LP.v_shadowed.erase(LP.v_shadowed.begin() + i);
-						i--;
+						return true;
 					}
+					return false;
 				}
-				else
-				{
-					LP.v_shadowed.erase(LP.v_shadowed.begin() + i);
-					i--;
-					--total;
-				}
-			}
+
+				total--;
+				return true;
+			});
 		}
 
 		// save (lights are popped from back)

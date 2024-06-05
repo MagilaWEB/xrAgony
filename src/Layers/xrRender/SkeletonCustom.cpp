@@ -730,11 +730,6 @@ void CKinematics::AddWallmark(
 	wallmarks.push_back(wm);
 }
 
-struct zero_wm_pred
-{
-	bool operator()(const intrusive_ptr<CSkeletonWallmark> x) { return x == nullptr; }
-};
-
 void CKinematics::CalculateWallmarks()
 {
 	if (!wallmarks.empty() && (wm_frame != Device.dwFrame))
@@ -760,8 +755,9 @@ void CKinematics::CalculateWallmarks()
 		}
 		if (need_remove)
 		{
-			auto new_end = std::remove_if(wallmarks.begin(), wallmarks.end(), zero_wm_pred());
-			wallmarks.erase(new_end, wallmarks.end());
+			std::erase_if(wallmarks, [](const intrusive_ptr<CSkeletonWallmark> x) {
+				return x == nullptr;
+			});
 		}
 	}
 }

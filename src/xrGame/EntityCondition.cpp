@@ -178,21 +178,17 @@ void CEntityCondition::ChangeBleeding(const float percent)
 	}
 }
 
-bool RemoveWoundPred(CWound* pWound)
-{
-	if (pWound->GetDestroy())
-	{
-		xr_delete(pWound);
-		return true;
-	}
-	return false;
-}
-
 void CEntityCondition::UpdateWounds()
 {
 	//убрать все зашившие раны из списка
-	m_WoundVector.erase(
-		std::remove_if(m_WoundVector.begin(), m_WoundVector.end(), &RemoveWoundPred), m_WoundVector.end());
+	std::erase_if(m_WoundVector, [&](CWound*& pWound) {
+		if (pWound->GetDestroy())
+		{
+			xr_delete(pWound);
+			return true;
+		}
+		return false;
+	});
 }
 
 void CEntityCondition::UpdateConditionTime()
