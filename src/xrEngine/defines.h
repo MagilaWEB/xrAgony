@@ -37,6 +37,8 @@ enum
 
 	rsDX9 = (1ul << 19ul),
 	rsDX11 = (1ul << 20ul),
+	rsCPUStatistic = (1ul << 21ul),
+	rsXrThreadStatistic = (1ul << 22ul),
 	rsShowFPS = (1ul << 23ul), // 23 was reserved for editor
 	// 24-32 bit - reserved to Editor
 };

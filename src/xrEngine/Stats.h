@@ -14,20 +14,28 @@ class ENGINE_API CStats : public pureRender
 private:
 	CGameFont* statsFont;
 	CGameFont* fpsFont;
+	CGameFont* pFontCPU;
+	CGameFont* pFontXrThread;
 	float fMem_calls;
 	xr_vector<shared_str> errors;
+	double cpuBefore;
+	double cpuLoad;
+	CTimer cpu_time;
 
 public:
 	CStats();
 	~CStats();
 
 	void Show(void);
+
 	virtual void OnRender();
 	void OnDeviceCreate(void);
 	void OnDeviceDestroy(void);
 
 private:
 	void FilteredLog(const char* s);
+	void StatsCPU();
+	void ShowXrThread();
 };
 
 enum

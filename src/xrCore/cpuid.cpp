@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "cpuid.h"
 #include <intrin.h>
+#pragma comment(lib, "ntdll.lib")
 
 _processor_info::_processor_info()
 {
@@ -35,24 +36,6 @@ _processor_info::_processor_info()
 	__cpuid(cpuInfo, 0x80000001);
 	m_f81_ECX = cpuInfo[2];
 	m_f81_EDX = cpuInfo[3];
-
-	// get version of OS
-	DWORD dwMajorVersion = 0;
-	DWORD dwVersion = 0;
-	dwVersion = GetVersion();
-
-	dwMajorVersion = (DWORD)(LOBYTE(LOWORD(dwVersion)));
-
-	if (dwMajorVersion <= 5) // XP don't support SSE3+ instruction sets
-	{
-		m_f1_ECX[0] = 0;
-		m_f1_ECX[9] = 0;
-		m_f1_ECX[19] = 0;
-		m_f1_ECX[20] = 0;
-		m_f81_ECX[6] = 0;
-		m_f1_ECX[28] = 0;
-		m_f7_EBX[5] = 0;
-	}
 
 	// Calculate available processors
 	DWORD returnedLength = 0;
@@ -102,58 +85,25 @@ _processor_info::_processor_info()
 	performanceInfo = std::make_unique<SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION[]>(m_dwNumberOfProcessors);
 }
 
-unsigned long long SubtractTimes(const FILETIME one, const FILETIME two)
+float _processor_info::getCPULoad()
 {
-	LARGE_INTEGER a, b;
-	a.LowPart = one.dwLowDateTime;
-	a.HighPart = one.dwHighDateTime;
+	float summa_cpu{};
+	for (DWORD i = 0; i < m_dwNumberOfProcessors; i++)
+		summa_cpu += fUsage[i];
 
-	b.LowPart = two.dwLowDateTime;
-	b.HighPart = two.dwHighDateTime;
-
-	return a.QuadPart - b.QuadPart;
-}
-
-bool _processor_info::getCPULoad(double& val)
-{
-	FILETIME sysIdle, sysKernel, sysUser;
-	// sysKernel include IdleTime
-	if (GetSystemTimes(&sysIdle, &sysKernel, &sysUser) == 0) // GetSystemTimes func FAILED return value is zero;
-		return false;
-
-	if (prevSysIdle.dwLowDateTime != 0 && prevSysIdle.dwHighDateTime != 0)
-	{
-		DWORDLONG sysIdleDiff, sysKernelDiff, sysUserDiff;
-		sysIdleDiff = SubtractTimes(sysIdle, prevSysIdle);
-		sysKernelDiff = SubtractTimes(sysKernel, prevSysKernel);
-		sysUserDiff = SubtractTimes(sysUser, prevSysUser);
-
-		DWORDLONG sysTotal = sysKernelDiff + sysUserDiff;
-		DWORDLONG kernelTotal = sysKernelDiff - sysIdleDiff; // kernelTime - IdleTime = kernelTime, because sysKernel include IdleTime
-
-		if (sysTotal > 0) // sometimes kernelTime > idleTime
-			val = (double)(((kernelTotal + sysUserDiff) * 100.0) / sysTotal);
-	}
-
-	prevSysIdle = sysIdle;
-	prevSysKernel = sysKernel;
-	prevSysUser = sysUser;
-
-	return true;
+	return summa_cpu / m_dwNumberOfProcessors;
 }
 
 void _processor_info::MTCPULoad()
 {
-	using NTQUERYSYSTEMINFORMATION = NTSTATUS(NTAPI*)(SYSTEM_INFORMATION_CLASS, PVOID, ULONG, PULONG);
-	static auto m_pNtQuerySystemInformation = (NTQUERYSYSTEMINFORMATION)GetProcAddress(GetModuleHandle("ntdll.dll"), "NtQuerySystemInformation");
+	NtQuerySystemInformation(SystemProcessorPerformanceInformation, performanceInfo.get(),
+		sizeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION) * (ULONG)m_dwNumberOfProcessors, nullptr);
 
-	if (!NT_SUCCESS(m_pNtQuerySystemInformation(SystemProcessorPerformanceInformation, performanceInfo.get(),
-		sizeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION) * (ULONG)m_dwNumberOfProcessors, nullptr)))
-		Msg("!![%s] Can't get NtQuerySystemInformation", __FUNCTION__);
-
-	DWORD dwTickCount = GetTickCount();
+	ULONGLONG dwTickCount = GetTickCount64();
 	if (!m_dwCount)
 		m_dwCount = dwTickCount;
+
+	const ULONGLONG pertime = dwTickCount - m_dwCount;
 
 	for (DWORD i = 0; i < m_dwNumberOfProcessors; i++)
 	{
@@ -161,14 +111,7 @@ void _processor_info::MTCPULoad()
 		cpuPerfInfo->KernelTime.QuadPart -= cpuPerfInfo->IdleTime.QuadPart;
 
 		fUsage[i] = 100.0f - 0.01f * (cpuPerfInfo->IdleTime.QuadPart - m_idleTime[i].QuadPart) / ((dwTickCount - m_dwCount));
-		if (fUsage[i] < 0.0f)
-		{
-			fUsage[i] = 0.0f;
-		}
-		if (fUsage[i] > 100.0f)
-		{
-			fUsage[i] = 100.0f;
-		}
+		clamp(fUsage[i], 0.f, 100.f);
 
 		m_idleTime[i] = cpuPerfInfo->IdleTime;
 	}

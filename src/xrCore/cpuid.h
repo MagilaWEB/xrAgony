@@ -34,7 +34,7 @@ struct XRCORE_API _processor_info final
 	bool hasAVX512ER() const { return m_f7_EBX[27]; }
 	bool hasAVX512CD() const { return m_f7_EBX[28]; }
 
-	bool getCPULoad(double& val);
+	float getCPULoad();
 	void MTCPULoad();
 	DWORD m_dwNumberOfProcessors;
 	std::unique_ptr<float[]> fUsage;
@@ -47,7 +47,7 @@ private:
 	std::bitset<32> m_f81_ECX;
 	std::bitset<32> m_f81_EDX;
 
-	DWORD m_dwCount = 0;
+	ULONGLONG m_dwCount = 0;
 	FILETIME prevSysIdle{}, prevSysKernel{}, prevSysUser{};
 	std::unique_ptr<LARGE_INTEGER[]> m_idleTime;
 	std::unique_ptr<SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION[]> performanceInfo;
