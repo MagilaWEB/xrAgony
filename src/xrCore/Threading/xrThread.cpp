@@ -67,7 +67,8 @@ void xrThread::worker_main()
 
 			update_function();
 
-			ms_time = timer.GetElapsed_sec() * 1000;
+			float ms = timer.GetElapsed_sec() * 1000;
+			ms >= ms_time ? ms_time = ms : ms_time -= ((ms_time - ms) * .03f);
 
 			if (thread_locked)
 				done.Set();

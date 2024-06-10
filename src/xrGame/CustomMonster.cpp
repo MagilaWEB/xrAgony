@@ -336,7 +336,7 @@ void CCustomMonster::shedule_Update(u32 DT)
 #else // DEBUG
 		{
 			if (!psAI_Flags.test(aiStalker) || !!smart_cast<CActor*>(Level().CurrentEntity()))
-				Device.add_parallel(this, &CCustomMonster::Exec_Visibility);
+				Device.add_parallel2(this, &CCustomMonster::Exec_Visibility);
 			else
 				Exec_Visibility();
 		}

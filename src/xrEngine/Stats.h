@@ -18,9 +18,6 @@ private:
 	CGameFont* pFontXrThread;
 	float fMem_calls;
 	xr_vector<shared_str> errors;
-	double cpuBefore;
-	double cpuLoad;
-	CTimer cpu_time;
 
 public:
 	CStats();
@@ -34,7 +31,6 @@ public:
 
 private:
 	void FilteredLog(const char* s);
-	void StatsCPU();
 	void ShowXrThread();
 };
 

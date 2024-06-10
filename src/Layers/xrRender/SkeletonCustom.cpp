@@ -736,9 +736,8 @@ void CKinematics::CalculateWallmarks()
 	{
 		wm_frame = Device.dwFrame;
 		bool need_remove = false;
-		for (auto it = wallmarks.begin(); it != wallmarks.end(); it++)
+		for (intrusive_ptr<CSkeletonWallmark>& wm  : wallmarks)
 		{
-			intrusive_ptr<CSkeletonWallmark>& wm = *it;
 			float w = (Device.fTimeGlobal - wm->TimeStart()) / ps_r__WallmarkTTL;
 			if (w < 1.f)
 			{

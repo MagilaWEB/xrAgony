@@ -150,8 +150,6 @@ void CStats::Show()
 	}
 	else
 	{
-		if (psDeviceFlags.test(rsCPUStatistic))
-			StatsCPU();
 
 		if (psDeviceFlags.test(rsXrThreadStatistic))
 			ShowXrThread();
@@ -193,45 +191,6 @@ void CStats::Show()
 	}
 }
 
-void CStats::StatsCPU()
-{
-	if (cpu_time.GetElapsed_sec() >= 1.f)
-	{
-		cpu_time.Start();
-
-		// Counting CPU load
-		CPU::ID.MTCPULoad();
-		cpuLoad = CPU::ID.getCPULoad();
-	}
-
-	auto color_text = [&](double double_progress)
-	{
-		if (double_progress > 75.0)
-			pFontCPU->SetColor(color_rgba(255, 51, 51, 255));
-		else if (double_progress > 50.0)
-			pFontCPU->SetColor(color_rgba(255, 255, 0, 255));
-		else if (double_progress > 25.0)
-			pFontCPU->SetColor(color_rgba(0, 255, 0, 255));
-		else
-			pFontCPU->SetColor(color_rgba(0, 255, 255, 255));
-	};
-
-	float dwScale = 8.f;
-
-	pFontCPU->Out(6, dwScale, "CPU [%s] LOAD: %0.2f%%", _Trim(CPU::ID.brand), cpuLoad); // CPU load
-	dwScale += 19;
-	color_text(cpuLoad);
-	// get MT Load
-	for (size_t i = 0; i < CPU::ID.m_dwNumberOfProcessors; i++)
-	{
-		color_text(CPU::ID.fUsage[i]);
-		pFontCPU->Out(10, dwScale, "CPU%-3u: %0.2f%%", i, CPU::ID.fUsage[i]);
-		dwScale += 16;
-
-	}
-	pFontCPU->OnRender();
-}
-
 void CStats::ShowXrThread()
 {
 	pFontXrThread->OutSet(3.f, 1.f);
@@ -239,14 +198,14 @@ void CStats::ShowXrThread()
 	{
 		if (thread->DebugInfo())
 		{
-			float color_result = thread->ms_time/12;
+			float color_result = thread->ms_time/15;
 			clamp(color_result, 0.f, 1.f);
 
 			const float revers_color_result = 1.f - color_result;
 
 			pFontXrThread->SetColor(color_rgba(u32(255 * color_result), u32(255 * revers_color_result), 0, 255));
 
-			pFontXrThread->OutNext("Thread: Name[%s], ID[%d], time[%f ms]", thread->Name(), thread->ID(), thread->ms_time);
+			pFontXrThread->OutNext("Thread: Name[%s], ID[%d], time[%0.4f ms]", thread->Name(), thread->ID(), thread->ms_time);
 			pFontXrThread->OnRender();
 		}
 		return false;

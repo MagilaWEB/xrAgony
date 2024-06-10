@@ -331,20 +331,16 @@ void CLevel::OnFrame()
 	ProcessGameEvents();
 	if (m_bNeed_CrPr)
 		make_NetCorrectionPrediction();
+
 	if (g_mt_config.test(mtMap))
-		Device.add_parallel(m_map_manager, &CMapManager::Update);
+		Device.add_parallel2(m_map_manager, &CMapManager::Update);
 	else
 		MapManager().Update();
+
 	if (IsGameTypeSingle() && Device.dwPrecacheFrame == 0)
 	{
-		// XXX nitrocaster: was enabled in x-ray 1.5; to be restored or removed
-		// if (g_mt_config.test(mtMap))
-		//{
-		//	Device.seqParallel.push_back(fastdelegate::FastDelegate<>(
-		//	m_game_task_manager,&CGameTaskManager::UpdateTasks));
-		//}
-		// else
-		GameTaskManager().UpdateTasks();
+		Device.add_parallel2(m_game_task_manager, &CGameTaskManager::UpdateTasks);
+		//GameTaskManager().UpdateTasks();
 	}
 	// Inherited update
 	inherited::OnFrame();

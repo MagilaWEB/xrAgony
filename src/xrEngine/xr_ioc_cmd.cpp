@@ -709,7 +709,7 @@ void CCC_Register()
 	//CMD3(CCC_Mask, "rs_refresh_60hz", &psDeviceFlags, rsRefresh60hz);
 	CMD3(CCC_Mask,	"rs_stats", &psDeviceFlags, rsStatistic);
 	CMD3(CCC_Mask,	"rs_fps", &psDeviceFlags, rsShowFPS);
-	CMD3(CCC_Mask,	"rs_cpu_stats", &psDeviceFlags, rsCPUStatistic);
+	//CMD3(CCC_Mask,	"rs_cpu_stats", &psDeviceFlags, rsCPUStatistic);
 	CMD3(CCC_Mask,	"rs_thread_stats", &psDeviceFlags, rsXrThreadStatistic);
 	CMD4(CCC_Float,	"rs_vis_distance", &psVisDistance, 0.4f, 1.0f);
 

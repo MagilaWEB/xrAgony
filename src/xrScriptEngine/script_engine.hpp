@@ -183,9 +183,9 @@ public:
 	bool function_object(LPCSTR function_to_call, luabind::object& object, int type = LUA_TFUNCTION);
 	void parse_script_namespace(const char* name, char* ns, u32 nsSize, char* func, u32 funcSize);
 	template <typename TResult>
-	IC bool functor(LPCSTR function_to_call, luabind::functor<TResult>& lua_function);
+	bool functor(LPCSTR function_to_call, luabind::functor<TResult>& lua_function);
 	template <typename TResult, typename... Args>
-	IC TResult function_event(LPCSTR function_to_call, Args&&... args);
+	TResult function_event(LPCSTR function_to_call, Args&&... args);
 #ifdef USE_DEBUGGER
 #ifndef USE_LUA_STUDIO
 	void stopDebugger();
@@ -218,7 +218,7 @@ public:
 };
 
 template <typename TResult>
-IC bool CScriptEngine::functor(LPCSTR function_to_call, luabind::functor<TResult>& lua_function)
+bool CScriptEngine::functor(LPCSTR function_to_call, luabind::functor<TResult>& lua_function)
 {
 	luabind::object object;
 	if (!function_object(function_to_call, object))
@@ -228,13 +228,18 @@ IC bool CScriptEngine::functor(LPCSTR function_to_call, luabind::functor<TResult
 }
 
 template <typename TResult, typename... Args>
-IC TResult CScriptEngine::function_event(LPCSTR function_to_call, Args&&... args)
+TResult CScriptEngine::function_event(LPCSTR function_to_call, Args&&... args)
 {
 	luabind::object object;
 	luabind::functor<TResult> function;
 
 	if (!function_object(function_to_call, object))
-		return nullptr;
+	{
+		if constexpr (std::is_same_v<TResult, void>)
+			return;
+		else
+			return nullptr;
+	}
 
 	function = object;
 	

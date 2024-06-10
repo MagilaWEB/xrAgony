@@ -137,10 +137,7 @@ bool CALifeUpdateManager::change_level(NET_Packet& net_packet)
 		return (false);
 
 #ifdef ENGINE_LUA_ALIFE_UPDAGE_MANAGER_CALLBACKS
-	luabind::functor<void> funct;
-	::ScriptEngine->functor("_G.CALifeUpdateManager__on_before_change_level", funct);
-	if (funct)
-		funct(&net_packet);
+	::ScriptEngine->function_event<void>("_G.CALifeUpdateManager__on_before_change_level", &net_packet);
 #endif
 
 	//	prepare_objects_for_save		();

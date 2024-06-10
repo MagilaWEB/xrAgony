@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "cpuid.h"
-#include <intrin.h>
-#pragma comment(lib, "ntdll.lib")
 
 _processor_info::_processor_info()
 {
@@ -80,41 +78,4 @@ _processor_info::_processor_info()
 	SYSTEM_INFO sysInfo;
 	GetSystemInfo(&sysInfo);
 	m_dwNumberOfProcessors = sysInfo.dwNumberOfProcessors;
-	fUsage = std::make_unique<float[]>(m_dwNumberOfProcessors);
-	m_idleTime = std::make_unique<LARGE_INTEGER[]>(m_dwNumberOfProcessors);
-	performanceInfo = std::make_unique<SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION[]>(m_dwNumberOfProcessors);
-}
-
-float _processor_info::getCPULoad()
-{
-	float summa_cpu{};
-	for (DWORD i = 0; i < m_dwNumberOfProcessors; i++)
-		summa_cpu += fUsage[i];
-
-	return summa_cpu / m_dwNumberOfProcessors;
-}
-
-void _processor_info::MTCPULoad()
-{
-	NtQuerySystemInformation(SystemProcessorPerformanceInformation, performanceInfo.get(),
-		sizeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION) * (ULONG)m_dwNumberOfProcessors, nullptr);
-
-	ULONGLONG dwTickCount = GetTickCount64();
-	if (!m_dwCount)
-		m_dwCount = dwTickCount;
-
-	const ULONGLONG pertime = dwTickCount - m_dwCount;
-
-	for (DWORD i = 0; i < m_dwNumberOfProcessors; i++)
-	{
-		auto* cpuPerfInfo = &performanceInfo[i];
-		cpuPerfInfo->KernelTime.QuadPart -= cpuPerfInfo->IdleTime.QuadPart;
-
-		fUsage[i] = 100.0f - 0.01f * (cpuPerfInfo->IdleTime.QuadPart - m_idleTime[i].QuadPart) / ((dwTickCount - m_dwCount));
-		clamp(fUsage[i], 0.f, 100.f);
-
-		m_idleTime[i] = cpuPerfInfo->IdleTime;
-	}
-
-	m_dwCount = dwTickCount;
 }
