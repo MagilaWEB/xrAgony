@@ -282,7 +282,8 @@ static void mar_encode_value(lua_State* L, mar_Buffer* buf, int val, size_t* idx
 		else {
 			mar_Buffer rec_buf;
 			lua_pop(L, 1); /* pop nil */
-			if (luaL_getmetafield(L, -1, "__persist")) {
+			if (luaL_getmetafield(L, -1, "__persist"))
+			{
 				tag = MAR_TUSR;
 
 				lua_pushvalue(L, -2);
@@ -307,14 +308,17 @@ static void mar_encode_value(lua_State* L, mar_Buffer* buf, int val, size_t* idx
 				buf_write(L, rec_buf.data, rec_buf.head, buf);
 				buf_done(L, &rec_buf);
 			}
-			else {
+			else
+			{
 				luaL_error(L, "attempt to encode userdata (no __persist hook)");
 			}
 			lua_pop(L, 1);
 		}
 		break;
 	}
-	case LUA_TNIL: break;
+	case LUA_TNIL:
+		buf_write(L, (void*)&val_type, MAR_CHR, buf);
+		break;
 	default:
 		luaL_error(L, "invalid value type (%s)", lua_typename(L, val_type));
 	}
@@ -449,6 +453,9 @@ static void mar_decode_value(lua_State* L, const char* buf, size_t len, const ch
 			int ref;
 			mar_next_len(ref, int);
 			lua_rawgeti(L, SEEN_IDX, ref);
+			if (lua_type(L, -1) == LUA_TFUNCTION) { //has a function
+				lua_call(L, 0, 1);
+			}
 		}
 		else if (tag == MAR_TUSR) {
 			mar_next_len(l, uint32_t);
