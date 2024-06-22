@@ -18,7 +18,7 @@
 
 ENGINE_API CRenderDevice Device;
 ENGINE_API CLoadScreenRenderer load_screen_renderer;
-ENGINE_API xr_list<LOADING_EVENT> g_loading_events;
+ENGINE_API xr_list<fastdelegate::FastDelegate<bool()>> g_loading_events;
 ENGINE_API BOOL g_bRendering = FALSE;
 
 
@@ -38,6 +38,8 @@ void CRenderDevice::Run()
 	seqAppStart.Process();
 
 	mt_global_update.Init(this, &CRenderDevice::GlobalUpdate);
+
+	mt_load.Init(this, &CRenderDevice::b_Load);
 
 	mt_frame.Init(this, &CRenderDevice::OnFrame, xrThread::sParalelRender);
 
@@ -119,16 +121,12 @@ bool CRenderDevice::ActiveMain()
 
 void CRenderDevice::End(void)
 {
-	bool load_finished = false;
 	if (dwPrecacheFrame)
 	{
-		::Sound->set_master_volume(0.f);
 		dwPrecacheFrame--;
 		if (!dwPrecacheFrame)
 		{
-			load_finished = true;
 			::Render->updateGamma();
-			::Sound->set_master_volume(1.f);
 			::Render->ResourcesDestroyNecessaryTextures();
 			Memory.mem_compact();
 			Msg("* MEMORY USAGE: %d K", Memory.mem_usage() / 1024);
@@ -137,15 +135,16 @@ void CRenderDevice::End(void)
 			g_find_chunk_counter.flush();
 #endif
 
-			if (g_pGamePersistent->GameType() == 1) // haCk
-			{
-				WINDOWINFO wi;
-				GetWindowInfo(m_hWnd, &wi);
-				if (wi.dwWindowStatus != WS_ACTIVECAPTION)
-					Pause(TRUE, TRUE, TRUE, "application start");
-			}
+			//if (g_pGamePersistent->GameType() == 1) // haCk
+			//{
+			//	WINDOWINFO wi;
+			//	GetWindowInfo(m_hWnd, &wi);
+			//	if (wi.dwWindowStatus != WS_ACTIVECAPTION)
+			//		Pause(TRUE, TRUE, FALSE, "application start");
+			//}
 		}
 	}
+
 	g_bRendering = FALSE;
 	// end scene
 	// Present goes here, so call OA Frame end.
@@ -174,11 +173,14 @@ void CRenderDevice::CalcFrameStats()
 	if (fTimeDelta > EPS_S)
 	{
 		float fps = 1.f / fTimeDelta;
-		// if (Engine.External.tune_enabled) vtune.update (fps);
 		float fOne = 0.3f;
 		float fInv = 1.0f - fOne;
 		stats.fFPS = fInv * stats.fFPS + fOne * fps;
-		FPS = u16(stats.fFPS);
+
+		LIMIT_UPDATE(fps_update, 0.3,
+			FPS = u16(FPS + stats.fFPS)/2;
+		)
+
 		if (stats.RenderTotal.result > EPS_S)
 		{
 			u32 renderedPolys = ::Render->GetCacheStatPolys();
@@ -191,12 +193,12 @@ void CRenderDevice::CalcFrameStats()
 
 void CRenderDevice::OnFrame()
 {
-	if (!Device.Paused())
+	if (!Device.Paused() && !load_prosses)
 	{
 		if (g_pGameLevel && g_pGameLevel->bReady)
 		{
 			LIMIT_UPDATE_FPS_CODE(UniqueCallLimit, 60, ::ScriptEngine->UpdateUniqueCall();)
-			::ScriptEngine->script_process(ScriptProcessor::Level)->update();
+				::ScriptEngine->script_process(ScriptProcessor::Level)->update();
 			lua_gc(::ScriptEngine->lua(), LUA_GCSTEP, 10);
 		}
 	}
@@ -212,10 +214,13 @@ void CRenderDevice::OnFrame()
 
 void CRenderDevice::OnFrame2()
 {
-	while (!seqParallel2.empty())
+	if (!load_prosses)
 	{
-		seqParallel2.front()();
-		seqParallel2.pop_front();
+		while (!seqParallel2.empty())
+		{
+			seqParallel2.front()();
+			seqParallel2.pop_front();
+		}
 	}
 }
 
@@ -278,6 +283,19 @@ void CRenderDevice::d_SVPRender()
 	}
 }
 
+void CRenderDevice::b_Load()
+{
+	if (g_loading_events.empty())
+	{
+		load_prosses = false;
+		return;
+	}
+
+	load_prosses = true;
+	if (g_loading_events.front()())
+		g_loading_events.pop_front();
+}
+
 void CRenderDevice::GlobalUpdate()
 {
 	xrCriticalSection::raii mt{ ResetRender };
@@ -290,27 +308,17 @@ void CRenderDevice::GlobalUpdate()
 		else
 			g_bEnableStatGather = FALSE;
 
-		if (g_loading_events.size())
+		const u32 limit = (ActiveMain() || IsLoadingScreen()) ? g_MainFPSlimit : Paused() ? g_PausedFPSlimit : g_GlobalFPSlimit;
+		// FPS Lock
+		if (limit > 0)
 		{
-			if (g_loading_events.front()())
-				g_loading_events.pop_front();
-			pApp->LoadDraw();
-			return;
-		}
-		else
-		{
-			const u32 limit = ActiveMain() ? g_MainFPSlimit : Paused() ? g_PausedFPSlimit : g_GlobalFPSlimit;
-			// FPS Lock
-			if (limit > 0)
-			{
-				static CTimer dwTime;
-				const float updateDelta = 1000.f / limit;
-				const float elapsed = dwTime.GetElapsed_sec() * 1000;
-				if (elapsed < updateDelta)
-					Sleep(DWORD(updateDelta - elapsed));
+			static CTimer dwTime;
+			const float updateDelta = 1000.f / limit;
+			const float elapsed = dwTime.GetElapsed_sec() * 1000;
+			if (elapsed < updateDelta)
+				Sleep(DWORD(updateDelta - elapsed));
 
-				dwTime.Start();
-			}
+			dwTime.Start();
 		}
 
 		if (b_is_Active && ::Render->GetDeviceState() != DeviceState::Lost)
@@ -320,6 +328,7 @@ void CRenderDevice::GlobalUpdate()
 			else
 				d_SVPRender();
 		}
+
 
 		FrameMove();
 
@@ -350,13 +359,12 @@ void CRenderDevice::GlobalUpdate()
 		mProjectSaved = mProject;
 
 		xrThread::StartGlobal(xrThread::sParalelRender);
-		
+
 		d_Render();
 
 		xrThread::WaitGlobal();
 	}
 }
-
 
 void CRenderDevice::message_loop()
 {
@@ -444,7 +452,7 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 			if (!xr_strcmp(reason, "li_pause_key_no_clip"))
 				TimerGlobal.Pause(FALSE);
 #endif
-		}
+}
 		if (bSound && ::Sound)
 			snd_emitters_ = ::Sound->pause_emitters(true);
 	}
@@ -464,12 +472,18 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 #ifdef DEBUG
 				Log("::Sound->pause_emitters underflow");
 #endif
-			}
 		}
+	}
 		}
 	}
 
 BOOL CRenderDevice::Paused() { return g_pauseMngr().Paused(); }
+
+const bool CRenderDevice::IsLoadingScreen()
+{
+	return pApp->IsLoadingScreen();
+}
+
 void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 {
 	u16 fActive = LOWORD(wParam);
@@ -549,8 +563,12 @@ void CLoadScreenRenderer::stop()
 {
 	if (!b_registered)
 		return;
+
+	if (pApp->LoadScreen())
+		pApp->LoadScreen()->ChangeVisibility(false);
+
 	Device.seqRender.Remove(this);
-	pApp->DestroyLoadingScreen();
+
 	b_registered = false;
 	b_need_user_input = false;
 }

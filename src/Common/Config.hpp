@@ -38,7 +38,7 @@
 #	define COC_USER_SPOT // Enable user spot on the map from CoC
 #	define COC_MAP_SPOT_PROPS_BOX
 #	define COC_ENABLE_AUTOSAVE // Enable autosave manager
-#	define COC_KICK
+//#	define COC_KICK
 #	define COC_LOADSCREEN
 #	define COC_BACKPACK
 #	define COC_SLOTS

@@ -9,7 +9,6 @@
 #include "IGame_Level.h"
 #include "IGame_Persistent.h"
 
-#include "ILoadingScreen.h"
 #include "XR_IOConsole.h"
 #include "x_ray.h"
 #include "std_classes.h"
@@ -100,16 +99,16 @@ void _InitializeFont(CGameFont*& F, LPCSTR section, u32 flags)
 CApplication::CApplication()
 {
 	loaded = false;
-	ll_dwReference = 0;
 
 	max_load_stage = 0;
 
 	// events
 	eQuit = Engine.Event.Handler_Attach("KERNEL:quit", this);
 	eStart = Engine.Event.Handler_Attach("KERNEL:start", this);
-	eStartLoad = Engine.Event.Handler_Attach("KERNEL:load", this);
+	//eStartLoad = Engine.Event.Handler_Attach("KERNEL:load", this);
 	eDisconnect = Engine.Event.Handler_Attach("KERNEL:disconnect", this);
 	eConsole = Engine.Event.Handler_Attach("KERNEL:console", this);
+	eQuickLoad = Engine.Event.Handler_Attach("Game:QuickLoad", this);
 
 	// levels
 	Level_Current = u32(-1);
@@ -130,6 +129,7 @@ CApplication::CApplication()
 
 	// App Title
 	loadingScreen = nullptr;
+	SetLoadStateMax(load_stage_limit);
 }
 
 CApplication::~CApplication()
@@ -143,12 +143,15 @@ CApplication::~CApplication()
 	Device.seqFrame.Remove(&SoundProcessor);
 	Device.seqFrame.Remove(this);
 
+	DestroyLoadingScreen();
+
 	// events
 	Engine.Event.Handler_Detach(eConsole, this);
 	Engine.Event.Handler_Detach(eDisconnect, this);
-	Engine.Event.Handler_Detach(eStartLoad, this);
+	//Engine.Event.Handler_Detach(eStartLoad, this);
 	Engine.Event.Handler_Detach(eStart, this);
 	Engine.Event.Handler_Detach(eQuit, this);
+	Engine.Event.Handler_Detach(eQuickLoad, this);
 }
 
 void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
@@ -186,7 +189,6 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 		LoadBegin();
 		g_pGamePersistent->Start(op_server);
 		g_pGameLevel->net_Start(op_server, op_client);
-		LoadEnd();
 		xr_free(op_server);
 		xr_free(op_client);
 	}
@@ -219,44 +221,36 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 	}
 }
 
-static CTimer phase_timer;
 
 void CApplication::LoadBegin()
 {
-	ll_dwReference++;
-	if (1 == ll_dwReference)
-	{
-		loaded = false;
+	loaded = false;
 
-		_InitializeFont(pFontSystem, "ui_font_letterica18_russian", 0);
+	_InitializeFont(pFontSystem, "ui_font_letterica18_russian", 0);
 
-		phase_timer.Start();
-		load_stage = 0;
-	}
+	load_stage = 0;
+
+	if(loadingScreen && !loadingScreen->IsVisibility())
+		loadingScreen->ChangeVisibility(true);
 }
 
 void CApplication::LoadEnd()
 {
-	ll_dwReference--;
-	if (0 == ll_dwReference)
-	{
-		Msg("* phase time: %d ms", phase_timer.GetElapsed_ms());
-		Msg("* phase cmem: %d K", Memory.mem_usage() / 1024);
-		Console->Execute("stat_memory");
-		loaded = true;
-	}
+	//Msg("* phase time: %d ms", phase_timer.GetElapsed_ms());
+	//Msg("* phase cmem: %d K", Memory.mem_usage() / 1024);
+	//Console->Execute("stat_memory");
+#if Debug
+	Msg("------ !load_stage %d", load_stage);
+#endif
+	load_stage = 0;
+	loaded = true;
+	SetLoadStateMax(load_stage_limit);
 }
 
-void CApplication::SetLoadingScreen(ILoadingScreen* newScreen)
+void CApplication::SetLoadingScreen(std::function<void(ILoadingScreen*&)> func)
 {
-	if (loadingScreen)
-	{
-		//		Log("! Trying to create new loading screen, but there is already one..");
-		//		DEBUG_BREAK;
-		DestroyLoadingScreen();
-	}
-
-	loadingScreen = newScreen;
+	if (!loadingScreen)
+		func(loadingScreen);
 }
 
 void CApplication::DestroyLoadingScreen()
@@ -264,52 +258,21 @@ void CApplication::DestroyLoadingScreen()
 	xr_delete(loadingScreen);
 }
 
-void CApplication::LoadDraw()
+bool CApplication::IsLoadingScreen()
 {
-	if (loaded)
-		return;
-
-	Device.dwFrame += 1;
-
-	if (!Device.Begin())
-		return;
-
-	load_draw_internal();
-
-	Device.End();
+	return loadingScreen != nullptr && loadingScreen->IsVisibility();
 }
 
-void CApplication::LoadForceFinish()
+void CApplication::SetLoadStageTitle(pcstr ls_title)
 {
-	if (loadingScreen)
-		loadingScreen->ForceFinish();
-}
+	if (ps_rs_loading_stages && loadingScreen && ls_title)
+		loadingScreen->SetStageTitle(ls_title);
+	else
+		loadingScreen->SetStageTitle(nullptr);
 
-void CApplication::SetLoadStageTitle(pcstr _ls_title)
-{
-	if (ps_rs_loading_stages && loadingScreen)
-		loadingScreen->SetStageTitle(_ls_title);
-}
-
-void CApplication::LoadTitleInt(LPCSTR str1, LPCSTR str2, LPCSTR str3)
-{
-	if (loadingScreen)
-		loadingScreen->SetStageTip(str1, str2, str3);
-}
-
-void CApplication::LoadStage()
-{
-	VERIFY(ll_dwReference);
-	Msg("* phase time: %d ms", phase_timer.GetElapsed_ms());
-	phase_timer.Start();
-	Msg("* phase cmem: %d K", Memory.mem_usage() / 1024);
-	max_load_stage = 19;
-
-	LoadDraw();
 	++load_stage;
 }
 
-void CApplication::LoadSwitch() {}
 // Sequential
 void CApplication::OnFrame()
 {

@@ -35,17 +35,21 @@ void CResourceManager::_DeleteCS(const SCS* CS) { DestroyShader(CS); }
 void fix_texture_name(LPSTR fn);
 
 template <class T>
-BOOL reclaim(xr_vector<T*>& vec, const T* ptr)
+bool reclaim(xr_vector<T*>& vec, const T* ptr)
 {
-	auto it = vec.begin();
-	auto end = vec.end();
-	for (; it != end; it++)
-		if (*it == ptr)
+	if (vec.empty())
+		return false;
+
+	for (size_t i = 0; i < vec.size(); i++)
+	{
+		if (vec[i] == ptr)
 		{
-			vec.erase(it);
-			return TRUE;
+			vec.erase(vec.begin() + i);
+			return true;
 		}
-	return FALSE;
+	}
+
+	return false;
 }
 
 //--------------------------------------------------------------------------------------------------------------

@@ -60,14 +60,10 @@ void CLevel::ClientReceive()
 			}
 
 			game_events->insert(*P);
-			if (g_bDebugEvents)
-				ProcessGameEvents();
 		}
 		break;
 		case M_EVENT:
 			game_events->insert(*P);
-			if (g_bDebugEvents)
-				ProcessGameEvents();
 			break;
 		case M_EVENT_PACK:
 		{
@@ -79,8 +75,6 @@ void CLevel::ClientReceive()
 				tmpP.timeReceive = P->timeReceive;
 
 				game_events->insert(tmpP);
-				if (g_bDebugEvents)
-					ProcessGameEvents();
 			};
 		}
 		break;
@@ -203,9 +197,6 @@ void CLevel::ClientReceive()
 		net_msg_Release();
 	}
 	EndProcessQueue();
-
-	if (g_bDebugEvents)
-		ProcessGameSpawns();
 }
 
 void CLevel::OnMessage(void* data, u32 size) { IPureClient::OnMessage(data, size); };

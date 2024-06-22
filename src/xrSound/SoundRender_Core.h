@@ -84,8 +84,8 @@ public:
 	void _restart() override;
 
 	// Sound interface
-	void verify_refsound(ref_sound& S);
 	void create(ref_sound& S, pcstr fName, esound_type sound_type, int game_type) override;
+	void SetIgnorePaused(ref_sound& S, bool b_ignore_p) override;
 	void attach_tail(ref_sound& S, pcstr fName) override;
 
 	void clone(ref_sound& S, const ref_sound& from, esound_type sound_type, int game_type) override;

@@ -52,7 +52,9 @@ void CLevel::remove_objects()
 			++(Device.dwFrame);
 			psDeviceFlags.set(rsDisableObjectsAsCrows, TRUE);
 			ClientReceive();
+
 			ProcessGameEvents();
+
 			Objects.Update(false);
 #ifdef DEBUG
 			Msg("Update objects list...");
@@ -287,8 +289,6 @@ void CLevel::ClearAllObjects()
 			GEN.w_u16(pObj->H_Parent()->ID());
 			GEN.w_u16(u16(pObj->ID()));
 			game_events->insert(GEN);
-			if (g_bDebugEvents)
-				ProcessGameEvents();
 			//-------------------------------------------------------------
 			ParentFound = true;
 			//-------------------------------------------------------------
@@ -297,8 +297,9 @@ void CLevel::ClearAllObjects()
 				pObj->H_Parent()->ID());
 #endif
 		};
+
 		ProcessGameEvents();
-		};
+	};
 
 	CLObjNum = Level().Objects.o_count();
 
@@ -325,8 +326,6 @@ void CLevel::ClearAllObjects()
 		GEN.w_u16(GE_DESTROY);
 		GEN.w_u16(u16(pObj->ID()));
 		game_events->insert(GEN);
-		if (g_bDebugEvents)
-			ProcessGameEvents();
 		//-------------------------------------------------------------
 		ParentFound = true;
 		//-------------------------------------------------------------
@@ -334,8 +333,9 @@ void CLevel::ClearAllObjects()
 		Msg("Destruction of %s[%d]", *(pObj->cNameSect()), pObj->ID());
 #endif
 	};
+
 	ProcessGameEvents();
-	};
+};
 
 void CLevel::OnInvalidHost()
 {

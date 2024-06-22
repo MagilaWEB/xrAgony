@@ -27,6 +27,10 @@ CLevelGraph::CLevelGraph()
 void CLevelGraph::Initialize(const char* filePath)
 {
 	m_reader = FS.r_open(filePath);
+
+	while(!m_reader)
+		m_reader = FS.r_open(filePath);
+
 	// m_header & data
 	m_header = (CHeader*)m_reader->pointer();
 	R_ASSERT(header().version() == XRAI_CURRENT_VERSION);

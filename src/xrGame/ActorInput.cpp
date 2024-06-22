@@ -90,13 +90,16 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	else if (inventory().Action((u16)cmd, CMD_START))
 		return;
 
-#if defined(DEBUG) || defined(COC_DEBUG)
 	if (psActorFlags.test(AF_NO_CLIP))
 	{
+		if (pInput->iGetAsyncKeyState(DIK_RETURN))
+		{
+			psActorFlags.set(AF_NO_CLIP, false);
+			return;
+		}
 		NoClipFly(cmd);
 		return;
 	}
-#endif // DEBUG
 	switch (cmd)
 	{
 	case kJUMP: { mstate_wishful |= mcJump;
@@ -218,11 +221,11 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		}
 	}
 	break;
-#ifdef COC_KICK
-	case kKICK:
-		actorKick();
-		break;
-#endif
+//#ifdef COC_KICK
+//	case kKICK:
+//		actorKick();
+//		break;
+//#endif
 	}
 }
 
@@ -296,14 +299,12 @@ void CActor::IR_OnKeyboardHold(int cmd)
 		return;
 	}
 
-#if defined(DEBUG) || defined(COC_DEBUG)
 	if (psActorFlags.test(AF_NO_CLIP) &&
 		(cmd == kFWD || cmd == kBACK || cmd == kL_STRAFE || cmd == kR_STRAFE || cmd == kJUMP || cmd == kCROUCH))
 	{
 		NoClipFly(cmd);
 		return;
 	}
-#endif // DEBUG
 	float LookFactor = GetLookFactor();
 	switch (cmd)
 	{
@@ -635,97 +636,91 @@ void CActor::SwitchTorch()
 		pTorch->Switch();
 }
 
-#ifdef COC_KICK
-void CActor::actorKick()
-{
-	CGameObject *O = ObjectWeLookingAt();
-	if (!O)
-		return;
+//#ifdef COC_KICK
+//void CActor::actorKick()
+//{
+//	CGameObject *O = ObjectWeLookingAt();
+//	if (!O)
+//		return;
+//
+//	float mass_f = 100.f;
+//
+//	CEntityAlive *EA = smart_cast<CEntityAlive*>(O);
+//	if (EA)
+//	{
+//		if (EA->character_physics_support())
+//			mass_f = EA->character_physics_support()->movement()->GetMass();
+//		else
+//			mass_f = EA->GetMass();
+//
+//		if (EA->g_Alive() && mass_f > 20.0f) //ability to kick tuskano and rat
+//			return;
+//	}
+//	else
+//	{
+//		CPhysicsShellHolder *sh = smart_cast<CPhysicsShellHolder*>(O);
+//		if (sh)
+//			mass_f = sh->GetMass();
+//
+//		PIItem itm = smart_cast<PIItem>(O);
+//		if (itm)
+//			mass_f = itm->Weight();
+//	}
+//
+//	CInventoryOwner *io = smart_cast<CInventoryOwner*> (O);
+//	if (io)
+//		mass_f += io->inventory().TotalWeight();
+//
+//	static float kick_impulse = READ_IF_EXISTS(pSettings, r_float, "actor", "kick_impulse", 250.f);
+//	Fvector dir = Direction();
+//	dir.y = sin(15.f * PI / 180.f);
+//	dir.normalize();
+//
+//	u16 bone_id = 0;
+//	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+//	if (RQ.O == O && RQ.element != 0xffff)
+//		bone_id = (u16)RQ.element;
+//
+//	clamp<float>(mass_f, 1.0f, 100.f); // îãðàíè÷èòü ïàðàìåòðû õèòà
+//
+//										// The smaller the mass, the more damage given capped at 60 mass. 60+ mass take 0 damage
+//	float hit_power = 100.f * ((mass_f / 100.f) - 0.6f) / (0.f - 0.6f);
+//	clamp<float>(hit_power, 0.f, 100.f);
+//	hit_power /= 100;
+//
+//	//shell->applyForce(dir, kick_power * conditions().GetPower());
+//	Fvector h_pos = O->Position();
+//	SHit hit = SHit(hit_power, dir, this, bone_id, h_pos, kick_impulse, ALife::eHitTypeStrike, 0.f, false);
+//	O->Hit(&hit);
+//	if (EA)
+//	{
+//		static float alive_kick_power = 3.f;
+//		float real_imp = kick_impulse / mass_f;
+//		dir.mul(pow(real_imp, alive_kick_power));
+//		if (EA->character_physics_support())
+//		{
+//			EA->character_physics_support()->movement()->AddControlVel(dir);
+//			EA->character_physics_support()->movement()->ApplyImpulse(dir.normalize(), kick_impulse * alive_kick_power);
+//		}
+//	}
+//
+//	conditions().ConditionJump(mass_f / 50);
+//}
+//#endif
 
-	float mass_f = 100.f;
-
-	CEntityAlive *EA = smart_cast<CEntityAlive*>(O);
-	if (EA)
-	{
-		if (EA->character_physics_support())
-			mass_f = EA->character_physics_support()->movement()->GetMass();
-		else
-			mass_f = EA->GetMass();
-
-		if (EA->g_Alive() && mass_f > 20.0f) //ability to kick tuskano and rat
-			return;
-	}
-	else
-	{
-		CPhysicsShellHolder *sh = smart_cast<CPhysicsShellHolder*>(O);
-		if (sh)
-			mass_f = sh->GetMass();
-
-		PIItem itm = smart_cast<PIItem>(O);
-		if (itm)
-			mass_f = itm->Weight();
-	}
-
-	CInventoryOwner *io = smart_cast<CInventoryOwner*> (O);
-	if (io)
-		mass_f += io->inventory().TotalWeight();
-
-	static float kick_impulse = READ_IF_EXISTS(pSettings, r_float, "actor", "kick_impulse", 250.f);
-	Fvector dir = Direction();
-	dir.y = sin(15.f * PI / 180.f);
-	dir.normalize();
-
-	u16 bone_id = 0;
-	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
-	if (RQ.O == O && RQ.element != 0xffff)
-		bone_id = (u16)RQ.element;
-
-	clamp<float>(mass_f, 1.0f, 100.f); // îãðàíè÷èòü ïàðàìåòðû õèòà
-
-										// The smaller the mass, the more damage given capped at 60 mass. 60+ mass take 0 damage
-	float hit_power = 100.f * ((mass_f / 100.f) - 0.6f) / (0.f - 0.6f);
-	clamp<float>(hit_power, 0.f, 100.f);
-	hit_power /= 100;
-
-	//shell->applyForce(dir, kick_power * conditions().GetPower());
-	Fvector h_pos = O->Position();
-	SHit hit = SHit(hit_power, dir, this, bone_id, h_pos, kick_impulse, ALife::eHitTypeStrike, 0.f, false);
-	O->Hit(&hit);
-	if (EA)
-	{
-		static float alive_kick_power = 3.f;
-		float real_imp = kick_impulse / mass_f;
-		dir.mul(pow(real_imp, alive_kick_power));
-		if (EA->character_physics_support())
-		{
-			EA->character_physics_support()->movement()->AddControlVel(dir);
-			EA->character_physics_support()->movement()->ApplyImpulse(dir.normalize(), kick_impulse * alive_kick_power);
-		}
-	}
-
-	conditions().ConditionJump(mass_f / 50);
-}
-#endif
-
-#if defined(DEBUG) || defined(COC_DEBUG)
 void CActor::NoClipFly(int cmd)
 {
-	Fvector cur_pos; // = Position();
-	cur_pos.set(0, 0, 0);
-	float scale = 1.0f;
+	Fvector cur_pos{ Device.vCameraDirectionSaved }; // = Position();
+	Fvector m_pos_x{};
+	float scale = Device.fTimeDelta * 4;
 	if (pInput->iGetAsyncKeyState(DIK_LSHIFT))
-		scale = 0.25f;
-	else if (pInput->iGetAsyncKeyState(DIK_LMENU))
-		scale = 4.0f;
+		scale = Device.fTimeDelta * 15;
 
 	switch (cmd)
 	{
-	case kJUMP: cur_pos.y += 0.1f; break;
-	case kCROUCH: cur_pos.y -= 0.1f; break;
-	case kFWD: cur_pos.z += 0.1f; break;
-	case kBACK: cur_pos.z -= 0.1f; break;
-	case kL_STRAFE: cur_pos.x -= 0.1f; break;
-	case kR_STRAFE: cur_pos.x += 0.1f; break;
+	case kBACK: scale = -scale; break;
+	case kL_STRAFE: m_pos_x.x -= scale; break;
+	case kR_STRAFE: m_pos_x.x += scale; break;
 	case kCAM_1: cam_Set(eacFirstEye); break;
 	case kCAM_2: cam_Set(eacLookAt); break;
 	case kCAM_3: cam_Set(eacFreeLook); break;
@@ -745,11 +740,13 @@ void CActor::NoClipFly(int cmd)
 	break;
 	case kUSE: ActorUse(); break;
 	}
-	cur_pos.mul(scale);
+
 	Fmatrix mOrient;
 	mOrient.rotateY(-(cam_Active()->GetWorldYaw()));
-	mOrient.transform_dir(cur_pos);
+	mOrient.transform_dir(m_pos_x);
+
+	cur_pos.mul(scale);
 	Position().add(cur_pos);
+	Position().add(m_pos_x);
 	character_physics_support()->movement()->SetPosition(Position());
 }
-#endif // DEBUG

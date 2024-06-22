@@ -109,6 +109,7 @@ public:
 class XRSOUND_API CSound_emitter
 {
 public:
+	virtual void SetIgnorePaused(bool b_ignore) = 0;
 	virtual bool is_2D() = 0;
 	virtual void switch_to_2D() = 0;
 	virtual void switch_to_3D() = 0;
@@ -163,6 +164,8 @@ public:
 	virtual ~ISoundManager() {}
 	static void _create();
 	static void _destroy();
+
+	virtual void SetIgnorePaused(ref_sound& S, bool b_ignore_p) = 0;
 
 	virtual void _restart() = 0;
 	virtual bool i_locked() = 0;
@@ -258,6 +261,12 @@ struct ref_sound
 
 	void create(pcstr name, esound_type sound_type, int game_type)
 	{ VerSndUnlocked(); ::Sound->create(*this, name, sound_type, game_type); }
+
+	void SetIgnorePaused(bool b_ignore)
+	{
+		VerSndUnlocked(); ::Sound->SetIgnorePaused(*this, b_ignore);
+	}
+
 	void attach_tail(pcstr name)
 	{ VerSndUnlocked(); ::Sound->attach_tail(*this, name); }
 

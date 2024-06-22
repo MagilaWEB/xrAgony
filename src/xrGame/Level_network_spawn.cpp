@@ -9,6 +9,7 @@
 #include "client_spawn_manager.h"
 #include "xrEngine/xr_object.h"
 #include "xrEngine/IGame_Persistent.h"
+#include "xrEngine/x_ray.h"
 
 void CLevel::cl_Process_Spawn(NET_Packet& P)
 {
@@ -38,14 +39,14 @@ void CLevel::cl_Process_Spawn(NET_Packet& P)
 		E->s_flags.set(M_SPAWN_OBJECT_LOCAL, TRUE);
 	};
 
-	/*
-	game_spawn_queue.push_back(E);
-	if (g_bDebugEvents)		ProcessGameSpawns();
-	/*/
-	g_sv_Spawn(E);
 
-	F_entity_Destroy(E);
-	//*/
+	if (Device.IsLoadingScreen() && E->ID != 0 && E->ID_Parent != 0)
+		game_spawn_list.push_back(E);
+	else
+	{
+		g_sv_Spawn(E);
+		F_entity_Destroy(E);
+	}
 };
 
 void CLevel::g_cl_Spawn(LPCSTR name, u8 rp, u16 flags, Fvector pos)
@@ -174,16 +175,66 @@ CSE_Abstract* CLevel::spawn_item(LPCSTR section, const Fvector& position, u32 le
 		return (abstract);
 }
 
+
 void CLevel::ProcessGameSpawns()
 {
-	while (!game_spawn_queue.empty())
+	static CTimer timer;
+	static bool load_play_start = false;
+	timer.Start();
+
+	while (!game_spawn_list.empty())
 	{
-		CSE_Abstract* E = game_spawn_queue.front();
+		if (!load_play_start)
+		{
+			load_play_start = true;
+			pApp->LoadBegin();
+			pApp->SetLoadStateMax(game_spawn_list.size());
+		}
 
-		g_sv_Spawn(E);
+		pApp->SetLoadStageTitle("st_loading_object_synchronization");
 
-		F_entity_Destroy(E);
+		CSE_Abstract* E = game_spawn_list.front();
+		if (E)
+		{
+			if ( timer.GetElapsed_ms() < 2 || pApp->IsNewGame())
+			{
+				u16 E_ID = E->ID;
 
-		game_spawn_queue.pop_front();
+				g_sv_Spawn(E);
+				F_entity_Destroy(E);
+
+				for (CSE_Abstract*& PRENT_E : game_spawn_list)
+				{
+					if (PRENT_E && E_ID == PRENT_E->ID_Parent)
+					{
+						g_sv_Spawn(PRENT_E);
+						F_entity_Destroy(PRENT_E);
+						PRENT_E = nullptr;
+						pApp->SetLoadStageTitle("st_loading_object_synchronization");
+					}
+				}
+			}
+			else
+			{
+#if Debug
+				Msg("** number of objects in the spawn queue [%d].", game_spawn_list.size());
+#endif
+				return;
+			}
+		}
+
+		game_spawn_list.pop_front();
+	}
+
+	if (load_play_start && game_spawn_list.empty())
+	{
+		if (pApp->LoadScreen())
+			pApp->LoadScreen()->ForceFinish();
+		else
+			Msg("~WARNING: LoadScreen == nullptr.");
+
+		pApp->LoadEnd();
+
+		load_play_start = false;
 	}
 }

@@ -193,7 +193,7 @@ public:
 	game_cl_GameState* game = nullptr;
 	bool game_configured = false;
 	NET_Queue_Event* game_events = nullptr;
-	xr_deque<CSE_Abstract*> game_spawn_queue;
+	xr_list<CSE_Abstract*> game_spawn_list;
 	xrServer* Server = nullptr;
 	GlobalFeelTouch m_feel_deny;
 	CZoneList* hud_zones_list = nullptr;
@@ -395,5 +395,3 @@ IC CPHCommander& CLevel::ph_commander_physics_worldstep()
 	VERIFY(m_ph_commander_scripts);
 	return *m_ph_commander_physics_worldstep;
 }
-
-extern bool g_bDebugEvents;

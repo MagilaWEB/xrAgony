@@ -1,42 +1,43 @@
 #include "pch_script.h"
-#include "xrEngine/xr_ioconsole.h"
-#include "xrEngine/xr_ioc_cmd.h"
-#include "xrEngine/customhud.h"
-#include "xrEngine/fdemorecord.h"
-#include "xrEngine/fdemoplay.h"
-#include "xrMessages.h"
-#include "xrserver.h"
-#include "Level.h"
-#include "xrScriptEngine/script_debugger.hpp"
+#include "actor.h"
+#include "Actor_Flags.h"
+#include "ai/monsters/BaseMonster/base_monster.h"
 #include "ai_debug.h"
+#include "ai_space.h"
 #include "alife_simulator.h"
+#include "alife_time_manager.h"
+#include "autosave_manager.h"
+#include "customzone.h"
+#include "date_time.h"
 #include "game_cl_base.h"
 #include "game_cl_single.h"
 #include "game_sv_single.h"
+#include "GameTask.h"
 #include "hit.h"
+#include "Level.h"
+#include "MainMenu.h"
+#include "mt_config.h"
 #include "PHDestroyable.h"
-#include "actor.h"
-#include "Actor_Flags.h"
-#include "customzone.h"
+#include "saved_game_wrapper.h"
+#include "string_table.h"
+#include "ui/UIActorMenu.h"
+#include "ui/UIMainIngameWnd.h"
+#include "UIGameSP.h"
+#include "xrAICore/Navigation/level_graph.h"
+#include "xrEngine/customhud.h"
+#include "xrEngine/fdemoplay.h"
+#include "xrEngine/fdemorecord.h"
+#include "xrEngine/xr_ioconsole.h"
+#include "xrEngine/xr_ioc_cmd.h"
+#include "xrMessages.h"
+#include "xrPhysics/iphworld.h"
+#include "xrScriptEngine/script_debugger.hpp"
 #include "xrScriptEngine/script_engine.hpp"
 #include "xrScriptEngine/script_process.hpp"
+#include "xrserver.h"
 #include "xrServer_Objects.h"
-#include "ui/UIMainIngameWnd.h"
-#include "xrPhysics/iphworld.h"
-#include "string_table.h"
-#include "autosave_manager.h"
-#include "ai_space.h"
-#include "ai/monsters/BaseMonster/base_monster.h"
-#include "date_time.h"
-#include "mt_config.h"
-#include "UIGameSP.h"
-#include "ui/UIActorMenu.h"
 #include "xrUICore/Static/UIStatic.h"
 #include "zone_effector.h"
-#include "GameTask.h"
-#include "MainMenu.h"
-#include "saved_game_wrapper.h"
-#include "xrAICore/Navigation/level_graph.h"
 
 #include "cameralook.h"
 #include "character_hit_animations_params.h"
@@ -50,6 +51,8 @@
 #include "LevelGraphDebugRender.hpp"
 #include "CharacterPhysicsSupport.h"
 #endif // DEBUG
+
+
 
 string_path g_last_saved_game;
 
@@ -669,7 +672,7 @@ public:
 
 		Console->Execute("stat_memory");
 
-		if (Device.Paused())
+		 if (Device.Paused())
 			Device.Pause(FALSE, TRUE, TRUE, "CCC_ALifeLoadFrom");
 
 		NET_Packet net_packet;
@@ -1716,6 +1719,56 @@ public:
 	}
 };
 
+// Set the current time
+class CCC_ÑhangeGameTime : public CCC_Vector3
+{
+private:
+	Fvector p;
+public:
+	CCC_ÑhangeGameTime(LPCSTR N) : CCC_Vector3(N, &p, Fvector(), Fvector().set(FLT_MAX, FLT_MAX, FLT_MAX)) {}
+	virtual void Execute(LPCSTR args)
+	{
+		if (!xr_strlen(args))
+			return;
+		if (!g_pGamePersistent)
+			return;
+
+		Fvector v;
+		if ((3 != sscanf(args, "%f,%f,%f", &v.x, &v.y, &v.z)) && (3 != sscanf(args, "(%f, %f, %f)", &v.x, &v.y, &v.z)))
+		{
+			InvalidSyntax();
+		}
+		else
+		{
+			CCC_Vector3::Execute(args);
+
+			game_sv_Single* tpGame = smart_cast<game_sv_Single*>(Level().Server->GetGameState());
+			if (tpGame && ai().get_alife())
+			{
+				Msg("You've skipped %f minutes, %f hours , %f days", p.x, p.y, p.z);
+				float local_value = (p.x * 60) + (p.y * 3600) + (p.z * 86400);
+				g_pGamePersistent->Environment().ChangeGameTime(local_value);
+				tpGame->alife().time_manager().change_game_time(u32(local_value * 1000));
+			}
+		}
+	}
+
+	virtual void Info(TInfo& I)
+	{
+		xr_sprintf(I, sizeof(I), "vector3 in range (minutes, hours, days)");
+	}
+
+	virtual void fill_tips(vecTips& tips, u32 mode)
+	{
+		TStatus str;
+		xr_sprintf(str, sizeof(str), " (minutes, hours, days) (current)");
+		tips.push_back(str);
+		IConsole_Command::fill_tips(tips, mode);
+	}
+
+	virtual void Save(IWriter* F) { ; }
+};
+
 #include "xrAICore/Navigation/ai_object_location.h"
 class CCC_Spawn : public IConsole_Command {
 public:
@@ -2027,7 +2080,6 @@ void CCC_RegisterCommands()
 	CMD4(CCC_FloatBlock, "ph_rigid_break_weapon_factor", &ph_console::phRigidBreakWeaponFactor, 0.f, 1000000000.f);
 	CMD4(CCC_Integer, "ph_tri_clear_disable_count", &ph_console::ph_tri_clear_disable_count, 0, 255);
 	CMD4(CCC_FloatBlock, "ph_tri_query_ex_aabb_rate", &ph_console::ph_tri_query_ex_aabb_rate, 1.01f, 3.f);
-	CMD3(CCC_Mask, "g_no_clip", &psActorFlags, AF_NO_CLIP);
 	CMD1(CCC_JumpToLevel, "jump_to_level");
 	CMD3(CCC_Mask, "g_god", &psActorFlags, AF_GODMODE);
 	CMD3(CCC_Mask, "g_unlimitedammo", &psActorFlags, AF_UNLIMITEDAMMO);
@@ -2043,6 +2095,7 @@ void CCC_RegisterCommands()
 		CMD1(CCC_Spawn_to_inventory, "g_spawn_to_inventory");
 		CMD1(CCC_JumpToLevel, "jump_to_level");
 		CMD3(CCC_Mask, "g_god", &psActorFlags, AF_GODMODE);
+		CMD1(CCC_ÑhangeGameTime, "g_change_game_time");
 		CMD3(CCC_Mask, "g_unlimitedammo", &psActorFlags, AF_UNLIMITEDAMMO);
 		CMD1(CCC_TimeFactor, "time_factor");
 		CMD1(CCC_Script, "run_script");

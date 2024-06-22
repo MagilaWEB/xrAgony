@@ -174,10 +174,8 @@ void CRender::Render()
 
 	rmNormal();
 
-	IMainMenu* pMainMenu = g_pGamePersistent ? g_pGamePersistent->m_pMainMenu : 0;
-	bool bMenu = pMainMenu ? pMainMenu->CanSkipSceneRendering() : false;
 
-	if (!(g_pGameLevel && g_hud) || bMenu)
+	if (!(g_pGameLevel && g_hud))
 	{
 		Target->u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
 		return;

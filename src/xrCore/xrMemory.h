@@ -36,17 +36,17 @@ public:
 	void GetProcessMemInfo(SProcessMemInfo& minfo);
 	size_t mem_usage();
 	void mem_compact();
-	inline void* mem_alloc(size_t size)
+	IC void* mem_alloc(size_t size)
 	{
 		stat_calls++;
 		return malloc(size + reserved);
 	};
-	inline void* mem_realloc(void* ptr, size_t size)
+	IC void* mem_realloc(void* ptr, size_t size)
 	{
 		stat_calls++;
 		return realloc(ptr, size + reserved);
 	};
-	inline void mem_free(void* ptr)
+	IC void mem_free(void* ptr)
 	{
 		stat_calls++;
 		free(ptr);
@@ -66,25 +66,28 @@ extern XRCORE_API xrMemory Memory;
 Начиная со стандарта C++11 нет необходимости объявлять все формы операторов new и delete.
 */
 
-inline void* operator new(size_t size) { return Memory.mem_alloc(size); }
+IC void* operator new(size_t size) { return Memory.mem_alloc(size); }
 
-inline void operator delete(void* ptr) noexcept { Memory.mem_free(ptr); }
+IC void operator delete(void* ptr) noexcept { Memory.mem_free(ptr); }
 
 template <class T>
-inline void xr_delete(T*& ptr) noexcept
+IC void xr_delete(T*& ptr) noexcept
 {
-	delete ptr;
-	ptr = nullptr;
+	if (ptr)
+	{
+		delete ptr;
+		ptr = nullptr;
+	}
 }
 
 // generic "C"-like allocations/deallocations
 template <class T>
-inline T* xr_alloc(size_t count)
+IC T* xr_alloc(size_t count)
 {
 	return (T*)Memory.mem_alloc(count * sizeof(T));
 }
 template <class T>
-inline void xr_free(T*& ptr) noexcept
+IC void xr_free(T*& ptr) noexcept
 {
 	if (ptr)
 	{
@@ -92,8 +95,8 @@ inline void xr_free(T*& ptr) noexcept
 		ptr = nullptr;
 	}
 }
-inline void* xr_malloc(size_t size) { return Memory.mem_alloc(size); }
-inline void* xr_realloc(void* ptr, size_t size) { return Memory.mem_realloc(ptr, size); }
+IC void* xr_malloc(size_t size) { return Memory.mem_alloc(size); }
+IC void* xr_realloc(void* ptr, size_t size) { return Memory.mem_realloc(ptr, size); }
 
 XRCORE_API pstr xr_strdup(pcstr string);
 

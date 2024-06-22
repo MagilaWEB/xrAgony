@@ -239,7 +239,7 @@ void game_sv_GameState::AddDelayedEvent(NET_Packet& tNetPacket, u16 type, u32 ti
 
 void game_sv_GameState::ProcessDelayedEvent()
 {
-	GameEvent* ge = NULL;
+	GameEvent* ge = nullptr;
 	while ((ge = m_event_queue->Retreive()) != 0)
 	{
 		OnEvent(ge->P, ge->type, ge->time, ge->sender);

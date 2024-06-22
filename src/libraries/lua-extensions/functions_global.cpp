@@ -14,7 +14,7 @@
 
 void set_info_extend_lua(lua_State* L) {
 	lua_pushliteral(L, "PLUGIN_EXTENDED_LUA_COPYRIGHT");
-	lua_pushliteral(L, "Copyright (C) A.R.E.A 2017-2023.");
+	lua_pushliteral(L, "Copyright (C) MAGILA.");
 	lua_settable(L, -3);
 	lua_pushliteral(L, "PLUGIN_EXTENDED_LUA_DESCRIPTION");
 	lua_pushliteral(L, "EXTENDED_LUA is a Lua library that extends the capabilities of Lua through additional fast global functions that are not enough in standard luajit v2.1.");

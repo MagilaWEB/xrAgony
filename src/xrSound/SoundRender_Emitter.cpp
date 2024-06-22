@@ -88,6 +88,11 @@ void CSoundRender_Emitter::Event_Propagade()
 	SoundRender->s_events.emplace_back(owner_data, range);
 }
 
+void CSoundRender_Emitter::SetIgnorePaused(bool b_ignore)
+{
+	bIgnorePaused = b_ignore;
+}
+
 void CSoundRender_Emitter::switch_to_2D()
 {
 	b2D = true;

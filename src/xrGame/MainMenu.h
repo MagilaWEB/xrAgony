@@ -73,9 +73,8 @@ protected:
 	xr_vector<CUIMessageBoxEx*>	m_pMB_ErrDlgs;
 	bool			ReloadUI						();
 public:
-	u32 m_deactivated_frame;
 	bool m_activatedScreenRatio;
-	virtual void DestroyInternal(bool bForce);
+	virtual void DestroyInternal();
 	CMainMenu();
 	virtual ~CMainMenu();
 

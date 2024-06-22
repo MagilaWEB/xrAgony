@@ -6,13 +6,13 @@
 void set_info_extend_table(lua_State* L)
 {
 	lua_pushliteral(L, "EXTENDED_TABLE_COPYRIGHT");
-	lua_pushliteral(L, "Copyright (C) A.R.E.A 2017-2023.");
+	lua_pushliteral(L, "Copyright (C) MAGILA.");
 	lua_settable(L, -3);
 	lua_pushliteral(L, "EXTENDED_TABLE_DESCRIPTION");
 	lua_pushliteral(L, "EXTENDED_TABLE is a Lua library that extends and adds new methods for working with table objects luajit v2.1.");
 	lua_settable(L, -3);
 	lua_pushliteral(L, "EXTENDED_TABLE_VERSION");
-	lua_pushliteral(L, "EXTENDED_TABLE v0.1.1 (25.11.2023)");
+	lua_pushliteral(L, "EXTENDED_TABLE v0.1.2 (20.06.2024)");
 	lua_settable(L, -3);
 }
 
@@ -93,20 +93,24 @@ int get_random(lua_State* L)
 {
 	luaL_checktype(L, 1, LUA_TTABLE);
 	int i = C_get_size(L);
-	int j = gen_random_in_range(1, i);
-	i = 0;
-	lua_settop(L, 2);
-	while (lua_next(L, 1))
+	if (i)
 	{
-		++i;
-		if (i == j)
+		int j = gen_random_in_range(L, 1, i);
+		i = 0;
+		lua_settop(L, 2);
+		while (lua_next(L, 1))
 		{
-			lua_pushvalue(L, -2);
-			lua_pushvalue(L, -2);
-			return 2;
+			++i;
+			if (i == j)
+			{
+				lua_pushvalue(L, -2);
+				lua_pushvalue(L, -2);
+				return 2;
+			}
+			lua_pop(L, 1);
 		}
-		lua_pop(L, 1);
 	}
+	
 	lua_pushnil(L);
 	return 1;
 }
@@ -115,19 +119,22 @@ int get_random_value(lua_State* L)
 {
 	luaL_checktype(L, 1, LUA_TTABLE);
 	int i = C_get_size(L);
-	int j = gen_random_in_range(1, i);
-	i = 0;
-	lua_settop(L, 2);
-	while (lua_next(L, 1))
+	if (i)
 	{
-		++i;
-		if (i == j)
+		int j = gen_random_in_range(L, 1, i);
+		i = 0;
+		lua_settop(L, 2);
+		while (lua_next(L, 1))
 		{
-			lua_pushvalue(L, -1);
-			lua_pushvalue(L, -1);
-			return 2;
+			++i;
+			if (i == j)
+			{
+				lua_pushvalue(L, -1);
+				lua_pushvalue(L, -1);
+				return 2;
+			}
+			lua_pop(L, 1);
 		}
-		lua_pop(L, 1);
 	}
 	lua_pushnil(L);
 	return 1;

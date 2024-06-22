@@ -1,9 +1,12 @@
 #ifndef __X_RAY_H__
 #define __X_RAY_H__
 
+#include "xrEngine/ILoadingScreen.h"
+
+constexpr u16 load_stage_limit = 32;
+
 // refs
 class ENGINE_API CGameFont;
-class ILoadingScreen;
 
 // definition
 class ENGINE_API CApplication : public pureFrame, public IEventReceiver
@@ -18,26 +21,26 @@ class ENGINE_API CApplication : public pureFrame, public IEventReceiver
 private:
 	ILoadingScreen* loadingScreen;
 
-	int max_load_stage;
+	u16 max_load_stage;
+	u16 load_stage;
 
-	int load_stage;
-
-	u32 ll_dwReference;
-	bool loaded;
+	bool loaded{ false };
+	bool m_new_game{ false };
 
 private:
 	EVENT eQuit;
 	EVENT eStart;
-	EVENT eStartLoad;
+	//EVENT eStartLoad;
 	EVENT eDisconnect;
 	EVENT eConsole;
+	EVENT eQuickLoad;
 
 	void Level_Append(LPCSTR lname);
 
 public:
 	CGameFont* pFontSystem;
 
-	bool IsLoaded() { return loaded; }
+	IC const bool IsLoaded() { return loaded; }
 	// Levels
 	xr_vector<sLevelInfo> Levels;
 	u32 Level_Current;
@@ -48,15 +51,44 @@ public:
 	static CInifile* GetArchiveHeader(LPCSTR name, LPCSTR ver);
 
 	// Loading
+	IC ILoadingScreen* LoadScreen()
+	{
+		if (loadingScreen)
+			return loadingScreen;
+
+		return nullptr;
+	}
 	void LoadBegin();
 	void LoadEnd();
-	void LoadTitleInt(LPCSTR str1, LPCSTR str2, LPCSTR str3);
-	void LoadStage();
-	void LoadSwitch();
-	void LoadDraw();
-	void LoadForceFinish();
 
-	void SetLoadStageTitle(pcstr ls_title);
+	void load_draw_internal();
+
+	IC const int GetLoadState()
+	{
+		return load_stage;
+	}
+
+	IC void SetLoadStateMax(u16 max_stage)
+	{
+		max_load_stage = max_stage;
+	}
+
+	IC const int GetLoadStateMax()
+	{
+		return max_load_stage;
+	}
+
+	void SetLoadStageTitle(pcstr ls_title = nullptr);
+
+	IC const bool IsNewGame()
+	{
+		return m_new_game;
+	}
+
+	IC void NewGame(bool state)
+	{
+		m_new_game = state;
+	}
 
 	virtual void OnEvent(EVENT E, u64 P1, u64 P2);
 
@@ -65,10 +97,10 @@ public:
 	virtual ~CApplication();
 
 	virtual void OnFrame();
-	void load_draw_internal();
 
-	void SetLoadingScreen(ILoadingScreen* newScreen);
+	void SetLoadingScreen(std::function<void(ILoadingScreen*&)> func);
 	void DestroyLoadingScreen();
+	bool IsLoadingScreen();
 };
 
 extern ENGINE_API CApplication* pApp;

@@ -778,15 +778,10 @@ void CActor::g_Physics(Fvector& _accel, float jump, float dt)
 		character_physics_support()->movement()->Calculate(accel, cameras[cam_active]->vDirection, 0, jump, dt, false);
 		bool new_border_state = character_physics_support()->movement()->isOutBorder();
 		if (m_bOutBorder != new_border_state && Level().CurrentControlEntity() == this)
-		{
 			SwitchOutBorder(new_border_state);
-		}
-#if defined(DEBUG) || defined(COC_DEBUG)
+
 		if (!psActorFlags.test(AF_NO_CLIP))
 			character_physics_support()->movement()->GetPosition(Position());
-#else // DEBUG
-		character_physics_support()->movement()->GetPosition(Position());
-#endif // DEBUG
 		character_physics_support()->movement()->bSleep = false;
 	}
 

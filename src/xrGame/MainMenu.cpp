@@ -51,7 +51,6 @@ CMainMenu::CMainMenu()
 	CUIXmlInit::InitColorDefs();
 	g_btnHint = NULL;
 	g_statHint = NULL;
-	m_deactivated_frame = 0;
 
 	//-------------------------------------------
 
@@ -151,9 +150,8 @@ void CMainMenu::Activate(bool bActivate)
 		if (g_pGameLevel)
 		{
 			if (b_is_single)
-			{
 				Device.seqFrame.Remove(g_pGameLevel);
-			}
+
 			Device.seqRender.Remove(g_pGameLevel);
 			CCameraManager::ResetPP();
 		};
@@ -163,36 +161,32 @@ void CMainMenu::Activate(bool bActivate)
 	}
 	else
 	{
-		m_deactivated_frame = Device.dwFrame;
 		m_Flags.set(flActive, FALSE);
 		m_Flags.set(flNeedChangeCapture, TRUE);
 
 		Device.seqRender.Remove(this);
 
-		bool b = !!Console->bVisible;
-		if (b)
-		{
+		if (Console->bVisible)
 			Console->Hide();
-		}
 
 		IR_Release();
-		if (b)
-		{
+
+		if (Console->bVisible)
 			Console->Show();
-		}
 
 		if (m_startDialog->IsShown())
 			m_startDialog->HideDialog();
 
 		CleanInternals();
+
 		if (g_pGameLevel)
 		{
 			if (b_is_single)
-			{
 				Device.seqFrame.Add(g_pGameLevel);
-			}
+
 			Device.seqRender.Add(g_pGameLevel);
 		};
+
 		if (m_Flags.test(flRestoreConsole))
 			Console->Show();
 
@@ -214,6 +208,8 @@ void CMainMenu::Activate(bool bActivate)
 			m_Flags.set(flNeedVidRestart, FALSE);
 			Console->Execute("vid_restart");
 		}
+
+		DestroyInternal();
 	}
 }
 
@@ -425,13 +421,13 @@ void CMainMenu::CheckForErrorDlg()
 	m_NeedErrDialog = ErrNoError;
 };
 
-void CMainMenu::DestroyInternal(bool bForce)
+void CMainMenu::DestroyInternal()
 {
-	if (m_startDialog && ((m_deactivated_frame < Device.dwFrame + 4) || bForce))
+	if (m_startDialog)
 		xr_delete(m_startDialog);
 }
 
-void	CMainMenu::OnLoadError(LPCSTR module)
+void CMainMenu::OnLoadError(LPCSTR module)
 {
 	LPCSTR str = StringTable().translate("ui_st_error_loading").c_str();
 	string1024 Text;

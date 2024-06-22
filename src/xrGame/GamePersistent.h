@@ -80,8 +80,7 @@ public:
 	virtual float MtlTransparent(u32 mtl_idx);
 	virtual void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert) override;
 
-	virtual void LoadTitle(bool change_tip = false, shared_str map_name = "");
-	void SetLoadStageTitle(pcstr ls_title = nullptr) override;
+	virtual void LoadTitle(shared_str map_name = "") override;
 
 	virtual bool CanBePaused();
 

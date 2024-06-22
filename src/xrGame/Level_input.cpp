@@ -56,11 +56,8 @@ void CLevel::IR_OnMouseWheel(int direction)
 #endif
 	if (CurrentGameUI()->IR_UIOnMouseWheel(direction))
 		return;
-	if (Device.Paused()
-#if defined(DEBUG) || defined(COC_DEBUG)
-		&& !psActorFlags.test(AF_NO_CLIP)
-#endif // DEBUG
-		)
+
+	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;
 
 	if (CURRENT_ENTITY())
@@ -90,12 +87,10 @@ void CLevel::IR_OnMouseMove(int dx, int dy)
 
 	if (CurrentGameUI()->IR_UIOnMouseMove(dx, dy))
 		return;
-	if (Device.Paused()
-#if defined(DEBUG) || defined(COC_DEBUG)
-		&& !psActorFlags.test(AF_NO_CLIP)
-#endif // DEBUG
-		)
+
+	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;
+
 	if (CURRENT_ENTITY())
 	{
 		IInputReceiver* IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(CURRENT_ENTITY()));
@@ -137,11 +132,9 @@ void CLevel::IR_OnKeyboardPress(int key)
 	{
 		if (!g_block_pause && IsGameTypeSingle())
 		{
-#if defined(DEBUG) || defined(COC_DEBUG)
 			if (psActorFlags.test(AF_NO_CLIP))
 				Device.Pause(!Device.Paused(), TRUE, TRUE, "li_pause_key_no_clip");
 			else
-#endif // DEBUG
 				Device.Pause(!Device.Paused(), TRUE, TRUE, "li_pause_key");
 		}
 		return;
@@ -188,11 +181,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 	if (b_ui_exist && CurrentGameUI()->IR_UIOnKeyboardPress(key))
 		return;
 
-	if (Device.Paused()
-#if defined(DEBUG) || defined(COC_DEBUG)
-		&& !psActorFlags.test(AF_NO_CLIP)
-#endif // DEBUG
-		)
+	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;
 
 	if (game && game->OnKeyboardPress(get_binded_action(key)))
@@ -512,13 +501,11 @@ void CLevel::IR_OnKeyboardRelease(int key)
 
 	if (CurrentGameUI() && CurrentGameUI()->IR_UIOnKeyboardRelease(key))
 		return;
+
 	if (game && game->OnKeyboardRelease(get_binded_action(key)))
 		return;
-	if (Device.Paused()
-#if defined(DEBUG) || defined(COC_DEBUG)
-		&& !psActorFlags.test(AF_NO_CLIP)
-#endif // DEBUG
-		)
+
+	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;
 
 	if (CURRENT_ENTITY())
@@ -572,12 +559,10 @@ void CLevel::IR_OnKeyboardHold(int key)
 
 	if (CurrentGameUI() && CurrentGameUI()->IR_UIOnKeyboardHold(key))
 		return;
-	if (Device.Paused()
-#if defined(DEBUG) || defined(COC_DEBUG)
-		&& !psActorFlags.test(AF_NO_CLIP)
-#endif // DEBUG
-		)
+
+	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;
+
 	if (CURRENT_ENTITY())
 	{
 		IInputReceiver* IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(CURRENT_ENTITY()));

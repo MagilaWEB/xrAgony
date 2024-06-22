@@ -22,13 +22,11 @@ void CRender::level_Load(IReader* fs)
 	R_ASSERT(!b_loaded);
 
 	// Begin
-	pApp->LoadBegin();
 	RImplementation.Resources->DeferredLoad(TRUE);
 	IReader* chunk;
 
 	// Shaders
-	g_pGamePersistent->SetLoadStageTitle("st_loading_shaders");
-	g_pGamePersistent->LoadTitle();
+	pApp->SetLoadStageTitle("st_loading_shaders");
 	{
 		chunk = fs->open_chunk(fsL_SHADERS);
 		R_ASSERT2(chunk, "Level doesn't builded correctly.");
@@ -55,9 +53,7 @@ void CRender::level_Load(IReader* fs)
 	Details = new CDetailManager();
 
 	// VB,IB,SWI
-	g_pGamePersistent->SetLoadStageTitle("st_loading_geometry");
-	g_pGamePersistent->LoadTitle();
-
+	pApp->SetLoadStageTitle("st_loading_geometry");
 	{
 		CStreamReader* geom = FS.rs_open("$level$", "level.geom");
 		R_ASSERT2(geom, "level.geom");
@@ -75,8 +71,7 @@ void CRender::level_Load(IReader* fs)
 	}
 
 	// Visuals
-	g_pGamePersistent->SetLoadStageTitle("st_loading_spatial_db");
-	g_pGamePersistent->LoadTitle();
+	pApp->SetLoadStageTitle("st_loading_spatial_db");
 	chunk = fs->open_chunk(fsL_VISUALS);
 	LoadVisuals(chunk);
 	chunk->close();
@@ -92,8 +87,7 @@ void CRender::level_Load(IReader* fs)
 	});
 
 	// Sectors
-	g_pGamePersistent->SetLoadStageTitle("st_loading_sectors_portals");
-	g_pGamePersistent->LoadTitle();
+	pApp->SetLoadStageTitle("st_loading_sectors_portals");
 	LoadSectors(fs);
 
 	// 3D Fluid
@@ -109,21 +103,17 @@ void CRender::level_Load(IReader* fs)
 	});
 	
 	// Lights
-	g_pGamePersistent->SetLoadStageTitle("st_loading_lights");
-	g_pGamePersistent->LoadTitle();
+	pApp->SetLoadStageTitle("st_loading_lights");
 	LoadLights(fs);
 	
 	// state
 	{
-		g_pGamePersistent->SetLoadStageTitle("st_loading_details");
-		g_pGamePersistent->LoadTitle();
+		pApp->SetLoadStageTitle("st_loading_details");
 		Details_Load.Wait();
 	}
 
 	parallel.wait();
 
-	// End
-	pApp->LoadEnd();
 
 	// sanity-clear
 	lstLODgroups.clear();

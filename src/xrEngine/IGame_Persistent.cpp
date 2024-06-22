@@ -125,17 +125,14 @@ void IGame_Persistent::Disconnect()
 
 void IGame_Persistent::OnGameStart()
 {
-#ifndef _EDITOR
-	SetLoadStageTitle("st_prefetching_objects");
-	LoadTitle();
 	if (!strstr(Core.Params, "-noprefetch"))
-		Prefetch();
-#endif
+		g_loading_events.emplace_back(this, &IGame_Persistent::Prefetch);
 }
 
 #ifndef _EDITOR
-void IGame_Persistent::Prefetch()
+bool IGame_Persistent::Prefetch()
 {
+	pApp->SetLoadStageTitle("st_loading_prefetching_objects");
 	// prefetch game objects & models
 	CTimer timer;
 	timer.Start();
@@ -147,13 +144,12 @@ void IGame_Persistent::Prefetch()
 	Log("Loading models...");
 	::Render->models_Prefetch();
 
-	/*Log("Loading textures...");
-	::Render->ResourcesDeferredUpload();*/
-
 	const auto memoryAfter = Memory.mem_usage() - memoryBefore;
 
 	Msg("* [prefetch] time:	%d ms", timer.GetElapsed_ms());
 	Msg("* [prefetch] memory: %d Kb", memoryAfter / 1024);
+
+	return true;
 }
 #endif
 

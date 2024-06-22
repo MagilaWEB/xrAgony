@@ -6,7 +6,7 @@
 void set_info_extend_string(lua_State* L)
 {
 	lua_pushliteral(L, "EXTENDED_STRING_COPYRIGHT");
-	lua_pushliteral(L, "Copyright (C) A.R.E.A 2017-2024.");
+	lua_pushliteral(L, "Copyright (C) MAGILA.");
 	lua_settable(L, -3);
 	lua_pushliteral(L, "EXTENDED_STRING_DESCRIPTION");
 	lua_pushliteral(L, "EXTENDED_STRING is a Lua library that extends and adds new methods for working with string objects luajit v2.1.");

@@ -92,7 +92,7 @@ public:
 	IGame_ObjectPool ObjectPool;
 	CEnvironment* pEnvironment;
 	CEnvironment& Environment() { return *pEnvironment; };
-	void Prefetch();
+	bool Prefetch();
 #endif
 	IMainMenu* m_pMainMenu;
 	static bool IsMainMenuActive();
@@ -142,8 +142,7 @@ public:
 
 	ICF u32 GameType() { return m_game_params.m_e_game_type; };
 	virtual void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert);
-	virtual void LoadTitle(bool /*change_tip*/ = false, shared_str /*map_name*/ = "") {}
-	virtual void SetLoadStageTitle(pcstr /*ls_title*/) {}
+	virtual void LoadTitle(shared_str /*map_name*/ = "") {}
 	virtual bool CanBePaused() { return true; }
 };
 
@@ -154,7 +153,7 @@ public:
 	virtual void Activate(bool bActive) = 0;
 	virtual bool IsActive() = 0;
 	virtual bool CanSkipSceneRendering() = 0;
-	virtual void DestroyInternal(bool bForce) = 0;
+	virtual void DestroyInternal() = 0;
 };
 
 extern ENGINE_API IGame_Persistent* g_pGamePersistent;

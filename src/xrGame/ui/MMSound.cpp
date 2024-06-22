@@ -10,6 +10,8 @@ void CMMSound::Init(CUIXml& xml_doc, LPCSTR path)
 	string256 _path;
 	m_bRandom = xml_doc.ReadAttribInt(path, 0, "random") ? true : false;
 
+	m_bIgnorePaused = xml_doc.ReadAttribInt(path, 0, "ignore_paused") ? true : false;
+
 	int nodes_num = xml_doc.GetNodesNum(path, 0, "menu_music");
 
 	XML_NODE tab_node = xml_doc.NavigateToNode(path, 0);
@@ -66,6 +68,7 @@ void CMMSound::music_Play()
 
 	m_music_stereo.create(_path, st_Music, sg_SourceType);
 	m_music_stereo.play(NULL, sm_2D);
+	m_music_stereo.SetIgnorePaused(m_bIgnorePaused);
 }
 
 void CMMSound::music_Update()

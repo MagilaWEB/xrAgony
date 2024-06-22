@@ -7,136 +7,99 @@
 #define REG_PRIORITY_HIGH 0x33333333ul
 #define REG_PRIORITY_CAPTURE 0x7ffffffful
 #define REG_PRIORITY_INVALID 0xfffffffful
+#define DECLARE_MESSAGE(name)\
+struct pure##name\
+{\
+    virtual void On##name() = 0;\
+    ICF void __stdcall OnPure() { On##name(); }\
+}
 
-// XXX: rename to FrameStart
-struct pureFrame
-{
-	virtual void OnFrame() = 0;
-	ICF void __stdcall OnPure() { OnFrame(); }
-};
-
-struct pureFrameEnd
-{
-	virtual void OnFrameEnd() = 0;
-	ICF void __stdcall OnPure() { OnFrameEnd(); }
-};
-
-struct pureRender
-{
-	virtual void OnRender() = 0;
-	ICF void __stdcall OnPure() { OnRender(); }
-};
-
-struct pureAppActivate
-{
-	virtual void OnAppActivate() = 0;
-	ICF void __stdcall OnPure() { OnAppActivate(); }
-};
-
-struct pureAppDeactivate
-{
-	virtual void OnAppDeactivate() = 0;
-	ICF void __stdcall OnPure() { OnAppDeactivate(); }
-};
-
-struct pureAppStart
-{
-	virtual void OnAppStart() = 0;
-	ICF void __stdcall OnPure() { OnAppStart(); }
-};
-
-struct pureAppEnd
-{
-	virtual void OnAppEnd() = 0;
-	ICF void __stdcall OnPure() { OnAppEnd(); }
-};
-
-struct pureDeviceReset
-{
-	virtual void OnDeviceReset() = 0;
-	ICF void __stdcall OnPure() { OnDeviceReset(); }
-};
-
-struct pureScreenResolutionChanged
-{
-	virtual void OnScreenResolutionChanged() = 0;
-	ICF void __stdcall OnPure() { OnScreenResolutionChanged(); }
-};
+DECLARE_MESSAGE(Frame); // XXX: rename to FrameStart
+DECLARE_MESSAGE(FrameEnd);
+DECLARE_MESSAGE(Render);
+DECLARE_MESSAGE(AppActivate);
+DECLARE_MESSAGE(AppDeactivate);
+DECLARE_MESSAGE(AppStart);
+DECLARE_MESSAGE(AppEnd);
+DECLARE_MESSAGE(DeviceReset);
+DECLARE_MESSAGE(ScreenResolutionChanged);
 
 template<class T>
 class MessageRegistry
 {
+	void* pmutex;
+
 	struct MessageObject
 	{
 		T* Object;
 		int Prio;
 	};
 
-	bool changed, inProcess;
+	bool changed{ false };
 	xr_vector<MessageObject> messages;
 
-	static int __cdecl compare(const void* e1, const void* e2)
+public:
+	MessageRegistry()
 	{
-		MessageObject* p1 = (MessageObject*)e1;
-		MessageObject* p2 = (MessageObject*)e2;
-		return p2->Prio - p1->Prio;
+		pmutex = xr_alloc<CRITICAL_SECTION>(1);
+		InitializeCriticalSection((CRITICAL_SECTION*)pmutex);
 	}
 
-public:
-	MessageRegistry() : changed(false), inProcess(false) {}
+	~MessageRegistry()
+	{
+		DeleteCriticalSection((CRITICAL_SECTION*)pmutex);
+		xr_free(pmutex);
+	}
 
-	void Clear() { messages.clear(); }
+	void Clear()
+	{
+		EnterCriticalSection((CRITICAL_SECTION*)pmutex);
+		messages.clear();
+		LeaveCriticalSection((CRITICAL_SECTION*)pmutex);
+	}
 
 	constexpr void Add(T* object, const int priority = REG_PRIORITY_NORMAL)
 	{
-		Add({ object, priority });
-	}
+		EnterCriticalSection((CRITICAL_SECTION*)pmutex);
+		VERIFY(object);
 
-	void Add(MessageObject&& newMessage)
-	{
-#ifdef DEBUG
-		VERIFY(newMessage.Object);
-		VERIFY(newMessage.Prio != REG_PRIORITY_INVALID);
+		messages.emplace_back(object, priority);
 
-		// Verify that we don't already have the same object with valid priority
-		for (size_t i = 0; i < messages.size(); ++i)
-		{
-			auto& message = messages[i];
-			VERIFY(!(message.Prio != REG_PRIORITY_INVALID && message.Object == newMessage.Object));
-		}
-#endif
-		messages.emplace_back(newMessage);
-
-		if (inProcess)
-			changed = true;
-		else
-			Resort();
+		changed = true;
+		LeaveCriticalSection((CRITICAL_SECTION*)pmutex);
 	}
 
 	void Remove(T* object)
 	{
-		for (size_t i = 0; i < messages.size(); ++i)
+		EnterCriticalSection((CRITICAL_SECTION*)pmutex);
+		for (MessageObject& msg : messages)
 		{
-			auto& message = messages[i];
-			if (message.Object == object)
-				message.Prio = REG_PRIORITY_INVALID;
+			if (msg.Object == object)
+			{
+				msg.Prio = REG_PRIORITY_INVALID;
+				break;
+			}
 		}
 
-		if (inProcess)
-			changed = true;
-		else
-			Resort();
+		changed = true;
+		LeaveCriticalSection((CRITICAL_SECTION*)pmutex);
 	}
 
 	void Process()
 	{
+		EnterCriticalSection((CRITICAL_SECTION*)pmutex);
+		if (changed)
+			Resort();
+
 		if (messages.empty())
+		{
+			LeaveCriticalSection((CRITICAL_SECTION*)pmutex);
 			return;
+		}
+			
 
-		inProcess = true;
-
-		if (messages[0].Prio == REG_PRIORITY_CAPTURE)
-			messages[0].Object->OnPure();
+		if (messages.front().Prio == REG_PRIORITY_CAPTURE)
+			messages.front().Object->OnPure();
 		else
 		{
 			for (size_t i = 0; i < messages.size(); ++i)
@@ -147,16 +110,18 @@ public:
 			}
 		}
 
-		if (changed)
-			Resort();
-
-		inProcess = false;
+		LeaveCriticalSection((CRITICAL_SECTION*)pmutex);
 	}
 
+private:
 	void Resort()
 	{
 		if (!messages.empty())
-			qsort(&messages.front(), messages.size(), sizeof(MessageObject), compare);
+		{
+			messages.sort([](MessageObject& msg, MessageObject& msg2) {
+				return msg.Prio > msg2.Prio;
+			});
+		}
 
 		while (!messages.empty() && messages.back().Prio == REG_PRIORITY_INVALID)
 			messages.pop_back();

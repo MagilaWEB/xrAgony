@@ -66,7 +66,6 @@ CLevel::CLevel()
 	DemoCS(MUTEX_PROFILE_ID(DemoCS))
 #endif
 {
-	g_bDebugEvents = strstr(Core.Params, "-debug_ge") != nullptr;
 	game_events = new NET_Queue_Event();
 	eChangeRP = Engine.Event.Handler_Attach("LEVEL:ChangeRP", this);
 	eDemoPlay = Engine.Event.Handler_Attach("LEVEL:PlayDEMO", this);
@@ -281,7 +280,6 @@ void CLevel::ProcessGameEvents()
 			}
 		}
 	}
-
 }
 
 void CLevel::MakeReconnect()
@@ -328,7 +326,9 @@ void CLevel::OnFrame()
 	ClientReceive();
 	stats.ClientRecv.End();
 
-	ProcessGameEvents();
+	if (!Device.IsLoadingProsses())
+		ProcessGameEvents();
+	
 	if (m_bNeed_CrPr)
 		make_NetCorrectionPrediction();
 
@@ -345,22 +345,28 @@ void CLevel::OnFrame()
 	// Inherited update
 	inherited::OnFrame();
 
-	g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
+	if(!Device.IsLoadingProsses())
+	{
+		g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
 
-	m_ph_commander->update();
-	m_ph_commander_scripts->update();
+		m_ph_commander->update();
+		m_ph_commander_scripts->update();
+	}
 
 	stats.BulletManagerCommit.Begin();
 	BulletManager().CommitRenderSet();
 	stats.BulletManagerCommit.End();
 
-	// update static sounds
-	if (g_mt_config.test(mtLevelSounds))
+	if (!Device.IsLoadingProsses())
 	{
-		Device.add_parallel(m_level_sound_manager, &CLevelSoundManager::Update);
+		// update static sounds
+		if (g_mt_config.test(mtLevelSounds))
+		{
+			Device.add_parallel(m_level_sound_manager, &CLevelSoundManager::Update);
+		}
+		else
+			m_level_sound_manager->Update();
 	}
-	else
-		m_level_sound_manager->Update();
 
 	if (pStatGraphR)
 	{
@@ -369,6 +375,8 @@ void CLevel::OnFrame()
 		pStatGraphR->AppendItem(float(m_dwRPC) * fRPC_Mult, 0xffff0000, 1);
 		pStatGraphR->AppendItem(float(m_dwRPS) * fRPS_Mult, 0xff00ff00, 0);
 	}
+
+	ProcessGameSpawns();
 }
 
 #ifdef DEBUG_PRECISE_PATH

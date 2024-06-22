@@ -176,7 +176,7 @@ void CStats::Show()
 
 	if (psDeviceFlags.test(rsShowFPS))
 	{
-		const auto fps = u32(Device.GetStats().fFPS);
+		const u32 fps = Device.FPS;
 		if (fps >= 121)
 			fpsFont->SetColor(color_rgba(255, 0, 255, 255));
 		else if (fps >= 60)

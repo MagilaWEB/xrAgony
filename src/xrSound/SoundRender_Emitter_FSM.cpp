@@ -39,14 +39,14 @@ void CSoundRender_Emitter::update(float dt)
 	{
 	case stStopped: break;
 	case stStartingDelayed:
-		if (iPaused)
+		if (iPaused && !bIgnorePaused)
 			break;
 		starting_delay -= dt;
 		if (starting_delay <= 0)
 			m_current_state = stStarting;
 		break;
 	case stStarting:
-		if (iPaused)
+		if (iPaused && !bIgnorePaused)
 			break;
 		fTimeStarted = fTime;
 		fTimeToStop = fTime + get_length_sec();
@@ -67,14 +67,14 @@ void CSoundRender_Emitter::update(float dt)
 			m_current_state = stSimulating;
 		break;
 	case stStartingLoopedDelayed:
-		if (iPaused)
+		if (iPaused && !bIgnorePaused)
 			break;
 		starting_delay -= dt;
 		if (starting_delay <= 0)
 			m_current_state = stStartingLooped;
 		break;
 	case stStartingLooped:
-		if (iPaused)
+		if (iPaused && !bIgnorePaused)
 			break;
 		fTimeStarted = fTime;
 		fTimeToStop = 0xffffffff;
@@ -95,7 +95,7 @@ void CSoundRender_Emitter::update(float dt)
 			m_current_state = stSimulatingLooped;
 		break;
 	case stPlaying:
-		if (iPaused)
+		if (iPaused && !bIgnorePaused)
 		{
 			if (target)
 			{
@@ -129,7 +129,7 @@ void CSoundRender_Emitter::update(float dt)
 		}
 		break;
 	case stSimulating:
-		if (iPaused)
+		if (iPaused && !bIgnorePaused)
 		{
 			fTimeStarted += fDeltaTime;
 			fTimeToStop += fDeltaTime;
@@ -162,7 +162,7 @@ void CSoundRender_Emitter::update(float dt)
 		}
 		break;
 	case stPlayingLooped:
-		if (iPaused)
+		if (iPaused && !bIgnorePaused)
 		{
 			if (target)
 			{
@@ -186,7 +186,7 @@ void CSoundRender_Emitter::update(float dt)
 		}
 		break;
 	case stSimulatingLooped:
-		if (iPaused)
+		if (iPaused && !bIgnorePaused)
 		{
 			fTimeStarted += fDeltaTime;
 			fTimeToPropagade += fDeltaTime;

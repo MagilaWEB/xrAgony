@@ -19,8 +19,6 @@ bool CLevel::net_Start_client(const char* options) { return false; }
 #include "string_table.h"
 bool CLevel::net_start_client1()
 {
-	pApp->LoadBegin();
-
 	// name_of_server
 	string64 name_of_server = "";
 	if (strchr(*m_caClientOptions, '/'))
@@ -29,13 +27,12 @@ bool CLevel::net_start_client1()
 	if (strchr(name_of_server, '/'))
 		*strchr(name_of_server, '/') = 0;
 
-	string256 temp;
-	xr_sprintf(temp, "%s %s",
-		StringTable().translate("st_client_connecting_to").c_str(),
-		name_of_server);
+	//string256 temp;
+	//xr_sprintf(temp, "%s %s",
+	//	StringTable().translate("st_client_connecting_to").c_str(),
+	//	name_of_server);
 
-	pApp->SetLoadStageTitle(temp);
-	pApp->LoadStage();
+	//pApp->SetLoadStageTitle(temp);
 	return true;
 }
 
@@ -104,8 +101,7 @@ bool CLevel::net_start_client4()
 	if (connected_to_server)
 	{
 		// Begin spawn
-		g_pGamePersistent->SetLoadStageTitle("st_client_spawning");
-		g_pGamePersistent->LoadTitle();
+		pApp->SetLoadStageTitle("st_loading_create_physics");
 
 		// Send physics to single or multithreaded mode
 
@@ -138,14 +134,11 @@ bool CLevel::net_start_client5()
 {
 	if (connected_to_server)
 	{
-		// HUD
-
 		// Textures
-		g_pGamePersistent->SetLoadStageTitle("st_loading_textures");
-		g_pGamePersistent->LoadTitle();
+		pApp->SetLoadStageTitle("st_loading_textures");
 		::Render->DeferredLoad(FALSE);
 		::Render->ResourcesDeferredUpload();
-		LL_CheckTextures();
+		//	LL_CheckTextures();
 
 		deny_m_spawn = TRUE;
 	}
@@ -162,7 +155,6 @@ bool CLevel::net_start_client6()
 
 		if (!game_configured)
 		{
-			pApp->LoadEnd();
 			return true;
 		}
 		g_hud->Load();
@@ -175,9 +167,6 @@ bool CLevel::net_start_client6()
 		if (game)
 			game->OnConnected();
 
-		g_pGamePersistent->SetLoadStageTitle("st_client_synchronising");
-		pApp->LoadForceFinish();
-		g_pGamePersistent->LoadTitle();
 		Device.PreCache(60, true, true);
 		net_start_result_total = TRUE;
 	}
@@ -185,7 +174,5 @@ bool CLevel::net_start_client6()
 	{
 		net_start_result_total = FALSE;
 	}
-
-	pApp->LoadEnd();
 	return true;
 }

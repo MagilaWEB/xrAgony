@@ -33,7 +33,7 @@ CALifeSimulator::CALifeSimulator(xrServer* server, shared_str* command_line)
 	if (!strstr(Core.Params, "-keep_lua"))
 	{
 		destroy_lua_wpn_params();
-		MainMenu()->DestroyInternal(true);
+		MainMenu()->DestroyInternal();
 		xr_delete(g_object_factory);
 		ai().SetupScriptEngine();
 #ifdef DEBUG

@@ -34,10 +34,10 @@ bool CLevel::net_Start(const char* op_server, const char* op_client)
 	m_caClientOptions = tmp;
 	m_caServerOptions = op_server;
 	//---------------------------------------------------------------------
-	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start1));
-	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start2));
-	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start4));
-	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start6));
+	g_loading_events.emplace_back(this, &CLevel::net_start1);
+	g_loading_events.emplace_back(this, &CLevel::net_start2);
+	g_loading_events.emplace_back(this, &CLevel::net_start4);
+	g_loading_events.emplace_back(this, &CLevel::net_start6);
 
 	return net_start_result_total;
 }
@@ -47,9 +47,6 @@ bool CLevel::net_start1()
 	// Start client and server if need it
 	if (m_caServerOptions.size())
 	{
-		g_pGamePersistent->SetLoadStageTitle("st_server_starting");
-		g_pGamePersistent->LoadTitle();
-
 		typedef IGame_Persistent::params params;
 		params& p = g_pGamePersistent->m_game_params;
 		// Connect
@@ -61,7 +58,7 @@ bool CLevel::net_start1()
 
 			map_data.m_name = game_sv_GameState::parse_level_name(m_caServerOptions);
 
-			g_pGamePersistent->LoadTitle(true, map_data.m_name);
+			g_pGamePersistent->LoadTitle(map_data.m_name);
 
 			::Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
 			::Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
@@ -97,7 +94,7 @@ bool CLevel::net_start2()
 		Server->SLS_Default();
 		map_data.m_name = Server->level_name(m_caServerOptions);
 		
-		g_pGamePersistent->LoadTitle(true, map_data.m_name);
+		g_pGamePersistent->LoadTitle(map_data.m_name);
 
 		::Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
 		::Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
@@ -112,12 +109,12 @@ bool CLevel::net_start4()
 
 	g_loading_events.pop_front();
 
-	g_loading_events.push_front(LOADING_EVENT(this, &CLevel::net_start_client6));
-	g_loading_events.push_front(LOADING_EVENT(this, &CLevel::net_start_client5));
-	g_loading_events.push_front(LOADING_EVENT(this, &CLevel::net_start_client4));
-	g_loading_events.push_front(LOADING_EVENT(this, &CLevel::net_start_client3));
-	g_loading_events.push_front(LOADING_EVENT(this, &CLevel::net_start_client2));
-	g_loading_events.push_front(LOADING_EVENT(this, &CLevel::net_start_client1));
+	g_loading_events.emplace_front(this, &CLevel::net_start_client6);
+	g_loading_events.emplace_front(this, &CLevel::net_start_client5);
+	g_loading_events.emplace_front(this, &CLevel::net_start_client4);
+	g_loading_events.emplace_front(this, &CLevel::net_start_client3);
+	g_loading_events.emplace_front(this, &CLevel::net_start_client2);
+	g_loading_events.emplace_front(this, &CLevel::net_start_client1);
 
 	return false;
 }
@@ -127,8 +124,6 @@ bool CLevel::net_start6()
 	// init bullet manager
 	BulletManager().Clear();
 	BulletManager().Load();
-
-	pApp->LoadEnd();
 
 	if (net_start_result_total)
 	{

@@ -39,22 +39,14 @@ public:
 		return find(obj) != inherited::end();
 	}
 
-	IC const_iterator find_if(const T& obj) const
+	template <typename _Pr>
+	IC iterator find_if(_Pr obj)
 	{
 		return std::find_if(inherited::begin(), inherited::end(), obj);
 	}
 
-	IC iterator find_if(const T& obj)
-	{
-		return std::find_if(inherited::begin(), inherited::end(), obj);
-	}
-
-	IC bool contain_if(const T& obj) const
-	{
-		return find_if(obj) != inherited::end();
-	}
-
-	IC bool contain_if(T& obj)
+	template <typename _Pr>
+	IC bool contain_if(_Pr obj)
 	{
 		return find_if(obj) != inherited::end();
 	}

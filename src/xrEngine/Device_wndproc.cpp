@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "xrEngine\x_ray.h"
 
 bool CRenderDevice::on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& result)
 {
@@ -40,10 +41,17 @@ bool CRenderDevice::on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	}
 	case WM_CLOSE:
 	{
-		xrThread::GlobalState(xrThread::dsOK);
-		Engine.Event.Defer("KERNEL:disconnect");
-		Engine.Event.Defer("KERNEL:quit");
-		result = 1;
+		ILoadingScreen* screen = pApp->LoadScreen();
+		if (screen && !screen->IsVisibility())
+		{
+			seqParallel.clear();
+			seqParallel2.clear();
+			xrThread::GlobalState(xrThread::dsOK);
+			Engine.Event.Defer("KERNEL:disconnect");
+			Engine.Event.Defer("KERNEL:quit");
+			result = 1;
+			return (false);
+		}
 		return (true);
 	}
 	}

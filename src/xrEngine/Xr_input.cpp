@@ -660,15 +660,19 @@ void CInput::OnAppDeactivate(void)
 
 void CInput::OnFrame(void)
 {
-	stats.FrameStart();
-	stats.FrameTime.Begin();
-	dwCurTime = Device.TimerAsync();
-	if (pKeyboard)
-		KeyUpdate();
-	if (pMouse)
-		MouseUpdate();
-	stats.FrameTime.End();
-	stats.FrameEnd();
+	if(!Device.IsLoadingProsses())
+	{
+		stats.FrameStart();
+		stats.FrameTime.Begin();
+		dwCurTime = Device.TimerAsync();
+		if (pKeyboard)
+			KeyUpdate();
+		if (pMouse)
+			MouseUpdate();
+		stats.FrameTime.End();
+		stats.FrameEnd();
+	}
+	
 }
 
 IInputReceiver* CInput::CurrentIR()

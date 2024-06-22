@@ -160,10 +160,8 @@ void CRender::Render()
 	g_r = 1;
 	VERIFY(0 == mapDistort.size());
 
-	IMainMenu* pMainMenu = g_pGamePersistent ? g_pGamePersistent->m_pMainMenu : 0;
-	bool bMenu = pMainMenu ? pMainMenu->CanSkipSceneRendering() : false;
 
-	if (!(g_pGameLevel && g_hud) || bMenu)
+	if (!(g_pGameLevel && g_hud))
 		return;
 
 	if (m_bFirstFrameAfterReset)

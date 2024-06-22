@@ -110,10 +110,14 @@ void CSoundRender_Core::stop_emitters()
 int CSoundRender_Core::pause_emitters(bool val)
 {
 	m_iPauseCounter += val ? +1 : -1;
+
 	VERIFY(m_iPauseCounter >= 0);
 
-	for (u32 it = 0; it < s_emitters.size(); it++)
-		((CSoundRender_Emitter*)s_emitters[it])->pause(val, val ? m_iPauseCounter : m_iPauseCounter + 1);
+	if (m_iPauseCounter >= 0)
+	{
+		for (u32 it = 0; it < s_emitters.size(); it++)
+			((CSoundRender_Emitter*)s_emitters[it])->pause(val, val ? m_iPauseCounter : m_iPauseCounter + 1);
+	}
 
 	return m_iPauseCounter;
 }
@@ -273,6 +277,15 @@ void CSoundRender_Core::create(ref_sound& S, pcstr fName, esound_type sound_type
 	if (!bPresent)
 		return;
 	S._p = new ref_sound_data(fName, sound_type, game_type);
+}
+
+void CSoundRender_Core::SetIgnorePaused(ref_sound& S, bool b_ignore_p)
+{
+	if (!bPresent)
+		return;
+
+	if (S._feedback())
+		S._feedback()->SetIgnorePaused(b_ignore_p);
 }
 
 void CSoundRender_Core::attach_tail(ref_sound& S, pcstr fName)

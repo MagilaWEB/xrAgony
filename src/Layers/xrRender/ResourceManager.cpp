@@ -16,7 +16,7 @@
 #include "tss.h"
 #include "blenders/blender.h"
 #include "blenders/blender_recorder.h"
-
+#include "xrEngine/x_ray.h"
 //	Already defined in Texture.cpp
 void fix_texture_name(LPSTR fn);
 /*
@@ -35,14 +35,18 @@ void fix_texture_name(LPSTR fn)
 template <class T>
 bool reclaim(xr_vector<T*>& vec, const T* ptr)
 {
-	auto it = vec.begin();
-	auto end = vec.end();
-	for (; it != end; ++it)
-		if (*it == ptr)
+	if (vec.empty())
+		return false;
+
+	for (size_t i = 0; i < vec.size(); i++)
+	{
+		if (vec[i] == ptr)
 		{
-			vec.erase(it);
+			vec.erase(vec.begin() + i);
 			return true;
 		}
+	}
+
 	return false;
 }
 
@@ -337,13 +341,38 @@ void CResourceManager::DeferredUpload()
 	if (Device.IsReset())
 		return;
 #endif
+	
+	u32 texture_it = 0;
+	u32 texture_send = 0;
+	tbb::task_group parallel;
+	
+	if (pApp->IsLoadingScreen())
+	{
+		parallel.run([&]() {
+			while (true)
+			{
+				const u32 result = u32((float(texture_it) / m_textures.size()) * 21);
+				if (result != texture_send)
+				{
+					pApp->SetLoadStageTitle("st_loading_textures");
+					texture_send = result;
+				}
+
+				if (texture_send >= 20)
+					break;
+			}
+		});
+	}
 
 	CHECK_TIME("Resource Manager DeferredUpload",
 		tbb::parallel_for_each(m_textures, [&](struct std::pair<const char*, CTexture*> m_tex)
 		{
 			m_tex.second->Load();
+			texture_it++;
 		});
 	)
+
+	parallel.wait();
 }
 
 void CResourceManager::DeferredUnload()

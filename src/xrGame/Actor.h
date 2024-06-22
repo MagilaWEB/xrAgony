@@ -256,9 +256,9 @@ protected:
 	u16 m_holderID;
 	bool use_Holder(CHolderCustom* holder);
 	void ActorUse();
-#ifdef COC_KICK
-	void actorKick();
-#endif
+//#ifdef COC_KICK
+//	void actorKick();
+//#endif
 
 protected:
 	BOOL m_bAnimTorsoPlayed;
@@ -686,9 +686,7 @@ public:
 	virtual void OnPrevWeaponSlot();
 	void SwitchNightVision();
 	void SwitchTorch();
-#if defined(DEBUG) || defined(COC_DEBUG)
 	void NoClipFly(int cmd);
-#endif // DEBUG
 
 public:
 	virtual void on_weapon_shot_start(CWeapon* weapon);
