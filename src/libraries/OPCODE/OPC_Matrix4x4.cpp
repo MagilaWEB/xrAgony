@@ -108,22 +108,9 @@ Matrix4x4& Matrix4x4::Invert()
 
 	float IDet = 1.0f / Det;
 
-	Temp.m[0][0] = CoFactor(0, 0) * IDet;
-	Temp.m[1][0] = CoFactor(0, 1) * IDet;
-	Temp.m[2][0] = CoFactor(0, 2) * IDet;
-	Temp.m[3][0] = CoFactor(0, 3) * IDet;
-	Temp.m[0][1] = CoFactor(1, 0) * IDet;
-	Temp.m[1][1] = CoFactor(1, 1) * IDet;
-	Temp.m[2][1] = CoFactor(1, 2) * IDet;
-	Temp.m[3][1] = CoFactor(1, 3) * IDet;
-	Temp.m[0][2] = CoFactor(2, 0) * IDet;
-	Temp.m[1][2] = CoFactor(2, 1) * IDet;
-	Temp.m[2][2] = CoFactor(2, 2) * IDet;
-	Temp.m[3][2] = CoFactor(2, 3) * IDet;
-	Temp.m[0][3] = CoFactor(3, 0) * IDet;
-	Temp.m[1][3] = CoFactor(3, 1) * IDet;
-	Temp.m[2][3] = CoFactor(3, 2) * IDet;
-	Temp.m[3][3] = CoFactor(3, 3) * IDet;
+	for(u32 i = 0; i < 4; i++)
+		for(u32 i2 = 0; i2 < 4; i++)
+			Temp.m[i2][i] = CoFactor(i, i2) * IDet;
 
 	*this = Temp;
 

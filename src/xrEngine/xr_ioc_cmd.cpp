@@ -701,13 +701,9 @@ void CCC_Register()
 	// Render device states
 	CMD4(CCC_Integer, "r__supersample", &ps_r__Supersample, 1, 4);
 
-	CMD3(CCC_Mask, "rs_v_sync", &psDeviceFlags, rsVSync);
-	// CMD3(CCC_Mask, "rs_disable_objects_as_crows",&psDeviceFlags, rsDisableObjectsAsCrows );
-	//CMD3(CCC_Mask, "rs_fullscreen", &psDeviceFlags, rsFullscreen);
-	//CMD3(CCC_Mask, "rs_refresh_60hz", &psDeviceFlags, rsRefresh60hz);
+	CMD3(CCC_Mask,	"rs_v_sync", &psDeviceFlags, rsVSync);
 	CMD3(CCC_Mask,	"rs_stats", &psDeviceFlags, rsStatistic);
 	CMD3(CCC_Mask,	"rs_fps", &psDeviceFlags, rsShowFPS);
-	//CMD3(CCC_Mask,	"rs_cpu_stats", &psDeviceFlags, rsCPUStatistic);
 	CMD3(CCC_Mask,	"rs_thread_stats", &psDeviceFlags, rsXrThreadStatistic);
 	CMD4(CCC_Float,	"rs_vis_distance", &psVisDistance, 0.4f, 1.0f);
 
