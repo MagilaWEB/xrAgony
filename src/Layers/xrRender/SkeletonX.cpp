@@ -10,17 +10,12 @@
 #include <d3dx9.h>
 #pragma warning(pop)
 
-#ifndef _EDITOR
 #include "xrEngine/Render.h"
-#else
-#include "Layers/xrAPI/xrAPI.h"
-#endif
 #include "SkeletonX.h"
 #include "SkeletonCustom.h"
 #include "xrCore/FMesh.hpp"
-#include "xrCore/Math/MathUtil.hpp"
 
-using namespace XRay::Math;
+#include <Layers\xrRender\Utils\SkinXW.hpp>
 
 shared_str s_bones_array_const;
 
@@ -125,7 +120,7 @@ void CSkeletonX::_Render_soft(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCou
 				*Vertices1W, // source
 				vCount, // count
 				Parent->bone_instances // bones
-				);
+			);
 		}
 		else if (*Vertices2W)
 		{
@@ -133,7 +128,7 @@ void CSkeletonX::_Render_soft(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCou
 				*Vertices2W, // source
 				vCount, // count
 				Parent->bone_instances // bones
-				);
+			);
 		}
 		else if (*Vertices3W)
 		{
@@ -141,7 +136,7 @@ void CSkeletonX::_Render_soft(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCou
 				*Vertices3W, // source
 				vCount, // count
 				Parent->bone_instances // bones
-				);
+			);
 		}
 		else if (*Vertices4W)
 		{
@@ -149,7 +144,7 @@ void CSkeletonX::_Render_soft(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCou
 				*Vertices4W, // source
 				vCount, // count
 				Parent->bone_instances // bones
-				);
+			);
 		}
 		else
 			R_ASSERT2(0, "unsupported soft rendering");

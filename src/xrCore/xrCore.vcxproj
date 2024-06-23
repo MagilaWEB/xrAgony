@@ -116,9 +116,6 @@
     <ClCompile Include="LzHuf.cpp" />
     <ClCompile Include="Math\PLC_CPP.cpp" />
     <ClCompile Include="Math\PLC_SSE.cpp" />
-    <ClCompile Include="Math\SkinXW_CPP.cpp" />
-    <ClCompile Include="Math\SkinXW_SSE.cpp" />
-    <ClCompile Include="Math\MathUtil.cpp" />
     <ClCompile Include="Media\Image.cpp" />
     <ClCompile Include="Model.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -216,9 +213,6 @@
     <ClInclude Include="Math\PLC_CPP.hpp" />
     <ClInclude Include="Math\PLC_SSE.hpp" />
     <ClInclude Include="Math\Random32.hpp" />
-    <ClInclude Include="Math\SkinXW_CPP.hpp" />
-    <ClInclude Include="Math\SkinXW_SSE.hpp" />
-    <ClInclude Include="Math\MathUtil.hpp" />
     <ClInclude Include="math_constants.h" />
     <ClInclude Include="Media\Image.hpp" />
     <ClInclude Include="net_utils.h" />

@@ -8,7 +8,6 @@
 #include <objbase.h>
 #endif
 #include "xrCore.h"
-#include "Math/MathUtil.hpp"
 #include "xrCore/_std_extensions.h"
 
 #pragma comment(lib, "winmm.lib")
@@ -78,7 +77,6 @@ void xrCore::Initialize(pcstr _ApplicationName, LogCallback cb, bool init_fs, pc
 		Msg("command line %s\n", Params);
 		_initialize_cpu();
 		R_ASSERT(CPU::ID.hasSSE());
-		XRay::Math::Initialize();
 		// xrDebug::Initialize ();
 
 		rtc_initialize();

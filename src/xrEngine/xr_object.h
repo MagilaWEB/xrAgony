@@ -14,6 +14,11 @@
 #include "xrCommon/misc_math_types.h" // SRotation
 
 // fwd. decl.
+#ifdef RENDER
+struct IPhysicsShell;
+#else
+class IPhysicsShell;
+#endif
 class IRender_Sector;
 class IRender_ObjectSpecific;
 class CCustomHUD;
@@ -25,7 +30,6 @@ class CInifile;
 #define CROW_RADIUS (30.f)
 #define CROW_RADIUS2 (60.f)
 
-class IPhysicsShell;
 xr_pure_interface IObjectPhysicsCollision;
 
 class CAttachmentOwner;

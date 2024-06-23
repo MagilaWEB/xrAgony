@@ -475,7 +475,7 @@ void CHW::updateWindowProps(HWND m_hWnd)
 			else
 			{
 				if (bBordersMode)
-					fYOffset = GetSystemMetrics(SM_CYCAPTION); // size of the window title bar
+					fYOffset = (float)GetSystemMetrics(SM_CYCAPTION); // size of the window title bar
 				SetRect(&m_rcWindowBounds, 0, 0, DevPP.BackBufferWidth, DevPP.BackBufferHeight);
 			};
 
@@ -484,7 +484,7 @@ void CHW::updateWindowProps(HWND m_hWnd)
 			SetWindowPos(m_hWnd,
 				HWND_NOTOPMOST,
 				m_rcWindowBounds.left,
-				m_rcWindowBounds.top + fYOffset,
+				int(m_rcWindowBounds.top + fYOffset),
 				(m_rcWindowBounds.right - m_rcWindowBounds.left),
 				(m_rcWindowBounds.bottom - m_rcWindowBounds.top),
 				SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME
