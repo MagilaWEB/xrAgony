@@ -209,7 +209,8 @@ void CMainMenu::Activate(bool bActivate)
 			Console->Execute("vid_restart");
 		}
 
-		DestroyInternal();
+		if(g_pGameLevel)
+			DestroyInternal();
 	}
 }
 

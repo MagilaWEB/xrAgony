@@ -78,7 +78,7 @@ void UILoadingScreen::Update(u16 stagesCompleted, u16 stagesTotal)
 	}
 
 	CUIWindow::Update();
-	CUIWindow::Draw();
+	Draw();
 
 	if(sound)
 		sound->music_Update();
@@ -148,6 +148,8 @@ void UILoadingScreen::ChangeVisibility(bool state)
 		m_is_visibility = true;
 
 		Device.ThreadLoad()->State(xrThread::dsOK);
+
+		MainMenu()->DestroyInternal();
 	}
 	else
 	{
