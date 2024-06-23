@@ -3,9 +3,9 @@
 #include <winternl.h>
 #include <memory>
 
-struct XRCORE_API _processor_info final
+struct _processor_info final
 {
-	_processor_info();
+	XRCORE_API _processor_info();
 
 	string32 vendor; // vendor name
 	string64 brand; // Name of model eg. Intel_Pentium_Pro
@@ -15,24 +15,24 @@ struct XRCORE_API _processor_info final
 	u16 threadCount; // number of available threads, both physical and logical
 	u16 coresCount; // number of physical cores
 
-	void clearFeatures() { m_f1_ECX = m_f1_EDX = m_f7_EBX = m_f7_ECX = m_f81_ECX = m_f81_EDX = 0; }
-	bool hasMMX() const { return m_f1_EDX[23]; }
-	bool has3DNOWExt() const { return m_f81_EDX[30]; }
-	bool has3DNOW() const { return m_f81_EDX[31]; }
-	bool hasSSE() const { return m_f1_EDX[25]; }
-	bool hasSSE2() const { return m_f1_EDX[26]; }
-	bool hasSSE3() const { return m_f1_ECX[0]; }
-	bool hasMWAIT() const { return m_f1_ECX[3]; }
-	bool hasSSSE3() const { return m_f1_ECX[9]; }
-	bool hasSSE41() const { return m_f1_ECX[19]; }
-	bool hasSSE42() const { return m_f1_ECX[20]; }
-	bool hasSSE4a() const { return m_f81_ECX[6]; }
-	bool hasAVX() const { return m_f1_ECX[28]; }
-	bool hasAVX2() const { return m_f7_EBX[5]; }
-	bool hasAVX512F() const { return m_f7_EBX[16]; }
-	bool hasAVX512PF() const { return m_f7_EBX[26]; }
-	bool hasAVX512ER() const { return m_f7_EBX[27]; }
-	bool hasAVX512CD() const { return m_f7_EBX[28]; }
+	XRCORE_API void clearFeatures() { m_f1_ECX = m_f1_EDX = m_f7_EBX = m_f7_ECX = m_f81_ECX = m_f81_EDX = 0; }
+	XRCORE_API bool hasMMX() const { return m_f1_EDX[23]; }
+	XRCORE_API bool has3DNOWExt() const { return m_f81_EDX[30]; }
+	XRCORE_API bool has3DNOW() const { return m_f81_EDX[31]; }
+	XRCORE_API bool hasSSE() const { return m_f1_EDX[25]; }
+	XRCORE_API bool hasSSE2() const { return m_f1_EDX[26]; }
+	XRCORE_API bool hasSSE3() const { return m_f1_ECX[0]; }
+	XRCORE_API bool hasMWAIT() const { return m_f1_ECX[3]; }
+	XRCORE_API bool hasSSSE3() const { return m_f1_ECX[9]; }
+	XRCORE_API bool hasSSE41() const { return m_f1_ECX[19]; }
+	XRCORE_API bool hasSSE42() const { return m_f1_ECX[20]; }
+	XRCORE_API bool hasSSE4a() const { return m_f81_ECX[6]; }
+	XRCORE_API bool hasAVX() const { return m_f1_ECX[28]; }
+	XRCORE_API bool hasAVX2() const { return m_f7_EBX[5]; }
+	XRCORE_API bool hasAVX512F() const { return m_f7_EBX[16]; }
+	XRCORE_API bool hasAVX512PF() const { return m_f7_EBX[26]; }
+	XRCORE_API bool hasAVX512ER() const { return m_f7_EBX[27]; }
+	XRCORE_API bool hasAVX512CD() const { return m_f7_EBX[28]; }
 
 	DWORD m_dwNumberOfProcessors;
 

@@ -19,18 +19,18 @@ namespace luabind {
 
 		struct invoke_context;
 
-		struct LUABIND_API function_object
+		struct function_object
 		{
-			function_object(lua_CFunction entry)
+			LUABIND_API function_object(lua_CFunction entry)
 				: entry(entry)
 				, next(0)
 			{}
 
-			virtual ~function_object()
+			LUABIND_API virtual ~function_object()
 			{}
 
-			virtual int call(lua_State* L, invoke_context& ctx, const int args) const = 0;
-			virtual int format_signature(lua_State* L, char const* function, bool concat = true) const = 0;
+			LUABIND_API virtual int call(lua_State* L, invoke_context& ctx, const int args) const = 0;
+			LUABIND_API virtual int format_signature(lua_State* L, char const* function, bool concat = true) const = 0;
 
 			lua_CFunction entry;
 			luabind::string name;
@@ -38,9 +38,9 @@ namespace luabind {
 			object keepalive;
 		};
 
-		struct LUABIND_API invoke_context
+		struct invoke_context
 		{
-			invoke_context()
+			LUABIND_API invoke_context()
 				: best_score((std::numeric_limits<int>::max)())
 				//This need to avoid static analyzer's treats
 				, candidates{ nullptr,nullptr,nullptr,nullptr,nullptr,
@@ -48,12 +48,12 @@ namespace luabind {
 				, candidate_index(0)
 			{}
 
-			operator bool() const
+			LUABIND_API operator bool() const
 			{
 				return candidate_index == 1;
 			}
 
-			void format_error(lua_State* L, function_object const* overloads) const;
+			LUABIND_API void format_error(lua_State* L, function_object const* overloads) const;
 
 			int best_score;
 			function_object const* candidates[10];	// This looks like it could crash if you provide too many overloads?

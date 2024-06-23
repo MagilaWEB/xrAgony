@@ -63,7 +63,7 @@ namespace luabind {
 		class cast_graph;
 		class class_id_map;
 
-		class LUABIND_API class_rep
+		class class_rep
 		{
 			friend struct class_registration;
 			friend int super_callback(lua_State*);
@@ -82,7 +82,7 @@ namespace luabind {
 			// EXPECTS THE TOP VALUE ON THE LUA STACK TO
 			// BE THE USER DATA WHERE THIS CLASS IS BEING
 			// INSTANTIATED!
-			class_rep(type_id const& type
+			LUABIND_API class_rep(type_id const& type
 				, const char* name
 				, lua_State* L
 			);
@@ -91,14 +91,14 @@ namespace luabind {
 			// EXPECTS THE TOP VALUE ON THE LUA STACK TO
 			// BE THE USER DATA WHERE THIS CLASS IS BEING
 			// INSTANTIATED!
-			class_rep(lua_State* L, const char* name);
+			LUABIND_API class_rep(lua_State* L, const char* name);
 
-			~class_rep();
+			LUABIND_API ~class_rep();
 
-			std::pair<void*, void*> allocate(lua_State* L) const;
+			LUABIND_API std::pair<void*, void*> allocate(lua_State* L) const;
 
 			// this is called as metamethod __call on the class_rep.
-			static int constructor_dispatcher(lua_State* L);
+			LUABIND_API static int constructor_dispatcher(lua_State* L);
 
 			struct base_info
 			{
@@ -106,46 +106,46 @@ namespace luabind {
 				class_rep* base;
 			};
 
-			void add_base_class(const base_info& binfo);
+			LUABIND_API void add_base_class(const base_info& binfo);
 
-			const luabind::vector<base_info>& bases() const throw() { return m_bases; }
+			LUABIND_API const luabind::vector<base_info>& bases() const throw() { return m_bases; }
 
-			void set_type(type_id const& t) { m_type = t; }
-			type_id const& type() const throw() { return m_type; }
+			LUABIND_API void set_type(type_id const& t) { m_type = t; }
+			LUABIND_API type_id const& type() const throw() { return m_type; }
 
-			const char* name() const throw() { return m_name; }
+			LUABIND_API const char* name() const throw() { return m_name; }
 
 			// the lua reference to the metatable for this class' instances
-			int metatable_ref() const throw() { return m_instance_metatable; }
+			LUABIND_API int metatable_ref() const throw() { return m_instance_metatable; }
 
-			void get_table(lua_State* L) const { m_table.push(L); }
-			void get_default_table(lua_State* L) const { m_default_table.push(L); }
+			LUABIND_API void get_table(lua_State* L) const { m_table.push(L); }
+			LUABIND_API void get_default_table(lua_State* L) const { m_default_table.push(L); }
 
-			class_type get_class_type() const { return m_class_type; }
+			LUABIND_API class_type get_class_type() const { return m_class_type; }
 
-			void add_static_constant(const char* name, int val);
+			LUABIND_API void add_static_constant(const char* name, int val);
 
-			static int super_callback(lua_State* L);
+			LUABIND_API static int super_callback(lua_State* L);
 
-			static int lua_settable_dispatcher(lua_State* L);
+			LUABIND_API static int lua_settable_dispatcher(lua_State* L);
 
 			// called from the metamethod for __index
 			// obj is the object pointer
-			static int static_class_gettable(lua_State* L);
+			LUABIND_API static int static_class_gettable(lua_State* L);
 
-			bool has_operator_in_lua(lua_State*, int id);
+			LUABIND_API bool has_operator_in_lua(lua_State*, int id);
 
-			cast_graph const& casts() const
+			LUABIND_API cast_graph const& casts() const
 			{
 				return *m_casts;
 			}
 
-			class_id_map const& classes() const
+			LUABIND_API class_id_map const& classes() const
 			{
 				return *m_classes;
 			}
 
-			luabind::map<const char*, int, ltstr> const& static_constants() const
+			LUABIND_API luabind::map<const char*, int, ltstr> const& static_constants() const
 			{
 				return m_static_constants;
 			}

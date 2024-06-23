@@ -28,25 +28,9 @@ namespace nv
 
 // Override new/delete
 
-inline void * operator new (size_t size) noexcept
-{
-	return nv::mem::malloc(size); 
-}
+void* operator new (size_t size);
 
-inline void operator delete (void *p) noexcept
-{
-	nv::mem::free(p); 
-}
-
-inline void * operator new [] (size_t size) noexcept
-{
-	return nv::mem::malloc(size);
-}
-
-inline void operator delete [] (void * p) noexcept
-{
-	nv::mem::free(p); 
-}
+void operator delete (void* p) noexcept;
 
 /*
 #ifdef _DEBUG

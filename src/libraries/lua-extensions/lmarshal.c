@@ -395,8 +395,6 @@ static void mar_decode_value(lua_State* L, const char* buf, size_t len, const ch
 		break;
 	}
 	case LUA_TFUNCTION: {
-		unsigned int nups;
-		unsigned int i;
 		mar_Buffer dec_buf;
 		char tag = *(char*)*p;
 		mar_incr_ptr(1);
@@ -433,10 +431,10 @@ static void mar_decode_value(lua_State* L, const char* buf, size_t len, const ch
 
 			lua_pushstring(L, MAR_NUPS_IDX_KEY);
 			lua_rawget(L, -2);
-			nups = luaL_checknumber(L, -1);
+			unsigned int nups = (unsigned int)luaL_checknumber(L, -1);
 			lua_pop(L, 1);
 
-			for (i = 1; i <= nups; i++) {
+			for (int i = 1; i <= nups; i++) {
 				lua_rawgeti(L, -1, i);
 				lua_setupvalue(L, -3, i);
 			}

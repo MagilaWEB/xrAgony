@@ -58,6 +58,7 @@
       <ConformanceMode>false</ConformanceMode>
       <Optimization>MaxSpeed</Optimization>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <WarningLevel>Level2</WarningLevel>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -75,6 +76,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <ConformanceMode>false</ConformanceMode>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <WarningLevel>Level2</WarningLevel>
     </ClCompile>
     <Link>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>

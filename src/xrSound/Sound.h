@@ -11,7 +11,7 @@ constexpr pcstr SNDENV_FILENAME = "sEnvironment.xr";
 
 // refs
 class IGameObject;
-class ref_sound;
+struct ref_sound;
 class ref_sound_data;
 class XRSOUND_API CSound_params;
 class XRSOUND_API CSound_source;

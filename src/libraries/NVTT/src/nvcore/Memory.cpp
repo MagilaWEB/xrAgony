@@ -34,3 +34,12 @@ void * nv::mem::realloc(void * ptr, size_t size)
 	return ::realloc(ptr, size);
 }
 
+void* operator new (size_t size)
+{
+	return nv::mem::malloc(size);
+}
+
+void operator delete (void* p) noexcept
+{
+	nv::mem::free(p);
+}

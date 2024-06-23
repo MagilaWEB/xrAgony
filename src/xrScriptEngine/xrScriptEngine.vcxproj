@@ -58,6 +58,7 @@
       <ConformanceMode>true</ConformanceMode>
       <Optimization>MaxSpeed</Optimization>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <WarningLevel>Level2</WarningLevel>
     </ClCompile>
     <Link>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>

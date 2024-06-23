@@ -186,7 +186,7 @@ void CStats::Show()
 		else
 			fpsFont->SetColor(color_rgba(255, 51, 51, 255));
 
-		fpsFont->Out(Device.dwWidth - 40, 5, "%3d", fps);
+		fpsFont->Out(float(Device.dwWidth - 40), 5, "%3d", fps);
 		fpsFont->OnRender();
 	}
 }

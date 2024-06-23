@@ -23,18 +23,18 @@ namespace luabind {
 
 		class class_rep;
 
-		class LUABIND_API cast_graph
+		class cast_graph
 		{
 		public:
-			cast_graph();
-			~cast_graph();
+			LUABIND_API cast_graph();
+			LUABIND_API ~cast_graph();
 
 			// `src` and `p` here describe the *most derived* object. This means that
 			// for a polymorphic type, the pointer must be cast with
 			// dynamic_cast<void*> before being passed in here, and `src` has to
 			// match typeid(*p).
-			std::pair<void*, int> cast(void* p, class_id src, class_id target, class_id dynamic_id, void const* dynamic_ptr) const;
-			void insert(class_id src, class_id target, cast_function cast);
+			LUABIND_API std::pair<void*, int> cast(void* p, class_id src, class_id target, class_id dynamic_id, void const* dynamic_ptr) const;
+			LUABIND_API void insert(class_id src, class_id target, cast_function cast);
 
 		private:
 			class impl;
@@ -45,14 +45,14 @@ namespace luabind {
 		// id-space into two, using one half for "local" ids; ids that are used only as
 		// keys into the conversion cache. This is needed because we need a unique key
 		// even for types that hasn't been registered explicitly.
-		class LUABIND_API class_id_map
+		class class_id_map
 		{
 		public:
-			class_id_map();
+			LUABIND_API class_id_map();
 
-			class_id get(type_id const& type) const;
-			class_id get_local(type_id const& type);
-			void put(class_id id, type_id const& type);
+			LUABIND_API class_id get(type_id const& type) const;
+			LUABIND_API class_id get_local(type_id const& type);
+			LUABIND_API void put(class_id id, type_id const& type);
 
 		private:
 			using map_type = luabind::map<type_id, class_id>;

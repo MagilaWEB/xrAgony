@@ -1119,11 +1119,11 @@ long ov_bitrate(OggVorbis_File *vf,int i){
 	 * so this is slightly transformed to make it work.
 	 */
 	br = bits/ov_time_total(vf,-1);
-	return(rint(br));
+	return((long)rint(br));
   }else{
 	if(vf->seekable){
 	  /* return the actual bitrate */
-	  return(rint((vf->offsets[i+1]-vf->dataoffsets[i])*8/ov_time_total(vf,i)));
+	  return((long)rint((vf->offsets[i+1]-vf->dataoffsets[i])*8/ov_time_total(vf,i)));
 	}else{
 	  /* return nominal if set */
 	  if(vf->vi[i].bitrate_nominal>0){
@@ -1151,9 +1151,9 @@ long ov_bitrate_instant(OggVorbis_File *vf){
   long ret;
   if(vf->ready_state<OPENED)return(OV_EINVAL);
   if(vf->samptrack==0)return(OV_FALSE);
-  ret=vf->bittrack/vf->samptrack*vf->vi[link].rate+.5;
-  vf->bittrack=0.f;
-  vf->samptrack=0.f;
+  ret = (long)(vf->bittrack / vf->samptrack * vf->vi[link].rate + .5);
+  vf->bittrack=0.0;
+  vf->samptrack=0.0;
   return(ret);
 }
 
@@ -1796,10 +1796,7 @@ int ov_time_seek(OggVorbis_File *vf,double seconds){
   if(link==vf->links)return(OV_EINVAL);
 
   /* enough information to convert time offset to pcm offset */
-  {
-	ogg_int64_t target=pcm_total+(seconds-time_total)*vf->vi[link].rate;
-	return(ov_pcm_seek(vf,target));
-  }
+  return(ov_pcm_seek(vf, (ogg_int64_t)(pcm_total + (seconds - time_total) * vf->vi[link].rate)));
 }
 
 /* page-granularity version of ov_time_seek
@@ -1826,10 +1823,7 @@ int ov_time_seek_page(OggVorbis_File *vf,double seconds){
   if(link==vf->links)return(OV_EINVAL);
 
   /* enough information to convert time offset to pcm offset */
-  {
-	ogg_int64_t target=pcm_total+(seconds-time_total)*vf->vi[link].rate;
-	return(ov_pcm_seek_page(vf,target));
-  }
+  return (ov_pcm_seek_page(vf, (ogg_int64_t)(pcm_total + (seconds - time_total) * vf->vi[link].rate)));
 }
 
 /* tell the current stream offset cursor.  Note that seek followed by

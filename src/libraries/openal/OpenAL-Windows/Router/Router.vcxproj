@@ -60,6 +60,7 @@
       <ConformanceMode>false</ConformanceMode>
       <Optimization>MaxSpeed</Optimization>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <WarningLevel>Level2</WarningLevel>
     </ClCompile>
     <Link>
       <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -84,6 +85,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>false</ConformanceMode>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <WarningLevel>Level2</WarningLevel>
     </ClCompile>
     <Link>
       <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>

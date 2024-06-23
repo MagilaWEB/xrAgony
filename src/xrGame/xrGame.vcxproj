@@ -51,7 +51,6 @@
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)xrServerEntities;$(xrLibraries)ode/include;$(xrLibraries)OpenAutomate\inc;$(xrLibraries)CxImage;$(xrLibraries)pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;XRGAME_EXPORTS;MASTER_GOLD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4237;4250;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
@@ -64,6 +63,7 @@
       <ConformanceMode>false</ConformanceMode>
       <Optimization>MaxSpeed</Optimization>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <WarningLevel>Level2</WarningLevel>
     </ClCompile>
     <Link>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
@@ -74,7 +74,6 @@
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)xrServerEntities;$(xrLibraries)ode/include;$(xrLibraries)OpenAutomate\inc;$(xrLibraries)CxImage;$(xrLibraries)pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;XRGAME_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4237;4250;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

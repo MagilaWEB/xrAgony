@@ -39,38 +39,38 @@ namespace luabind {
 		// this class is allocated inside lua for each pointer.
 		// it contains the actual c++ object-pointer.
 		// it also tells if it is const or not.
-		class LUABIND_API object_rep
+		class object_rep
 		{
 		public:
-			object_rep(instance_holder* instance, class_rep* crep);
-			~object_rep();
+			LUABIND_API object_rep(instance_holder* instance, class_rep* crep);
+			LUABIND_API ~object_rep();
 
-			const class_rep* crep() const { return m_classrep; }
-			class_rep* crep() { return m_classrep; }
+			LUABIND_API const class_rep* crep() const { return m_classrep; }
+			LUABIND_API class_rep* crep() { return m_classrep; }
 
-			void set_instance(instance_holder* instance) { m_instance = instance; }
+			LUABIND_API void set_instance(instance_holder* instance) { m_instance = instance; }
 
-			void add_dependency(lua_State* L, int index);
+			LUABIND_API void add_dependency(lua_State* L, int index);
 
-			std::pair<void*, int> get_instance(class_id target) const
+			LUABIND_API std::pair<void*, int> get_instance(class_id target) const
 			{
 				if(m_instance == 0)
 					return std::pair<void*, int>(nullptr, -1);
 				return m_instance->get(m_classrep->casts(), target);
 			}
 
-			bool is_const() const
+			LUABIND_API bool is_const() const
 			{
 				return m_instance && m_instance->pointee_const();
 			}
 
-			void release()
+			LUABIND_API void release()
 			{
 				if(m_instance)
 					m_instance->release();
 			}
 
-			void* allocate(std::size_t size)
+			LUABIND_API void* allocate(std::size_t size)
 			{
 				if(size <= 32) {
 					return &m_instance_buffer;
@@ -81,7 +81,7 @@ namespace luabind {
 
 			}
 
-			void deallocate(void* storage)
+			LUABIND_API void deallocate(void* storage)
 			{
 				if(storage == &m_instance_buffer) {
 					return;

@@ -720,7 +720,7 @@ void CInventory::RepackAmmo(PIItem pIItem)
 	if (size == pAmmo->m_boxCurr)
 		return;
 
-	u16 fill = iFloor(size / boxSize);
+	u16 fill = iFloor((float)size / boxSize);
 	u16 remainder = size - (boxSize * fill);
 	if (remainder > 0)
 		pAmmo->m_boxCurr = remainder;

@@ -40,7 +40,7 @@
     <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
   </PropertyGroup>
   <ItemDefinitionGroup>
-   <PostBuildEvent>
+    <PostBuildEvent>
       <Command>for /r "$(xrSdkDir)binaries/$(PlatformShortName)" %%f in (*.dll *.pdb) do @xcopy /Q /D "%%f" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -60,6 +60,7 @@
       <ConformanceMode>true</ConformanceMode>
       <Optimization>MaxSpeed</Optimization>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <WarningLevel>Level2</WarningLevel>
     </ClCompile>
     <ResourceCompile />
     <Link>
@@ -82,6 +83,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <WarningLevel>Level2</WarningLevel>
     </ClCompile>
     <ResourceCompile />
     <Link>

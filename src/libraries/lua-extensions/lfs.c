@@ -595,7 +595,7 @@ static int file_utime (lua_State *L) {
 		buf = NULL;
 	else {
 		utb.actime = (time_t)luaL_optnumber (L, 2, 0);
-		utb.modtime = (time_t)luaL_optnumber (L, 3, utb.actime);
+		utb.modtime = (time_t)luaL_optnumber (L, 3, (lua_Number)utb.actime);
 		buf = &utb;
 	}
 	if (utime (file, buf)) {
@@ -638,15 +638,15 @@ static void push_st_rdev (lua_State *L, STAT_STRUCT *info) {
 }
 /* time of last access */
 static void push_st_atime (lua_State *L, STAT_STRUCT *info) {
-	lua_pushnumber (L, info->st_atime);
+	lua_pushnumber (L, (lua_Number)info->st_atime);
 }
 /* time of last data modification */
 static void push_st_mtime (lua_State *L, STAT_STRUCT *info) {
-	lua_pushnumber (L, info->st_mtime);
+	lua_pushnumber (L, (lua_Number)info->st_mtime);
 }
 /* time of last file status change */
 static void push_st_ctime (lua_State *L, STAT_STRUCT *info) {
-	lua_pushnumber (L, info->st_ctime);
+	lua_pushnumber (L, (lua_Number)info->st_ctime);
 }
 /* file size, in bytes */
 static void push_st_size (lua_State *L, STAT_STRUCT *info) {

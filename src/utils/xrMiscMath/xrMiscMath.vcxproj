@@ -47,7 +47,6 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <DisableSpecificWarnings>4251;4275;4458;4244</DisableSpecificWarnings>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -61,11 +60,11 @@
       <ConformanceMode>true</ConformanceMode>
       <Optimization>MaxSpeed</Optimization>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <WarningLevel>Level2</WarningLevel>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <DisableSpecificWarnings>4251;4275;4458;4244</DisableSpecificWarnings>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -78,6 +77,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <ConformanceMode>true</ConformanceMode>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <WarningLevel>Level2</WarningLevel>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

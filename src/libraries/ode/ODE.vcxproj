@@ -42,7 +42,8 @@
     <ClCompile>
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4100;4505;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -65,6 +66,7 @@
       <ConformanceMode Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ConformanceMode>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Level2</WarningLevel>
     </ClCompile>
     <Link>
       <GenerateDebugInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">DebugFull</GenerateDebugInformation>
@@ -87,6 +89,7 @@
       <IntrinsicFunctions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</IntrinsicFunctions>
       <ConformanceMode Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ConformanceMode>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</WholeProgramOptimization>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Level2</WarningLevel>
     </ClCompile>
     <Link>
       <GenerateDebugInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">DebugFull</GenerateDebugInformation>

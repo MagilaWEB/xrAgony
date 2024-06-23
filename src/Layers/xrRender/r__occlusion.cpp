@@ -28,7 +28,7 @@ void R_occlusion::occq_destroy()
 
 void R_occlusion::cleanup_lost()
 {
-	u32 cnt = 0;
+	//u32 cnt = 0;
 
 	for (u32 ID = 0; ID < used.size(); ID++)
 	{
@@ -36,12 +36,12 @@ void R_occlusion::cleanup_lost()
 		if (q.Q && q.ttl && q.ttl < Device.dwFrame)
 		{
 			occq_free(ID);
-			cnt++;
+			//cnt++;
 		}
 	}
 
-	if (cnt > 0)
-		Msg("! [%s]: cleanup %u lost queries", __FUNCTION__, cnt);
+	/*if (cnt > 0)
+		Msg("! [%s]: cleanup %u lost queries", __FUNCTION__, cnt);*/
 }
 
 

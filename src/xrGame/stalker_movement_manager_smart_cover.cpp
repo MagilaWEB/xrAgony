@@ -356,8 +356,7 @@ void stalker_movement_manager_smart_cover::loophole_path(smart_cover::cover cons
 	shared_str source = smart_cover::transform_vertex(source_raw, true);
 	shared_str target = smart_cover::transform_vertex(target_raw, false);
 
-	typedef GraphEngineSpace::CBaseParameters CBaseParameters;
-	CBaseParameters parameters(u32(-1), u32(-1), u32(-1));
+	GraphEngineSpace::CBaseParameters parameters;
 	path.clear();
 	R_ASSERT2(ai().graph_engine().search(cover.description()->transitions(), source, target, &path, parameters),
 		make_string("cannot build path via loopholes [%s] -> [%s] (cover %s)", source_raw.c_str(), target_raw.c_str(),

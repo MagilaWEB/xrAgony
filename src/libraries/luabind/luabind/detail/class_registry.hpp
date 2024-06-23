@@ -35,24 +35,24 @@ namespace luabind {
 
 		class class_rep;
 
-		struct LUABIND_API class_registry
+		struct class_registry
 		{
-			class_registry(lua_State* L);
+			LUABIND_API class_registry(lua_State* L);
 
-			static class_registry* get_registry(lua_State* L);
+			LUABIND_API static class_registry* get_registry(lua_State* L);
 
-			int cpp_instance() const { return m_instance_metatable; }
-			int cpp_class() const { return m_cpp_class_metatable; }
+			LUABIND_API int cpp_instance() const { return m_instance_metatable; }
+			LUABIND_API int cpp_class() const { return m_cpp_class_metatable; }
 
-			int lua_instance() const { return m_instance_metatable; }
-			int lua_class() const { return m_lua_class_metatable; }
-			int lua_function() const { return m_lua_function_metatable; }
+			LUABIND_API int lua_instance() const { return m_instance_metatable; }
+			LUABIND_API int lua_class() const { return m_lua_class_metatable; }
+			LUABIND_API int lua_function() const { return m_lua_function_metatable; }
 
-			void add_class(type_id const& info, class_rep* crep);
+			LUABIND_API void add_class(type_id const& info, class_rep* crep);
 
-			class_rep* find_class(type_id const& info) const;
+			LUABIND_API class_rep* find_class(type_id const& info) const;
 
-			luabind::map<type_id, class_rep*> const& get_classes() const
+			LUABIND_API luabind::map<type_id, class_rep*> const& get_classes() const
 			{
 				return m_classes;
 			}

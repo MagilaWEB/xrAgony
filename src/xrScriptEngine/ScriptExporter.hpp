@@ -10,7 +10,7 @@ namespace XRay
 	class XRSCRIPTENGINE_API ScriptExporter
 	{
 	public:
-		class XRSCRIPTENGINE_API Node
+		class Node
 		{
 		public:
 			using ExporterFunc = void(__cdecl*)(lua_State* luaState);
@@ -27,19 +27,19 @@ namespace XRay
 			static size_t NodeCount;
 
 		public:
-			Node(const char* id, std::initializer_list<shared_str> deps, ExporterFunc exporterFunc);
-			~Node();
+			XRSCRIPTENGINE_API Node(const char* id, std::initializer_list<shared_str> deps, ExporterFunc exporterFunc);
+			XRSCRIPTENGINE_API ~Node();
 
-			void Export(lua_State* luaState);
-			void Reset() { m_done = false; }
-			const char* GetId() const { return m_id; }
-			size_t GetDependencyCount() const { return m_deps.size(); }
-			const xr_list<shared_str>& GetDependencyIds() const { return m_deps; }
-			Node* GetPrev() const { return m_prevNode; }
-			Node* GetNext() const { return m_nextNode; }
-			static Node* GetFirst() { return FirstNode; }
-			static Node* GetLast() { return LastNode; }
-			static size_t GetCount() { return NodeCount; }
+			XRSCRIPTENGINE_API void Export(lua_State* luaState);
+			XRSCRIPTENGINE_API void Reset() { m_done = false; }
+			XRSCRIPTENGINE_API const char* GetId() const { return m_id; }
+			XRSCRIPTENGINE_API size_t GetDependencyCount() const { return m_deps.size(); }
+			XRSCRIPTENGINE_API const xr_list<shared_str>& GetDependencyIds() const { return m_deps; }
+			XRSCRIPTENGINE_API Node* GetPrev() const { return m_prevNode; }
+			XRSCRIPTENGINE_API Node* GetNext() const { return m_nextNode; }
+			XRSCRIPTENGINE_API static Node* GetFirst() { return FirstNode; }
+			XRSCRIPTENGINE_API static Node* GetLast() { return LastNode; }
+			XRSCRIPTENGINE_API static size_t GetCount() { return NodeCount; }
 		private:
 			bool HasDependency(const Node* node) const;
 			static void InsertAfter(Node* target, Node* node);

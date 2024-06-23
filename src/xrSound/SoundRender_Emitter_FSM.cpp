@@ -77,7 +77,7 @@ void CSoundRender_Emitter::update(float dt)
 		if (iPaused && !bIgnorePaused)
 			break;
 		fTimeStarted = fTime;
-		fTimeToStop = 0xffffffff;
+		fTimeToStop = flt_max;
 		fTimeToPropagade = fTime;
 		fade_volume = 1.f;
 		occluder_volume = SoundRender->get_occlusion(p_source.position, .2f, occluder);

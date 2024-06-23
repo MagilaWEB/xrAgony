@@ -46,12 +46,12 @@ namespace luabind
 	// may throw, if the copy constructor of an exception that is
 	// being thrown throws another exception, terminate will be called
 	// and the entire application is killed.
-	class LUABIND_API error : public std::exception
+	class error : public std::exception
 	{
 	public:
-		explicit error(lua_State* L);
+		LUABIND_API explicit error(lua_State* L);
 
-		virtual const char* what() const throw();
+		LUABIND_API virtual const char* what() const throw();
 
 	private:
 		luabind::string m_message;
@@ -60,13 +60,13 @@ namespace luabind
 	// if an object_cast<>() fails, this is thrown
 	// it is also thrown if the return value of
 	// a lua function cannot be converted
-	class LUABIND_API cast_failed : public std::exception
+	class cast_failed : public std::exception
 	{
 	public:
-		cast_failed(lua_State* L, type_id const& i) : m_L(L), m_info(i) {}
-		lua_State* state() const throw() { return m_L; }
-		type_id info() const throw() { return m_info; }
-		virtual const char* what() const throw() { return "unable to make cast"; }
+		LUABIND_API cast_failed(lua_State* L, type_id const& i) : m_L(L), m_info(i) {}
+		LUABIND_API lua_State* state() const throw() { return m_L; }
+		LUABIND_API type_id info() const throw() { return m_info; }
+		LUABIND_API virtual const char* what() const throw() { return "unable to make cast"; }
 	private:
 		lua_State* m_L;
 		type_id m_info;
@@ -85,10 +85,10 @@ namespace luabind
 	LUABIND_API pcall_callback_fun get_pcall_callback();
 
 	// thrown when trying to use unregistered class or call nonexistent function
-	class LUABIND_API unresolved_name : public std::runtime_error
+	class unresolved_name : public std::runtime_error
 	{
 	public:
-		unresolved_name(const char* desc, const char* name);
+		LUABIND_API unresolved_name(const char* desc, const char* name);
 	};
 }
 
