@@ -65,10 +65,10 @@ extern XRCORE_API xrMemory Memory;
 /*
 Начиная со стандарта C++11 нет необходимости объявлять все формы операторов new и delete.
 */
+IC void* operator new(size_t size) { return Memory.mem_alloc(size); }
 
-void* operator new(size_t size);
+IC void operator delete(void* ptr) noexcept { Memory.mem_free(ptr); }
 
-void operator delete(void* ptr) noexcept;
 
 template <class T>
 IC void xr_delete(T*& ptr) noexcept

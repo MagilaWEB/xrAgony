@@ -3,10 +3,9 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#if defined(WINDOWS)
 #include <mmsystem.h>
 #include <objbase.h>
-#endif
+
 #include "xrCore.h"
 #include "xrCore/_std_extensions.h"
 
@@ -19,9 +18,7 @@ namespace CPU
 	extern void Detect();
 };
 
-
 static u32 init_counter = 0;
-
 void xrCore::Initialize(pcstr _ApplicationName, LogCallback cb, bool init_fs, pcstr fs_fname, bool plugin)
 {
 	xrThread::init_main_thread();
@@ -46,16 +43,6 @@ void xrCore::Initialize(pcstr _ApplicationName, LogCallback cb, bool init_fs, pc
 
 		_splitpath(fn, dr, di, nullptr, nullptr);
 		strconcat(sizeof(ApplicationPath), ApplicationPath, dr, di);
-
-#ifdef _EDITOR
-		// working path
-		if (strstr(Params, "-wf"))
-		{
-			string_path c_name;
-			sscanf(strstr(Core.Params, "-wf ") + 4, "%[^ ] ", c_name);
-			SetCurrentDirectory(c_name);
-		}
-#endif
 
 		GetCurrentDirectory(sizeof(WorkingPath), WorkingPath);
 
@@ -94,29 +81,24 @@ void xrCore::Initialize(pcstr _ApplicationName, LogCallback cb, bool init_fs, pc
 			flags |= CLocatorAPI::flBuildCopy;
 		if (strstr(Params, "-ebuild") != nullptr)
 			flags |= CLocatorAPI::flBuildCopy | CLocatorAPI::flEBuildCopy;
+
 #ifdef DEBUG
 		if (strstr(Params, "-cache"))
 			flags |= CLocatorAPI::flCacheFiles;
 		else
 			flags &= ~CLocatorAPI::flCacheFiles;
 #endif // DEBUG
-#ifdef _EDITOR // for EDITORS - no cache
-		flags &= ~CLocatorAPI::flCacheFiles;
-#endif // _EDITOR
+
 		flags |= CLocatorAPI::flScanAppRoot;
 
-#ifndef _EDITOR
 #ifndef ELocatorAPIH
 		if (strstr(Params, "-file_activity") != nullptr)
 			flags |= CLocatorAPI::flDumpFileActivity;
 #endif
-#endif
 		FS._initialize(flags, nullptr, fs_fname);
 		EFS._initialize();
 #ifdef DEBUG
-#ifndef _EDITOR
 		Msg("Process heap 0x%08x", GetProcessHeap());
-#endif
 #endif // DEBUG
 	}
 	SetLogCB(cb);
@@ -138,10 +120,8 @@ void xrCore::initParamFlags()
 		ParamFlags.set(ParamFlag::genbump, true);
 }
 
-#ifndef _EDITOR
 #include "compression_ppmd_stream.h"
 extern compression::ppmd::stream* trained_model;
-#endif
 void xrCore::_destroy()
 {
 	--init_counter;
@@ -152,14 +132,13 @@ void xrCore::_destroy()
 		xr_FS.reset();
 		xr_EFS.reset();
 
-#ifndef _EDITOR
 		if (trained_model)
 		{
 			void* buffer = trained_model->buffer();
 			xr_free(buffer);
 			xr_delete(trained_model);
 		}
-#endif
+
 		xr_free(Params);
 		Memory._destroy();
 	}
@@ -217,12 +196,7 @@ void xrCore::CalculateBuildId()
 		buildId -= daysInMonth[i];
 }
 
-#if defined(WINDOWS)
-#ifdef _EDITOR
-BOOL WINAPI DllEntryPoint(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
-#else
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
-#endif
 {
 	switch (ul_reason_for_call)
 	{
@@ -253,4 +227,3 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvRese
 	}
 	return TRUE;
 }
-#endif // XRCORE_STATIC

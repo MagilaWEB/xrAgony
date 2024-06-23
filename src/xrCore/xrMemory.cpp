@@ -143,7 +143,3 @@ pstr xr_strdup(pcstr string)
 	CopyMemory(memory, string, len);
 	return memory;
 }
-
-void* operator new(size_t size) { return Memory.mem_alloc(size); }
-
-void operator delete(void* ptr) noexcept { Memory.mem_free(ptr); }

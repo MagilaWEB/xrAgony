@@ -81,7 +81,7 @@ CInput::CInput(BOOL bExclusive, int deviceForInit)
 #ifdef ENGINE_BUILD
 	Device.seqAppActivate.Add(this);
 	Device.seqAppDeactivate.Add(this, REG_PRIORITY_HIGH);
-	Device.seqFrame.Add(this, REG_PRIORITY_HIGH);
+	Device.seqFrame.Add(this, REG_PRIORITY_LOW);
 #endif
 }
 
@@ -672,7 +672,6 @@ void CInput::OnFrame(void)
 		stats.FrameTime.End();
 		stats.FrameEnd();
 	}
-	
 }
 
 IInputReceiver* CInput::CurrentIR()

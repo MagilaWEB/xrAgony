@@ -27,10 +27,21 @@ namespace nv
 
 
 // Override new/delete
+#pragma warning( push )
+#pragma warning( disable : 5043)
+/*
+Начиная со стандарта C++11 нет необходимости объявлять все формы операторов new и delete.
+*/
+inline void* operator new (size_t size) noexcept
+{
+	return nv::mem::malloc(size);
+}
 
-void* operator new (size_t size);
-
-void operator delete (void* p) noexcept;
+inline void operator delete (void* p) noexcept
+{
+	nv::mem::free(p);
+}
+#pragma warning( pop )
 
 /*
 #ifdef _DEBUG
