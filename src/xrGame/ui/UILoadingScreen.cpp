@@ -16,8 +16,6 @@
 #include "UIHelper.h"
 #include <GamePersistent.h>
 
-extern ENGINE_API int ps_rs_loading_stages;
-
 UILoadingScreen::UILoadingScreen()
 {
 	UILoadingScreen::Initialize();
@@ -70,12 +68,9 @@ void UILoadingScreen::Update(u16 stagesCompleted, u16 stagesTotal)
 	if (loadingProgress->GetProgressPos() < progress)
 		loadingProgress->SetProgressPos(progress);
 
-	if (ps_rs_loading_stages)
-	{
-		string16 buf;
-		xr_sprintf(buf, "%.0f%%", loadingProgress->GetProgressPos());
-		loadingProgressPercent->TextItemControl()->SetText(buf);
-	}
+	string16 buf;
+	xr_sprintf(buf, "%.0f%%", loadingProgress->GetProgressPos());
+	loadingProgressPercent->TextItemControl()->SetText(buf);
 
 	CUIWindow::Update();
 	Draw();

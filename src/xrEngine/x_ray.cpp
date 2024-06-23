@@ -23,8 +23,6 @@
 ENGINE_API CApplication* pApp = nullptr;
 extern CRenderDevice Device;
 
-ENGINE_API int ps_rs_loading_stages = 0;
-
 #ifdef MASTER_GOLD
 #define NO_MULTI_INSTANCES
 #endif // #ifdef MASTER_GOLD
@@ -265,7 +263,7 @@ bool CApplication::IsLoadingScreen()
 
 void CApplication::SetLoadStageTitle(pcstr ls_title)
 {
-	if (ps_rs_loading_stages && loadingScreen && ls_title)
+	if (loadingScreen && ls_title)
 		loadingScreen->SetStageTitle(ls_title);
 	else
 		loadingScreen->SetStageTitle(nullptr);
