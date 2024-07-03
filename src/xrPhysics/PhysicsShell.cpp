@@ -283,9 +283,7 @@ void phys_shell_verify_model(IKinematics& K)
 
 void phys_shell_verify_object_model(IPhysicsShellHolder& O)
 {
-	IKinematics* K = O.ObjectKinematics();
-
-	VERIFY2(K, make_string("Can not create physics shell for object %s, model %s is not skeleton", O.ObjectName(),
+	VERIFY2(O.ObjectKinematics(), make_string("Can not create physics shell for object %s, model %s is not skeleton", O.ObjectName(),
 					O.ObjectNameVisual()));
 
 	VERIFY2(has_physics_collision_shapes(*K),

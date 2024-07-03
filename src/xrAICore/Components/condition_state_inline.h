@@ -48,7 +48,7 @@ TEMPLATE_SPECIALIZATION
 IC void CConditionStateAbstract::remove_condition(const typename COperatorCondition::_condition_type& condition)
 {
 	typename xr_vector<COperatorCondition>::iterator I = std::lower_bound(
-		m_conditions.begin(), m_conditions.end(), COperatorCondition(condition, COperatorCondition::_value_type(0)));
+		m_conditions.begin(), m_conditions.end(), COperatorCondition(condition, typename COperatorCondition::_value_type(0)));
 	THROW((I != m_conditions.end()) && ((*I).condition() == condition));
 	m_hash ^= (*I).hash_value();
 	m_conditions.erase(I);
@@ -187,7 +187,7 @@ IC const typename CConditionStateAbstract::COperatorCondition* CConditionStateAb
 	const typename CConditionStateAbstract::COperatorCondition::_condition_type& condition) const
 {
 	typename xr_vector<COperatorCondition>::const_iterator I = std::lower_bound(
-		conditions().begin(), conditions().end(), COperatorCondition(condition, COperatorCondition::_value_type(0)));
+		conditions().begin(), conditions().end(), COperatorCondition(condition, typename COperatorCondition::_value_type(0)));
 	if (I == m_conditions.end())
 		return (0);
 	else

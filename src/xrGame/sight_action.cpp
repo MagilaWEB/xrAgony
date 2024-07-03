@@ -161,10 +161,27 @@ void CSightAction::execute_position(Fvector const& look_position)
 #endif
 }
 
+void aim_target(shared_str const& aim_bone_id, Fvector& result, const CGameObject* object);
+
 void CSightAction::execute_object()
 {
 	Fvector look_pos;
-	m_object_to_look->Center(look_pos);
+
+	if (smart_cast<const CActor*>(m_object_to_look) && Actor())
+	{
+		if (Actor()->HUDview())
+		{
+			look_pos = Actor()->cam_FirstEye()->Position();
+			look_pos.y -= 0.9f;
+		}
+		else
+		{
+			aim_target("bip01_head", look_pos, m_object_to_look);
+			look_pos.y -= 0.9f;
+		}
+	}
+	else
+		m_object_to_look->Center(look_pos);
 
 	Fvector my_position = m_object->eye_matrix.c;
 

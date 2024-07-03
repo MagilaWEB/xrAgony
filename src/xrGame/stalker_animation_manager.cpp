@@ -126,3 +126,17 @@ void CStalkerAnimationManager::play_fx(float power_factor, int fx_index)
 	m_skeleton_animated->PlayFX(
 		m_data_storage->m_part_animations.A[object().movement().body_state()].m_global.A[0].A[fx_index], power_factor);
 }
+
+
+bool CStalkerAnimationManager::standing() const
+{
+	CAI_Stalker& obj = object();
+
+	if (obj.movement().speed(obj.character_physics_support()->movement()) < EPS_L)
+		return (true);
+
+	if (eMovementTypeStand == obj.movement().movement_type())
+		return (true);
+
+	return (false);
+}

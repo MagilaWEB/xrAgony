@@ -41,7 +41,6 @@ class CPHWorld : public pureFrame,
 {
 private:
 	PHWorldStatistics stats;
-	double m_start_time;
 	u32 m_delay;
 	u32 m_previous_delay;
 	u32 m_reduce_delay;
@@ -96,8 +95,8 @@ public:
 	// IC	dSpaceID					GetSpace						()			{return Space;}	;
 	IC bool Exist() { return b_exist; }
 	void Create(CObjectSpace* os, CObjectList* lo, CRenderDeviceBase* dv);
-	void SetGravity(float g);
-	IC float Gravity() { return m_gravity; }
+	void SetGravity(float g) override;
+	IC float Gravity() override { return m_gravity; }
 	void AddObject(CPHObject* object);
 	void AddUpdateObject(CPHUpdateObject* object);
 	void AddRecentlyDisabled(CPHObject* object);
@@ -106,30 +105,30 @@ public:
 	void RemoveUpdateObject(PH_UPDATE_OBJECT_I i);
 	dGeomID GetMeshGeom() { return Mesh.GetGeom(); }
 	IC dGeomID GetMotionRayGeom() { return m_motion_ray; }
-	void SetStep(float s);
+	void SetStep(float s) override;
 	void Destroy();
 	IC float FrameTime(bool frame_mark) { return b_frame_mark == frame_mark ? m_frame_time : m_previous_frame_time; }
 	void FrameStep(dReal step = 0.025f);
-	void Step();
+	void Step() override;
 	void StepTouch();
 	void CutVelocity(float l_limit, float a_limit);
 	void GetState(V_PH_WORLD_STATE& state);
-	void Freeze();
-	void UnFreeze();
+	void Freeze() override;
+	void UnFreeze() override;
 	void AddFreezedObject(CPHObject* obj);
 	void RemoveFreezedObject(PH_OBJECT_I i);
 	bool IsFreezed();
-	IC bool Processing() { return b_processing; }
-	u32 CalcNumSteps(u32 dTime);
+	IC bool Processing() override { return b_processing; }
+	u32 CalcNumSteps(u32 dTime) override;
 	u16 ObjectsNumber();
 	u16 UpdateObjectsNumber();
 	IC u16 StepsShortCnt() { return m_steps_short_num; }
-	u64& StepsNum() { return m_steps_num; }
-	float FrameTime() { return m_frame_time; }
+	u64& StepsNum() override { return m_steps_num; }
+	float FrameTime() override { return m_frame_time; }
 	ContactCallbackFun* default_contact_shotmark() { return m_default_contact_shotmark; }
 	ContactCallbackFun* default_character_contact_shotmark() { return m_default_character_contact_shotmark; }
-	void set_default_contact_shotmark(ContactCallbackFun* f) { m_default_contact_shotmark = f; }
-	void set_default_character_contact_shotmark(ContactCallbackFun* f) { m_default_character_contact_shotmark = f; }
+	void set_default_contact_shotmark(ContactCallbackFun* f) override { m_default_contact_shotmark = f; }
+	void set_default_character_contact_shotmark(ContactCallbackFun* f) override { m_default_character_contact_shotmark = f; }
 	void NetRelcase(CPhysicsShell* s);
 	CObjectSpace& ObjectSpace()
 	{
@@ -151,15 +150,18 @@ public:
 #ifdef DEBUG
 	virtual void OnRender();
 #endif
-	virtual void OnFrame();
+	virtual void OnFrame() override;
 	virtual const PHWorldStatistics& GetStats() override { return stats; }
 	virtual void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert) override;
 
 private:
-	void StepNumIterations(int num_it);
-	iphysics_scripted& get_scripted() { return *this; }
-	void set_step_time_callback(PhysicsStepTimeCallback* cb) { physics_step_time_callback = cb; }
-	void set_update_callback(IPHWorldUpdateCallbck* cb)
+	void StepNumIterations(int num_it) override;
+	iphysics_scripted& get_scripted() override { return *this; }
+	void set_step_time_callback(PhysicsStepTimeCallback* cb) override
+	{
+		physics_step_time_callback = cb;
+	}
+	void set_update_callback(IPHWorldUpdateCallbck* cb) override
 	{
 		VERIFY(cb);
 		m_update_callback = cb;

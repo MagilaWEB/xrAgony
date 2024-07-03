@@ -98,6 +98,4 @@ IC void xr_free(T*& ptr) noexcept
 IC void* xr_malloc(size_t size) { return Memory.mem_alloc(size); }
 IC void* xr_realloc(void* ptr, size_t size) { return Memory.mem_realloc(ptr, size); }
 
-XRCORE_API pstr xr_strdup(pcstr string);
-
 XRCORE_API void log_vminfo();

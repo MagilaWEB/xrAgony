@@ -650,7 +650,7 @@ void qweasddMess1(NET_Packet& val1, bool val2 = false, bool val3 = true)
 
 	LPCSTR str1 = val2 ? "Yes2" : "No2";
 	LPCSTR str2 = val3 ? "Yes3" : "No3";
-	Msg("qweasddMess1 -> packetstr = %s, val2 = %s, val3 = %s", packetstr, str1, str2);
+	Msg("qweasddMess1 -> packetstr = %s, val2 = %s, val3 = %s", packetstr.c_str(), str1, str2);
 }
 void patrol_path_add(LPCSTR patrol_path, CPatrolPath* path) {
 	ai().patrol_paths_raw().add_path(shared_str(patrol_path), path);

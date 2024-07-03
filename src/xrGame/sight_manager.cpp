@@ -293,8 +293,8 @@ void CSightManager::update()
 
 void CSightManager::remove_links(IGameObject* object)
 {
-	setup_actions::iterator I = actions().begin();
-	setup_actions::iterator E = actions().end();
+	auto I = actions().begin();
+	auto E = actions().end();
 	for (; I != E; ++I)
 		(*I).second->remove_links(object);
 }

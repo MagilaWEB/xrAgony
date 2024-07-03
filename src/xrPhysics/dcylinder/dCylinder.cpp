@@ -1137,42 +1137,40 @@ int dCollideCylS(dxGeom* o1, dxGeom* o2, int flags, dContactGeom* contact, int s
 	p[2] = p2[2] - p1[2];
 
 	dReal s, s2;
-	unsigned char code;
-#define TEST(expr1, expr2, norm, cc)	\
+	//unsigned char code;
+#define TEST(expr1, expr2, norm)		\
 	s2 = dFabs(expr1) - (expr2);		\
-	if (s2 > 0)						\
-		return 0;					  \
-	if (s2 > s)						\
-	{								  \
-		s = s2;						\
-		normalR = norm;				\
-		invert_normal = ((expr1) < 0); \
-		code = (cc);					\
+	if (s2 > 0)							\
+		return 0;						\
+	if (s2 > s)							\
+	{									\
+		s = s2;							\
+		normalR = norm;					\
+		invert_normal = ((expr1) < 0);	\
 	}
 
 	s = -dInfinity;
 	invert_normal = 0;
-	code = 0;
+	//code = 0;
 
 	// separating axis cyl ax
 
-	TEST(dDOT14(p, R + 1), sphereRadius + hl, R + 1, 2);
+	TEST(dDOT14(p, R + 1), sphereRadius + hl, R + 1);
 // note: cross product axes need to be scaled when s is computed.
 // normal (n1,n2,n3) is relative to
 #undef TEST
-#define TEST(expr1, expr2, n1, n2, n3, cc) \
-	s2 = dFabs(expr1) - (expr2);			\
+#define TEST(expr1, expr2, n1, n2, n3) \
+	s2 = dFabs(expr1) - (expr2);		\
 	if (s2 > 0)							\
-		return 0;						  \
+		return 0;						\
 	if (s2 > s)							\
-	{									  \
+	{									\
 		s = s2;							\
-		normalR = 0;						\
-		normalC[0] = (n1);				 \
-		normalC[1] = (n2);				 \
-		normalC[2] = (n3);				 \
-		invert_normal = ((expr1) < 0);	 \
-		code = (cc);						\
+		normalR = 0;					\
+		normalC[0] = (n1);				\
+		normalC[1] = (n2);				\
+		normalC[2] = (n3);				\
+		invert_normal = ((expr1) < 0);	\
 	}
 
 	// making ax which is perpendicular to cyl1 ax to sphere center//
@@ -1185,7 +1183,7 @@ int dCollideCylS(dxGeom* o1, dxGeom* o2, int flags, dContactGeom* contact, int s
 	Ax[1] = p2[1] - p1[1] - R[5] * proj;
 	Ax[2] = p2[2] - p1[2] - R[9] * proj;
 	dNormalize3(Ax);
-	TEST(dDOT(p, Ax), sphereRadius + cylRadius, Ax[0], Ax[1], Ax[2], 9);
+	TEST(dDOT(p, Ax), sphereRadius + cylRadius, Ax[0], Ax[1], Ax[2]);
 
 	Ax[0] = p[0];
 	Ax[1] = p[1];
@@ -1219,7 +1217,7 @@ int dCollideCylS(dxGeom* o1, dxGeom* o2, int flags, dContactGeom* contact, int s
 	cos1 = dDOT14(Ax, R + 0);
 	cos3 = dDOT14(Ax, R + 2);
 	_sin = dSqrt(cos1 * cos1 + cos3 * cos3);
-	TEST(dDOT(p, Ax), sphereRadius + cylRadius * _sin + hl * _cos, Ax[0], Ax[1], Ax[2], 14);
+	TEST(dDOT(p, Ax), sphereRadius + cylRadius * _sin + hl * _cos, Ax[0], Ax[1], Ax[2]);
 
 #undef TEST
 

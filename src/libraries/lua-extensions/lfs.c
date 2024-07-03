@@ -112,7 +112,7 @@ typedef struct dir_data {
 */
 static int change_dir (lua_State *L) {
 	const char *path = luaL_checkstring(L, 1);
-	if (chdir(path)) {
+	if (_chdir(path)) {
 		lua_pushnil (L);
 		lua_pushfstring (L,"Unable to change working directory to '%s'\n%s\n",
 				path, chdir_error);
@@ -130,7 +130,7 @@ static int change_dir (lua_State *L) {
 */
 static int get_dir (lua_State *L) {
   char *path;
-  if ((path = getcwd(NULL, 0)) == NULL) {
+  if ((path = _getcwd(NULL, 0)) == NULL) {
 	lua_pushnil(L);
 	lua_pushstring(L, getcwd_error);
 	return 2;
@@ -190,7 +190,7 @@ static int _file_lock (lua_State *L, FILE *fh, const char *mode, const long star
 #ifdef __BORLANDC__
 	code = locking (fileno(fh), lkmode, len);
 #else
-	code = _locking (fileno(fh), lkmode, len);
+	code = _locking (_fileno(fh), lkmode, len);
 #endif
 #else
 	struct flock f;
@@ -367,7 +367,7 @@ static int make_dir (lua_State *L) {
 	const char *path = luaL_checkstring (L, 1);
 	int fail;
 #ifdef _WIN32
-	int oldmask = umask (0);
+	int oldmask = _umask (0);
 	fail = _mkdir (path);
 #else
 	mode_t oldmask = umask( (mode_t)0 );
@@ -379,7 +379,7 @@ static int make_dir (lua_State *L) {
 		lua_pushfstring (L, "%s", strerror(errno));
 		return 2;
 	}
-	umask (oldmask);
+	_umask(oldmask);
 	lua_pushboolean (L, 1);
 	return 1;
 }
@@ -392,7 +392,7 @@ static int remove_dir (lua_State *L) {
 	const char *path = luaL_checkstring (L, 1);
 	int fail;
 
-	fail = rmdir (path);
+	fail = _rmdir (path);
 
 	if (fail) {
 		lua_pushnil (L);

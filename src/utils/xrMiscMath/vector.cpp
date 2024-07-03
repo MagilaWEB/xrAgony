@@ -1,10 +1,8 @@
 #include "pch.hpp"
-#include <limits>
 #include "xrCore/vector.h"
 #include "xrCore/_vector3d.h"
 #include "xrCore/xrDebug_macros.h"
 #include "xrCore/xrDebug.h"
-
 
 // normalize angle (0..2PI)
 float angle_normalize_always(float a)

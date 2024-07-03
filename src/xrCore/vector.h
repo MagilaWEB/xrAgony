@@ -24,7 +24,7 @@ struct _quaternion;
 #include "_vector3d.h"
 #include "_vector2.h"
 #include "_vector4.h"
-#include "_matrix.h"
+#include "utils/xrMiscMath/matrix.h"
 #include "_matrix33.h"
 #include "_quaternion.h"
 #include "_rect.h"

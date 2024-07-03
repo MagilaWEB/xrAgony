@@ -18,7 +18,7 @@ void set_info_extend_math(lua_State* L)
 
 std::random_device ndrng;
 std::mt19937 intgen;
-std::uniform_real<float> float_random_01;
+std::uniform_real_distribution<float> float_random_01;
 
 int gen_random_in_range(lua_State* L, int a1, int a2)
 {	//unsigned?
@@ -30,7 +30,7 @@ int gen_random_in_range(lua_State* L, int a1, int a2)
 		return 0;
 	}
 
-	std::uniform_int<> dist(a1, a2);
+	std::uniform_real_distribution<> dist(a1, a2);
 	intgen.seed(ndrng());
 
 	return dist(intgen);

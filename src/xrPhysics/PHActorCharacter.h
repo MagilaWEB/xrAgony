@@ -99,7 +99,6 @@ class CPHActorCharacter : public CPHSimpleCharacter
 	typedef CPHSimpleCharacter inherited;
 
 	RESRICTORS_V m_restrictors;
-	float m_speed_goal;
 	bool b_single_game;
 
 public:

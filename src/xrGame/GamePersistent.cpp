@@ -519,14 +519,14 @@ void CGamePersistent::update_logo_intro()
 {
 	if (m_intro && (false == m_intro->IsActive()))
 	{
-		m_intro_event = nullptr;
+		m_intro_event = fastdelegate::FastDelegate<void()>();
 		xr_delete(m_intro);
 		Msg("intro_delete ::update_logo_intro");
 		Console->Execute("main_menu on");
 	}
 	else if (!m_intro)
 	{
-		m_intro_event = nullptr;
+		m_intro_event = fastdelegate::FastDelegate<void()>();
 	}
 }
 
@@ -560,7 +560,7 @@ void CGamePersistent::start_game_intro()
 {
 	if (!allow_intro())
 	{
-		m_intro_event = nullptr;
+		m_intro_event = fastdelegate::FastDelegate<void()>();
 		return;
 	}
 
@@ -579,11 +579,11 @@ void CGamePersistent::update_game_intro()
 	{
 		xr_delete(m_intro);
 		Msg("intro_delete ::update_game_intro");
-		m_intro_event = nullptr;
+		m_intro_event = fastdelegate::FastDelegate<void()>();
 	}
 	else if (!m_intro)
 	{
-		m_intro_event = nullptr;
+		m_intro_event = fastdelegate::FastDelegate<void()>();
 	}
 }
 

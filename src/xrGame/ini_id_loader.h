@@ -143,7 +143,7 @@ const typename ITEM_DATA* CSINI_IdToIndex::GetByIndex(T_INDEX index, bool no_ass
 TEMPLATE_SPECIALIZATION
 void CSINI_IdToIndex::DeleteIdToIndexData() { xr_delete(m_pItemDataVector); }
 TEMPLATE_SPECIALIZATION
-typename void CSINI_IdToIndex::InitInternal()
+void CSINI_IdToIndex::InitInternal()
 {
 	VERIFY(!m_pItemDataVector);
 	T_INIT::InitIdToIndex();

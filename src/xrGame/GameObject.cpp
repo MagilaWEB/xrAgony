@@ -460,8 +460,8 @@ BOOL CGameObject::net_Spawn(CSE_Abstract* DC)
 	{
 #pragma warning(push)
 #pragma warning(disable : 4238)
-		m_ini_file = new CInifile(
-			&IReader((void*)(*O->m_ini_string), xr_strlen(O->m_ini_string)), FS.get_path("$game_config$")->m_Path);
+		IReader reader((void*)(*(O->m_ini_string)), O->m_ini_string.size());
+		m_ini_file = new CInifile(&reader, FS.get_path("$game_config$")->m_Path);
 #pragma warning(pop)
 	}
 

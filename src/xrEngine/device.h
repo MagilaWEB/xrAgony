@@ -338,7 +338,7 @@ private:
 	ICF const bool RunFunctionPointer()
 	{
 		bool fPointerStart;
-		while (fPointerStart = !functionPointer.empty())
+		while ((fPointerStart = !functionPointer.empty()))
 		{
 			functionPointer.front()();
 			functionPointer.pop_front();

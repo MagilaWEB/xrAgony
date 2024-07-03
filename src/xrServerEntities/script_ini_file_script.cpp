@@ -38,13 +38,8 @@ bool r_line(CScriptIniFile* self, LPCSTR S, int L, luabind::string& N, luabind::
 #pragma warning(disable : 4238)
 CScriptIniFile* create_ini_file(LPCSTR ini_string)
 {
-	return ((CScriptIniFile*)new CInifile(
-		&IReader((void*)ini_string, xr_strlen(ini_string)), FS.get_path("$game_config$")->m_Path));
-}
-
-CScriptIniFile *create_ini_file(LPCSTR ini_string, LPCSTR path)
-{
-	return (CScriptIniFile*)new CInifile(&IReader((void*)ini_string, xr_strlen(ini_string)), path);
+	IReader reader((void*)ini_string, xr_strlen(ini_string));
+	return ((CScriptIniFile*)new CInifile(&reader, FS.get_path("$game_config$")->m_Path));
 }
 #pragma warning(pop)
 
@@ -127,8 +122,7 @@ static void CScriptIniFile_Export(lua_State* luaState)
 			def("reload_system_ini", &reload_system_ini),
 			//-Alundaio
 			def("system_ini", &get_system_ini),
-		def("create_ini_file", (CScriptIniFile*(*)(LPCSTR))&create_ini_file, adopt<0>()),
-		def("create_ini_file", (CScriptIniFile*(*)(LPCSTR, LPCSTR))(&create_ini_file), adopt<0>())
+		def("create_ini_file", (CScriptIniFile*(*)(LPCSTR))&create_ini_file, adopt<0>())
 	];
 }
 

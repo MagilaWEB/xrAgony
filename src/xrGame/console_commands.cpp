@@ -1720,12 +1720,12 @@ public:
 };
 
 // Set the current time
-class CCC_ÑhangeGameTime : public CCC_Vector3
+class CCC_ChangeGameTime : public CCC_Vector3
 {
 private:
 	Fvector p;
 public:
-	CCC_ÑhangeGameTime(LPCSTR N) : CCC_Vector3(N, &p, Fvector(), Fvector().set(FLT_MAX, FLT_MAX, FLT_MAX)) {}
+	CCC_ChangeGameTime(LPCSTR N) : CCC_Vector3(N, &p, Fvector(), Fvector().set(FLT_MAX, FLT_MAX, FLT_MAX)) {}
 	virtual void Execute(LPCSTR args)
 	{
 		if (!xr_strlen(args))
@@ -2095,7 +2095,7 @@ void CCC_RegisterCommands()
 		CMD1(CCC_Spawn_to_inventory, "g_spawn_to_inventory");
 		CMD1(CCC_JumpToLevel, "jump_to_level");
 		CMD3(CCC_Mask, "g_god", &psActorFlags, AF_GODMODE);
-		CMD1(CCC_ÑhangeGameTime, "g_change_game_time");
+		CMD1(CCC_ChangeGameTime, "g_change_game_time");
 		CMD3(CCC_Mask, "g_unlimitedammo", &psActorFlags, AF_UNLIMITEDAMMO);
 		CMD1(CCC_TimeFactor, "time_factor");
 		CMD1(CCC_Script, "run_script");

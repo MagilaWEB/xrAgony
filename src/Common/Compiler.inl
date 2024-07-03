@@ -45,6 +45,8 @@
 #ifdef _MSC_VER
 // We use xr_* instead of defining e.g. strupr => _strupr, since the macro definition could
 // come before the std. header file declaring it, and thereby renaming that one too.
+#define xr_strcmp strcmp
+#define xr_strdup _strdup
 #define xr_strupr _strupr
 #define xr_strlwr _strlwr
 #define xr_stricmp _stricmp

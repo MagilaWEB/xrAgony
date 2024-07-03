@@ -7,7 +7,7 @@
 #endif
 #define PUGIXML_NO_XPATH
 #define PUGIXML_HAS_LONG_LONG
-#include "pugixml.hpp"
+#include "pugixml/src/pugixml.hpp"
 #ifdef DEBUG // debug & mixed
 #include "xrCommon/xr_vector.h"
 #endif

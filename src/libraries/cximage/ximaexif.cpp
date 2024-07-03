@@ -765,9 +765,9 @@ void CxImageJPG::CxExifInfo::process_COM (const BYTE * Data, int length)
 ////////////////////////////////////////////////////////////////////////////////
 void CxImageJPG::CxExifInfo::process_SOFn (const BYTE * Data, int marker)
 {
-	int data_precision, num_components;
+	int num_components;//data_precision
 
-	data_precision = Data[2];
+	//data_precision = Data[2];
 	m_exifinfo->Height = Get16m((void*)(Data+3));
 	m_exifinfo->Width = Get16m((void*)(Data+5));
 	num_components = Data[7];

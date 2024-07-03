@@ -23,7 +23,7 @@ return(dwResult);
 
 class XRCORE_API CRandom
 {
-	volatile s32 holdrand;
+	s32 holdrand;
 
 public:
 	CRandom() : holdrand(1){};

@@ -874,7 +874,7 @@ void dBodySetAutoDisableFlag (dBodyID b, int do_auto_disable)
 void dBodySetAutoDisableDefaults (dBodyID b)
 {
 	dAASSERT(b);
-	dWorldID w = b->world;
+	//dWorldID w = b->world;
 	//dAASSERT(w);
 	//b->adis.linear_threshold = dWorldGetAutoDisableLinearThreshold (w);
 	//b->adis.angular_threshold = dWorldGetAutoDisableAngularThreshold (w);

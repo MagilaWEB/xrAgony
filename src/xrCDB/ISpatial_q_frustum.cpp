@@ -6,14 +6,12 @@
 
 extern Fvector c_spatial_offset[8];
 
-class walker
+struct walker
 {
-public:
 	u32 mask;
 	CFrustum* F;
 	ISpatial_DB* space;
 
-public:
 	walker(ISpatial_DB* _space, u32 _mask, const CFrustum* _F)
 	{
 		mask = _mask;

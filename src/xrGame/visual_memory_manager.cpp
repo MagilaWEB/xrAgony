@@ -157,7 +157,7 @@ void CVisualMemoryManager::reload(LPCSTR section)
 	}
 }
 
-IC const CVisionParameters& CVisualMemoryManager::current_state() const
+const CVisionParameters& CVisualMemoryManager::current_state() const
 {
 	if (m_stalker)
 	{
@@ -342,8 +342,7 @@ float CVisualMemoryManager::get_visible_value(const CGameObject* game_object, fl
 CNotYetVisibleObject* CVisualMemoryManager::not_yet_visible_object(const CGameObject* game_object)
 {
 	START_PROFILE("Memory Manager/visuals/not_yet_visible_object")
-		xr_vector<CNotYetVisibleObject>::iterator I = std::find_if(
-			m_not_yet_visible_objects.begin(), m_not_yet_visible_objects.end(), CNotYetVisibleObjectPredicate(game_object));
+	auto I = m_not_yet_visible_objects.find_if(CNotYetVisibleObjectPredicate(game_object));
 	if (I == m_not_yet_visible_objects.end())
 		return (0);
 	return (&*I);
@@ -352,7 +351,9 @@ CNotYetVisibleObject* CVisualMemoryManager::not_yet_visible_object(const CGameOb
 
 void CVisualMemoryManager::add_not_yet_visible_object(const CNotYetVisibleObject& not_yet_visible_object)
 {
-	m_not_yet_visible_objects.push_back(not_yet_visible_object);
+	auto I = m_not_yet_visible_objects.find_if(CNotYetVisibleObjectPredicate(not_yet_visible_object.m_object));
+	if (I == m_not_yet_visible_objects.end())
+		m_not_yet_visible_objects.push_back(not_yet_visible_object);
 }
 
 u32 CVisualMemoryManager::get_prev_time(const CGameObject* game_object) const
@@ -645,7 +646,7 @@ CVisibleObject* CVisualMemoryManager::visible_object(const CGameObject* game_obj
 	return (&*I);
 }
 
-IC squad_mask_type CVisualMemoryManager::mask() const
+squad_mask_type CVisualMemoryManager::mask() const
 {
 	if (!m_stalker)
 		return (squad_mask_type(-1));

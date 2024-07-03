@@ -8,7 +8,7 @@
 
 #pragma once
 #include "xrCore/_types.h"
-#include "xrCore/_matrix.h"
+#include "utils/xrMiscMath/matrix.h"
 #include "xrCore/xrstring.h"
 #ifdef DEBUG
 #include "xrCore/log.h"

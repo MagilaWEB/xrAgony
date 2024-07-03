@@ -317,9 +317,6 @@
     <ClInclude Include="_math.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="_matrix.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="_matrix33.h">
       <Filter>Math</Filter>
     </ClInclude>

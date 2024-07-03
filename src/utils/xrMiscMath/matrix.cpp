@@ -1,13 +1,10 @@
 #include "pch.hpp"
 
-#include <limits>
-#include <xmmintrin.h>
-#include "xrCore/_matrix.h"
+#include "matrix.h"
 #include "xrCore/_quaternion.h"
 #include "xrCore/xrDebug_macros.h"
 #include "xrCore/xrDebug.h"
 #include "xrCommon/math_funcs_inline.h"
-
 
 template <typename T>
 _matrix<T>& _matrix<T>::rotation(const _quaternion<T>& Q)
@@ -95,6 +92,98 @@ _matrix<T>& _matrix<T>::identity()
 	return *this;
 }
 
+template <typename T>
+_matrix<T>& _matrix<T>::inertion(const Self& mat, T v)
+{
+	T iv = 1.f - v;
+
+#ifdef __clang__
+	m[0][0] = m[0][0] * v + mat.m[0][0] * iv;
+	m[0][1] = m[0][1] * v + mat.m[0][1] * iv;
+	m[0][2] = m[0][2] * v + mat.m[0][2] * iv;
+	m[0][3] = m[0][3] * v + mat.m[0][3] * iv;
+
+	m[1][0] = m[1][0] * v + mat.m[1][0] * iv;
+	m[1][1] = m[1][1] * v + mat.m[1][1] * iv;
+	m[1][2] = m[1][2] * v + mat.m[1][2] * iv;
+	m[1][3] = m[1][3] * v + mat.m[1][3] * iv;
+
+	m[2][0] = m[2][0] * v + mat.m[2][0] * iv;
+	m[2][1] = m[2][1] * v + mat.m[2][1] * iv;
+	m[2][2] = m[2][2] * v + mat.m[2][2] * iv;
+	m[2][3] = m[2][3] * v + mat.m[2][3] * iv;
+
+	m[3][0] = m[3][0] * v + mat.m[3][0] * iv;
+	m[3][1] = m[3][1] * v + mat.m[3][1] * iv;
+	m[3][2] = m[3][2] * v + mat.m[3][2] * iv;
+	m[3][3] = m[3][3] * v + mat.m[3][3] * iv;
+#else
+	for (u32 i = 0; i < 4; i++)
+		for (u32 i2 = 0; i2 < 4; i2++)
+			m[i][i2] = m[i][i2] * v + mat.m[i][i2] * iv;
+#endif
+	return *this;
+}
+
+
+#ifdef __clang__
+// Multiply RES = A[4x4]*B[4x4] (WITH projection)
+template <typename T>
+_matrix<T>& _matrix<T>::mul(const _matrix<T>& A, const _matrix<T>& B)
+{
+	VERIFY((this != &A) && (this != &B));
+	m[0][0] = A.m[0][0] * B.m[0][0] + A.m[1][0] * B.m[0][1] + A.m[2][0] * B.m[0][2] + A.m[3][0] * B.m[0][3];
+	m[0][1] = A.m[0][1] * B.m[0][0] + A.m[1][1] * B.m[0][1] + A.m[2][1] * B.m[0][2] + A.m[3][1] * B.m[0][3];
+	m[0][2] = A.m[0][2] * B.m[0][0] + A.m[1][2] * B.m[0][1] + A.m[2][2] * B.m[0][2] + A.m[3][2] * B.m[0][3];
+	m[0][3] = A.m[0][3] * B.m[0][0] + A.m[1][3] * B.m[0][1] + A.m[2][3] * B.m[0][2] + A.m[3][3] * B.m[0][3];
+
+	m[1][0] = A.m[0][0] * B.m[1][0] + A.m[1][0] * B.m[1][1] + A.m[2][0] * B.m[1][2] + A.m[3][0] * B.m[1][3];
+	m[1][1] = A.m[0][1] * B.m[1][0] + A.m[1][1] * B.m[1][1] + A.m[2][1] * B.m[1][2] + A.m[3][1] * B.m[1][3];
+	m[1][2] = A.m[0][2] * B.m[1][0] + A.m[1][2] * B.m[1][1] + A.m[2][2] * B.m[1][2] + A.m[3][2] * B.m[1][3];
+	m[1][3] = A.m[0][3] * B.m[1][0] + A.m[1][3] * B.m[1][1] + A.m[2][3] * B.m[1][2] + A.m[3][3] * B.m[1][3];
+
+	m[2][0] = A.m[0][0] * B.m[2][0] + A.m[1][0] * B.m[2][1] + A.m[2][0] * B.m[2][2] + A.m[3][0] * B.m[2][3];
+	m[2][1] = A.m[0][1] * B.m[2][0] + A.m[1][1] * B.m[2][1] + A.m[2][1] * B.m[2][2] + A.m[3][1] * B.m[2][3];
+	m[2][2] = A.m[0][2] * B.m[2][0] + A.m[1][2] * B.m[2][1] + A.m[2][2] * B.m[2][2] + A.m[3][2] * B.m[2][3];
+	m[2][3] = A.m[0][3] * B.m[2][0] + A.m[1][3] * B.m[2][1] + A.m[2][3] * B.m[2][2] + A.m[3][3] * B.m[2][3];
+
+	m[3][0] = A.m[0][0] * B.m[3][0] + A.m[1][0] * B.m[3][1] + A.m[2][0] * B.m[3][2] + A.m[3][0] * B.m[3][3];
+	m[3][1] = A.m[0][1] * B.m[3][0] + A.m[1][1] * B.m[3][1] + A.m[2][1] * B.m[3][2] + A.m[3][1] * B.m[3][3];
+	m[3][2] = A.m[0][2] * B.m[3][0] + A.m[1][2] * B.m[3][1] + A.m[2][2] * B.m[3][2] + A.m[3][2] * B.m[3][3];
+	m[3][3] = A.m[0][3] * B.m[3][0] + A.m[1][3] * B.m[3][1] + A.m[2][3] * B.m[3][2] + A.m[3][3] * B.m[3][3];
+	return *this;
+}
+
+// Multiply RES = A[4x3]*B[4x3] (no projection), faster than ordinary multiply
+template <typename T>
+_matrix<T>& _matrix<T>::mul_43(const _matrix<T>& A, const _matrix<T>& B)
+{
+	VERIFY((this != &A) && (this != &B));
+	m[0][0] = A.m[0][0] * B.m[0][0] + A.m[1][0] * B.m[0][1] + A.m[2][0] * B.m[0][2];
+	m[0][1] = A.m[0][1] * B.m[0][0] + A.m[1][1] * B.m[0][1] + A.m[2][1] * B.m[0][2];
+	m[0][2] = A.m[0][2] * B.m[0][0] + A.m[1][2] * B.m[0][1] + A.m[2][2] * B.m[0][2];
+	m[0][3] = 0;
+
+	m[1][0] = A.m[0][0] * B.m[1][0] + A.m[1][0] * B.m[1][1] + A.m[2][0] * B.m[1][2];
+	m[1][1] = A.m[0][1] * B.m[1][0] + A.m[1][1] * B.m[1][1] + A.m[2][1] * B.m[1][2];
+	m[1][2] = A.m[0][2] * B.m[1][0] + A.m[1][2] * B.m[1][1] + A.m[2][2] * B.m[1][2];
+	m[1][3] = 0;
+
+	m[2][0] = A.m[0][0] * B.m[2][0] + A.m[1][0] * B.m[2][1] + A.m[2][0] * B.m[2][2];
+	m[2][1] = A.m[0][1] * B.m[2][0] + A.m[1][1] * B.m[2][1] + A.m[2][1] * B.m[2][2];
+	m[2][2] = A.m[0][2] * B.m[2][0] + A.m[1][2] * B.m[2][1] + A.m[2][2] * B.m[2][2];
+	m[2][3] = 0;
+
+	m[3][0] = A.m[0][0] * B.m[3][0] + A.m[1][0] * B.m[3][1] + A.m[2][0] * B.m[3][2] + A.m[3][0];
+	m[3][1] = A.m[0][1] * B.m[3][0] + A.m[1][1] * B.m[3][1] + A.m[2][1] * B.m[3][2] + A.m[3][1];
+	m[3][2] = A.m[0][2] * B.m[3][0] + A.m[1][2] * B.m[3][1] + A.m[2][2] * B.m[3][2] + A.m[3][2];
+	m[3][3] = 1;
+	return *this;
+}
+
+#else
+#include <limits>
+#include <xmmintrin.h>
 // Multiply RES = A[4x4]*B[4x4] (WITH projection)
 _matrix<float>& _matrix<float>::mul(const Self& A, const Self& B)
 {
@@ -198,6 +287,7 @@ _matrix<T>& _matrix<T>::mul_43(const Self& A, const Self& B)
 
 	return *this;
 }
+#endif
 
 template <typename T>
 _matrix<T>& _matrix<T>::invert(const _matrix<T>& a) // important: this is 4x3 invert, not the 4x4 one
@@ -551,6 +641,33 @@ void _matrix<T>::getHPB(T& h, T& p, T& b) const
 	}
 }
 
+template <typename T>
+void _matrix<T>::transform(Fvector4& dest, const Tvector& v) const // preferred to use
+{
+	dest.w = v.x * _14 + v.y * _24 + v.z * _34 + _44;
+	dest.x = (v.x * _11 + v.y * _21 + v.z * _31 + _41) / dest.w;
+	dest.y = (v.x * _12 + v.y * _22 + v.z * _32 + _42) / dest.w;
+	dest.z = (v.x * _13 + v.y * _23 + v.z * _33 + _43) / dest.w;
+}
+
+template <typename T>
+void _matrix<T>::transform(Tvector& dest, const Tvector& v) const // preferred to use
+{
+	T iw = 1.f / (v.x * _14 + v.y * _24 + v.z * _34 + _44);
+	dest.x = (v.x * _11 + v.y * _21 + v.z * _31 + _41) * iw;
+	dest.y = (v.x * _12 + v.y * _22 + v.z * _32 + _42) * iw;
+	dest.z = (v.x * _13 + v.y * _23 + v.z * _33 + _43) * iw;
+}
+
+template <typename T>
+void _matrix<T>::transform(Fvector4& dest, const Fvector4& v) const // preferred to use
+{
+	dest.w = v.x * _14 + v.y * _24 + v.z * _34 + v.w * _44;
+	dest.x = v.x * _11 + v.y * _21 + v.z * _31 + v.w * _41;
+	dest.y = v.x * _12 + v.y * _22 + v.z * _32 + v.w * _42;
+	dest.z = v.x * _13 + v.y * _23 + v.z * _33 + v.w * _43;
+}
+
 // explicit instantiations
 
 template Fmatrix& Fmatrix::rotation(const _quaternion<float>& Q);
@@ -608,3 +725,10 @@ template Fmatrix& Fmatrix::setHPB(Fmatrix::TYPE h, Fmatrix::TYPE p, Fmatrix::TYP
 template Dmatrix& Dmatrix::setHPB(Dmatrix::TYPE h, Dmatrix::TYPE p, Dmatrix::TYPE b);
 template void Fmatrix::getHPB(Fmatrix::TYPE& h, Fmatrix::TYPE& p, Fmatrix::TYPE& b) const;
 template void Dmatrix::getHPB(Dmatrix::TYPE& h, Dmatrix::TYPE& p, Dmatrix::TYPE& b) const;
+
+template void Fmatrix::transform(Fvector4& dest, const Tvector& v) const;
+template void Dmatrix::transform(Fvector4& dest, const Tvector& v) const;
+template void Fmatrix::transform(Tvector& dest, const Tvector& v) const;
+template void Dmatrix::transform(Tvector& dest, const Tvector& v) const;
+template void Fmatrix::transform(Fvector4& dest, const Fvector4& v) const;
+template void Dmatrix::transform(Fvector4& dest, const Fvector4& v) const;

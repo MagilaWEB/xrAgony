@@ -180,7 +180,6 @@ public:
 		size_t row;
 		int end_row;
 		int start_row;
-		size_t len = sizeof(_Type) * cols;
 		for (row = 0; row < rows / 2; row++)
 		{
 			end_row = rows - row - 1;

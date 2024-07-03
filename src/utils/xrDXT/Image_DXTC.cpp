@@ -72,7 +72,7 @@ bool Image_DXTC::LoadFromFile(LPCSTR filename)
 	}
 	// only understands .dds files for now
 	// return true if success
-	char* exts[] = {".DDS"};
+	char* exts[4]{ ".DDS" };
 	int next = 1;
 	char fileupper[256];
 	strcpy_s(fileupper, filename);
@@ -533,7 +533,7 @@ void Image_DXTC::DecompressDXT1()
 	int yblocks = m_DDSD.dwHeight / 4;
 	DWORD* pBase = (DWORD*)m_pDecompBytes;
 	DWORD* pImPos = (DWORD*)pBase; // pos in decompressed data
-	WORD* pPos = (WORD*)m_pCompBytes; // pos in compressed data
+	//WORD* pPos = (WORD*)m_pCompBytes; // pos in compressed data
 	DXTColBlock* pBlock;
 	Color8888 col_0, col_1, col_2, col_3;
 	WORD wrd;
@@ -578,7 +578,7 @@ void Image_DXTC::DecompressDXT3()
 	int yblocks = m_DDSD.dwHeight / 4;
 	DWORD* pBase = (DWORD*)m_pDecompBytes;
 	DWORD* pImPos = (DWORD*)pBase; // pos in decompressed data
-	WORD* pPos = (WORD*)m_pCompBytes; // pos in compressed data
+	//WORD* pPos = (WORD*)m_pCompBytes; // pos in compressed data
 	DXTColBlock* pBlock;
 	DXTAlphaBlockExplicit* pAlphaBlock;
 	Color8888 col_0, col_1, col_2, col_3;
@@ -628,7 +628,7 @@ void Image_DXTC::DecompressDXT5()
 	int yblocks = m_DDSD.dwHeight / 4;
 	DWORD* pBase = (DWORD*)m_pDecompBytes;
 	DWORD* pImPos = (DWORD*)pBase; // pos in decompressed data
-	WORD* pPos = (WORD*)m_pCompBytes; // pos in compressed data
+	//WORD* pPos = (WORD*)m_pCompBytes; // pos in compressed data
 	Color8888 col_0, col_1, col_2, col_3;
 	// fill alphazero with appropriate value to zero out alpha when
 	//  alphazero is ANDed with the image color 32 bit DWORD:

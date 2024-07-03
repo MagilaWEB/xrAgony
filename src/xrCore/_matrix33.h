@@ -2,7 +2,7 @@
 #ifndef _matrix33H_
 #define _matrix33H_
 #include "_vector3d.h"
-#include "_matrix.h"
+#include "utils/xrMiscMath/matrix.h"
 
 template <class T>
 struct _matrix33

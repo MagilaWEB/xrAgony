@@ -4,7 +4,6 @@ class Lcp33
 static	const	int			MSIZE=3;
 static	const	int			RLENGTH=4;
 				int			NBn																		;
-				int			savedNbn																;
 				bool		unresolved																;
 				dReal		A[MSIZE*RLENGTH]														;
 				dReal		*sourceA																;
@@ -13,7 +12,7 @@ static	const	int			RLENGTH=4;
 				dReal		*b																		;
 				dReal		*x																		;
 				dReal		w[3]																	;
-				dReal		bounds[3]																;
+				//dReal		bounds[3]																;
 				dReal		tw[3]																	;
 				int			state[3]																;
 				int			skip																	;

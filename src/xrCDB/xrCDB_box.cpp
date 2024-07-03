@@ -128,9 +128,8 @@ ICF bool planeBoxOverlap(const Point& normal, const float d, const Point& maxbox
 		return false;
 
 template <bool bClass3, bool bFirst>
-class box_collider
+struct box_collider
 {
-public:
 	COLLIDER* dest;
 	TRI* tris;
 	Fvector* verts;

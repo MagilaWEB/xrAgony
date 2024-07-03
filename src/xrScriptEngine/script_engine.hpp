@@ -238,7 +238,7 @@ TResult CScriptEngine::function_event(LPCSTR function_to_call, Args&&... args)
 		if constexpr (std::is_same_v<TResult, void>)
 			return;
 		else
-			return nullptr;
+			return TResult(nullptr);
 	}
 
 	function = object;

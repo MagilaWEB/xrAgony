@@ -1,10 +1,10 @@
 #pragma once
 #ifndef __M__
 #define __M__
-#include "_vector2.h"
-#include "_vector3d.h"
-#include "_vector4.h"
-#include "_std_extensions.h" // _valid<float>
+#include "xrCore/_vector2.h"
+#include "xrCore/_vector3d.h"
+#include "xrCore/_vector4.h"
+#include "xrCore/_std_extensions.h" // _valid<float>
 /*
 * DirectX-compliant, ie row-column order, ie m[Row][Col].
 * Same as:
@@ -417,18 +417,7 @@ struct _matrix
 		return *this;
 	}
 
-	IC SelfRef inertion(const Self& mat, T v)
-	{
-		T iv = 1.f - v;
-		for (int i = 0; i < 4; i++)
-		{
-			m[i][0] = m[i][0] * v + mat.m[i][0] * iv;
-			m[i][1] = m[i][1] * v + mat.m[i][1] * iv;
-			m[i][2] = m[i][2] * v + mat.m[i][2] * iv;
-			m[i][3] = m[i][3] * v + mat.m[i][3] * iv;
-		}
-		return *this;
-	}
+	SelfRef inertion(const Self& mat, T v);
 
 	ICF void transform_tiny(Tvector& dest, const Tvector& v) const // preferred to use
 	{
@@ -457,29 +446,9 @@ struct _matrix
 		dest.z = v.x * _13 + v.y * _23 + v.z * _33;
 	}
 
-	IC void transform(Fvector4& dest, const Tvector& v) const // preferred to use
-	{
-		dest.w = v.x * _14 + v.y * _24 + v.z * _34 + _44;
-		dest.x = (v.x * _11 + v.y * _21 + v.z * _31 + _41) / dest.w;
-		dest.y = (v.x * _12 + v.y * _22 + v.z * _32 + _42) / dest.w;
-		dest.z = (v.x * _13 + v.y * _23 + v.z * _33 + _43) / dest.w;
-	}
-
-	IC void transform(Tvector& dest, const Tvector& v) const // preferred to use
-	{
-		T iw = 1.f / (v.x * _14 + v.y * _24 + v.z * _34 + _44);
-		dest.x = (v.x * _11 + v.y * _21 + v.z * _31 + _41) * iw;
-		dest.y = (v.x * _12 + v.y * _22 + v.z * _32 + _42) * iw;
-		dest.z = (v.x * _13 + v.y * _23 + v.z * _33 + _43) * iw;
-	}
-
-	IC void transform(Fvector4& dest, const Fvector4& v) const // preferred to use
-	{
-		dest.w = v.x * _14 + v.y * _24 + v.z * _34 + v.w * _44;
-		dest.x = v.x * _11 + v.y * _21 + v.z * _31 + v.w * _41;
-		dest.y = v.x * _12 + v.y * _22 + v.z * _32 + v.w * _42;
-		dest.z = v.x * _13 + v.y * _23 + v.z * _33 + v.w * _43;
-	}
+	void transform(Fvector4& dest, const Tvector& v) const; // preferred to use
+	void transform(Tvector& dest, const Tvector& v) const; // preferred to use
+	void transform(Fvector4& dest, const Fvector4& v) const; // preferred to use
 
 	ICF void transform_tiny(Tvector& v) const
 	{

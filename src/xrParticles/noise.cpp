@@ -2,7 +2,7 @@
 
 #include "noise.h"
 
-#ifndef _EDITOR
+#if !defined(__clang__)
 #include <xmmintrin.h>
 
 ICF int iFloor_SSE(float const x) { return _mm_cvtt_ss2si(_mm_set_ss(x)); }
@@ -17,7 +17,7 @@ ICF int iFloor_SSE(float const x) { return _mm_cvtt_ss2si(_mm_set_ss(x)); }
 #define S_CURVE(t) (t * t * (3.f - 2.f * t))
 #define LERP(t, a, b) (a + t * (b - a))
 
-#ifndef _EDITOR
+#if !defined(__clang__)
 #define PN_SETUP(i, b0, b1, r0, r1) \
 	t = vec[i] + 10000.f;			\
 	tt = iFloor_SSE(t);			 \
@@ -98,7 +98,12 @@ float noise3(const Fvector& vec)
 	float* q;
 	float sx, sy, sz;
 	float a, b, c, d, t, u, v;
+
+#if defined(__clang__)
+	int i, j;
+#else
 	int i, j, tt;
+#endif
 
 	PN_SETUP(0, bx0, bx1, rx0, rx1);
 	PN_SETUP(1, by0, by1, ry0, ry1);

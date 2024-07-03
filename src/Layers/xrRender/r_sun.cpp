@@ -250,7 +250,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 	{
 		ex_project = Device.mProject;
 		ex_full.mul(ex_project, Device.mView);
-		D3DXMatrixInverse((D3DXMATRIX*)&ex_full_inverse, 0, (D3DXMATRIX*)&ex_full);
+		ex_full_inverse.invert_44(ex_full);
 	}
 
 	// Compute volume(s) - something like a frustum for infinite directional light
@@ -359,7 +359,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 		Fmatrix m_viewport = { view_dim / 2.f, 0.0f, 0.0f, 0.0f, 0.0f, -view_dim / 2.f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
 			0.0f, view_dim / 2.f, view_dim / 2.f, 0.0f, 1.0f };
 		Fmatrix m_viewport_inv;
-		D3DXMatrixInverse((D3DXMATRIX*)&m_viewport_inv, 0, (D3DXMATRIX*)&m_viewport);
+		m_viewport_inv.invert_44(m_viewport);
 
 		// snap view-position to pixel
 		cull_xform.mul(mdir_Project, mdir_View);
@@ -497,7 +497,12 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 			RCache.set_xform_project(fuckingsun->X.D.combine);
 			r_dsgraph_render_graph(0);
 			if (RImplementation.is_sun() && ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS))
+			{
+				RCache.set_CullMode(CULL_NONE);
+				RCache.set_xform_world(Fidentity);
 				Details->Render(CDetailManager::VisiblesType::SHADOW_SUN);
+				RCache.set_CullMode(CULL_CCW);
+			}
 
 			fuckingsun->X.D.transluent = FALSE;
 			if (bSpecial)

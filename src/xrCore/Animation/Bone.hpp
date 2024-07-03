@@ -409,28 +409,28 @@ public:
 	bool ExportOGF(IWriter& F);
 
 private:
-	IBoneData& GetChild(u16 id) { return *children[id]; }
-	const IBoneData& GetChild(u16 id) const { return *children[id]; }
-	u16 GetSelfID() const { return (u16)SelfID; }
-	u16 GetNumChildren() const { return u16(children.size()); }
-	const SJointIKData& get_IK_data() const { return IK_data; }
-	const Fmatrix& get_bind_transform() const { return local_rest_transform; }
-	const SBoneShape& get_shape() const { return shape; }
-	const Fobb& get_obb() const;
-	const Fvector& get_center_of_mass() const { return center_of_mass; }
-	float get_mass() const { return mass; }
+	IBoneData& GetChild(u16 id) override { return *children[id]; }
+	const IBoneData& GetChild(u16 id) const override { return *children[id]; }
+	u16 GetSelfID() const override { return (u16)SelfID; }
+	u16 GetNumChildren() const override { return u16(children.size()); }
+	const SJointIKData& get_IK_data() const override { return IK_data; }
+	const Fmatrix& get_bind_transform() const override { return local_rest_transform; }
+	const SBoneShape& get_shape() const override { return shape; }
+	const Fobb& get_obb() const override;
+	const Fvector& get_center_of_mass() const override { return center_of_mass; }
+	float get_mass() const override { return mass; }
 	// the caller should use GMLib.GetMaterialIdx instead
 	virtual u16 get_game_mtl_idx() const override { return u16(-1); }
 	virtual shared_str GetMaterialName() const override { return game_mtl; }
-	u16 GetParentID() const
+	u16 GetParentID() const override
 	{
 		if (parent)
 			return u16(parent->SelfID);
 		else
 			return u16(-1);
 	};
-	float lo_limit(u8 k) const { return engine_lo_limit(k); }
-	float hi_limit(u8 k) const { return engine_hi_limit(k); }
+	float lo_limit(u8 k) const override { return engine_lo_limit(k); }
+	float hi_limit(u8 k) const override { return engine_hi_limit(k); }
 };
 
 //*** Shared Bone Data ****************************************************************************
@@ -472,27 +472,27 @@ public:
 	void DebugQuery(BoneDebug& L);
 #endif
 	IC void SetParentID(u16 id) { ParentID = id; }
-	IC u16 GetSelfID() const { return SelfID; }
-	IC u16 GetParentID() const { return ParentID; }
+	IC u16 GetSelfID() const override { return SelfID; }
+	IC u16 GetParentID() const override { return ParentID; }
 	// assign face
 	void AppendFace(u16 child_idx, u16 idx) { child_faces[child_idx].push_back(idx); }
 	// Calculation
 	void CalculateM2B(const Fmatrix& Parent);
 
 private:
-	IBoneData& GetChild(u16 id) { return *children[id]; }
-	const IBoneData& GetChild(u16 id) const { return *children[id]; }
-	u16 GetNumChildren() const { return (u16)children.size(); }
-	const SJointIKData& get_IK_data() const { return IK_data; }
-	const Fmatrix& get_bind_transform() const { return bind_transform; }
-	const SBoneShape& get_shape() const { return shape; }
-	const Fobb& get_obb() const { return obb; }
-	const Fvector& get_center_of_mass() const { return center_of_mass; }
-	float get_mass() const { return mass; }
+	IBoneData& GetChild(u16 id) override { return *children[id]; }
+	const IBoneData& GetChild(u16 id) const override { return *children[id]; }
+	u16 GetNumChildren() const override { return (u16)children.size(); }
+	const SJointIKData& get_IK_data() const override { return IK_data; }
+	const Fmatrix& get_bind_transform() const override { return bind_transform; }
+	const SBoneShape& get_shape() const override { return shape; }
+	const Fobb& get_obb() const override { return obb; }
+	const Fvector& get_center_of_mass() const override { return center_of_mass; }
+	float get_mass() const override { return mass; }
 	virtual u16 get_game_mtl_idx() const override { return game_mtl_idx; }
 	virtual shared_str GetMaterialName() const override { return name; }
-	float lo_limit(u8 k) const { return IK_data.limits[k].limit.x; }
-	float hi_limit(u8 k) const { return IK_data.limits[k].limit.y; }
+	float lo_limit(u8 k) const override { return IK_data.limits[k].limit.x; }
+	float hi_limit(u8 k) const override { return IK_data.limits[k].limit.y; }
 
 public:
 	virtual u32 mem_usage()

@@ -2,10 +2,10 @@
 #include "ISpatial.h"
 #include "xrCore/_fbox.h"
 
-#pragma warning(push)
-#pragma warning(disable : 4995)
+#if (_M_IX86_FP > 0) && (__AVX__ == 0) && USE_CODE_SSE
 #include <xmmintrin.h>
-#pragma warning(pop)
+#define ___SSE___ 1
+#endif
 
 struct alignas(16) vec_t : public Fvector3
 {
@@ -29,6 +29,7 @@ struct ray_segment_t
 	float t_near, t_far;
 };
 
+#if !___SSE___
 ICF u32& uf(float& x) { return (u32&)x; }
 ICF BOOL isect_fpu(const Fvector& min, const Fvector& max, const ray_t& ray, Fvector& coord)
 {
@@ -131,6 +132,8 @@ ICF BOOL isect_fpu(const Fvector& min, const Fvector& max, const ray_t& ray, Fve
 	return false;
 }
 
+#else
+
 // turn those verbose intrinsics into something readable.
 #define loadps(mem) _mm_load_ps((const float* const)(mem))
 #define storess(ss, mem) _mm_store_ss((float* const)(mem), (ss))
@@ -191,43 +194,42 @@ ICF BOOL isect_sse(const aabb_t& box, const ray_t& ray, float& dist)
 
 	return ret;
 }
+#endif
 
 extern Fvector c_spatial_offset[8];
 
-template <bool b_use_sse, bool b_first, bool b_nearest>
-class alignas(16) walker
+template <bool b_first, bool b_nearest>
+struct alignas(16) walker
 {
-public:
 	ray_t ray;
 	u32 mask;
 	float range;
 	float range2;
 	ISpatial_DB* space;
 
-public:
 	walker(ISpatial_DB* _space, u32 _mask, const Fvector& _start, const Fvector& _dir, float _range)
 	{
 		mask = _mask;
 		ray.pos.set(_start);
 		ray.inv_dir.set(1.f, 1.f, 1.f).div(_dir);
 		ray.fwd_dir.set(_dir);
-		if (!b_use_sse)
-		{
-			// for FPU - zero out inf
-			if (_abs(_dir.x) <= flt_eps)
-				ray.inv_dir.x = 0;
-				
-			if (_abs(_dir.y) <= flt_eps)
-				ray.inv_dir.y = 0;
-				
-			if (_abs(_dir.z) <= flt_eps)
-				ray.inv_dir.z = 0;
-				
-		}
+#if !___SSE___
+		// for FPU - zero out inf
+		if (_abs(_dir.x) <= flt_eps)
+			ray.inv_dir.x = 0;
+
+		if (_abs(_dir.y) <= flt_eps)
+			ray.inv_dir.y = 0;
+
+		if (_abs(_dir.z) <= flt_eps)
+			ray.inv_dir.z = 0;
+#endif
 		range = _range;
 		range2 = _range * _range;
 		space = _space;
 	}
+
+#if !___SSE___
 	// fpu
 	ICF BOOL _box_fpu(const Fvector& n_C, const float n_R, Fvector& coord)
 	{
@@ -237,6 +239,7 @@ public:
 		BB.set(n_C.x - n_vR, n_C.y - n_vR, n_C.z - n_vR, n_C.x + n_vR, n_C.y + n_vR, n_C.z + n_vR);
 		return isect_fpu(BB.vMin, BB.vMax, ray, coord);
 	}
+#else
 	// sse
 	ICF BOOL _box_sse(const Fvector& n_C, const float n_R, float& dist)
 	{
@@ -257,27 +260,26 @@ public:
 
 		return isect_sse(box, ray, dist);
 	}
+#endif
+
 	void walk(ISpatial_NODE* N, Fvector& n_C, float n_R)
 	{
 		// Actual ray/aabb test
-		if (b_use_sse)
-		{
-			// use SSE
-			float d;
-			if (!_box_sse(n_C, n_R, d))
-				return;
-			if (d > range)
-				return;
-		}
-		else
-		{
-			// use FPU
-			Fvector P;
-			if (!_box_fpu(n_C, n_R, P))
-				return;
-			if (P.distance_to_sqr(ray.pos) > range2)
-				return;
-		}
+#if ___SSE___
+		// use SSE
+		float d;
+		if (!_box_sse(n_C, n_R, d))
+			return;
+		if (d > range)
+			return;
+#else
+		// use FPU
+		Fvector P;
+		if (!_box_fpu(n_C, n_R, P))
+			return;
+		if (P.distance_to_sqr(ray.pos) > range2)
+			return;
+#endif
 
 		// test items
 		for (auto& it : N->items)
@@ -329,62 +331,31 @@ void ISpatial_DB::q_ray(
 	Stats.Query.Begin();
 	q_result = &R;
 	q_result->clear();
-	if (CPU::ID.hasSSE())
+
+	if (_o & O_ONLYFIRST)
 	{
-		if (_o & O_ONLYFIRST)
+		if (_o & O_ONLYNEAREST)
 		{
-			if (_o & O_ONLYNEAREST)
-			{
-				walker<true, true, true> W(this, _mask_and, _start, _dir, _range);
-				W.walk(m_root, m_center, m_bounds);
-			}
-			else
-			{
-				walker<true, true, false> W(this, _mask_and, _start, _dir, _range);
-				W.walk(m_root, m_center, m_bounds);
-			}
+			walker<true, true> W{ this, _mask_and, _start, _dir, _range };
+			W.walk(m_root, m_center, m_bounds);
 		}
 		else
 		{
-			if (_o & O_ONLYNEAREST)
-			{
-				walker<true, false, true> W(this, _mask_and, _start, _dir, _range);
-				W.walk(m_root, m_center, m_bounds);
-			}
-			else
-			{
-				walker<true, false, false> W(this, _mask_and, _start, _dir, _range);
-				W.walk(m_root, m_center, m_bounds);
-			}
+			walker<true, false> W{ this, _mask_and, _start, _dir, _range };
+			W.walk(m_root, m_center, m_bounds);
 		}
 	}
 	else
 	{
-		if (_o & O_ONLYFIRST)
+		if (_o & O_ONLYNEAREST)
 		{
-			if (_o & O_ONLYNEAREST)
-			{
-				walker<false, true, true> W(this, _mask_and, _start, _dir, _range);
-				W.walk(m_root, m_center, m_bounds);
-			}
-			else
-			{
-				walker<false, true, false> W(this, _mask_and, _start, _dir, _range);
-				W.walk(m_root, m_center, m_bounds);
-			}
+			walker<false, true> W{ this, _mask_and, _start, _dir, _range };
+			W.walk(m_root, m_center, m_bounds);
 		}
 		else
 		{
-			if (_o & O_ONLYNEAREST)
-			{
-				walker<false, false, true> W(this, _mask_and, _start, _dir, _range);
-				W.walk(m_root, m_center, m_bounds);
-			}
-			else
-			{
-				walker<false, false, false> W(this, _mask_and, _start, _dir, _range);
-				W.walk(m_root, m_center, m_bounds);
-			}
+			walker<false, false> W{ this, _mask_and, _start, _dir, _range };
+			W.walk(m_root, m_center, m_bounds);
 		}
 	}
 	Stats.Query.End();

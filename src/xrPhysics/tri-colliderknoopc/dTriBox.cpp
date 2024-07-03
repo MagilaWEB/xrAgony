@@ -552,25 +552,6 @@ depth##ox = sidePr - dFabs(dist##ox);																				  \
 		pos[1] = p[1];
 		pos[2] = p[2];
 
-#define FOO(i, op)				 \
-	pos[0] op hside[i] * R[0 + i]; \
-	pos[1] op hside[i] * R[4 + i]; \
-	pos[2] op hside[i] * R[8 + i];
-#define BAR(i, iinc) \
-	if (A##iinc > 0) \
-	{				\
-		FOO(i, -=)	\
-	}				\
-	else			 \
-	{				\
-		FOO(i, +=)	\
-	}
-		BAR(0, 1);
-		BAR(1, 2);
-		BAR(2, 3);
-#undef FOO
-#undef BAR
-
 ///////////////////////////////////////////////////////////
 
 #define TRI_CONTAIN_POINT(pos)																				\
@@ -599,57 +580,62 @@ depth##ox = sidePr - dFabs(dist##ox);																				  \
 		dReal* pdepth;
 		dContactGeom *prc, *c = CONTACT(contact, ret * skip);
 		prc = c;
-#define FOO(j, op, spoint)								\
-	c->pos[0] = spoint##[0] op 2.f * hside[j] * R[0 + j]; \
-	c->pos[1] = spoint##[1] op 2.f * hside[j] * R[4 + j]; \
-	c->pos[2] = spoint##[2] op 2.f * hside[j] * R[8 + j];
-#define BAR(side, sideinc, spos, sdepth)	  \
-	{										 \
-		pdepth = &(c->depth);				 \
-		*pdepth = sdepth - B##sideinc;		\
-		if (A##sideinc > 0)					\
-		{									 \
-			FOO(side, +, spos)				\
-		}									 \
-		else								  \
-		{									 \
-			FOO(side, -, spos)				\
-		}									 \
-		prc = c;							  \
-		if (!(*pdepth < 0))					\
-		{									 \
-			++ret;							\
-			c = CONTACT(contact, ret * skip); \
-		}									 \
-	}
+
+		auto BAR = [&](u32 index, auto B, auto A, auto spoint, auto _sdepth) -> void
+		{
+			pdepth = &(c->depth);
+			*pdepth = _sdepth - B;
+
+			if (A > 0)
+			{
+				c->pos[0] = spoint[0] + 2.f * hside[index] * R[0 + index];
+				c->pos[1] = spoint[1] + 2.f * hside[index] * R[4 + index];
+				c->pos[2] = spoint[2] + 2.f * hside[index] * R[8 + index];
+			}
+			else
+			{
+				c->pos[0] = spoint[0] - 2.f * hside[index] * R[0 + index];
+				c->pos[1] = spoint[1] - 2.f * hside[index] * R[4 + index];
+				c->pos[2] = spoint[2] - 2.f * hside[index] * R[8 + index];
+			}
+
+			prc = c;
+			if (!(*pdepth < 0))
+			{
+				++ret;
+				c = CONTACT(contact, ret * skip);
+			}
+		};
+
 		// TRI_CONTAIN_POINT(CONTACT(contact,ret*skip)->pos)
 
 		if (B1 < B2)
 		{
-			BAR(0, 1, pos, depth);
+			BAR(0, B1, A1, pos, depth);
+
 			if (B2 < B3)
 			{
-				BAR(1, 2, pos, depth);
-				BAR(0, 1, prc->pos, prc->depth);
+				BAR(1, B2, A2, pos, depth);
+				BAR(0, B1, A1, prc->pos, prc->depth);
 			}
 			else
 			{
-				BAR(2, 3, pos, depth);
-				BAR(0, 1, prc->pos, prc->depth);
+				BAR(2, B3, A3, pos, depth);
+				BAR(0, B1, A1, prc->pos, prc->depth);
 			}
 		}
 		else
 		{
-			BAR(1, 2, pos, depth);
+			BAR(1, B2, A2, pos, depth);
 			if (B1 < B3)
 			{
-				BAR(0, 1, pos, depth);
-				BAR(1, 2, prc->pos, prc->depth);
+				BAR(0, B1, A1, pos, depth);
+				BAR(1, B2, A2, prc->pos, prc->depth);
 			}
 			else
 			{
-				BAR(2, 3, pos, depth);
-				BAR(1, 2, prc->pos, prc->depth);
+				BAR(2, B3, A3, pos, depth);
+				BAR(1, B2, A2, prc->pos, prc->depth);
 			}
 		}
 /*

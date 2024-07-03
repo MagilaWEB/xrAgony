@@ -49,6 +49,8 @@ class IWriter;
 //////////////////////////////////////////////////////////////////////////
 class XRCORE_API str_container
 {
+	str_container_impl* impl;
+
 public:
 	str_container();
 	~str_container();
@@ -59,9 +61,6 @@ public:
 	void dump(IWriter* W);
 	void verify();
 	u32 stat_economy();
-
-private:
-	str_container_impl* impl;
 };
 XRCORE_API extern str_container* g_pStringContainer;
 
@@ -74,30 +73,33 @@ protected:
 	// ref-counting
 	void _dec() noexcept
 	{
-		if (nullptr == p_)
-			return;
-		p_->dwReference--;
-		if (0 == p_->dwReference)
-			p_ = nullptr;
+		if (p_)
+		{
+			p_->dwReference--;
+			if (0 == p_->dwReference)
+				p_ = nullptr;
+		}
 	}
 
 public:
 	void _set(pcstr rhs)
 	{
 		str_value* v = g_pStringContainer->dock(rhs);
-		if (nullptr != v)
+		if (v)
 			v->dwReference++;
 		_dec();
 		p_ = v;
 	}
+
 	void _set(shared_str const& rhs) noexcept
 	{
 		str_value* v = rhs.p_;
-		if (nullptr != v)
+		if (v)
 			v->dwReference++;
 		_dec();
 		p_ = v;
 	}
+
 	void _set(nullptr_t) noexcept
 	{
 		_dec();
@@ -106,9 +108,10 @@ public:
 
 	[[nodiscard]]
 	const str_value* _get() const { return p_; }
+
 public:
 	// construction
-	shared_str() = default;
+	shared_str() { p_ = nullptr; }
 	shared_str(pcstr rhs)
 	{
 		p_ = nullptr;
@@ -119,6 +122,7 @@ public:
 		p_ = nullptr;
 		_set(rhs);
 	}
+
 	shared_str(shared_str&& rhs) noexcept
 		: p_(rhs.p_)
 	{
@@ -156,7 +160,6 @@ public:
 
 	[[nodiscard]]
 	char operator[](size_t id) { return p_->value[id]; }
-
 	[[nodiscard]]
 	char operator[](size_t id) const { return p_->value[id]; }
 
@@ -167,9 +170,9 @@ public:
 	[[nodiscard]]
 	size_t size() const
 	{
-		if (nullptr == p_)
-			return 0;
-		return p_->dwLength;
+		if (p_)
+			return p_->dwLength;	
+		return 0;
 	}
 
 	[[nodiscard]]
@@ -186,10 +189,7 @@ public:
 	}
 
 	[[nodiscard]]
-	bool equal(const shared_str& rhs) const
-	{
-		return (p_ == rhs.p_);
-	}
+	bool equal(const shared_str& rhs) const { return (p_ == rhs.p_); }
 
 	shared_str& __cdecl printf(const char* format, ...)
 	{
@@ -204,11 +204,6 @@ public:
 		return (shared_str&)*this;
 	}
 };
-
-inline int xr_strcmp(const char* S1, const char* S2)
-{
-	return (int)strcmp(S1, S2);
-}
 
 // res_ptr == res_ptr
 // res_ptr != res_ptr
@@ -240,19 +235,10 @@ IC void xr_strlwr(shared_str& src)
 	if (*src)
 	{
 		char* lp = xr_strdup(*src);
-#if defined(WINDOWS)
 		xr_strlwr(lp);
-#elif defined(LINUX)
-		int i = 0;
-		while (lp[i])
-		{
-			lp[i] = (char)std::toupper(lp[i], std::locale());
-			i++;
-	}
-#endif
 		src = lp;
 		xr_free(lp);
-}
+	}
 }
 
 IC char* xr_strlwr(char* src)

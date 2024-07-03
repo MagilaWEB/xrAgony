@@ -1170,7 +1170,7 @@ void CAI_Stalker::Think()
 	STOP_PROFILE
 
 		START_PROFILE("stalker/schedule_update/think/movement")
-		if (!g_Alive())
+		if (!g_Alive() || getDestroy())
 			return;
 
 	//	try {

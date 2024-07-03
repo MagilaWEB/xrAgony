@@ -1628,7 +1628,7 @@ void PAVortex::Transform(const Fmatrix& m)
 static int	noise_start = 1;
 extern void	noise3Init();
 
-#ifndef _EDITOR
+#if !defined(__clang__)
 
 #include <xmmintrin.h>
 

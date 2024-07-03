@@ -40,10 +40,10 @@ int to_bool(lua_State* L)
 		const char* str_val = lua_tolstring(L, -1, &l);
 		if
 			(
-				stricmp(str_val, "true") == 0 ||
-				stricmp(str_val, "1") == 0 ||
-				stricmp(str_val, "on") == 0 ||
-				stricmp(str_val, "yes") == 0
+				_stricmp(str_val, "true") == 0 ||
+				_stricmp(str_val, "1") == 0 ||
+				_stricmp(str_val, "on") == 0 ||
+				_stricmp(str_val, "yes") == 0
 				)
 			lua_pushboolean(L, 1);
 		else

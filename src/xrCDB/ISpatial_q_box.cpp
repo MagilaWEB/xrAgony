@@ -5,16 +5,14 @@
 extern Fvector c_spatial_offset[8];
 
 template <bool b_first>
-class walker
+struct walker
 {
-public:
 	u32 mask;
 	Fvector center;
 	Fvector size;
 	Fbox box;
 	ISpatial_DB* space;
 
-public:
 	walker(ISpatial_DB* _space, u32 _mask, const Fvector& _center, const Fvector& _size)
 	{
 		mask = _mask;

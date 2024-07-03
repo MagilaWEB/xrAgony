@@ -134,7 +134,7 @@ struct CComparer
 		template <bool a>
 		IC static bool compare(const T& a1, const T& a2, const P& p)
 		{
-			return CHelper<T>::compare<object_type_traits::is_pointer<T>::value>(a1, a2, p);
+			return CHelper<T>::template compare<object_type_traits::is_pointer<T>::value>(a1, a2, p);
 		}
 
 		template <>
@@ -147,7 +147,7 @@ struct CComparer
 	template <typename T>
 	IC static bool compare(const T& a1, const T& a2, const P& p)
 	{
-		return CHelper4<T>::compare<object_type_traits::is_stl_container<T>::value>(a1, a2, p);
+		return CHelper4<T>::template compare<object_type_traits::is_stl_container<T>::value>(a1, a2, p);
 	}
 };
 

@@ -133,13 +133,3 @@ void xrMemory::mem_compact()
 		SetProcessWorkingSetSize(GetCurrentProcess(), size_t(-1), size_t(-1));
 #endif
 }
-
-// xr_strdup
-pstr xr_strdup(pcstr string)
-{
-	VERIFY(string);
-	size_t len = xr_strlen(string) + 1;
-	char* memory = (char*)xr_malloc(len);
-	CopyMemory(memory, string, len);
-	return memory;
-}

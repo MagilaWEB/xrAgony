@@ -8,9 +8,8 @@ using namespace CDB;
 using namespace Opcode;
 
 template <bool bClass3, bool bFirst>
-class frustum_collider
+struct frustum_collider
 {
-public:
 	COLLIDER* dest;
 	TRI* tris;
 	Fvector* verts;

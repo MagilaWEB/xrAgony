@@ -3,13 +3,11 @@
 
 extern Fvector c_spatial_offset[8];
 
-class walker
+struct walker
 {
-public:
 	u32 o_count;
 	u32 n_count;
 
-public:
 	walker()
 	{
 		o_count = 0;

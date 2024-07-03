@@ -3,7 +3,7 @@
 #define ShapeDataH
 #include "xrCore/_types.h"
 #include "xrCore/_sphere.h"
-#include "xrCore/_matrix.h"
+#include "utils/xrMiscMath/matrix.h"
 #include "xrCommon/xr_vector.h"
 
 struct CShapeData

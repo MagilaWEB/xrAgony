@@ -21,4 +21,4 @@ public:
 	bool Update();
 };
 
-#endif PHJOINT_DESTROY_INFO_H
+#endif

@@ -60,7 +60,7 @@ public:
 	virtual void SetAligment(EAligment aligment) override { eCurrentAlignment = aligment; }
 	virtual float SizeOf_(pcstr s) override;
 	virtual float SizeOf_(const wchar_t* wsStr) override;
-	virtual float SizeOf_(const char cChar); // only ANSII
+	virtual float SizeOf_(const char cChar) override; // only ANSII
 	virtual float CurrentHeight_() override;
 	virtual void OutSetI(float x, float y) override;
 	virtual void OutSet(float x, float y) override;

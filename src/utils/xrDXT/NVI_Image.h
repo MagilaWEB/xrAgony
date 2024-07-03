@@ -137,7 +137,7 @@ public:
 	NVI_ImageBordered();
 	~NVI_ImageBordered() override;
 	HRESULT Initialize(NVI_Image** hSrcImage, const RECT* border, bool wrap);
-	HRESULT Free();
+	HRESULT Free() override;
 	// i,j relative to src image, so i,j = 0 fetches from
 	//	(i-m_nBorderXLow, j-m_nBorderYLow ) in the m_pArray
 	void GetPixel(DWORD* pDest, int i, int j);

@@ -35,7 +35,7 @@ IC bool PhOutOfBoundaries(const Fvector& v) { return v.y < phBoundaries.y1; }
 
 const float LOSE_CONTROL_DISTANCE = 0.5f; // fly distance to lose control
 const float CLAMB_DISTANCE = 0.5f;
-const float CLIMB_GETUP_HEIGHT = 0.3f;
+//const float CLIMB_GETUP_HEIGHT = 0.3f;
 
 float IC sgn(float v) { return v < 0.f ? -1.f : 1.f; }
 bool test_sides(const Fvector& center, const Fvector& side_dir, const Fvector& fv_dir, const Fvector& box, int tri_id)
@@ -65,25 +65,25 @@ bool test_sides(const Fvector& center, const Fvector& side_dir, const Fvector& f
 		float abs_sd0 = sg_sd0 * sd0;
 		float abs_sd1 = sg_sd1 * sd1;
 
-		float sd, abs_sd, sg_sd;
+		float  abs_sd, sg_sd;//sd,
 		u32 v;
 		if (sg_sd0 == sg_sd1)
 		{
-			sd = -sd0 - sd1;
+			//sd = -sd0 - sd1;
 			abs_sd = abs_sd0 + abs_sd1;
 			sg_sd = -sg_sd0;
 			v = tri.T->verts[2];
 		}
 		else if (abs_sd0 > abs_sd1)
 		{
-			sd = sd0;
+		//	sd = sd0;
 			abs_sd = abs_sd0;
 			sg_sd = sg_sd0;
 			v = tri.T->verts[0];
 		}
 		else
 		{
-			sd = sd1;
+		//	sd = sd1;
 			abs_sd = abs_sd1;
 			sg_sd = sg_sd1;
 			v = tri.T->verts[1];
@@ -807,7 +807,7 @@ b_lose_control = false;
 
 const float CHWON_ACCLEL_SHIFT = 0.4f;
 const float CHWON_AABB_FACTOR = 1.f;
-const float CHWON_ANG_COS = M_SQRT1_2;
+//const float CHWON_ANG_COS = M_SQRT1_2;
 const float CHWON_CALL_UP_SHIFT = 0.05f;
 const float CHWON_CALL_FB_HIGHT = 1.5f;
 const float CHWON_AABB_FB_FACTOR = 1.f;
@@ -1873,8 +1873,8 @@ void CPHSimpleCharacter::TestRestrictorContactCallbackFun(
 	CPHActorCharacter* actor_character = (static_cast<CPHCharacter*>(obj_data->ph_object))->CastActorCharacter();
 	if (!actor_character)
 		return;
-	CPHSimpleCharacter* ch_this = static_cast<CPHSimpleCharacter*>(retrieveGeomUserData(g_this)->ph_object);
-	VERIFY(ch_this);
+	//CPHSimpleCharacter* ch_this = static_cast<CPHSimpleCharacter*>(retrieveGeomUserData(g_this)->ph_object);
+	//VERIFY(ch_this);
 	save_max(restrictor_depth, c.geom.depth);
 	do_colide = true;
 	c.surface.mu = 0.f;

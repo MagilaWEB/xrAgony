@@ -118,7 +118,7 @@ IC int dcTriListCollider::dSortTriPrimitiveCollide(
 
 	pos_tries.clear();
 	dReal neg_depth = dInfinity, b_neg_depth = dInfinity;
-	UINT b_count = 0;
+	//UINT b_count = 0;
 	bool intersect = false;
 
 #ifdef DEBUG
@@ -281,7 +281,7 @@ IC int dcTriListCollider::dSortTriPrimitiveCollide(
 
 					if (!b_pased && b_passable)
 					{ //! contain_pos&&
-						++b_count;
+						//++b_count;
 						dReal sidePr = primitive.Proj(o1, tri.norm);
 						tri.depth = sidePr - tri.dist;
 						if (b_neg_depth > tri.depth &&

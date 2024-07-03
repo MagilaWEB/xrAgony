@@ -21,7 +21,9 @@
 #endif
 
 // Check compiler
-#if defined(_MSC_VER)
+#if defined(__clang__)
+#pragma message("Compiling with LLVM++...")
+#elif defined(_MSC_VER)
 #pragma message("Compiling with VC++...")
 #define COMPILER_VISUAL_CPP
 #else
@@ -77,6 +79,6 @@
 #define inline_ inline
 
 // Down the hatch
-#pragma inline_depth(255)
+//#pragma inline_depth(255)
 
 #endif // __ICEPREPROCESSOR_H__

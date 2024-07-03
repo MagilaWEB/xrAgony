@@ -119,7 +119,7 @@ void CalculateNormalMap(NVI_Image* pSrc, ConvolutionKernel* pKernels, int num_ke
 			float mag = du * du + dv * dv + 1.0f;
 			mag = (float)_sqrt(mag);
 			// Get alpha as height
-			char height = (char)(pArray[j * size_x + i]) >> 24;
+			//char height = (char)(pArray[j * size_x + i]) >> 24;
 			Fvector src = {-du / mag, -dv / mag, 1.0f / mag};
 			Ivector dst = vpack(src);
 			unsigned long nmap_color = color_rgba(dst.x, dst.y, dst.z, 0);
@@ -193,8 +193,8 @@ void ConvertAlphaToNormalMap_5x5(NVI_Image* pSrc, float scale, bool wrap)
 	//		kernels.  Edge texels are duplicated into the border regions or
 	//	  copied from the other side of the source image if wrapping is on.
 	int numelem; // num elements in each kernel
-	float wt1 = 1.0f / 6.0f;
-	float wt2 = 1.0f / 48.0f;
+	//float wt1 = 1.0f / 6.0f;
+	//float wt2 = 1.0f / 48.0f;
 	/*
 	// Kernel for change of height in u axis:
 	// The are cubic coefs for interpolation with sample

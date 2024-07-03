@@ -60,7 +60,7 @@
 
   <ItemDefinitionGroup>
 	<ClCompile>
-	  <AdditionalIncludeDirectories>.;$(SolutionDir);$(xrLibraries);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)include\oneapi;$(xrSdkDir)DXSDK/Include;$(xrLuaDir);$(xrLibraries)luabind;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+	  <AdditionalIncludeDirectories>../;.;$(SolutionDir);$(xrLibraries);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)include\oneapi;$(xrSdkDir)DXSDK/Include;$(xrLuaDir);$(xrLibraries)luabind;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 	  <!-- MultiProcessorCompilation don't compatible with LinkIncremental and UseDebugLibraries -->
 	  <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Debug'  ))">true</MultiProcessorCompilation>
 	  <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Release'))">true</MultiProcessorCompilation>

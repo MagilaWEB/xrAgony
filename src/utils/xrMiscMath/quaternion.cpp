@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include "xrCore/_quaternion.h"
-#include "xrCore/_matrix.h"
+#include "matrix.h"
 #include "xrCommon/math_funcs_inline.h"
 
 //

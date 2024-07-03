@@ -4,7 +4,7 @@
 
 #include "xrCDB.h"
 #include "xrCore/_vector3d.h"
-#include "xrCore/_matrix.h"
+#include "utils/xrMiscMath/matrix.h"
 #include "xrCommon/math_funcs_inline.h"
 
 class IGameObject;

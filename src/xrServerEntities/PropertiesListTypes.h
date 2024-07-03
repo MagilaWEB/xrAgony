@@ -112,8 +112,8 @@ public:
 
 	CustomValue(T* val)
 	{
-		OnBeforeEditEvent = 0;
-		OnAfterEditEvent = 0;
+		OnBeforeEditEvent = TOnBeforeEditEvent();
+		OnAfterEditEvent = TOnAfterEditEvent();
 		set_value(value, val);
 		set_value(init_value, *val);
 	}
@@ -366,7 +366,7 @@ public:
 	ButtonValue(const shared_str& val, u32 flags)
 	{
 		m_Flags.assign(flags);
-		OnBtnClickEvent = nullptr;
+		OnBtnClickEvent = TOnBtnClick();
 		btn_num = -1;
 		xr_string v;
 		int cnt = _GetItemCount(val.c_str());
@@ -463,8 +463,8 @@ public:
 
 	CTextValue(LPSTR val, int _lim) : value(val), init_value(val), lim(_lim)
 	{
-		OnBeforeEditEvent = nullptr;
-		OnAfterEditEvent = nullptr;
+		OnBeforeEditEvent = TOnBeforeEditEvent();
+		OnAfterEditEvent = TOnAfterEditEvent();
 	};
 	virtual xr_string GetDrawText(TOnDrawTextEvent OnDrawText)
 	{
