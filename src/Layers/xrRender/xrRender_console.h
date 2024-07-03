@@ -69,38 +69,15 @@ extern ECORE_API float ps_r__ssaDONTSORT;
 extern ECORE_API float ps_r__ssaHZBvsTEX;
 extern ECORE_API int ps_r__tf_Anisotropic;
 
-// R1
-extern ECORE_API float ps_r1_ssaLOD_A;
-extern ECORE_API float ps_r1_ssaLOD_B;
-extern ECORE_API float ps_r1_tf_Mipbias;
-extern ECORE_API float ps_r1_lmodel_lerp;
-extern ECORE_API float ps_r1_dlights_clip;
-extern ECORE_API float ps_r1_pps_u;
-extern ECORE_API float ps_r1_pps_v;
-
-// R1-specific
-extern ECORE_API int ps_r1_GlowsPerFrame; // r1-only
-extern ECORE_API Flags32 ps_r1_flags; // r1-only
-
-extern ECORE_API float ps_r1_fog_luminance; // 1.f r1-only
-extern ECORE_API int ps_r1_SoftwareSkinning; // r1-only
-
-enum
-{
-	R1FLAG_DLIGHTS = (1 << 0),
-};
-
 // R2
 extern ECORE_API float ps_r2_ssaLOD_A;
 extern ECORE_API float ps_r2_ssaLOD_B;
-extern ECORE_API float ps_r2_tf_Mipbias;
 
 // R2-specific
 extern ECORE_API Flags32 ps_r2_ls_flags; // r2-only
 extern ECORE_API Flags32 ps_r2_ls_flags_ext;
 extern ECORE_API float ps_r2_df_parallax_h; // r2-only
 extern ECORE_API float ps_r2_df_parallax_range; // r2-only
-extern ECORE_API float ps_r2_gmaterial; // r2-only
 extern ECORE_API float ps_r2_tonemap_middlegray; // r2-only
 extern ECORE_API float ps_r2_tonemap_adaptation; // r2-only
 extern ECORE_API float ps_r2_tonemap_low_lum; // r2-only
@@ -128,7 +105,6 @@ extern ECORE_API float ps_r2_sun_depth_near_bias; // -0.0001f
 extern ECORE_API float ps_r2_sun_lumscale; // 0.5f
 extern ECORE_API float ps_r2_sun_lumscale_hemi; // 1.0f
 extern ECORE_API float ps_r2_sun_lumscale_amb; // 1.0f
-extern ECORE_API float ps_r2_zfill; // .1f
 
 extern ECORE_API float ps_r2_dhemi_sky_scale; // 1.5f
 extern ECORE_API float ps_r2_dhemi_light_scale; // 1.f
@@ -157,8 +133,8 @@ enum
 	//R2FLAG_GI = (1 << 6),
 	R2FLAG_FASTBLOOM = (1 << 7),
 	R2FLAG_GLOBALMATERIAL = (1 << 8),
-	R2FLAG_ZFILL = (1 << 9),
-	R2FLAG_R1LIGHTS = (1 << 10),
+	//R2FLAG_ZFILL = (1 << 9),
+	//R2FLAG_R1LIGHTS = (1 << 10),
 	R2FLAG_SUN_IGNORE_PORTALS = (1 << 11),
 
 	R2FLAG_EXP_SPLIT_SCENE = (1 << 13),

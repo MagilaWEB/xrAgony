@@ -204,32 +204,7 @@ void CRender::Render()
 	}
 
 	//******* Z-prefill calc - DEFERRER RENDERER
-	if (ps_r2_ls_flags.test(R2FLAG_ZFILL))
-	{
-		PIX_EVENT(DEFER_Z_FILL);
-		RImplementation.BasicStats.Culling.Begin();
-		float z_distance = ps_r2_zfill;
-		Fmatrix m_zfill, m_project;
-		m_project.build_projection(deg2rad(Device.fFOV), Device.fASPECT, VIEWPORT_NEAR,
-			z_distance * g_pGamePersistent->Environment().CurrentEnv->far_plane);
-		m_zfill.mul(m_project, Device.mView);
-		r_pmask(true, false); // enable priority "0"
-		set_Recorder(NULL);
-		phase = PHASE_SMAP;
-		render_main(m_zfill, false);
-		r_pmask(true, false); // disable priority "1"
-		RImplementation.BasicStats.Culling.End();
-
-		// flush
-		Target->phase_scene_prepare();
-		RCache.set_ColorWriteEnable(FALSE);
-		r_dsgraph_render_graph(0);
-		RCache.set_ColorWriteEnable();
-	}
-	else
-	{
-		Target->phase_scene_prepare();
-	}
+	Target->phase_scene_prepare();
 
 	//******* Main calc - DEFERRER RENDERER
 	// Main calc

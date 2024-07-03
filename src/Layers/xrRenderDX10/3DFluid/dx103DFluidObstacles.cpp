@@ -197,7 +197,7 @@ void dx103DFluidObstacles::ProcessDynamicObstacles(
 
 		// renderable
 		// IRenderable* renderable	  = spatial->dcast_Renderable ();
-		// if (0==renderable)				continue;					// unknown, but renderable object (r1_glow???)
+		// if (0==renderable)				continue;
 		IGameObject* pObject = spatial->dcast_GameObject();
 		if (!pObject)
 			continue;

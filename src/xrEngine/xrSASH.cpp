@@ -287,10 +287,7 @@ void xrSASH::GetAllOptions()
 	Option.Dependency.ComparisonOp = OA_COMP_OP_EQUAL;
 	Option.Dependency.ComparisonVal.Enum = (oaString)"renderer_r1";
 	Option.Dependency.ComparisonValType = GetOptionType("renderer");
-	{
-		DescribeOption("r__supersample", Option.Dependency);
-		DescribeOption("r1_no_detail_textures", Option.Dependency);
-	}
+	DescribeOption("r__supersample", Option.Dependency);
 
 	// >=r2
 	oaInitOption(&Option); // Reset dependency info
@@ -369,7 +366,6 @@ void xrSASH::GetCurrentOptions()
 
 	// r1 only
 	GetOption("r__supersample");
-	GetOption("r1_no_detail_textures");
 
 	// >=r2
 	GetOption("r2_sun");

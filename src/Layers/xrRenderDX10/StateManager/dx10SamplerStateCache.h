@@ -32,6 +32,7 @@ public:
 #endif
 
 	void SetMaxAnisotropy(UINT uiMaxAniso);
+	void SetMipLODBias(float uiMipLODBias);
 
 private:
 	typedef ID3DSamplerState IDeviceState;
@@ -55,6 +56,7 @@ private:
 	xr_vector<StateRecord> m_StateArray;
 
 	u32 m_uiMaxAnisotropy;
+	float m_uiMipLODBias;
 };
 
 extern dx10SamplerStateCache SSManager;

@@ -121,27 +121,12 @@ float ps_r__ssaDISCARD = 3.5f; // RO
 float ps_r__ssaDONTSORT = 32.f; // RO
 float ps_r__ssaHZBvsTEX = 96.f; // RO
 
-int ps_r__tf_Anisotropic = 8;
-
-// R1
-float ps_r1_ssaLOD_A = 64.f;
-float ps_r1_ssaLOD_B = 48.f;
-float ps_r1_tf_Mipbias = 0.0f;
-Flags32 ps_r1_flags = { R1FLAG_DLIGHTS }; // r1-only
-float ps_r1_lmodel_lerp = 0.1f;
-float ps_r1_dlights_clip = 40.f;
-float ps_r1_pps_u = 0.f;
-float ps_r1_pps_v = 0.f;
-
-// R1-specific
-int ps_r1_GlowsPerFrame = 16; // r1-only
-float ps_r1_fog_luminance = 1.1f; // r1-only
-int ps_r1_SoftwareSkinning = 0; // r1-only
+int ps_r__tf_Anisotropic = 16;
+float ps_r__tf_Mipbias = 0.5f;
 
 // R2
 float ps_r2_ssaLOD_A = 64.f;
 float ps_r2_ssaLOD_B = 48.f;
-float ps_r2_tf_Mipbias = 0.0f;
 
 // R2-specific
 Flags32 ps_r2_ls_flags = { R2FLAG_SUN
@@ -190,8 +175,6 @@ float ps_r2_sun_depth_near_bias = 0.00001f; // -0.00005f
 float ps_r2_sun_lumscale = 1.0f; // 1.0f
 float ps_r2_sun_lumscale_hemi = 1.0f; // 1.0f
 float ps_r2_sun_lumscale_amb = 1.0f;
-float ps_r2_gmaterial = 2.2f; //
-float ps_r2_zfill = 0.25f; // .1f
 
 float ps_r2_dhemi_sky_scale = 0.08f; // 1.5f
 float ps_r2_dhemi_light_scale = 0.2f;
@@ -317,64 +300,35 @@ public:
 		apply();
 	}
 };
+
 class CCC_tf_MipBias : public CCC_Float
 {
 public:
 	void apply()
 	{
-		if (nullptr == HW.pDevice)
-			return;
+		if (0 == HW.pDevice)	return;
 
 #if defined(USE_DX11)
-		// TODO: DX10: Implement mip bias control
-		// VERIFY(!"apply not implmemented.");
+		SSManager.SetMipLODBias(*value);
 #else
 		for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
 			CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MIPMAPLODBIAS, *((LPDWORD)value)));
 #endif
 	}
 
-	CCC_tf_MipBias(LPCSTR N, float* v) : CCC_Float(N, v, -3.f, +3.f) {}
+	CCC_tf_MipBias(LPCSTR N, float* v) : CCC_Float(N, v, -1.0f, +1.0f) {};
 	virtual void Execute(LPCSTR args)
 	{
 		CCC_Float::Execute(args);
 		apply();
 	}
-	virtual void Status(TStatus& S)
+	virtual void	Status(TStatus& S)
 	{
 		CCC_Float::Status(S);
 		apply();
 	}
 };
-class CCC_R2GM : public CCC_Float
-{
-public:
-	CCC_R2GM(LPCSTR N, float* v) : CCC_Float(N, v, 0.f, 4.f) { *v = 0; };
-	virtual void Execute(LPCSTR args)
-	{
-		if (0 == xr_strcmp(args, "on"))
-		{
-			ps_r2_ls_flags.set(R2FLAG_GLOBALMATERIAL, TRUE);
-		}
-		else if (0 == xr_strcmp(args, "off"))
-		{
-			ps_r2_ls_flags.set(R2FLAG_GLOBALMATERIAL, FALSE);
-		}
-		else
-		{
-			CCC_Float::Execute(args);
-			if (ps_r2_ls_flags.test(R2FLAG_GLOBALMATERIAL))
-			{
-				static LPCSTR name[4] = { "oren", "blin", "phong", "metal" };
-				float mid = *value;
-				int m0 = iFloor(mid) % 4;
-				int m1 = (m0 + 1) % 4;
-				float frc = mid - float(iFloor(mid));
-				Msg("* material set to [%s]-[%s], with lerp of [%f]", name[m0], name[m1], frc);
-			}
-		}
-	}
-};
+
 class CCC_Screenshot : public IConsole_Command
 {
 public:
@@ -773,35 +727,13 @@ void xrRender_initconsole()
 #endif // DEBUG
 
 	CMD2(CCC_tf_Aniso, "r__tf_aniso", &ps_r__tf_Anisotropic); // {1..16}
-
-	// R1
-	CMD4(CCC_Float, "r1_ssa_lod_a", &ps_r1_ssaLOD_A, 16, 96);
-	CMD4(CCC_Float, "r1_ssa_lod_b", &ps_r1_ssaLOD_B, 16, 64);
-	CMD4(CCC_Float, "r1_lmodel_lerp", &ps_r1_lmodel_lerp, 0, 0.333f);
-	CMD2(CCC_tf_MipBias, "r1_tf_mipbias", &ps_r1_tf_Mipbias); // {-3 +3}
-	CMD3(CCC_Mask, "r1_dlights", &ps_r1_flags, R1FLAG_DLIGHTS);
-	CMD4(CCC_Float, "r1_dlights_clip", &ps_r1_dlights_clip, 10.f, 150.f);
-	CMD4(CCC_Float, "r1_pps_u", &ps_r1_pps_u, -1.f, +1.f);
-	CMD4(CCC_Float, "r1_pps_v", &ps_r1_pps_v, -1.f, +1.f);
-
-	// R1-specific
-	CMD4(CCC_Integer, "r1_glows_per_frame", &ps_r1_GlowsPerFrame, 2, 32);
-
-	CMD4(CCC_Float, "r1_fog_luminance", &ps_r1_fog_luminance, 0.2f, 5.f);
-
-	// Software Skinning
-	// 0 - disabled (renderer can override)
-	// 1 - enabled
-	// 2 - forced hardware skinning (renderer can not override)
-	CMD4(CCC_Integer, "r1_software_skinning", &ps_r1_SoftwareSkinning, 0, 2);
+	CMD2(CCC_tf_MipBias, "r__tf_mipbias", &ps_r__tf_Mipbias);//	{-3 +3}
 
 	// R2
 	CMD4(CCC_Float, "r2_ssa_lod_a", &ps_r2_ssaLOD_A, 16, 96);
 	CMD4(CCC_Float, "r2_ssa_lod_b", &ps_r2_ssaLOD_B, 32, 64);
-	CMD2(CCC_tf_MipBias, "r2_tf_mipbias", &ps_r2_tf_Mipbias);
 
 	// R2-specific
-	CMD2(CCC_R2GM, "r2em", &ps_r2_gmaterial);
 	CMD3(CCC_Mask, "r2_tonemap", &ps_r2_ls_flags, R2FLAG_TONEMAP);
 	CMD4(CCC_Float, "r2_tonemap_middlegray", &ps_r2_tonemap_middlegray, 0.0f, 2.0f);
 	CMD4(CCC_Float, "r2_tonemap_adaptation", &ps_r2_tonemap_adaptation, 0.01f, 10.0f);
@@ -817,10 +749,7 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r2_ls_psm_kernel", &ps_r2_ls_psm_kernel, .1f, 3.f);
 	CMD4(CCC_Float, "r2_ls_ssm_kernel", &ps_r2_ls_ssm_kernel, .1f, 3.f);
 	CMD4(CCC_Float, "r2_ls_squality", &ps_r2_ls_squality, .5f, 1.f);
-
-	CMD3(CCC_Mask, "r2_zfill", &ps_r2_ls_flags, R2FLAG_ZFILL);
-	CMD4(CCC_Float, "r2_zfill_depth", &ps_r2_zfill, .001f, .5f);
-	CMD3(CCC_Mask, "r2_allow_r1_lights", &ps_r2_ls_flags, R2FLAG_R1LIGHTS);
+	//CMD3(CCC_Mask, "r2_allow_r1_lights", &ps_r2_ls_flags, R2FLAG_R1LIGHTS);
 
 	CMD3(CCC_Mask, "r__actor_shadow", &ps_actor_shadow_flags, RFLAG_ACTOR_SHADOW); // Swartz
 

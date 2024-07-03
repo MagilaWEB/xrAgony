@@ -355,27 +355,6 @@ void CheckForIntelGMA(CHWCaps& Caps)
 			}
 		}
 	}
-
-	if (isIntelGMA)
-	{
-		switch (ps_r1_SoftwareSkinning)
-		{
-		case 0:
-			Log("* Enabling software skinning");
-			ps_r1_SoftwareSkinning = 1;
-			break;
-		case 1: Log("* Using software skinning"); break;
-		case 2:
-			Log("* WARNING: Using hardware skinning");
-			Log("*	setting 'r1_software_skinning' to '1' may improve performance");
-			break;
-		}
-	}
-	else if (ps_r1_SoftwareSkinning == 1)
-	{
-		Msg("* WARNING: Using software skinning");
-		Msg("*	setting 'r1_software_skinning' to '0' should improve performance");
-	}
 }
 
 u32 CHW::selectGPU()
