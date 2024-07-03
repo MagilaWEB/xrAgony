@@ -37,13 +37,12 @@ void CRenderDevice::Run()
 
 	seqAppStart.Process();
 
-	mt_global_update.Init(this, &CRenderDevice::GlobalUpdate);
+	mt_global_update.Init([this]() { GlobalUpdate(); });
 
-	mt_load.Init(this, &CRenderDevice::b_Load);
+	mt_load.Init([this]() { b_Load(); });
 
-	mt_frame.Init(this, &CRenderDevice::OnFrame, xrThread::sParalelRender);
-
-	mt_frame2.Init(this, &CRenderDevice::OnFrame2, xrThread::sParalelRender);
+	mt_frame.Init([this]() { OnFrame(); }, xrThread::sParalelRender);
+	mt_frame2.Init([this]() { OnFrame2(); }, xrThread::sParalelRender);
 
 	// Message cycle
 	::Render->ClearTarget();

@@ -59,22 +59,23 @@ public:
 
 class XRCORE_API xrThread
 {
-	//For lambda functions.
-	struct new_lambda
-	{
-		std::function<void()> function{ []() {} };
-		new_lambda(std::function<void()> n_function)
-		{
-			function = std::move(n_function);
-		};
+	xr_string thread_name{ "X-RAY thread " };
+	CTimer timer;
+	DWORD thread_id{ 0 };
+	Event process;
+	Event done;
+	std::jthread* Thread;
+	bool thread_infinity{ false };
+	bool thread_locked{ false };
+	bool b_init{ false };
+	bool send_local_state{ false };
+	
+	bool global_parallel_process{ false };
+	bool debug_info{ true };
 
-		~new_lambda() = default;
-
-		void Runfunction()
-		{
-			function();
-		}
-	};
+	static IC DWORD main_thread_id;
+	static IC xr_list<xrThread*> all_obj_thread;
+	std::function<void()> update_function;
 
 public:
 	xrThread(const LPCSTR name, bool infinity = false, bool locked = false);
@@ -97,26 +98,7 @@ public:
 	float ms_time{ 0.f };
 
 private:
-	xr_string thread_name{ "X-RAY thread " };
-	CTimer timer;
-	DWORD thread_id{ 0 };
-	Event process;
-	Event done;
-	std::jthread * Thread;
-	bool thread_infinity{ false };
-	bool thread_locked{ false };
-	bool b_init{ false };
-	bool send_local_state{ false };
 	ParallelState global_parallel{ sParalelNone };
-	bool global_parallel_process{ false };
-	bool debug_info{ true };
-
-	new_lambda * lambda_function;
-
-	static IC DWORD main_thread_id;
-	static IC xr_list<xrThread*> all_obj_thread;
-
-	fastdelegate::FastDelegate<void()> update_function;
 	ThreadState thread_state{ dsSleep };
 
 	IC void g_State(const ThreadState new_state)
@@ -149,7 +131,7 @@ public:
 
 	IC bool UsName(LPCSTR name)
 	{
-		return  thread_name.find(name) != xr_string::npos;
+		return thread_name.find(name) != xr_string::npos;
 	};
 
 	IC DWORD ID() const
@@ -158,13 +140,12 @@ public:
 	};
 
 	//Initializing and creating a Thread.
-	template<class  PAR, class PAR_X>
-	ICF void Init(PAR* pr_1, fastdelegate::FastDelegate<void()>::Parameters(PAR_X::* pr_2)(), ParallelState state = sParalelNone)
+	IC void Init(auto&& fn, ParallelState state = sParalelNone)
 	{
 		if (!IsInit())
 		{
 			thread_state = dsOK;
-			update_function = fastdelegate::FastDelegate<void()>(pr_1, pr_2);
+			update_function = fn;
 			b_init = true;
 			all_obj_thread.push_back(std::move(this));
 
@@ -172,9 +153,7 @@ public:
 
 			global_parallel = state;
 		}
-	};
-
-	void Init(std::function<void()> fn, ParallelState state = sParalelNone);
+	}
 
 	//Is the thread initialized.
 	bool IsInit() const;
@@ -218,16 +197,21 @@ public:
 	static void GlobalState(const ThreadState new_state);
 
 	//For all threads.
-	static void ForThreads(const std::function<bool(xrThread*)> upd) noexcept;
+	IC static void ForThreads(const auto&& upd) noexcept
+	{
+		for (xrThread* thread : all_obj_thread)
+			if (thread && upd(*thread))
+				break;
+	};
 
 	//Global Start threads.
 	IC static void StartGlobal(ParallelState s_state)
 	{
-		ForThreads([&](xrThread* thread) {
-			if (thread->global_parallel == s_state)
+		ForThreads([s_state](xrThread& thread) {
+			if (thread.global_parallel == s_state)
 			{
-				thread->global_parallel_process = true;
-				thread->Start();
+				thread.global_parallel_process = true;
+				thread.Start();
 			}
 
 			return false;
@@ -237,11 +221,11 @@ public:
 	//Global Wait threads.
 	IC static void WaitGlobal()
 	{
-		ForThreads([&](xrThread* thread) {
-			if (thread->global_parallel_process && thread->global_parallel != sParalelNone)
+		ForThreads([](xrThread& thread) {
+			if (thread.global_parallel_process && thread.global_parallel != sParalelNone)
 			{
-				thread->global_parallel_process = false;
-				thread->Wait();
+				thread.global_parallel_process = false;
+				thread.Wait();
 			}
 
 			return false;

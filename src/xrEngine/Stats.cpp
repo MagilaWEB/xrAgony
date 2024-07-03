@@ -194,18 +194,18 @@ void CStats::Show()
 void CStats::ShowXrThread()
 {
 	pFontXrThread->OutSet(3.f, 1.f);
-	xrThread::ForThreads([&](xrThread* thread)
+	xrThread::ForThreads([&](xrThread& thread)
 	{
-		if (thread->DebugInfo())
+		if (thread.DebugInfo())
 		{
-			float color_result = thread->ms_time/15;
+			float color_result = thread.ms_time/15;
 			clamp(color_result, 0.f, 1.f);
 
 			const float revers_color_result = 1.f - color_result;
 
 			pFontXrThread->SetColor(color_rgba(u32(255 * color_result), u32(255 * revers_color_result), 0, 255));
 
-			pFontXrThread->OutNext("Thread: Name[%s], ID[%d], time[%0.4f ms]", thread->Name(), thread->ID(), thread->ms_time);
+			pFontXrThread->OutNext("Thread: Name[%s], ID[%d], time[%0.4f ms]", thread.Name(), thread.ID(), thread.ms_time);
 			pFontXrThread->OnRender();
 		}
 		return false;

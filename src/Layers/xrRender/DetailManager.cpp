@@ -193,7 +193,7 @@ void CDetailManager::Load()
 	swing_desc[1].rot1 = pSettings->r_float("details", "swing_fast_rot1");
 	swing_desc[1].rot2 = pSettings->r_float("details", "swing_fast_rot2");
 	swing_desc[1].speed = pSettings->r_float("details", "swing_fast_speed");
-	t_detail.Init(this, &CDetailManager::Frame, xrThread::sParalelFrame);
+	t_detail.Init([this]() { Frame(); }, xrThread::sParalelFrame);
 }
 #endif
 

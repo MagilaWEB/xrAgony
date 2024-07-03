@@ -16,15 +16,6 @@ xrThread::~xrThread()
 		Stop();
 }
 
-void xrThread::Init(std::function<void()> fn, ParallelState state)
-{
-	if (!IsInit())
-	{
-		lambda_function = new new_lambda(fn);
-		Init(lambda_function, &new_lambda::Runfunction, state);
-	}
-};
-
 void xrThread::worker_main()
 {
 	thread_id = GetCurrentThreadId();
@@ -152,8 +143,6 @@ void xrThread::Stop()
 
 		Thread->request_stop();
 		xr_delete(Thread);
-
-		lambda_function = nullptr;
 	}
 }
 
@@ -178,10 +167,3 @@ void xrThread::GlobalState(const ThreadState new_state)
 		cache_state = new_state;
 	}
 }
-
-void xrThread::ForThreads(const std::function<bool(xrThread*)> upd) noexcept
-{
-	for (xrThread*& thread : all_obj_thread)
-		if (thread && upd(thread))
-			break;
-};

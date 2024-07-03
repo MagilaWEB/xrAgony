@@ -112,7 +112,7 @@ void CHOM::Load()
 	S->close();
 	FS.r_close(fs);
 
-	mt_update.Init(this, &CHOM::frame_update, xrThread::sParalelRender);
+	mt_update.Init([this]() { frame_update(); }, xrThread::sParalelRender);
 }
 
 void CHOM::Unload()

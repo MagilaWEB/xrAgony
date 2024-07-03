@@ -76,7 +76,7 @@ bool CAI_Stalker::feel_touch_on_contact(IGameObject* O)
 {
 	VERIFY(O != this);
 
-	if ((O->GetSpatialData().type | STYPE_VISIBLEFORAI) != O->GetSpatialData().type)
+	if ((O->GetSpatialData().type | STYPE_VISIBLEFORAI) != O->GetSpatialData().type && !smart_cast<CCustomZone*>(O))
 		return (false);
 
 	return (inherited::feel_touch_on_contact(O));

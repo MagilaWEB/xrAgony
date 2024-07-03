@@ -158,7 +158,7 @@ void CPHWorld::Create(CObjectSpace* os, CObjectList* lo, CRenderDeviceBase* dv)
 	m_object_space = os;
 	m_level_objects = lo;
 	m_device = dv;
-	mt_PHWorld.Init(this, &CPHWorld::OnFrame, xrThread::sParalelRender);
+	mt_PHWorld.Init([this]() { OnFrame(); }, xrThread::sParalelRender);
 	//Device().AddSeqFrame(this, mt);
 
 // m_commander							=new CPHCommander();
