@@ -306,6 +306,13 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 						SlotItem*& Item = sp.items[it];
 						if (!Item) continue;
 
+						if (RImplementation.pOutdoorSector && PortalTraverser.i_marker != RImplementation.pOutdoorSector->r_marker)
+							continue;
+
+						CSector* sector = (CSector*)RImplementation.getSector(Item->sector_id);
+						if (sector && PortalTraverser.i_marker != sector->r_marker)
+							continue;
+
 						if (optimization)
 						{
 							if (!Item->optimization)

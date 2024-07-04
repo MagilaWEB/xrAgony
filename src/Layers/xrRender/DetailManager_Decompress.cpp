@@ -194,24 +194,22 @@ void CDetailManager::cache_Decompress(Slot* S)
 				collide::test_callback tb, IGameObject * ignore_object);*/
 			collide::rq_results rq_res{};
 			g_pGameLevel->ObjectSpace.RayQuery(rq_res, collide::ray_defs{ Item_P,  Fvector{ 0, -1.f, 0 }, 1000.f, CDB::OPT_CULL, collide::rqtStatic },
-			[&normal, verts](collide::rq_result& result, LPVOID params)
+			[&normal, verts, &Item](collide::rq_result& result, LPVOID params)
 			{
 				auto LOCAL_RQ = reinterpret_cast<collide::rq_result*>(params);
-				if (result.O)
-				{
-					*LOCAL_RQ = result;
-					return FALSE;
-				}
-				else
-				{
-					CDB::TRI* T = g_pGameLevel->ObjectSpace.GetStaticTris() + result.element;
-					SGameMtl* mtl = GMLib.GetMaterialByIdx(T->material);
+				CDB::TRI* T = g_pGameLevel->ObjectSpace.GetStaticTris() + result.element;
 
+				if(!result.O)
+				{		
+					SGameMtl* mtl = GMLib.GetMaterialByIdx(T->material);
 					normal.mknormal(verts[T->verts[0]], verts[T->verts[1]], verts[T->verts[2]]);
 					// Ignore liquid and dynamic.
 					if (mtl->Flags.is(SGameMtl::flLiquid) || mtl->Flags.is(SGameMtl::flDynamic))
 						return TRUE;
 				}
+
+				//Detect sector
+				Item.sector_id = T->sector;
 				*LOCAL_RQ = result;
 				return FALSE;
 			},

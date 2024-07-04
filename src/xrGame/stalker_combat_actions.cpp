@@ -211,7 +211,7 @@ void CStalkerActionRetreatFromEnemy::execute()
 	object().movement().set_movement_type(eMovementTypeRun);
 	object().movement().set_path_type(MovementManager::ePathTypeLevelPath);
 	object().movement().set_detail_path_type(DetailPathManager::eDetailPathTypeSmooth);
-	object().movement().set_mental_state(eMentalStatePanic);
+	object().movement().set_mental_state(eMentalStateDanger); //Panic animation looks ridiculous, danger set is better
 	object().movement().set_body_state(eBodyStateStand);
 
 	CCoverPoint const* point = 0;
@@ -569,7 +569,7 @@ void CStalkerActionTakeCover::execute()
 		}
 		else
 			object().sight().setup(CSightAction(SightManager::eSightTypePosition, mem_object.m_object_params.m_position,
-												true));
+				true));
 	}
 	//-Alundaio
 }
@@ -660,7 +660,7 @@ void CStalkerActionLookOut::execute()
 	}
 	else
 		object().sight().setup(CSightAction(SightManager::eSightTypePosition,
-											mem_object.m_object_params.m_position, true));
+			mem_object.m_object_params.m_position, true));
 
 	object().best_cover(mem_object.m_object_params.m_position);
 	//-Alundaio
@@ -760,7 +760,7 @@ void CStalkerActionHoldPosition::execute()
 	}
 	else
 		object().sight().setup(CSightAction(SightManager::eSightTypePosition, mem_object.m_object_params.m_position,
-											true));
+			true));
 	//-Alundaio
 
 	if (completed())
@@ -768,7 +768,7 @@ void CStalkerActionHoldPosition::execute()
 		if (object().agent_manager().member().can_detour() ||
 			!object().agent_manager().member().cover_detouring() ||
 			!fire_make_sense()
-		)
+			)
 		{
 			m_storage->set_property(eWorldPropertyPositionHolded, true);
 			m_storage->set_property(eWorldPropertyInCover, false);
@@ -817,13 +817,13 @@ void CStalkerActionDetourEnemy::initialize()
 
 	object().agent_manager().member().member(m_object).cover(0);
 
-//#ifndef SILENT_COMBAT
-	//Alundaio: Added sanity to make sure enemy exists
+	//#ifndef SILENT_COMBAT
+		//Alundaio: Added sanity to make sure enemy exists
 	if (object().memory().enemy().selected() && object().memory().enemy().selected()->human_being() && object().agent_manager().member().group_behaviour())
-	//Alundaio: END
-		//object().sound().play(eStalkerSoundNeedBackup);
+		//Alundaio: END
+			//object().sound().play(eStalkerSoundNeedBackup);
 		object().sound().play(eStalkerSoundDetour);
-//#endif
+	//#endif
 }
 
 void CStalkerActionDetourEnemy::finalize()
@@ -891,7 +891,7 @@ void CStalkerActionDetourEnemy::execute()
 	}
 	else
 		object().sight().setup(CSightAction(SightManager::eSightTypePosition,
-											mem_object.m_object_params.m_position, true));
+			mem_object.m_object_params.m_position, true));
 	//-Alundaio
 }
 
@@ -1090,7 +1090,7 @@ void CStalkerActionSuddenAttack::execute()
 		}
 		else
 			object().sight().setup(CSightAction(SightManager::eSightTypePosition,
-												mem_object.m_object_params.m_position, true));
+				mem_object.m_object_params.m_position, true));
 		//-Alundaio		
 	}
 
@@ -1116,24 +1116,24 @@ void CStalkerActionSuddenAttack::execute()
 			object().movement().set_movement_type(eMovementTypeWalk);
 			aim_ready();
 		}
+		else
+		{
+			if (distance >= 6.f)
+			{
+				object().movement().set_body_state(eBodyStateCrouch);
+				object().movement().set_movement_type(eMovementTypeRun);
+				aim_ready();
+			}
 			else
 			{
-				if (distance >= 6.f)
-				{
-					object().movement().set_body_state(eBodyStateCrouch);
-					object().movement().set_movement_type(eMovementTypeRun);
-					aim_ready();
-				}
+				object().movement().set_body_state(eBodyStateCrouch);
+				object().movement().set_movement_type(eMovementTypeStand);
+				if (visible_now)
+					fire();
 				else
-				{
-					object().movement().set_body_state(eBodyStateCrouch);
-					object().movement().set_movement_type(eMovementTypeStand);
-					if (visible_now)
-						fire();
-					else
-						aim_ready();
-				}
+					aim_ready();
 			}
+		}
 	}
 }
 
@@ -1224,8 +1224,7 @@ void CStalkerActionCriticalHit::initialize()
 			u32 min_queue_size, max_queue_size, min_queue_interval, max_queue_interval;
 			float distance = object().memory().enemy().selected()->Position().distance_to(object().Position());
 			select_queue_params(distance, min_queue_size, max_queue_size, min_queue_interval, max_queue_interval);
-			object().set_goal(eObjectActionIdle, object().best_weapon(), min_queue_size, max_queue_size,
-							  min_queue_interval, max_queue_interval);
+			object().set_goal(eObjectActionIdle, object().best_weapon(), min_queue_size, max_queue_size, min_queue_interval, max_queue_interval);
 		}
 		else
 			object().set_goal(eObjectActionIdle, object().best_weapon());

@@ -279,9 +279,10 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 #endif
 
 			u32 dwBatch = 0;
-			for (SlotItem*& Instance : vis)
+			for (SlotItem* Instance : vis)
 			{
 				if (!Instance) continue;
+
 				u32 base = dwBatch * 4;
 
 				// Build matrix ( 3x4 matrix, last row - color )
