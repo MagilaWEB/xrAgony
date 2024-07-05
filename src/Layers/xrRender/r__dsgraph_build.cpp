@@ -478,7 +478,7 @@ Fvector4 o_optimize_dynamic_l2_size = { O_D_L2_S_LOW, O_D_L2_S_MED, O_D_L2_S_HII
 Fvector4 o_optimize_dynamic_l3_dist = { O_D_L3_D_LOW, O_D_L3_D_MED, O_D_L3_D_HII, O_D_L3_D_ULT };
 Fvector4 o_optimize_dynamic_l3_size = { O_D_L3_S_LOW, O_D_L3_S_MED, O_D_L3_S_HII, O_D_L3_S_ULT };
 
-IC float GetDistFromCamera(const Fvector& from_position)
+IC float GetDistFromCamera(const Fvector & from_position)
 // Aproximate, adjusted by fov, distance from camera to position (For right work when looking though binoculars and scopes)
 {
 	float distance = Device.vCameraPosition.distance_to(from_position);
@@ -488,7 +488,7 @@ IC float GetDistFromCamera(const Fvector& from_position)
 	return adjusted_distane;
 }
 
-IC bool IsValuableToRender(dxRender_Visual* pVisual, bool isStatic, bool sm, Fmatrix& transform_matrix, bool ignore_optimize = false)
+IC bool IsValuableToRender(dxRender_Visual * pVisual, bool isStatic, bool sm, Fmatrix & transform_matrix, bool ignore_optimize = false)
 {
 	if (ignore_optimize)
 		return true;
@@ -580,8 +580,8 @@ IC bool IsValuableToRender(dxRender_Visual* pVisual, bool isStatic, bool sm, Fma
 					return false;
 				else if ((sphere_volume < o_optimize_static_l5_size.x) && (adjusted_dist > o_optimize_static_l5_dist.x))
 					return false;
+			}
 		}
-	}
 		else
 		{
 			switch (opt_dynamic)
@@ -619,7 +619,7 @@ IC bool IsValuableToRender(dxRender_Visual* pVisual, bool isStatic, bool sm, Fma
 					return false;
 			}
 		}
-}
+	}
 
 	return true;
 }
@@ -627,7 +627,7 @@ IC bool IsValuableToRender(dxRender_Visual* pVisual, bool isStatic, bool sm, Fma
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void CRender::add_leafs_Dynamic(dxRender_Visual* pVisual, bool bIgnoreOpt)
+void CRender::add_leafs_Dynamic(dxRender_Visual * pVisual, bool bIgnoreOpt)
 {
 	if (!pVisual)
 		return;
@@ -642,9 +642,12 @@ void CRender::add_leafs_Dynamic(dxRender_Visual* pVisual, bool bIgnoreOpt)
 		// Add all children, doesn't perform any tests
 		for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
 		{
-			if (I._effect) add_leafs_Dynamic(I._effect, bIgnoreOpt);
+			if (I._effect)
+				add_leafs_Dynamic(I._effect, bIgnoreOpt);
+
 			for (dxRender_Visual* pit : I._children_related)
 				add_leafs_Dynamic(pit, bIgnoreOpt);
+
 			for (dxRender_Visual* pit : I._children_free)
 				add_leafs_Dynamic(pit, bIgnoreOpt);
 		}
@@ -652,8 +655,12 @@ void CRender::add_leafs_Dynamic(dxRender_Visual* pVisual, bool bIgnoreOpt)
 	return;
 	case MT_HIERRARHY:
 	{
-		for (dxRender_Visual* Vis : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
+		FHierrarhyVisual* pV = reinterpret_cast<FHierrarhyVisual*>(pVisual);
+		for (dxRender_Visual*& Vis : pV->children)
+		{
+			Vis->vis.obj_data = pV->getVisData().obj_data; // Наследники используют шейдерные данные от родительского визуала
 			add_leafs_Dynamic(Vis);
+		}
 	}
 	return;
 	case MT_SKELETON_ANIM:
@@ -661,14 +668,19 @@ void CRender::add_leafs_Dynamic(dxRender_Visual* pVisual, bool bIgnoreOpt)
 	{
 		// Add all children, doesn't perform any tests
 		CKinematics* pV = reinterpret_cast<CKinematics*>(pVisual);
+		bool use_lod = false;
 		if (pV->m_lod)
 		{
 			Fvector Tpos;
 			float D;
 			val_pTransform->transform_tiny(Tpos, pV->vis.sphere.P);
 			float ssa = CalcSSA(D, Tpos, pV->vis.sphere.R / 2.f); // assume dynamics never consume full sphere
-			if (ssa < r_ssaLOD_A) add_leafs_Dynamic(pV->m_lod, bIgnoreOpt);
+			if (ssa < r_ssaLOD_A)
+				use_lod = true;
 		}
+
+		if (use_lod)
+			add_leafs_Dynamic(pV->m_lod, bIgnoreOpt);
 		else
 		{
 			pV->CalculateBones(TRUE);
@@ -694,7 +706,7 @@ void CRender::add_leafs_Dynamic(dxRender_Visual* pVisual, bool bIgnoreOpt)
 	}
 }
 
-void CRender::add_leafs_Static(dxRender_Visual* pVisual)
+void CRender::add_leafs_Static(dxRender_Visual * pVisual)
 {
 	if (!HOM.visible(pVisual->vis))
 		return;
@@ -709,9 +721,12 @@ void CRender::add_leafs_Static(dxRender_Visual* pVisual)
 		// Add all children, doesn't perform any tests
 		for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
 		{
-			if (I._effect) add_leafs_Dynamic(I._effect);
+			if (I._effect)
+				add_leafs_Dynamic(I._effect);
+
 			for (dxRender_Visual* pit : I._children_related)
 				add_leafs_Dynamic(pit);
+
 			for (dxRender_Visual* pit : I._children_free)
 				add_leafs_Dynamic(pit);
 		}
@@ -720,8 +735,12 @@ void CRender::add_leafs_Static(dxRender_Visual* pVisual)
 	case MT_HIERRARHY:
 	{
 		// Add all children, doesn't perform any tests
-		for (dxRender_Visual* I : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
+		FHierrarhyVisual* pV = reinterpret_cast<FHierrarhyVisual*>(pVisual);
+		for (dxRender_Visual*& I : pV->children)
+		{
+			I->vis.obj_data = pV->getVisData().obj_data;// Наследники используют шейдерные данные от родительского визуала
 			add_leafs_Static(I);
+		}
 	}
 	return;
 	case MT_SKELETON_ANIM:
@@ -751,9 +770,12 @@ void CRender::add_leafs_Static(dxRender_Visual* pVisual)
 		if (ssa > r_ssaLOD_B || phase == PHASE_SMAP)
 		{
 			// Add all children, doesn't perform any tests
-			for (dxRender_Visual* I : pV->children)
+			for (dxRender_Visual*& I : pV->children)
+			{
+				I->vis.obj_data = pV->getVisData().obj_data; // Наследники используют шейдерные данные от родительского визуала
 				add_leafs_Static(I);
-	}
+			}
+		}
 	}
 	return;
 	case MT_TREE_PM:
@@ -769,13 +791,13 @@ void CRender::add_leafs_Static(dxRender_Visual* pVisual)
 		r_dsgraph_insert_static(pVisual);
 	}
 	return;
-}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOL CRender::add_Dynamic(dxRender_Visual* pVisual, u32 planes)
+BOOL CRender::add_Dynamic(dxRender_Visual * pVisual, u32 planes)
 {
 	if (!pVisual->bIgnoreOpt && !IsValuableToRender(pVisual, false, phase == 1, *val_pTransform))
 		return FALSE;
@@ -795,19 +817,26 @@ BOOL CRender::add_Dynamic(dxRender_Visual* pVisual, u32 planes)
 	case MT_PARTICLE_GROUP:
 	{
 		// Add all children, doesn't perform any tests
-		for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
+		if (fcvPartial == VIS)
 		{
-			if (fcvPartial == VIS)
+			for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
 			{
-				if (I._effect) add_Dynamic(I._effect, planes);
+				if (I._effect)
+					add_Dynamic(I._effect, planes);
+
 				for (dxRender_Visual* pit : I._children_related)
 					add_Dynamic(pit, planes);
 				for (dxRender_Visual* pit : I._children_free)
 					add_Dynamic(pit, planes);
 			}
-			else
+		}
+		else
+		{
+			for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
 			{
-				if (I._effect) add_leafs_Dynamic(I._effect);
+				if (I._effect)
+					add_leafs_Dynamic(I._effect);
+
 				for (dxRender_Visual* pit : I._children_related)
 					add_leafs_Dynamic(pit);
 				for (dxRender_Visual* pit : I._children_free)
@@ -819,10 +848,11 @@ BOOL CRender::add_Dynamic(dxRender_Visual* pVisual, u32 planes)
 	case MT_HIERRARHY:
 	{
 		// Add all children
-		for (dxRender_Visual* I : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
-			if (fcvPartial == VIS)
+		if (fcvPartial == VIS)
+			for (dxRender_Visual* I : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
 				add_Dynamic(I, planes);
-			else
+		else
+			for (dxRender_Visual* I : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
 				add_leafs_Dynamic(I);
 	}
 	break;
@@ -831,14 +861,19 @@ BOOL CRender::add_Dynamic(dxRender_Visual* pVisual, u32 planes)
 	{
 		// Add all children, doesn't perform any tests
 		CKinematics* pV = reinterpret_cast<CKinematics*>(pVisual);
+		bool use_lod = false;
 		if (pV->m_lod)
 		{
 			Fvector Tpos;
 			float D;
 			val_pTransform->transform_tiny(Tpos, pV->vis.sphere.P);
 			float ssa = CalcSSA(D, Tpos, pV->vis.sphere.R / 2.f); // assume dynamics never consume full sphere
-			if (ssa < r_ssaLOD_A) add_leafs_Dynamic(pV->m_lod);
+			if (ssa < r_ssaLOD_A)
+				use_lod = true;
 		}
+
+		if (use_lod)
+			add_leafs_Dynamic(pV->m_lod);
 		else
 		{
 			pV->CalculateBones(TRUE);
@@ -846,15 +881,6 @@ BOOL CRender::add_Dynamic(dxRender_Visual* pVisual, u32 planes)
 			for (dxRender_Visual* I : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
 				add_leafs_Dynamic(I);
 		}
-		/*
-		I = pV->children.begin		();
-		E = pV->children.end		();
-		if (fcvPartial==VIS) {
-			for (; I!=E; I++)	add_Dynamic			(*I,planes);
-		} else {
-			for (; I!=E; I++)	add_leafs_Dynamic	(*I);
-		}
-		*/
 	}
 	break;
 	default:
@@ -867,7 +893,7 @@ BOOL CRender::add_Dynamic(dxRender_Visual* pVisual, u32 planes)
 	return TRUE;
 }
 
-void CRender::add_Static(dxRender_Visual* pVisual, u32 planes)
+void CRender::add_Static(dxRender_Visual * pVisual, u32 planes)
 {
 	if (!pVisual->bIgnoreOpt && !IsValuableToRender(pVisual, true, phase == 1, *val_pTransform))
 		return;
@@ -888,20 +914,25 @@ void CRender::add_Static(dxRender_Visual* pVisual, u32 planes)
 	case MT_PARTICLE_GROUP:
 	{
 		// Add all children, doesn't perform any tests
-		for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
+		if (fcvPartial == VIS)
 		{
-			if (fcvPartial == VIS)
+			for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
 			{
-				if (I._effect) add_Dynamic(I._effect, planes);
+				if (I._effect)
+					add_Dynamic(I._effect, planes);
 
 				for (dxRender_Visual* childRelated : I._children_related)
 					add_Dynamic(childRelated, planes);
 				for (dxRender_Visual* childFree : I._children_free)
 					add_Dynamic(childFree, planes);
 			}
-			else
+		}
+		else
+		{
+			for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
 			{
-				if (I._effect) add_leafs_Dynamic(I._effect);
+				if (I._effect)
+					add_leafs_Dynamic(I._effect);
 
 				for (dxRender_Visual* childRelated : I._children_related)
 					add_leafs_Dynamic(childRelated);
@@ -914,10 +945,11 @@ void CRender::add_Static(dxRender_Visual* pVisual, u32 planes)
 	case MT_HIERRARHY:
 	{
 		// Add all children
-		for (dxRender_Visual* childRenderable : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
-			if (VIS == fcvPartial)
+		if (VIS == fcvPartial)
+			for (dxRender_Visual* childRenderable : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
 				add_Static(childRenderable, planes);
-			else
+		else
+			for (dxRender_Visual* childRenderable : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
 				add_leafs_Static(childRenderable);
 	}
 	break;
@@ -927,10 +959,11 @@ void CRender::add_Static(dxRender_Visual* pVisual, u32 planes)
 		// Add all children, doesn't perform any tests
 		CKinematics* pV = reinterpret_cast<CKinematics*>(pVisual);
 		pV->CalculateBones(TRUE);
-		for (dxRender_Visual* childRenderable : pV->children)
-			if (VIS == fcvPartial)
+		if (VIS == fcvPartial)
+			for (dxRender_Visual* childRenderable : pV->children)
 				add_Static(childRenderable, planes);
-			else
+		else
+			for (dxRender_Visual* childRenderable : pV->children)
 				add_leafs_Static(childRenderable);
 	}
 	break;
@@ -1074,7 +1107,7 @@ void D3DXRenderBase::SetupStates()
 		CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MINFILTER, D3DTEXF_LINEAR));
 		CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR));
 		CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR));
-	}
+}
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_DITHERENABLE, TRUE));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_COLORVERTEX, TRUE));
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
