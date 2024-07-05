@@ -369,13 +369,13 @@ void CRenderDevice::message_loop()
 {
 	ShowWindow(m_hWnd, SW_SHOW);
 
-	PeekMessage(&msg, NULL, 0U, 0U, PM_NOREMOVE);
+	PeekMessage(&msg, nullptr, 0U, 0U, PM_NOREMOVE);
 	while (msg.message != WM_QUIT)
 	{
 		if ((!IsQUIT()) && b_restart)
 			ResetStart();
 
-		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+		if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);

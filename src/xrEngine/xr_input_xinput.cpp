@@ -123,7 +123,7 @@ _action actions[] = {
 	{ "pda_tab7",			kPDA_TAB7, _sp },
 	{ "kick",				kKICK, _sp },
 	{ "head_rotation",		kHEADROTATION, _both},
-	{ NULL, kLASTACTION ,_both}
+	{ nullptr, kLASTACTION ,_both}
 };
 
 _keyboard keyboards[] = {
@@ -194,7 +194,7 @@ _keyboard keyboards[] = {
 	{ "mouse8",			MOUSE_8			},	{ "kPOWER",			DIK_POWER		},
 	{ "kMUTE",			DIK_MUTE		},	{ "kVOLUMEUP",		DIK_VOLUMEUP	},
 	{ "kVOLUMEDOWN",	DIK_VOLUMEDOWN	},	{ "kNUMPADCOMMA",	DIK_NUMPADCOMMA	},
-	{ NULL, 			0				}
+	{ nullptr, 			0				}
 };
 // clang-format on
 
@@ -217,7 +217,7 @@ _action* action_name_to_ptr(pcstr _name)
 		++idx;
 	}
 	Msg("! cant find corresponding [id] for '%s'", _name);
-	return NULL;
+	return nullptr;
 }
 
 bool is_binded(EGameActions _action_id, int _dik)
@@ -270,7 +270,7 @@ _keyboard* keyname_to_ptr(pcstr _name)
 	}
 
 	Msg("! cant find corresponding [_keyboard*] for keyname %s", _name);
-	return NULL;
+	return nullptr;
 }
 
 void GetActionAllBinding(LPCSTR _action, char* dst_buff, int dst_buff_sz)
@@ -291,7 +291,7 @@ void GetActionAllBinding(LPCSTR _action, char* dst_buff, int dst_buff_sz)
 	{
 		xr_strcpy(sec, pbinding->m_keyboard[1]->key_local_name.c_str());
 	}
-	if (NULL == pbinding->m_keyboard[0] && NULL == pbinding->m_keyboard[1])
+	if (nullptr == pbinding->m_keyboard[0] && nullptr == pbinding->m_keyboard[1])
 	{
 		xr_sprintf(dst_buff, dst_buff_sz, "%s", gStringTable->translate("st_key_notbinded").c_str());
 	}

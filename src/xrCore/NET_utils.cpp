@@ -10,7 +10,7 @@
 
 void NET_Packet::w(const void* p, u32 count)
 {
-	R_ASSERT(inistream == NULL || w_allow);
+	R_ASSERT(inistream == nullptr || w_allow);
 	VERIFY(p && count);
 	VERIFY(B.count + count < NET_PacketSizeLimit);
 	CopyMemory(&B.data[B.count], p, count);
@@ -61,7 +61,7 @@ void NET_Packet::w_stringZ(const shared_str& p)
 	else
 	{
 		IIniFileStream* tmp = inistream;
-		inistream = NULL;
+		inistream = nullptr;
 		w_u8(0);
 		inistream = tmp; // hack -(
 	}
@@ -149,7 +149,7 @@ u32 NET_Packet::r_tell()
 
 void NET_Packet::r(void* p, u32 count)
 {
-	R_ASSERT(inistream == NULL);
+	R_ASSERT(inistream == nullptr);
 	VERIFY(p && count);
 	CopyMemory(p, &B.data[r_pos], count);
 	r_pos += count;

@@ -141,8 +141,8 @@ bool CLevel::net_start6()
 
 		if (!map_data.m_map_loaded && map_data.m_name.size())
 		{
-			LPCSTR level_id_string = NULL;
-			LPCSTR dialog_string = NULL;
+			LPCSTR level_id_string = nullptr;
+			LPCSTR dialog_string = nullptr;
 			LPCSTR download_url = !!map_data.m_map_download_url ? map_data.m_map_download_url.c_str() : "";
 			LPCSTR tmp_map_ver = !!map_data.m_map_version ? map_data.m_map_version.c_str() : "";
 

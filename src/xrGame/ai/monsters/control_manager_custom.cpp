@@ -457,7 +457,7 @@ bool CControlManagerCustom::jump_if_possible(Fvector const& target, CEntityAlive
 	if (!m_object->check_start_conditions(ControlCom::eControlJump))
 		return false;
 
-	bool const aggressive_jump = target_object ? m_object->can_use_agressive_jump(target_object) : NULL;
+	bool const aggressive_jump = target_object ? m_object->can_use_agressive_jump(target_object) : nullptr;
 	if (check_possibility && !m_jump->can_jump(target, aggressive_jump))
 		return false;
 
@@ -497,7 +497,7 @@ void CControlManagerCustom::check_jump_over_physics()
 
 		// получить список объектов вокруг врага
 		m_nearest.clear();
-		Level().ObjectSpace.GetNearest(m_nearest, travel_point.position, m_object->Radius(), NULL);
+		Level().ObjectSpace.GetNearest(m_nearest, travel_point.position, m_object->Radius(), nullptr);
 
 		for (u32 k = 0; k < m_nearest.size(); k++)
 		{

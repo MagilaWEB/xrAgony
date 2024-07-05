@@ -152,7 +152,7 @@ void CRender::create()
 	o.mrt = (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth = (HW.Caps.raster.b_MRT_mixdepth);
 
-	// Check for NULL render target support
+	// Check for nullptr render target support
 	//	DX10 disabled
 	// D3DFORMAT	nullrt	= (D3DFORMAT)MAKEFOURCC('N','U','L','L');
 	// o.nullrt			= HW.support	(nullrt,			D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
@@ -594,7 +594,7 @@ void CRender::add_StaticWallmark(ref_shader& S, const Fvector& P, float s, CDB::
 
 void CRender::add_StaticWallmark(IWallMarkArray* pArray, const Fvector& P, float s, CDB::TRI* T, Fvector* V)
 {
-	dxWallMarkArray* pWMA = reinterpret_cast<dxWallMarkArray*>(pArray);
+	dxWallMarkArray* pWMA = (dxWallMarkArray*)pArray;
 	ref_shader* pShader = pWMA->dxGenerateWallmark();
 	if (pShader)
 		add_StaticWallmark(*pShader, P, s, T, V);
@@ -616,10 +616,10 @@ void CRender::add_SkeletonWallmark(
 void CRender::add_SkeletonWallmark(
 	const Fmatrix* xf, IKinematics* obj, IWallMarkArray* pArray, const Fvector& start, const Fvector& dir, float size)
 {
-	dxWallMarkArray* pWMA = reinterpret_cast<dxWallMarkArray*>(pArray);
+	dxWallMarkArray* pWMA = (dxWallMarkArray*)pArray;
 	ref_shader* pShader = pWMA->dxGenerateWallmark();
 	if (pShader)
-		add_SkeletonWallmark(xf, reinterpret_cast<CKinematics*>(pArray), *pShader, start, dir, size);
+		add_SkeletonWallmark(xf, (CKinematics*)obj, *pShader, start, dir, size);
 }
 void CRender::add_Occluder(Fbox2& bb_screenspace) { HOM.occlude(bb_screenspace); }
 void CRender::set_Object(IRenderable* O) { val_pObject = O; }
@@ -1441,8 +1441,8 @@ HRESULT CRender::shader_compile(LPCSTR name, IReader* fs, LPCSTR pFunctionName,
 	if (FAILED(_result))
 	{
 		includer Includer;
-		LPD3DBLOB pShaderBuf = NULL;
-		LPD3DBLOB pErrorBuf = NULL;
+		LPD3DBLOB pShaderBuf = nullptr;
+		LPD3DBLOB pErrorBuf = nullptr;
 		_result = D3DCompile(fs->pointer(), fs->length(), "", defines, &Includer, pFunctionName, pTarget, Flags, 0, &pShaderBuf, &pErrorBuf);
 
 #if 0

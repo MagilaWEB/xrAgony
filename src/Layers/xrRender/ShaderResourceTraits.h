@@ -165,7 +165,7 @@ struct ShaderTypeTraits<SHS>
 	static inline HRESULT CreateHWShader(DWORD const* buffer, size_t size, HWShaderType& sh)
 	{
 		HRESULT _res = 0;
-		_res = HW.pDevice->CreateHullShader(buffer, size, NULL, &sh);
+		_res = HW.pDevice->CreateHullShader(buffer, size, nullptr, &sh);
 		return _res;
 	}
 
@@ -191,7 +191,7 @@ struct ShaderTypeTraits<SDS>
 	static inline HRESULT CreateHWShader(DWORD const* buffer, size_t size, HWShaderType& sh)
 	{
 		HRESULT _res = 0;
-		_res = HW.pDevice->CreateDomainShader(buffer, size, NULL, &sh);
+		_res = HW.pDevice->CreateDomainShader(buffer, size, nullptr, &sh);
 		return _res;
 	}
 
@@ -217,7 +217,7 @@ struct ShaderTypeTraits<SCS>
 	static inline HRESULT CreateHWShader(DWORD const* buffer, size_t size, HWShaderType& sh)
 	{
 		HRESULT _res = 0;
-		_res = HW.pDevice->CreateComputeShader(buffer, size, NULL, &sh);
+		_res = HW.pDevice->CreateComputeShader(buffer, size, nullptr, &sh);
 		return _res;
 	}
 
@@ -279,7 +279,7 @@ inline T* CResourceManager::CreateShader(const char* name, const char* filename 
 		sh_map.insert(std::make_pair(sh->set_name(name), sh));
 		if (0 == xr_stricmp(name, "null"))
 		{
-			sh->sh = NULL;
+			sh->sh = nullptr;
 			return sh;
 		}
 

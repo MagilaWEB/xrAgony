@@ -68,7 +68,7 @@ CExplosive::CExplosive(void)
 	m_bHideInExplosion = TRUE;
 	m_fExplodeHideDurationMax = 0;
 	m_bDynamicParticles = FALSE;
-	m_pExpParticle = NULL;
+	m_pExpParticle = nullptr;
 }
 
 void CExplosive::LightCreate()
@@ -317,7 +317,7 @@ float CExplosive::TestPassEffect(const Fvector& source_p, const Fvector& dir, fl
 #else
 		SExpQParams ep;
 #endif
-		g_pGameLevel->ObjectSpace.RayQuery(storage, RD, grenade_hit_callback, &ep, NULL, blasted_obj);
+		g_pGameLevel->ObjectSpace.RayQuery(storage, RD, grenade_hit_callback, &ep, nullptr, blasted_obj);
 		shoot_factor = ep.shoot_factor;
 	}
 	else
@@ -529,7 +529,7 @@ void CExplosive::OnAfterExplosion()
 	{
 		m_pExpParticle->Stop();
 		CParticlesObject::Destroy(m_pExpParticle);
-		m_pExpParticle = NULL;
+		m_pExpParticle = nullptr;
 	}
 	//ликвидировать сам объект
 	if (cast_game_object()->Local())
@@ -623,7 +623,7 @@ void CExplosive::FindNormal(Fvector& normal)
 	dir.set(0, -1.f, 0);
 	cast_game_object()->Center(pos);
 
-	BOOL result = Level().ObjectSpace.RayPick(pos, dir, cast_game_object()->Radius(), collide::rqtBoth, RQ, NULL);
+	BOOL result = Level().ObjectSpace.RayPick(pos, dir, cast_game_object()->Radius(), collide::rqtBoth, RQ, nullptr);
 	if (!result || RQ.O)
 	{
 		normal.set(0, 1, 0);
@@ -781,7 +781,7 @@ u16 CExplosive::Initiator()
 
 void CExplosive::UpdateExplosionParticles()
 {
-	if (!m_bDynamicParticles || m_pExpParticle == NULL || !m_pExpParticle->IsPlaying())
+	if (!m_bDynamicParticles || m_pExpParticle == nullptr || !m_pExpParticle->IsPlaying())
 		return;
 	CGameObject* GO = cast_game_object();
 	if (!GO)

@@ -68,7 +68,7 @@ public:
 struct 		resptrcode_crtc	: public resptr_base<CRTC>
 {
 	void				create			(LPCSTR Name, u32 size, D3DFORMAT f);
-	void				destroy			()	{ _set(NULL);		}
+	void				destroy			()	{ _set(nullptr);		}
 };
 typedef	resptr_core<CRTC,resptrcode_crtc>		ref_rtc;
 */

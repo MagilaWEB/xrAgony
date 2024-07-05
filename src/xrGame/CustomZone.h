@@ -14,7 +14,7 @@ class CZoneEffector;
 struct SZoneObjectInfo
 {
 	SZoneObjectInfo()
-		: object(NULL), zone_ignore(false), dw_time_in_zone(0), f_time_affected(Device.fTimeGlobal),
+		: object(nullptr), zone_ignore(false), dw_time_in_zone(0), f_time_affected(Device.fTimeGlobal),
 		  small_object(false), nonalive_object(false)
 	{
 	}

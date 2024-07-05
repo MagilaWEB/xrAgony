@@ -28,9 +28,9 @@ Flags32 ph_dbg_draw_mask;
 Flags32 ph_dbg_draw_mask1;
 bool draw_frame = 0;
 
-// LPCSTR	dbg_trace_object_name					=NULL;
+// LPCSTR	dbg_trace_object_name					=nullptr;
 string64 s_dbg_trace_obj_name = "none";
-IGameObject* trace_object = NULL;
+IGameObject* trace_object = nullptr;
 u32 dbg_bodies_num = 0;
 u32 dbg_joints_num = 0;
 u32 dbg_islands_num = 0;
@@ -612,7 +612,7 @@ void DBG_DrawStatAfterFrameStep()
 
 CFunctionGraph::CFunctionGraph()
 {
-	m_stat_graph = NULL;
+	m_stat_graph = nullptr;
 	m_function.clear();
 }
 CFunctionGraph::~CFunctionGraph()
@@ -907,7 +907,7 @@ public:
 void DBG_PH_NetRelcase(IGameObject* obj)
 {
 	if (trace_object == obj)
-		trace_object = NULL;
+		trace_object = nullptr;
 }
 
 bool is_trace_obj(CPHObject* obj)

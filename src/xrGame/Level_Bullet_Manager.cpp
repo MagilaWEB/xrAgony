@@ -167,7 +167,7 @@ void CBulletManager::PlayWhineSound(SBullet* bullet, IGameObject* object, const 
 {
 	if (m_WhineSounds.empty())
 		return;
-	if (bullet->m_whine_snd._feedback() != NULL)
+	if (bullet->m_whine_snd._feedback() != nullptr)
 		return;
 	if (bullet->hit_type != ALife::eHitTypeFireWound)
 		return;
@@ -626,7 +626,7 @@ bool CBulletManager::trajectory_check_error(Fvector& previous_position, collide:
 
 	collide::ray_defs RD(start, start_to_target, distance, CDB::OPT_FULL_TEST, collide::rqtBoth);
 	BOOL const result = Level().ObjectSpace.RayQuery(
-		storage, RD, CBulletManager::firetrace_callback, &data, CBulletManager::test_callback, NULL);
+		storage, RD, CBulletManager::firetrace_callback, &data, CBulletManager::test_callback, nullptr);
 	if (!result || (data.collide_time == 0.f))
 	{
 		add_bullet_point(

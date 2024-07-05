@@ -66,10 +66,10 @@ void CRender::ScreenshotImpl(ScreenshotMode mode, LPCSTR name, CMemoryWriter* me
 		desc.SampleDesc.Count = 1;
 		desc.Usage = D3D_USAGE_DEFAULT;
 		desc.BindFlags = D3D10_BIND_SHADER_RESOURCE;
-		CHK_DX(HW.pDevice->CreateTexture2D(&desc, NULL, &pSrcSmallTexture));
+		CHK_DX(HW.pDevice->CreateTexture2D(&desc, nullptr, &pSrcSmallTexture));
 
 		//D3DX10_TEXTURE_LOAD_INFO* pLoadInfo
-		CHK_DX(D3DX11LoadTextureFromTexture(HW.pContext, pSrcTexture, NULL, pSrcSmallTexture));
+		CHK_DX(D3DX11LoadTextureFromTexture(HW.pContext, pSrcTexture, nullptr, pSrcSmallTexture));
 
 		// save (logical & physical)
 		ID3DBlob* saved = nullptr;
@@ -103,10 +103,10 @@ void CRender::ScreenshotImpl(ScreenshotMode mode, LPCSTR name, CMemoryWriter* me
 		desc.SampleDesc.Count = 1;
 		desc.Usage = D3D_USAGE_DEFAULT;
 		desc.BindFlags = D3D_BIND_SHADER_RESOURCE;
-		CHK_DX(HW.pDevice->CreateTexture2D(&desc, NULL, &pSrcSmallTexture));
+		CHK_DX(HW.pDevice->CreateTexture2D(&desc, nullptr, &pSrcSmallTexture));
 
 		//D3DX10_TEXTURE_LOAD_INFO* pLoadInfo
-		CHK_DX(D3DX11LoadTextureFromTexture(HW.pContext, pSrcTexture, NULL, pSrcSmallTexture));
+		CHK_DX(D3DX11LoadTextureFromTexture(HW.pContext, pSrcTexture, nullptr, pSrcSmallTexture));
 
 		// save (logical & physical)
 		ID3DBlob* saved = nullptr;

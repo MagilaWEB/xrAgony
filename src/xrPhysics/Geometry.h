@@ -57,7 +57,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	IC dGeomID geom() { return dGeomTransformGetGeom(m_geom_transform); }
 	IC dGeomID geometry_transform() { return m_geom_transform; }
-	IC dGeomID geometry() { return m_geom_transform ? (geom() ? geom() : m_geom_transform) : NULL; }
+	IC dGeomID geometry() { return m_geom_transform ? (geom() ? geom() : m_geom_transform) : nullptr; }
 	IC dGeomID geometry_bt()
 	{
 		if (is_transformed_bt())
@@ -67,7 +67,7 @@ public:
 	}
 	IC const dGeomID geom() const { return dGeomTransformGetGeom(m_geom_transform); }
 	IC const dGeomID geometry_transform() const { return m_geom_transform; }
-	IC const dGeomID geometry() const { return m_geom_transform ? (geom() ? geom() : m_geom_transform) : NULL; }
+	IC const dGeomID geometry() const { return m_geom_transform ? (geom() ? geom() : m_geom_transform) : nullptr; }
 	IC const dGeomID geometry_bt() const
 	{
 		if (is_transformed_bt())

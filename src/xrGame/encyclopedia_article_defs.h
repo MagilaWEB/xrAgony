@@ -14,7 +14,7 @@ struct ARTICLE_DATA : public ISerializable
 		eInfoArticle
 	};
 
-	ARTICLE_DATA() : article_id(NULL), receive_time(0), readed(false), article_type(eEncyclopediaArticle) {}
+	ARTICLE_DATA() : article_id(nullptr), receive_time(0), readed(false), article_type(eEncyclopediaArticle) {}
 	ARTICLE_DATA(shared_str id, ALife::_TIME_ID time, EArticleType articleType)
 		: article_id(id), receive_time(time), readed(false), article_type(articleType)
 	{

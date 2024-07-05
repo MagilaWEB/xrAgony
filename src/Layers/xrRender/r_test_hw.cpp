@@ -15,7 +15,7 @@ BOOL xrRender_test_hw()
 	ZeroMemory(&wcex, sizeof(wcex));
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.lpfnWndProc = WndProc;
-	wcex.hInstance = GetModuleHandle(NULL);
+	wcex.hInstance = GetModuleHandle(nullptr);
 	wcex.lpszClassName = "TestDX11WindowClass";
 	if (!RegisterClassEx(&wcex))
 	{
@@ -25,7 +25,7 @@ BOOL xrRender_test_hw()
 
 	// Create window
 	HWND hWnd = CreateWindow("TestDX11WindowClass", "", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-		CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, NULL, NULL);
+		CW_USEDEFAULT, CW_USEDEFAULT, nullptr, nullptr, nullptr, nullptr);
 
 	if (!hWnd)
 	{
@@ -50,11 +50,11 @@ BOOL xrRender_test_hw()
 	D3D_FEATURE_LEVEL pFeatureLevels[] = { D3D_FEATURE_LEVEL_11_0 };
 	D3D_FEATURE_LEVEL FeatureLevel;
 
-	ID3D11Device* pd3dDevice = NULL;
-	ID3D11DeviceContext* pContext = NULL;
-	IDXGISwapChain* pSwapChain = NULL;
+	ID3D11Device* pd3dDevice = nullptr;
+	ID3D11DeviceContext* pContext = nullptr;
+	IDXGISwapChain* pSwapChain = nullptr;
 
-	HRESULT hr = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, pFeatureLevels, 1, D3D11_SDK_VERSION,
+	HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, pFeatureLevels, 1, D3D11_SDK_VERSION,
 		&sd, &pSwapChain, &pd3dDevice, &FeatureLevel, &pContext);
 
 	if (FAILED(hr))
@@ -65,7 +65,7 @@ BOOL xrRender_test_hw()
 	_RELEASE(pContext);
 
 	DestroyWindow(hWnd);
-	UnregisterClass("TestDX11WindowClass", GetModuleHandle(NULL));
+	UnregisterClass("TestDX11WindowClass", GetModuleHandle(nullptr));
 
 	return SUCCEEDED(hr);
 #else

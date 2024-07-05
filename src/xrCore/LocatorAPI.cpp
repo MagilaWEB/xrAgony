@@ -615,7 +615,7 @@ bool CLocatorAPI::Recurse(pcstr path)
 	glob_t globbuf;
 
 	globbuf.gl_offs = 256;
-	int result = glob(scanPath, GLOB_NOSORT, NULL, &globbuf);
+	int result = glob(scanPath, GLOB_NOSORT, nullptr, &globbuf);
 
 	if (0 != result)
 		return false;
@@ -1240,7 +1240,7 @@ void CLocatorAPI::file_from_archive(IReader*& R, pcstr fname, const file& desc)
 #if defined(WINDOWS)
 	u8* ptr = (u8*)MapViewOfFile(A.hSrcMap, FILE_MAP_READ, 0, start, sz);
 #elif defined(LINUX)
-	u8* ptr = (u8*)::mmap(NULL, sz, PROT_READ, MAP_SHARED, A.hSrcFile, start);
+	u8* ptr = (u8*)::mmap(nullptr, sz, PROT_READ, MAP_SHARED, A.hSrcFile, start);
 #endif
 
 	VERIFY3(ptr, "cannot create file mapping on file", fname);

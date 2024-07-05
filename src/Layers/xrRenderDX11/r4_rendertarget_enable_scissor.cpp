@@ -154,7 +154,7 @@ bool CRenderTarget::enable_scissor(light* L) // true if intersects near plane
 			//CHK_DX		(HW.pDevice->SetScissorRect(&R));
 		} else {
 			// __asm int 3;
-			RCache.set_Scissor(NULL);
+			RCache.set_Scissor(nullptr);
 		}
 	}
 

@@ -78,7 +78,7 @@ void ALDeviceList::Enumerate()
 		Msg("SOUND: OpenAL: system  default SndDevice name is %s", m_defaultDeviceName);
 
 		index = 0;
-		// go through device list (each device terminated with a single NULL, list terminated with double NULL)
+		// go through device list (each device terminated with a single nullptr, list terminated with double nullptr)
 		while (*devices != NULL)
 		{
 			ALCdevice* device = alcOpenDevice(devices);

@@ -17,7 +17,7 @@
 
 #define TALK_XML "talk.xml"
 
-CUITalkDialogWnd::CUITalkDialogWnd() : m_pNameTextFont(NULL)
+CUITalkDialogWnd::CUITalkDialogWnd() : m_pNameTextFont(nullptr)
 {
 	m_ClickedQuestionID = "";
 	mechanic_mode = false;
@@ -82,7 +82,7 @@ void CUITalkDialogWnd::InitTalkDialogWnd()
 	// шрифт для индикации имени персонажа в окне разговора
 	CUIXmlInit::InitFont(*m_uiXml, "font", 0, m_iNameTextColor, m_pNameTextFont);
 
-	CGameFont* pFont = NULL;
+	CGameFont* pFont = nullptr;
 	CUIXmlInit::InitFont(*m_uiXml, "font", 1, m_uOurReplicsColor, pFont);
 
 	SetWindowName("----CUITalkDialogWnd");

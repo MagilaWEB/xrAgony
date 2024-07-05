@@ -269,7 +269,7 @@ void door::on_change_state(door_state const state)
 		return;
 	}
 
-	change_state(nullptr); //Alundaio: NULL - no need to know who
+	change_state(nullptr); //Alundaio: nullptr - no need to know who
 }
 
 #ifdef DEBUG

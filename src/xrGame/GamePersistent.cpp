@@ -150,8 +150,8 @@ CGamePersistent::CGamePersistent(void)
 	}
 	else
 	{
-		pDemoFile = NULL;
-		eDemoStart = NULL;
+		pDemoFile = nullptr;
+		eDemoStart = nullptr;
 	}
 
 	eQuickLoad = Engine.Event.Handler_Attach("Game:QuickLoad", this);
@@ -504,7 +504,7 @@ void CGamePersistent::start_logo_intro()
 	if (Device.dwPrecacheFrame == 0)
 	{
 		m_intro_event.bind(this, &CGamePersistent::update_logo_intro);
-		if (0 == xr_strlen(m_game_params.m_game_or_spawn) && NULL == g_pGameLevel)
+		if (0 == xr_strlen(m_game_params.m_game_or_spawn) && nullptr == g_pGameLevel)
 		{
 			VERIFY(nullptr == m_intro);
 			m_intro = new CUISequencer();
@@ -635,7 +635,7 @@ void CGamePersistent::OnFrame()
 			}
 			else
 			{
-				CCameraBase* C = NULL;
+				CCameraBase* C = nullptr;
 				if (g_actor)
 				{
 					if (!Actor()->Holder())
@@ -679,7 +679,7 @@ void CGamePersistent::OnFrame()
 #else // MASTER_GOLD
 		if (g_actor && IsGameTypeSingle())
 		{
-			CCameraBase* C = NULL;
+			CCameraBase* C = nullptr;
 			if (!Actor()->Holder())
 				C = Actor()->cam_Active();
 			else

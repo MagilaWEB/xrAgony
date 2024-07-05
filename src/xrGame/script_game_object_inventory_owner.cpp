@@ -405,7 +405,7 @@ void CScriptGameObject::TransferItem(CScriptGameObject* pItem, CScriptGameObject
 {
 	if (!pItem || !pForWho)
 	{
-		::ScriptEngine->script_log(LuaMessageType::Error, "cannot transfer NULL item");
+		::ScriptEngine->script_log(LuaMessageType::Error, "cannot transfer nullptr item");
 		return;
 	}
 
@@ -440,7 +440,7 @@ void CScriptGameObject::TransferMoney(int money, CScriptGameObject* pForWho)
 {
 	if (!pForWho)
 	{
-		::ScriptEngine->script_log(LuaMessageType::Error, "cannot transfer money for NULL object");
+		::ScriptEngine->script_log(LuaMessageType::Error, "cannot transfer money for nullptr object");
 		return;
 	}
 	CInventoryOwner* pOurOwner = smart_cast<CInventoryOwner*>(&object());
@@ -617,12 +617,12 @@ LPCSTR CScriptGameObject::ProfileName()
 	if (!pInventoryOwner)
 	{
 		::ScriptEngine->script_log(LuaMessageType::Error, "ProfileName available only for InventoryOwner");
-		return NULL;
+		return nullptr;
 	}
 
 	shared_str profile_id = pInventoryOwner->CharacterInfo().Profile();
 	if (!profile_id || !profile_id.size())
-		return NULL;
+		return nullptr;
 	else
 		return *profile_id;
 }
@@ -634,7 +634,7 @@ LPCSTR CScriptGameObject::CharacterName()
 	if (!pInventoryOwner)
 	{
 		::ScriptEngine->script_log(LuaMessageType::Error, "CharacterName available only for InventoryOwner");
-		return NULL;
+		return nullptr;
 	}
 	return pInventoryOwner->Name();
 }
@@ -646,7 +646,7 @@ LPCSTR CScriptGameObject::CharacterIcon()
 	if (!pInventoryOwner)
 	{
 		::ScriptEngine->script_log(LuaMessageType::Error, "CharacterIconName available only for InventoryOwner");
-		return NULL;
+		return nullptr;
 	}
 	return pInventoryOwner->IconName();
 }
@@ -737,7 +737,7 @@ LPCSTR CScriptGameObject::CharacterCommunity()
 	if (!pInventoryOwner)
 	{
 		::ScriptEngine->script_log(LuaMessageType::Error, "CharacterCommunity available only for InventoryOwner");
-		return NULL;
+		return nullptr;
 	}
 	return *pInventoryOwner->CharacterInfo().Community().id();
 }
@@ -769,7 +769,7 @@ LPCSTR CScriptGameObject::sound_voice_prefix() const
 	if (!pInventoryOwner)
 	{
 		::ScriptEngine->script_log(LuaMessageType::Error, "sound_voice_prefix available only for InventoryOwner");
-		return NULL;
+		return nullptr;
 	}
 
 	return pInventoryOwner->SpecificCharacter().sound_voice_prefix();
@@ -781,7 +781,7 @@ ETaskState CScriptGameObject::GetGameTaskState(LPCSTR task_id)
 	shared_str shared_name = task_id;
 	CGameTask* t = Level().GameTaskManager().HasGameTask(shared_name, true);
 
-	if (NULL == t)
+	if (nullptr == t)
 		return eTaskStateDummy;
 
 	return t->GetTaskState();

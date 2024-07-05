@@ -13,13 +13,13 @@ void initialize_bindings()
 	while (true)
 	{
 		_keyboard& _k1 = keyboards[i1];
-		if (_k1.key_name == NULL)
+		if (_k1.key_name == nullptr)
 			break;
 		int i2 = i1;
 		while (true)
 		{
 			_keyboard& _k2 = keyboards[i2];
-			if (_k2.key_name == NULL)
+			if (_k2.key_name == nullptr)
 				break;
 			if (_k1.dik == _k2.dik && i1 != i2)
 			{
@@ -64,7 +64,7 @@ pcstr id_to_action_name(EGameActions _id)
 		++idx;
 	}
 	Msg("! cant find corresponding [action_name] for id");
-	return NULL;
+	return nullptr;
 }
 
 pcstr dik_to_keyname(int _dik)
@@ -73,7 +73,7 @@ pcstr dik_to_keyname(int _dik)
 	if (kb)
 		return kb->key_name;
 	else
-		return NULL;
+		return nullptr;
 }
 
 _keyboard* dik_to_ptr(int _dik, bool bSafe)
@@ -88,7 +88,7 @@ _keyboard* dik_to_ptr(int _dik, bool bSafe)
 	}
 	if (!bSafe)
 		Msg("! cant find corresponding [_keyboard] for dik '%d'", _dik);
-	return NULL;
+	return nullptr;
 }
 
 bool is_group_not_conflicted(_key_group g1, _key_group g2)
@@ -173,10 +173,10 @@ public:
 					!is_group_not_conflicted(binding->m_action->key_group, curr_pbinding->m_action->key_group);
 
 				if (binding->m_keyboard[0] == pkeyboard && b_conflict)
-					binding->m_keyboard[0] = NULL;
+					binding->m_keyboard[0] = nullptr;
 
 				if (binding->m_keyboard[1] == pkeyboard && b_conflict)
-					binding->m_keyboard[1] = NULL;
+					binding->m_keyboard[1] = nullptr;
 			}
 		}
 
@@ -209,7 +209,7 @@ public:
 	{
 		int action_id = action_name_to_id(args);
 		_binding* pbinding = &g_key_bindings[action_id];
-		pbinding->m_keyboard[m_work_idx] = NULL;
+		pbinding->m_keyboard[m_work_idx] = nullptr;
 
 		CStringTable::ReparseKeyBindings();
 	}
@@ -240,8 +240,8 @@ public:
 		for (int idx = 0; idx < bindings_count; ++idx)
 		{
 			_binding* pbinding = &g_key_bindings[idx];
-			pbinding->m_keyboard[0] = NULL;
-			pbinding->m_keyboard[1] = NULL;
+			pbinding->m_keyboard[0] = nullptr;
+			pbinding->m_keyboard[1] = nullptr;
 		}
 		bindConsoleCmds.clear();
 	}
@@ -275,8 +275,8 @@ public:
 		{
 			_binding* pbinding = &g_key_bindings[idx];
 			xr_sprintf(buff, "[%s] primary is[%s] secondary is[%s]", pbinding->m_action->action_name,
-				(pbinding->m_keyboard[0]) ? pbinding->m_keyboard[0]->key_local_name.c_str() : "NULL",
-				(pbinding->m_keyboard[1]) ? pbinding->m_keyboard[1]->key_local_name.c_str() : "NULL");
+				(pbinding->m_keyboard[0]) ? pbinding->m_keyboard[0]->key_local_name.c_str() : "nullptr",
+				(pbinding->m_keyboard[1]) ? pbinding->m_keyboard[1]->key_local_name.c_str() : "nullptr");
 			Log(buff);
 		}
 		Log("- --- Bind list end	---");

@@ -13,16 +13,16 @@
 #include "Feel_Sound.h"
 #include "xrServerEntities/smart_cast.h"
 
-ENGINE_API IGame_Level* g_pGameLevel = NULL;
+ENGINE_API IGame_Level* g_pGameLevel = nullptr;
 
 IGame_Level::IGame_Level()
 {
 	m_pCameras = new CCameraManager(true);
 	g_pGameLevel = this;
-	pLevel = NULL;
+	pLevel = nullptr;
 	bReady = false;
-	pCurrentEntity = NULL;
-	pCurrentViewEntity = NULL;
+	pCurrentEntity = nullptr;
+	pCurrentViewEntity = nullptr;
 	Device.DumpResourcesMemoryUsage();
 }
 

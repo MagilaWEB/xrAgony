@@ -26,7 +26,7 @@ void show(const bool topmost)
 	if (logoWindow)
 		return;
 
-	logoWindow = CreateDialog(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_STARTUP), nullptr, LogoWndProc);
+	logoWindow = CreateDialog(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDD_STARTUP), nullptr, LogoWndProc);
 	const HWND logoPicture = GetDlgItem(logoWindow, IDC_STATIC_LOGO);
 	RECT logoRect;
 	GetWindowRect(logoPicture, &logoRect);

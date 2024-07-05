@@ -325,7 +325,7 @@ void CRender::Render()
 
 	if (!(g_pGameLevel && g_hud))
 	{
-		Target->u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
+		Target->u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, nullptr, nullptr, HW.pBaseZB);
 		return;
 	}
 
@@ -557,7 +557,7 @@ void CRender::AfterWorldRender()
 		HW.pBaseRT->GetResource(&res);
 		HW.pContext->CopyResource(Target->rt_secondVP->pSurface, res);
 #else
-		IDirect3DSurface9* pBackBuffer = NULL;
+		IDirect3DSurface9* pBackBuffer = nullptr;
 		HW.pDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
 		D3DXLoadSurfaceFromSurface(Target->rt_secondVP->pRT, 0, 0, pBackBuffer, 0, 0, D3DX_DEFAULT, 0);
 		pBackBuffer->Release();

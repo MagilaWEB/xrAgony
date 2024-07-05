@@ -54,7 +54,7 @@ CPHMovementControl::CPHMovementControl(IGameObject* parent)
 #endif
 
 	m_material = 0;
-	m_capture = NULL;
+	m_capture = nullptr;
 	b_exect_position = true;
 	m_start_index = 0;
 	eOldEnvironment = peInAir;
@@ -82,7 +82,7 @@ CPHMovementControl::CPHMovementControl(IGameObject* parent)
 
 	fContactSpeed = 0.f;
 	fAirControlParam = 0.f;
-	m_character = NULL;
+	m_character = nullptr;
 	m_dwCurBox = 0xffffffff;
 	fCollisionDamageFactor = 1.f;
 	in_dead_area_count = 0;
@@ -197,7 +197,7 @@ void CPHMovementControl::Calculate(
 
 	*/
 	// IPhysicsShellHolder * O=di->DamageObject();
-	// SCollisionHitCallback* cc= O ? O->get_collision_hit_callback() : NULL;
+	// SCollisionHitCallback* cc= O ? O->get_collision_hit_callback() : nullptr;
 	ICollisionDamageInfo* cdi = CollisionDamageInfo();
 	if (cdi->HitCallback())
 		cdi->HitCallback()->call((m_character->PhysicsRefObject()), fMinCrashSpeed, fMaxCrashSpeed, fContactSpeed,
@@ -1085,7 +1085,7 @@ void CPHMovementControl::PHCaptureObject(CPhysicsShellHolder* object, u16 elemen
 
 Fvector CPHMovementControl::PHCaptureGetNearestElemPos(const CPhysicsShellHolder* object)
 {
-	R_ASSERT3((object->m_pPhysicsShell != NULL), "NO Phisics Shell for object ", *object->cName());
+	R_ASSERT3((object->m_pPhysicsShell != nullptr), "NO Phisics Shell for object ", *object->cName());
 
 	CPhysicsElement* ph_elem = object->m_pPhysicsShell->NearestToPoint(vPosition);
 
@@ -1307,7 +1307,7 @@ void CPHMovementControl::MulFrictionFactor(float f) { m_character->FrictionFacto
 IElevatorState* CPHMovementControl::ElevatorState()
 {
 	if (!m_character || !m_character->b_exist)
-		return NULL;
+		return nullptr;
 	return m_character->ElevatorState();
 	// m_character->SetElevator()
 }
@@ -1328,7 +1328,7 @@ BOOL CPHMovementControl::BorderTraceCallback(collide::rq_result& result, LPVOID 
 {
 	STraceBorderQParams& p = *(STraceBorderQParams*)params;
 	u16 mtl_idx = GAMEMTL_NONE_IDX;
-	CDB::TRI* T = NULL;
+	CDB::TRI* T = nullptr;
 	if (result.O)
 	{
 		return true;
@@ -1370,7 +1370,7 @@ void CPHMovementControl::TraceBorder(const Fvector& prev_position)
 	STraceBorderQParams p(this, dir);
 	storage.r_clear();
 	g_pGameLevel->ObjectSpace.RayQuery(
-		storage, RD, BorderTraceCallback, &p, NULL, smart_cast<IGameObject*>(m_character->PhysicsRefObject()));
+		storage, RD, BorderTraceCallback, &p, nullptr, smart_cast<IGameObject*>(m_character->PhysicsRefObject()));
 }
 
 void CPHMovementControl::UpdateObjectBox(CPHCharacter* ach)
@@ -1567,7 +1567,7 @@ void CPHMovementControl::SetNonInteractive(bool v)
 
 // dBodyID		CPHMovementControl::	GetBody						( )
 //{
-//	if(m_character) return m_character->get_body(); else return NULL;
+//	if(m_character) return m_character->get_body(); else return nullptr;
 //}
 
 void CPHMovementControl::GetCharacterVelocity(Fvector& velocity)
@@ -1601,7 +1601,7 @@ ObjectContactCallbackFun* CPHMovementControl::ObjectContactCallback()
 	if (m_character)
 		return m_character->ObjectContactCallBack();
 	else
-		return NULL;
+		return nullptr;
 }
 u16 CPHMovementControl::ContactBone() { return m_character->ContactBone(); }
 const ICollisionDamageInfo* CPHMovementControl::CollisionDamageInfo() const

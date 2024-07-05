@@ -243,7 +243,7 @@ void CResourceManager::_DeleteDecl(const SDeclaration* dcl)
 R_constant_table* CResourceManager::_CreateConstantTable(R_constant_table& C)
 {
 	if (C.empty())
-		return NULL;
+		return nullptr;
 
 	for (u32 it = 0; it < v_constant_tables.size(); it++)
 		if (v_constant_tables[it]->equal(C))
@@ -453,7 +453,7 @@ CMatrix* CResourceManager::_CreateMatrix(LPCSTR Name)
 {
 	R_ASSERT(Name && Name[0]);
 	if (0 == xr_stricmp(Name, "$null"))
-		return NULL;
+		return nullptr;
 
 	LPSTR N = LPSTR(Name);
 	map_Matrix::iterator I = m_matrices.find(N);
@@ -491,7 +491,7 @@ CConstant* CResourceManager::_CreateConstant(LPCSTR Name)
 {
 	R_ASSERT(Name && Name[0]);
 	if (0 == xr_stricmp(Name, "$null"))
-		return NULL;
+		return nullptr;
 
 	LPSTR N = LPSTR(Name);
 	map_Constant::iterator I = m_constants.find(N);
@@ -564,7 +564,7 @@ SMatrixList* CResourceManager::_CreateMatrixList(SMatrixList& L)
 			break;
 		}
 	if (bEmpty)
-		return NULL;
+		return nullptr;
 
 	for (u32 it = 0; it < lst_matrices.size(); it++)
 	{
@@ -596,7 +596,7 @@ SConstantList* CResourceManager::_CreateConstantList(SConstantList& L)
 			break;
 		}
 	if (bEmpty)
-		return NULL;
+		return nullptr;
 
 	for (u32 it = 0; it < lst_constants.size(); it++)
 	{

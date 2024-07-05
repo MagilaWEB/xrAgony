@@ -62,7 +62,7 @@ void CBackend::Invalidate()
 	state = nullptr;
 	ps = 0;
 	vs = 0;
-	DX10_ONLY(gs = NULL);
+	DX10_ONLY(gs = nullptr);
 #ifdef USE_DX11
 	hs = 0;
 	ds = 0;
@@ -93,10 +93,10 @@ void CBackend::Invalidate()
 	xforms.unmap();
 
 #if defined(USE_DX11)
-	m_pInputLayout = NULL;
+	m_pInputLayout = nullptr;
 	m_PrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 	m_bChangedRTorZB = false;
-	m_pInputSignature = NULL;
+	m_pInputSignature = nullptr;
 	for (int i = 0; i < MaxCBuffers; ++i)
 	{
 		m_aPixelConstants[i] = 0;
@@ -129,7 +129,7 @@ void CBackend::Invalidate()
 		textures_vs[vs_it++] = nullptr;
 }
 
-void CBackend::set_ClipPlanes(u32 _enable, Fplane* _planes /*=NULL */, u32 count /* =0*/)
+void CBackend::set_ClipPlanes(u32 _enable, Fplane* _planes /*=nullptr */, u32 count /* =0*/)
 {
 #if defined(USE_DX11)
 	// TODO: DX10: Implement in the corresponding vertex shaders
@@ -172,7 +172,7 @@ void CBackend::set_ClipPlanes(u32 _enable, Fplane* _planes /*=NULL */, u32 count
 }
 
 #ifndef DEDICATED_SREVER
-void CBackend::set_ClipPlanes(u32 _enable, Fmatrix* _xform /*=NULL */, u32 fmask /* =0xff */)
+void CBackend::set_ClipPlanes(u32 _enable, Fmatrix* _xform /*=nullptr */, u32 fmask /* =0xff */)
 {
 	if (0 == HW.Caps.geometry.dwClipPlanes)
 		return;
@@ -374,7 +374,7 @@ void CBackend::set_Textures(STextureList* _T)
 		// HW.pDevice->PSSetShaderResources(_last_ps, 1, &pRes);
 		SRVSManager.SetPSResource(_last_ps, pRes);
 #else
-		CHK_DX(HW.pDevice->SetTexture(_last_ps, NULL));
+		CHK_DX(HW.pDevice->SetTexture(_last_ps, nullptr));
 #endif
 	}
 	// clear remaining stages (VS)
@@ -390,7 +390,7 @@ void CBackend::set_Textures(STextureList* _T)
 		// HW.pDevice->VSSetShaderResources(_last_vs, 1, &pRes);
 		SRVSManager.SetVSResource(_last_vs, pRes);
 #else
-		CHK_DX(HW.pDevice->SetTexture(_last_vs + CTexture::rstVertex, NULL));
+		CHK_DX(HW.pDevice->SetTexture(_last_vs + CTexture::rstVertex, nullptr));
 #endif
 	}
 
@@ -446,7 +446,7 @@ void CBackend::set_Textures(STextureList* _T)
 }
 #else
 
-void CBackend::set_ClipPlanes(u32 _enable, Fmatrix* _xform /*=NULL */, u32 fmask /* =0xff */) {}
+void CBackend::set_ClipPlanes(u32 _enable, Fmatrix* _xform /*=nullptr */, u32 fmask /* =0xff */) {}
 void CBackend::set_Textures(STextureList* _T) {}
 
 #endif

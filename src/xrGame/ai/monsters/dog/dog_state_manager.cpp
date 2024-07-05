@@ -36,7 +36,7 @@ CStateManagerDog::CStateManagerDog(CAI_Dog* monster) : inherited(monster)
 	add_state(eStateHitted, new CStateMonsterHitted<CAI_Dog>(monster));
 	add_state(eStateControlled, new CStateMonsterControlled<CAI_Dog>(monster));
 	add_state(eStateHearHelpSound, new CStateMonsterHearHelpSound<CAI_Dog>(monster));
-	object->EatedCorpse = NULL;
+	object->EatedCorpse = nullptr;
 }
 
 void CStateManagerDog::execute()

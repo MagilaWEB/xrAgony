@@ -12,9 +12,9 @@
 #include <share.h>
 #endif
 
-void* FileDownload(LPCSTR fn, u32* pdwSize = NULL);
+void* FileDownload(LPCSTR fn, u32* pdwSize = nullptr);
 void FileCompress(const char* fn, const char* sign, void* data, u32 size);
-void* FileDecompress(const char* fn, const char* sign, u32* size = NULL);
+void* FileDecompress(const char* fn, const char* sign, u32* size = nullptr);
 
 class CFileWriter : public IWriter
 {

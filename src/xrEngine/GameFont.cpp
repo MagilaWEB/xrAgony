@@ -21,7 +21,7 @@ CGameFont::CGameFont(pcstr section, u32 flags)
 	fYStep = 0.0f;
 	uFlags = flags;
 	nNumChars = 0x100;
-	TCMap = NULL;
+	TCMap = nullptr;
 	Initialize(pSettings->r_string(section, "shader"), pSettings->r_string(section, "texture"));
 	if (pSettings->line_exist(section, "size"))
 	{
@@ -43,7 +43,7 @@ CGameFont::CGameFont(pcstr shader, pcstr texture, u32 flags)
 	fYStep = 0.0f;
 	uFlags = flags;
 	nNumChars = 0x100;
-	TCMap = NULL;
+	TCMap = nullptr;
 	Initialize(shader, texture);
 }
 
@@ -192,7 +192,7 @@ void CGameFont::OutSet(float x, float y)
 }
 
 void CGameFont::OutSetI(float x, float y) { OutSet(DI2PX(x), DI2PY(y)); }
-u32 CGameFont::smart_strlen(pcstr S) { return (IsMultibyte() ? mbhMulti2Wide(NULL, NULL, 0, S) : xr_strlen(S)); }
+u32 CGameFont::smart_strlen(pcstr S) { return (IsMultibyte() ? mbhMulti2Wide(nullptr, nullptr, 0, S) : xr_strlen(S)); }
 void CGameFont::OnRender()
 {
 	pFontRender->OnRender(*this);
@@ -207,7 +207,7 @@ u16 CGameFont::GetCutLengthPos(float fTargetWidth, pcstr pszText)
 	wchar_t* wsStr = (wchar_t*)malloc(MAX_MB_CHARS);
 	wchar_t wsPos[MAX_MB_CHARS];
 
-	if (wsStr != NULL)
+	if (wsStr != nullptr)
 	{
 		float fCurWidth = 0.0f, fDelta = 0.0f;
 
@@ -239,7 +239,7 @@ u16 CGameFont::SplitByWidth(u16* puBuffer, u16 uBufferSize, float fTargetWidth, 
 	wchar_t* wsStr = (wchar_t*)malloc(MAX_MB_CHARS);
 	wchar_t wsPos[MAX_MB_CHARS];
 
-	if (wsStr != NULL)
+	if (wsStr != nullptr)
 	{
 
 		float fCurWidth = 0.0f, fDelta = 0.0f;
@@ -345,7 +345,7 @@ float CGameFont::SizeOf_(pcstr s)
 	{
 		wchar_t wsStr[MAX_MB_CHARS];
 
-		mbhMulti2Wide(wsStr, NULL, MAX_MB_CHARS, s);
+		mbhMulti2Wide(wsStr, nullptr, MAX_MB_CHARS, s);
 
 		return SizeOf_(wsStr);
 	}

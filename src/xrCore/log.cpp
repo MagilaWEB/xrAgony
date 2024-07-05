@@ -233,15 +233,15 @@ void CreateLog(BOOL nl)
 		//-Alun
 
 		LogWriter = FS.w_open(logFName);
-		if (LogWriter == NULL)
+		if (LogWriter == nullptr)
 		{
 #if defined(WINDOWS)
-			MessageBox(NULL, "Can't create log file.", "Error", MB_ICONERROR);
+			MessageBox(nullptr, "Can't create log file.", "Error", MB_ICONERROR);
 #endif
 			abort();
 		}
 
-		time_t t = time(NULL);
+		time_t t = time(nullptr);
 		tm* ti = localtime(&t);
 		char buf[64];
 		strftime(buf, 64, "[%x %X]\t", ti);

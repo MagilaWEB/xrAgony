@@ -72,7 +72,7 @@ void CSpecificCharacter::load_shared(LPCSTR)
 
 #ifdef XRGAME_EXPORTS
 
-	LPCSTR start_dialog = pXML->Read("start_dialog", 0, NULL);
+	LPCSTR start_dialog = pXML->Read("start_dialog", 0, nullptr);
 	if (start_dialog)
 	{
 		data()->m_StartDialog = start_dialog;
@@ -143,8 +143,8 @@ void CSpecificCharacter::load_shared(LPCSTR)
 
 #ifdef XRGAME_EXPORTS
 
-	LPCSTR team = pXML->Read("community", 0, NULL);
-	R_ASSERT3(team != NULL, "'community' field not fulfiled for specific character", *m_OwnId);
+	LPCSTR team = pXML->Read("community", 0, nullptr);
+	R_ASSERT3(team != nullptr, "'community' field not fulfiled for specific character", *m_OwnId);
 
 	char* buf_str = xr_strdup(team);
 	xr_strlwr(buf_str);

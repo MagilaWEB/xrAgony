@@ -16,7 +16,7 @@
 #include "xrEngine/GameFont.h"
 
 #ifdef DEBUG
-CAttachableItem* CAttachableItem::m_dbgItem = NULL;
+CAttachableItem* CAttachableItem::m_dbgItem = nullptr;
 #endif
 
 CPhysicsShellHolder& CAttachableItem::object() const { return (item().object()); }

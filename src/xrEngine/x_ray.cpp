@@ -192,7 +192,7 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 	}
 	else if (E == eDisconnect)
 	{
-		if (pInput != NULL && TRUE == Engine.Event.Peek("KERNEL:quit"))
+		if (pInput != nullptr && TRUE == Engine.Event.Peek("KERNEL:quit"))
 			pInput->ClipCursor(false);
 
 		if (g_pGameLevel)

@@ -74,16 +74,16 @@ CCharacterPhysicsSupport::~CCharacterPhysicsSupport()
 CCharacterPhysicsSupport::CCharacterPhysicsSupport(EType atype, CEntityAlive* aentity)
 	: m_pPhysicsShell(aentity->PPhysicsShell()), m_EntityAlife(*aentity), mXFORM(aentity->XFORM()),
 	  m_ph_sound_player(aentity), m_interactive_motion(0), m_PhysicMovementControl(new CPHMovementControl(aentity)),
-	  m_eType(atype), m_eState(esAlive), m_physics_skeleton(NULL), m_ik_controller(NULL), m_BonceDamageFactor(1.f),
-	  m_collision_hit_callback(NULL), m_interactive_animation(NULL), m_physics_shell_animated(NULL),
+	  m_eType(atype), m_eState(esAlive), m_physics_skeleton(nullptr), m_ik_controller(nullptr), m_BonceDamageFactor(1.f),
+	  m_collision_hit_callback(nullptr), m_interactive_animation(nullptr), m_physics_shell_animated(nullptr),
 	  m_physics_shell_animated_time_destroy(u32(-1)), m_weapon_attach_bone(0), m_active_item_obj(0),
-	  m_hit_valide_time(u32(-1)), m_collision_activating_delay(NULL)
+	  m_hit_valide_time(u32(-1)), m_collision_activating_delay(nullptr)
 {
 	m_flags.assign(0);
 	m_flags.set(fl_death_anim_on, FALSE);
 	m_flags.set(fl_skeleton_in_shell, FALSE);
 	m_flags.set(fl_use_hit_anims, TRUE);
-	m_pPhysicsShell = NULL;
+	m_pPhysicsShell = nullptr;
 	switch (atype)
 	{
 	case etActor:
@@ -277,7 +277,7 @@ void CCharacterPhysicsSupport::SpawnInitPhysics(CSE_Abstract* e)
 	}
 	else
 	{
-		ActivateShell(NULL);
+		ActivateShell(nullptr);
 	}
 
 	CSE_PHSkeleton* po = smart_cast<CSE_PHSkeleton*>(e);
@@ -605,7 +605,7 @@ void CCharacterPhysicsSupport::in_UpdateCL()
 	}
 	// else if ( !m_EntityAlife.g_Alive( ) && !m_EntityAlife.use_simplified_visual( ) )
 	//{
-	// ActivateShell( NULL );
+	// ActivateShell( nullptr );
 	// m_PhysicMovementControl->DestroyCharacter( );
 	//}
 	else if (ik_controller())
@@ -1089,7 +1089,7 @@ void CCharacterPhysicsSupport::CreateShell(IGameObject* who, Fvector& dp, Fvecto
 	// shell create
 	R_ASSERT2(m_physics_skeleton, "No skeleton created!!");
 	m_pPhysicsShell = m_physics_skeleton;
-	m_physics_skeleton = NULL;
+	m_physics_skeleton = nullptr;
 	m_pPhysicsShell->set_Kinematics(K);
 	m_pPhysicsShell->RunSimulation();
 	m_pPhysicsShell->mXFORM.set(mXFORM);
@@ -1244,7 +1244,7 @@ void CCharacterPhysicsSupport::in_ChangeVisual()
 			m_pPhysicsShell->Deactivate();
 		xr_delete(m_pPhysicsShell);
 		if (m_EntityAlife.Visual())
-			ActivateShell(NULL);
+			ActivateShell(nullptr);
 	}
 }
 
@@ -1374,7 +1374,7 @@ void CCharacterPhysicsSupport::in_Die()
 	{
 		if (m_EntityAlife.use_simplified_visual())
 			return;
-		ActivateShell(NULL);
+		ActivateShell(nullptr);
 		m_PhysicMovementControl->DestroyCharacter();
 		return;
 	}

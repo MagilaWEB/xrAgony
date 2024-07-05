@@ -35,7 +35,7 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 		vBase = data->r_u32();
 		vCount = data->r_u32();
 
-		VERIFY(NULL == p_rm_Vertices);
+		VERIFY(nullptr == p_rm_Vertices);
 
 		p_rm_Vertices = RImplementation.getVB(ID);
 		p_rm_Vertices->AddRef();
@@ -49,7 +49,7 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 		iCount = data->r_u32();
 		dwPrimitives = iCount / 3;
 
-		VERIFY(NULL == p_rm_Indices);
+		VERIFY(nullptr == p_rm_Indices);
 		p_rm_Indices = RImplementation.getIB(ID);
 		p_rm_Indices->AddRef();
 
@@ -68,7 +68,7 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 			m_fast->vBase = def().r_u32();
 			m_fast->vCount = def().r_u32();
 
-			VERIFY(NULL == m_fast->p_rm_Vertices);
+			VERIFY(nullptr == m_fast->p_rm_Vertices);
 			m_fast->p_rm_Vertices = RImplementation.getVB(ID, true);
 			m_fast->p_rm_Vertices->AddRef();
 			fmt = RImplementation.getVB_Format(ID, true);
@@ -79,7 +79,7 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 			m_fast->iCount = def().r_u32();
 			m_fast->dwPrimitives = iCount / 3;
 
-			VERIFY(NULL == m_fast->p_rm_Indices);
+			VERIFY(nullptr == m_fast->p_rm_Indices);
 			m_fast->p_rm_Indices = RImplementation.getIB(ID, true);
 			m_fast->p_rm_Indices->AddRef();
 			// geom
@@ -97,7 +97,7 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 			u32 ID = data->r_u32();
 			vBase = data->r_u32();
 			vCount = data->r_u32();
-			VERIFY(NULL == p_rm_Vertices);
+			VERIFY(nullptr == p_rm_Vertices);
 			p_rm_Vertices = RImplementation.getVB(ID);
 			p_rm_Vertices->AddRef();
 
@@ -113,14 +113,14 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 			u32 vStride = D3DXGetFVFVertexSize(fvf);
 
 #if defined(USE_DX11)
-			VERIFY(NULL == p_rm_Vertices);
+			VERIFY(nullptr == p_rm_Vertices);
 			R_CHK(dx10BufferUtils::CreateVertexBuffer(&p_rm_Vertices, data->pointer(), vCount * vStride));
 			HW.stats_manager.increment_stats_vb(p_rm_Vertices);
 #else
 			BOOL bSoft = HW.Caps.geometry.bSoftware;
 			u32 dwUsage = D3DUSAGE_WRITEONLY | (bSoft ? D3DUSAGE_SOFTWAREPROCESSING : 0);
 			BYTE* bytes = nullptr;
-			VERIFY(NULL == p_rm_Vertices);
+			VERIFY(nullptr == p_rm_Vertices);
 			R_CHK(HW.pDevice->CreateVertexBuffer(vCount * vStride, dwUsage, 0, D3DPOOL_MANAGED, &p_rm_Vertices, nullptr));
 			HW.stats_manager.increment_stats_vb(p_rm_Vertices);
 			R_CHK(p_rm_Vertices->Lock(0, 0, (void**)&bytes, 0));
@@ -141,7 +141,7 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 			iBase = data->r_u32();
 			iCount = data->r_u32();
 			dwPrimitives = iCount / 3;
-			VERIFY(NULL == p_rm_Indices);
+			VERIFY(nullptr == p_rm_Indices);
 			p_rm_Indices = RImplementation.getIB(ID);
 			p_rm_Indices->AddRef();
 		}
@@ -158,13 +158,13 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 			//u32 dwUsage = /*D3DUSAGE_WRITEONLY |*/ (bSoft?D3DUSAGE_SOFTWAREPROCESSING:0);			
 			//BYTE* bytes = 0;
 
-			//VERIFY(NULL==p_rm_Indices);
+			//VERIFY(nullptr==p_rm_Indices);
 			//R_CHK
 			//(HW.pDevice->CreateIndexBuffer(iCount*2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &p_rm_Indices, 0));
 			//R_CHK(p_rm_Indices->Lock(0, 0, (void**)&bytes, 0));
 			//CopyMemory(bytes, data->pointer(), iCount*2);
 
-			VERIFY(NULL == p_rm_Indices);
+			VERIFY(nullptr == p_rm_Indices);
 			R_CHK(dx10BufferUtils::CreateIndexBuffer(&p_rm_Indices, data->pointer(), iCount * 2));
 			HW.stats_manager.increment_stats_ib(p_rm_Indices);
 #else
@@ -173,7 +173,7 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 				bSoft ? D3DUSAGE_SOFTWAREPROCESSING : 0); // indices are read in model-wallmarks code
 			BYTE* bytes = nullptr;
 
-			VERIFY(NULL == p_rm_Indices);
+			VERIFY(nullptr == p_rm_Indices);
 			R_CHK(
 				HW.pDevice->CreateIndexBuffer(iCount * 2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &p_rm_Indices, nullptr));
 			HW.stats_manager.increment_stats_ib(p_rm_Indices);

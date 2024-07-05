@@ -430,7 +430,7 @@ void CDbgLuaHelper::DrawVariable(lua_State* l, const char* name, bool bOpenTable
 	{
 		luabind::detail::object_rep* obj = static_cast<luabind::detail::object_rep*>(lua_touserdata(L, -1));
 		luabind::detail::lua_reference& r = obj->get_lua_table();
-		lua_State * ls = NULL;
+		lua_State * ls = nullptr;
 		r.get(ls);
 		DrawTable(ls, name);
 		return;

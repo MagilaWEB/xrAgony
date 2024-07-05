@@ -351,7 +351,7 @@ public:
 	virtual void on_matrix_change(const Fmatrix& prev) = 0;
 	// UsableScriptObject functions
 	virtual bool use(IGameObject* obj) = 0;
-	// строчка появляющаяся при наведении на объект (если NULL, то нет)
+	// строчка появляющаяся при наведении на объект (если nullptr, то нет)
 	virtual LPCSTR tip_text() = 0;
 	virtual void set_tip_text(LPCSTR text) = 0;
 	virtual void set_tip_text_default() = 0;

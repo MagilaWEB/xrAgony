@@ -37,7 +37,7 @@ void CHW::OnAppActivate()
 	if (m_pSwapChain && !m_ChainDesc.Windowed)
 	{
 		ShowWindow(m_ChainDesc.OutputWindow, SW_RESTORE);
-		m_pSwapChain->SetFullscreenState(TRUE, NULL);
+		m_pSwapChain->SetFullscreenState(TRUE, nullptr);
 	}
 }
 
@@ -45,7 +45,7 @@ void CHW::OnAppDeactivate()
 {
 	if (m_pSwapChain && !m_ChainDesc.Windowed)
 	{
-		m_pSwapChain->SetFullscreenState(FALSE, NULL);
+		m_pSwapChain->SetFullscreenState(FALSE, nullptr);
 		ShowWindow(m_ChainDesc.OutputWindow, SW_MINIMIZE);
 	}
 }
@@ -172,7 +172,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	R_CHK(pContext->QueryInterface(__uuidof(UserDefinedAnnotation), reinterpret_cast<void**>(&UserDefinedAnnotation)));
 #endif
 #else
-	_R = D3DX10CreateDeviceAndSwapChain(m_pAdapter, m_DriverType, NULL, createDeviceFlags, &sd, &m_pSwapChain, &pDevice);
+	_R = D3DX10CreateDeviceAndSwapChain(m_pAdapter, m_DriverType, nullptr, createDeviceFlags, &sd, &m_pSwapChain, &pDevice);
 
 	pContext = pDevice;
 	FeatureLevel = D3D_FEATURE_LEVEL_10_0;
@@ -235,7 +235,7 @@ void CHW::DestroyDevice()
 
 	//  Must switch to windowed mode to release swap chain
 	if (!m_ChainDesc.Windowed)
-		m_pSwapChain->SetFullscreenState(FALSE, NULL);
+		m_pSwapChain->SetFullscreenState(FALSE, nullptr);
 	_SHOW_REF("refCount:m_pSwapChain", m_pSwapChain);
 	_RELEASE(m_pSwapChain);
 
@@ -268,7 +268,7 @@ void CHW::Reset(HWND hwnd)
 
 	cd.Windowed = bWindowed;
 
-	m_pSwapChain->SetFullscreenState(!bWindowed, NULL);
+	m_pSwapChain->SetFullscreenState(!bWindowed, nullptr);
 
 	DXGI_MODE_DESC& desc = m_ChainDesc.BufferDesc;
 
@@ -529,14 +529,14 @@ void CHW::UpdateViews()
 	R = m_pSwapChain->GetBuffer(0, __uuidof(ID3DTexture2D), (LPVOID*)&pBuffer);
 	R_CHK(R);
 
-	R = pDevice->CreateRenderTargetView(pBuffer, NULL, &pBaseRT);
+	R = pDevice->CreateRenderTargetView(pBuffer, nullptr, &pBaseRT);
 	_RELEASE(pBuffer);
 	R_CHK(R);
 
 	//  Create Depth/stencil buffer
 	//  HACK: DX10: hard depth buffer format
 	// R_CHK	(pDevice->GetDepthStencilSurface	(&pBaseZB));
-	ID3DTexture2D* pDepthStencil = NULL;
+	ID3DTexture2D* pDepthStencil = nullptr;
 	D3D_TEXTURE2D_DESC descDepth;
 	descDepth.Width = sd.BufferDesc.Width;
 	descDepth.Height = sd.BufferDesc.Height;
@@ -550,12 +550,12 @@ void CHW::UpdateViews()
 	descDepth.CPUAccessFlags = 0;
 	descDepth.MiscFlags = 0;
 	R = pDevice->CreateTexture2D(&descDepth, // Texture desc
-		NULL, // Initial data
+		nullptr, // Initial data
 		&pDepthStencil); // [out] Texture
 	R_CHK(R);
 
 	//  Create Depth/stencil view
-	R = pDevice->CreateDepthStencilView(pDepthStencil, NULL, &pBaseZB);
+	R = pDevice->CreateDepthStencilView(pDepthStencil, nullptr, &pBaseZB);
 	R_CHK(R);
 
 	_RELEASE(pDepthStencil);

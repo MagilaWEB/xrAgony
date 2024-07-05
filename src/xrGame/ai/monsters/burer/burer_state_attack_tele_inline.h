@@ -113,7 +113,7 @@ void CStateBurerAttackTele<Object>::deactivate()
 			}
 			if (CGrenade* grenade = smart_cast<CGrenade*>(cur_object))
 			{
-				grenade->set_destroy_callback(NULL);
+				grenade->set_destroy_callback(nullptr);
 			}
 		}
 	}

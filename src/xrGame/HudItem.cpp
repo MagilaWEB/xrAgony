@@ -31,7 +31,7 @@ CHudItem::CHudItem()
 	EnableHudInertion(TRUE);
 	AllowHudInertion(TRUE);
 	m_bStopAtEndAnimIsRunning = false;
-	m_current_motion_def = NULL;
+	m_current_motion_def = nullptr;
 	m_started_rnd_anim_idx = u8(-1);
 	
 	//inertion
@@ -227,7 +227,7 @@ void CHudItem::UpdateCL()
 
 					const motion_marks::interval* Iprev = M.pick_mark(motion_prev_time);
 					const motion_marks::interval* Icurr = M.pick_mark(motion_curr_time);
-					if (Iprev == NULL && Icurr != NULL /* || M.is_mark_between(motion_prev_time, motion_curr_time)*/)
+					if (Iprev == nullptr && Icurr != nullptr /* || M.is_mark_between(motion_prev_time, motion_curr_time)*/)
 					{
 						OnMotionMark(m_startedMotionState, M);
 					}
@@ -237,7 +237,7 @@ void CHudItem::UpdateCL()
 			m_dwMotionCurrTm = Device.dwTimeGlobal;
 			if (m_dwMotionCurrTm > m_dwMotionEndTm)
 			{
-				m_current_motion_def = NULL;
+				m_current_motion_def = nullptr;
 				m_dwMotionStartTm = 0;
 				m_dwMotionEndTm = 0;
 				m_dwMotionCurrTm = 0;
@@ -267,7 +267,7 @@ void CHudItem::OnH_B_Independent(bool just_before_destroy)
 		g_player_hud->detach_item(this);
 		Msg("---Detaching hud item [%s][%d]", this->HudSection().c_str(), this->object().ID());
 	}*/
-	// SetHudItemData			(NULL);
+	// SetHudItemData			(nullptr);
 }
 
 void CHudItem::OnH_A_Independent()
@@ -338,7 +338,7 @@ void CHudItem::StopCurrentAnimWithoutCallback()
 	m_dwMotionEndTm = 0;
 	m_dwMotionCurrTm = 0;
 	m_bStopAtEndAnimIsRunning = false;
-	m_current_motion_def = NULL;
+	m_current_motion_def = nullptr;
 }
 
 BOOL CHudItem::GetHUDmode()
@@ -357,7 +357,7 @@ void CHudItem::PlayAnimIdle()
 	if (TryPlayAnimIdle())
 		return;
 
-	PlayHUDMotion("anm_idle", TRUE, NULL, GetState());
+	PlayHUDMotion("anm_idle", TRUE, nullptr, GetState());
 }
 
 bool CHudItem::TryPlayAnimIdle()
@@ -436,7 +436,7 @@ void CHudItem::OnMovementChanged(ACTOR_DEFS::EMoveCommand cmd)
 
 attachable_hud_item* CHudItem::HudItemData() const
 {
-	attachable_hud_item* hi = NULL;
+	attachable_hud_item* hi = nullptr;
 	if (!g_player_hud)
 		return hi;
 
@@ -448,5 +448,5 @@ attachable_hud_item* CHudItem::HudItemData() const
 	if (hi && hi->m_parent_hud_item == this)
 		return hi;
 
-	return NULL;
+	return nullptr;
 }

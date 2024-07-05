@@ -27,7 +27,7 @@ CShootingObject::CShootingObject()
 	reinit();
 }
 
-void CShootingObject::reinit() { m_pFlameParticles = NULL; }
+void CShootingObject::reinit() { m_pFlameParticles = nullptr; }
 void CShootingObject::Load(LPCSTR section)
 {
 	if (pSettings->line_exist(section, "light_disabled"))
@@ -199,7 +199,7 @@ void CShootingObject::StartParticles(
 	if (!particles_name)
 		return;
 
-	if (pParticles != NULL)
+	if (pParticles != nullptr)
 	{
 		UpdateParticles(pParticles, pos, vel);
 		return;
@@ -214,7 +214,7 @@ void CShootingObject::StartParticles(
 }
 void CShootingObject::StopParticles(CParticlesObject*& pParticles)
 {
-	if (pParticles == NULL)
+	if (pParticles == nullptr)
 		return;
 
 	pParticles->Stop();
@@ -296,7 +296,7 @@ void CShootingObject::OnShellDrop(const Fvector& play_pos, const Fvector& parent
 //партиклы дыма
 void CShootingObject::StartSmokeParticles(const Fvector& play_pos, const Fvector& parent_vel)
 {
-	CParticlesObject* pSmokeParticles = NULL;
+	CParticlesObject* pSmokeParticles = nullptr;
 	StartParticles(pSmokeParticles, *m_sSmokeParticlesCurrent, play_pos, parent_vel, true);
 }
 
@@ -324,12 +324,12 @@ void CShootingObject::StopFlameParticles()
 {
 	if (0 == m_sFlameParticlesCurrent.size())
 		return;
-	if (m_pFlameParticles == NULL)
+	if (m_pFlameParticles == nullptr)
 		return;
 
 	m_pFlameParticles->SetAutoRemove(true);
 	m_pFlameParticles->Stop();
-	m_pFlameParticles = NULL;
+	m_pFlameParticles = nullptr;
 }
 
 void CShootingObject::UpdateFlameParticles()
@@ -480,6 +480,6 @@ void CShootingObject::FireStart() { bWorking = true; }
 void CShootingObject::FireEnd() { bWorking = false; }
 void CShootingObject::StartShotParticles()
 {
-	CParticlesObject* pSmokeParticles = NULL;
+	CParticlesObject* pSmokeParticles = nullptr;
 	StartParticles(pSmokeParticles, *m_sShotParticles, m_vCurrentShootPos, m_vCurrentShootDir, true);
 }

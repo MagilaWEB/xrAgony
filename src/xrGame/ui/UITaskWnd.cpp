@@ -21,7 +21,7 @@
 #include "Actor.h"
 #include "xrUICore/Buttons/UICheckButton.h"
 
-CUITaskWnd::CUITaskWnd() { hint_wnd = NULL; }
+CUITaskWnd::CUITaskWnd() { hint_wnd = nullptr; }
 CUITaskWnd::~CUITaskWnd() { delete_data(m_pMapWnd); }
 void CUITaskWnd::Init()
 {

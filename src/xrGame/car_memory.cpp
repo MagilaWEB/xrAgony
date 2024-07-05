@@ -29,7 +29,7 @@ void car_memory::reload(LPCSTR section)
 #include "actor.h"
 bool car_memory::feel_vision_isRelevant(IGameObject* object)
 {
-	return (NULL != smart_cast<CActor*>(object));
+	return (nullptr != smart_cast<CActor*>(object));
 	//.	return			(false);
 }
 

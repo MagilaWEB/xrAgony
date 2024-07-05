@@ -18,7 +18,7 @@ extern const float ORIGIN_OFFSET_AIM;	// (zoomed inertia factor)
 extern const float TENDTO_SPEED;		// barrel return speed
 extern const float TENDTO_SPEED_AIM;	// (zoomed return speed)
 
-player_hud* g_player_hud = NULL;
+player_hud* g_player_hud = nullptr;
 Fvector _ancor_pos;
 Fvector _wpn_root_pos;
 Fvector m_hud_offset_pos = { 0.f, 0.f, 0.f }; //only in hud adj mode
@@ -390,7 +390,7 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 		m_model->CalculateBones_Invalidate();
 	}
 
-	R_ASSERT2(m_parent_hud_item, "parent hud item is NULL");
+	R_ASSERT2(m_parent_hud_item, "parent hud item is nullptr");
 	CPhysicItem& parent_object = m_parent_hud_item->object();
 	// R_ASSERT2		(parent_object, "object has no parent actor");
 	// IGameObject*		parent_object = static_cast_checked<IGameObject*>(&m_parent_hud_item->object());

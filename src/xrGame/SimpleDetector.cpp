@@ -9,7 +9,7 @@ CSimpleDetector::CSimpleDetector(void) { m_artefacts.m_af_rank = 1; }
 CSimpleDetector::~CSimpleDetector(void) {}
 void CSimpleDetector::CreateUI()
 {
-	R_ASSERT(NULL == m_ui);
+	R_ASSERT(nullptr == m_ui);
 	m_ui = new CUIArtefactDetectorSimple();
 	ui().construct(this);
 }

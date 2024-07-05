@@ -330,7 +330,7 @@ IReader* IReader::open_chunk_iterator(u32& ID, IReader* _prev)
 
 	// open
 	if (elapsed() < 8)
-		return NULL;
+		return nullptr;
 	ID = r_u32();
 	const size_t _size = r_u32();
 	if (ID & CFS_CompressMark)
@@ -477,7 +477,7 @@ CVirtualFileRW::CVirtualFileRW(pcstr cFileName)
 	// Open the file
 	hSrcFile = CreateFile(cFileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
 	R_ASSERT3(hSrcFile != INVALID_HANDLE_VALUE, cFileName, xrDebug::ErrorToString(GetLastError()));
-	Size = (int)GetFileSize(hSrcFile, NULL);
+	Size = (int)GetFileSize(hSrcFile, nullptr);
 	R_ASSERT3(Size, cFileName, xrDebug::ErrorToString(GetLastError()));
 
 	hSrcMap = CreateFileMapping(hSrcFile, 0, PAGE_READWRITE, 0, 0, 0);
@@ -505,7 +505,7 @@ CVirtualFileReader::CVirtualFileReader(pcstr cFileName)
 	// Open the file
 	hSrcFile = CreateFile(cFileName, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
 	R_ASSERT3(hSrcFile != INVALID_HANDLE_VALUE, cFileName, xrDebug::ErrorToString(GetLastError()));
-	Size = (int)GetFileSize(hSrcFile, NULL);
+	Size = (int)GetFileSize(hSrcFile, nullptr);
 	R_ASSERT3(Size, cFileName, xrDebug::ErrorToString(GetLastError()));
 
 	hSrcMap = CreateFileMapping(hSrcFile, 0, PAGE_READONLY, 0, 0, 0);

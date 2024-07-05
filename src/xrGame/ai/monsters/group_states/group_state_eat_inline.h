@@ -61,7 +61,7 @@ void CStateGroupEatAbstract::finalize()
 	}
 	if (this->object->character_physics_support()->movement()->PHCapture())
 		this->object->character_physics_support()->movement()->PHReleaseObject();
-	this->object->EatedCorpse = NULL;
+	this->object->EatedCorpse = nullptr;
 	this->object->b_end_state_eat = true;
 }
 
@@ -75,13 +75,13 @@ void CStateGroupEatAbstract::critical_finalize()
 			this->object->character_physics_support()->movement()->PHReleaseObject();
 		const_cast<CEntityAlive*>(this->object->EatedCorpse)->m_use_timeout = this->object->m_corpse_use_timeout;
 		const_cast<CEntityAlive*>(this->object->EatedCorpse)->set_lock_corpse(false);
-		this->object->EatedCorpse = NULL;
+		this->object->EatedCorpse = nullptr;
 		this->object->b_end_state_eat = true;
 	}
 	if (this->object->EnemyMan.get_enemy())
 		if (this->object->character_physics_support()->movement()->PHCapture())
 			this->object->character_physics_support()->movement()->PHReleaseObject();
-	this->object->EatedCorpse = NULL;
+	this->object->EatedCorpse = nullptr;
 	this->object->b_end_state_eat = true;
 }
 

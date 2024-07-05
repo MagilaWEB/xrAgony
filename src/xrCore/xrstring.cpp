@@ -7,7 +7,7 @@
 
 #include "FS_impl.h"
 
-XRCORE_API str_container* g_pStringContainer = NULL;
+XRCORE_API str_container* g_pStringContainer = nullptr;
 
 xrCriticalSection cs;
 
@@ -37,7 +37,7 @@ struct str_container_impl
 			candidate = candidate->next;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	void insert(str_value* value)
@@ -53,7 +53,7 @@ struct str_container_impl
 		{
 			str_value** current = &buffer[i];
 
-			while (*current != NULL)
+			while (*current != nullptr)
 			{
 				str_value* value = *current;
 				if (!value->dwReference)

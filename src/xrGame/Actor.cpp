@@ -91,7 +91,7 @@ static float IReceived = 0;
 static float ICoincidenced = 0;
 extern float cammera_into_collision_shift;
 
-string32 ACTOR_DEFS::g_quick_use_slots[4] = { NULL, NULL, NULL, NULL };
+string32 ACTOR_DEFS::g_quick_use_slots[4] = { 0, 0, 0, 0 };
 // skeleton
 
 static Fbox bbStandBox;
@@ -143,12 +143,12 @@ CActor::CActor() : CEntityAlive(), current_ik_cam_shift(0)
 	m_fFallTime = s_fFallTime;
 	m_bAnimTorsoPlayed = false;
 
-	m_pPhysicsShell = NULL;
+	m_pPhysicsShell = nullptr;
 
 	m_fFeelGrenadeRadius = 10.0f;
 	m_fFeelGrenadeTime = 1.0f;
 
-	m_holder = NULL;
+	m_holder = nullptr;
 	m_holderID = u16(-1);
 
 #ifdef DEBUG
@@ -158,15 +158,15 @@ CActor::CActor() : CEntityAlive(), current_ik_cam_shift(0)
 	//разрешить использование пояса в inventory
 	inventory().SetBeltUseful(true);
 
-	m_pPersonWeLookingAt = NULL;
-	m_pVehicleWeLookingAt = NULL;
-	m_pObjectWeLookingAt = NULL;
+	m_pPersonWeLookingAt = nullptr;
+	m_pVehicleWeLookingAt = nullptr;
+	m_pObjectWeLookingAt = nullptr;
 	m_bPickupMode = false;
 	m_bInfoDraw = false;
 
-	pStatGraph = NULL;
+	pStatGraph = nullptr;
 
-	m_pActorEffector = NULL;
+	m_pActorEffector = nullptr;
 
 	SetZoomAimingMode(false);
 
@@ -178,10 +178,10 @@ CActor::CActor() : CEntityAlive(), current_ik_cam_shift(0)
 	//Alundaio: Needed for car
 	m_vehicle_anims = new SActorVehicleAnims();
 	//-Alundaio
-	m_entity_condition = NULL;
+	m_entity_condition = nullptr;
 	m_iLastHitterID = u16(-1);
 	m_iLastHittingWeaponID = u16(-1);
-	m_statistic_manager = NULL;
+	m_statistic_manager = nullptr;
 	//-----------------------------------------------------------------------------------
 	m_memory = new CActorMemory(this);
 	m_bOutBorder = false;
@@ -199,7 +199,7 @@ CActor::CActor() : CEntityAlive(), current_ik_cam_shift(0)
 	// Alex ADD: for smooth crouch fix
 	CurrentHeight = 0.f;
 
-	m_night_vision = NULL;
+	m_night_vision = nullptr;
 	m_bNightVisionAllow = true;
 	m_bNightVisionOn = false;
 }
@@ -415,7 +415,7 @@ void CActor::Load(LPCSTR section)
 void CActor::PHHit(SHit& H) { m_pPhysics_support->in_Hit(H, false); }
 struct playing_pred
 {
-	IC bool operator()(ref_sound& s) { return (NULL != s._feedback()); }
+	IC bool operator()(ref_sound& s) { return (nullptr != s._feedback()); }
 };
 
 void CActor::Hit(SHit* pHDS)
@@ -799,7 +799,7 @@ void CActor::g_Physics(Fvector& _accel, float jump, float dt)
 			bool b_hit_initiated = di->GetAndResetInitiated();
 			Fvector hdir;
 			di->HitDir(hdir);
-			SetHitInfo(this, NULL, 0, Fvector().set(0, 0, 0), hdir);
+			SetHitInfo(this, nullptr, 0, Fvector().set(0, 0, 0), hdir);
 			//				Hit
 			//(m_PhysicMovementControl->gcontact_HealthLost,hdir,di->DamageInitiator(),m_PhysicMovementControl->ContactBone(),di->HitPos(),0.f,ALife::eHitTypeStrike);//s16(6
 			//+ 2*::Random.randI(0,2))
@@ -934,7 +934,7 @@ void CActor::UpdateCL()
 
 	if (g_Alive() && Level().CurrentViewEntity() == this)
 	{
-		if (CurrentGameUI() && NULL == CurrentGameUI()->TopInputReceiver())
+		if (CurrentGameUI() && nullptr == CurrentGameUI()->TopInputReceiver())
 		{
 			int dik = get_action_dik(kUSE, 0);
 			if (dik && pInput->iGetAsyncKeyState(dik))
@@ -1617,7 +1617,7 @@ void CActor::OnItemDrop(CInventoryItem* inventory_item, bool just_before_destroy
 	}
 
 	if (!just_before_destroy && inventory_item->BaseSlot() == GRENADE_SLOT &&
-		NULL == inventory().ItemFromSlot(GRENADE_SLOT))
+		nullptr == inventory().ItemFromSlot(GRENADE_SLOT))
 	{
 		PIItem grenade = inventory().SameSlot(GRENADE_SLOT, inventory_item, true);
 
@@ -2108,7 +2108,7 @@ bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 
 				SetCallbacks();
 
-				m_holder = NULL;
+				m_holder = nullptr;
 				m_holderID = u16(-1);
 
 				IKinematicsAnimated* V = smart_cast<IKinematicsAnimated*>(Visual()); R_ASSERT(V);
@@ -2149,7 +2149,7 @@ bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 
 				if (pCamBobbing) {
 					Cameras().RemoveCamEffector(eCEBobbing);
-					pCamBobbing = NULL;
+					pCamBobbing = nullptr;
 				}
 
 				if (actor_camera_shell)
@@ -2202,7 +2202,7 @@ void CActor::on_requested_spawn(IGameObject* object)
 	character_physics_support()->movement()->SetPosition(oHolder->ExitPosition());
 	character_physics_support()->movement()->SetVelocity(oHolder->ExitVelocity());
 
-	m_holder = NULL;
+	m_holder = nullptr;
 	m_holderID = (u16)(-1);
 
 	use_HolderEx(oHolder, true);

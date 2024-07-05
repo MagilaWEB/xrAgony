@@ -397,7 +397,7 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 		u32 vStride = D3DXGetDeclVertexSize(dwDecl_01W, 0);
 		VERIFY(vStride == sizeof(vertHW_1W));
 		//BYTE* bytes = 0;
-		VERIFY(NULL == V.p_rm_Vertices);
+		VERIFY(nullptr == V.p_rm_Vertices);
 
 		//R_CHK
 		//(HW.pDevice->CreateVertexBuffer(V.vCount*vStride, dwUsage, 0, D3DPOOL_MANAGED, &V.p_rm_Vertices, 0));
@@ -445,7 +445,7 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 		u32 vStride = D3DXGetDeclVertexSize(dwDecl_2W, 0);
 		VERIFY(vStride == sizeof(vertHW_2W));
 		// BYTE* bytes = 0;
-		VERIFY(NULL == V.p_rm_Vertices);
+		VERIFY(nullptr == V.p_rm_Vertices);
 
 		//R_CHK
 		//(HW.pDevice->CreateVertexBuffer(V.vCount*vStride, dwUsage, 0, D3DPOOL_MANAGED, &V.p_rm_Vertices, 0));
@@ -494,7 +494,7 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 
 		VERIFY(vStride == sizeof(vertHW_3W));
 		//BYTE* bytes = 0;
-		VERIFY(NULL == V.p_rm_Vertices);
+		VERIFY(nullptr == V.p_rm_Vertices);
 
 		//R_CHK
 		//(HW.pDevice->CreateVertexBuffer(V.vCount*vStride, dwUsage, 0, D3DPOOL_MANAGED, &V.p_rm_Vertices, 0));
@@ -546,7 +546,7 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 
 		VERIFY(vStride == sizeof(vertHW_4W));
 		//BYTE* bytes = 0;
-		VERIFY(NULL == V.p_rm_Vertices);
+		VERIFY(nullptr == V.p_rm_Vertices);
 
 		//R_CHK
 		//(HW.pDevice->CreateVertexBuffer(V.vCount*vStride, dwUsage, 0, D3DPOOL_MANAGED, &V.p_rm_Vertices, 0));
@@ -606,7 +606,7 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 		u32 vStride = D3DXGetDeclVertexSize(dwDecl_01W, 0);
 		VERIFY(vStride == sizeof(vertHW_1W));
 		BYTE* bytes = nullptr;
-		VERIFY(NULL == V.p_rm_Vertices);
+		VERIFY(nullptr == V.p_rm_Vertices);
 		R_CHK(HW.pDevice->CreateVertexBuffer(V.vCount * vStride, dwUsage, 0, D3DPOOL_MANAGED, &V.p_rm_Vertices, nullptr));
 		HW.stats_manager.increment_stats_vb(V.p_rm_Vertices);
 		R_CHK(V.p_rm_Vertices->Lock(0, 0, (void**)&bytes, 0));
@@ -629,7 +629,7 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 		u32 vStride = D3DXGetDeclVertexSize(dwDecl_2W, 0);
 		VERIFY(vStride == sizeof(vertHW_2W));
 		BYTE* bytes = nullptr;
-		VERIFY(NULL == V.p_rm_Vertices);
+		VERIFY(nullptr == V.p_rm_Vertices);
 		R_CHK(HW.pDevice->CreateVertexBuffer(V.vCount * vStride, dwUsage, 0, D3DPOOL_MANAGED, &V.p_rm_Vertices, nullptr));
 		HW.stats_manager.increment_stats_vb(V.p_rm_Vertices);
 		R_CHK(V.p_rm_Vertices->Lock(0, 0, (void**)&bytes, 0));
@@ -653,7 +653,7 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 		u32 vStride = D3DXGetDeclVertexSize(dwDecl_3W, 0);
 		VERIFY(vStride == sizeof(vertHW_3W));
 		BYTE* bytes = nullptr;
-		VERIFY(NULL == V.p_rm_Vertices);
+		VERIFY(nullptr == V.p_rm_Vertices);
 		R_CHK(HW.pDevice->CreateVertexBuffer(V.vCount * vStride, dwUsage, 0, D3DPOOL_MANAGED, &V.p_rm_Vertices, nullptr));
 		HW.stats_manager.increment_stats_vb(V.p_rm_Vertices);
 		R_CHK(V.p_rm_Vertices->Lock(0, 0, (void**)&bytes, 0));
@@ -678,7 +678,7 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 		u32 vStride = D3DXGetDeclVertexSize(dwDecl_4W, 0);
 		VERIFY(vStride == sizeof(vertHW_4W));
 		BYTE* bytes = nullptr;
-		VERIFY(NULL == V.p_rm_Vertices);
+		VERIFY(nullptr == V.p_rm_Vertices);
 		R_CHK(HW.pDevice->CreateVertexBuffer(V.vCount * vStride, dwUsage, 0, D3DPOOL_MANAGED, &V.p_rm_Vertices, nullptr));
 		HW.stats_manager.increment_stats_vb(V.p_rm_Vertices);
 		R_CHK(V.p_rm_Vertices->Lock(0, 0, (void**)&bytes, 0));

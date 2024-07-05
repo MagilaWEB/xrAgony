@@ -72,6 +72,6 @@ void CMonsterCorpseManager::remove_links(IGameObject* O)
 {
 	if (corpse == O)
 	{
-		corpse = NULL;
+		corpse = nullptr;
 	}
 }

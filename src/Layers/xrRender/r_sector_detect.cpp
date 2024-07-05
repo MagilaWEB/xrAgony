@@ -21,12 +21,12 @@ int CRender::translateSector(IRender_Sector* pSector)
 
 IRender_Sector* CRender::detectSector(const Fvector& P)
 {
-	IRender_Sector* S = NULL;
+	IRender_Sector* S = nullptr;
 	Fvector dir;
 
 	dir.set(0, -1, 0);
 	S = detectSector(P, dir);
-	if (NULL == S)
+	if (nullptr == S)
 	{
 		dir.set(0, 1, 0);
 		S = detectSector(P, dir);

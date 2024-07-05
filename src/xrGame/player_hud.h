@@ -140,8 +140,8 @@ public:
 	void detach_item(CHudItem* item);
 	void detach_all_items()
 	{
-		m_attached_items[0] = NULL;
-		m_attached_items[1] = NULL;
+		m_attached_items[0] = nullptr;
+		m_attached_items[1] = nullptr;
 	};
 
 	void calc_transform(u16 attach_slot_idx, const Fmatrix& offset, Fmatrix& result);

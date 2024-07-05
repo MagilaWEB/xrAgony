@@ -114,7 +114,7 @@ void CTorch::Switch()
 
 		shared_str snd_name = pSettings->r_string(cNameSect(), "switch_sound");
 		m_switch_sound.create(snd_name.c_str(), st_Effect, sg_SourceType);
-		m_switch_sound.play(NULL, sm_2D);
+		m_switch_sound.play(nullptr, sm_2D);
 	}
 }
 
@@ -126,12 +126,12 @@ void CTorch::Switch(bool light_on)
 		if (light_on && !m_switched_on)
 		{
 			if (m_sounds.FindSoundItem("SndTurnOn", false))
-				m_sounds.PlaySound("SndTurnOn", pActor->Position(), NULL, !!pActor->HUDview());
+				m_sounds.PlaySound("SndTurnOn", pActor->Position(), nullptr, !!pActor->HUDview());
 		}
 		else if (!light_on && m_switched_on)
 		{
 			if (m_sounds.FindSoundItem("SndTurnOff", false))
-				m_sounds.PlaySound("SndTurnOff", pActor->Position(), NULL, !!pActor->HUDview());
+				m_sounds.PlaySound("SndTurnOff", pActor->Position(), nullptr, !!pActor->HUDview());
 		}
 	}
 

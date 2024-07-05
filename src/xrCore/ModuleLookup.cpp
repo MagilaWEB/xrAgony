@@ -37,7 +37,7 @@ namespace XRay
 
 		bool closed = false;
 
-		closed = FreeLibrary(static_cast<HMODULE>(handle)) != NULL;
+		closed = FreeLibrary(static_cast<HMODULE>(handle)) != FALSE;
 
 		if (closed == false)
 			Msg("! Failed to close DLL: %s", xrDebug::ErrorToString(GetLastError()));

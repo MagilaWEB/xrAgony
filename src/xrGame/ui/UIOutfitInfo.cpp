@@ -94,7 +94,7 @@ CUIOutfitInfo::CUIOutfitInfo()
 {
 	for (u32 i = 0; i < max_count; ++i)
 	{
-		m_items[i] = NULL;
+		m_items[i] = nullptr;
 	}
 }
 

@@ -203,7 +203,7 @@ public:
 
 	CRenderDevice() : m_dwWindowStyle(0), fWidth_2(0), fHeight_2(0)
 	{
-		m_hWnd = NULL;
+		m_hWnd = nullptr;
 		b_is_Active = FALSE;
 		b_is_Ready = FALSE;
 		Timer.Start();

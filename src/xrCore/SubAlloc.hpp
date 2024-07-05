@@ -190,7 +190,7 @@ static void* _STDCALL AllocUnitsRare(UINT indx)
 		{
 			GlueCount--;
 			i = U2B(Indx2Units[indx]);
-			return UnitsStart - pText > i ? (UnitsStart -= i) : NULL;
+			return UnitsStart - pText > i ? (UnitsStart -= i) : nullptr;
 		}
 	} while (!BList[i].avail());
 

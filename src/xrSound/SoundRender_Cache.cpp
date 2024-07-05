@@ -41,8 +41,8 @@ void CSoundRender_Cache::move2top(cache_line* line)
 	c_begin = line;
 
 	// internal verify
-	VERIFY(c_begin->prev == NULL);
-	VERIFY(c_end->next == NULL);
+	VERIFY(c_begin->prev == nullptr);
+	VERIFY(c_end->next == nullptr);
 }
 
 bool CSoundRender_Cache::request(cache_cat& cat, u32 id)

@@ -29,7 +29,7 @@ public:
 	void DisableAllPointers();
 	bool GetMapLocationsForObject(u16 id, xr_vector<CMapLocation*>& res);
 	void OnObjectDestroyNotify(u16 id);
-	void ResetStorage() { m_locations = NULL; };
+	void ResetStorage() { m_locations = nullptr; };
 #ifdef DEBUG
 	void Dump();
 #endif

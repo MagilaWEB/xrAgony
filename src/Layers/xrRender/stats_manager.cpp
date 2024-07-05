@@ -16,7 +16,7 @@ void stats_manager::increment_stats(u32 size, enum_stats_buffer_type type, _D3DP
 
 void stats_manager::increment_stats(u32 size, enum_stats_buffer_type type, _D3DPOOL location, void* buff_ptr)
 {
-	R_ASSERT(buff_ptr != NULL);
+	R_ASSERT(buff_ptr != nullptr);
 	R_ASSERT(type >= 0 && type < enum_stats_buffer_type_COUNT);
 	R_ASSERT(location >= 0 && location <= D3DPOOL_SCRATCH);
 	memory_usage_summary[type][location] += size;

@@ -450,7 +450,7 @@ public:
 	void SetAmmoElapsed(int ammo_count);
 
 	virtual void OnMagazineEmpty();
-	void SpawnAmmo(u32 boxCurr = 0xffffffff, LPCSTR ammoSect = NULL, u32 ParentID = 0xffffffff);
+	void SpawnAmmo(u32 boxCurr = 0xffffffff, LPCSTR ammoSect = nullptr, u32 ParentID = 0xffffffff);
 	bool SwitchAmmoType(u32 flags);
 
 	virtual float Get_PDM_Base() const { return m_pdm.m_fPDM_disp_base; };

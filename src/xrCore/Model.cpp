@@ -206,7 +206,7 @@ void PPM_CONTEXT::makeSuffix()
 void PPM_CONTEXT::read(_PPMD_FILE* fp, UINT PrevSym)
 {
 	STATE* p;
-	Suffix = NULL;
+	Suffix = nullptr;
 	NumStats = _PPMD_E_GETC(fp);
 	Flags = 0x10 * (PrevSym >= 0x40);
 	if (!NumStats)
@@ -221,7 +221,7 @@ void PPM_CONTEXT::read(_PPMD_FILE* fp, UINT PrevSym)
 			p->Successor->read(fp, p->Symbol);
 		}
 		else
-			p->Successor = NULL;
+			p->Successor = nullptr;
 		return;
 	}
 	Stats = (PPM_CONTEXT::STATE*)AllocUnits((NumStats + 2) >> 1);
@@ -241,7 +241,7 @@ void PPM_CONTEXT::read(_PPMD_FILE* fp, UINT PrevSym)
 			p->Successor->read(fp, p->Symbol);
 		}
 		else
-			p->Successor = NULL;
+			p->Successor = nullptr;
 		p->Freq = (p == Stats) ? (64) : (p[-1].Freq - p[0].Freq);
 		SummFreq += p->Freq;
 	}
@@ -268,7 +268,7 @@ PPM_CONTEXT::write( int o, FILE* fp )
 	if ( !NumStats ) {
 		f=(p=&oneState())->Freq;
 		if ( EscFreq )					  f=(2*f)/EscFreq;
-		f=CLAMP(f,1,127) | 0x80*(p->Successor != NULL);
+		f=CLAMP(f,1,127) | 0x80*(p->Successor != nullptr);
 		putc(f,fp);						 putc(p->Symbol,fp);
 		if ( p->Successor )				 p->Successor->write(o+1,fp);
 		return;
@@ -284,12 +284,12 @@ PPM_CONTEXT::write( int o, FILE* fp )
 		}
 	}
 	a=Stats->Freq+!Stats->Freq;			 f=(64*EscFreq+(b=a >> 1))/a;
-	f=CLAMP(f,1,127) | 0x80*(Stats->Successor != NULL);
+	f=CLAMP(f,1,127) | 0x80*(Stats->Successor != nullptr);
 	putc(f,fp);							 c=64;
 	for (p=Stats;p <= Stats+NumStats;p++) {
 		f=(64*p->Freq+b)/a;				 f += !f;
 		if (p != Stats)
-			putc((c-f) | 0x80*(p->Successor != NULL),fp);
+			putc((c-f) | 0x80*(p->Successor != nullptr),fp);
 		c=f;								putc(p->Symbol,fp);
 	}
 	for (p=Stats;p <= Stats+NumStats;p++)
@@ -323,7 +323,7 @@ PPM_CONTEXT* PPM_CONTEXT::cutOff(int Order)
 			if (Order < MaxOrder)
 				P_CALL(cutOff);
 			else
-				p->Successor = NULL;
+				p->Successor = nullptr;
 			if (!p->Successor && Order > O_BOUND)
 				goto REMOVE;
 			return this;
@@ -332,7 +332,7 @@ PPM_CONTEXT* PPM_CONTEXT::cutOff(int Order)
 		{
 		REMOVE:
 			SpecialFreeUnit(this);
-			return NULL;
+			return nullptr;
 		}
 	}
 	PrefetchData(Stats);
@@ -340,13 +340,13 @@ PPM_CONTEXT* PPM_CONTEXT::cutOff(int Order)
 	for (p = Stats + (i = NumStats); p >= Stats; p--)
 		if ((BYTE*)p->Successor < UnitsStart)
 		{
-			p->Successor = NULL;
+			p->Successor = nullptr;
 			SWAP(*p, Stats[i--]);
 		}
 		else if (Order < MaxOrder)
 			P_CALL(cutOff);
 		else
-			p->Successor = NULL;
+			p->Successor = nullptr;
 	if (i != NumStats && Order)
 	{
 		NumStats = i;
@@ -377,11 +377,11 @@ PPM_CONTEXT* PPM_CONTEXT::removeBinConts(int Order)
 		if ((BYTE*)p->Successor >= UnitsStart && Order < MaxOrder)
 			P_CALL(removeBinConts);
 		else
-			p->Successor = NULL;
+			p->Successor = nullptr;
 		if (!p->Successor && (!Suffix->NumStats || Suffix->Flags == 0xFF))
 		{
 			FreeUnits(this, 1);
-			return NULL;
+			return nullptr;
 		}
 		else
 			return this;
@@ -391,7 +391,7 @@ PPM_CONTEXT* PPM_CONTEXT::removeBinConts(int Order)
 		if ((BYTE*)p->Successor >= UnitsStart && Order < MaxOrder)
 			P_CALL(removeBinConts);
 		else
-			p->Successor = NULL;
+			p->Successor = nullptr;
 	return this;
 }
 
@@ -513,7 +513,7 @@ static PPM_CONTEXT* _FASTCALL ReduceOrder(PPM_CONTEXT::STATE* p, PPM_CONTEXT* pc
 	{
 		p1 = FoundState;
 		FoundState = p;
-		p->Successor = CreateSuccessors(FALSE, NULL, pc);
+		p->Successor = CreateSuccessors(FALSE, nullptr, pc);
 		FoundState = p1;
 	}
 	if (OrderFall == 1 && pc1 == MaxContext)
@@ -650,7 +650,7 @@ NO_LOOP:
 	{
 		PPM_CONTEXT* pc1 = (PPM_CONTEXT*)AllocContext();
 		if (!pc1)
-			return NULL;
+			return nullptr;
 		((DWORD*)pc1)[0] = ((DWORD*)&ct)[0];
 		((DWORD*)pc1)[1] = ((DWORD*)&ct)[1];
 		pc1->Suffix = pc;
@@ -661,7 +661,7 @@ NO_LOOP:
 
 static inline void UpdateModel(PPM_CONTEXT* MinContext)
 {
-	PPM_CONTEXT::STATE* p = NULL;
+	PPM_CONTEXT::STATE* p = nullptr;
 	PPM_CONTEXT* FSuccessor = FoundState->Successor;
 	PPM_CONTEXT* pc = MinContext->Suffix;
 	PPM_CONTEXT* pc1 = MaxContext;
@@ -822,7 +822,7 @@ inline void PPM_CONTEXT::encodeBinSymbol(int symbol)
 		InitEsc = ExpEscape[bs >> 10];
 		CharMask[rs.Symbol] = EscCount;
 		NumMasked = PrevSuccess = 0;
-		FoundState = NULL;
+		FoundState = nullptr;
 	}
 }
 inline void PPM_CONTEXT::decodeBinSymbol() const
@@ -848,7 +848,7 @@ inline void PPM_CONTEXT::decodeBinSymbol() const
 		InitEsc = ExpEscape[bs >> 10];
 		CharMask[rs.Symbol] = EscCount;
 		NumMasked = PrevSuccess = 0;
-		FoundState = NULL;
+		FoundState = nullptr;
 	}
 }
 inline void PPM_CONTEXT::update1(STATE* p)
@@ -892,7 +892,7 @@ inline void PPM_CONTEXT::encodeSymbol1(int symbol)
 			SubRange.low = LoCnt;
 			CharMask[p->Symbol] = EscCount;
 			i = NumMasked = NumStats;
-			FoundState = NULL;
+			FoundState = nullptr;
 			do
 			{
 				CharMask[(--p)->Symbol] = EscCount;
@@ -932,7 +932,7 @@ inline void PPM_CONTEXT::decodeSymbol1()
 			SubRange.low = HiCnt;
 			CharMask[p->Symbol] = EscCount;
 			i = NumMasked = NumStats;
-			FoundState = NULL;
+			FoundState = nullptr;
 			do
 			{
 				CharMask[(--p)->Symbol] = EscCount;
@@ -1220,7 +1220,7 @@ static void _STDCALL StartModelRare(int MaxOrder, MR_METHOD MRMethod)
 		}
 
 		MaxContext = (PPM_CONTEXT*)AllocContext();
-		MaxContext->Suffix = NULL;
+		MaxContext->Suffix = nullptr;
 
 		if (!trained_model || _PPMD_E_GETC(trained_model) > MaxOrder)
 		{
@@ -1230,7 +1230,7 @@ static void _STDCALL StartModelRare(int MaxOrder, MR_METHOD MRMethod)
 			{
 				MaxContext->Stats[i].Symbol = i;
 				MaxContext->Stats[i].Freq = 1;
-				MaxContext->Stats[i].Successor = NULL;
+				MaxContext->Stats[i].Successor = nullptr;
 			}
 		}
 		else
@@ -1254,7 +1254,7 @@ static void _STDCALL StartModelRare(int MaxOrder, MR_METHOD MRMethod)
 		///		InitSubAllocator();
 		RunLength = InitRL = -((MaxOrder < 12) ? MaxOrder : 12) - 1;
 		///		MaxContext = (PPM_CONTEXT*) AllocContext();
-		///		MaxContext->Suffix = NULL;
+		///		MaxContext->Suffix = nullptr;
 
 		MaxContext = context;
 		FoundState = 0;
@@ -1267,7 +1267,7 @@ static void _STDCALL StartModelRare(int MaxOrder, MR_METHOD MRMethod)
 					for( PrevSuccess=i=0;i < 256;i++)
 					{
 						MaxContext->Stats[i].Symbol=i;  MaxContext->Stats[i].Freq=1;
-						MaxContext->Stats[i].Successor=NULL;
+						MaxContext->Stats[i].Successor=nullptr;
 					}
 				}
 				else

@@ -628,4 +628,4 @@ void CPHWorld::GetState(V_PH_WORLD_STATE& state)
 	}
 }
 
-void CPHWorld::StepNumIterations(int num_it) { dWorldSetQuickStepNumIterations(NULL, num_it); }
+void CPHWorld::StepNumIterations(int num_it) { dWorldSetQuickStepNumIterations(nullptr, num_it); }

@@ -517,8 +517,8 @@ IC void CBoneInstance::construct()
 	mTransform.identity();
 	mRenderTransform.identity();
 
-	Callback = NULL;
-	Callback_Param = NULL;
+	Callback = nullptr;
+	Callback_Param = nullptr;
 	Callback_overwrite = FALSE;
 	Callback_type = 0;
 

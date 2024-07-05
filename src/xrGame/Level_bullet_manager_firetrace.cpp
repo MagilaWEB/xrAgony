@@ -51,7 +51,7 @@ BOOL CBulletManager::test_callback(const collide::ray_defs& rd, IGameObject* obj
 	if (entity && entity->g_Alive() && (entity->ID() != bullet->parent_id))
 	{
 		ICollisionForm* cform = entity->GetCForm();
-		if ((NULL != cform) && (cftObject == cform->Type()))
+		if ((nullptr != cform) && (cftObject == cform->Type()))
 		{
 			CActor* actor = smart_cast<CActor*>(entity);
 			CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(entity);
@@ -209,7 +209,7 @@ void CBulletManager::FireShotmark(SBullet* bullet, const Fvector& vDir, const Fv
 	}
 
 	ref_sound* pSound = (!mtl_pair || mtl_pair->CollideSounds.empty()) ?
-		NULL :
+		nullptr :
 		&mtl_pair->CollideSounds[::Random.randI(0, mtl_pair->CollideSounds.size())];
 
 	//проиграть звук
@@ -221,7 +221,7 @@ void CBulletManager::FireShotmark(SBullet* bullet, const Fvector& vDir, const Fv
 	}
 
 	LPCSTR ps_name = (!mtl_pair || mtl_pair->CollideParticles.empty()) ?
-		NULL :
+		nullptr :
 		*mtl_pair->CollideParticles[::Random.randI(0, mtl_pair->CollideParticles.size())];
 
 	SGameMtl* tgt_mtl = GMLib.GetMaterialByIdx(target_material);
@@ -328,7 +328,7 @@ void CBulletManager::DynamicObjectHit(CBulletManager::_event& E)
 	{
 
 
-		SHit Hit = SHit(hit_param.power, original_dir, NULL, u16(E.R.element), position_in_bone_space,
+		SHit Hit = SHit(hit_param.power, original_dir, nullptr, u16(E.R.element), position_in_bone_space,
 			hit_param.impulse, E.bullet.hit_type, E.bullet.armor_piercing, E.bullet.flags.aim_bullet);
 
 		Hit.GenHeader(u16(GE_HIT) & 0xffff, E.R.O->ID());

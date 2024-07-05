@@ -1500,7 +1500,7 @@ void CWeapon::SwitchState(u32 S)
 	if (bDebug)
 	{
 		Msg("---Server is going to send GE_WPN_STATE_CHANGE to [%d], weapon_section[%s], parent[%s]", S,
-			cNameSect().c_str(), H_Parent() ? H_Parent()->cName().c_str() : "NULL Parent");
+			cNameSect().c_str(), H_Parent() ? H_Parent()->cName().c_str() : "nullptr Parent");
 	}
 #endif // #ifndef MASTER_GOLD
 
@@ -1702,7 +1702,7 @@ bool CWeapon::ready_to_kill() const
 	if (!io)
 		return false;
 
-	if (io->inventory().ActiveItem() == NULL || io->inventory().ActiveItem()->object().ID() != ID())
+	if (io->inventory().ActiveItem() == nullptr || io->inventory().ActiveItem()->object().ID() != ID())
 		return false;
 	//-Alundaio
 	return (

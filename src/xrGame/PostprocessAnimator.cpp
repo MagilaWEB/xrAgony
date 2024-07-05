@@ -112,5 +112,5 @@ CPostprocessAnimatorControlled::CPostprocessAnimatorControlled(CEffectorControll
 	SetFactorFunc(fastdelegate::FastDelegate<float()>(m_controller, &CEffectorController::GetFactor));
 }
 
-CPostprocessAnimatorControlled::~CPostprocessAnimatorControlled() { m_controller->SetPP(NULL); }
+CPostprocessAnimatorControlled::~CPostprocessAnimatorControlled() { m_controller->SetPP(nullptr); }
 BOOL CPostprocessAnimatorControlled::Valid() { return m_controller->Valid(); }

@@ -70,7 +70,7 @@ CEntityCondition::CEntityCondition(CEntityAlive* object) : CEntityConditionSimpl
 	m_fDeltaPsyHealth = 0;
 
 	m_fHealthLost = 0.f;
-	m_pWho = NULL;
+	m_pWho = nullptr;
 	m_iWhoID = 0;
 
 	m_WoundVector.clear();
@@ -150,8 +150,8 @@ void CEntityCondition::reinit()
 	m_fDeltaPsyHealth = 0;
 
 	m_fHealthLost = 0.f;
-	m_pWho = NULL;
-	m_iWhoID = NULL;
+	m_pWho = nullptr;
+	m_iWhoID = 0;
 
 	ClearWounds();
 }
@@ -363,7 +363,7 @@ CWound* CEntityCondition::ConditionHit(SHit* pHDS)
 {
 	//кто нанес последний хит
 	m_pWho = pHDS->who;
-	m_iWhoID = (NULL != pHDS->who) ? pHDS->who->ID() : 0;
+	m_iWhoID = (nullptr != pHDS->who) ? pHDS->who->ID() : 0;
 
 	bool bAddWound = pHDS->add_wound;
 
@@ -416,7 +416,7 @@ CWound* CEntityCondition::ConditionHit(SHit* pHDS)
 		hit_power *= GetHitImmunity(pHDS->hit_type) - m_fBoostRadiationImmunity;
 		m_fDeltaRadiation += hit_power;
 		bAddWound = false;
-		return NULL;
+		return nullptr;
 		break;
 	case ALife::eHitTypeExplosion:
 		hit_power *= GetHitImmunity(pHDS->hit_type) - m_fBoostExplImmunity;
@@ -456,7 +456,7 @@ CWound* CEntityCondition::ConditionHit(SHit* pHDS)
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 

@@ -70,7 +70,7 @@ void CUISequenceSimpleItem::Load(CUIXml* xml, int idx)
 	m_flags.set(etiNeedPauseOff, 0 == xr_stricmp(str, "off"));
 	m_flags.set(etiNeedPauseSound, 0 == xr_stricmp(str, "on"));
 
-	str = xml->Read("guard_key", 0, NULL);
+	str = xml->Read("guard_key", 0, nullptr);
 	m_continue_dik_guard = -1;
 	if (str && !xr_stricmp(str, "any"))
 	{
@@ -243,7 +243,7 @@ void CUISequenceSimpleItem::Start()
 	m_owner->MainWnd()->AttachChild(m_UIWindow);
 
 	if (m_sound._handle())
-		m_sound.play(NULL, sm_2D);
+		m_sound.play(nullptr, sm_2D);
 
 	if (g_pGameLevel)
 	{

@@ -202,7 +202,7 @@ void CBaseGraviZone::PlayTeleParticles(CGameObject* pObject)
 	if (!PP)
 		return;
 
-	shared_str particle_str = NULL;
+	shared_str particle_str = nullptr;
 
 	//разные партиклы для объектов разного размера
 	if (pObject->Radius() < SMALL_OBJECT_RADIUS)
@@ -226,7 +226,7 @@ void CBaseGraviZone::StopTeleParticles(CGameObject* pObject)
 	CParticlesPlayer* PP = smart_cast<CParticlesPlayer*>(pObject);
 	if (!PP)
 		return;
-	shared_str particle_str = NULL;
+	shared_str particle_str = nullptr;
 
 	//разные партиклы для объектов разного размера
 	if (pObject->Radius() < SMALL_OBJECT_RADIUS)

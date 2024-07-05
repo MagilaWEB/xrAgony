@@ -361,14 +361,14 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 	LPCSTR s_shader = undercorated;
 
 	// Access to template
-	C.BT = NULL;
+	C.BT = nullptr;
 	C.bEditor = FALSE;
 	C.bDetail = FALSE;
 
 	// Prepare
 	_ParseList(C.L_textures, s_textures);
-	C.detail_texture = NULL;
-	C.detail_scaler = NULL;
+	C.detail_texture = nullptr;
+	C.detail_scaler = nullptr;
 
 	// Compile element	(LOD0 - HQ)
 	if (ScriptEngine.object(s_shader, "normal_hq", LUA_TFUNCTION))

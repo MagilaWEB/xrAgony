@@ -8,7 +8,7 @@
 ENGINE_API std::string dbg_object_base_dump_string(const IGameObject* obj)
 {
 	if (!obj)
-		return make_string("object: NULL ptr");
+		return make_string("object: nullptr ptr");
 	return make_string("object name: %s, section name: %s, visual name: %s \n", obj->cName().c_str(),
 		obj->cNameSect().c_str(), obj->Visual() ? obj->cNameVisual().c_str() : "none");
 }

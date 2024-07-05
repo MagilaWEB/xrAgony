@@ -78,7 +78,7 @@ IGameObject* CObjectList::FindObjectByCLS_ID(CLASS_ID cls)
 			return *O;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void CObjectList::o_remove(Objects& v, IGameObject* O)
@@ -340,7 +340,7 @@ void CObjectList::net_Unregister(IGameObject* O)
 {
 	// R_ASSERT (O->ID() < 0xffff);
 	if (O->ID() < 0xffff) // demo_spectator can have 0xffff
-		map_NETID[O->ID()] = NULL;
+		map_NETID[O->ID()] = nullptr;
 	/*
 	 xr_map<u32,IGameObject*>::iterator it = map_NETID.find(O->ID());
 	 if ((it!=map_NETID.end()) && (it->second == O)) {

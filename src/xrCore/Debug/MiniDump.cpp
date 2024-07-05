@@ -28,13 +28,13 @@ unsigned __stdcall DumpThread(LPVOID pData)
 
 	// Create the file first.
 	HANDLE hFile = CreateFileW(
-		pParams->szFileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		pParams->szFileName, GENERIC_READ | GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
 		MINIDUMP_EXCEPTION_INFORMATION stMDEI;
-		MINIDUMP_EXCEPTION_INFORMATION* pMDEI = NULL;
+		MINIDUMP_EXCEPTION_INFORMATION* pMDEI = nullptr;
 
-		if (pParams->pExceptInfo != NULL)
+		if (pParams->pExceptInfo != nullptr)
 		{
 			stMDEI.ThreadId = pParams->dwThreadID;
 			stMDEI.ExceptionPointers = pParams->pExceptInfo;
@@ -43,7 +43,7 @@ unsigned __stdcall DumpThread(LPVOID pData)
 		}
 		// Got the file open.  Write it.
 		BOOL bRet =
-			MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, pParams->eType, pMDEI, NULL, NULL);
+			MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, pParams->eType, pMDEI, nullptr, nullptr);
 		if (bRet == TRUE)
 		{
 			pParams->eReturnValue = WriteMiniDumpResult::DumpSucceeded;
@@ -89,7 +89,7 @@ WriteMiniDumpResult __stdcall WriteMiniDumpA(
 	{
 		eRetVal = WriteMiniDumpResult::BadParameter;
 	}
-	if (pWideFileName != NULL)
+	if (pWideFileName != nullptr)
 	{
 		HeapFree(GetProcessHeap(), 0, pWideFileName);
 	}
@@ -106,7 +106,7 @@ WriteMiniDumpResult __stdcall WriteMiniDumpW(
 		return WriteMiniDumpResult::BadParameter;
 	}
 	// If an exception pointer blob was passed in.
-	if (pExceptInfo != NULL)
+	if (pExceptInfo != nullptr)
 	{
 		if (IsBadReadPtr(pExceptInfo, sizeof(EXCEPTION_POINTERS)) == TRUE)
 		{
@@ -125,7 +125,7 @@ WriteMiniDumpResult __stdcall WriteMiniDumpW(
 
 	// Crank the writer thread.
 	unsigned dwTID;
-	HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, DumpThread, &stParams, 0, &dwTID);
+	HANDLE hThread = (HANDLE)_beginthreadex(nullptr, 0, DumpThread, &stParams, 0, &dwTID);
 	if ((HANDLE)-1 != hThread)
 	{
 		// The thread is running.  Block until the thread ends.

@@ -44,7 +44,7 @@ IConsole_Command* CConsole::GetCommand(LPCSTR cmd) const
 {
 	vecCMD_CIT it = Commands.find(cmd);
 	if (it == Commands.end())
-		return NULL;
+		return nullptr;
 	else
 		return it->second;
 }
@@ -75,7 +75,7 @@ LPCSTR CConsole::GetString(LPCSTR cmd) const
 {
 	IConsole_Command* cc = GetCommand(cmd);
 	if (!cc)
-		return NULL;
+		return nullptr;
 
 	static IConsole_Command::TStatus stat;
 	cc->Status(stat);
@@ -92,7 +92,7 @@ const xr_token* CConsole::GetXRToken(LPCSTR cmd) const
 	{
 		return cf->GetToken();
 	}
-	return NULL;
+	return nullptr;
 }
 
 Fvector* CConsole::GetFVectorPtr(LPCSTR cmd) const
@@ -103,7 +103,7 @@ Fvector* CConsole::GetFVectorPtr(LPCSTR cmd) const
 	{
 		return cf->GetValuePtr();
 	}
-	return NULL;
+	return nullptr;
 }
 
 Fvector CConsole::GetFVector(LPCSTR cmd) const

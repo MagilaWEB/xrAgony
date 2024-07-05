@@ -134,8 +134,8 @@ void CArtefact::OnH_A_Chield()
 	}
 	if (m_detectorObj)
 	{
-		m_detectorObj->m_currPatrolPath = NULL;
-		m_detectorObj->m_currPatrolVertex = NULL;
+		m_detectorObj->m_currPatrolPath = nullptr;
+		m_detectorObj->m_currPatrolVertex = nullptr;
 	}
 }
 
@@ -259,7 +259,7 @@ void CArtefact::StartLights()
 	if (!m_bLightsEnabled)
 		return;
 
-	VERIFY(m_pTrailLight == NULL);
+	VERIFY(m_pTrailLight == nullptr);
 	m_pTrailLight = ::Render->light_create();
 	bool const b_light_shadow = !!pSettings->r_bool(cNameSect(), "idle_light_shadow");
 
@@ -430,7 +430,7 @@ void CArtefact::OnStateSwitch(u32 S, u32 oldState)
 	};
 }
 
-void CArtefact::PlayAnimIdle() { PlayHUDMotion("anm_idle", FALSE, NULL, eIdle); }
+void CArtefact::PlayAnimIdle() { PlayHUDMotion("anm_idle", FALSE, nullptr, eIdle); }
 void CArtefact::OnAnimationEnd(u32 state)
 {
 	switch (state)
@@ -462,7 +462,7 @@ void CArtefact::FollowByPath(LPCSTR path_name, int start_idx, Fvector magic_forc
 		m_detectorObj->FollowByPath(path_name, start_idx, magic_force);
 }
 
-bool CArtefact::CanBeInvisible() { return (m_detectorObj != NULL); }
+bool CArtefact::CanBeInvisible() { return (m_detectorObj != nullptr); }
 void CArtefact::SwitchVisibility(bool b)
 {
 	if (m_detectorObj)
@@ -494,7 +494,7 @@ void CArtefact::CreateArtefactActivation()
 }
 
 SArtefactDetectorsSupport::SArtefactDetectorsSupport(CArtefact* A)
-	: m_parent(A), m_currPatrolPath(NULL), m_currPatrolVertex(NULL), m_switchVisTime(0)
+	: m_parent(A), m_currPatrolPath(nullptr), m_currPatrolVertex(nullptr), m_switchVisTime(0)
 {
 }
 

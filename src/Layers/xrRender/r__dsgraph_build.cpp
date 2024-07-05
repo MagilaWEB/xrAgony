@@ -255,7 +255,7 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 	{
 		mapSorted_Node* N = mapDistort.insertInAnyWay(distSQ);
 		N->second.ssa = SSA;
-		N->second.pObject = NULL;
+		N->second.pObject = nullptr;
 		N->second.pVisual = pVisual;
 		N->second.Matrix = Fidentity;
 		N->second.se = &*pVisual->shader->E[4]; // 4=L_special
@@ -272,7 +272,7 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 	if (sh->flags.bStrictB2F)
 	{
 		mapSorted_Node* N = mapSorted.insertInAnyWay(distSQ);
-		N->second.pObject = NULL;
+		N->second.pObject = nullptr;
 		N->second.pVisual = pVisual;
 		N->second.Matrix = Fidentity;
 		N->second.se = sh;
@@ -289,7 +289,7 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 	{
 		mapSorted_Node* N = mapEmissive.insertInAnyWay(distSQ);
 		N->second.ssa = SSA;
-		N->second.pObject = NULL;
+		N->second.pObject = nullptr;
 		N->second.pVisual = pVisual;
 		N->second.Matrix = Fidentity;
 		N->second.se = &*pVisual->shader->E[4]; // 4=L_special
@@ -299,7 +299,7 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 	{
 		mapSorted_Node* N = mapWmark.insertInAnyWay(distSQ);
 		N->second.ssa = SSA;
-		N->second.pObject = NULL;
+		N->second.pObject = nullptr;
 		N->second.pVisual = pVisual;
 		N->second.Matrix = Fidentity;
 		N->second.se = sh;

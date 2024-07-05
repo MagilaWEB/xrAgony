@@ -36,7 +36,7 @@ protected:
 	void UpdateAutoAim();
 
 public:
-	CCameraLook2(IGameObject* p, u32 flags = 0) : CCameraLook(p, flags) { m_locked_enemy = NULL; };
+	CCameraLook2(IGameObject* p, u32 flags = 0) : CCameraLook(p, flags) { m_locked_enemy = nullptr; };
 	virtual ~CCameraLook2() {}
 	virtual void OnActivate(CCameraBase* old_cam);
 	virtual void Update(Fvector& point, Fvector& noise_dangle);

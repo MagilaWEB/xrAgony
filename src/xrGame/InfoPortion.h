@@ -60,7 +60,7 @@ public:
 	const SInfoPortionData::INFO_ID_VECTOR&			DisableInfos()	const {return info_data()->m_DisableInfo;}
 
 			void									RunScriptActions		(const CGameObject* pOwner)
-{info_data()->m_InfoScriptHelper.Action(pOwner, NULL, NULL);}
+{info_data()->m_InfoScriptHelper.Action(pOwner, nullptr, nullptr);}
 
 	//текстовое представление информации
 			shared_str								GetText () const ;

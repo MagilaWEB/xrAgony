@@ -463,4 +463,4 @@ void CUIScrollBar::Draw()
 	inherited::Draw();
 }
 
-void CUIScrollBar::Refresh() { SendMessage(m_ScrollBox, SCROLLBOX_MOVE, NULL); }
+void CUIScrollBar::Refresh() { SendMessage(m_ScrollBox, SCROLLBOX_MOVE, nullptr); }

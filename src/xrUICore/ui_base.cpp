@@ -193,7 +193,7 @@ void ui_core::PopScissor()
 	m_Scissors.pop();
 
 	if (m_Scissors.empty())
-		::UIRender->SetScissor(NULL);
+		::UIRender->SetScissor(nullptr);
 	else
 	{
 		const Frect& top = m_Scissors.top();
@@ -269,7 +269,7 @@ shared_str ui_core::get_xml_name(LPCSTR fn)
 	if (!is_widescreen())
 	{
 		xr_sprintf(str, "%s", fn);
-		if (NULL == strext(fn))
+		if (nullptr == strext(fn))
 			xr_strcat(str, ".xml");
 	}
 	else
@@ -287,7 +287,7 @@ shared_str ui_core::get_xml_name(LPCSTR fn)
 		if (NULL == FS.exist(str_, "$game_config$", UI_PATH_WITH_DELIMITER, str))
 		{
 			xr_sprintf(str, "%s", fn);
-			if (NULL == strext(fn))
+			if (nullptr == strext(fn))
 				xr_strcat(str, ".xml");
 		}
 	}

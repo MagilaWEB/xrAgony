@@ -13,7 +13,7 @@
 
 namespace text_editor
 {
-base::base() : m_previous_action(NULL) {}
+base::base() : m_previous_action(nullptr) {}
 base::~base() { xr_delete(m_previous_action); }
 void base::on_assign(base* const prev_action) { m_previous_action = prev_action; }
 void base::on_key_press(line_edit_control* const control)

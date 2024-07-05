@@ -50,7 +50,7 @@ public:
 	virtual void OptimalFit(const Frect& r);
 
 	const shared_str& MapName() { return m_name; }
-	virtual CUIGlobalMapSpot* GlobalMapSpot() { return NULL; }
+	virtual CUIGlobalMapSpot* GlobalMapSpot() { return nullptr; }
 	virtual void Draw();
 	virtual void Update();
 	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData);

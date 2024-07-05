@@ -32,7 +32,7 @@ xrClientData::xrClientData() : IClient()
 
 void xrClientData::Clear()
 {
-	owner = NULL;
+	owner = nullptr;
 	net_Accepted = FALSE;
 };
 
@@ -250,9 +250,9 @@ void xrServer::entity_Destroy(CSE_Abstract*& P)
 	m_tID_Generator.vfFreeID(P->ID, Device.TimerAsync());
 
 	if (P->owner && P->owner->owner == P)
-		P->owner->owner = NULL;
+		P->owner->owner = nullptr;
 
-	P->owner = NULL;
+	P->owner = nullptr;
 	if (!ai().get_alife() || !P->m_bALifeControl)
 	{
 		F_entity_Destroy(P);
@@ -267,7 +267,7 @@ CSE_Abstract* xrServer::GetEntity(u32 Num)
 		if (C == Num)
 			return I->second;
 	};
-	return NULL;
+	return nullptr;
 };
 
 #ifdef DEBUG

@@ -37,7 +37,7 @@ public:
 	virtual void feel_touch_delete(IGameObject* O);
 	virtual bool feel_touch_contact(IGameObject* O);
 
-	bool IsAttacking() { return NULL != m_AttakingEntity; }
+	bool IsAttacking() { return nullptr != m_AttakingEntity; }
 protected:
 	virtual void UpdateCLChild();
 

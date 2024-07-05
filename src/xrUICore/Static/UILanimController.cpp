@@ -2,7 +2,7 @@
 #include "UILanimController.h"
 #include "xrEngine/LightAnimLibrary.h"
 
-color_animation::color_animation() : m_lanim(NULL), m_lanim_start_time(-1.0f), m_lanim_delay_time(0.0f)
+color_animation::color_animation() : m_lanim(nullptr), m_lanim_start_time(-1.0f), m_lanim_delay_time(0.0f)
 {
 	m_lanimFlags.zero();
 }

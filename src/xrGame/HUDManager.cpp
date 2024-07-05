@@ -74,7 +74,7 @@ void CHUDManager::Render_First()
 
 bool need_render_hud()
 {
-	IGameObject* O = g_pGameLevel ? g_pGameLevel->CurrentViewEntity() : NULL;
+	IGameObject* O = g_pGameLevel ? g_pGameLevel->CurrentViewEntity() : nullptr;
 	if (0 == O)
 		return false;
 

@@ -5,8 +5,8 @@
 RenderableBase::RenderableBase()
 {
 	renderable.xform.identity();
-	renderable.visual = NULL;
-	renderable.pROS = NULL;
+	renderable.visual = nullptr;
+	renderable.pROS = nullptr;
 	renderable.pROS_Allowed = TRUE;
 	ISpatial* self = dynamic_cast<ISpatial*>(this);
 	if (self)
@@ -20,8 +20,8 @@ RenderableBase::~RenderableBase()
 	::Render->model_Delete(renderable.visual);
 	if (renderable.pROS)
 		::Render->ros_destroy(renderable.pROS);
-	renderable.visual = NULL;
-	renderable.pROS = NULL;
+	renderable.visual = nullptr;
+	renderable.pROS = nullptr;
 }
 
 IRender_ObjectSpecific* RenderableBase::renderable_ROS()

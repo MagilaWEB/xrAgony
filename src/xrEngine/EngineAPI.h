@@ -91,5 +91,5 @@ ENGINE_API bool is_enough_address_space_available();
 #define DEL_INSTANCE(a)\
 	{\
 		Engine.External.pDestroy(a);\
-		a = NULL;\
+		a = nullptr;\
 	}

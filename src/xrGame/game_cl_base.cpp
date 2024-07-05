@@ -17,7 +17,7 @@ game_cl_GameState::game_cl_GameState()
 {
 	shedule.t_min = 5;
 	shedule.t_max = 20;
-	m_game_ui_custom = NULL;
+	m_game_ui_custom = nullptr;
 	shedule_register();
 
 	m_u16VotingEnabled			= 0;

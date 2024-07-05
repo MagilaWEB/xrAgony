@@ -305,7 +305,7 @@ void CWeaponMagazinedWGrenade::LaunchGrenade()
 		if (E)
 		{
 			CInventoryOwner* io = smart_cast<CInventoryOwner*>(H_Parent());
-			if (NULL == io->inventory().ActiveItem())
+			if (nullptr == io->inventory().ActiveItem())
 			{
 				Log("current_state", GetState());
 				Log("next_state", GetNextState());
@@ -657,9 +657,9 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 		if (IsZoomed())
 		{
 			if (m_bGrenadeMode)
-				PlayHUDMotion("anm_idle_g_aim", /*FALSE*/TRUE, NULL, GetState()); //AVO: fix fast anim switch
+				PlayHUDMotion("anm_idle_g_aim", /*FALSE*/TRUE, nullptr, GetState()); //AVO: fix fast anim switch
 			else
-				PlayHUDMotion("anm_idle_w_gl_aim", TRUE, NULL, GetState());
+				PlayHUDMotion("anm_idle_w_gl_aim", TRUE, nullptr, GetState());
 		}
 		else
 		{
@@ -683,11 +683,11 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 			if (m_bGrenadeMode)
 			{
 				if (act_state == 0)
-					PlayHUDMotion("anm_idle_g", /*FALSE*/TRUE, NULL, GetState()); //AVO: fix fast anim switch
+					PlayHUDMotion("anm_idle_g", /*FALSE*/TRUE, nullptr, GetState()); //AVO: fix fast anim switch
 				else if (act_state == 1)
-					PlayHUDMotion("anm_idle_sprint_g", TRUE, NULL, GetState());
+					PlayHUDMotion("anm_idle_sprint_g", TRUE, nullptr, GetState());
 				else if (act_state == 2)
-					PlayHUDMotion("anm_idle_moving_g", TRUE, NULL, GetState());
+					PlayHUDMotion("anm_idle_moving_g", TRUE, nullptr, GetState());
 #ifdef NEW_ANIMS //AVO: custom move animation
 				else if (act_state == 3)
 					if (isHUDAnimationExist("anm_idle_moving_crouch_g"))
@@ -697,11 +697,11 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 			else
 			{
 				if (act_state == 0)
-					PlayHUDMotion("anm_idle_w_gl", /*FALSE*/TRUE, NULL, GetState()); //AVO: fix fast anim switch
+					PlayHUDMotion("anm_idle_w_gl", /*FALSE*/TRUE, nullptr, GetState()); //AVO: fix fast anim switch
 				else if (act_state == 1)
-					PlayHUDMotion("anm_idle_sprint_w_gl", TRUE, NULL, GetState());
+					PlayHUDMotion("anm_idle_sprint_w_gl", TRUE, nullptr, GetState());
 				else if (act_state == 2)
-					PlayHUDMotion("anm_idle_moving_w_gl", TRUE, NULL, GetState());
+					PlayHUDMotion("anm_idle_moving_w_gl", TRUE, nullptr, GetState());
 #ifdef NEW_ANIMS //AVO: custom move animation
 				else if (act_state == 3)
 					if (isHUDAnimationExist("anm_idle_moving_crouch_w_gl"))

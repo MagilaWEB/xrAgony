@@ -17,7 +17,7 @@ class CUIMapLocationHint : public CUIFrameWindow
 	void SetInfoMode(u8 mode);
 
 public:
-	CUIMapLocationHint() : m_owner(NULL){};
+	CUIMapLocationHint() : m_owner(nullptr){};
 	virtual ~CUIMapLocationHint(){};
 
 	void Init(CUIXml& uiXml, LPCSTR path);

@@ -8,10 +8,10 @@ int g_svTextConsoleUpdateRate = 1;
 
 CTextConsole::CTextConsole()
 {
-	m_pMainWnd = NULL;
-	m_hConsoleWnd = NULL;
-	m_hLogWnd = NULL;
-	m_hLogWndFont = NULL;
+	m_pMainWnd = nullptr;
+	m_hConsoleWnd = nullptr;
+	m_hLogWnd = nullptr;
+	m_hLogWndFont = nullptr;
 
 	m_bScrollLog = true;
 	m_dwStartLine = 0;
@@ -21,7 +21,7 @@ CTextConsole::CTextConsole()
 	m_last_time = Device.dwTimeGlobal;
 }
 
-CTextConsole::~CTextConsole() { m_pMainWnd = NULL; }
+CTextConsole::~CTextConsole() { m_pMainWnd = nullptr; }
 //-------------------------------------------------------------------------------------------
 LRESULT CALLBACK TextConsole_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void CTextConsole::CreateConsoleWnd()
@@ -38,8 +38,8 @@ void CTextConsole::CreateConsoleWnd()
 	const char* wndclass = "TEXT_CONSOLE";
 
 	// Register the windows class
-	WNDCLASS wndClass = {0, TextConsole_WndProc, 0, 0, hInstance, NULL, LoadCursor(hInstance, IDC_ARROW),
-		GetStockBrush(GRAY_BRUSH), NULL, wndclass};
+	WNDCLASS wndClass = {0, TextConsole_WndProc, 0, 0, hInstance, nullptr, LoadCursor(hInstance, IDC_ARROW),
+		GetStockBrush(GRAY_BRUSH), nullptr, wndclass};
 	RegisterClass(&wndClass);
 
 	// Set the window's initial style
@@ -72,8 +72,8 @@ void CTextConsole::CreateLogWnd()
 	const char* wndclass = "TEXT_CONSOLE_LOG_WND";
 
 	// Register the windows class
-	WNDCLASS wndClass = {0, TextConsole_LogWndProc, 0, 0, hInstance, NULL, LoadCursor(NULL, IDC_ARROW),
-		GetStockBrush(BLACK_BRUSH), NULL, wndclass};
+	WNDCLASS wndClass = {0, TextConsole_LogWndProc, 0, 0, hInstance, nullptr, LoadCursor(nullptr, IDC_ARROW),
+		GetStockBrush(BLACK_BRUSH), nullptr, wndclass};
 	RegisterClass(&wndClass);
 
 	// Set the window's initial style
@@ -282,7 +282,7 @@ void CTextConsole::DrawLog(HDC hDC, RECT* pRect)
 		BOOL res = TextOut(hDC, 10, ypos, pOut, xr_strlen(pOut));
 		if (!res)
 		{
-			R_ASSERT2(0, "TextOut(..) return NULL");
+			R_ASSERT2(0, "TextOut(..) return nullptr");
 		}
 	}
 
@@ -321,7 +321,7 @@ void CTextConsole::OnFrame()
 	 {
 	 return;
 	 }
-	 */ InvalidateRect(m_hConsoleWnd, NULL, FALSE);
-	SetCursor(LoadCursor(NULL, IDC_ARROW));
+	 */ InvalidateRect(m_hConsoleWnd, nullptr, FALSE);
+	SetCursor(LoadCursor(nullptr, IDC_ARROW));
 	// m_bNeedUpdate = true;
 }

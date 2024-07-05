@@ -303,10 +303,10 @@ void CClimableObject::ObjectContactCallback(
 {
 	dxGeomUserData* usr_data_1 = PHRetrieveGeomUserData(c.geom.g1);
 	dxGeomUserData* usr_data_2 = PHRetrieveGeomUserData(c.geom.g2);
-	dxGeomUserData* usr_data_ch = NULL;
-	dxGeomUserData* usr_data_lad = NULL;
-	CClimableObject* this_object = NULL;
-	CPHCharacter* ch = NULL;
+	dxGeomUserData* usr_data_ch = nullptr;
+	dxGeomUserData* usr_data_lad = nullptr;
+	CClimableObject* this_object = nullptr;
+	CPHCharacter* ch = nullptr;
 	float norm_sign = 0.f;
 	if (bo1)
 	{

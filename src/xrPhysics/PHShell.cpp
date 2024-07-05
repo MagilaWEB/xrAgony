@@ -336,7 +336,7 @@ CPhysicsElement* CPHShell::get_Element(u16 bone_id)
 		CBoneInstance& instance = m_pKinematics->LL_GetBoneInstance(bone_id);
 		if (instance.callback() == BonesCallback || instance.callback() == StataticRootBonesCallBack)
 		{
-			return (instance.callback_type() == bctPhysics) ? (CPhysicsElement*)instance.callback_param() : NULL;
+			return (instance.callback_type() == bctPhysics) ? (CPhysicsElement*)instance.callback_param() : nullptr;
 		}
 	}
 
@@ -697,7 +697,7 @@ void CPHShell::AddElementRecursive(
 			}
 
 			// B.Callback_Param=root_e;
-			// B.Callback=NULL;
+			// B.Callback=nullptr;
 		}
 		else //
 		{

@@ -55,7 +55,7 @@ public:
 
 	void					Activate			(u16 slot, /*EActivationReason reason=eGeneral, */bool bForce=false);
 	
-	PIItem					ActiveItem			()const					{return (m_iActiveSlot==NO_ACTIVE_SLOT)?NULL:ItemFromSlot(m_iActiveSlot);}
+	PIItem					ActiveItem			()const					{return (m_iActiveSlot==NO_ACTIVE_SLOT)?nullptr:ItemFromSlot(m_iActiveSlot);}
 	PIItem					ItemFromSlot		(u16 slot) const;
 
 	bool Action(u16 cmd, u32 flags);

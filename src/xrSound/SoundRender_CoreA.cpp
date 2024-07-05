@@ -180,7 +180,7 @@ void CSoundRender_CoreA::_clear()
 		T->_destroy();
 		xr_delete(T);
 	}
-	// Reset the current context to NULL.
+	// Reset the current context to nullptr.
 	alcMakeContextCurrent(nullptr);
 	// Release the context and the device.
 	alcDestroyContext(pContext);

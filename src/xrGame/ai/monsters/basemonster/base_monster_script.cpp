@@ -197,7 +197,7 @@ bool CBaseMonster::bfAssignMovement(CScriptEntityAction* tpEntityAction)
 		ALife::_OBJECT_ID leader_id = group.commander_id();
 		bool const should_follow_leader = leader_id != (ALife::_OBJECT_ID)(-1) && leader_id != ID();
 		CCustomMonster* const leader =
-			should_follow_leader ? smart_cast<CCustomMonster*>(Level().Objects.net_Find(leader_id)) : NULL;
+			should_follow_leader ? smart_cast<CCustomMonster*>(Level().Objects.net_Find(leader_id)) : nullptr;
 
 		if (!should_follow_leader || !leader || (leader && !leader->GetScriptControl()))
 		{

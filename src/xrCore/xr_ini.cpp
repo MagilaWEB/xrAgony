@@ -27,7 +27,7 @@ int _cdecl _i64toa_s(int64_t value, char *str, size_t size, int radix)
 	char buffer[65], *pos;
 	size_t len;
 
-	if (!(str != NULL))
+	if (!(str != nullptr))
 		return MSVCRT_EINVAL;
 	if (!(size > 0))
 		return MSVCRT_EINVAL;
@@ -96,7 +96,7 @@ int _cdecl _ui64toa_s(uint64_t value, char *str, size_t size, int radix)
 	char buffer[65], *pos;
 	int digit;
 
-	if (!(str != NULL))
+	if (!(str != nullptr))
 		return MSVCRT_EINVAL;
 	if (!(size > 0))
 		return MSVCRT_EINVAL;
@@ -161,7 +161,7 @@ uint64_t _cdecl _strtoui64_l(const char *nptr, char **endptr, int base, locale_t
 	BOOL negative = FALSE;
 	uint64_t ret = 0;
 
-	if (!(nptr != NULL))
+	if (!(nptr != nullptr))
 		return 0;
 	if (!(base == 0 || base >= 2))
 		return 0;
@@ -227,7 +227,7 @@ uint64_t _cdecl _strtoui64_l(const char *nptr, char **endptr, int base, locale_t
 
 uint64_t _cdecl _strtoui64(const char *nptr, char **endptr, int base)
 {
-	return _strtoui64_l(nptr, endptr, base, NULL);
+	return _strtoui64_l(nptr, endptr, base, nullptr);
 }
 #endif
 
@@ -549,8 +549,8 @@ void CInifile::Load(IReader* F, pcstr path, allow_include_func_t allow_include_f
 				}
 
 				Item I;
-				I.first = name[0] ? name : NULL;
-				I.second = str2[0] ? str2 : NULL;
+				I.first = name[0] ? name : nullptr;
+				I.second = str2[0] ? str2 : nullptr;
 				//#ifdef DEBUG
 				// I.comment = m_flags.test(eReadOnly)?0:comment;
 				//#endif

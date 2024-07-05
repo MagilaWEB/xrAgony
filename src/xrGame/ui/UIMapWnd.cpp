@@ -22,25 +22,25 @@
 #include "UIPdaSpot.h"
 #include "xrEngine/xr_input.h" //remove me !!!
 
-CUIMapWnd* g_map_wnd = NULL; // quick temporary solution -(
+CUIMapWnd* g_map_wnd = nullptr; // quick temporary solution -(
 CUIMapWnd* GetMapWnd() { return g_map_wnd; }
 CUIMapWnd::CUIMapWnd()
 {
-	m_tgtMap = NULL;
-	m_GlobalMap = NULL;
+	m_tgtMap = nullptr;
+	m_GlobalMap = nullptr;
 	m_view_actor = false;
 	m_prev_actor_pos.set(0, 0);
 	m_currentZoom = 1.0f;
-	m_map_location_hint = NULL;
+	m_map_location_hint = nullptr;
 	m_map_move_step = 10.0f;
 #ifdef COC_USER_SPOT
 	m_UserSpotWnd = nullptr;
 #endif
 
-	//	UIMainMapHeader			= NULL;
+	//	UIMainMapHeader			= nullptr;
 	m_scroll_mode = false;
 	m_nav_timing = Device.dwTimeGlobal;
-	hint_wnd = NULL;
+	hint_wnd = nullptr;
 	g_map_wnd = this;
 	m_cur_location = nullptr;
 }
@@ -55,7 +55,7 @@ CUIMapWnd::~CUIMapWnd()
 		delete_data( m_dbg_text_hint );
 		delete_data( m_dbg_info );
 	#endif // DEBUG/**/
-	g_map_wnd = NULL;
+	g_map_wnd = nullptr;
 }
 
 void CUIMapWnd::Init(LPCSTR xml_name, LPCSTR start_from)
@@ -356,7 +356,7 @@ void CUIMapWnd::MapLocationRelcase(CMapLocation* ml)
 	{
 		CMapSpot* ms = smart_cast<CMapSpot*>(owner);
 		if (ms && ms->MapLocation() == ml) // CUITaskItem also can be a HintOwner
-			m_map_location_hint->SetOwner(NULL);
+			m_map_location_hint->SetOwner(nullptr);
 	}
 }
 
@@ -448,7 +448,7 @@ bool CUIMapWnd::OnMouseAction(float x, float y, EUIMessages mouse_action)
 		{
 #ifdef COC_MAP_SPOT_PROPS_BOX
 		case WINDOW_RBUTTON_UP:
-			ActivatePropertiesBox(NULL);
+			ActivatePropertiesBox(nullptr);
 			break;
 #endif
 		case WINDOW_MOUSE_MOVE:
@@ -526,13 +526,13 @@ void CUIMapWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 		case MAP_CHANGE_SPOT_HINT_ACT: // Кликнули по кнопке изменить название метки
 		{
 			ShowSettingsWindow(m_cur_location->ObjectID(), m_cur_location->GetLastPosition(), m_cur_location->GetLevelName());
-			m_cur_location = NULL;
+			m_cur_location = nullptr;
 			break;
 		}
 		case MAP_REMOVE_SPOT_ACT: // Кликнули по кнопке удалить метку
 		{
 			Level().MapManager().RemoveMapLocation(m_cur_location);
-			m_cur_location = NULL;
+			m_cur_location = nullptr;
 			break;
 		}
 		}
@@ -563,8 +563,8 @@ void CUIMapWnd::ActivatePropertiesBox(CUIWindow* w)
 	// Только для меток игрока
 	if (m_cur_location->IsUserDefined())
 	{
-		m_UIPropertiesBox->AddItem("st_pda_change_spot_hint", NULL, MAP_CHANGE_SPOT_HINT_ACT); // Изменяем название метки
-		m_UIPropertiesBox->AddItem("st_pda_delete_spot", NULL, MAP_REMOVE_SPOT_ACT); // Удаляем метку
+		m_UIPropertiesBox->AddItem("st_pda_change_spot_hint", nullptr, MAP_CHANGE_SPOT_HINT_ACT); // Изменяем название метки
+		m_UIPropertiesBox->AddItem("st_pda_delete_spot", nullptr, MAP_REMOVE_SPOT_ACT); // Удаляем метку
 	}
 
 	if (m_UIPropertiesBox->GetItemsCount() > 0)
@@ -693,7 +693,7 @@ void CUIMapWnd::ViewActor()
 	Fvector v = Level().CurrentEntity()->Position();
 	m_prev_actor_pos.set(v.x, v.z);
 
-	CUICustomMap* lm = NULL;
+	CUICustomMap* lm = nullptr;
 	u16 idx = GetIdxByName(Level().name());
 	if (idx != u16(-1))
 	{
@@ -777,7 +777,7 @@ void CUIMapWnd::HideHint(CUIWindow* parent)
 	}
 }
 
-void CUIMapWnd::HideCurHint() { m_map_location_hint->SetOwner(NULL); }
+void CUIMapWnd::HideCurHint() { m_map_location_hint->SetOwner(nullptr); }
 void CUIMapWnd::Hint(const shared_str& text)
 {
 	/*
@@ -853,7 +853,7 @@ CMapLocation* CUIMapWnd::UnderSpot(Fvector RealPosition, CUILevelMap* curr_map)
 	Fvector2 m_position_on_map;
 	Fvector2 m_position_mouse = curr_map->ConvertRealToLocal(RealPositionXZ, false);
 	float TargetLocationDistance = 100.0f;
-	CMapLocation* ml = NULL;
+	CMapLocation* ml = nullptr;
 
 	for (it = Spots.begin(); it != Spots.end(); ++it)
 	{

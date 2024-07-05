@@ -40,7 +40,7 @@ public:
 	virtual bool OnKeyboardPress(int key);
 	virtual bool OnKeyboardRelease(int key);
 
-	virtual CUIGameCustom* createGameUI() { return NULL; };
+	virtual CUIGameCustom* createGameUI() { return nullptr; };
 	virtual void SetGameUI(CUIGameCustom*){};
 
 	virtual void shedule_Update(u32 dt);

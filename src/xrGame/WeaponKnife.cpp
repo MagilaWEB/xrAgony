@@ -759,7 +759,7 @@ bool CWeaponKnife::SelectBestHitVictim(
 
 	if ((m_eHitType == m_eHitType_2) && (!m_spartial_query_res.empty()))
 	{
-		spartial_base_t::value_type tmp_best_victim = NULL;
+		spartial_base_t::value_type tmp_best_victim = nullptr;
 		best_victim_selector tmp_selector(tmp_parent->ID(), fendpos_dest, spartial_prefetch_radius, tmp_best_victim);
 		std::for_each(m_spartial_query_res.begin(), m_spartial_query_res.end(), tmp_selector);
 		m_spartial_query_res.clear();
@@ -790,11 +790,11 @@ IGameObject* CWeaponKnife::TryPick(Fvector const& start_pos, Fvector const& dir,
 {
 	collide::ray_defs tmp_rdefs(start_pos, dir, dist, CDB::OPT_FULL_TEST, collide::rqtObject);
 	m_ray_query_results.r_clear();
-	m_last_picked_obj = NULL;
+	m_last_picked_obj = nullptr;
 	VERIFY(H_Parent());
 	m_except_id = H_Parent()->ID();
 	Level().ObjectSpace.RayQuery(
-		m_ray_query_results, tmp_rdefs, &CWeaponKnife::RayQueryCallback, static_cast<LPVOID>(this), NULL, NULL);
+		m_ray_query_results, tmp_rdefs, &CWeaponKnife::RayQueryCallback, static_cast<LPVOID>(this), nullptr, nullptr);
 	return m_last_picked_obj;
 }
 
@@ -840,7 +840,7 @@ CWeaponKnife::best_victim_selector::best_victim_selector(
 	u16 except_id, Fvector const& pos, float const query_distance, spartial_base_t::value_type& dest_result)
 	: m_except_id(except_id), m_start_pos(pos), m_query_distance(query_distance), m_dest_result(dest_result)
 {
-	m_dest_result = NULL;
+	m_dest_result = nullptr;
 }
 
 CWeaponKnife::best_victim_selector::best_victim_selector(best_victim_selector const& copy)

@@ -37,7 +37,7 @@ public:
 	void InitItemInfo(Fvector2 pos, Fvector2 size, LPCSTR xml_name);
 	void InitItemInfo(LPCSTR xml_name);
 	void InitItem(
-		CUICellItem* pCellItem, CInventoryItem* pCompareItem = NULL, u32 item_price = u32(-1), LPCSTR trade_tip = NULL);
+		CUICellItem* pCellItem, CInventoryItem* pCompareItem = nullptr, u32 item_price = u32(-1), LPCSTR trade_tip = nullptr);
 
 	void TryAddConditionInfo(CInventoryItem& pInvItem, CInventoryItem* pCompareItem);
 	void TryAddWpnInfo(CInventoryItem& pInvItem, CInventoryItem* pCompareItem);

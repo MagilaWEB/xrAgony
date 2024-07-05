@@ -19,7 +19,7 @@ private:
 	void* handle;
 
 public:
-	Event() { handle = (void*)CreateEvent(NULL, FALSE, FALSE, NULL); }
+	Event() { handle = (void*)CreateEvent(nullptr, FALSE, FALSE, nullptr); }
 	~Event() { CloseHandle(handle); }
 
 	// Reset the event to the unsignalled state.

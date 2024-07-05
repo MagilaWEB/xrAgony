@@ -26,7 +26,7 @@ public:
 	{
 		if (children.size() > idx)
 			return children[idx];
-		return NULL;
+		return nullptr;
 	}
 };
 

@@ -147,7 +147,7 @@ dxGeom* dCreateTriList(dSpaceID space, dTriCallback* Callback, dTriArrayCallback
 
 		c.aabb_test = &dAABBTestTL;
 
-		//	c.aabb_test=NULL;
+		//	c.aabb_test=nullptr;
 		c.dtor = &dDestroyTriList;
 
 		dTriListClass = dCreateGeomClass(&c);

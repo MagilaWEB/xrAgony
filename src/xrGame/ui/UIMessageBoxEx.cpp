@@ -49,7 +49,7 @@ void CUIMessageBoxEx::OnNOClicked(CUIWindow* w, void* d)
 
 void CUIMessageBoxEx::SetText(LPCSTR text) { m_pMessageBox->SetText(text); }
 LPCSTR CUIMessageBoxEx::GetText() { return m_pMessageBox->GetText(); }
-void CUIMessageBoxEx::SendMessage(CUIWindow* pWnd, s16 msg, void* pData /* = NULL */)
+void CUIMessageBoxEx::SendMessage(CUIWindow* pWnd, s16 msg, void* pData /* = nullptr */)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
 	if (pWnd == m_pMessageBox)

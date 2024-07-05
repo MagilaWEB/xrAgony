@@ -4,7 +4,7 @@
 
 using namespace std;
 
-XRCORE_API smem_container* g_pSharedMemoryContainer = NULL;
+XRCORE_API smem_container* g_pSharedMemoryContainer = nullptr;
 
 // XXXX: TODO: Use a RAII type for lock enter/leave?
 

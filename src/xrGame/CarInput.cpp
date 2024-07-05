@@ -102,7 +102,7 @@ bool CCar::bfAssignObject(CScriptEntityAction* tpEntityAction)
 		}
 		return (false);
 	}
-	SCarLight* light = NULL;
+	SCarLight* light = nullptr;
 	if (m_lights.findLight(l_sBoneID, light))
 	{
 		switch (l_tObjectAction.m_tGoalType)
@@ -273,7 +273,7 @@ bool CCar::isObjectVisible(CScriptGameObject* O_)
 	{
 		if (!O_)
 		{
-			Msg("Attempt to call CCar::isObjectVisible method wihth passed NULL parameter");
+			Msg("Attempt to call CCar::isObjectVisible method wihth passed nullptr parameter");
 			return false;
 		}
 		IGameObject* O = &O_->object();
@@ -292,12 +292,12 @@ bool CCar::isObjectVisible(CScriptGameObject* O_)
 		dir_to_object.sub(to_point, from_point).normalize_safe();
 		float ray_length = from_point.distance_to(to_point);
 
-		BOOL res = Level().ObjectSpace.RayTest(from_point, dir_to_object, ray_length, collide::rqtStatic, NULL, NULL);
+		BOOL res = Level().ObjectSpace.RayTest(from_point, dir_to_object, ray_length, collide::rqtStatic, nullptr, nullptr);
 		return (0 == res);
 	}
 }
 
-bool CCar::HasWeapon() { return (m_car_weapon != NULL); }
+bool CCar::HasWeapon() { return (m_car_weapon != nullptr); }
 Fvector CCar::CurrentVel()
 {
 	Fvector lin_vel;

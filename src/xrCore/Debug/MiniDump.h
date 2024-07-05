@@ -58,7 +58,7 @@ PARAMETERS	  :
 				  Traditionally, the extension for dump files is .DMP.
 				  If the file exists, it will be overwritten.
 	dwThread	- The optional id of the thread that crashed.
-	pExceptInfo - The optional exception information.  This can be NULL
+	pExceptInfo - The optional exception information.  This can be nullptr
 				  to indicate no exception information is to be added
 				  to the dump.
 RETURNS		 :

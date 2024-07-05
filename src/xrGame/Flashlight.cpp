@@ -41,7 +41,7 @@ CFlashlight::~CFlashlight()
 
 bool CFlashlight::CheckCompatibilityInt(CHudItem* itm, u16* slot_to_activate)
 {
-	if (itm == NULL)
+	if (itm == nullptr)
 		return true;
 
 	CInventoryItem& iitm = itm->item();
@@ -83,7 +83,7 @@ bool  CFlashlight::CheckCompatibility(CHudItem* itm)
 	if (!inherited::CheckCompatibility(itm))
 		return false;
 
-	if (!CheckCompatibilityInt(itm, NULL))
+	if (!CheckCompatibilityInt(itm, nullptr))
 	{
 		HideDevice(true);
 		return			false;
@@ -111,7 +111,7 @@ void CFlashlight::ToggleDevice(bool bFastMode)
 	if (GetState() == eHidden)
 	{
 		PIItem iitem = m_pInventory->ActiveItem();
-		CHudItem* itm = (iitem) ? iitem->cast_hud_item() : NULL;
+		CHudItem* itm = (iitem) ? iitem->cast_hud_item() : nullptr;
 		u16 slot_to_activate = NO_ACTIVE_SLOT;
 
 		if (CheckCompatibilityInt(itm, &slot_to_activate))
@@ -175,9 +175,9 @@ void CFlashlight::OnStateSwitch(u32 S, u32 oldState)
 			if (pActor)
 			{
 				if (!m_switched_on)
-					m_sounds.PlaySound("SndTurnOn", pActor->Position(), NULL, !!pActor->HUDview());
+					m_sounds.PlaySound("SndTurnOn", pActor->Position(), nullptr, !!pActor->HUDview());
 				else
-					m_sounds.PlaySound("SndTurnOff", pActor->Position(), NULL, !!pActor->HUDview());
+					m_sounds.PlaySound("SndTurnOff", pActor->Position(), nullptr, !!pActor->HUDview());
 			}
 			PlayHUDMotion("anm_toggle", TRUE, this, GetState());
 			SetPending(TRUE);
@@ -186,7 +186,7 @@ void CFlashlight::OnStateSwitch(u32 S, u32 oldState)
 		{
 			CActor* pActor = smart_cast<CActor*>(H_Parent());
 			if (pActor)
-				m_sounds.PlaySound("SndTurnOn", pActor->Position(), NULL, !!pActor->HUDview());
+				m_sounds.PlaySound("SndTurnOn", pActor->Position(), nullptr, !!pActor->HUDview());
 			PlayHUDMotion("anm_toggle", TRUE, this, GetState());
 			SetPending(TRUE);
 		}break;
@@ -194,13 +194,13 @@ void CFlashlight::OnStateSwitch(u32 S, u32 oldState)
 		{
 			CActor* pActor = smart_cast<CActor*>(H_Parent());
 			if (pActor)
-				m_sounds.PlaySound("SndTurnOff", pActor->Position(), NULL, !!pActor->HUDview());
+				m_sounds.PlaySound("SndTurnOff", pActor->Position(), nullptr, !!pActor->HUDview());
 			PlayHUDMotion("anm_toggle", TRUE, this, GetState());
 			SetPending(TRUE);
 		}break;
 		case eIdleZoom:
 		{
-			PlayHUDMotion("anm_zoom", TRUE, NULL, GetState());
+			PlayHUDMotion("anm_zoom", TRUE, nullptr, GetState());
 			SetPending(FALSE);
 		}break;
 	}
@@ -371,7 +371,7 @@ void CFlashlight::UpdateVisibility()
 		bool bClimb = ((Actor()->MovingState() & mcClimb) != 0);
 		if (!bClimb)
 		{
-			CHudItem* huditem = (i0) ? i0->m_parent_hud_item : NULL;
+			CHudItem* huditem = (i0) ? i0->m_parent_hud_item : nullptr;
 			bool bChecked = !huditem || CheckCompatibilityInt(huditem, 0);
 
 			if (bChecked)
@@ -506,12 +506,12 @@ void CFlashlight::Switch(bool light_on, bool b_play_sound)
 		if (light_on && !m_switched_on)
 		{
 			if (b_play_sound && m_sounds.FindSoundItem("SndTurnOn", false))
-				m_sounds.PlaySound("SndTurnOn", pActor->Position(), NULL, !!pActor->HUDview());
+				m_sounds.PlaySound("SndTurnOn", pActor->Position(), nullptr, !!pActor->HUDview());
 		}
 		else if (!light_on && m_switched_on)
 		{
 			if (b_play_sound && m_sounds.FindSoundItem("SndTurnOff", false))
-				m_sounds.PlaySound("SndTurnOff", pActor->Position(), NULL, !!pActor->HUDview());
+				m_sounds.PlaySound("SndTurnOff", pActor->Position(), nullptr, !!pActor->HUDview());
 		}
 	}
 

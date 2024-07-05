@@ -68,7 +68,7 @@ void xrDebug::ShowMSGboxAboutError(LPCSTR title = "X-Ray A.G.O.N.Y. Engine", LPC
 	ShowWindow(GetActiveWindow(), SW_FORCEMINIMIZE);
 
 	MessageBox(
-		NULL,
+		nullptr,
 		description,
 		title,
 		MB_OK |
@@ -410,7 +410,7 @@ void xrDebug::DoExit(const std::string& message)
 {
 	FlushLog();
 #if defined(WINDOWS)
-	MessageBox(NULL, message.c_str(), "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+	MessageBox(nullptr, message.c_str(), "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 	TerminateProcess(GetCurrentProcess(), 1);
 #endif
 }

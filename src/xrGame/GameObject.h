@@ -189,27 +189,27 @@ public:
 	virtual void setReady(BOOL _ready) override { Props.net_Ready = _ready ? 1 : 0; }
 	virtual BOOL getReady() const override { return Props.net_Ready; }
 	// functions used for avoiding most of the smart_cast
-	virtual CAttachmentOwner* cast_attachment_owner() override { return NULL; }
-	virtual CInventoryOwner* cast_inventory_owner() override { return NULL; }
-	virtual CInventoryItem* cast_inventory_item() override { return NULL; }
-	virtual CEntity* cast_entity() override { return NULL; }
-	virtual CEntityAlive* cast_entity_alive() override { return NULL; }
-	virtual CActor* cast_actor() override { return NULL; }
+	virtual CAttachmentOwner* cast_attachment_owner() override { return nullptr; }
+	virtual CInventoryOwner* cast_inventory_owner() override { return nullptr; }
+	virtual CInventoryItem* cast_inventory_item() override { return nullptr; }
+	virtual CEntity* cast_entity() override { return nullptr; }
+	virtual CEntityAlive* cast_entity_alive() override { return nullptr; }
+	virtual CActor* cast_actor() override { return nullptr; }
 	virtual CGameObject* cast_game_object() override { return this; }
-	virtual CCustomZone* cast_custom_zone() override { return NULL; }
-	virtual CPhysicsShellHolder* cast_physics_shell_holder() override { return NULL; }
-	virtual IInputReceiver* cast_input_receiver() override { return NULL; }
-	virtual CParticlesPlayer* cast_particles_player() override { return NULL; }
-	virtual CArtefact* cast_artefact() override { return NULL; }
-	virtual CCustomMonster* cast_custom_monster() override { return NULL; }
-	virtual CAI_Stalker* cast_stalker() override { return NULL; }
-	virtual CScriptEntity* cast_script_entity() override { return NULL; }
-	virtual CWeapon* cast_weapon() override { return NULL; }
-	virtual CExplosive* cast_explosive() override { return NULL; }
-	virtual CSpaceRestrictor* cast_restrictor() override { return NULL; }
-	virtual CAttachableItem* cast_attachable_item() override { return NULL; }
-	virtual CHolderCustom* cast_holder_custom() override { return NULL; }
-	virtual CBaseMonster* cast_base_monster() override { return NULL; }
+	virtual CCustomZone* cast_custom_zone() override { return nullptr; }
+	virtual CPhysicsShellHolder* cast_physics_shell_holder() override { return nullptr; }
+	virtual IInputReceiver* cast_input_receiver() override { return nullptr; }
+	virtual CParticlesPlayer* cast_particles_player() override { return nullptr; }
+	virtual CArtefact* cast_artefact() override { return nullptr; }
+	virtual CCustomMonster* cast_custom_monster() override { return nullptr; }
+	virtual CAI_Stalker* cast_stalker() override { return nullptr; }
+	virtual CScriptEntity* cast_script_entity() override { return nullptr; }
+	virtual CWeapon* cast_weapon() override { return nullptr; }
+	virtual CExplosive* cast_explosive() override { return nullptr; }
+	virtual CSpaceRestrictor* cast_restrictor() override { return nullptr; }
+	virtual CAttachableItem* cast_attachable_item() override { return nullptr; }
+	virtual CHolderCustom* cast_holder_custom() override { return nullptr; }
+	virtual CBaseMonster* cast_base_monster() override { return nullptr; }
 	CShellLauncher* cast_shell_launcher() override { return nullptr; }
 	virtual bool feel_touch_on_contact(IGameObject*) override { return TRUE; }
 	// Utilities
@@ -355,7 +355,7 @@ public:
 	// UsableScriptObject functions
 	virtual bool use(IGameObject* obj) override;
 
-	//строчка появляющаяся при наведении на объект (если NULL, то нет)
+	//строчка появляющаяся при наведении на объект (если nullptr, то нет)
 	virtual LPCSTR tip_text() override;
 	virtual void set_tip_text(LPCSTR new_text) override;
 	virtual void set_tip_text_default() override;

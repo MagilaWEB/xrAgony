@@ -17,7 +17,7 @@ CUISubLine::CUISubLine(const CUISubLine& other)
 	m_color = other.m_color;
 	m_last_in_line = other.m_last_in_line;
 	m_text = other.m_text;
-	m_pTempLine = NULL;
+	m_pTempLine = nullptr;
 }
 
 CUISubLine& CUISubLine::operator=(const CUISubLine& other)
@@ -29,7 +29,7 @@ CUISubLine& CUISubLine::operator=(const CUISubLine& other)
 	return (*this);
 }
 
-CUISubLine::CUISubLine() : m_color(0), m_pTempLine(NULL), m_last_in_line(false)
+CUISubLine::CUISubLine() : m_color(0), m_pTempLine(nullptr), m_last_in_line(false)
 {
 }
 

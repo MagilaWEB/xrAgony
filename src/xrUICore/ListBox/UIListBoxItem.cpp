@@ -5,7 +5,7 @@
 #include "Static/UIStatic.h"
 #include "xrEngine/xr_input_xinput.h"
 
-CUIListBoxItem::CUIListBoxItem(float height) : m_text(NULL), tag(u32(-1))
+CUIListBoxItem::CUIListBoxItem(float height) : m_text(nullptr), tag(u32(-1))
 {
 	SetHeight(height);
 	m_text = AddTextField("", 10.0f);
@@ -29,7 +29,7 @@ void CUIListBoxItem::OnFocusReceive()
 
 void CUIListBoxItem::InitDefault() { InitTexture("ui_listline", "hud\\default"); }
 void CUIListBoxItem::SetFont(CGameFont* F) { m_text->SetFont(F); }
-CGameFont* CUIListBoxItem::GetFont() { return (m_text) ? m_text->GetFont() : NULL; }
+CGameFont* CUIListBoxItem::GetFont() { return (m_text) ? m_text->GetFont() : nullptr; }
 bool CUIListBoxItem::OnMouseDown(int mouse_btn)
 {
 	if (mouse_btn == MOUSE_1)

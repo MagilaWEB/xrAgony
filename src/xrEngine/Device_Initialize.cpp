@@ -15,13 +15,13 @@ void CRenderDevice::Initialize()
 	TimerMM.Start();
 
 	// Unless a substitute hWnd has been specified, create a window to render into
-	if (m_hWnd == NULL)
+	if (m_hWnd == nullptr)
 	{
 		const char* wndclass = "_XRAY_1.6";
 		// Register the windows class
 		HINSTANCE hInstance = (HINSTANCE)GetModuleHandle(0);
 		WNDCLASS wndClass = { 0, WndProc, 0, 0, hInstance, LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1)),
-			LoadCursor(NULL, IDC_ARROW), (HBRUSH)GetStockObject(BLACK_BRUSH), NULL, wndclass };
+			LoadCursor(nullptr, IDC_ARROW), (HBRUSH)GetStockObject(BLACK_BRUSH), nullptr, wndclass };
 		RegisterClass(&wndClass);
 		// Set the window's initial style
 		m_dwWindowStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP;

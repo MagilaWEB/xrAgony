@@ -11,9 +11,9 @@ struct SPHCharacterRestrictor
 	SPHCharacterRestrictor(ERestrictionType Ttype)
 	{
 		m_type = Ttype;
-		m_character = NULL;
-		m_restrictor = NULL;
-		m_restrictor_transform = NULL;
+		m_character = nullptr;
+		m_restrictor = nullptr;
+		m_restrictor_transform = nullptr;
 		m_restrictor_radius = 0.1f;
 	}
 	~SPHCharacterRestrictor() { Destroy(); };
@@ -51,10 +51,10 @@ struct TPHCharacterRestrictor : public SPHCharacterRestrictor
 		if (!(ud1 && ud2))
 			return;
 
-		CPHObject* o1 = NULL;
+		CPHObject* o1 = nullptr;
 		if (ud1)
 			o1 = ud1->ph_object;
-		CPHObject* o2 = NULL;
+		CPHObject* o2 = nullptr;
 		if (ud2)
 			o2 = ud2->ph_object;
 		if (!(o1 && o2))

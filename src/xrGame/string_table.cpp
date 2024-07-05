@@ -122,12 +122,12 @@ void CStringTable::Load(LPCSTR xml_file_full)
 
 	for (int i = 0; i < string_num; ++i)
 	{
-		LPCSTR string_name = uiXml.ReadAttrib(uiXml.GetRoot(), "string", i, "id", NULL);
+		LPCSTR string_name = uiXml.ReadAttrib(uiXml.GetRoot(), "string", i, "id", nullptr);
 
 		VERIFY3(pData->m_StringTable.find(string_name) == pData->m_StringTable.end(), "duplicate string table id",
 			string_name);
 
-		LPCSTR string_text = uiXml.Read(uiXml.GetRoot(), "string:text", i, NULL);
+		LPCSTR string_text = uiXml.Read(uiXml.GetRoot(), "string:text", i, nullptr);
 
 		if (m_bWriteErrorsToLog && string_text)
 			Msg("[string table] '%s' no translation in '%s'", string_name, pData->m_sLanguage.c_str());

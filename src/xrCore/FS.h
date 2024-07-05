@@ -178,7 +178,7 @@ struct IReaderBase_Test;
 struct XRCORE_API IReaderTestPolicy
 {
 	IReaderBase_Test* m_test;
-	IReaderTestPolicy() { m_test = NULL; }
+	IReaderTestPolicy() { m_test = nullptr; }
 	~IReaderTestPolicy(); // defined in FS.cpp
 };
 #endif // TESTING_IREADER
@@ -413,7 +413,7 @@ public:
 	IReader* open_chunk(u32 ID);
 
 	// iterators
-	IReader* open_chunk_iterator(u32& ID, IReader* previous = nullptr); // NULL=first
+	IReader* open_chunk_iterator(u32& ID, IReader* previous = nullptr); // nullptr=first
 
 	size_t find_chunk(u32 ID, bool* bCompressed = 0);
 

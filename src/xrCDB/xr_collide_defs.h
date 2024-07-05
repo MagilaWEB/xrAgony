@@ -101,7 +101,7 @@ struct ray_defs
 };
 struct rq_result
 {
-	IGameObject* O; // if NULL - static
+	IGameObject* O; // if nullptr - static
 	float range; // range to intersection
 	int element; // номер кости/номер треугольника
 

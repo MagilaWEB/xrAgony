@@ -622,7 +622,7 @@ float current_cover(CAI_Stalker* object)
 	position = object->eye_matrix.c;
 	direction = object->eye_matrix.k;
 	collide::rq_result ray_query_result;
-	BOOL result = Level().ObjectSpace.RayPick(position, direction, 10.f, collide::rqtStatic, ray_query_result, NULL);
+	BOOL result = Level().ObjectSpace.RayPick(position, direction, 10.f, collide::rqtStatic, ray_query_result, nullptr);
 
 	if (!result)
 		return (100.f);

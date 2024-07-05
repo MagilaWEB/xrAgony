@@ -205,7 +205,7 @@ public:
 class CCC_GameLanguage : public CCC_Token
 {
 public:
-	CCC_GameLanguage(LPCSTR N) : CCC_Token(N, &CStringTable::LanguageID, NULL) {};
+	CCC_GameLanguage(LPCSTR N) : CCC_Token(N, &CStringTable::LanguageID, nullptr) {};
 
 	virtual void Execute(LPCSTR args)
 	{
@@ -1074,7 +1074,7 @@ public:
 	virtual void Execute(LPCSTR args)
 	{
 		CCC_Integer::Execute(args);
-		// dWorldSetQuickStepNumIterations(NULL,phIterations);
+		// dWorldSetQuickStepNumIterations(nullptr,phIterations);
 		if (physics_world())
 			physics_world()->StepNumIterations(phIterations);
 	}
@@ -1376,7 +1376,7 @@ class CCC_RadioMask : public CCC_Mask
 	CCC_RadioGroupMask2* group;
 
 public:
-	CCC_RadioMask(LPCSTR N, Flags32* V, u32 M) : CCC_Mask(N, V, M) { group = NULL; }
+	CCC_RadioMask(LPCSTR N, Flags32* V, u32 M) : CCC_Mask(N, V, M) { group = nullptr; }
 	void SetGroup(CCC_RadioGroupMask2* G) { group = G; }
 	virtual void Execute(LPCSTR args);
 
@@ -1455,7 +1455,7 @@ public:
 	{
 		if (CAttachableItem::m_dbgItem)
 		{
-			CAttachableItem::m_dbgItem = NULL;
+			CAttachableItem::m_dbgItem = nullptr;
 			Msg("CCC_TuneAttachableItem switched to off");
 			return;
 		};

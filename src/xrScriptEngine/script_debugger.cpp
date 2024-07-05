@@ -3,7 +3,7 @@
 #include "script_lua_helper.hpp"
 #include "mslotutils.h"
 
-// CScriptDebugger* CScriptDebugger::m_pDebugger = NULL;
+// CScriptDebugger* CScriptDebugger::m_pDebugger = nullptr;
 
 void CScriptDebugger::SendMessageToIde(CMailSlotMsg& msg)
 {

@@ -13,7 +13,7 @@ struct CUICell
 {
 	CUICell()
 	{
-		m_item = NULL;
+		m_item = nullptr;
 		Clear();
 	}
 
@@ -26,7 +26,7 @@ struct CUICell
 		VERIFY(m_item);
 		m_bMainItem = bMain;
 	}
-	bool Empty() { return m_item == NULL; }
+	bool Empty() { return m_item == nullptr; }
 	bool MainItem() { return m_bMainItem; }
 	void Clear();
 	bool operator==(const CUICell& C) const { return (m_item == C.m_item); }
@@ -157,7 +157,7 @@ public:
 	virtual void Draw();
 	virtual void Update();
 	virtual bool OnMouseAction(float x, float y, EUIMessages mouse_action);
-	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = nullptr);
 
 	void OnDragEvent(CUIDragItem* drag_item, bool b_receive);
 };

@@ -53,7 +53,7 @@ NvEdgeInfo* NvStripifier::FindEdgeInfo(NvEdgeInfoVec& edgeInfos, int v0, int v1)
 NvFaceInfo* NvStripifier::FindOtherFace(NvEdgeInfoVec& edgeInfos, int v0, int v1, NvFaceInfo* faceInfo)
 {
 	NvEdgeInfo* edgeInfo = FindEdgeInfo(edgeInfos, v0, v1);
-	assert(edgeInfo != NULL);
+	assert(edgeInfo != nullptr);
 	return (edgeInfo->m_face0 == faceInfo ? edgeInfo->m_face1 : edgeInfo->m_face0);
 }
 
@@ -82,10 +82,10 @@ void NvStripifier::BuildStripifyInfo(NvFaceInfoVec& faceInfos, NvEdgeInfoVec& ed
 	int numIndices = indices.size();
 	faceInfos.reserve(numIndices);
 
-	// we actually resize the edge infos, so we must initialize to NULL
+	// we actually resize the edge infos, so we must initialize to nullptr
 	edgeInfos.resize(numIndices);
 	for (int i = 0; i < numIndices; i++)
-		edgeInfos[i] = NULL;
+		edgeInfos[i] = nullptr;
 
 	// iterate through the triangles of the triangle list
 	int numTriangles = numIndices / 3;

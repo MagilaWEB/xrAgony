@@ -444,7 +444,7 @@ CHolderCustom* CScriptGameObject::get_current_holder()
 	if (actor)
 		return actor->Holder();
 	else
-		return NULL;
+		return nullptr;
 }
 
 void CScriptGameObject::set_ignore_monster_threshold(float ignore_monster_threshold)
@@ -613,10 +613,10 @@ void CScriptGameObject::set_visual_name(pcstr visual, bool bForce)
 		stalker->ChangeVisual(visual);
 
 		CPhysicsShell* tmp_shell = stalker->PPhysicsShell();
-		stalker->PPhysicsShell() = NULL;
+		stalker->PPhysicsShell() = nullptr;
 		stalker->OnChangeVisual();
 		stalker->PPhysicsShell() = tmp_shell;
-		tmp_shell = NULL;
+		tmp_shell = nullptr;
 
 		IKinematicsAnimated* V = smart_cast<IKinematicsAnimated*>(stalker->Visual());
 		if (V)
@@ -624,7 +624,7 @@ void CScriptGameObject::set_visual_name(pcstr visual, bool bForce)
 			if (!stalker->already_dead())
 			stalker->CStepManager::reload(stalker->cNameSect().c_str());
 			stalker->CDamageManager::reload(*stalker->cNameSect(), "damage", pSettings);
-			stalker->ResetBoneProtections(NULL, NULL);
+			stalker->ResetBoneProtections(nullptr, nullptr);
 			stalker->reattach_items();
 			stalker->m_pPhysics_support->in_ChangeVisual();
 			stalker->animation().reload();

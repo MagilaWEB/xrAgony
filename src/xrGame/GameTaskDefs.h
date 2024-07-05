@@ -26,8 +26,8 @@ struct SGameTaskKey : public ISerializable, public IPureDestroyableObject
 {
 	shared_str task_id;
 	CGameTask* game_task;
-	SGameTaskKey(const shared_str& t_id) : task_id(t_id), game_task(NULL){};
-	SGameTaskKey() : task_id(NULL), game_task(NULL){};
+	SGameTaskKey(const shared_str& t_id) : task_id(t_id), game_task(nullptr){};
+	SGameTaskKey() : task_id(nullptr), game_task(nullptr){};
 
 	virtual void save(IWriter& stream);
 	virtual void load(IReader& stream);

@@ -423,7 +423,7 @@ void CAI_Stalker::update_best_item_info_impl()
 	luabind::functor<CScriptGameObject*> funct;
 	if (::ScriptEngine->functor("ai_stalker.update_best_weapon", funct))
 	{
-		CScriptGameObject* GO = funct(this->lua_game_object(), m_item_actuality && m_best_item_to_kill ? m_best_item_to_kill->cast_game_object()->lua_game_object() : NULL);
+		CScriptGameObject* GO = funct(this->lua_game_object(), m_item_actuality && m_best_item_to_kill ? m_best_item_to_kill->cast_game_object()->lua_game_object() : nullptr);
 		if (GO)
 		{
 			CInventoryItem* bw = GO->object().cast_inventory_item();
@@ -690,7 +690,7 @@ void CAI_Stalker::can_kill_entity(
 
 	ray_query_param params(this, memory().visual().transparency_threshold(), distance);
 
-	Level().ObjectSpace.RayQuery(rq_storage, ray_defs, ray_query_callback, &params, NULL, this);
+	Level().ObjectSpace.RayQuery(rq_storage, ray_defs, ray_query_callback, &params, nullptr, this);
 	m_can_kill_enemy = m_can_kill_enemy || params.m_can_kill_enemy;
 	m_can_kill_member = m_can_kill_member || params.m_can_kill_member;
 	m_pick_distance = _max(m_pick_distance, params.m_pick_distance);
@@ -1024,8 +1024,8 @@ void CAI_Stalker::check_throw_trajectory(const float& throw_time)
 {
 	m_throw_enabled = false;
 
-	xr_vector<trajectory_pick>* trajectory_picks = NULL;
-	xr_vector<Fvector>* collide_tris = NULL;
+	xr_vector<trajectory_pick>* trajectory_picks = nullptr;
+	xr_vector<Fvector>* collide_tris = nullptr;
 #ifdef DEBUG
 	trajectory_picks = &m_throw_picks;
 	collide_tris = &m_throw_collide_tris;

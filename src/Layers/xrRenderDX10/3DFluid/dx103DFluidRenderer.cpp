@@ -255,8 +255,8 @@ void dx103DFluidRenderer::CreateJitterTexture()
 	dataDesc.pSysMem = data;
 	dataDesc.SysMemPitch = 256;
 
-	ID3DTexture2D* NoiseTexture = NULL;
-	// ID3DxxShaderResourceView* JitterTextureSRV = NULL;
+	ID3DTexture2D* NoiseTexture = nullptr;
+	// ID3DxxShaderResourceView* JitterTextureSRV = nullptr;
 
 	CHK_DX(HW.pDevice->CreateTexture2D(&desc, &dataDesc, &NoiseTexture));
 
@@ -351,7 +351,7 @@ void dx103DFluidRenderer::CreateHHGGTexture()
 	dataDesc.pSysMem = converted;
 	dataDesc.SysMemPitch = sizeof(converted);
 
-	ID3DTexture1D* HHGGTexture = NULL;
+	ID3DTexture1D* HHGGTexture = nullptr;
 
 	CHK_DX(HW.pDevice->CreateTexture1D(&desc, &dataDesc, &HHGGTexture));
 

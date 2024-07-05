@@ -34,7 +34,7 @@ void FTreeVisual::Load(const char* N, IReader* data, u32 dwFlags)
 		vCount = data->r_u32();
 		vFormat = RImplementation.getVB_Format(ID);
 
-		VERIFY(NULL == p_rm_Vertices);
+		VERIFY(nullptr == p_rm_Vertices);
 
 		p_rm_Vertices = RImplementation.getVB(ID);
 		p_rm_Vertices->AddRef();
@@ -46,7 +46,7 @@ void FTreeVisual::Load(const char* N, IReader* data, u32 dwFlags)
 		iCount = data->r_u32();
 		dwPrimitives = iCount / 3;
 
-		VERIFY(NULL == p_rm_Indices);
+		VERIFY(nullptr == p_rm_Indices);
 		p_rm_Indices = RImplementation.getIB(ID);
 		p_rm_Indices->AddRef();
 	}

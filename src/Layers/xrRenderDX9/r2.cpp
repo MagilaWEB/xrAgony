@@ -130,7 +130,7 @@ void CRender::create()
 	o.mrt = (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth = (HW.Caps.raster.b_MRT_mixdepth);
 
-	// Check for NULL render target support
+	// Check for nullptr render target support
 	D3DFORMAT nullrt = (D3DFORMAT)MAKEFOURCC('N', 'U', 'L', 'L');
 	o.nullrt = HW.support(nullrt, D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
 	/*

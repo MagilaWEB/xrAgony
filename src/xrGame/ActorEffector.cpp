@@ -262,7 +262,7 @@ CCameraEffectorControlled::CCameraEffectorControlled(CEffectorController* c) : m
 	SetFactorFunc(GET_KOEFF_FUNC(m_controller, &CEffectorController::GetFactor));
 }
 
-CCameraEffectorControlled::~CCameraEffectorControlled() { m_controller->SetCam(NULL); }
+CCameraEffectorControlled::~CCameraEffectorControlled() { m_controller->SetCam(nullptr); }
 BOOL CCameraEffectorControlled::Valid() { return m_controller->Valid(); }
 #define SND_MIN_VOLUME_FACTOR (0.1f)
 

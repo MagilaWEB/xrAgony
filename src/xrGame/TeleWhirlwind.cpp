@@ -11,7 +11,7 @@
 
 CTeleWhirlwind::CTeleWhirlwind()
 {
-	m_owner_object = NULL;
+	m_owner_object = nullptr;
 	m_center.set(0.f, 0.f, 0.f);
 	m_keep_radius = 1.f;
 	m_throw_power = 100.f;
@@ -334,4 +334,4 @@ void CTeleWhirlwindObject::fire(const Fvector& target, float power)
 
 void CTeleWhirlwindObject::set_throw_power(float throw_pow) { throw_power = throw_pow; }
 void CTeleWhirlwindObject::switch_state(ETelekineticState new_state) { inherited::switch_state(new_state); }
-bool CTeleWhirlwindObject::can_activate(CPhysicsShellHolder* obj) { return (obj != NULL); }
+bool CTeleWhirlwindObject::can_activate(CPhysicsShellHolder* obj) { return (obj != nullptr); }

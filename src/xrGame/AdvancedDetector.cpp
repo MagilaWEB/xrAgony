@@ -9,7 +9,7 @@ CAdvancedDetector::CAdvancedDetector() { m_artefacts.m_af_rank = 2; }
 CAdvancedDetector::~CAdvancedDetector() {}
 void CAdvancedDetector::CreateUI()
 {
-	R_ASSERT(NULL == m_ui);
+	R_ASSERT(nullptr == m_ui);
 	m_ui = new CUIArtefactDetectorAdv();
 	ui().construct(this);
 }
@@ -98,7 +98,7 @@ CUIArtefactDetectorAdv::~CUIArtefactDetectorAdv() {}
 void CUIArtefactDetectorAdv::SetValue(const float val1, const Fvector& val2) { m_target_dir = val2; }
 void CUIArtefactDetectorAdv::update()
 {
-	if (NULL == m_parent->HudItemData() || m_bid == u16(-1))
+	if (nullptr == m_parent->HudItemData() || m_bid == u16(-1))
 		return;
 	inherited::update();
 	attachable_hud_item* itm = m_parent->HudItemData();

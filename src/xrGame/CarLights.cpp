@@ -116,7 +116,7 @@ void SCarLight::Update()
 	light_render->set_position(M.c);
 }
 
-CCarLights::CCarLights() { m_pcar = NULL; }
+CCarLights::CCarLights() { m_pcar = nullptr; }
 void CCarLights::Init(CCar* pcar)
 {
 	m_pcar = pcar;

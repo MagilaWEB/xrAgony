@@ -161,7 +161,7 @@ void CPolterFlame::update_schedule()
 					// test hit
 					collide::rq_result rq;
 					if (Level().ObjectSpace.RayPick(
-							elem->position, elem->target_dir, m_length, collide::rqtBoth, rq, NULL))
+							elem->position, elem->target_dir, m_length, collide::rqtBoth, rq, nullptr))
 					{
 						if ((rq.O == elem->target_object) && (rq.range < m_length))
 						{

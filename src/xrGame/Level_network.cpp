@@ -306,15 +306,15 @@ void CLevel::ClearAllObjects()
 	for (u32 i = 0; i < CLObjNum; i++)
 	{
 		IGameObject* pObj = Level().Objects.o_get_by_iterator(i);
-		if (pObj->H_Parent() != NULL)
+		if (pObj->H_Parent() != nullptr)
 		{
 			if (IsGameTypeSingle())
 			{
-				FATAL("pObj->H_Parent() != NULL");
+				FATAL("pObj->H_Parent() != nullptr");
 			}
 			else
 			{
-				Msg("! ERROR: object's parent is not NULL");
+				Msg("! ERROR: object's parent is not nullptr");
 			}
 		}
 

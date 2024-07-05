@@ -83,7 +83,7 @@ bool CPHSkeleton::Spawn(CSE_Abstract* D)
 	else
 	{
 		CPhysicsShellHolder* obj = PPhysicsShellHolder();
-		IKinematics* K = NULL;
+		IKinematics* K = nullptr;
 		if (obj->Visual())
 		{
 			K = smart_cast<IKinematics*>(obj->Visual());

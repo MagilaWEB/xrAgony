@@ -29,7 +29,7 @@ public:
 	//получить окно самого верхнего уровня
 	CUIWindow* GetTop()
 	{
-		if (m_pParentWnd == NULL)
+		if (m_pParentWnd == nullptr)
 			return this;
 		else
 			return m_pParentWnd->GetTop();
@@ -55,7 +55,7 @@ public:
 	void SetCapture(CUIWindow* pChildWindow, bool capture_status);
 	CUIWindow* GetMouseCapturer() { return m_pMouseCapturer; }
 	//окошко, которому пересылаются сообщения,
-	//если NULL, то шлем на GetParent()
+	//если nullptr, то шлем на GetParent()
 	void SetMessageTarget(CUIWindow* pWindow) { m_pMessageTarget = pWindow; }
 	CUIWindow* GetMessageTarget();
 
@@ -65,7 +65,7 @@ public:
 	//ф-ция должна переопределяться
 	// pWnd - указатель на окно, которое послало сообщение
 	// pData - указатель на дополнительные данные, которые могут понадобиться
-	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = nullptr);
 
 	virtual void Enable(bool status) { m_bIsEnabled = status; }
 	bool IsEnabled() { return m_bIsEnabled; }

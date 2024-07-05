@@ -425,7 +425,7 @@ void CLensFlare::OnFrame(shared_str id)
 			{
 				// cache outdated. real query.
 				r_dest.r_clear();
-				if (g_pGameLevel->ObjectSpace.RayQuery(r_dest, RD, material_callback, &TP, NULL, o_main))
+				if (g_pGameLevel->ObjectSpace.RayQuery(r_dest, RD, material_callback, &TP, nullptr, o_main))
 					m_ray_cache[i].result = FALSE;
 			}
 		}
@@ -452,7 +452,7 @@ TP.vis = 0.f;
 }else{
 // cache outdated. real query.
 r_dest.r_clear ();
-if (g_pGameLevel->ObjectSpace.RayQuery (r_dest,RD,material_callback,&TP,NULL,o_main))
+if (g_pGameLevel->ObjectSpace.RayQuery (r_dest,RD,material_callback,&TP,nullptr,o_main))
 m_ray_cache.result = FALSE ;
 }
 }
@@ -473,7 +473,7 @@ blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,Device.fTimeDelta);
  }else{
  // cache outdated. real query.
  r_dest.r_clear ();
- if (g_pGameLevel->ObjectSpace.RayQuery (r_dest,RD,material_callback,&TP,NULL,o_main))
+ if (g_pGameLevel->ObjectSpace.RayQuery (r_dest,RD,material_callback,&TP,nullptr,o_main))
  m_ray_cache.result = FALSE ;
  }
  }

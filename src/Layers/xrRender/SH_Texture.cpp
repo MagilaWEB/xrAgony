@@ -111,7 +111,7 @@ void CTexture::apply_avi(u32 dwStage)
 
 		// AVI
 		D3DLOCKED_RECT R;
-		R_CHK(T2D->LockRect(0, &R, NULL, 0));
+		R_CHK(T2D->LockRect(0, &R, nullptr, 0));
 		R_ASSERT(R.Pitch == int(pAVI->m_dwWidth * 4));
 		//		R_ASSERT(pAVI->DecompressFrame((u32*)(R.pBits)));
 		BYTE* ptr;

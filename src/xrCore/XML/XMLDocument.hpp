@@ -179,7 +179,7 @@ public:
 
 #ifdef DEBUG // debug & mixed
 	//проверка того, что аттрибуты у тегов уникальны
-	//(если не NULL, то уникальность нарушена и возврашается имя
+	//(если не nullptr, то уникальность нарушена и возврашается имя
 	//повторяющегося атрибута)
 	pcstr CheckUniqueAttrib(XML_NODE start_node, pcstr tag_name, pcstr attrib_name);
 #endif

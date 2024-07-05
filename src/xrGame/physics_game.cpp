@@ -154,7 +154,7 @@ static void play_object(dxGeomUserData* data, SGameMtlPair* mtl_pair, const dCon
 	VERIFY(mtl_pair);
 	VERIFY(c);
 
-	CPHSoundPlayer* sp = NULL;
+	CPHSoundPlayer* sp = nullptr;
 #ifdef DEBUG
 	__try
 	{

@@ -16,7 +16,7 @@ public:
 
 public:
 	CSingleton() {}
-	virtual ~CSingleton() { _self = NULL; }
+	virtual ~CSingleton() { _self = nullptr; }
 	static void DestroySingleton()
 	{
 		if (!_self)
