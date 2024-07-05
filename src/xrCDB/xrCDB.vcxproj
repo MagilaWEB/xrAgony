@@ -109,7 +109,6 @@
     </ClCompile>
     <ClCompile Include="xrXRC.cpp" />
     <ClCompile Include="xr_area.cpp" />
-    <ClCompile Include="xr_area_query.cpp" />
     <ClCompile Include="xr_area_raypick.cpp" />
   </ItemGroup>
   <ItemGroup>

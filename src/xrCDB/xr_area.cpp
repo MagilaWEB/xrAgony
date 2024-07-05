@@ -12,7 +12,6 @@ using namespace collide;
 // Purpose	: stores space slots
 //----------------------------------------------------------------------
 CObjectSpace::CObjectSpace()
-	: xrc("object space")
 #ifdef DEBUG
 	  , m_pRender(0)
 #endif
@@ -28,10 +27,6 @@ CObjectSpace::CObjectSpace()
 //----------------------------------------------------------------------
 CObjectSpace::~CObjectSpace()
 {
-// moved to ~IGameLevel
-//	::Sound->set_geometry_occ		(nullptr);
-//	::Sound->set_handler			(nullptr);
-//
 #ifdef DEBUG
 	// sh_debug.destroy			();
 	xr_delete(m_pRender);
@@ -43,7 +38,6 @@ CObjectSpace::~CObjectSpace()
 int CObjectSpace::GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<IGameObject*>& q_nearest, const Fvector& point,
 	float range, IGameObject* ignore_object)
 {
-	xrCriticalSection::raii mt{ lock };
 	q_spatial.clear();
 	// Query objects
 	q_nearest.clear();
@@ -75,13 +69,7 @@ int CObjectSpace::GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<IGameObj
 }
 
 //----------------------------------------------------------------------
-IC int CObjectSpace::GetNearest(
-	xr_vector<IGameObject*>& q_nearest, const Fvector& point, float range, IGameObject* ignore_object)
-{
-	return (GetNearest(r_spatial, q_nearest, point, range, ignore_object));
-}
 
-//----------------------------------------------------------------------
 IC int CObjectSpace::GetNearest(xr_vector<IGameObject*>& q_nearest, ICollisionForm* obj, float range)
 {
 	IGameObject* O = obj->Owner();
@@ -153,5 +141,3 @@ void CObjectSpace::dbgRender()
 }
 */
 #endif
-// XXX stats: add to statistics
-void CObjectSpace::DumpStatistics(IGameFont& font, IPerformanceAlert* alert) { xrc.DumpStatistics(font, alert); }

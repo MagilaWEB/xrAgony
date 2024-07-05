@@ -10,8 +10,8 @@
 #include "xrEngine/GameFont.h"
 #include "xrEngine/PerformanceAlert.hpp"
 
-ISpatial_DB* g_SpatialSpace = nullptr;
-ISpatial_DB* g_SpatialSpacePhysic = nullptr;
+ISpatial_DB* g_SpatialSpace = NULL;
+ISpatial_DB* g_SpatialSpacePhysic = NULL;
 
 Fvector c_spatial_offset[8] = {
 	{-1, -1, -1}, {1, -1, -1}, {-1, 1, -1}, {1, 1, -1}, {-1, -1, 1}, {1, -1, 1}, {-1, 1, 1}, {1, 1, 1} };
@@ -23,8 +23,8 @@ SpatialBase::SpatialBase(ISpatial_DB* space)
 	spatial.sphere.R = 0;
 	spatial.node_center.set(0, 0, 0);
 	spatial.node_radius = 0;
-	spatial.node_ptr = nullptr;
-	spatial.sector = nullptr;
+	spatial.node_ptr = NULL;
+	spatial.sector = NULL;
 	spatial.space = space;
 }
 SpatialBase::~SpatialBase(void) { spatial_unregister(); }
@@ -86,8 +86,8 @@ void SpatialBase::spatial_unregister()
 	{
 		// remove
 		spatial.space->remove(this);
-		spatial.node_ptr = nullptr;
-		spatial.sector = nullptr;
+		spatial.node_ptr = NULL;
+		spatial.sector = NULL;
 	}
 	else
 	{
@@ -128,7 +128,7 @@ void ISpatial_NODE::_init(ISpatial_NODE* _parent)
 {
 	parent = _parent;
 	children[0] = children[1] = children[2] = children[3] = children[4] = children[5] = children[6] = children[7] =
-		nullptr;
+		NULL;
 	items.clear();
 }
 
@@ -141,7 +141,7 @@ void ISpatial_NODE::_insert(ISpatial* S)
 
 void ISpatial_NODE::_remove(ISpatial* S)
 {
-	S->GetSpatialData().node_ptr = nullptr;
+	S->GetSpatialData().node_ptr = NULL;
 	xr_vector<ISpatial*>::iterator it = std::find(items.begin(), items.end(), S);
 	VERIFY(it != items.end());
 	items.erase(it);
@@ -183,10 +183,10 @@ void ISpatial_DB::initialize(Fbox& BB)
 		allocator_pool.reserve(128);
 		m_center.set(bbc);
 		m_bounds = _max(_max(bbd.x, bbd.y), bbd.z);
-		rt_insert_object = nullptr;
+		rt_insert_object = NULL;
 		if (0 == m_root)
 			m_root = _node_create();
-		m_root->_init(nullptr);
+		m_root->_init(NULL);
 	}
 }
 ISpatial_NODE* ISpatial_DB::_node_create()
@@ -206,7 +206,7 @@ void ISpatial_DB::_node_destroy(ISpatial_NODE*& P)
 	VERIFY(P->_empty());
 	Stats.NodeCount--;
 	allocator_pool.push_back(P);
-	P = nullptr;
+	P = NULL;
 }
 
 void ISpatial_DB::_insert(ISpatial_NODE* N, Fvector& n_C, float n_R)

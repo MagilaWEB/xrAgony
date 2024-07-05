@@ -5,6 +5,7 @@
 #include "xrEngine/xr_object.h"
 #include "Intersect.hpp"
 #include "d3d9types.h"
+#include "xrCore/_vector3d_ext.h"
 
 #ifdef DEBUG
 static BOOL _cdb_bDebug = false;
@@ -12,6 +13,9 @@ extern XRCDB_API BOOL* cdb_bDebug = &_cdb_bDebug;
 bool bDebug() { return !!(*cdb_bDebug); }
 #endif
 using namespace collide;
+IC static thread_local xrXRC xrc;
+IC static thread_local collide::rq_results r_temp;
+IC static thread_local xr_vector<ISpatial*> r_spatial;
 
 //--------------------------------------------------------------------------------
 // RayTest - Occluded/No
@@ -19,10 +23,8 @@ using namespace collide;
 BOOL CObjectSpace::RayTest(const Fvector& start, const Fvector& dir, float range, collide::rq_target tgt,
 	collide::ray_cache* cache, IGameObject* ignore_object)
 {
-	lock.Enter();
 	BOOL _ret = _RayTest(start, dir, range, tgt, cache, ignore_object);
 	r_spatial.clear();
-	lock.Leave();
 	return _ret;
 }
 BOOL CObjectSpace::_RayTest(const Fvector& start, const Fvector& dir, float range, collide::rq_target tgt,
@@ -76,7 +78,7 @@ BOOL CObjectSpace::_RayTest(const Fvector& start, const Fvector& dir, float rang
 			}
 
 			// 2. Polygon doesn't pick - real database query
-			xrc.ray_query(CDB::OPT_ONLYFIRST , &Static, start, dir, range);
+			xrc.ray_query(CDB::OPT_ONLYFIRST, &Static, start, dir, range);
 			if (0 == xrc.r_count())
 			{
 				cache->set(start, dir, range, FALSE);
@@ -110,10 +112,8 @@ BOOL CObjectSpace::_RayTest(const Fvector& start, const Fvector& dir, float rang
 BOOL CObjectSpace::RayPick(
 	const Fvector& start, const Fvector& dir, float range, rq_target tgt, rq_result& R, IGameObject* ignore_object)
 {
-	lock.Enter();
 	BOOL _res = _RayPick(start, dir, range, tgt, R, ignore_object);
 	r_spatial.clear();
-	lock.Leave();
 	return _res;
 }
 BOOL CObjectSpace::_RayPick(
@@ -180,10 +180,8 @@ BOOL CObjectSpace::_RayPick(
 BOOL CObjectSpace::RayQuery(collide::rq_results& dest, const collide::ray_defs& R, collide::rq_callback CB,
 	LPVOID user_data, collide::test_callback tb, IGameObject* ignore_object)
 {
-	lock.Enter();
 	BOOL _res = _RayQuery2(dest, R, CB, user_data, tb, ignore_object);
 	r_spatial.clear();
-	lock.Leave();
 	return (_res);
 }
 BOOL CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_defs& R, collide::rq_callback CB,
@@ -233,7 +231,7 @@ BOOL CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_de
 					VERIFY(false)
 					continue;
 				}
-				
+
 				cform->_RayQuery(R, r_temp);
 			}
 		}
@@ -499,3 +497,59 @@ BOOL CObjectSpace::RayQuery(collide::rq_results& r_dest, ICollisionForm* target,
 	r_dest.r_clear();
 	return target->_RayQuery(R, r_dest);
 }
+
+//----------------------------------------------------------------------
+IC int CObjectSpace::GetNearest(
+	xr_vector<IGameObject*>& q_nearest, const Fvector& point, float range, IGameObject* ignore_object)
+{
+	return (GetNearest(r_spatial, q_nearest, point, range, ignore_object));
+}
+
+bool CObjectSpace::BoxQuery(Fvector const& box_center, Fvector const& box_z_axis, Fvector const& box_y_axis,
+	Fvector const& box_sizes, xr_vector<Fvector>* out_tris)
+{
+	Fvector z_axis = box_z_axis;
+	z_axis.normalize();
+	Fvector y_axis = box_y_axis;
+	y_axis.normalize();
+	Fvector x_axis;
+	x_axis.crossproduct(box_y_axis, box_z_axis).normalize();
+
+	Fplane planes[6];
+	enum
+	{
+		left_plane,
+		right_plane,
+		top_plane,
+		bottom_plane,
+		front_plane,
+		near_plane
+	};
+
+	planes[left_plane].build(box_center - (x_axis * (box_sizes.x * 0.5f)), -x_axis);
+	planes[right_plane].build(box_center + (x_axis * (box_sizes.x * 0.5f)), x_axis);
+	planes[top_plane].build(box_center + (y_axis * (box_sizes.y * 0.5f)), y_axis);
+	planes[bottom_plane].build(box_center - (y_axis * (box_sizes.y * 0.5f)), -y_axis);
+	planes[front_plane].build(box_center - (z_axis * (box_sizes.z * 0.5f)), -z_axis);
+	planes[near_plane].build(box_center + (z_axis * (box_sizes.z * 0.5f)), z_axis);
+
+	CFrustum frustum;
+	frustum.CreateFromPlanes(planes, sizeof(planes) / sizeof(planes[0]));
+
+	xrc.frustum_query(CDB::OPT_FULL_TEST, &Static, frustum);
+
+	if (out_tris)
+	{
+		for (auto& result : *xrc.r_get())
+		{
+			out_tris->push_back(result.verts[0]);
+			out_tris->push_back(result.verts[1]);
+			out_tris->push_back(result.verts[2]);
+		}
+	}
+
+	return !!xrc.r_count();
+}
+
+// XXX stats: add to statistics
+void CObjectSpace::DumpStatistics(IGameFont& font, IPerformanceAlert* alert) { xrc.DumpStatistics(font, alert); }

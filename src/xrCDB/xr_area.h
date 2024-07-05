@@ -18,14 +18,8 @@ class IGameObject;
 struct hdrCFORM;
 class XRCDB_API CObjectSpace : Noncopyable
 {
-private:
-	// Debug
-	xrCriticalSection lock;
 	CDB::MODEL Static;
 	Fbox m_BoundingVolume;
-	xrXRC xrc; // MT: dangerous
-	collide::rq_results r_temp; // MT: dangerous
-	xr_vector<ISpatial*> r_spatial; // MT: dangerous
 public:
 #ifdef DEBUG
 	FactoryPtr<IObjectSpaceRender>* m_pRender;

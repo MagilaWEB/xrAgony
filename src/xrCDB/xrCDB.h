@@ -80,8 +80,8 @@ namespace CDB
 				syncronize_impl();
 		}
 
-		void build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc = nullptr, void* bcp = nullptr);
-		void build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc = nullptr, void* bcp = nullptr);
+		void build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc = NULL, void* bcp = NULL);
+		void build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc = NULL, void* bcp = NULL);
 		u32 memory();
 
 	private:
