@@ -2,22 +2,16 @@
 #include "xrCore/xrDebug_macros.h"
 #include "Common/xr_allocator.h"
 
-
 // Both xr_fixed_map doesn't support move operation
 // Trying to do so will result in a crash at some point
 // (at first it would be just fine, but this is a lie)
 
-// The container is just designed for copying, not moving
-
-
-template <class K, class T, class allocator = xr_allocator>
+template <typename K, typename T, typename allocator = xr_allocator>
 class xr_fixed_map
 {
 	static constexpr size_t SG_REALLOC_ADVANCE = 64;
 
 public:
-	using key_type = K;
-	using mapped_type = T;
 	struct value_type
 	{
 		K first{};
@@ -29,56 +23,52 @@ public:
 			right = nullptr;
 		}
 	};
-
-	using callback = void __fastcall(const value_type&);
-	using callback_cmp = bool __fastcall(const value_type& N1, const value_type& N2);
-
-
+	typedef void __fastcall callback(value_type*);
 
 private:
-	value_type* nodes;
-	size_t pool;
-	size_t limit;
+	value_type* nodes{};
+	size_t pool{};
+	size_t limit{};
 
-	IC size_t value_sizeof(size_t Count) { return Count * sizeof(value_type); }
+	IC size_t Size(size_t Count) { return Count * sizeof(value_type); }
 
-	void resize()
+	void Realloc()
 	{
 		size_t newLimit = limit + SG_REALLOC_ADVANCE;
 		VERIFY(newLimit % SG_REALLOC_ADVANCE == 0);
+		value_type* newNodes = (value_type*)allocator::alloc(Size(newLimit));
+		VERIFY(newNodes);
 
-		value_type* newNodes = (value_type*)allocator::alloc(value_sizeof(newLimit));
-		R_ASSERT(newNodes);
-
-		if constexpr (std::is_pod<T>::value)
+		if constexpr (std::is_pod_v<T>)
 		{
-			ZeroMemory(newNodes, sizeof(value_type) * newLimit);
+			ZeroMemory(newNodes, Size(newLimit));
 			if (pool)
-				CopyMemory(newNodes, nodes, allocated_memory());
+				CopyMemory(newNodes, nodes, Size(limit));
 		}
 		else
 		{
 			for (value_type* cur = newNodes; cur != newNodes + newLimit; ++cur)
 				allocator::construct(cur);
+
 			if (pool)
-				std::copy(first(), last(), newNodes);
+				std::copy(begin(), last(), newNodes);
 		}
 
-		for (size_t i = 0; i < pool; ++i)
+		for (size_t I = 0; I < pool; I++)
 		{
 			VERIFY(nodes);
-			value_type* nodeOld = nodes + i;
-			value_type* nodeNew = newNodes + i;
+			value_type* Nold = nodes + I;
+			value_type* Nnew = newNodes + I;
 
-			if (nodeOld->left)
+			if (Nold->left)
 			{
-				size_t leftId = nodeOld->left - nodes;
-				nodeNew->left = newNodes + leftId;
+				size_t Lid = Nold->left - nodes;
+				Nnew->left = newNodes + Lid;
 			}
-			if (nodeOld->right)
+			if (Nold->right)
 			{
-				size_t rightId = nodeOld->right - nodes;
-				nodeNew->right = newNodes + rightId;
+				size_t Rid = Nold->right - nodes;
+				Nnew->right = newNodes + Rid;
 			}
 		}
 
@@ -89,289 +79,201 @@ private:
 		limit = newLimit;
 	}
 
-	value_type* add(const K& key)
+	IC value_type* Alloc(const K& first)
 	{
 		if (pool == limit)
-			resize();
-
+			Realloc();
 		value_type* node = nodes + pool;
-		node->first = key;
-		node->left = nullptr;
-		node->right = nullptr;
-		++pool;
-
+		node->first = first;
+		node->right = node->left = nullptr;
+		pool++;
 		return node;
 	}
-
-	value_type* create_child(value_type*& parent, const K& key)
+	IC value_type* CreateChild(value_type*& parent, const K& first)
 	{
-		ptrdiff_t PID = ptrdiff_t(parent - nodes);
-		value_type* N = add(key);
+		size_t PID = size_t(parent - nodes);
+		value_type* N = Alloc(first);
 		parent = nodes + PID;
 		return N;
 	}
 
-	void recurse_left_right(value_type* N, callback CB)
+	IC void recurseLR(value_type* N, callback CB)
 	{
 		if (N->left)
-			recurse_left_right(N->left, CB);
-		CB(*N);
+			recurseLR(N->left, CB);
+		CB(N);
 		if (N->right)
-			recurse_left_right(N->right, CB);
+			recurseLR(N->right, CB);
 	}
-
-	void recurse_right_left(value_type* N, callback CB)
+	IC void recurseRL(value_type* N, callback CB)
 	{
 		if (N->right)
-			recurse_right_left(N->right, CB);
-		CB(*N);
+			recurseRL(N->right, CB);
+		CB(N);
 		if (N->left)
-			recurse_right_left(N->left, CB);
+			recurseRL(N->left, CB);
 	}
-
-	void get_left_right(value_type* N, xr_vector<T>& D)
+	IC void getLR(value_type* N, xr_vector<T>& D)
 	{
 		if (N->left)
-			get_left_right(N->left, D);
+			getLR(N->left, D);
 		D.push_back(N->second);
 		if (N->right)
-			get_left_right(N->right, D);
+			getLR(N->right, D);
 	}
-
-	void get_right_left(value_type* N, xr_vector<T>& D)
+	IC void getRL(value_type* N, xr_vector<T>& D)
 	{
 		if (N->right)
-			get_right_left(N->right, D);
+			getRL(N->right, D);
 		D.push_back(N->second);
 		if (N->left)
-			get_right_left(N->left, D);
-	}
-
-	void get_left_right_p(value_type* N, xr_vector<value_type*>& D)
-	{
-		if (N->left)
-			get_left_right_p(N->left, D);
-		D.push_back(N);
-		if (N->right)
-			get_left_right_p(N->right, D);
-	}
-
-	void get_right_left_p(value_type* N, xr_vector<value_type*>& D)
-	{
-		if (N->right)
-			get_right_left_p(N->right, D);
-		D.push_back(N);
-		if (N->left)
-			get_right_left_p(N->left, D);
+			getRL(N->left, D);
 	}
 
 public:
-	xr_fixed_map()
-	{
-		pool = 0;
-		limit = 0;
-		nodes = nullptr;
-	}
-
 	~xr_fixed_map() { destroy(); }
-
 	void destroy()
 	{
 		if (nodes)
 		{
-			for (value_type* cur = begin(); cur != last(); ++cur)
-				cur->~value_type();
+			for (value_type* cur = begin(); cur != last(); cur++)
+				allocator::destroy(cur);
 			allocator::dealloc(nodes);
 		}
-		nodes = 0;
-		pool = 0;
-		limit = 0;
 	}
-
-	value_type* insert(const K& key)
+	IC value_type* insert(const K& k)
 	{
-		if (!pool)
-			return add(key);
-
-		value_type* node = nodes;
-
-	once_more:
-		if (key < node->first)
+		if (pool)
 		{
-			if (node->left)
+			value_type* node = nodes;
+
+		once_more:
+			if (k < node->first)
 			{
-				node = node->left;
-				goto once_more;
+				if (node->left)
+				{
+					node = node->left;
+					goto once_more;
+				}
+				else
+				{
+					value_type* N = CreateChild(node, k);
+					node->left = N;
+					return N;
+				}
+			}
+			else if (k > node->first)
+			{
+				if (node->right)
+				{
+					node = node->right;
+					goto once_more;
+				}
+				else
+				{
+					value_type* N = CreateChild(node, k);
+					node->right = N;
+					return N;
+				}
 			}
 			else
-			{
-				value_type* N = create_child(node, key);
-				node->left = N;
-				return N;
-			}
-		}
-		else if (key > node->first)
-		{
-			if (node->right)
-			{
-				node = node->right;
-				goto once_more;
-			}
-			else
-			{
-				value_type* N = create_child(node, key);
-				node->right = N;
-				return N;
-			}
-		}
-		else
-			return node;
-	}
-
-	value_type* insert_anyway(const K& key)
-	{
-		if (!pool)
-			return add(key);
-
-		value_type* node = nodes;
-
-	once_more:
-		if (key <= node->first)
-		{
-			if (node->left)
-			{
-				node = node->left;
-				goto once_more;
-			}
-			else
-			{
-				value_type* N = create_child(node, key);
-				node->left = N;
-				return N;
-			}
+				return node;
 		}
 		else
 		{
-			if (node->right)
-			{
-				node = node->right;
-				goto once_more;
-			}
-			else
-			{
-				value_type* N = create_child(node, key);
-				node->right = N;
-				return N;
-			}
+			return Alloc(k);
 		}
 	}
 
-	value_type* insert(const K& key, const T& value)
-	{
-		value_type* N = insert(key);
-		N->second = value;
-		return N;
-	}
-
-	value_type* insert_anyway(const K& key, const T& value)
-	{
-		value_type* N = insert_anyway(key);
-		N->second = value;
-		return N;
-	}
-
-	value_type* insert(K&& key, T&& value)
-	{
-		value_type* N = insert(key);
-		N->second = value;
-		return N;
-	}
-
-	value_type* insert_anyway(K&& key, T&& value)
-	{
-		value_type* N = insert_anyway(key);
-		N->second = value;
-		return N;
-	}
-
-	size_t allocated() const { return limit; }
-	size_t allocated_memory() const { return limit * sizeof(value_type); }
-
-	[[nodiscard]] bool empty() const { return pool == 0; } void clear() { pool = 0; }
-
-	value_type* begin() { return nodes; }
-	value_type* end() { return nodes + pool; }
-
-	value_type* first() { return nodes; }
-	value_type* last() { return nodes + limit; } // for setup only
-
-	[[nodiscard]] size_t size() const { return pool; }
-
-	value_type& at_index(size_t v)
-	{
-		return nodes[v];
-	}
-
-	mapped_type& at(const key_type& key) { return insert(key)->second; }
-	mapped_type& operator[](const key_type& key) { return insert(key)->second; }
-
-	void traverse_left_right(callback CB)
+	IC value_type* insertInAnyWay(const K& k)
 	{
 		if (pool)
-			recurse_left_right(nodes, CB);
+		{
+			value_type* node = nodes;
+
+		once_more:
+			if (k <= node->first)
+			{
+				if (node->left)
+				{
+					node = node->left;
+					goto once_more;
+				}
+				else
+				{
+					value_type* N = CreateChild(node, k);
+					node->left = N;
+					return N;
+				}
+			}
+			else
+			{
+				if (node->right)
+				{
+					node = node->right;
+					goto once_more;
+				}
+				else
+				{
+					value_type* N = CreateChild(node, k);
+					node->right = N;
+					return N;
+				}
+			}
+		}
+		else
+		{
+			return Alloc(k);
+		}
 	}
 
-	void traverse_right_left(callback CB)
+	IC size_t allocated() { return this->limit; }
+	bool empty() const { return pool == 0; }
+	IC void clear() { pool = 0; }
+	IC value_type* begin() { return nodes; }
+	IC value_type* end() { return nodes + pool; }
+	IC value_type* last() { return nodes + limit; } // for setup only
+	IC size_t size() { return pool; }
+	IC value_type& operator[](int v) { return nodes[v]; }
+
+	IC void traverseLR(callback CB)
 	{
 		if (pool)
-			recurse_right_left(nodes, CB);
+			recurseLR(nodes, CB);
 	}
-
-	void traverse_any(callback CB)
-	{
-		value_type* _end = end();
-		for (value_type* cur = begin(); cur != _end; ++cur)
-			CB(*cur);
-	}
-
-	void get_left_right(xr_vector<T>& D)
+	IC void traverseRL(callback CB)
 	{
 		if (pool)
-			get_left_right(nodes, D);
+			recurseRL(nodes, CB);
 	}
 
-	void get_left_right_p(xr_vector<value_type*>& D)
+	IC void getLR(xr_vector<T>& D)
 	{
 		if (pool)
-			get_left_right_p(nodes, D);
+			getLR(nodes, D);
 	}
 
-	void get_right_left(xr_vector<T>& D)
+	IC void getRL(xr_vector<T>& D)
 	{
 		if (pool)
-			get_right_left(nodes, D);
+			getRL(nodes, D);
 	}
 
-	void get_right_left_p(xr_vector<value_type*>& D)
-	{
-		if (pool)
-			get_right_left_p(nodes, D);
-	}
-
-	void get_any_p(xr_vector<value_type*>& D)
+	IC void getANY_P(xr_vector<value_type*>& D)
 	{
 		if (empty())
 			return;
+
 		D.resize(size());
 		value_type** _it = &D.front();
 		value_type* _end = end();
-		for (value_type* cur = begin(); cur != _end; ++cur, ++_it)
+		for (value_type* cur = begin(); cur != _end; cur++, _it++)
 			*_it = cur;
 	}
 
-	void setup(callback CB)
+	IC void setup(callback CB)
 	{
 		for (size_t i = 0; i < limit; i++)
-			CB(*(nodes + i));
+			CB(nodes + i);
 	}
 };

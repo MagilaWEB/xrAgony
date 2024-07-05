@@ -226,7 +226,7 @@ bool attachable_hud_item::need_renderable() { return m_parent_hud_item->need_ren
 void attachable_hud_item::render()
 {
 	::Render->set_Transform(&m_item_transform);
-	::Render->add_Visual(m_model->dcast_RenderVisual());
+	::Render->add_Visual(m_model->dcast_RenderVisual(), true);
 	debug_draw_firedeps();
 	m_parent_hud_item->render_hud_mode();
 }
@@ -521,7 +521,7 @@ void player_hud::render_hud()
 		return;
 
 	::Render->set_Transform(&m_transform);
-	::Render->add_Visual(m_model->dcast_RenderVisual());
+	::Render->add_Visual(m_model->dcast_RenderVisual(), true);
 
 	if (m_attached_items[0])
 		m_attached_items[0]->render();

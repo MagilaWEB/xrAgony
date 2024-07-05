@@ -195,6 +195,10 @@ float ps_r3_dyn_wet_surf_near = 10.f; // 10.0f
 float ps_r3_dyn_wet_surf_far = 30.f; // 30.0f
 int ps_r3_dyn_wet_surf_sm_res = 256; // 256
 
+int opt_static = 0;
+int opt_dynamic = 0;
+int opt_shadow = 1;
+
 // AVO: detail draw radius
 Flags32		ps_common_flags = { 0 };// r1-only
 u32			ps_steep_parallax = 0;
@@ -876,6 +880,11 @@ void xrRender_initconsole()
 	CMD1(CCC_DBGGrassLevelDensityCoff, "r__dbg_detail_radius_coff");
 	CMD4(CCC_detail_radius, "r__detail_radius", &ps_r__detail_radius, 39, ps_r__detail_radius_MAX);
 	CMD4(CCC_Integer, "r__details_opt_intensity", &ps_r__details_opt_intensity, 0, 10);
+
+	// Geometry optimization
+	CMD4(CCC_Integer, "r__optimize_static_geom", &opt_static, 0, 4);
+	CMD4(CCC_Integer, "r__optimize_dynamic_geom", &opt_dynamic, 0, 4);
+	CMD4(CCC_Integer, "r__optimize_shadow_geom", &opt_shadow, 0, 4);
 
 	//  Allow real-time fog config reload
 #ifdef USE_DX11

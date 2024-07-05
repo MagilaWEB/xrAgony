@@ -20,9 +20,9 @@ void D3DXRenderBase::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 		return;
 
 	if (_setup_zb)
-		mapLOD.get_left_right(lstLODs); // front-to-back
+		mapLOD.getLR(lstLODs);	// front-to-back
 	else
-		mapLOD.get_right_left(lstLODs); // back-to-front
+		mapLOD.getRL(lstLODs);	// back-to-front
 	
 	if (lstLODs.empty())
 		return;

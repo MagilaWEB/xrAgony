@@ -57,15 +57,15 @@ template <class T> IC bool cmp_textures_lexN(const T& lhs, const T& rhs)
 	return std::lexicographical_compare(t1->begin(), t1->end(), t2->begin(), t2->end());
 }
 
-template <class T> void sort_tlist(xr_vector<T::template value_type*>& lst, xr_vector<T::template value_type*>& temp, T& textures)
+template <class T> void sort_tlist(auto&& lst, auto&& temp, T& textures)
 {
 	int amount = textures.begin()->first->size();
 
 	if (amount <= 1)
 	{
 		// Just sort by SSA
-		textures.get_any_p(lst);
-		std::sort(lst.begin(), lst.end(), cmp_second_ssa<T::template value_type*>);
+		textures.getANY_P(lst);
+		lst.sort(cmp_second_ssa<T::template value_type*>);
 	}
 	else
 	{
@@ -79,13 +79,13 @@ template <class T> void sort_tlist(xr_vector<T::template value_type*>& lst, xr_v
 		}
 
 		// 1st - part - SSA, 2nd - lexicographically
-		std::sort(lst.begin(), lst.end(), cmp_second_ssa<T::template value_type*>);
+		lst.sort(cmp_second_ssa<T::template value_type*>);
 		if (2 == amount)
-			std::sort(temp.begin(), temp.end(), cmp_textures_lex2<T::template value_type*>);
+			temp.sort(cmp_textures_lex2<T::template value_type*>);
 		else if (3 == amount)
-			std::sort(temp.begin(), temp.end(), cmp_textures_lex3<T::template value_type*>);
+			temp.sort(cmp_textures_lex3<T::template value_type*>);
 		else
-			std::sort(temp.begin(), temp.end(), cmp_textures_lexN<T::template value_type*>);
+			temp.sort(cmp_textures_lexN<T::template value_type*>);
 
 		// merge lists
 		lst.insert(lst.end(), temp.begin(), temp.end());
@@ -108,8 +108,8 @@ void D3DXRenderBase::r_dsgraph_render_graph(u32 _priority)
 		{
 			mapNormalVS& vs = mapNormalPasses[_priority][iPass];
 
-			vs.get_any_p(nrmVS);
-			std::sort(nrmVS.begin(), nrmVS.end(), cmp_second_ssa<mapNormalVS::value_type*>);
+			vs.getANY_P(nrmVS);
+			nrmVS.sort(cmp_second_ssa<mapNormalVS::value_type*>);
 			for (auto& vs_it : nrmVS)
 			{
 				RCache.set_VS(vs_it->first);
@@ -119,8 +119,8 @@ void D3DXRenderBase::r_dsgraph_render_graph(u32 _priority)
 				mapNormalGS& gs = vs_it->second;
 				gs.ssa = 0;
 
-				gs.get_any_p(nrmGS);
-				std::sort(nrmGS.begin(), nrmGS.end(), cmp_second_ssa<mapNormalGS::value_type*>);
+				gs.getANY_P(nrmGS);
+				nrmGS.sort(cmp_second_ssa<mapNormalGS::value_type*>);
 				for (auto& gs_it : nrmGS)
 				{
 					RCache.set_GS(gs_it->first);
@@ -131,8 +131,8 @@ void D3DXRenderBase::r_dsgraph_render_graph(u32 _priority)
 #endif
 				ps.ssa = 0;
 
-				ps.get_any_p(nrmPS);
-				std::sort(nrmPS.begin(), nrmPS.end(), cmp_ps_second_ssa<mapNormalPS::value_type*>);
+				ps.getANY_P(nrmPS);
+				nrmPS.sort(cmp_ps_second_ssa<mapNormalPS::value_type*>);
 				for (auto& ps_it : nrmPS)
 				{
 					RCache.set_PS(ps_it->first);
@@ -146,8 +146,8 @@ void D3DXRenderBase::r_dsgraph_render_graph(u32 _priority)
 #endif
 					cs.ssa = 0;
 
-					cs.get_any_p(nrmCS);
-					std::sort(nrmCS.begin(), nrmCS.end(), cmp_second_ssa<mapNormalCS::value_type*>);
+					cs.getANY_P(nrmCS);
+					nrmCS.sort(cmp_second_ssa<mapNormalCS::value_type*>);
 					for (auto& cs_it : nrmCS)
 					{
 						RCache.set_Constants(cs_it->first);
@@ -155,8 +155,8 @@ void D3DXRenderBase::r_dsgraph_render_graph(u32 _priority)
 						mapNormalStates& states = cs_it->second;
 						states.ssa = 0;
 
-						states.get_any_p(nrmStates);
-						std::sort(nrmStates.begin(), nrmStates.end(), cmp_second_ssa<mapNormalStates::value_type*>);
+						states.getANY_P(nrmStates);
+						nrmStates.sort(cmp_second_ssa<mapNormalStates::value_type*>);
 						for (auto& state_it : nrmStates)
 						{
 							RCache.set_States(state_it->first);
@@ -173,15 +173,13 @@ void D3DXRenderBase::r_dsgraph_render_graph(u32 _priority)
 								mapNormalItems& items = tex_it->second;
 								items.ssa = 0;
 
-								std::sort(items.begin(), items.end(), cmp_ssa<_NormalItem>);
+								items.sort(cmp_ssa<_NormalItem>);
 								for (auto& it_it : items)
 								{
 									float LOD = calcLOD(it_it.ssa, it_it.pVisual->vis.sphere.R);
 #ifdef USE_DX11
 									RCache.LOD.set_LOD(LOD);
 #endif
-									//--#SM+#-- Обновляем шейдерные данные модели [update shader values for this model]
-									RCache.hemi.c_update(it_it.pVisual);
 
 									it_it.pVisual->Render(LOD);
 								}
@@ -218,8 +216,8 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 {
 	mapMatrixVS& vs = mapMatrixPasses[_priority][iPass];
 
-	vs.get_any_p(matVS);
-	std::sort(matVS.begin(), matVS.end(), cmp_second_ssa<mapMatrixVS::value_type*>);
+	vs.getANY_P(matVS);
+	matVS.sort(cmp_second_ssa<mapMatrixVS::value_type*>);
 	for (auto& vs_id : matVS)
 	{
 		RCache.set_VS(vs_id->first);
@@ -228,8 +226,8 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 		mapMatrixGS& gs = vs_id->second;
 		gs.ssa = 0;
 
-		gs.get_any_p(matGS);
-		std::sort(matGS.begin(), matGS.end(), cmp_second_ssa<mapMatrixGS::value_type*>);
+		gs.getANY_P(matGS);
+		matGS.sort(cmp_second_ssa<mapMatrixGS::value_type*>);
 		for (auto& gs_it : matGS)
 		{
 			RCache.set_GS(gs_it->first);
@@ -240,8 +238,8 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 #endif
 		ps.ssa = 0;
 
-		ps.get_any_p(matPS);
-		std::sort(matPS.begin(), matPS.end(), cmp_ps_second_ssa<mapMatrixPS::value_type*>);
+		ps.getANY_P(matPS);
+		matPS.sort(cmp_ps_second_ssa<mapMatrixPS::value_type*>);
 		for (auto& ps_it : matPS)
 		{
 			RCache.set_PS(ps_it->first);
@@ -255,8 +253,8 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 #endif
 			cs.ssa = 0;
 
-			cs.get_any_p(matCS);
-			std::sort(matCS.begin(), matCS.end(), cmp_second_ssa<mapMatrixCS::value_type*>);
+			cs.getANY_P(matCS);
+			matCS.sort(cmp_second_ssa<mapMatrixCS::value_type*>);
 			for (auto& cs_it : matCS)
 			{
 				RCache.set_Constants(cs_it->first);
@@ -264,8 +262,8 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 				mapMatrixStates& states = cs_it->second;
 				states.ssa = 0;
 
-				states.get_any_p(matStates);
-				std::sort(matStates.begin(), matStates.end(), cmp_second_ssa<mapMatrixStates::value_type*>);
+				states.getANY_P(matStates);
+				matStates.sort(cmp_second_ssa<mapMatrixStates::value_type*>);
 				for (auto& state_it : matStates)
 				{
 					RCache.set_States(state_it->first);
@@ -282,7 +280,7 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 						mapMatrixItems& items = tex_it->second;
 						items.ssa = 0;
 
-						std::sort(items.begin(), items.end(), cmp_ssa<_MatrixItem>);
+						items.sort(cmp_ssa<_MatrixItem>);
 						for (auto& ni_it : items)
 						{
 							RCache.set_xform_world(ni_it.Matrix);
@@ -293,8 +291,6 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 #ifdef USE_DX11
 							RCache.LOD.set_LOD(LOD);
 #endif
-							//--#SM+#-- Обновляем шейдерные данные модели [update shader values for this model]
-							RCache.hemi.c_update(ni_it.pVisual);
 
 							ni_it.pVisual->Render(LOD);
 						}
@@ -362,7 +358,7 @@ public:
 		// https://github.com/ShokerStlk/xray-16-SWM/commit/869de0b6e74ac05990f541e006894b6fe78bd2a5#diff-4199ef700b18ce4da0e2b45dee1924d0R83
 
 		Device.mProject.build_projection(deg2rad(psHUD_FOV * Device.fFOV /* *Device.fASPECT*/), Device.fASPECT,
-			/*VIEWPORT_NEAR*/0.02f, g_pGamePersistent->Environment().CurrentEnv->far_plane);
+			VIEWPORT_NEAR_HUD, g_pGamePersistent->Environment().CurrentEnv->far_plane);
 
 		Device.mFullTransform.mul(Device.mProject, Device.mView);
 		RCache.set_xform_project(Device.mProject);
@@ -382,30 +378,28 @@ public:
 };
 
 template<class T>
-IC void __fastcall render_item(const T& item)
+IC void __fastcall render_item(T* item)
 {
-	dxRender_Visual* V = item.second.pVisual;
+	dxRender_Visual* V = item->second.pVisual;
 	VERIFY(V && V->shader._get());
-	RCache.set_Element(item.second.se);
-	RCache.set_xform_world(item.second.Matrix);
-	RImplementation.apply_object(item.second.pObject);
+	RCache.set_Element(item->second.se);
+	RCache.set_xform_world(item->second.Matrix);
+	RImplementation.apply_object(item->second.pObject);
 	RImplementation.apply_lmaterial();
-	//--#SM+#-- Обновляем шейдерные данные модели [update shader values for this model]
-	RCache.hemi.c_update(V);
-	V->Render(calcLOD(item.first, V->vis.sphere.R));
+	V->Render(calcLOD(item->first, V->vis.sphere.R));
 }
 
 template<class T>
 IC void sort_front_to_back_render_and_clean(T& vec)
 {
-	vec.traverse_left_right(render_item);
+	vec.traverseLR(render_item);
 	vec.clear();
 }
 
 template<class T>
 IC void sort_back_to_front_render_and_clean(T& vec)
 {
-	vec.traverse_right_left(render_item);
+	vec.traverseLR(render_item);
 	vec.clear();
 }
 
@@ -477,7 +471,7 @@ void D3DXRenderBase::r_dsgraph_render_wmarks()
 {
 	PIX_EVENT(r_dsgraph_render_wmarks);
 
-	sort_front_to_back_render_and_clean(mapWmark);
+	sort_back_to_front_render_and_clean(mapWmark);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -522,8 +516,8 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 		for (int K = 0; K < RImplementation.Sectors_xrc.r_count(); K++)
 		{
 			CPortal* pPortal =
-				(CPortal*)RImplementation
-				.Portals[RImplementation.rmPortals->get_tris()[RImplementation.Sectors_xrc.r_begin()[K].id].dummy];
+				reinterpret_cast<CPortal*>(RImplementation
+				.Portals[RImplementation.rmPortals->get_tris()[RImplementation.Sectors_xrc.r_begin()[K].id].dummy]);
 			pPortal->bDualRender = TRUE;
 		}
 	}
@@ -534,7 +528,7 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	// Determine visibility for static geometry hierrarhy
 	for (u32 s_it = 0; s_it < PortalTraverser.r_sectors.size(); s_it++)
 	{
-		CSector* sector = (CSector*)PortalTraverser.r_sectors[s_it];
+		CSector* sector = reinterpret_cast<CSector*>(PortalTraverser.r_sectors[s_it]);
 		dxRender_Visual* root = sector->root();
 		for (u32 v_it = 0; v_it < sector->r_frustums.size(); v_it++)
 		{
@@ -560,7 +554,7 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 		for (u32 o_it = 0; o_it < lstRenderables.size(); o_it++)
 		{
 			ISpatial* spatial = lstRenderables[o_it];
-			CSector* sector = (CSector*)spatial->GetSpatialData().sector;
+			CSector* sector = reinterpret_cast<CSector*>(spatial->GetSpatialData().sector);
 			if (nullptr == sector)
 				continue; // disassociated from S/P structure
 			if (PortalTraverser.i_marker != sector->r_marker)
@@ -600,61 +594,45 @@ void D3DXRenderBase::r_dsgraph_render_R1_box(IRender_Sector* S, Fbox& BB, int sh
 	PIX_EVENT(r_dsgraph_render_R1_box);
 
 	lstVisuals.clear();
-	lstVisuals.push_back(((CSector*)S)->root());
+	lstVisuals.push_back(reinterpret_cast<CSector*>(S)->root());
 
-	for (size_t test = 0; test < lstVisuals.size(); ++test)
+	for (u32 test = 0; test < lstVisuals.size(); test++)
 	{
 		dxRender_Visual* V = lstVisuals[test];
 
-		// Visual is 100% visible - simply add it
 		switch (V->Type)
 		{
-		case MT_HIERRARHY:
-		{
-			// Add all children
-			FHierrarhyVisual* pV = (FHierrarhyVisual*)V;
-			for (auto& i : pV->children)
-			{
-				dxRender_Visual* T = i;
-				if (BB.intersect(T->vis.box))
-					lstVisuals.push_back(T);
-			}
+		case MT_HIERRARHY: {
+			for (dxRender_Visual* Vis : reinterpret_cast<FHierrarhyVisual*>(V)->children)
+				if (BB.intersect(Vis->vis.box))
+					lstVisuals.push_back(Vis);
 		}
 		break;
 		case MT_SKELETON_ANIM:
-		case MT_SKELETON_RIGID:
-		{
-			// Add all children	(s)
-			CKinematics* pV = (CKinematics*)V;
+		case MT_SKELETON_RIGID: {
+			auto pV = reinterpret_cast<CKinematics*>(V);
 			pV->CalculateBones(TRUE);
-			for (auto& i : pV->children)
-			{
-				dxRender_Visual* T = i;
-				if (BB.intersect(T->vis.box))
-					lstVisuals.push_back(T);
-			}
+
+			for (dxRender_Visual* Vis : pV->children)
+				if (BB.intersect(Vis->vis.box))
+					lstVisuals.push_back(Vis);
 		}
 		break;
-		case MT_LOD:
-		{
-			FLOD* pV = (FLOD*)V;
-			for (auto& i : pV->children)
-			{
-				dxRender_Visual* T = i;
-				if (BB.intersect(T->vis.box))
-					lstVisuals.push_back(T);
-			}
+		case MT_LOD: {
+			for (dxRender_Visual* Vis : reinterpret_cast<FLOD*>(V)->children)
+				if (BB.intersect(Vis->vis.box))
+					lstVisuals.push_back(Vis);
 		}
 		break;
 		default:
 		{
 			// Renderable visual
-			ShaderElement* E2 = V->shader->E[sh]._get();
-			if (E2 && !(E2->flags.bDistort))
+			ShaderElement* E = V->shader->E[sh]._get();
+			if (E && !(E->flags.bDistort))
 			{
-				for (u32 pass = 0; pass < E2->passes.size(); pass++)
+				for (u32 pass = 0; pass < E->passes.size(); pass++)
 				{
-					RCache.set_Element(E2, pass);
+					RCache.set_Element(E, pass);
 					V->Render(-1.f);
 				}
 			}

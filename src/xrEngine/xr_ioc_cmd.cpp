@@ -637,6 +637,8 @@ public:
 };
 
 ENGINE_API float psHUD_FOV = 0.45f;
+ENGINE_API float VIEWPORT_NEAR = .1f;
+ENGINE_API float VIEWPORT_NEAR_HUD = 0.01f;
 
 // extern int psSkeletonUpdate;
 extern int rsDVB_Size;
@@ -700,6 +702,8 @@ void CCC_Register()
 
 	// Render device states
 	CMD4(CCC_Integer, "r__supersample", &ps_r__Supersample, 1, 4);
+	CMD4(CCC_Float, "r_viewport_near", &VIEWPORT_NEAR, 0.0f, 1.f);
+	CMD4(CCC_Float, "r_viewport_near_hud", &VIEWPORT_NEAR_HUD, 0.0f, 1.f);
 
 	CMD3(CCC_Mask,	"rs_v_sync", &psDeviceFlags, rsVSync);
 	CMD3(CCC_Mask,	"rs_stats", &psDeviceFlags, rsStatistic);

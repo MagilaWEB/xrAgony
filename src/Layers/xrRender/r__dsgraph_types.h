@@ -14,22 +14,14 @@ struct _NormalItem
 
 struct _MatrixItem
 {
-	float ssa;
+	float				ssa;
 	IRenderable* pObject;
 	dxRender_Visual* pVisual;
-	Fmatrix Matrix; // matrix (copy)
+	Fmatrix				Matrix;				// matrix (copy)
 };
 
-struct _MatrixItemS
+struct _MatrixItemS : public _MatrixItem
 {
-	// Хак для использования списков инициализации
-	// Не используем наследование
-	// _MatrixItem begin
-	float ssa;
-	IRenderable* pObject;
-	dxRender_Visual* pVisual;
-	Fmatrix Matrix; // matrix (copy)
-	// _MatrixItem end
 	ShaderElement* se;
 };
 
@@ -39,7 +31,6 @@ struct _LodItem
 	dxRender_Visual* pVisual;
 };
 
-using state_type = SState*;
 using ps_type = ID3DPixelShader*;
 #if defined(USE_DX11) // DX11 needs shader signature to properly bind geometry to shader
 using vs_type = SVS*;
@@ -63,7 +54,7 @@ struct mapNormalTextures : public xr_fixed_map<STextureList*, mapNormalItems>
 	float ssa;
 };
 
-struct mapNormalStates : public xr_fixed_map<state_type, mapNormalTextures>
+struct mapNormalStates : public xr_fixed_map<ID3DState*, mapNormalTextures>
 {
 	float ssa;
 };
@@ -121,7 +112,7 @@ struct mapMatrixTextures : public xr_fixed_map<STextureList*, mapMatrixItems>
 	float ssa;
 };
 
-struct mapMatrixStates : public xr_fixed_map<state_type, mapMatrixTextures>
+struct mapMatrixStates : public xr_fixed_map<ID3DState*, mapMatrixTextures>
 {
 	float ssa;
 };
@@ -166,6 +157,11 @@ using mapMatrixPasses_T = mapMatrix_T[SHADER_PASSES_MAX];
 
 // Top level
 using mapSorted_T = xr_fixed_map<float, _MatrixItemS>;
+using mapSorted_Node = mapSorted_T::value_type;
+
 using mapHUD_T	= xr_fixed_map<float, _MatrixItemS>;
+using mapHUD_Node = mapHUD_T::value_type;
+
 using mapLOD_T	= xr_fixed_map<float, _LodItem>;
+using mapLOD_Node = mapLOD_T::value_type;
 }
