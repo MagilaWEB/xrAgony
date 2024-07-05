@@ -743,9 +743,6 @@
     <ClCompile Include="r4_R_rain.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="r4_R_render.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\r__dsgraph_build.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -1300,6 +1297,9 @@
     </ClCompile>
     <ClCompile Include="..\xrRender\Utils\SkinXW.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\r_render.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -548,7 +548,13 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 		set_Object(nullptr);
 
 		// Traverse object database
-		g_SpatialSpace->q_frustum(lstRenderables, ISpatial_DB::O_ORDERED, STYPE_RENDERABLE, ViewBase);
+		g_SpatialSpace->q_frustum
+		(
+			lstRenderables,
+			ISpatial_DB::O_ORDERED,
+			STYPE_RENDERABLE + STYPE_RENDERABLESHADOW,
+			ViewBase
+		);
 
 		// Determine visibility for dynamic part of scene
 		for (u32 o_it = 0; o_it < lstRenderables.size(); o_it++)

@@ -156,7 +156,6 @@ private:
 	void LoadBuffers(CStreamReader* fs, BOOL _alternative);
 	void LoadVisuals(IReader* fs);
 	void LoadLights(IReader* fs);
-	void LoadPortals(IReader* fs);
 	void LoadSectors(IReader* fs);
 	void LoadSWIs(CStreamReader* fs);
 
@@ -166,8 +165,7 @@ private:
 	void add_leafs_Static(dxRender_Visual* pVisual); // if detected node's full visibility
 
 public:
-	IRender_Sector* rimp_detectSector(Fvector& P, Fvector& D);
-	void render_main(Fmatrix& mCombined, bool _fportals);
+	void render_main(bool deffered);
 	void render_forward();
 	void render_lights(light_Package& LP);
 	void render_sun_cascade(u32 cascade_ind);
@@ -185,6 +183,8 @@ public:
 	IRender_Sector* getSectorActive();
 	IRenderVisual* model_CreatePE(LPCSTR name);
 	IRender_Sector* detectSector(const Fvector& P, Fvector& D);
+	xr_vector<IRender_Sector*> detectSectors_sphere(CSector* sector, const Fvector& b_center, const Fvector& b_dim);
+	xr_vector<IRender_Sector*> detectSectors_frustum(CSector* sector, CFrustum* _frustum);
 	int translateSector(IRender_Sector* pSector);
 
 	// HW-occlusion culling

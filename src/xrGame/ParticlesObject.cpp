@@ -81,7 +81,7 @@ void CParticlesObject::UpdateSpatial()
 		R = vis.sphere.R;
 		if (0 == spatial.type) {
 			// First 'valid' update - register
-			spatial.type = STYPE_RENDERABLE;
+			spatial.type = STYPE_PARTICLE;
 			spatial.sphere.set(P, R);
 			spatial_register();
 		}

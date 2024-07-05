@@ -381,6 +381,7 @@
     <ClCompile Include="..\xrRender\r_constants.cpp" />
     <ClCompile Include="..\xrRender\R_DStreams.cpp" />
     <ClCompile Include="..\xrRender\r_lights.cpp" />
+    <ClCompile Include="..\xrRender\r_render.cpp" />
     <ClCompile Include="..\xrRender\r_sector_detect.cpp" />
     <ClCompile Include="..\xrRender\r_sun.cpp" />
     <ClCompile Include="..\xrRender\r_sun_support.cpp" />
@@ -462,7 +463,6 @@
     <ClCompile Include="r4_rendertarget_phase_smap_S.cpp" />
     <ClCompile Include="r4_rendertarget_phase_ssao.cpp" />
     <ClCompile Include="r4_R_rain.cpp" />
-    <ClCompile Include="r4_R_render.cpp" />
     <ClCompile Include="R_Backend_LOD.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

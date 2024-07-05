@@ -641,9 +641,6 @@
     <ClCompile Include="r2_loader.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="r2_R_render.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\r__dsgraph_build.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -1108,6 +1105,9 @@
     </ClCompile>
     <ClCompile Include="..\xrRender\Utils\SkinXW.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\r_render.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
