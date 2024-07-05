@@ -48,7 +48,7 @@ void D3DXRenderBase::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 		int cur_count = 0;
 		u32 vOffset;
 		FLOD::_hw* V =
-			(FLOD::_hw*)RCache.Vertex.Lock(iBatchSize * uiVertexPerImposter, firstV->geom->vb_stride, vOffset);
+			reinterpret_cast<FLOD::_hw*>(RCache.Vertex.Lock(iBatchSize * uiVertexPerImposter, firstV->geom->vb_stride, vOffset));
 
 		for (u32 j = 0; j < iBatchSize; ++j, ++i)
 		{

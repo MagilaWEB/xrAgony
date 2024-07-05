@@ -41,7 +41,7 @@ bool CRender::is_sun()
 	if (o.sunstatic)
 		return FALSE;
 
-	Fcolor sun_color = ((light*)Lights.sun_adapted._get())->color;
+	Fcolor sun_color = reinterpret_cast<light*>(Lights.sun_adapted._get())->color;
 	return (ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS));
 }
 
@@ -467,10 +467,10 @@ IRender_ObjectSpecific* CRender::ros_create(IRenderable* parent) { return new CR
 void CRender::ros_destroy(IRender_ObjectSpecific*& p) { xr_delete(p); }
 IRenderVisual* CRender::model_Create(LPCSTR name, IReader* data) { return Models->Create(name, data); }
 IRenderVisual* CRender::model_CreateChild(LPCSTR name, IReader* data) { return Models->CreateChild(name, data); }
-IRenderVisual* CRender::model_Duplicate(IRenderVisual* V) { return Models->Instance_Duplicate((dxRender_Visual*)V); }
+IRenderVisual* CRender::model_Duplicate(IRenderVisual* V) { return Models->Instance_Duplicate(reinterpret_cast<dxRender_Visual*>(V)); }
 void CRender::model_Delete(IRenderVisual*& V, BOOL bDiscard)
 {
-	dxRender_Visual* pVisual = (dxRender_Visual*)V;
+	dxRender_Visual* pVisual = reinterpret_cast<dxRender_Visual*>(V);
 	Models->Delete(pVisual, bDiscard);
 	V = nullptr;
 }
@@ -484,7 +484,7 @@ void CRender::model_Delete(IRender_DetailModel*& F)
 {
 	if (F)
 	{
-		CDetail* D = (CDetail*)F;
+		CDetail* D = reinterpret_cast<CDetail*>(F);
 		D->Unload();
 		xr_delete(D);
 		F = nullptr;
@@ -582,8 +582,8 @@ void CRender::flush() { r_dsgraph_render_graph(0); }
 BOOL CRender::occ_visible(vis_data& P) { return HOM.visible(P); }
 BOOL CRender::occ_visible(sPoly& P) { return HOM.visible(P); }
 BOOL CRender::occ_visible(Fbox& P) { return HOM.visible(P); }
-void CRender::add_Visual(IRenderVisual* V, bool ignore_opt) { add_leafs_Dynamic((dxRender_Visual*)V, ignore_opt); }
-void CRender::add_Geometry(IRenderVisual* V) { add_Static((dxRender_Visual*)V, View->getMask()); }
+void CRender::add_Visual(IRenderVisual* V, bool ignore_opt) { add_leafs_Dynamic(reinterpret_cast<dxRender_Visual*>(V), ignore_opt); }
+void CRender::add_Geometry(IRenderVisual* V) { add_Static(reinterpret_cast<dxRender_Visual*>(V), View->getMask()); }
 void CRender::add_StaticWallmark(ref_shader& S, const Fvector& P, float s, CDB::TRI* T, Fvector* verts)
 {
 	if (T->suppress_wm)
@@ -594,7 +594,7 @@ void CRender::add_StaticWallmark(ref_shader& S, const Fvector& P, float s, CDB::
 
 void CRender::add_StaticWallmark(IWallMarkArray* pArray, const Fvector& P, float s, CDB::TRI* T, Fvector* V)
 {
-	dxWallMarkArray* pWMA = (dxWallMarkArray*)pArray;
+	dxWallMarkArray* pWMA = reinterpret_cast<dxWallMarkArray*>(pArray);
 	ref_shader* pShader = pWMA->dxGenerateWallmark();
 	if (pShader)
 		add_StaticWallmark(*pShader, P, s, T, V);
@@ -616,10 +616,10 @@ void CRender::add_SkeletonWallmark(
 void CRender::add_SkeletonWallmark(
 	const Fmatrix* xf, IKinematics* obj, IWallMarkArray* pArray, const Fvector& start, const Fvector& dir, float size)
 {
-	dxWallMarkArray* pWMA = (dxWallMarkArray*)pArray;
+	dxWallMarkArray* pWMA = reinterpret_cast<dxWallMarkArray*>(pArray);
 	ref_shader* pShader = pWMA->dxGenerateWallmark();
 	if (pShader)
-		add_SkeletonWallmark(xf, (CKinematics*)obj, *pShader, start, dir, size);
+		add_SkeletonWallmark(xf, reinterpret_cast<CKinematics*>(pArray), *pShader, start, dir, size);
 }
 void CRender::add_Occluder(Fbox2& bb_screenspace) { HOM.occlude(bb_screenspace); }
 void CRender::set_Object(IRenderable* O) { val_pObject = O; }
@@ -722,7 +722,7 @@ static HRESULT create_shader(LPCSTR const pTarget, DWORD const* buffer, u32 cons
 		// XXX: try to use code below
 		// _result = create_shader(pTarget, buffer, buffer_size, file_name, (SVS*&)result, disasm);
 
-		SVS* svs_result = (SVS*)result;
+		SVS* svs_result = reinterpret_cast<SVS*>(result);
 		_result = HW.pDevice->CreateVertexShader(buffer, buffer_size, 0, &svs_result->sh);
 		if (!SUCCEEDED(_result))
 		{

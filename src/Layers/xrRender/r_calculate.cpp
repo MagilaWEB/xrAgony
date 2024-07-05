@@ -29,7 +29,7 @@ void CRender::Calculate()
 	// Detect camera-sector
 	if (!vLastCameraPos.similar(Device.vCameraPosition, EPS_S))
 	{
-		CSector* pSector = (CSector*)detectSector(Device.vCameraPosition);
+		CSector* pSector = reinterpret_cast<CSector*>(detectSector(Device.vCameraPosition));
 		if (pSector && (pSector != pLastSector))
 			g_pGamePersistent->OnSectorChanged(translateSector(pSector));
 
@@ -46,9 +46,9 @@ void CRender::Calculate()
 		Fvector box_radius;
 		box_radius.set(eps, eps, eps);
 		Sectors_xrc.box_query(CDB::OPT_FULL_TEST, rmPortals, Device.vCameraPosition, box_radius);
-		for (int K = 0; K < Sectors_xrc.r_count(); K++)
+		for (auto & sector : *Sectors_xrc.r_get())
 		{
-			CPortal* pPortal = (CPortal*)Portals[rmPortals->get_tris()[Sectors_xrc.r_begin()[K].id].dummy];
+			CPortal* pPortal = reinterpret_cast<CPortal*>(Portals[rmPortals->get_tris()[sector.id].dummy]);
 			pPortal->bDualRender = TRUE;
 		}
 	}
@@ -63,13 +63,13 @@ void CRender::Calculate()
 	{
 		ISpatial* spatial = lstRenderables[_it];
 		spatial->spatial_updatesector();
-		CSector* sector = (CSector*)spatial->GetSpatialData().sector;
+		CSector* sector = reinterpret_cast<CSector*>(spatial->GetSpatialData().sector);
 		if (0 == sector)
 			continue; // disassociated from S/P structure
 
 		VERIFY(spatial->GetSpatialData().type & STYPE_LIGHTSOURCE);
 		// lightsource
-		light* L = (light*)(spatial->dcast_Light());
+		light* L = reinterpret_cast<light*>(spatial->dcast_Light());
 		VERIFY(L);
 		Lights.add_light(L);
 	}

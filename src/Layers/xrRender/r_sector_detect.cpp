@@ -79,7 +79,7 @@ IRender_Sector* CRender::detectSector(const Fvector& P, Fvector& dir)
 	{
 		// Take sector, facing to our point from portal
 		CDB::TRI* pTri = rmPortals->get_tris() + ID;
-		CPortal* pPortal = (CPortal*)Portals[pTri->dummy];
+		CPortal* pPortal = reinterpret_cast<CPortal*>(Portals[pTri->dummy]);
 		return pPortal->getSectorFacing(P);
 	}
 	else
