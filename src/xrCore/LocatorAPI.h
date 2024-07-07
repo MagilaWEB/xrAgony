@@ -8,7 +8,6 @@
 #pragma warning(pop)
 #include "Common/Util.hpp"
 #include "LocatorAPI_defs.h"
-//#include "xrCore/Threading/Lock.hpp"
 #include "xrCommon/xr_map.h"
 #include "xrCommon/predicates.h"
 #include "Common/Noncopyable.hpp"
@@ -52,7 +51,6 @@ struct _finddata32_t
 #endif
 
 class CStreamReader;
-class Lock;
 
 enum class FSType
 {
@@ -227,7 +225,6 @@ private:
 	files_set m_files;
 	bool bNoRecurse;
 
-	Lock* m_auth_lock;
 	u64 m_auth_code;
 
 	const file* RegisterExternal(pcstr name);

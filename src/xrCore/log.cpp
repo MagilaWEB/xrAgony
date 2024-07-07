@@ -4,7 +4,6 @@
 #include <time.h>
 #include "resource.h"
 #include "log.h"
-#include "xrCore/Threading/Lock.hpp"
 #ifdef _EDITOR
 #include "malloc.h"
 #endif
@@ -13,11 +12,7 @@ BOOL LogExecCB = TRUE;
 string_path logFName = "engine.log";
 string_path log_file_name = "engine.log";
 BOOL no_log = TRUE;
-#ifdef CONFIG_PROFILE_LOCKS
-Lock logCS(MUTEX_PROFILE_ID(log));
-#else // CONFIG_PROFILE_LOCKS
-Lock logCS;
-#endif // CONFIG_PROFILE_LOCKS
+xrCriticalSection logCS;
 xr_vector<xr_string>* LogFile = nullptr;
 LogCallback LogCB = 0;
 
@@ -50,6 +45,13 @@ void AddOne(const char* split)
 #ifdef DEBUG
 	OutputDebugString(split);
 	OutputDebugString("\n");
+#else
+	static bool logvs{ !!strstr(xr_strdup(GetCommandLine()), "-logvs") };
+	if (logvs)
+	{
+		OutputDebugString(split);
+		OutputDebugString("\n");
+	}
 #endif
 
 	// exec CallBack

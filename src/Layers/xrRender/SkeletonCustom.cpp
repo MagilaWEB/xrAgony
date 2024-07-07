@@ -9,11 +9,7 @@
 #include "xrEngine/Render.h"
 #endif
 int psSkeletonUpdate = 32;
-Lock UCalc_Mutex
-#ifdef CONFIG_PROFILE_LOCKS
-(MUTEX_PROFILE_ID(UCalc_Mutex))
-#endif // CONFIG_PROFILE_LOCKS
-;
+xrCriticalSection UCalc_Mutex;
 
 #ifndef _EDITOR
 #include "xrServerEntities/smart_cast.h"

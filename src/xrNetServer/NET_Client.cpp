@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "net_Client.h"
 #include "net_Server.h"
-#include "xrCore/Threading/Lock.hpp"
 
 #pragma warning(push)
 #pragma warning(disable : 4995)
 #include <malloc.h>
 #include "xrCore/Debug/dxerr.h"
 
-#ifdef CONFIG_PROFILE_LOCKS
-INetQueue::INetQueue() : pcs(new Lock(MUTEX_PROFILE_ID(INetQueue)))
-#else
-INetQueue::INetQueue() : pcs(new Lock)
-#endif
+INetQueue::INetQueue()
 {
 	unused.reserve(128);
 	for (int i = 0; i < 16; i++)
@@ -21,14 +16,13 @@ INetQueue::INetQueue() : pcs(new Lock)
 
 INetQueue::~INetQueue()
 {
-	pcs->Enter();
+	pcs.Enter();
 	u32 it;
 	for (it = 0; it < unused.size(); it++)
 		xr_delete(unused[it]);
 	for (it = 0; it < ready.size(); it++)
 		xr_delete(ready[it]);
-	pcs->Leave();
-	delete pcs;
+	pcs.Leave();
 }
 
 static u32 LastTimeCreate = 0;
@@ -61,7 +55,7 @@ NET_Packet* INetQueue::Create()
 NET_Packet* INetQueue::Create(const NET_Packet& _other)
 {
 	NET_Packet* P = nullptr;
-	pcs->Enter();
+	pcs.Enter();
 	//#ifdef _DEBUG
 	// Msg("- INetQueue::Create - ready %d, unused %d", ready.size(), unused.size());
 	//#endif
@@ -80,7 +74,7 @@ NET_Packet* INetQueue::Create(const NET_Packet& _other)
 		P = ready.back();
 	}
 	CopyMemory(P, &_other, sizeof(NET_Packet));
-	pcs->Leave();
+	pcs.Leave();
 	return P;
 }
 
@@ -131,9 +125,9 @@ void INetQueue::Release()
 	// pcs->Leave();
 }
 
-void INetQueue::LockQ() { pcs->Enter(); }
+void INetQueue::LockQ() { pcs.Enter(); }
 
-void INetQueue::UnlockQ() { pcs->Leave(); }
+void INetQueue::UnlockQ() { pcs.Leave(); }
 
 //==============================================================================
 

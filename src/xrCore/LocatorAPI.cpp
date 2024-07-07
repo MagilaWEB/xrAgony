@@ -17,7 +17,6 @@
 #include "FS_internal.h"
 #include "stream_reader.h"
 #include "file_stream_reader.h"
-#include "xrCore/Threading/Lock.hpp"
 #if defined(LINUX)
 #include "xrstring.h"
 #include <glob.h>
@@ -105,30 +104,21 @@ void setup_reader(IReader* _r, _open_file& _of) { _of._reader = _r; }
 template <typename T>
 void _register_open_file(T* _r, pcstr _fname)
 {
-	Lock _lock;
-	_lock.Enter();
-
 	shared_str f = _fname;
 	_check_open_file(f);
 
 	_open_file& _of = find_free_item(_fname);
 	setup_reader(_r, _of);
 	_of._used += 1;
-
-	_lock.Leave();
 }
 
 template <typename T>
 void _unregister_open_file(T* _r)
 {
-	Lock _lock;
-	_lock.Enter();
-
 	auto it = std::find_if(g_open_files.begin(), g_open_files.end(), eq_pointer<T>(_r));
 	VERIFY(it != g_open_files.end());
 	_open_file& _of = *it;
 	_of._reader = nullptr;
-	_lock.Leave();
 }
 
 XRCORE_API void _dump_open_files(int mode)
@@ -155,22 +145,13 @@ XRCORE_API void _dump_open_files(int mode)
 	Log("----total count = ", g_open_files.size());
 }
 
-CLocatorAPI::CLocatorAPI() : bNoRecurse(true), m_auth_code(0),
-#ifdef CONFIG_PROFILE_LOCKS
-m_auth_lock(new Lock(MUTEX_PROFILE_ID(CLocatorAPI::m_auth_lock)))
-#else
-m_auth_lock(new Lock)
-#endif // CONFIG_PROFILE_LOCKS
+CLocatorAPI::CLocatorAPI() : bNoRecurse(true), m_auth_code(0)
 {
 	m_Flags.zero();
-#if defined(WINDOWS)
 	// get page size
 	SYSTEM_INFO sys_inf;
 	GetSystemInfo(&sys_inf);
 	dwAllocGranularity = sys_inf.dwAllocationGranularity;
-#elif defined(LINUX)
-	dwAllocGranularity = sysconf(_SC_PAGE_SIZE);
-#endif
 	m_iLockRescan = 0;
 	dwOpenCounter = 0;
 }
@@ -179,7 +160,6 @@ CLocatorAPI::~CLocatorAPI()
 {
 	VERIFY(0 == m_iLockRescan);
 	_dump_open_files(1);
-	delete m_auth_lock;
 }
 
 const CLocatorAPI::file* CLocatorAPI::RegisterExternal(pcstr name)

@@ -209,6 +209,7 @@ public:
 		Timer.Start();
 		m_bNearer = FALSE;
 		m_ScopeVP.SetSVPActive(false);
+		xrThread::id_main_thread(GetCurrentThreadId());
 	};
 
 	~CRenderDevice()

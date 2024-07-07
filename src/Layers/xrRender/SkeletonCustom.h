@@ -7,7 +7,7 @@
 #include "Include/xrRender/Kinematics.h"
 
 // consts
-extern Lock UCalc_Mutex;
+extern xrCriticalSection UCalc_Mutex;
 
 // refs
 class CKinematics;

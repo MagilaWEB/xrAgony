@@ -10,52 +10,8 @@
 #include <tbb.h>
 #include "xrCore/_types.h"
 #include "xrCore/Threading/xrSyncronize.hpp"
+#include "xrCore/Threading/Event.hpp"
 #include <xrCommon\xr_list.h>
-
-// Event Manager
-class XRCORE_API Event
-{
-private:
-	void* handle;
-
-public:
-	Event() { handle = (void*)CreateEvent(nullptr, FALSE, FALSE, nullptr); }
-	~Event() { CloseHandle(handle); }
-
-	// Reset the event to the unsignalled state.
-	IC void Reset() const { ResetEvent(handle); }
-	// Set the event to the signalled state.
-	IC void Set() const { SetEvent(handle); }
-	// Wait indefinitely for the object to become signalled.
-	IC void Wait() const { WaitForSingleObject(handle, INFINITE); }
-	// Wait, with a time limit, for the object to become signalled.
-	IC bool Wait(u32 millisecondsTimeout) const { return WaitForSingleObject(handle, millisecondsTimeout) != WAIT_TIMEOUT; }
-	// Expected thread can issue a exception. But it require to process one message from HWND message queue, otherwise, thread can't show error message
-	IC void WaitEx(u32 millisecondsTimeout) const
-	{
-		DWORD WaitResult = WAIT_TIMEOUT;
-		do
-		{
-			WaitResult = WaitForSingleObject(handle, millisecondsTimeout);
-			if (WaitResult == WAIT_TIMEOUT)
-			{
-				MSG msg;
-				if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
-				{
-					TranslateMessage(&msg);
-					DispatchMessage(&msg);
-				}
-			}
-		} while (WaitResult == WAIT_TIMEOUT);
-	}
-
-	void* GetHandle() { return handle; }
-
-	bool operator==(const Event& other) const
-	{
-		return handle == other.handle;
-	}
-};
 
 class XRCORE_API xrThread
 {
@@ -71,11 +27,11 @@ class XRCORE_API xrThread
 	bool send_local_state{ false };
 	
 	bool global_parallel_process{ false };
-	bool debug_info{ true };
+	
+	std::function<void()> update_function;
 
 	static IC DWORD main_thread_id;
 	static IC xr_list<xrThread*> all_obj_thread;
-	std::function<void()> update_function;
 
 public:
 	xrThread(const LPCSTR name, bool infinity = false, bool locked = false);
@@ -96,145 +52,69 @@ public:
 	};
 	
 	float ms_time{ 0.f };
+	bool debug_info{ true };
 
 private:
 	ParallelState global_parallel{ sParalelNone };
 	ThreadState thread_state{ dsSleep };
 
-	IC void g_State(const ThreadState new_state)
-	{
-		if (new_state == dsExit)
-			Stop();
-		else
-			thread_state = new_state;
-	}
+	void g_State(const ThreadState new_state);
 
 	//Main function for worker thread.
 	void worker_main();
 
 public:
+	// Initializing and creating a Thread.
+	void Init(std::function<void()> fn, ParallelState state = sParalelNone);
 
-	static IC void init_main_thread()
-	{
-		main_thread_id = GetCurrentThreadId();
-	};
+	// Name of thread.
+	LPCSTR Name();
 
-	static IC const DWORD get_main_id()
-	{
-		return main_thread_id;
-	};
+	// Get the id of the current thread.
+	DWORD ID() const;
 
-	IC LPCSTR Name()
-	{
-		return thread_name.c_str();
-	};
-
-	IC bool UsName(LPCSTR name)
-	{
-		return thread_name.find(name) != xr_string::npos;
-	};
-
-	IC DWORD ID() const
-	{
-		return thread_id;
-	};
-
-	//Initializing and creating a Thread.
-	IC void Init(auto&& fn, ParallelState state = sParalelNone)
-	{
-		if (!IsInit())
-		{
-			thread_state = dsOK;
-			update_function = fn;
-			b_init = true;
-			all_obj_thread.push_back(std::move(this));
-
-			Thread = new std::jthread{ [this]() { worker_main(); } };
-
-			global_parallel = state;
-		}
-	}
-
-	//Is the thread initialized.
+	// Is the thread initialized.
 	bool IsInit() const;
 
-	//At the place of the call, the thread unlocks
+	// At the place of the call, the thread unlocks.
 	void Start() const;
 
-	//At the place of the call, the thread is waiting for completion
+	// At the place of the call, the thread is waiting for completion.
 	void Wait() const;
 
-	//At the place of the call, it starts and waits for the iteration of the thread to complete.
+	// At the place of the call, it starts and waits for the iteration of the thread to complete.
 	void StartWait() const;
 
-	//Setting the status of threads (dsOK = 0, dsSleep = 1, dsExit = 2).
-	IC void State(const ThreadState new_state)
-	{
-		send_local_state = true;
-		g_State(new_state);
-	};
+	// Setting the status of threads (dsOK = 0, dsSleep = 1, dsExit = 2).
+	void State(const ThreadState new_state);
 
-	//Get the status of the thread;
-	IC const ThreadState GetState() const { return thread_state; };
+	// Get the status of the thread.
+	const ThreadState GetState() const;
 
-	//Enable synchronization with Device.
-	IC void DeviceParallel(ParallelState state)
-	{
-		global_parallel = state;
-	};
+	// Enable synchronization with Device.
+	void DeviceParallel(ParallelState state);
 
-	IC void DebugFalse()
-	{
-		debug_info = false;
-	};
+	// Whether the threads process is running.
+	bool IsProcess() const;
 
-	IC const bool DebugInfo() const
-	{
-		return debug_info;
-	};
+	// Terminates the thread and destroys.
+	void Stop();
+
+	// Remember the id of the main thread.
+	static void id_main_thread(DWORD id);
+
+	// Get the main thread ID.
+	static const DWORD get_main_id();
 
 	//Set the status of all threads created via xrThread.
 	static void GlobalState(const ThreadState new_state);
 
 	//For all threads.
-	IC static void ForThreads(const auto&& upd) noexcept
-	{
-		for (xrThread* thread : all_obj_thread)
-			if (thread && upd(*thread))
-				break;
-	};
+	static void ForThreads(const std::function<bool(xrThread&)>& upd) noexcept;
 
 	//Global Start threads.
-	IC static void StartGlobal(ParallelState s_state)
-	{
-		ForThreads([s_state](xrThread& thread) {
-			if (thread.global_parallel == s_state)
-			{
-				thread.global_parallel_process = true;
-				thread.Start();
-			}
-
-			return false;
-		});
-	};
+	static void StartGlobal(ParallelState s_state);
 
 	//Global Wait threads.
-	IC static void WaitGlobal()
-	{
-		ForThreads([](xrThread& thread) {
-			if (thread.global_parallel_process && thread.global_parallel != sParalelNone)
-			{
-				thread.global_parallel_process = false;
-				thread.Wait();
-			}
-
-			return false;
-		});
-	};
-
-	//Whether the threads process is running.
-	bool IsProcess() const;
-
-	//Terminates the thread and destroys
-	void Stop();
+	static void WaitGlobal();
 };

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "xrCore/Threading/Lock.hpp"
 #include "Common/Noncopyable.hpp"
 #include "xrCommon/xr_vector.h"
 
@@ -26,7 +25,7 @@ class ENGINE_API CEventAPI : private Noncopyable
 private:
 	xr_vector<EVENT> Events;
 	xr_vector<Deferred> Events_Deferred;
-	Lock CS;
+	xrCriticalSection CS;
 
 public:
 #ifdef CONFIG_PROFILE_LOCKS

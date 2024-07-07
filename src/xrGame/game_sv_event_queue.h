@@ -4,8 +4,6 @@
 #include "xrCommon/xr_vector.h"
 #include "xrCommon/xr_set.h"
 
-class Lock;
-
 struct GameEvent
 {
 	u16 type;
@@ -16,7 +14,7 @@ struct GameEvent
 
 class GameEventQueue : Noncopyable
 {
-	Lock* pcs;
+	xrCriticalSection pcs;
 	xr_deque<GameEvent*> ready;
 	xr_vector<GameEvent*> unused;
 	xr_set<ClientID> m_blocked_clients;

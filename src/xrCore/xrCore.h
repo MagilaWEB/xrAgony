@@ -52,7 +52,6 @@
 #include "xrDebug.h"
 
 #include "clsid.h"
-//#include "Threading/Lock.hpp"
 #include "xrMemory.h"
 
 #include "_std_extensions.h"
@@ -137,11 +136,11 @@ public:
 	Flags16 ParamFlags; //Alun: TODO: Add all params
 	enum ParamFlag {
 		verboselog = (1 << 0),
-		fpslock60 = (1 << 1),
-		fpslock120 = (1 << 2),
-		fpslock144 = (1 << 3),
-		fpslock240 = (1 << 4),
-		nofpslock = (1 << 5),
+		//fpslock60 = (1 << 1),
+		//fpslock120 = (1 << 2),
+		//fpslock144 = (1 << 3),
+		//fpslock240 = (1 << 4),
+		//nofpslock = (1 << 5),
 		dbgbullet = (1 << 6),
 		genbump = (1 << 7),
 		dev = (1 << 8),

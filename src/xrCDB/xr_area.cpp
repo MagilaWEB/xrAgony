@@ -12,9 +12,6 @@ using namespace collide;
 // Purpose	: stores space slots
 //----------------------------------------------------------------------
 CObjectSpace::CObjectSpace()
-#ifdef DEBUG
-	  , m_pRender(0)
-#endif
 {
 #ifdef DEBUG
 	if (::RenderFactory)

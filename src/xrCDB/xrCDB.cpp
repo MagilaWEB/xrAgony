@@ -4,7 +4,6 @@
 #include "stdafx.h"
 
 #include "xrCDB.h"
-#include "xrCore/Threading/Lock.hpp"
 
 namespace Opcode
 {

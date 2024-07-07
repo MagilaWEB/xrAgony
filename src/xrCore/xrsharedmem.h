@@ -5,9 +5,7 @@
 //#include "_stl_extensions.h"
 #include "xrCommon/xr_vector.h"
 #include "Common/Noncopyable.hpp"
-
-// fwd. decl.
-class Lock;
+#include "Threading/xrSyncronize.hpp"
 
 #pragma pack(push, 4)
 //////////////////////////////////////////////////////////////////////////
@@ -71,7 +69,7 @@ public:
 
 private:
 	typedef xr_vector<smem_value*> cdb;
-	Lock* pcs;
+	xrCriticalSection pcs;
 	cdb container;
 };
 XRCORE_API extern smem_container* g_pSharedMemoryContainer;

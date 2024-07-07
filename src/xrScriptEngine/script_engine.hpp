@@ -12,7 +12,6 @@
 #include "xrScriptEngine/ScriptExporter.hpp"
 #include "xrScriptEngine/script_space_forward.hpp"
 #include "xrScriptEngine/Functor.hpp"
-#include "xrCore/Threading/Lock.hpp"
 #include "xrCommon/xr_unordered_map.h"
 
 struct lua_State;
@@ -73,14 +72,15 @@ public:
 	typedef AssociativeVector<ScriptProcessor, CScriptProcess*> CScriptProcessStorage;
 
 private:
-	static Lock stateMapLock;
-	static xr_unordered_map<lua_State*, CScriptEngine*> stateMap;
+	static IC xrCriticalSection stateMapLock;
+	static IC xr_unordered_map<lua_State*, CScriptEngine*> stateMap;
+	static IC string4096 g_ca_stdout;
+
 	lua_State* m_virtual_machine;
 	CScriptThread* m_current_thread;
 	bool m_reload_modules;
 	string128 m_last_no_file;
 	u32 m_last_no_file_length;
-	static string4096 g_ca_stdout;
 	bool logReenterability = false;
 	bool bindingsDumped = false;
 	char* scriptBuffer = nullptr;
@@ -90,8 +90,8 @@ private:
 	//Debrovski
 	shared_str(*m_userdataObjectLoggerFunc) (const luabind::detail::object_rep* objectToLog);
 
-	IC static xr_vector<luabind::functor<bool>> UniqueCall;
-	IC static xr_map<LPCSTR, CTimer> ScriptLimitUpdateData;
+	static IC xr_vector<luabind::functor<bool>> UniqueCall;
+	static IC xr_map<LPCSTR, CTimer> ScriptLimitUpdateData;
 
 protected:
 	CScriptProcessStorage m_script_processes;

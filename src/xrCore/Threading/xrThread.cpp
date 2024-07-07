@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "combaseapi.h"
 #include "xrThread.h"
+
 using namespace std;
 
 xrThread::xrThread(const LPCSTR name, bool infinity, bool locked)
@@ -84,6 +85,39 @@ void xrThread::worker_main()
 	}
 }
 
+void xrThread::g_State(const ThreadState new_state)
+{
+	if (new_state == dsExit)
+		Stop();
+	else
+		thread_state = new_state;
+}
+
+void xrThread::Init(std::function<void()> fn, ParallelState state)
+{
+	if (!IsInit())
+	{
+		thread_state = dsOK;
+		update_function = std::move(fn);
+		b_init = true;
+		all_obj_thread.push_back(std::move(this));
+
+		Thread = new std::jthread{ [this]() { worker_main(); } };
+
+		global_parallel = state;
+	}
+}
+
+LPCSTR xrThread::Name()
+{
+	return thread_name.c_str();
+}
+
+DWORD xrThread::ID() const
+{
+	return thread_id;
+}
+
 bool xrThread::IsInit() const
 {
 	return b_init;
@@ -117,12 +151,25 @@ void xrThread::StartWait() const
 	}
 }
 
+void xrThread::State(const ThreadState new_state)
+{
+	send_local_state = true;
+	g_State(new_state);
+}
+
+const xrThread::ThreadState xrThread::GetState() const
+{
+	return thread_state;
+}
+
+void xrThread::DeviceParallel(ParallelState state)
+{
+	global_parallel = state;
+}
+
 bool xrThread::IsProcess() const
 {
-	if (thread_state == dsOK)
-		return true;
-
-	return false;
+	return thread_state == dsOK;
 }
 
 void xrThread::Stop()
@@ -146,6 +193,16 @@ void xrThread::Stop()
 	}
 }
 
+void xrThread::id_main_thread(DWORD id)
+{
+	main_thread_id = id;
+}
+
+const DWORD xrThread::get_main_id()
+{
+	return main_thread_id;
+}
+
 void xrThread::GlobalState(const ThreadState new_state)
 {
 	static ThreadState cache_state{ dsExit };
@@ -166,4 +223,37 @@ void xrThread::GlobalState(const ThreadState new_state)
 
 		cache_state = new_state;
 	}
+}
+
+void xrThread::ForThreads(const std::function<bool(xrThread&)>& upd) noexcept
+{
+	for (xrThread* thread : all_obj_thread)
+		if (thread && upd(*thread))
+			break;
+}
+
+void xrThread::StartGlobal(ParallelState s_state)
+{
+	ForThreads([s_state](xrThread& thread) {
+		if (thread.global_parallel == s_state)
+		{
+			thread.global_parallel_process = true;
+			thread.Start();
+		}
+
+		return false;
+	});
+}
+
+void xrThread::WaitGlobal()
+{
+	ForThreads([](xrThread& thread) {
+		if (thread.global_parallel_process && thread.global_parallel != sParalelNone)
+		{
+			thread.global_parallel_process = false;
+			thread.Wait();
+		}
+
+		return false;
+	});
 }

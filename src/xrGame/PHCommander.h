@@ -2,7 +2,6 @@
 #ifndef PH_COMMANDER_H
 #define PH_COMMANDER_H
 #include "xrPhysics/iphworld.h"
-#include "xrCore/Threading/Lock.hpp"
 
 class CPHReqBase;
 class CPHReqComparerV;
@@ -71,7 +70,7 @@ using PHCALL_STORAGE = xr_vector<CPHCall*>;
 using PHCALL_I = PHCALL_STORAGE::iterator;
 class CPHCommander : public IPHWorldUpdateCallbck
 {
-	Lock lock;
+	xrCriticalSection lock;
 	PHCALL_STORAGE m_calls;
 
 public:

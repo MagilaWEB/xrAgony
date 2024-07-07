@@ -21,11 +21,10 @@ ENGINE_API CLoadScreenRenderer load_screen_renderer;
 ENGINE_API xr_list<fastdelegate::FastDelegate<bool()>> g_loading_events;
 ENGINE_API BOOL g_bRendering = FALSE;
 
-
 extern int g_process_priority;
-extern int g_GlobalFPSlimit;//Limit fps global.
-extern int g_PausedFPSlimit;//Limit fps to Pause.
-extern int g_MainFPSlimit;//Limit fps to main.
+extern int g_GlobalFPSlimit;	//Limit fps global.
+extern int g_PausedFPSlimit;	//Limit fps to Pause.
+extern int g_MainFPSlimit;		//Limit fps to main.
 extern int r_scope_fps_limit;
 
 void CRenderDevice::Run()

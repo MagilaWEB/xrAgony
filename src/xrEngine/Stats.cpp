@@ -196,7 +196,7 @@ void CStats::ShowXrThread()
 	pFontXrThread->OutSet(3.f, 1.f);
 	xrThread::ForThreads([&](xrThread& thread)
 	{
-		if (thread.DebugInfo())
+		if (thread.debug_info)
 		{
 			float color_result = thread.ms_time/15;
 			clamp(color_result, 0.f, 1.f);

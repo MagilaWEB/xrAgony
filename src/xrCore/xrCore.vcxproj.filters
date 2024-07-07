@@ -228,9 +228,6 @@
     <ClCompile Include="Text\MbHelpers.cpp">
       <Filter>Text</Filter>
     </ClCompile>
-    <ClCompile Include="Threading\Lock.cpp">
-      <Filter>Threading</Filter>
-    </ClCompile>
     <ClCompile Include="Debug\dxerr.cpp">
       <Filter>Debug core\DxErr</Filter>
     </ClCompile>
@@ -264,9 +261,6 @@
     <ClCompile Include="xrMemory.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Threading\ScopeLock.cpp">
-      <Filter>Threading</Filter>
-    </ClCompile>
     <ClCompile Include="FileCRC32.cpp">
       <Filter>FS</Filter>
     </ClCompile>
@@ -277,6 +271,9 @@
       <Filter>Threading</Filter>
     </ClCompile>
     <ClCompile Include="Threading\xrSyncronize.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Threading\Event.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
   </ItemGroup>
@@ -521,9 +518,6 @@
     <ClInclude Include="Text\MbHelpers.h">
       <Filter>Text</Filter>
     </ClInclude>
-    <ClInclude Include="Threading\Lock.hpp">
-      <Filter>Threading</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\object_type_traits.h">
       <Filter>Common\Object</Filter>
     </ClInclude>
@@ -605,9 +599,6 @@
     <ClInclude Include="xrMemory.h">
       <Filter>Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Threading\ScopeLock.hpp">
-      <Filter>Threading</Filter>
-    </ClInclude>
     <ClInclude Include="FileCRC32.h">
       <Filter>FS</Filter>
     </ClInclude>
@@ -624,6 +615,9 @@
       <Filter>Threading</Filter>
     </ClInclude>
     <ClInclude Include="Threading\xrSyncronize.hpp">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading\Event.hpp">
       <Filter>Threading</Filter>
     </ClInclude>
   </ItemGroup>

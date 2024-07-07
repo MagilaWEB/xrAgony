@@ -21,8 +21,6 @@ namespace CPU
 static u32 init_counter = 0;
 void xrCore::Initialize(pcstr _ApplicationName, LogCallback cb, bool init_fs, pcstr fs_fname, bool plugin)
 {
-	xrThread::init_main_thread();
-
 	xr_strcpy(ApplicationName, _ApplicationName);
 
 	if (0 == init_counter)

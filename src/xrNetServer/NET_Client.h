@@ -7,7 +7,7 @@
 
 class XRNETSERVER_API INetQueue : Noncopyable
 {
-	Lock* pcs;
+	xrCriticalSection pcs;
 	xr_deque<NET_Packet*> ready;
 	xr_vector<NET_Packet*> unused;
 

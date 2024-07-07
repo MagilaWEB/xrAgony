@@ -286,7 +286,7 @@ void phys_shell_verify_object_model(IPhysicsShellHolder& O)
 	VERIFY2(O.ObjectKinematics(), make_string("Can not create physics shell for object %s, model %s is not skeleton", O.ObjectName(),
 					O.ObjectNameVisual()));
 
-	VERIFY2(has_physics_collision_shapes(*K),
+	VERIFY2(has_physics_collision_shapes(*O.ObjectKinematics()),
 		make_string("Can not create physics shell for object %s, model %s has no physics collision shapes set",
 			O.ObjectName(),
 			O.ObjectNameVisual()) /*+ make_string("\n object dump: \n") + dbg_object_full_dump_string( &O )*/);

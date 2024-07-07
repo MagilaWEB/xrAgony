@@ -2,7 +2,6 @@
 #include "ISpatial.h"
 #include "Frustum.h"
 #include "xrCore/_fbox.h"
-#include "xrCore/Threading/Lock.hpp"
 
 extern Fvector c_spatial_offset[8];
 
