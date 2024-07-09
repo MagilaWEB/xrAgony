@@ -245,7 +245,7 @@ void CDetailManager::VisiblesClear()
 
 void CDetailManager::UpdateVisibleM(Fvector	EYE)
 {
-	xrCriticalSection::raii mt{ MT };
+	FastLock::raii mt{ MT };
 
 	RImplementation.BasicStats.DetailVisibility.Begin();
 	const float dist_optimization = (10 - (ps_r__details_opt_intensity - 1)) * 550.f;
@@ -503,7 +503,7 @@ void CDetailManager::Frame()
 
 	UpdateVisibleM(EYE);
 
-	xrCriticalSection::raii mt{ MT };
+	FastLock::raii mt{ MT };
 	LIMIT_UPDATE_FPS_CODE(detail_cache_Update, ps_r__detail_limit_update, cache_Update(s_x, s_z, EYE);)
 	spawn_Slots(EYE);
 	RImplementation.BasicStats.DetailCache.End();
@@ -517,7 +517,7 @@ void CDetailManager::Render(VisiblesType type)
 	if (Device.ActiveMain()) return;
 
 	{
-		xrCriticalSection::raii mt{ MT };
+		FastLock::raii mt{ MT };
 		DetailResset();
 		RessetScaleRandom();
 	}

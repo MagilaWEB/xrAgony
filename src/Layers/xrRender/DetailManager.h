@@ -209,7 +209,7 @@ public:
 	void							DetailResset();
 
 	/// MT stuff
-	xrCriticalSection				MT;
+	FastLock						MT;
 
 	CDetailManager();
 	virtual ~CDetailManager();

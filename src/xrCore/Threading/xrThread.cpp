@@ -93,16 +93,16 @@ void xrThread::g_State(const ThreadState new_state)
 		thread_state = new_state;
 }
 
-void xrThread::Init(std::function<void()> fn, ParallelState state)
+void xrThread::Init(function<void()> &&fn, ParallelState state)
 {
 	if (!IsInit())
 	{
 		thread_state = dsOK;
-		update_function = std::move(fn);
+		update_function = move(fn);
 		b_init = true;
-		all_obj_thread.push_back(std::move(this));
+		all_obj_thread.push_back(move(this));
 
-		Thread = new std::jthread{ [this]() { worker_main(); } };
+		Thread = new jthread{ [this]() { worker_main(); } };
 
 		global_parallel = state;
 	}
@@ -225,35 +225,38 @@ void xrThread::GlobalState(const ThreadState new_state)
 	}
 }
 
-void xrThread::ForThreads(const std::function<bool(xrThread&)>& upd) noexcept
+void xrThread::ForThreads(const function<void(xrThread&, bool&)>&& upd) noexcept
 {
-	for (xrThread* thread : all_obj_thread)
-		if (thread && upd(*thread))
-			break;
+	for (xrThread*& thread : all_obj_thread)
+	{
+		if (thread)
+		{
+			bool finish{ false };
+			upd(*thread, finish);
+			if (finish)
+				break;
+		}
+	}
 }
 
 void xrThread::StartGlobal(ParallelState s_state)
 {
-	ForThreads([s_state](xrThread& thread) {
+	ForThreads([s_state](xrThread& thread, bool&) -> void {
 		if (thread.global_parallel == s_state)
 		{
 			thread.global_parallel_process = true;
 			thread.Start();
 		}
-
-		return false;
 	});
 }
 
 void xrThread::WaitGlobal()
 {
-	ForThreads([](xrThread& thread) {
+	ForThreads([](xrThread& thread, bool&) -> void {
 		if (thread.global_parallel_process && thread.global_parallel != sParalelNone)
 		{
 			thread.global_parallel_process = false;
 			thread.Wait();
 		}
-
-		return false;
 	});
 }

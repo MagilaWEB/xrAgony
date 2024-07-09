@@ -194,7 +194,7 @@ void CStats::Show()
 void CStats::ShowXrThread()
 {
 	pFontXrThread->OutSet(3.f, 1.f);
-	xrThread::ForThreads([&](xrThread& thread)
+	xrThread::ForThreads([&](xrThread& thread, bool&) -> void
 	{
 		if (thread.debug_info)
 		{
@@ -208,7 +208,6 @@ void CStats::ShowXrThread()
 			pFontXrThread->OutNext("Thread: Name[%s], ID[%d], time[%0.4f ms]", thread.Name(), thread.ID(), thread.ms_time);
 			pFontXrThread->OnRender();
 		}
-		return false;
 	});
 }
 

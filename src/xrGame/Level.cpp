@@ -339,7 +339,7 @@ void CLevel::OnFrame()
 
 	if (IsGameTypeSingle() && Device.dwPrecacheFrame == 0)
 	{
-		Device.add_parallel2(m_game_task_manager, &CGameTaskManager::UpdateTasks);
+		Device.add_parallel(m_game_task_manager, &CGameTaskManager::UpdateTasks);
 		//GameTaskManager().UpdateTasks();
 	}
 	// Inherited update

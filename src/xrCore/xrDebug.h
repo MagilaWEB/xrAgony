@@ -91,14 +91,4 @@ private:
 	static bool InitializeSymbolEngine();
 };
 
-// for debug purposes only
-inline std::string make_string(const char* format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	string4096 temp;
-	vsprintf(temp, format, args);
-	return temp;
-}
-
 #include "xrDebug_macros.h"

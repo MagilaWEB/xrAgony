@@ -7,12 +7,10 @@ class XRCORE_API xrCriticalSection : Noncopyable
 	CRITICAL_SECTION pmutex;
 
 public:
-	class XRCORE_API raii
+	struct XRCORE_API raii
 	{
-	public:
 		raii(xrCriticalSection&);
 		~raii();
-
 	private:
 		xrCriticalSection* critical_section;
 	};
@@ -29,7 +27,17 @@ public:
 // Non recursive
 class XRCORE_API FastLock : Noncopyable
 {
+	SRWLOCK srw;
+
 public:
+	struct XRCORE_API raii
+	{
+		raii(FastLock&);
+		~raii();
+	private:
+		FastLock* fast_lock;
+	};
+
 	enum EFastLockType : ULONG
 	{
 		Exclusive = 0,
@@ -49,7 +57,4 @@ public:
 	void LeaveShared();
 
 	void* GetHandle();
-
-private:
-	SRWLOCK srw;
 };

@@ -65,7 +65,7 @@ private:
 
 public:
 	// Initializing and creating a Thread.
-	void Init(std::function<void()> fn, ParallelState state = sParalelNone);
+	void Init(std::function<void()> &&fn, ParallelState state = sParalelNone);
 
 	// Name of thread.
 	LPCSTR Name();
@@ -110,7 +110,7 @@ public:
 	static void GlobalState(const ThreadState new_state);
 
 	//For all threads.
-	static void ForThreads(const std::function<bool(xrThread&)>& upd) noexcept;
+	static void ForThreads(const std::function<void(xrThread& thread, bool& finish)>&& upd) noexcept;
 
 	//Global Start threads.
 	static void StartGlobal(ParallelState s_state);

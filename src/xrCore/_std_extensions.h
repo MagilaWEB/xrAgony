@@ -6,6 +6,7 @@
 #include <float.h>
 #include <stdio.h>
 #include "xrCommon/math_funcs_inline.h"
+#include "xrCommon/xr_string.h"
 //#include "xr_token.h"
 
 #ifdef abs
@@ -26,14 +27,6 @@
 
 #ifdef max
 #undef max
-#endif
-
-#if defined(LINUX)
-IC int vsnprintf_s(char* buffer, size_t size, size_t count, const char* format, va_list list)
-{
-	// TODO add bound check
-	return vsnprintf(buffer, size, format, list);
-}
 #endif
 
 // generic
@@ -121,38 +114,35 @@ IC size_t xr_strlen(const char* S) { return strlen(S); }
 //#ifndef _EDITOR
 #ifndef MASTER_GOLD
 
-inline int xr_strcpy(LPSTR destination, size_t const destination_size, LPCSTR source)
+IC int xr_strcpy(LPSTR destination, size_t const destination_size, LPCSTR source)
 {
 	return strcpy_s(destination, destination_size, source);
 }
 
-inline int xr_strcat(LPSTR destination, size_t const buffer_size, LPCSTR source)
+IC int xr_strcat(LPSTR destination, size_t const buffer_size, LPCSTR source)
 {
 	return strcat_s(destination, buffer_size, source);
 }
 
-inline int __cdecl xr_sprintf(LPSTR destination, size_t const buffer_size, LPCSTR format_string, ...)
+template <typename ... Args>
+IC int __cdecl xr_sprintf(LPSTR destination, size_t const buffer_size, LPCSTR format_string, Args... args)
 {
-	va_list args;
-	va_start(args, format_string);
-	return vsprintf_s(destination, buffer_size, format_string, args);
+	return sprintf_s(destination, buffer_size, format_string, std::forward<Args>(args)...);
 }
 
-template <int count>
-inline int __cdecl xr_sprintf(char (&destination)[count], LPCSTR format_string, ...)
+template <size_t count, typename ... Args>
+IC int __cdecl xr_sprintf(char(&destination)[count], LPCSTR format_string, Args... args)
 {
-	va_list args;
-	va_start(args, format_string);
-	return vsprintf_s(destination, count, format_string, args);
+	return sprintf_s(destination, count, format_string, std::forward<Args>(args)...);
 }
 #else // #ifndef MASTER_GOLD
 
-inline int xr_strcpy(LPSTR destination, size_t const destination_size, LPCSTR source)
+IC int xr_strcpy(LPSTR destination, size_t const destination_size, LPCSTR source)
 {
 	return strncpy_s(destination, destination_size, source, destination_size);
 }
 
-inline int xr_strcat(LPSTR destination, size_t const buffer_size, LPCSTR source)
+IC int xr_strcat(LPSTR destination, size_t const buffer_size, LPCSTR source)
 {
 	size_t const destination_length = xr_strlen(destination);
 	LPSTR i = destination + destination_length;
@@ -167,36 +157,41 @@ inline int xr_strcat(LPSTR destination, size_t const buffer_size, LPCSTR source)
 	return 0;
 }
 
-inline int __cdecl xr_sprintf(LPSTR destination, size_t const buffer_size, LPCSTR format_string, ...)
+template <typename ... Args>
+IC int __cdecl xr_sprintf(LPSTR destination, size_t const buffer_size, LPCSTR format_string, Args... args)
 {
-	va_list args;
-	va_start(args, format_string);
-	return vsnprintf_s(destination, buffer_size, buffer_size - 1, format_string, args);
+	return snprintf_s(destination, buffer_size, buffer_size - 1, format_string, std::forward<Args>(args)...);
 }
 
-template <int count>
-inline int __cdecl xr_sprintf(char (&destination)[count], LPCSTR format_string, ...)
+template <size_t count, typename ... Args>
+IC int __cdecl xr_sprintf(char (&destination)[count], LPCSTR format_string, Args... args)
 {
-	va_list args;
-	va_start(args, format_string);
-	return vsnprintf_s(destination, count, count - 1, format_string, args);
+	return snprintf_s(destination, count, count - 1, format_string, std::forward<Args>(args)...);
 }
 #endif // #ifndef MASTER_GOLD
 
+template <typename ... Args>
+IC xr_string make_string(LPCSTR format, Args... args)
+{
+	string4096 temp;
+	xr_sprintf(temp, format, std::forward<Args>(args)...);
+	return temp;
+}
+
 template <int count>
-inline int xr_strcpy(char (&destination)[count], LPCSTR source)
+IC int xr_strcpy(char (&destination)[count], LPCSTR source)
 {
 	return xr_strcpy(destination, count, source);
 }
 
 template <int count>
-inline int xr_strcat(char (&destination)[count], LPCSTR source)
+IC int xr_strcat(char (&destination)[count], LPCSTR source)
 {
 	return xr_strcat(destination, count, source);
 }
 //#endif // #ifndef _EDITOR
 
-inline void MemFill32(void* dst, u32 value, size_t dstSize)
+IC void MemFill32(void* dst, u32 value, size_t dstSize)
 {
 	u32* ptr = static_cast<u32*>(dst);
 	u32* end = ptr + dstSize;

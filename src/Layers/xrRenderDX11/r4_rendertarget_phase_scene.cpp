@@ -91,7 +91,7 @@ void CRenderTarget::phase_scene_begin()
 
 	// Stencil - write 0x1 at pixel pos
 	RCache.set_Stencil(
-		TRUE, D3DCMP_ALWAYS, 0x01, 0xff, 0x7f, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
+		TRUE, D3DCMP_ALWAYS, 0x1, 0xff, 0x7f, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
 
 	// Misc		- draw only front-faces
 	//	TODO: DX10: siable two-sided stencil here

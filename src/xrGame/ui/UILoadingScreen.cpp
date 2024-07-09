@@ -62,7 +62,7 @@ void UILoadingScreen::Initialize()
 
 void UILoadingScreen::Update(u16 stagesCompleted, u16 stagesTotal)
 {
-	xrCriticalSection::raii mt{ Lock };
+	FastLock::raii mt{ Lock };
 
 	const float progress = float(stagesCompleted) / stagesTotal * loadingProgress->GetRange_max();
 	if (loadingProgress->GetProgressPos() < progress)
@@ -113,7 +113,7 @@ void UILoadingScreen::OnRender()
 
 void UILoadingScreen::ForceFinish()
 {
-	xrCriticalSection::raii mt{ Lock };
+	FastLock::raii mt{ Lock };
 	loadingProgress->SetProgressPos(loadingProgress->GetRange_max());
 	loadingProgress->Show(false);
 	loadingProgressPercent->Show(false);
@@ -121,7 +121,7 @@ void UILoadingScreen::ForceFinish()
 
 void UILoadingScreen::ChangeVisibility(bool state)
 {
-	xrCriticalSection::raii mt{ Lock };
+	FastLock::raii mt{ Lock };
 	Show(state);
 
 	if (state)
@@ -173,7 +173,7 @@ const bool UILoadingScreen::IsVisibility()
 
 void UILoadingScreen::SetLevelLogo(pcstr name)
 {
-	xrCriticalSection::raii mt{ Lock };
+	FastLock::raii mt{ Lock };
 	if (loadingLogo->IsShown() == false)
 	{
 		loadingLogo->InitTexture(name);
@@ -184,7 +184,7 @@ void UILoadingScreen::SetLevelLogo(pcstr name)
 
 void UILoadingScreen::SetStageTitle(pcstr title)
 {
-	xrCriticalSection::raii mt{ Lock };
+	FastLock::raii mt{ Lock };
 	if (title)
 	{
 		string256 buff;
@@ -197,7 +197,7 @@ void UILoadingScreen::SetStageTitle(pcstr title)
 
 void UILoadingScreen::SetStageTip(pcstr header, pcstr tipNumber, pcstr tip, pcstr level_name)
 {
-	xrCriticalSection::raii mt{ Lock };
+	FastLock::raii mt{ Lock };
 	if (!m_start_show_timer)
 	{
 		m_start_show_timer = true;

@@ -34,7 +34,7 @@ class UILoadingScreen : public pureRender, public ILoadingScreen, public CUIWind
 	bool m_start_show_timer{ false };
 
 public:
-	xrCriticalSection Lock;
+	FastLock Lock;
 	UILoadingScreen();
 	~UILoadingScreen();
 

@@ -25,9 +25,8 @@ BOOL xrCriticalSection::TryEnter()
 	return TryEnterCriticalSection(&pmutex);
 }
 
-xrCriticalSection::raii::raii(xrCriticalSection& other)
+xrCriticalSection::raii::raii(xrCriticalSection& other) : critical_section(&std::forward<xrCriticalSection&>(other))
 {
-	critical_section = std::move(&other);
 	VERIFY(critical_section);
 	critical_section->Enter();
 }
@@ -52,3 +51,14 @@ bool FastLock::TryEnterShared() { return 0 != TryAcquireSRWLockShared(&srw); }
 void FastLock::LeaveShared() { ReleaseSRWLockShared(&srw); }
 
 void* FastLock::GetHandle() { return reinterpret_cast<void*>(&srw); }
+
+FastLock::raii::raii(FastLock& other) : fast_lock(&std::forward<FastLock&>(other))
+{
+	VERIFY(fast_lock);
+	fast_lock->Enter();
+}
+
+FastLock::raii::~raii()
+{
+	fast_lock->Leave();
+}
