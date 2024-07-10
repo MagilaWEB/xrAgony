@@ -12,7 +12,7 @@ xrCriticalSection cs;
 
 struct str_container_impl
 {
-	static const u32 buffer_size = 1024 * 256;
+	static constexpr u32 buffer_size = 1024 * 256;
 	str_value* buffer[buffer_size];
 	int num_docs;
 

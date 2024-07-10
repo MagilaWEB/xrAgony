@@ -40,7 +40,7 @@ void CLevel::cl_Process_Spawn(NET_Packet& P)
 	};
 
 
-	if (Device.IsLoadingScreen() && E->ID != 0 && E->ID_Parent != 0)
+	if (Device.IsLoadingScreen())
 		game_spawn_list.push_back(E);
 	else
 	{
@@ -182,16 +182,29 @@ void CLevel::ProcessGameSpawns()
 	static bool load_play_start = false;
 	timer.Start();
 
+	static size_t object_synchronization_it = 0;
+	static size_t object_synchronization_send = 0;
+	static size_t object_synchronization_size = 0;
+
 	while (!game_spawn_list.empty())
 	{
 		if (!load_play_start)
 		{
 			load_play_start = true;
-			pApp->LoadBegin();
-			pApp->SetLoadStateMax(game_spawn_list.size());
+			Device.Pause(TRUE, TRUE, TRUE, "object_synchronization");
+			pApp->SetLoadStageTitle("st_loading_object_synchronization");
+			object_synchronization_size = game_spawn_list.size();
 		}
 
-		pApp->SetLoadStageTitle("st_loading_object_synchronization");
+		auto check_progress{ [&]() {
+				const size_t result = size_t((float(object_synchronization_it) / object_synchronization_size) * 17);
+				if (result != object_synchronization_send)
+				{
+					pApp->SetLoadStageTitle("st_loading_object_synchronization");
+					object_synchronization_send = result;
+				}
+			}
+		};
 
 		CSE_Abstract* E = game_spawn_list.front();
 		if (E)
@@ -202,17 +215,22 @@ void CLevel::ProcessGameSpawns()
 
 				g_sv_Spawn(E);
 				F_entity_Destroy(E);
+				object_synchronization_it++;
 
-				for (CSE_Abstract*& PRENT_E : game_spawn_list)
+				check_progress();
+
+				std::erase_if(game_spawn_list, [&](CSE_Abstract*& PRENT_E)
 				{
 					if (PRENT_E && E_ID == PRENT_E->ID_Parent)
 					{
 						g_sv_Spawn(PRENT_E);
 						F_entity_Destroy(PRENT_E);
-						PRENT_E = nullptr;
-						pApp->SetLoadStageTitle("st_loading_object_synchronization");
+						object_synchronization_it++;
+						check_progress();
+						return true;
 					}
-				}
+					return false;
+				});
 			}
 			else
 			{
@@ -234,6 +252,10 @@ void CLevel::ProcessGameSpawns()
 			Msg("~WARNING: LoadScreen == nullptr.");
 
 		pApp->LoadEnd();
+
+		object_synchronization_size = 0;
+		object_synchronization_it = 0;
+		object_synchronization_send = 0;
 
 		load_play_start = false;
 	}

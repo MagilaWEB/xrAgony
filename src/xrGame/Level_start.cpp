@@ -21,8 +21,6 @@ bool CLevel::net_Start(const char* op_server, const char* op_client)
 {
 	net_start_result_total = TRUE;
 
-	pApp->LoadBegin();
-
 	string64 player_name = "";
 	xr_strcpy(player_name, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName);
 	VERIFY(xr_strlen(player_name));

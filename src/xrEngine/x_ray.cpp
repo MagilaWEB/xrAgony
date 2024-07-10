@@ -127,7 +127,7 @@ CApplication::CApplication()
 
 	// App Title
 	loadingScreen = nullptr;
-	SetLoadStateMax(load_stage_limit);
+	//SetLoadStateMax(load_stage_limit);
 }
 
 CApplication::~CApplication()
@@ -220,8 +220,20 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 }
 
 
+void CApplication::CheckMaxLoad()
+{
+	if (!loaded)
+		SetLoadStateMax(elementary_load_stage_limit);
+	else if (!g_pGameLevel->bReady)
+		SetLoadStateMax(reset_load_stage_limit);
+	else
+		SetLoadStateMax(restart_load_stage_limit);
+}
+
 void CApplication::LoadBegin()
 {
+	CheckMaxLoad();
+
 	loaded = false;
 
 	_InitializeFont(pFontSystem, "ui_font_letterica18_russian", 0);
@@ -242,7 +254,8 @@ void CApplication::LoadEnd()
 #endif
 	load_stage = 0;
 	loaded = true;
-	SetLoadStateMax(load_stage_limit);
+
+	//SetLoadStateMax(load_stage_limit);
 }
 
 void CApplication::SetLoadingScreen(std::function<void(ILoadingScreen*&)> func)
@@ -269,6 +282,8 @@ void CApplication::SetLoadStageTitle(pcstr ls_title)
 		loadingScreen->SetStageTitle(nullptr);
 
 	++load_stage;
+
+	//Msg("- load_stage [%d]", load_stage);
 }
 
 // Sequential

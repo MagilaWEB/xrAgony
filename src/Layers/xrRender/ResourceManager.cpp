@@ -342,24 +342,21 @@ void CResourceManager::DeferredUpload()
 		return;
 #endif
 	
-	u32 texture_it = 0;
-	u32 texture_send = 0;
+	size_t texture_it = 0;
+	size_t texture_send = 0;
+	size_t size_texture = m_textures.size();
 	tbb::task_group parallel;
-	
 	if (pApp->IsLoadingScreen())
 	{
 		parallel.run([&]() {
-			while (true)
+			while (texture_send < 40)
 			{
-				const u32 result = u32((float(texture_it) / m_textures.size()) * 21);
+				const size_t result = size_t((float(texture_it) / size_texture) * 41);
 				if (result != texture_send)
 				{
 					pApp->SetLoadStageTitle("st_loading_textures");
 					texture_send = result;
 				}
-
-				if (texture_send >= 20)
-					break;
 			}
 		});
 	}

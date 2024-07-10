@@ -190,9 +190,9 @@ public:
 
 	MessageRegistry<pureFrame>					seqFrameMT;
 	MessageRegistry<pureDeviceReset>			seqDeviceReset;
-	xr_list<fastdelegate::FastDelegate<void()>>	seqParallel;
-	xr_list<fastdelegate::FastDelegate<void()>>	seqParallel2;
-	xr_list<fastdelegate::FastDelegate<void()>>	segParallelLoad;
+	xr_list<fastdelegate::FastDelegate<>>	seqParallel;
+	xr_list<fastdelegate::FastDelegate<>>	seqParallel2;
+	xr_list<fastdelegate::FastDelegate<>>	segParallelLoad;
 	xr_list<std::function<void()>>				functionPointer;
 
 	

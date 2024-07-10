@@ -1511,10 +1511,10 @@ void CPHShell::SetAnimated(bool v)
 		(*i)->SetAnimated(v);
 }
 
-void CPHShell::AnimatorOnFrame()
+void CPHShell::AnimatorOnFrame(bool calculate_bones)
 {
 	VERIFY(PPhysicsShellAnimator());
-	PPhysicsShellAnimator()->OnFrame();
+	PPhysicsShellAnimator()->OnFrame(calculate_bones);
 }
 
 #ifdef DEBUG

@@ -77,8 +77,8 @@ float CALifeUpdateManager::shedule_Scale()
 
 void CALifeUpdateManager::update_switch()
 {
-	static xrCriticalSection Lock;
-	xrCriticalSection::raii mt{ Lock };
+	static FastLock Lock;
+	FastLock::raii mt{ Lock };
 	init_ef_storage();
 
 	START_PROFILE("ALife/switch");

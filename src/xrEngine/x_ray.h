@@ -3,8 +3,9 @@
 
 #include "xrEngine/ILoadingScreen.h"
 
-constexpr u16 load_stage_limit = 32;
-
+constexpr u16 elementary_load_stage_limit = 100;
+constexpr u16 reset_load_stage_limit = 70;
+constexpr u16 restart_load_stage_limit = 20;
 // refs
 class ENGINE_API CGameFont;
 
@@ -58,6 +59,8 @@ public:
 
 		return nullptr;
 	}
+
+	void CheckMaxLoad();
 	void LoadBegin();
 	void LoadEnd();
 

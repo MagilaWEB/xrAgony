@@ -519,14 +519,14 @@ void CGamePersistent::update_logo_intro()
 {
 	if (m_intro && (false == m_intro->IsActive()))
 	{
-		m_intro_event = fastdelegate::FastDelegate<void()>();
+		m_intro_event = nullptr;
 		xr_delete(m_intro);
 		Msg("intro_delete ::update_logo_intro");
 		Console->Execute("main_menu on");
 	}
 	else if (!m_intro)
 	{
-		m_intro_event = fastdelegate::FastDelegate<void()>();
+		m_intro_event = nullptr;
 	}
 }
 
@@ -554,13 +554,14 @@ void CGamePersistent::update_game_loaded()
 	xr_delete(m_intro);
 	Msg("intro_delete ::update_game_loaded");
 	start_game_intro();
+	Device.Pause(FALSE, TRUE, TRUE, "object_synchronization");
 }
 
 void CGamePersistent::start_game_intro()
 {
 	if (!allow_intro())
 	{
-		m_intro_event = fastdelegate::FastDelegate<void()>();
+		m_intro_event = nullptr;
 		return;
 	}
 
@@ -579,11 +580,11 @@ void CGamePersistent::update_game_intro()
 	{
 		xr_delete(m_intro);
 		Msg("intro_delete ::update_game_intro");
-		m_intro_event = fastdelegate::FastDelegate<void()>();
+		m_intro_event = nullptr;
 	}
 	else if (!m_intro)
 	{
-		m_intro_event = fastdelegate::FastDelegate<void()>();
+		m_intro_event = nullptr;
 	}
 }
 
@@ -592,8 +593,18 @@ extern CUISequencer* g_tutorial2;
 
 void CGamePersistent::OnFrame()
 {
+	static bool state_is_new_game{ false };
 	if (m_intro_event.empty() && pApp->IsLoaded() && pApp->IsLoadingScreen() && !pApp->IsNewGame())
+	{
 		m_intro_event.bind(this, &CGamePersistent::game_loaded);
+		state_is_new_game = false;
+	}
+	else if (pApp->IsLoaded() && pApp->IsNewGame() && !state_is_new_game)
+	{
+		Device.Pause(FALSE, TRUE, TRUE, "object_synchronization");
+		state_is_new_game = true;
+		pApp->CheckMaxLoad();
+	}
 
 	if (g_tutorial2)
 	{
@@ -723,7 +734,7 @@ void CGamePersistent::OnFrame()
 		//Device.add_parallel(&Engine.Sheduler, &CSheduler::Update);
 		Engine.Sheduler.Update();
 		// update weathers ambient
-		if (!Device.Paused())
+		if ((!Device.Paused()) && !pApp->IsLoadingScreen())
 			WeathersUpdate();
 	}
 

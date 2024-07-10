@@ -4,6 +4,7 @@
 #include "xrEngine/CustomHUD.h"
 
 #include "FBasicVisual.h"
+#include "SkeletonCustom.h"
 
 using namespace R_dsgraph;
 
@@ -569,6 +570,25 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 				IRenderable* renderable = spatial->dcast_Renderable();
 				if (nullptr == renderable)
 					continue; // unknown, but renderable object (r1_glow???)
+
+				if (Device.vCameraPosition.distance_to_sqr(renderable->GetRenderData().xform.c) <= 5000.f)
+				{
+					CKinematics* pKin = (CKinematics*)renderable->GetRenderData().visual;
+					if (pKin)
+					{
+						if (spatial->GetSpatialData().type & STYPE_RENDERABLESHADOW)
+						{
+							pKin->CalculateBones(TRUE);
+						}
+						if (spatial->GetSpatialData().type & STYPE_RENDERABLE)
+						{
+							if (0 == ViewSave.testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R))
+							{
+								pKin->CalculateBones(TRUE);
+							}
+						}
+					}
+				}
 
 				renderable->renderable_Render();
 			}

@@ -2,8 +2,8 @@
 
 #include "ModelPool.h"
 
-#ifndef _EDITOR
 #include "xrEngine/IGame_Persistent.h"
+#include "xrEngine/x_ray.h"
 #include "xrCore/FMesh.hpp"
 #include "FHierrarhyVisual.h"
 #include "SkeletonAnimated.h"
@@ -14,17 +14,6 @@
 #include "FTreeVisual.h"
 #include "ParticleGroup.h"
 #include "ParticleEffect.h"
-#else
-#include "FMesh.h"
-#include "FVisual.h"
-#include "FProgressive.h"
-#include "ParticleEffect.h"
-#include "ParticleGroup.h"
-#include "FSkinned.h"
-#include "FHierrarhyVisual.h"
-#include "SkeletonAnimated.h"
-#include "IGame_Persistent.h"
-#endif
 
 dxRender_Visual* CModelPool::Instance_Create(u32 type)
 {
@@ -395,12 +384,34 @@ void CModelPool::Prefetch()
 	string256 section;
 	strconcat(sizeof(section), section, "prefetch_visuals_", g_pGamePersistent->m_game_params.m_game_type);
 	const CInifile::Sect& sect = pSettings->r_section(section);
-	for (auto I = sect.Data.cbegin(); I != sect.Data.cend(); I++)
+
+	size_t prefetch_it = 0;
+	size_t prefetch_send = 0;
+	size_t size = sect.Data.size();
+	tbb::task_group parallel;
+	if (pApp->IsLoadingScreen())
 	{
-		const CInifile::Item& item = *I;
+		parallel.run([&]() {
+			while (prefetch_send < 10)
+			{
+				const size_t result = size_t((float(prefetch_it) / size) * 10);
+				if (result != prefetch_send)
+				{
+					pApp->SetLoadStageTitle("st_loading_prefetching_objects");
+					prefetch_send = result;
+				}
+			}
+		});
+	}
+
+	for (auto & item : sect.Data)
+	{
 		dxRender_Visual* V = Create(item.first.c_str());
 		Delete(V, FALSE);
+		prefetch_it++;
 	}
+
+	parallel.wait();
 	Logging(TRUE);
 }
 

@@ -37,6 +37,8 @@ public:
 	float m_volumetric_intensity;
 	float m_volumetric_distance;
 
+	xr_vector<IRender_Sector*> m_sectors{};
+
 #if defined(RENDER)
 	float falloff; // precalc to make light equal to zero at light range
 	float attenuation0; // Constant attenuation
@@ -102,10 +104,11 @@ public:
 #endif
 
 public:
+	virtual void get_sectors();
 	virtual void set_type(LT type) { flags.type = type; }
 	virtual void set_active(bool b);
 	virtual bool get_active() { return flags.bActive; }
-	virtual void set_shadow(bool b) { flags.bShadow = b; }
+	virtual void set_shadow(bool b);
 	virtual void set_volumetric(bool b) { flags.bVolumetric = b; }
 	virtual void set_volumetric_quality(float fValue) { m_volumetric_quality = fValue; }
 	virtual void set_volumetric_intensity(float fValue) { m_volumetric_intensity = fValue; }
@@ -124,7 +127,7 @@ public:
 	virtual Fvector spatial_sector_point();
 
 	virtual IRender_Light* dcast_Light() { return this; }
-	vis_data& get_homdata();
+	virtual vis_data& get_homdata();
 
 #if defined(RENDER)
 	void xform_calc();

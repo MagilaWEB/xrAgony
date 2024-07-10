@@ -3,6 +3,7 @@
 #include "IGame_Persistent.h"
 #include "IGame_ObjectPool.h"
 #include "xr_object.h"
+#include "x_ray.h"
 #include "xrServerEntities/smart_cast.h"
 
 IGame_ObjectPool::IGame_ObjectPool(void) {}
@@ -18,15 +19,38 @@ void IGame_ObjectPool::prefetch()
 	// prefetch objects
 	strconcat(sizeof(section), section, "prefetch_objects_", g_pGamePersistent->m_game_params.m_game_type);
 	CInifile::Sect const& sect = pSettings->r_section(section);
+
+	size_t prefetch_it = 0;
+	size_t prefetch_send = 0;
+	size_t size = sect.Data.size();
+	tbb::task_group parallel;
+	if (pApp->IsLoadingScreen())
+	{
+		parallel.run([&]() {
+			while (prefetch_send < 10)
+			{
+				const size_t result = size_t((float(prefetch_it) / size) * 10);
+				if (result != prefetch_send)
+				{
+					pApp->SetLoadStageTitle("st_loading_prefetching_objects");
+					prefetch_send = result;
+				}
+			}
+		});
+	}
+
 	for (const auto& item : sect.Data)
 	{
 		CLASS_ID CLS = pSettings->r_clsid(item.first.c_str(), "class");
 		p_count++;
+		prefetch_it++;
 		IGameObject* pObject = smart_cast<IGameObject*>(NEW_INSTANCE(CLS));
 		pObject->Load(item.first.c_str());
 		VERIFY2(pObject->cNameSect().c_str(), item.first.c_str());
 		m_PrefetchObjects.push_back(pObject);
 	}
+
+	parallel.wait();
 
 	// out statistic
 	::Render->model_Logging(TRUE);

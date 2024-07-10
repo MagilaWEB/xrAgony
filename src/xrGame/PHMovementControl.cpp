@@ -25,7 +25,7 @@
 #include "phdebug.h"
 #endif
 
-#include "Include/xrRender/Kinematics.h"
+//#include "Include/xrRender/Kinematics.h"
 
 #define GROUND_FRICTION 10.0f
 #define AIR_FRICTION 0.01f
@@ -1380,7 +1380,7 @@ void CPHMovementControl::UpdateObjectBox(CPHCharacter* ach)
 	if (!ach || !ach->b_exist)
 		return;
 	Fvector cbox;
-	PKinematics(pObject->Visual())->CalculateBones();
+	//PKinematics(pObject->Visual())->CalculateBones();
 	pObject->BoundingBox().getradius(cbox);
 
 	// const Fvector &pa	=cast_fv(dBodyGetPosition(ach->get_body()));

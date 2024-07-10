@@ -2,8 +2,9 @@
 #include "xrEngine/CustomHUD.h"
 #include "xrEngine/IGame_Persistent.h"
 #include "xrEngine/xr_object.h"
-#include "../xrRender/FBasicVisual.h"
-#include "../xrRender/QueryHelper.h"
+#include "xrRender/FBasicVisual.h"
+#include "xrRender/QueryHelper.h"
+#include "xrRender/SkeletonCustom.h"
 
 #define DBG_LINHT FALSE
 
@@ -170,6 +171,7 @@ void CRender::render_main(bool deffered)
 				}
 			);
 			
+			HOM.Enable();
 			if (!HOM.visible(sp_box))
 				continue;
 
@@ -180,63 +182,44 @@ void CRender::render_main(bool deffered)
 				{
 					if (L->get_LOD() > EPS_L)
 					{
+
 						if (dont_test_sectors)
 							Lights.add_light(L);
 						else
 						{
-							xr_vector<IRender_Sector*> m_sectors = {};
-							bool traversed = false;
-							if (L->flags.type == IRender_Light::SPOT || L->flags.type == IRender_Light::DIRECT)
+							for (u32 s_it = 0; s_it < L->m_sectors.size(); s_it++)
 							{
-								LR.compute_xf_spot(L);
-								CFrustum temp;
-								temp.CreateFromMatrix(L->X.S.combine, FRUSTUM_P_ALL & (~FRUSTUM_P_NEAR));
-
-								m_sectors = detectSectors_frustum(sector, &temp);
-								for (u32 s_it = 0; s_it < m_sectors.size(); s_it++)
+								CSector* sector_ = reinterpret_cast<CSector*>(L->m_sectors[s_it]);
+								if (PortalTraverser.i_marker == sector_->r_marker)
 								{
-									CSector* sector_ = reinterpret_cast<CSector*>(m_sectors[s_it]);
-									if (PortalTraverser.i_marker == sector_->r_marker)
-										traversed = true;
+									Lights.add_light(L);
+									break;
 								}
 							}
-							else
-							{
-								m_sectors = detectSectors_sphere(sector, L->position, Fvector().set(L->range, L->range, L->range));
-								for (u32 s_it = 0; s_it < m_sectors.size(); s_it++)
-								{
-									CSector* sector_ = reinterpret_cast<CSector*>(m_sectors[s_it]);
-									if (PortalTraverser.i_marker == sector_->r_marker)
-										traversed = true;
-								}
-							}
-
-							if (m_sectors.empty())
-								traversed = true;
-							else
-							{
-								if (L->flags.type == IRender_Light::POINT && spatial_data.sphere.P.distance_to_sqr(Device.vCameraPosition) < _sqr(spatial_data.sphere.R))
-									traversed = true;
-							}
-
-							if (traversed)
-							{
-#if DBG_LINHT
-								dbg_light_renderer(L, color_rgba(0,255,100,255), m_sectors.size());
-#endif
-								Lights.add_light(L);
-							}
-#if DBG_LINHT
-							else
-							{
-								dbg_light_renderer(L, color_rgba(255,0,100,255), m_sectors.size());
-							}
-#endif
 						}
 					}
 				}
 				continue;
 			}
+
+			auto CalcSSADynamic = [&](const Fvector& C, float R) -> float
+			{
+				Fvector4 v_res1, v_res2;
+				Device.mFullTransform.transform(v_res1, C);
+				Device.mFullTransform.transform(v_res2, Fvector(C).mad(Device.vCameraRight, R));
+				return v_res1.sub(v_res2).magnitude();
+			};
+
+			constexpr float base_fov = 67.f;
+			// Aproximate, adjusted by fov, distance from camera to position (For right work when looking though binoculars and scopes)
+			auto GetDistFromCamera = [](const Fvector& from_position) -> float
+			{
+				float distance = Device.vCameraPosition.distance_to(from_position);
+				float fov_K = base_fov / Device.fFOV;
+				float adjusted_distane = distance / fov_K;
+
+				return adjusted_distane;
+			};
 
 			if (dont_test_sectors)
 			{
@@ -245,10 +228,36 @@ void CRender::render_main(bool deffered)
 					// renderable
 					if (IRenderable* renderable = spatial->dcast_Renderable())
 					{
-						// Rendering
-						set_Object(renderable);
-						renderable->renderable_Render();
-						set_Object(0);
+						if (Device.vCameraPosition.distance_to_sqr(spatial_data.sphere.P) < _sqr(g_pGamePersistent->Environment().CurrentEnv->fog_distance))
+						{
+							if (CalcSSADynamic(spatial_data.sphere.P, spatial_data.sphere.R) > 0.002f && GetDistFromCamera(spatial_data.sphere.P) < 220.f)
+							{
+								if (deffered)
+								{
+									CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual);
+									if (pKin)
+									{
+										pKin->CalculateBones(TRUE);
+										pKin->CalculateWallmarks();
+										//dbg_text_renderer(spatial->spatial.sphere.P);
+									}
+								}
+								if (spatial_data.sphere.R > 1.f)
+								{
+									// Rendering
+									set_Object(renderable);
+									renderable->renderable_Render();
+									set_Object(0);
+								}
+							}
+							if (spatial_data.sphere.R <= 1.f)
+							{
+								// Rendering
+								set_Object(renderable);
+								renderable->renderable_Render();
+								set_Object(0);
+							}
+						}
 					}
 				}
 
@@ -279,10 +288,36 @@ void CRender::render_main(bool deffered)
 						// renderable
 						if (IRenderable* renderable = spatial->dcast_Renderable())
 						{
-							// Rendering
-							set_Object(renderable);
-							renderable->renderable_Render();
-							set_Object(0);
+							if (Device.vCameraPosition.distance_to_sqr(spatial_data.sphere.P) < _sqr(g_pGamePersistent->Environment().CurrentEnv->fog_distance))
+							{
+								if (CalcSSADynamic(spatial_data.sphere.P, spatial_data.sphere.R) > 0.002f && GetDistFromCamera(spatial_data.sphere.P) < 220.f)
+								{
+									if (deffered)
+									{
+										CKinematics* pKin = (CKinematics*)renderable->GetRenderData().visual;
+										if (pKin)
+										{
+											pKin->CalculateBones(TRUE);
+											pKin->CalculateWallmarks();
+											//dbg_text_renderer(spatial->spatial.sphere.P);
+										}
+									}
+									if (spatial_data.sphere.R > 1.f)
+									{
+										// Rendering
+										set_Object(renderable);
+										renderable->renderable_Render();
+										set_Object(0);
+									}
+								}
+								if (spatial_data.sphere.R <= 1.f)
+								{
+									// Rendering
+									set_Object(renderable);
+									renderable->renderable_Render();
+									set_Object(0);
+								}
+							}
 						}
 					}
 

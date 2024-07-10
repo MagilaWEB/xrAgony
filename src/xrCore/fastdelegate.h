@@ -26,10 +26,6 @@
 //				* Added fastdelegate.clear()
 // 16-Jul-04 1.2.1* Workaround for gcc bug (const member function pointers in templates)
 // 30-Oct-04 1.3  * Support for (non-void) return values.
-//				* No more workarounds in client code!
-//					MSVC and Intel now use a clever hack invented by John Dlugosz:
-//					- The FASTDELEGATEDECLARE workaround is no longer necessary.
-//					- No more warning messages for VC6
 //				* Less use of macros. Error messages should be more comprehensible.
 //				* Added include guards
 //				* Added FastDelegate::empty() to test if invocation is safe (Thanks Neville Franks).
@@ -196,44 +192,13 @@ namespace fastdelegate
 		//
 		////////////////////////////////////////////////////////////////////////////////
 
-		// Backwards compatibility: This macro used to be necessary in the virtual inheritance
-		// case for Intel and Microsoft. Now it just forward-declares the class.
-#define FASTDELEGATEDECLARE(CLASSNAME) class CLASSNAME;
-
 // Prevent use of the static function hack with the DOS medium model.
 #ifdef __MEDIUM__
 #undef FASTDELEGATE_USESTATICFUNCTIONHACK
 #endif
 
-		typedef void DefaultVoid;
-
-		// Translate from 'DefaultVoid' to 'void'.
-		// Everything else is unchanged
-		template <class T>
-		struct DefaultVoidToVoid
-		{
-			typedef T type;
-		};
-
-		template <>
-		struct DefaultVoidToVoid<DefaultVoid>
-		{
-			typedef void type;
-		};
-
-		// Translate from 'void' into 'DefaultVoid'
-		// Everything else is unchanged
-		template <class T>
-		struct VoidToDefaultVoid
-		{
-			typedef T type;
-		};
-
-		template <>
-		struct VoidToDefaultVoid<void>
-		{
-			typedef DefaultVoid type;
-		};
+		template <class T = void()>
+		using DefaultVoid = T;
 
 		////////////////////////////////////////////////////////////////////////////////
 		//					  Fast Delegates, part 1:
@@ -524,7 +489,7 @@ namespace fastdelegate
 	protected:
 		// the data is protected, not private, because many
 		// compilers have problems with template friends.
-		typedef void (detail::GenericClass::* GenericMemFuncType)(); // arbitrary MFP.
+		using GenericMemFuncType = void(detail::GenericClass::*)(); // arbitrary MFP.
 		detail::GenericClass* m_pthis;
 		GenericMemFuncType m_pFunction;
 
@@ -846,18 +811,16 @@ namespace fastdelegate
 	class FastDelegateImpl
 	{
 	private:
-		typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
-		typedef DesiredRetType(*StaticFunctionPtr)(Args...);
-		typedef RetType(*UnvoidStaticFunctionPtr)(Args...);
-		typedef RetType(detail::GenericClass::* GenericMemFn)(Args...);
-		typedef detail::ClosurePtr<GenericMemFn, StaticFunctionPtr, UnvoidStaticFunctionPtr> ClosureType;
+		using DesiredRetType = detail::DefaultVoid<RetType>;
+		using StaticFunctionPtr = DesiredRetType(*)(Args...);
+		using UnvoidStaticFunctionPtr = RetType(*)(Args...);
+		using GenericMemFn = RetType(detail::GenericClass::*)(Args...);
+		using ClosureType = detail::ClosurePtr<GenericMemFn, StaticFunctionPtr, UnvoidStaticFunctionPtr>;
 		ClosureType m_Closure;
 
 	public:
-		// Typedefs to aid generic programming
-		typedef FastDelegateImpl type;
-		typedef DesiredRetType Parameters;
-		
+		// using to aid generic programming
+		using Parameters = DesiredRetType ;
 
 		// Construction and comparison functions
 		FastDelegateImpl() { clear(); }
@@ -896,15 +859,15 @@ namespace fastdelegate
 		void operator=(DesiredRetType(*function_to_bind)(Args... args)) { bind(function_to_bind); }
 		inline void bind(DesiredRetType(*function_to_bind)(Args... args)) { m_Closure.bindstaticfunc(this, &FastDelegateImpl::InvokeStaticFunction, function_to_bind); }
 		// Invoke the delegate
-		RetType operator()(Args... args) const { return (m_Closure.GetClosureThis()->*(m_Closure.GetClosureMemPtr()))(args...); }
+		RetType operator()(Args... args) const { return (m_Closure.GetClosureThis()->*(m_Closure.GetClosureMemPtr()))(std::forward<Args>(args)...); }
 		// Implicit conversion to "bool" using the safe_bool idiom
 	private:
-		typedef struct SafeBoolStruct
+		struct SafeBoolStruct
 		{
 			int a_data_pointer_to_this_is_0_on_buggy_compilers;
 			StaticFunctionPtr m_nonzero;
-		} UselessTypedef;
-		typedef StaticFunctionPtr SafeBoolStruct::* unspecified_bool_type;
+		};
+		using unspecified_bool_type = StaticFunctionPtr SafeBoolStruct::*;
 
 	public:
 		operator unspecified_bool_type() const { return empty() ? 0 : &SafeBoolStruct::m_nonzero; }
@@ -922,7 +885,7 @@ namespace fastdelegate
 		void SetMemento(const DelegateMemento& any) { m_Closure.CopyFrom(this, any); }
 
 	private: // Invoker for static functions
-		RetType InvokeStaticFunction(Args... args) const { return (*(m_Closure.GetStaticFunction()))(args...); }
+		RetType InvokeStaticFunction(Args... args) const { return (*(m_Closure.GetStaticFunction()))(std::forward<Args>(args)...); }
 	};
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -940,7 +903,7 @@ namespace fastdelegate
 
 // Declare FastDelegate as a class template.  It will be specialized
 // later for all number of arguments.
-	template <typename Signature>
+	template <typename Signature = detail::DefaultVoid<void()>>
 	class FastDelegate;
 
 	template <typename RetType, typename... Args>
@@ -950,10 +913,10 @@ namespace fastdelegate
 	{
 	public:
 		// Make using the base type a bit easier via typedef.
-		typedef FastDelegateImpl<RetType, Args...> BaseType;
+		using BaseType = FastDelegateImpl<RetType, Args...>;
 
 		// Allow users access to the specific type of this delegate.
-		typedef FastDelegate SelfType;
+		using SelfType = FastDelegate;
 
 		// Mimic the base class constructors.
 		FastDelegate() : BaseType() {}

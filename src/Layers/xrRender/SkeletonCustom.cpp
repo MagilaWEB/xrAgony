@@ -9,7 +9,7 @@
 #include "xrEngine/Render.h"
 #endif
 int psSkeletonUpdate = 32;
-xrCriticalSection UCalc_Mutex;
+FastLock UCalc_Mutex;
 
 #ifndef _EDITOR
 #include "xrServerEntities/smart_cast.h"

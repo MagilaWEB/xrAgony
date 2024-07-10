@@ -683,8 +683,8 @@ void CRender::add_leafs_Dynamic(dxRender_Visual * pVisual, bool bIgnoreOpt)
 			add_leafs_Dynamic(pV->m_lod, bIgnoreOpt);
 		else
 		{
-			pV->CalculateBones(TRUE);
-			pV->CalculateWallmarks(); //. bug?
+			//pV->CalculateBones(TRUE);
+			//pV->CalculateWallmarks(); //. bug?
 			for (dxRender_Visual* I : pV->children)
 			{
 				I->vis.obj_data = pV->getVisData().obj_data; // Наследники используют шейдерные данные от родительского визуала
@@ -748,7 +748,7 @@ void CRender::add_leafs_Static(dxRender_Visual * pVisual)
 	{
 		// Add all children, doesn't perform any tests
 		CKinematics* pV = reinterpret_cast<CKinematics*>(pVisual);
-		pV->CalculateBones(TRUE);
+		//pV->CalculateBones(TRUE);
 		for (dxRender_Visual* I : pV->children)
 			add_leafs_Static(I);
 	}
@@ -876,8 +876,8 @@ BOOL CRender::add_Dynamic(dxRender_Visual * pVisual, u32 planes)
 			add_leafs_Dynamic(pV->m_lod);
 		else
 		{
-			pV->CalculateBones(TRUE);
-			pV->CalculateWallmarks(); //. bug?
+			//pV->CalculateBones(TRUE);
+			//pV->CalculateWallmarks(); //. bug?
 			for (dxRender_Visual* I : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
 				add_leafs_Dynamic(I);
 		}
@@ -958,7 +958,7 @@ void CRender::add_Static(dxRender_Visual * pVisual, u32 planes)
 	{
 		// Add all children, doesn't perform any tests
 		CKinematics* pV = reinterpret_cast<CKinematics*>(pVisual);
-		pV->CalculateBones(TRUE);
+		//pV->CalculateBones(TRUE);
 		if (VIS == fcvPartial)
 			for (dxRender_Visual* childRenderable : pV->children)
 				add_Static(childRenderable, planes);

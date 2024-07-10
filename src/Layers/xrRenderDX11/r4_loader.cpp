@@ -25,6 +25,8 @@ void CRender::level_Load(IReader* fs)
 	RImplementation.Resources->DeferredLoad(TRUE);
 	IReader* chunk;
 
+	tbb::task_group parallel;
+
 	// Shaders
 	pApp->SetLoadStageTitle("st_loading_shaders");
 	{
@@ -32,7 +34,25 @@ void CRender::level_Load(IReader* fs)
 		R_ASSERT2(chunk, "Level doesn't builded correctly.");
 		u32 count = chunk->r_u32();
 		Shaders.resize(count);
-		for (u32 i = 0; i < count; i++) // skip first shader as "reserved" one
+
+		size_t shader_it = 0;
+		size_t shader_send = 0;
+		if (pApp->IsLoadingScreen())
+		{
+			parallel.run([&]() {
+				while (shader_send < 10)
+				{
+					const size_t result = size_t((float(shader_it) / count) * 10);
+					if (result != shader_send)
+					{
+						pApp->SetLoadStageTitle("st_loading_shaders");
+						shader_send = result;
+					}
+				}
+			});
+		}
+
+		for (u32 i = 0; i < count; i++, shader_it++) // skip first shader as "reserved" one
 		{
 			string512 n_sh, n_tlist;
 			LPCSTR n = LPCSTR(chunk->pointer());
@@ -43,9 +63,11 @@ void CRender::level_Load(IReader* fs)
 			LPSTR delim = strchr(n_sh, '/');
 			*delim = 0;
 			xr_strcpy(n_tlist, delim + 1);
-			Shaders[i] = RImplementation.Resources->Create(n_sh, n_tlist);
+			Shaders[i] = Resources->Create(n_sh, n_tlist);
 		}
 		chunk->close();
+
+		parallel.wait();
 	}
 
 	// Components
@@ -76,8 +98,6 @@ void CRender::level_Load(IReader* fs)
 	LoadVisuals(chunk);
 	chunk->close();
 
-	tbb::task_group parallel;
-	
 	// Details
 	Event Details_Load;
 	parallel.run([&]()
