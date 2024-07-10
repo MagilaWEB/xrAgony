@@ -78,7 +78,7 @@ void CRender::render_main(bool deffered)
 				});
 
 			// Determine visibility for dynamic part of scene
-			set_Object(0);
+			set_Object(nullptr);
 			u32 uID_LTRACK = 0xffffffff;
 			if (phase == PHASE_NORMAL)
 			{
@@ -144,6 +144,11 @@ void CRender::render_main(bool deffered)
 				}
 			}
 		}
+
+		bool IsCalculateBones{ false };
+
+		if(deffered)
+			LIMIT_UPDATE_FPS_CODE(_CalculateBones, 40, IsCalculateBones = true;)
 
 		// Traverse frustums
 		for (ISpatial* spatial : lstRenderables)
@@ -232,7 +237,7 @@ void CRender::render_main(bool deffered)
 						{
 							if (CalcSSADynamic(spatial_data.sphere.P, spatial_data.sphere.R) > 0.002f && GetDistFromCamera(spatial_data.sphere.P) < 220.f)
 							{
-								if (deffered)
+								if (deffered && IsCalculateBones)
 								{
 									CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual);
 									if (pKin)
@@ -247,7 +252,7 @@ void CRender::render_main(bool deffered)
 									// Rendering
 									set_Object(renderable);
 									renderable->renderable_Render();
-									set_Object(0);
+									set_Object(nullptr);
 								}
 							}
 							if (spatial_data.sphere.R <= 1.f)
@@ -255,7 +260,7 @@ void CRender::render_main(bool deffered)
 								// Rendering
 								set_Object(renderable);
 								renderable->renderable_Render();
-								set_Object(0);
+								set_Object(nullptr);
 							}
 						}
 					}
@@ -269,7 +274,7 @@ void CRender::render_main(bool deffered)
 						// Rendering
 						set_Object(renderable);
 						renderable->renderable_Render();
-						set_Object(0);
+						set_Object(nullptr);
 					}
 				}
 			}
@@ -292,7 +297,7 @@ void CRender::render_main(bool deffered)
 							{
 								if (CalcSSADynamic(spatial_data.sphere.P, spatial_data.sphere.R) > 0.002f && GetDistFromCamera(spatial_data.sphere.P) < 220.f)
 								{
-									if (deffered)
+									if (deffered && IsCalculateBones)
 									{
 										CKinematics* pKin = (CKinematics*)renderable->GetRenderData().visual;
 										if (pKin)
@@ -307,7 +312,7 @@ void CRender::render_main(bool deffered)
 										// Rendering
 										set_Object(renderable);
 										renderable->renderable_Render();
-										set_Object(0);
+										set_Object(nullptr);
 									}
 								}
 								if (spatial_data.sphere.R <= 1.f)
@@ -315,7 +320,7 @@ void CRender::render_main(bool deffered)
 									// Rendering
 									set_Object(renderable);
 									renderable->renderable_Render();
-									set_Object(0);
+									set_Object(nullptr);
 								}
 							}
 						}
@@ -329,7 +334,7 @@ void CRender::render_main(bool deffered)
 							// Rendering
 							set_Object(renderable);
 							renderable->renderable_Render();
-							set_Object(0);
+							set_Object(nullptr);
 						}
 					}
 				}
@@ -341,7 +346,7 @@ void CRender::render_main(bool deffered)
 	}
 	else
 	{
-		set_Object(0);
+		set_Object(nullptr);
 		if (g_pGameLevel && psDeviceFlags.test(rsDrawDynamic) && (phase == PHASE_NORMAL))
 			g_hud->Render_Last();// HUD
 	}

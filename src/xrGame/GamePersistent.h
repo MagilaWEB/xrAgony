@@ -31,6 +31,8 @@ class CGamePersistent : public IGame_Persistent, public IEventReceiver
 
 	fastdelegate::FastDelegate<void()> m_intro_event;
 
+	xrThread mt_identify_room{ "Update identify room", true, true };
+
 	void start_logo_intro();
 	void update_logo_intro();
 
@@ -45,6 +47,7 @@ class CGamePersistent : public IGame_Persistent, public IEventReceiver
 	u32 m_last_stats_frame;
 #endif
 
+	void identify_room();
 	void WeathersUpdate();
 	void UpdateDof();
 
@@ -52,6 +55,8 @@ public:
 	IReader* pDemoFile;
 	u32 uTime2Change;
 	EVENT eDemoStart;
+	float rays_collided = 0.f;
+	float eff_vol_counter = 1.f;
 
 	CGamePersistent();
 	virtual ~CGamePersistent();

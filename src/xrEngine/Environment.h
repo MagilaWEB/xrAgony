@@ -151,6 +151,7 @@ public:
 	float fog_distance;
 
 	float rain_density;
+	float rain_volume;
 	Fvector3 rain_color;
 
 	float bolt_period;

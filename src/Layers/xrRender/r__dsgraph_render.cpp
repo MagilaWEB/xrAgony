@@ -531,9 +531,9 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	{
 		CSector* sector = reinterpret_cast<CSector*>(PortalTraverser.r_sectors[s_it]);
 		dxRender_Visual* root = sector->root();
-		for (u32 v_it = 0; v_it < sector->r_frustums.size(); v_it++)
+		for (CFrustum& frustum : sector->r_frustums)
 		{
-			set_Frustum(&(sector->r_frustums[v_it]));
+			set_Frustum(&frustum);
 			add_Geometry(root);
 		}
 	}
@@ -552,9 +552,12 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 		);
 
 		// Determine visibility for dynamic part of scene
-		for (u32 o_it = 0; o_it < lstRenderables.size(); o_it++)
+		bool IsCalculateBones{ false };
+
+		LIMIT_UPDATE_FPS_CODE(_CalculateBones, 40, IsCalculateBones = true;)
+
+		for (ISpatial* spatial : lstRenderables)
 		{
-			ISpatial* spatial = lstRenderables[o_it];
 			CSector* sector = reinterpret_cast<CSector*>(spatial->GetSpatialData().sector);
 			if (nullptr == sector)
 				continue; // disassociated from S/P structure
@@ -571,22 +574,17 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 				if (nullptr == renderable)
 					continue; // unknown, but renderable object (r1_glow???)
 
-				if (Device.vCameraPosition.distance_to_sqr(renderable->GetRenderData().xform.c) <= 5000.f)
+				if (Device.vCameraPosition.distance_to_sqr(renderable->GetRenderData().xform.c) <= 5000.f && IsCalculateBones)
 				{
-					CKinematics* pKin = (CKinematics*)renderable->GetRenderData().visual;
+					CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual);
 					if (pKin)
 					{
 						if (spatial->GetSpatialData().type & STYPE_RENDERABLESHADOW)
-						{
 							pKin->CalculateBones(TRUE);
-						}
+
 						if (spatial->GetSpatialData().type & STYPE_RENDERABLE)
-						{
-							if (0 == ViewSave.testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R))
-							{
+							if (ViewSave.testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R) == FALSE)
 								pKin->CalculateBones(TRUE);
-							}
-						}
 					}
 				}
 
@@ -606,9 +604,7 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	View = nullptr;
 }
 
-#include "SkeletonCustom.h"
 #include "FLOD.h"
-
 void D3DXRenderBase::r_dsgraph_render_R1_box(IRender_Sector* S, Fbox& BB, int sh)
 {
 	PIX_EVENT(r_dsgraph_render_R1_box);
