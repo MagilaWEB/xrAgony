@@ -10,38 +10,23 @@ class CTheoraSurface;
 class ECORE_API CTexture : public xr_resource_named
 {
 public:
-#if defined(USE_DX11)
 	enum	MaxTextures
 	{
 		//	Actually these values are 128
 		mtMaxPixelShaderTextures = 16,
 		mtMaxVertexShaderTextures = 4,
 		mtMaxGeometryShaderTextures = 16,
-#	ifdef USE_DX11
 		mtMaxHullShaderTextures = 16,
 		mtMaxDomainShaderTextures = 16,
 		mtMaxComputeShaderTextures = 16,
-#	endif
 		mtMaxCombinedShaderTextures =
 		mtMaxPixelShaderTextures
 		+ mtMaxVertexShaderTextures
 		+ mtMaxGeometryShaderTextures
-#	ifdef USE_DX11
 		+ mtMaxHullShaderTextures
 		+ mtMaxDomainShaderTextures
 		+ mtMaxComputeShaderTextures
-#	endif
 	};
-#else
-	enum MaxTextures
-	{
-		mtMaxPixelShaderTextures = 16,
-		mtMaxVertexShaderTextures = 4,
-		mtMaxCombinedShaderTextures =
-		mtMaxPixelShaderTextures
-		+ mtMaxVertexShaderTextures
-	};
-#endif
 
 	//	Since DX10 allows up to 128 unique textures,
 	//	distance between enum values should be at leas 128
@@ -97,9 +82,7 @@ public:
 	CTexture();
 	virtual ~CTexture();
 
-#if defined(USE_DX11)
 	ID3DShaderResourceView* get_SRView() { return m_pSRView; }
-#endif
 
 private:
 	BOOL desc_valid() { return pSurface == desc_cache; }
@@ -111,11 +94,9 @@ private:
 	}
 
 	void desc_update();
-#if defined(USE_DX11)
 	void Apply(u32 dwStage);
 	void ProcessStaging();
 	D3D_USAGE GetUsage();
-#endif
 
 	//	Class data
 public: //	Public class members (must be encapsulated further)
@@ -125,9 +106,7 @@ public: //	Public class members (must be encapsulated further)
 		u32 bUser : 1;
 		u32 seqCycles : 1;
 		u32 MemoryUsage : 28;
-#if defined(USE_DX11)
 		u32 bLoadedAsStaging : 1;
-#endif
 	} flags;
 
 	fastdelegate::FastDelegate<void(u32)> bind;
@@ -154,11 +133,9 @@ private:
 	ID3DBaseTexture* desc_cache;
 	D3D_TEXTURE2D_DESC desc;
 
-#if defined(USE_DX11)
 	ID3DShaderResourceView* m_pSRView;
 	// Sequence view data
 	xr_vector<ID3DShaderResourceView*> m_seqSRView;
-#endif
 };
 
 struct resptrcode_texture : public resptr_base<CTexture>

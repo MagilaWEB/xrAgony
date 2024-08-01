@@ -32,12 +32,8 @@ void dxUIRender::SetAlphaRef(int aref)
 
 void dxUIRender::SetScissor(Irect* rect)
 {
-#ifdef USE_DX11
 	RCache.set_Scissor(rect);
 	StateManager.OverrideScissoring(rect ? true : false, TRUE);
-#else
-	RCache.set_Scissor(rect);
-#endif
 }
 
 void dxUIRender::GetActiveTextureResolution(Fvector2& res)

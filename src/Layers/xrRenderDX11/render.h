@@ -1,24 +1,30 @@
 #pragma once
+
 #include "Layers/xrRender/D3DXRenderBase.h"
 #include "Layers/xrRender/r__occlusion.h"
+
 #include "Layers/xrRender/PSLibrary.h"
-#include "r2_types.h"
-#include "r2_rendertarget.h"
-#include "Layers/xrRender/HOM.h"
-#include "Layers/xrRender/DetailManager.h"
-#include "Layers/xrRender/ModelPool.h"
-#include "Layers/xrRender/WallmarksEngine.h"
+
+#include "r_types.h"
+#include "r4_rendertarget.h"
+
+#include "Layers/xrRender/hom.h"
+#include "Layers/xrRender/detailmanager.h"
+#include "Layers/xrRender/modelpool.h"
+#include "Layers/xrRender/wallmarksengine.h"
+
 #include "smap_allocator.h"
 #include "Layers/xrRender/light_db.h"
 #include "Layers/xrRender/light_render_direct.h"
 #include "Layers/xrRender/LightTrack.h"
 #include "Layers/xrRender/r_sun_cascades.h"
+
 #include "xrEngine/IRenderable.h"
 #include "xrCore/FMesh.hpp"
 
-class dxRender_Visual;
-
 constexpr u32 SUN_CASCADES_COUN = 3;
+
+class dxRender_Visual;
 
 // definition
 class CRender : public D3DXRenderBase
@@ -30,6 +36,23 @@ public:
 		PHASE_SMAP = 1, // E[1]
 	};
 
+	enum
+	{
+		MSAA_ATEST_NONE = 0x0, //	Hi bit - DX10.1 mode
+		MSAA_ATEST_DX10_0_ATOC = 0x1, //	Lo bit - ATOC mode
+		MSAA_ATEST_DX10_1_NATIVE = 0x2,
+		MSAA_ATEST_DX10_1_ATOC = 0x3,
+	};
+
+	enum
+	{
+		MMSM_OFF = 0,
+		MMSM_ON,
+		MMSM_AUTO,
+		MMSM_AUTODETECT
+	};
+
+public:
 	struct _options
 	{
 		u32 bug : 1;
@@ -38,6 +61,9 @@ public:
 		u32 ssao_opt_data : 1;
 		u32 ssao_half_data : 1;
 		u32 ssao_hbao : 1;
+		u32 ssao_hdao : 1;
+		u32 ssao_ultra : 1;
+		u32 hbao_vectorized : 1;
 
 		u32 smapsize : 16;
 		u32 depth16 : 1;
@@ -68,12 +94,27 @@ public:
 		u32 Tshadows : 1; // transluent shadows
 		u32 disasm : 1;
 		u32 advancedpp : 1; //	advanced post process (DOF, SSAO, volumetrics, etc.)
+		u32 volumetricfog : 1;
+
+		u32 dx10_msaa : 1; //	DX10.0 path
+		u32 dx10_msaa_hybrid : 1; //	DX10.0 main path with DX10.1 A-test msaa allowed
+		u32 dx10_msaa_opt : 1; //	DX10.1 path
+		u32 dx10_gbuffer_opt : 1; //	
+		u32 dx10_sm4_1 : 1; //	DX10.1 path
+		u32 dx10_msaa_alphatest : 2; //	A-test mode
+		u32 dx10_msaa_samples : 4;
+
+		u32 dx10_minmax_sm : 2;
+		u32 dx10_minmax_sm_screenarea_threshold;
+
+		u32 dx11_enable_tessellation : 1;
 
 		u32 forcegloss : 1;
 		u32 forceskinw : 1;
 		float forcegloss_v;
 	} o;
-	struct RenderR2Statistics
+
+	struct RenderR4Statistics
 	{
 		u32 l_total;
 		u32 l_visible;
@@ -85,7 +126,7 @@ public:
 		u32 ic_total;
 		u32 ic_culled;
 
-		RenderR2Statistics() { FrameStart(); }
+		RenderR4Statistics() { FrameStart(); }
 		void FrameStart()
 		{
 			l_total = 0;
@@ -103,7 +144,7 @@ public:
 	};
 
 public:
-	RenderR2Statistics Stats;
+	RenderR4Statistics Stats;
 	// Sector detection and visibility
 	CSector* pLastSector;
 	CSector* pOutdoorSector;
@@ -121,8 +162,8 @@ public:
 	xr_vector<ref_shader> Shaders;
 	typedef svector<D3DVERTEXELEMENT9, MAXD3DDECLLENGTH + 1> VertexDeclarator;
 	xr_vector<VertexDeclarator> nDC, xDC;
-	xr_vector<IDirect3DVertexBuffer9*> nVB, xVB;
-	xr_vector<IDirect3DIndexBuffer9*> nIB, xIB;
+	xr_vector<ID3DVertexBuffer*> nVB, xVB;
+	xr_vector<ID3DIndexBuffer*> nIB, xIB;
 	xr_vector<dxRender_Visual*> Visuals;
 	CPSLibrary PSLibrary;
 
@@ -148,7 +189,6 @@ public:
 
 	bool m_bMakeAsyncSS;
 	bool m_bFirstFrameAfterReset; // Determines weather the frame is the first after resetting device.
-
 	sun::cascade m_sun_cascades[SUN_CASCADES_COUN];
 
 private:
@@ -158,6 +198,7 @@ private:
 	void LoadLights(IReader* fs);
 	void LoadSectors(IReader* fs);
 	void LoadSWIs(CStreamReader* fs);
+	void Load3DFluid();
 
 	BOOL add_Dynamic(dxRender_Visual* pVisual, u32 planes); // normal processing
 	void add_Static(dxRender_Visual* pVisual, u32 planes);
@@ -168,6 +209,8 @@ public:
 	void render_main(bool deffered);
 	void render_forward();
 	void render_lights(light_Package& LP);
+	void render_rain();
+
 	void render_sun_cascade(u32 cascade_ind);
 	void init_cacades();
 	void render_sun_cascades();
@@ -176,8 +219,8 @@ public:
 	ShaderElement* rimp_select_sh_static(dxRender_Visual* pVisual, float cdist_sq);
 	ShaderElement* rimp_select_sh_dynamic(dxRender_Visual* pVisual, float cdist_sq);
 	D3DVERTEXELEMENT9* getVB_Format(int id, BOOL _alt = FALSE);
-	IDirect3DVertexBuffer9* getVB(int id, BOOL _alt = FALSE);
-	IDirect3DIndexBuffer9* getIB(int id, BOOL _alt = FALSE);
+	ID3DVertexBuffer* getVB(int id, BOOL _alt = FALSE);
+	ID3DIndexBuffer* getIB(int id, BOOL _alt = FALSE);
 	FSlideWindowItem* getSWI(int id);
 	IRender_Portal* getPortal(int id);
 	IRender_Sector* getSectorActive();
@@ -190,8 +233,8 @@ public:
 	// HW-occlusion culling
 	IC u32 occq_begin(u32& ID) { return HWOCC.occq_begin(ID); }
 	IC void occq_end(u32& ID) { HWOCC.occq_end(ID); }
-	IC u32 occq_get(u32& ID) { return HWOCC.occq_get(ID); }
-	IC void occq_free(u32 ID) { HWOCC.occq_free(ID); }
+	IC R_occlusion::occq_result occq_get(u32& ID) { return HWOCC.occq_get(ID); }
+	IC void					 occq_free(u32	ID) { HWOCC.occq_free(ID); }
 	ICF void apply_object(IRenderable* O)
 	{
 		if (0 == O)
@@ -200,8 +243,9 @@ public:
 			return;
 		CROS_impl& LT = *((CROS_impl*)O->renderable_ROS());
 		LT.update_smooth(O);
-		o_hemi = 0.75f * LT.get_hemi();
-		o_sun = 0.75f * LT.get_sun();
+		o_hemi = 0.5f * LT.get_hemi();
+		// o_hemi						= 0.5f*LT.get_hemi			()	;
+		o_sun = 0.5f * LT.get_sun();
 		CopyMemory(o_hemi_cube, LT.get_hemi_cube(), CROS_impl::NUM_FACES * sizeof(float));
 	}
 	IC void apply_lmaterial()
@@ -210,7 +254,7 @@ public:
 		if (0 == C)
 			return;
 		VERIFY(RC_dest_sampler == C->destination);
-		VERIFY(RC_sampler == C->type);
+		VERIFY(RC_dx10texture == C->type);
 		CTexture* T = RCache.get_ActiveTexture(u32(C->samp.index));
 		VERIFY(T);
 		RCache.hemi.set_material(o_hemi, o_sun, 0, (T->m_material + .5f) / 4.f);
@@ -224,7 +268,7 @@ public:
 	// feature level
 	virtual GenerationLevel get_generation() { return IRender::GENERATION_R2; }
 	virtual bool is_sun_static() { return o.sunstatic; }
-	virtual DWORD get_dx_level() { return 0x00090000; }
+	virtual DWORD get_dx_level() { return HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1 ? 0x000A0001 : 0x000A0000; }
 	// Loading / Unloading
 	virtual void create();
 	virtual void destroy();
@@ -234,13 +278,13 @@ public:
 	virtual void level_Load(IReader*);
 	virtual void level_Unload();
 
-	virtual IDirect3DBaseTexture9* texture_load(LPCSTR fname, u32& msize);
-	virtual HRESULT shader_compile(LPCSTR name, IReader* fs, LPCSTR pFunctionName,
-		LPCSTR pTarget, DWORD Flags, void*& result);
+	ID3DBaseTexture* texture_load(LPCSTR fname, u32& msize, bool bStaging = false);
+	virtual HRESULT shader_compile(LPCSTR name, IReader* fs, LPCSTR pFunctionName, LPCSTR pTarget, DWORD Flags,
+		void*& result);
 
 	// Information
 	virtual void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert) override;
-	virtual LPCSTR getShaderPath() { return "r2\\"; }
+	virtual LPCSTR getShaderPath() { return "r3\\"; }
 	virtual ref_shader getShader(int id);
 	virtual IRender_Sector* getSector(int id);
 	virtual IRenderVisual* getVisual(int id);
@@ -317,6 +361,12 @@ public:
 	virtual ~CRender();
 
 	bool is_sun();
+
+	void addShaderOption(const char* name, const char* value);
+	void clearAllShaderOptions() { m_ShaderOptions.clear(); }
+
+private:
+	xr_vector<D3D_SHADER_MACRO> m_ShaderOptions;
 
 protected:
 	virtual void ScreenshotImpl(ScreenshotMode mode, LPCSTR name, CMemoryWriter* memory_writer);

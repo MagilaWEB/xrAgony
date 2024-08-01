@@ -38,12 +38,10 @@ public:
 	//	DX10 cut DEFINE_MAP_PRED(const char*,CRTC*,			map_RTC,		map_RTCIt,			str_pred);
 	using map_VS = xr_map<const char*, SVS*, str_pred>;
 
-#if defined(USE_DX11)
 	using map_GS = xr_map<const char*, SGS*, str_pred>;
 	using map_HS = xr_map<const char*, SHS*, str_pred>;
 	using map_DS = xr_map<const char*, SDS*, str_pred>;
 	using map_CS = xr_map<const char*, SCS*, str_pred>;
-#endif
 
 	using map_PS = xr_map<const char*, SPS*, str_pred>;
 	using map_TD = xr_map<const char*, texture_detail, str_pred>;
@@ -59,15 +57,11 @@ private:
 	map_VS m_vs;
 	map_PS m_ps;
 
-#if defined(USE_DX11)
 	map_GS m_gs;
-#endif
 
-#if defined(USE_DX11)
 	map_DS m_ds;
 	map_HS m_hs;
 	map_CS m_cs;
-#endif
 
 	map_TD m_td;
 
@@ -76,10 +70,8 @@ private:
 	xr_vector<SGeometry*> v_geoms;
 	xr_vector<R_constant_table*> v_constant_tables;
 
-#if defined(USE_DX11)
 	xr_vector<dx10ConstantBuffer*> v_constant_buffer;
 	xr_vector<SInputSignature*> v_input_signature;
-#endif
 
 	// lists
 	xr_vector<STextureList*> lst_textures;
@@ -136,7 +128,6 @@ public:
 	R_constant_table* _CreateConstantTable(R_constant_table& C);
 	void _DeleteConstantTable(const R_constant_table* C);
 
-#if defined(USE_DX11)
 	dx10ConstantBuffer* _CreateConstantBuffer(ID3DShaderReflectionConstantBuffer* pTable);
 	void _DeleteConstantBuffer(const dx10ConstantBuffer* pBuffer);
 
@@ -144,19 +135,13 @@ public:
 	void _DeleteInputSignature(const SInputSignature* pSignature);
 
 	CRT* _CreateRT(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 SampleCount = 1, bool useUAV = false);
-#else
-	CRT* _CreateRT(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 SampleCount = 1);
-#endif
 	void _DeleteRT(const CRT* RT);
 
 	//	DX10 cut CRTC*							_CreateRTC			(LPCSTR Name, u32 size,	D3DFORMAT f);
 	//	DX10 cut void							_DeleteRTC			(const CRTC*	RT	);
-#if defined(USE_DX11)
 	SGS* _CreateGS(LPCSTR Name);
 	void _DeleteGS(const SGS* GS);
-#endif
 
-#if defined(USE_DX11)
 	SHS* _CreateHS(LPCSTR Name);
 	void _DeleteHS(const SHS* HS);
 
@@ -165,7 +150,6 @@ public:
 
 	SCS* _CreateCS(LPCSTR Name);
 	void _DeleteCS(const SCS* CS);
-#endif
 
 	SPS* _CreatePS(LPCSTR Name);
 	void _DeletePS(const SPS* PS);
@@ -228,7 +212,7 @@ public:
 	void DeferredLoad(BOOL E) { bDeferredLoad = E; }
 	void DeferredUpload();
 	void DeferredUnload();
-	void Evict();
+	//void Evict();
 	void StoreNecessaryTextures();
 	void DestroyNecessaryTextures();
 	void Dump(bool bBrief);

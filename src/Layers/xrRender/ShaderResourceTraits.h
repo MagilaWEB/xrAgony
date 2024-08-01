@@ -40,11 +40,7 @@ struct ShaderTypeTraits<SVS>
 	static inline HRESULT CreateHWShader(DWORD const* buffer, size_t size, HWShaderType& sh)
 	{
 		HRESULT _res = 0;
-#ifdef USE_DX11
 		_res = HW.pDevice->CreateVertexShader(buffer, size, 0, &sh);
-#else
-		_res = HW.pDevice->CreateVertexShader(buffer, &sh);
-#endif
 		return _res;
 	}
 
@@ -60,11 +56,7 @@ struct ShaderTypeTraits<SPS>
 	static inline const char* GetShaderExt() { return ".ps"; }
 	static inline const char* GetCompilationTarget()
 	{
-#if defined(USE_DX11)
 		return "ps_4_0";
-#else
-		return "ps_3_0";
-#endif
 	}
 
 	static void GetCompilationTarget(const char*& target, const char*& entry, const char* data)
@@ -101,18 +93,13 @@ struct ShaderTypeTraits<SPS>
 	static inline HRESULT CreateHWShader(DWORD const* buffer, size_t size, HWShaderType& sh)
 	{
 		HRESULT _res = 0;
-#ifdef USE_DX11
 		_res = HW.pDevice->CreatePixelShader(buffer, size, 0, &sh);
-#else
-		_res = HW.pDevice->CreatePixelShader(buffer, &sh);
-#endif
 		return _res;
 	}
 
 	static inline u32 GetShaderDest() { return RC_dest_pixel; }
 	};
 
-#if defined(USE_DX11)
 template <>
 struct ShaderTypeTraits<SGS>
 {
@@ -133,19 +120,13 @@ struct ShaderTypeTraits<SGS>
 	static inline HRESULT CreateHWShader(DWORD const* buffer, size_t size, HWShaderType& sh)
 	{
 		HRESULT _res = 0;
-#ifdef USE_DX11
 		_res = HW.pDevice->CreateGeometryShader(buffer, size, 0, &sh);
-#else
-		_res = HW.pDevice->CreateGeometryShader(buffer, size, &sh);
-#endif
 		return _res;
 	}
 
 	static inline u32 GetShaderDest() { return RC_dest_geometry; }
 };
-#endif
 
-#if defined(USE_DX11)
 template <>
 struct ShaderTypeTraits<SHS>
 {
@@ -223,7 +204,6 @@ struct ShaderTypeTraits<SCS>
 
 	static inline u32 GetShaderDest() { return RC_dest_compute; }
 };
-#endif
 
 template <>
 inline CResourceManager::map_PS& CResourceManager::GetShaderMap()
@@ -237,7 +217,6 @@ inline CResourceManager::map_VS& CResourceManager::GetShaderMap()
 	return m_vs;
 }
 
-#if defined(USE_DX11)
 template <>
 inline CResourceManager::map_GS& CResourceManager::GetShaderMap()
 {
@@ -260,7 +239,6 @@ inline CResourceManager::map_CS& CResourceManager::GetShaderMap()
 {
 	return m_cs;
 }
-#endif
 
 template <typename T>
 inline T* CResourceManager::CreateShader(const char* name, const char* filename /*= nullptr*/, const bool searchForEntryAndTarget /*= false*/)
@@ -303,7 +281,6 @@ inline T* CResourceManager::CreateShader(const char* name, const char* filename 
 
 		// Try to open
 		IReader* file = FS.r_open(cname);
-#if defined(USE_DX11)
 		if (!file /*&& strstr(Core.Params, "-lack_of_shaders")*/)
 		{
 			string1024 tmp;
@@ -313,7 +290,7 @@ inline T* CResourceManager::CreateShader(const char* name, const char* filename 
 			FS.update_path(cname, "$game_shaders$", cname);
 			file = FS.r_open(cname);
 		}
-#endif
+
 		R_ASSERT3(file, "Shader file doesnt exist:", cname);
 
 		// Duplicate and zero-terminate
@@ -329,11 +306,7 @@ inline T* CResourceManager::CreateShader(const char* name, const char* filename 
 		if (searchForEntryAndTarget)
 			ShaderTypeTraits<T>::GetCompilationTarget(c_target, c_entry, data);
 
-#if defined(USE_DX11)
 		DWORD flags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
-#else
-		DWORD flags = D3DXSHADER_DEBUG | D3DXSHADER_PACKMATRIX_ROWMAJOR;
-#endif
 
 		if (Core.ParamFlags.test(Core.verboselog))
 			Msg("compiling shader %s", name);

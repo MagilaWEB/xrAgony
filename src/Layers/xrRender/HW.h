@@ -7,11 +7,7 @@
 #include "stats_manager.h"
 #endif
 
-class CHW
-#if defined(USE_DX11)
-	: public pureAppActivate,
-	public pureAppDeactivate
-#endif
+class CHW : public pureAppActivate, public pureAppDeactivate
 {
 	//	Functions section
 public:
@@ -35,71 +31,37 @@ public:
 	BOOL support(D3DFORMAT fmt, DWORD type, DWORD usage);
 
 	void updateWindowProps(HWND hw);
-#ifdef DEBUG
-#if defined(USE_DX11)
 	void Validate(void) {};
-#else
-	void Validate(void)
-	{
-		VERIFY(pDevice);
-		VERIFY(pD3D);
-	};
-#endif
-#else
-	void Validate(void) {};
-#endif
 
 	//	Variables section
-	#if defined(USE_DX11)
-	public:
-		IDXGIFactory1* m_pFactory = nullptr;
-		IDXGIAdapter1* m_pAdapter = nullptr; //	pD3D equivalent
-		ID3D11Device* pDevice = nullptr; //	combine with DX9 pDevice via typedef
-		ID3D11DeviceContext* pContext = nullptr; //	combine with DX9 pDevice via typedef
-		IDXGISwapChain* m_pSwapChain = nullptr;
-		ID3D11RenderTargetView* pBaseRT = nullptr; //	combine with DX9 pBaseRT via typedef
-		ID3D11DepthStencilView* pBaseZB = nullptr;
-	#ifdef DEBUG
-		ID3DUserDefinedAnnotation* UserDefinedAnnotation = nullptr;
-	#endif
+public:
+	IDXGIFactory1* m_pFactory = nullptr;
+	IDXGIAdapter1* m_pAdapter = nullptr; //	pD3D equivalent
+	ID3D11Device* pDevice = nullptr; //	combine with DX9 pDevice via typedef
+	ID3D11DeviceContext* pContext = nullptr; //	combine with DX9 pDevice via typedef
+	IDXGISwapChain* m_pSwapChain = nullptr;
+	ID3D11RenderTargetView* pBaseRT = nullptr; //	combine with DX9 pBaseRT via typedef
+	ID3D11DepthStencilView* pBaseZB = nullptr;
+#ifdef DEBUG
+	ID3DUserDefinedAnnotation* UserDefinedAnnotation = nullptr;
+#endif
 
-		CHWCaps Caps;
+	CHWCaps Caps;
 
-		D3D_DRIVER_TYPE m_DriverType;
-		DXGI_SWAP_CHAIN_DESC m_ChainDesc; //	DevPP equivalent
-		D3D_FEATURE_LEVEL FeatureLevel;
-	#else
-	private:
-	#ifdef DEBUG
-		IDirect3DStateBlock9* dwDebugSB = nullptr;
-	#endif
-		XRay::Module hD3D = nullptr;
-
-	public:
-		IDirect3D9* pD3D = nullptr; // D3D
-		IDirect3DDevice9* pDevice = nullptr; // render device
-		IDirect3DSurface9* pBaseRT = nullptr;
-		IDirect3DSurface9* pBaseZB = nullptr;
-
-		CHWCaps Caps;
-
-		UINT DevAdapter;
-		D3DDEVTYPE m_DriverType;
-		D3DPRESENT_PARAMETERS DevPP;
-	#endif
+	D3D_DRIVER_TYPE m_DriverType;
+	DXGI_SWAP_CHAIN_DESC m_ChainDesc; //	DevPP equivalent
+	D3D_FEATURE_LEVEL FeatureLevel;
 
 	#if !defined(_MAYA_EXPORT)
 		stats_manager stats_manager;
 	#endif
 
-	#if defined(USE_DX11)
-		void UpdateViews();
+	void UpdateViews();
 
-		DXGI_RATIONAL selectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt);
+	DXGI_RATIONAL selectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt);
 
-		virtual void OnAppActivate();
-		virtual void OnAppDeactivate();
-	#endif
+	virtual void OnAppActivate();
+	virtual void OnAppDeactivate();
 
 	int maxRefreshRate = 200; //ECO_RENDER add
 

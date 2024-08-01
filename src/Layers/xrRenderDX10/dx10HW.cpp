@@ -139,7 +139,6 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	// Create the device
 	// DX10 don't need it?
 	//u32 GPU = selectGPU();
-#ifdef USE_DX11
 	const auto createDevice = [&](const D3D_FEATURE_LEVEL* level, const u32 levels)
 	{
 		return D3D11CreateDevice(
@@ -171,22 +170,6 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 #ifdef DEBUG
 	R_CHK(pContext->QueryInterface(__uuidof(UserDefinedAnnotation), reinterpret_cast<void**>(&UserDefinedAnnotation)));
 #endif
-#else
-	_R = D3DX10CreateDeviceAndSwapChain(m_pAdapter, m_DriverType, nullptr, createDeviceFlags, &sd, &m_pSwapChain, &pDevice);
-
-	pContext = pDevice;
-	FeatureLevel = D3D_FEATURE_LEVEL_10_0;
-	if (!FAILED(_R))
-	{
-		D3DX10GetFeatureLevel1(pDevice, &pDevice1);
-		FeatureLevel = D3D_FEATURE_LEVEL_10_1;
-	}
-	pContext1 = pDevice1;
-
-
-	R_CHK(m_pFactory->CreateSwapChain(pDevice, &sd, &m_pSwapChain));
-#endif
-
 
 	if (FAILED(_R))
 	{
@@ -213,9 +196,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	fill_vid_mode_list(this);
 #endif
 
-#ifdef USE_DX11
 	SET_DEBUG_NAME(pContext, "pContext");
-#endif
 }
 
 void CHW::DestroyDevice()
@@ -239,16 +220,11 @@ void CHW::DestroyDevice()
 	_SHOW_REF("refCount:m_pSwapChain", m_pSwapChain);
 	_RELEASE(m_pSwapChain);
 
-#ifdef USE_DX11
 #ifdef COC_DEBUG
 	_RELEASE(UserDefinedAnnotation);
 #endif
 	_RELEASE(pContext);
-#endif
 
-#ifndef USE_DX11
-	_RELEASE(HW.pDevice1);
-#endif
 	_SHOW_REF("refCount:HW.pDevice:", HW.pDevice);
 	_RELEASE(HW.pDevice);
 

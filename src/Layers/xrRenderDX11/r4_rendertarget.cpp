@@ -317,7 +317,7 @@ CRenderTarget::CRenderTarget()
 	param_color_add.set(0.0f, 0.0f, 0.0f);
 
 	dwAccumulatorClearMark = 0;
-	RImplementation.Resources->Evict();
+	//RImplementation.Resources->Evict();
 
 	// Blenders
 	b_occq = new CBlender_light_occq();

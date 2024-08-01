@@ -16,7 +16,7 @@
 
 ENGINE_API u32 state_screen_mode = 1;
 ENGINE_API xr_vector<xr_token> AvailableVideoModes;
-xr_vector<xr_token> vid_quality_token;
+//xr_vector<xr_token> vid_quality_token;
 int g_process_priority = 3;
 int g_GlobalFPSlimit = 121;//Limit fps global.
 int g_PausedFPSlimit = 30;//Limit fps to Pause.
@@ -516,45 +516,42 @@ virtual void Save (IWriter *F) {};
 #endif
 */
 
-ENGINE_API BOOL r2_sun_static = TRUE;
-ENGINE_API BOOL r2_advanced_pp = FALSE; // advanced post process and effects
+//ENGINE_API BOOL r2_advanced_pp = FALSE; // advanced post process and effects
 
 u32 renderer_value = 3;
 
-class CCC_r2 : public CCC_Token
-{
-	typedef CCC_Token inherited;
-
-public:
-	CCC_r2(LPCSTR N) : inherited(N, &renderer_value, nullptr) { renderer_value = 3; };
-	virtual ~CCC_r2() {}
-	virtual void Execute(LPCSTR args)
-	{
-		tokens = vid_quality_token.data();
-
-		inherited::Execute(args);
-		psDeviceFlags.set(rsDX9, ((renderer_value == 0) && renderer_value < 3));
-		psDeviceFlags.set(rsDX11, (renderer_value == 3));
-
-		//????
-		r2_sun_static = false;
-
-		r2_advanced_pp = (renderer_value >= 2);
-	}
-
-	virtual void Save(IWriter* F)
-	{
-		// fill_render_mode_list ();
-		tokens = vid_quality_token.data();
-		inherited::Save(F);
-	}
-
-	const xr_token* GetToken() noexcept override
-	{
-		tokens = vid_quality_token.data();
-		return inherited::GetToken();
-	}
-};
+//class CCC_r2 : public CCC_Token
+//{
+//	typedef CCC_Token inherited;
+//
+//public:
+//	CCC_r2(LPCSTR N) : inherited(N, &renderer_value, nullptr) { renderer_value = 3; };
+//	virtual ~CCC_r2() {}
+//	virtual void Execute(LPCSTR args)
+//	{
+//		tokens = vid_quality_token.data();
+//
+//		inherited::Execute(args);
+//		psDeviceFlags.set(rsDX9, ((renderer_value == 0) && renderer_value < 3));
+//		psDeviceFlags.set(rsDX11, (renderer_value == 3));
+//
+//
+//		r2_advanced_pp = (renderer_value >= 2);
+//	}
+//
+//	virtual void Save(IWriter* F)
+//	{
+//		// fill_render_mode_list ();
+//		tokens = vid_quality_token.data();
+//		inherited::Save(F);
+//	}
+//
+//	const xr_token* GetToken() noexcept override
+//	{
+//		tokens = vid_quality_token.data();
+//		return inherited::GetToken();
+//	}
+//};
 
 class CCC_soundDevice : public CCC_Token
 {
@@ -766,7 +763,7 @@ void CCC_Register()
 	CMD2(CCC_Float, "cam_inert", &psCamInert);
 	CMD2(CCC_Float, "cam_slide_inert", &psCamSlideInert);
 
-	CMD1(CCC_r2, "renderer");
+	//CMD1(CCC_r2, "renderer");
 
 	CMD1(CCC_soundDevice, "snd_device");
 

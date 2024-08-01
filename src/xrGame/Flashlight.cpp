@@ -259,20 +259,17 @@ BOOL CFlashlight::net_Spawn(CSE_Abstract* DC)
 	if (!inherited::net_Spawn(DC))
 		return FALSE;
 
-	bool b_r2 = !!psDeviceFlags.test(rsDX9);
-	b_r2 |= !!psDeviceFlags.test(rsDX11);
-
 	lanim = LALib.FindItem(pSettings->r_string(m_light_section, "color_animator"));
 
-	Fcolor clr = pSettings->r_fcolor(m_light_section, (b_r2) ? "color_r2" : "color");
+	Fcolor clr = pSettings->r_fcolor(m_light_section, "color");
 	fBrightness = clr.intensity();
-	float range = pSettings->r_float(m_light_section, (b_r2) ? "range_r2" : "range");
+	float range = pSettings->r_float(m_light_section, "range");
 	light_render->set_color(clr);
 	light_render->set_range(range);
 	light_render->set_hud_mode(true);
 
-	Fcolor clr_o = pSettings->r_fcolor(m_light_section, (b_r2) ? "omni_color_r2" : "omni_color");
-	float range_o = pSettings->r_float(m_light_section, (b_r2) ? "omni_range_r2" : "omni_range");
+	Fcolor clr_o = pSettings->r_fcolor(m_light_section, "omni_color");
+	float range_o = pSettings->r_float(m_light_section, "omni_range");
 	light_omni->set_color(clr_o);
 	light_omni->set_range(range_o);
 	light_omni->set_hud_mode(true);							

@@ -17,9 +17,7 @@
 #include "Layers/xrRender/xrD3DDefs.h"
 #include "Layers/xrRender/Debug/dxPixEventWrapper.h"
 
-#define R_R1 1
-#define R_R2 2
-#define RENDER R_R2
+#define RENDER
 
 #include "xrParticles/psystem.h"
 #include "Layers/xrRender/HW.h"
@@ -34,7 +32,7 @@
 #include "Layers/xrRender/blenders/Blender.h"
 #include "Layers/xrRender/blenders/Blender_CLSID.h"
 #include "Layers/xrRender/xrRender_console.h"
-#include "r4.h"
+#include "render.h"
 
 IC void jitter(CBlender_Compile& C)
 {

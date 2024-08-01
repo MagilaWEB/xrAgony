@@ -25,11 +25,9 @@ public:
 	void VSApplySamplers(HArray& samplers);
 	void PSApplySamplers(HArray& samplers);
 	void GSApplySamplers(HArray& samplers);
-#ifdef USE_DX11
 	void HSApplySamplers(HArray& samplers);
 	void DSApplySamplers(HArray& samplers);
 	void CSApplySamplers(HArray& samplers);
-#endif
 
 	void SetMaxAnisotropy(UINT uiMaxAniso);
 	void SetMipLODBias(float uiMipLODBias);

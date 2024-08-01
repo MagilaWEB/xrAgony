@@ -166,22 +166,14 @@ void D3DXRenderBase::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector&
 		SPass& pass = *sh->passes[iPass];
 		mapMatrix_T& map = mapMatrixPasses[sh->flags.iPriority / 2][iPass];
 
-#if defined(USE_DX11)
 		mapMatrixVS::value_type* Nvs = map.insert(&*pass.vs);
 		mapMatrixGS::value_type* Ngs = Nvs->second.insert(pass.gs->sh);
 		mapMatrixPS::value_type* Nps = Ngs->second.insert(pass.ps->sh);
-#else
-		mapMatrixVS::value_type* Nvs = map.insert(pass.vs->sh);
-		mapMatrixPS::value_type* Nps = Nvs->second.insert(pass.ps->sh);
-#endif
 
-#ifdef USE_DX11
 		Nps->second.hs = pass.hs->sh;
 		Nps->second.ds = pass.ds->sh;
 		mapMatrixCS::value_type* Ncs = Nps->second.mapCS.insert(pass.constants._get());
-#else
-		mapMatrixCS::value_type* Ncs = Nps->second.insert(pass.constants._get());
-#endif
+
 		mapMatrixStates::value_type* Nstate = Ncs->second.insert(pass.state->state);
 		mapMatrixTextures::value_type* Ntex = Nstate->second.insert(pass.T._get());
 		mapMatrixItems& items = Ntex->second;
@@ -197,27 +189,17 @@ void D3DXRenderBase::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector&
 				if (SSA > Ncs->second.ssa)
 				{
 					Ncs->second.ssa = SSA;
-#ifdef USE_DX11
 					if (SSA > Nps->second.mapCS.ssa)
 					{
 						Nps->second.mapCS.ssa = SSA;
-#else
-					if (SSA > Nps->second.ssa)
-					{
-						Nps->second.ssa = SSA;
-#endif
-#if defined(USE_DX11)
 						if (SSA > Ngs->second.ssa)
 						{
 							Ngs->second.ssa = SSA;
-#endif
 							if (SSA > Nvs->second.ssa)
 							{
 								Nvs->second.ssa = SSA;
 							}
-#if defined(USE_DX11)
 						}
-#endif
 					}
 				}
 			}
@@ -233,7 +215,7 @@ void D3DXRenderBase::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector&
 	}
 }
 
-void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
+void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual* pVisual)
 {
 	CRender& RI = RImplementation;
 
@@ -318,22 +300,13 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 		SPass& pass = *sh->passes[iPass];
 		mapNormal_T& map = mapNormalPasses[sh->flags.iPriority / 2][iPass];
 
-#if defined(USE_DX11)
 		mapNormalVS::value_type* Nvs = map.insert(&*pass.vs);
 		mapNormalGS::value_type* Ngs = Nvs->second.insert(pass.gs->sh);
 		mapNormalPS::value_type* Nps = Ngs->second.insert(pass.ps->sh);
-#else
-		mapNormalVS::value_type* Nvs = map.insert(pass.vs->sh);
-		mapNormalPS::value_type* Nps = Nvs->second.insert(pass.ps->sh);
-#endif
 
-#ifdef USE_DX11
 		Nps->second.hs = pass.hs->sh;
 		Nps->second.ds = pass.ds->sh;
 		mapNormalCS::value_type* Ncs = Nps->second.mapCS.insert(pass.constants._get());
-#else
-		mapNormalCS::value_type* Ncs = Nps->second.insert(pass.constants._get());
-#endif
 		mapNormalStates::value_type* Nstate = Ncs->second.insert(pass.state->state);
 		mapNormalTextures::value_type* Ntex = Nstate->second.insert(pass.T._get());
 		mapNormalItems& items = Ntex->second;
@@ -350,27 +323,15 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual * pVisual)
 				if (SSA > Ncs->second.ssa)
 				{
 					Ncs->second.ssa = SSA;
-#ifdef USE_DX11
 					if (SSA > Nps->second.mapCS.ssa)
 					{
 						Nps->second.mapCS.ssa = SSA;
-#else
-					if (SSA > Nps->second.ssa)
-					{
-						Nps->second.ssa = SSA;
-#endif
-#if defined(USE_DX11)
 						if (SSA > Ngs->second.ssa)
 						{
 							Ngs->second.ssa = SSA;
-#endif
 							if (SSA > Nvs->second.ssa)
-							{
 								Nvs->second.ssa = SSA;
-							}
-#if defined(USE_DX11)
 						}
-#endif
 					}
 				}
 			}
@@ -478,7 +439,7 @@ Fvector4 o_optimize_dynamic_l2_size = { O_D_L2_S_LOW, O_D_L2_S_MED, O_D_L2_S_HII
 Fvector4 o_optimize_dynamic_l3_dist = { O_D_L3_D_LOW, O_D_L3_D_MED, O_D_L3_D_HII, O_D_L3_D_ULT };
 Fvector4 o_optimize_dynamic_l3_size = { O_D_L3_S_LOW, O_D_L3_S_MED, O_D_L3_S_HII, O_D_L3_S_ULT };
 
-IC float GetDistFromCamera(const Fvector & from_position)
+IC float GetDistFromCamera(const Fvector& from_position)
 // Aproximate, adjusted by fov, distance from camera to position (For right work when looking though binoculars and scopes)
 {
 	float distance = Device.vCameraPosition.distance_to(from_position);
@@ -488,7 +449,7 @@ IC float GetDistFromCamera(const Fvector & from_position)
 	return adjusted_distane;
 }
 
-IC bool IsValuableToRender(dxRender_Visual * pVisual, bool isStatic, bool sm, Fmatrix & transform_matrix, bool ignore_optimize = false)
+IC bool IsValuableToRender(dxRender_Visual* pVisual, bool isStatic, bool sm, Fmatrix& transform_matrix, bool ignore_optimize = false)
 {
 	if (ignore_optimize)
 		return true;
@@ -627,7 +588,7 @@ IC bool IsValuableToRender(dxRender_Visual * pVisual, bool isStatic, bool sm, Fm
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void CRender::add_leafs_Dynamic(dxRender_Visual * pVisual, bool bIgnoreOpt)
+void CRender::add_leafs_Dynamic(dxRender_Visual* pVisual, bool bIgnoreOpt)
 {
 	if (!pVisual)
 		return;
@@ -706,7 +667,7 @@ void CRender::add_leafs_Dynamic(dxRender_Visual * pVisual, bool bIgnoreOpt)
 	}
 }
 
-void CRender::add_leafs_Static(dxRender_Visual * pVisual)
+void CRender::add_leafs_Static(dxRender_Visual* pVisual)
 {
 	if (!HOM.visible(pVisual->vis))
 		return;
@@ -797,7 +758,7 @@ void CRender::add_leafs_Static(dxRender_Visual * pVisual)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOL CRender::add_Dynamic(dxRender_Visual * pVisual, u32 planes)
+BOOL CRender::add_Dynamic(dxRender_Visual* pVisual, u32 planes)
 {
 	if (!pVisual->bIgnoreOpt && !IsValuableToRender(pVisual, false, phase == 1, *val_pTransform))
 		return FALSE;
@@ -893,7 +854,7 @@ BOOL CRender::add_Dynamic(dxRender_Visual * pVisual, u32 planes)
 	return TRUE;
 }
 
-void CRender::add_Static(dxRender_Visual * pVisual, u32 planes)
+void CRender::add_Static(dxRender_Visual* pVisual, u32 planes)
 {
 	if (!pVisual->bIgnoreOpt && !IsValuableToRender(pVisual, true, phase == 1, *val_pTransform))
 		return;
@@ -1023,7 +984,7 @@ D3DXRenderBase::D3DXRenderBase()
 	Resources = nullptr;
 }
 
-void D3DXRenderBase::Copy(IRender & _in) { *this = *(D3DXRenderBase*)&_in; }
+void D3DXRenderBase::Copy(IRender& _in) { *this = *(D3DXRenderBase*)&_in; }
 void D3DXRenderBase::setGamma(float fGamma)
 {
 	m_Gamma.Gamma(fGamma);
@@ -1059,7 +1020,7 @@ void D3DXRenderBase::DestroyHW()
 	HW.DestroyDevice();
 }
 
-void D3DXRenderBase::Reset(HWND hWnd, u32 & dwWidth, u32 & dwHeight, float& fWidth_2, float& fHeight_2)
+void D3DXRenderBase::Reset(HWND hWnd, u32& dwWidth, u32& dwHeight, float& fWidth_2, float& fHeight_2)
 {
 #if defined(DEBUG)
 	_SHOW_REF("*ref -CRenderDevice::ResetTotal: DeviceREF:", HW.pDevice);
@@ -1074,13 +1035,8 @@ void D3DXRenderBase::Reset(HWND hWnd, u32 & dwWidth, u32 & dwHeight, float& fWid
 
 	ResourcesDeferredUpload();
 
-#if defined(USE_DX11)
 	dwWidth = HW.m_ChainDesc.BufferDesc.Width;
 	dwHeight = HW.m_ChainDesc.BufferDesc.Height;
-#else
-	dwWidth = HW.DevPP.BackBufferWidth;
-	dwHeight = HW.DevPP.BackBufferHeight;
-#endif
 
 	fWidth_2 = float(dwWidth / 2);
 	fHeight_2 = float(dwHeight / 2);
@@ -1094,51 +1050,9 @@ void D3DXRenderBase::Reset(HWND hWnd, u32 & dwWidth, u32 & dwHeight, float& fWid
 void D3DXRenderBase::SetupStates()
 {
 	HW.Caps.Update();
-#if defined(USE_DX11)
 	SSManager.SetMaxAnisotropy(4);
 	//  TODO: DX10: Implement Resetting of render states into default mode
 	// VERIFY(!"D3DXRenderBase::SetupStates not implemented.");
-#else
-	for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
-	{
-		float fBias = -.5f;
-		CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MAXANISOTROPY, 4));
-		CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MIPMAPLODBIAS, *(LPDWORD)&fBias));
-		CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MINFILTER, D3DTEXF_LINEAR));
-		CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR));
-		CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR));
-}
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_DITHERENABLE, TRUE));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_COLORVERTEX, TRUE));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_LOCALVIEWER, TRUE));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_SPECULARMATERIALSOURCE, D3DMCS_MATERIAL));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_AMBIENTMATERIALSOURCE, D3DMCS_MATERIAL));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_EMISSIVEMATERIALSOURCE, D3DMCS_COLOR1));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, FALSE));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE));
-	if (psDeviceFlags.test(rsWireframe))
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME));
-	else
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID));
-	// ******************** Fog parameters
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGCOLOR, 0));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_RANGEFOGENABLE, FALSE));
-	if (HW.Caps.bTableFog)
-	{
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_LINEAR));
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_NONE));
-	}
-	else
-	{
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE));
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_LINEAR));
-	}
-#endif
 }
 
 void D3DXRenderBase::OnDeviceCreate(const char* shName)
@@ -1154,16 +1068,11 @@ void D3DXRenderBase::OnDeviceCreate(const char* shName)
 	DUImpl.OnDeviceCreate();
 }
 
-void D3DXRenderBase::Create(HWND hWnd, u32 & dwWidth, u32 & dwHeight, float& fWidth_2, float& fHeight_2, bool move_window)
+void D3DXRenderBase::Create(HWND hWnd, u32& dwWidth, u32& dwHeight, float& fWidth_2, float& fHeight_2, bool move_window)
 {
 	HW.CreateDevice(hWnd, move_window);
-#if defined(USE_DX11)
 	dwWidth = HW.m_ChainDesc.BufferDesc.Width;
 	dwHeight = HW.m_ChainDesc.BufferDesc.Height;
-#else
-	dwWidth = HW.DevPP.BackBufferWidth;
-	dwHeight = HW.DevPP.BackBufferHeight;
-#endif
 	fWidth_2 = float(dwWidth / 2);
 	fHeight_2 = float(dwHeight / 2);
 	Resources = new CResourceManager();
@@ -1178,64 +1087,20 @@ void D3DXRenderBase::SetupGPU(bool bForceGPU_SW, bool bForceGPU_NonPure, bool bF
 
 void D3DXRenderBase::overdrawBegin()
 {
-#if defined(USE_DX11)
 	//  TODO: DX10: Implement overdrawBegin
 	VERIFY(!"D3DXRenderBase::overdrawBegin not implemented.");
-#else
-	// Turn stenciling
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILREF, 0));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILMASK, 0x00000000));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff));
-	// Increment the stencil buffer for each pixel drawn
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_INCRSAT));
-	if (1 == HW.Caps.SceneMode)
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP)); // Overdraw
-	else
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_INCRSAT)); // ZB access
-#endif
 }
 
 void D3DXRenderBase::overdrawEnd()
 {
-#if defined(USE_DX11)
 	// TODO: DX10: Implement overdrawEnd
 	VERIFY(!"D3DXRenderBase::overdrawBegin not implemented.");
-#else
-	// Set up the stencil states
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL));
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILMASK, 0xff));
-	// Set the background to black
-	CHK_DX(HW.pDevice->Clear(0, nullptr, D3DCLEAR_TARGET, color_xrgb(255, 0, 0), 0, 0));
-	// Draw a rectangle wherever the count equal I
-	RCache.OnFrameEnd();
-	CHK_DX(HW.pDevice->SetFVF(FVF::F_TL));
-	// Render gradients
-	for (int I = 0; I < 12; I++)
-	{
-		u32 _c = I * 256 / 13;
-		u32 c = color_xrgb(_c, _c, _c);
-		FVF::TL pv[4];
-		pv[0].set(float(0), float(Device.dwHeight), c, 0, 0);
-		pv[1].set(float(0), float(0), c, 0, 0);
-		pv[2].set(float(Device.dwWidth), float(Device.dwHeight), c, 0, 0);
-		pv[3].set(float(Device.dwWidth), float(0), c, 0, 0);
-		CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILREF, I));
-		CHK_DX(HW.pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, pv, sizeof(FVF::TL)));
-	}
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE));
-#endif
 }
 
 void D3DXRenderBase::DeferredLoad(bool E) { Resources->DeferredLoad(E); }
 void D3DXRenderBase::ResourcesDeferredUpload() { Resources->DeferredUpload(); }
 void D3DXRenderBase::ResourcesDeferredUnload() { Resources->DeferredUnload(); }
-void D3DXRenderBase::ResourcesGetMemoryUsage(u32 & m_base, u32 & c_base, u32 & m_lmaps, u32 & c_lmaps)
+void D3DXRenderBase::ResourcesGetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps)
 {
 	if (Resources)
 		Resources->_GetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
@@ -1246,22 +1111,9 @@ void D3DXRenderBase::ResourcesDumpMemoryUsage() { Resources->_DumpMemoryUsage();
 DeviceState D3DXRenderBase::GetDeviceState()
 {
 	HW.Validate();
-#if defined(USE_DX11)
 	//  TODO: DX10: Implement GetDeviceState
 	//  TODO: DX10: Implement DXGI_PRESENT_TEST testing
 	// VERIFY(!"D3DXRenderBase::overdrawBegin not implemented.");
-#else
-	HRESULT _hr = HW.pDevice->TestCooperativeLevel();
-	if (FAILED(_hr))
-	{
-		// If the device was lost, do not render until we get it back
-		if (D3DERR_DEVICELOST == _hr)
-			return DeviceState::Lost;
-		// Check if the device is ready to be reset
-		if (D3DERR_DEVICENOTRESET == _hr)
-			return DeviceState::NeedReset;
-	}
-#endif
 	return DeviceState::Normal;
 }
 
@@ -1269,10 +1121,6 @@ bool D3DXRenderBase::GetForceGPU_REF() { return HW.Caps.bForceGPU_REF; }
 u32 D3DXRenderBase::GetCacheStatPolys() { return RCache.stat.polys; }
 void D3DXRenderBase::Begin()
 {
-#if !defined(USE_DX11) 
-	if (!Device.m_ScopeVP.IsSVPRender())
-		CHK_DX(HW.pDevice->BeginScene());
-#endif
 	RCache.OnFrameBegin();
 	RCache.set_CullMode(CULL_CW);
 	RCache.set_CullMode(CULL_CCW);
@@ -1282,17 +1130,12 @@ void D3DXRenderBase::Begin()
 
 void D3DXRenderBase::Clear()
 {
-#if defined(USE_DX11)
 	HW.pContext->ClearDepthStencilView(RCache.get_ZB(), D3D_CLEAR_DEPTH | D3D_CLEAR_STENCIL, 1.0f, 0);
 	if (psDeviceFlags.test(rsClearBB))
 	{
 		FLOAT ColorRGBA[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		HW.pContext->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
 	}
-#else
-	CHK_DX(HW.pDevice->Clear(0, nullptr, D3DCLEAR_ZBUFFER | (psDeviceFlags.test(rsClearBB) ? D3DCLEAR_TARGET : 0) |
-		(HW.Caps.bStencil ? D3DCLEAR_STENCIL : 0), color_xrgb(0, 0, 0), 1, 0));
-#endif
 }
 
 void DoAsyncScreenshot();
@@ -1310,26 +1153,17 @@ void D3DXRenderBase::End()
 
 	DoAsyncScreenshot();
 	extern ENGINE_API u32 state_screen_mode;
-#if defined(USE_DX11)
 	HW.m_pSwapChain->Present((state_screen_mode == 1) && psDeviceFlags.test(rsVSync) ? 1 : 0, 0);
-#else
-	CHK_DX(HW.pDevice->EndScene());
-	HW.pDevice->Present(nullptr, nullptr, nullptr, nullptr);
-#endif
 }
 
 void D3DXRenderBase::ResourcesDestroyNecessaryTextures() { Resources->DestroyNecessaryTextures(); }
 void D3DXRenderBase::ClearTarget()
 {
-#if defined(USE_DX11)
 	FLOAT ColorRGBA[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	HW.pContext->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
-#else
-	CHK_DX(HW.pDevice->Clear(0, nullptr, D3DCLEAR_TARGET, color_xrgb(0, 0, 0), 1, 0));
-#endif
 }
 
-void D3DXRenderBase::SetCacheXform(Fmatrix & mView, Fmatrix & mProject)
+void D3DXRenderBase::SetCacheXform(Fmatrix& mView, Fmatrix& mProject)
 {
 	RCache.set_xform_view(mView);
 	RCache.set_xform_project(mProject);
@@ -1348,7 +1182,7 @@ void D3DXRenderBase::OnAssetsChanged()
 	Resources->m_textures_description.Load();
 }
 
-void D3DXRenderBase::DumpStatistics(IGameFont & font, IPerformanceAlert * alert)
+void D3DXRenderBase::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 {
 	BasicStats.FrameEnd();
 	auto renderTotal = Device.GetStats().RenderTotal.result;

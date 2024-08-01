@@ -3,16 +3,13 @@
 #pragma once
 #include "xrCore/xr_resource.h"
 #include "tss_def.h"
-#if defined(USE_DX11)
 #include "Layers/xrRenderDX10/StateManager/dx10State.h"
-#endif
 
 #pragma pack(push, 4)
 
 //////////////////////////////////////////////////////////////////////////
 // Atomic resources
 //////////////////////////////////////////////////////////////////////////
-#if defined(USE_DX11)
 struct ECORE_API SInputSignature : public xr_resource_flagged
 {
 	ID3DBlob* signature;
@@ -20,16 +17,13 @@ struct ECORE_API SInputSignature : public xr_resource_flagged
 	~SInputSignature();
 };
 typedef resptr_core<SInputSignature, resptr_base<SInputSignature>> ref_input_sign;
-#endif
 
 //////////////////////////////////////////////////////////////////////////
 struct ECORE_API SVS : public xr_resource_named
 {
 	ID3DVertexShader* sh;
 	R_constant_table constants;
-#if defined(USE_DX11)
 	ref_input_sign signature;
-#endif
 	SVS();
 	~SVS();
 };
@@ -44,7 +38,6 @@ struct ECORE_API SPS : public xr_resource_named
 };
 typedef resptr_core<SPS, resptr_base<SPS>> ref_ps;
 
-#if defined(USE_DX11)
 //////////////////////////////////////////////////////////////////////////
 struct ECORE_API SGS : public xr_resource_named
 {
@@ -77,7 +70,6 @@ struct ECORE_API SCS : public xr_resource_named
 	~SCS();
 };
 typedef resptr_core<SCS, resptr_base<SCS>> ref_cs;
-#endif
 
 //////////////////////////////////////////////////////////////////////////
 struct ECORE_API SState : public xr_resource_flagged
@@ -91,14 +83,9 @@ typedef resptr_core<SState, resptr_base<SState>> ref_state;
 //////////////////////////////////////////////////////////////////////////
 struct ECORE_API SDeclaration : public xr_resource_flagged
 {
-#if defined(USE_DX11)
 	//	Maps input signature to input layout
 	xr_map<ID3DBlob*, ID3DInputLayout*> vs_to_layout;
 	xr_vector<D3D_INPUT_ELEMENT_DESC> dx10_dcl_code;
-#else	//	Don't need it: use ID3DInputLayout instead
-	//	which is per ( declaration, VS input layout) pair
-	IDirect3DVertexDeclaration9* dcl;
-#endif
 
 	//	Use this for DirectX10 to cache DX9 declaration for comparison purpose only
 	xr_vector<D3DVERTEXELEMENT9> dcl_code;

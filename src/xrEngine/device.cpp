@@ -290,7 +290,7 @@ void CRenderDevice::b_Load()
 	}
 
 	load_prosses = true;
-	if (g_loading_events.front()())
+	if (g_loading_events.front() && g_loading_events.front()())
 		g_loading_events.pop_front();
 }
 

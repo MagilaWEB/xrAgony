@@ -31,11 +31,7 @@ private:
 	void cleanup_lost();
 
 public:
-#if defined(USE_DX11)
 	typedef	u64		occq_result;
-#else
-	typedef	u32		occq_result;
-#endif
 public:
 	R_occlusion();
 	~R_occlusion();

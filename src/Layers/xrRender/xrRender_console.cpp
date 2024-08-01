@@ -38,9 +38,7 @@ const xr_token qssao_token[] = {
 	{"st_opt_low", 1},
 	{"st_opt_medium", 2},
 	{"st_opt_high", 3},
-#if defined(USE_DX11)
 	{"st_opt_ultra", 4},
-#endif
 	{nullptr, 0}
 };
 
@@ -49,10 +47,8 @@ const xr_token qsun_quality_token[] = {
 	{"st_opt_low", 0},
 	{"st_opt_medium", 1},
 	{"st_opt_high", 2},
-#if defined(USE_DX11)
 	{"st_opt_ultra", 3},
 	{"st_opt_extreme", 4},
-#endif
 	{nullptr, 0}
 };
 
@@ -233,9 +229,7 @@ float ps_r2_gloss_factor = 4.0f;
 #include "xrEngine/XR_IOConsole.h"
 #include "xrEngine/xr_ioc_cmd.h"
 
-#if defined(USE_DX11)
 #include "Layers/xrRenderDX10/StateManager/dx10SamplerStateCache.h"
-#endif
 
 //-----------------------------------------------------------------------
 
@@ -286,12 +280,7 @@ public:
 			return;
 		int val = *value;
 		clamp(val, 1, 16);
-#if defined(USE_DX11)
 		SSManager.SetMaxAnisotropy(val);
-#else
-		for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
-			CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MAXANISOTROPY, val));
-#endif
 	}
 	CCC_tf_Aniso(LPCSTR N, int* v) : CCC_Integer(N, v, 1, 16) {};
 	virtual void Execute(LPCSTR args)
@@ -313,12 +302,7 @@ public:
 	{
 		if (0 == HW.pDevice)	return;
 
-#if defined(USE_DX11)
 		SSManager.SetMipLODBias(*value);
-#else
-		for (u32 i = 0; i < HW.Caps.raster.dwStages; i++)
-			CHK_DX(HW.pDevice->SetSamplerState(i, D3DSAMP_MIPMAPLODBIAS, *((LPDWORD)value)));
-#endif
 	}
 
 	CCC_tf_MipBias(LPCSTR N, float* v) : CCC_Float(N, v, -1.0f, +1.0f) {};
@@ -484,21 +468,6 @@ public:
 
 		Msg("\nTotal			 \t \t %f \t %f \t %f ", vb_video + ib_video + rt_video,
 			textures_managed + vb_managed + ib_managed + rt_managed, vb_system + ib_system + rt_system);
-	}
-};
-
-#include "r__pixel_calculator.h"
-class CCC_BuildSSA : public IConsole_Command
-{
-public:
-	CCC_BuildSSA(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR /*args*/)
-	{
-#if !defined(USE_DX11)
-		//  TODO: DX10: Implement pixel calculator
-		r_pixel_calculator c;
-		c.run();
-#endif
 	}
 };
 
@@ -671,7 +640,6 @@ public:
 };
 
 //  Allow real-time fog config reload
-#ifdef USE_DX11
 #ifdef DEBUG
 
 #include "Layers/xrRenderDX10/3DFluid/dx103DFluidManager.h"
@@ -683,7 +651,6 @@ public:
 	virtual void Execute(LPCSTR /*args*/) { FluidManager.UpdateProfiles(); }
 };
 #endif // DEBUG
-#endif
 
 //-----------------------------------------------------------------------
 void xrRender_initconsole()
@@ -781,9 +748,8 @@ void xrRender_initconsole()
 	CMD4(CCC_Float, "r2_sun_tsm_proj", &ps_r2_sun_tsm_projection, .001f, 0.8f);
 	CMD4(CCC_Float, "r2_sun_tsm_bias", &ps_r2_sun_tsm_bias, -0.5, +0.5);
 	CMD4(CCC_Float, "r2_sun_near", &ps_r2_sun_near, 1.f, 150.f); // AVO: extended from 50.f to 150.f
-#if RENDER != R_R1
 	CMD4(CCC_Float, "r2_sun_far", &OLES_SUN_LIMIT_27_01_07, 51.f, 180.f);
-#endif
+
 	CMD4(CCC_Float, "r2_sun_near_border", &ps_r2_sun_near_border, .5f, 1.0f);
 	CMD4(CCC_Float, "r2_sun_depth_far_scale", &ps_r2_sun_depth_far_scale, 0.5, 1.5);
 	CMD4(CCC_Float, "r2_sun_depth_far_bias", &ps_r2_sun_depth_far_bias, -0.5, +0.5);
@@ -887,11 +853,9 @@ void xrRender_initconsole()
 	CMD4(CCC_Integer, "r__optimize_shadow_geom", &opt_shadow, 0, 4);
 
 	//  Allow real-time fog config reload
-#ifdef USE_DX11
 #ifdef DEBUG
 	CMD1(CCC_Fog_Reload, "r3_fog_reload");
 #endif // DEBUG
-#endif
 
 	CMD3(CCC_Mask, "r3_dynamic_wet_surfaces", &ps_r2_ls_flags, R3FLAG_DYN_WET_SURF);
 	CMD4(CCC_Float, "r3_dynamic_wet_surfaces_near", &ps_r3_dyn_wet_surf_near, 10, 70);

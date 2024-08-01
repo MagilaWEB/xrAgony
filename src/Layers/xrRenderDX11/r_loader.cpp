@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "r4.h"
+#include "render.h"
 #include "Layers/xrRender/ResourceManager.h"
 #include "Layers/xrRender/FBasicVisual.h"
 #include "xrCore/FMesh.hpp"
@@ -25,7 +25,7 @@ void CRender::level_Load(IReader* fs)
 	RImplementation.Resources->DeferredLoad(TRUE);
 	IReader* chunk;
 
-	tbb::task_group parallel;
+	static tbb::task_group parallel;
 
 	// Shaders
 	pApp->SetLoadStageTitle("st_loading_shaders");
@@ -219,7 +219,7 @@ void CRender::level_Unload()
 void CRender::LoadBuffers(CStreamReader* base_fs, BOOL _alternative)
 {
 	R_ASSERT2(base_fs, "Could not load geometry. File not found.");
-	RImplementation.Resources->Evict();
+	//RImplementation.Resources->Evict();
 	//	u32	dwUsage					= D3DUSAGE_WRITEONLY;
 
 	xr_vector<VertexDeclarator>& _DC = _alternative ? xDC : nDC;

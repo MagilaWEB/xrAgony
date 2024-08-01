@@ -35,8 +35,8 @@ enum
 
 	rsCameraPos = (1ul << 18ul),
 
-	rsDX9 = (1ul << 19ul),
-	rsDX11 = (1ul << 20ul),
+	//rsDX9 = (1ul << 19ul),
+	//rsDX11 = (1ul << 20ul),
 	//rsCPUStatistic = (1ul << 21ul),
 	rsXrThreadStatistic = (1ul << 22ul),
 	rsShowFPS = (1ul << 23ul), // 23 was reserved for editor

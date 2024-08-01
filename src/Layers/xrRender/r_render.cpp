@@ -436,10 +436,8 @@ void CRender::Render()
 	Target->phase_occq();
 	LP_normal.clear();
 
-#if USE_DX11
 	if (RImplementation.o.dx10_msaa)
 		RCache.set_ZB(RImplementation.Target->rt_MSAADepth->pZRT);
-#endif
 
 	{
 		PIX_EVENT(DEFER_TEST_LIGHT_VIS);
@@ -489,7 +487,6 @@ void CRender::Render()
 		Wallmarks->Render(); // wallmarks has priority as normal geometry
 	}
 
-#if USE_DX11
 	// full screen pass to mark msaa-edge pixels in highest stencil bit
 	if (RImplementation.o.dx10_msaa)
 	{
@@ -503,7 +500,6 @@ void CRender::Render()
 		PIX_EVENT(DEFER_RAIN);
 		render_rain();
 	}
-#endif
 
 	// Directional light - fucking sun
 	if (bSUN)
@@ -522,17 +518,12 @@ void CRender::Render()
 		RCache.set_xform_project(Device.mProject);
 		RCache.set_xform_view(Device.mView);
 		// Stencil - write 0x1 at pixel pos -
-#if USE_DX11
 		if (!RImplementation.o.dx10_msaa)
 			RCache.set_Stencil(
 				TRUE, D3DCMP_ALWAYS, 0x01, 0xff, 0xff, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
 		else
 			RCache.set_Stencil(
 				TRUE, D3DCMP_ALWAYS, 0x01, 0xff, 0x7f, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
-#else
-		RCache.set_Stencil(
-			TRUE, D3DCMP_ALWAYS, 0x01, 0xff, 0xff, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
-#endif
 		// RCache.set_Stencil
 		// (TRUE,D3DCMP_ALWAYS,0x00,0xff,0xff,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
 		RCache.set_CullMode(CULL_CCW);
@@ -592,15 +583,8 @@ void CRender::AfterWorldRender()
 {
 	if (Device.m_ScopeVP.IsSVPRender())
 	{
-#if USE_DX11
 		ID3DResource* res;
 		HW.pBaseRT->GetResource(&res);
 		HW.pContext->CopyResource(Target->rt_secondVP->pSurface, res);
-#else
-		IDirect3DSurface9* pBackBuffer = nullptr;
-		HW.pDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
-		D3DXLoadSurfaceFromSurface(Target->rt_secondVP->pRT, 0, 0, pBackBuffer, 0, 0, D3DX_DEFAULT, 0);
-		pBackBuffer->Release();
-#endif
 	}
 }

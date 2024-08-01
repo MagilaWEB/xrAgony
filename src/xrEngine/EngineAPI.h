@@ -56,7 +56,8 @@ class ENGINE_API CEngineAPI
 
 	XRay::Module hGame;
 	XRay::Module hTuner;
-	xr_vector<XRay::Module> m_renderers;
+	XRay::Module hRender;
+	//xr_vector<XRay::Module> m_renderers;
 
 	SetupEnv m_setupSelectedRenderer;
 
@@ -72,10 +73,10 @@ public:
 	VTPause* tune_pause;
 	VTResume* tune_resume;
 	void Initialize();
-	void CloseUnusedLibraries();
+	//void CloseUnusedLibraries();
 
 	void InitializeRenderers();
-	void SelectRenderer();
+	//void SelectRenderer();
 
 	void Destroy();
 

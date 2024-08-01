@@ -15,7 +15,7 @@
     <RootNamespace>xrRender_R4</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>xrRender_DX11</ProjectName>
+    <ProjectName>xrRenderDX</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(SolutionDir)Common.props" />
@@ -212,14 +212,12 @@
     <ClInclude Include="..\xrRender\R_Backend_tree.h" />
     <ClInclude Include="..\xrRender\R_Backend_xform.h" />
     <ClInclude Include="..\xrRender\r_constants.h" />
-    <ClInclude Include="..\xrRender\r_constants_cache.h" />
     <ClInclude Include="..\xrRender\R_DStreams.h" />
     <ClInclude Include="..\xrRender\r_lights.h" />
     <ClInclude Include="..\xrRender\r_sun_cascades.h" />
     <ClInclude Include="..\xrRender\r_sun_support.h" />
     <ClInclude Include="..\xrRender\r__dsgraph_types.h" />
     <ClInclude Include="..\xrRender\r__occlusion.h" />
-    <ClInclude Include="..\xrRender\r__pixel_calculator.h" />
     <ClInclude Include="..\xrRender\r__sector.h" />
     <ClInclude Include="..\xrRender\Shader.h" />
     <ClInclude Include="..\xrRender\ShaderResourceTraits.h" />
@@ -263,8 +261,8 @@
     <ClInclude Include="dx11MinMaxSMBlender.h" />
     <ClInclude Include="..\xrRender\Light_Render_Direct.h" />
     <ClInclude Include="..\xrRender\light_smapvis.h" />
-    <ClInclude Include="r2_types.h" />
-    <ClInclude Include="r4.h" />
+    <ClInclude Include="r_types.h" />
+    <ClInclude Include="render.h" />
     <ClInclude Include="r4_rendertarget.h" />
     <ClInclude Include="r4_rendertarget_wallmarks.h" />
     <ClInclude Include="R_Backend_LOD.h" />
@@ -390,7 +388,6 @@
     <ClCompile Include="..\xrRender\r__dsgraph_render.cpp" />
     <ClCompile Include="..\xrRender\r__dsgraph_render_lods.cpp" />
     <ClCompile Include="..\xrRender\r__occlusion.cpp" />
-    <ClCompile Include="..\xrRender\r__pixel_calculator.cpp" />
     <ClCompile Include="..\xrRender\r__screenshot.cpp" />
     <ClCompile Include="..\xrRender\r__sector.cpp" />
     <ClCompile Include="..\xrRender\r__sector_traversal.cpp" />
@@ -435,8 +432,8 @@
     <ClCompile Include="..\xrRender\Light_Render_Direct_ComputeXFS.cpp" />
     <ClCompile Include="..\xrRender\light_smapvis.cpp" />
     <ClCompile Include="..\xrRender\light_vis.cpp" />
-    <ClCompile Include="r4.cpp" />
-    <ClCompile Include="r4_loader.cpp" />
+    <ClCompile Include="render.cpp" />
+    <ClCompile Include="r_loader.cpp" />
     <ClCompile Include="r4_rendertarget.cpp" />
     <ClCompile Include="r4_rendertarget_accum_direct.cpp" />
     <ClCompile Include="r4_rendertarget_accum_omnipart_geom.cpp" />
@@ -462,7 +459,7 @@
     <ClCompile Include="r4_rendertarget_phase_smap_D.cpp" />
     <ClCompile Include="r4_rendertarget_phase_smap_S.cpp" />
     <ClCompile Include="r4_rendertarget_phase_ssao.cpp" />
-    <ClCompile Include="r4_R_rain.cpp" />
+    <ClCompile Include="r_rain.cpp" />
     <ClCompile Include="R_Backend_LOD.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

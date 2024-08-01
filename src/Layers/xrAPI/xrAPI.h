@@ -24,4 +24,4 @@ extern XRAPI_API AISpaceBase* AISpace;
 extern XRAPI_API ISoundManager* Sound;
 extern XRAPI_API ui_core* UICore;
 
-extern XRAPI_API int CurrentRenderer;
+//extern XRAPI_API int CurrentRenderer;

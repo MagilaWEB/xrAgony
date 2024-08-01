@@ -32,14 +32,10 @@ struct _LodItem
 };
 
 using ps_type = ID3DPixelShader*;
-#if defined(USE_DX11) // DX11 needs shader signature to properly bind geometry to shader
 using vs_type = SVS*;
 using gs_type = ID3DGeometryShader*;
 using hs_type = ID3D11HullShader*;
 using ds_type = ID3D11DomainShader*;
-#else
-using vs_type = ID3DVertexShader*;
-#endif
 
 // NORMAL
 using mapNormalDirect = xr_vector<_NormalItem>;
@@ -64,7 +60,6 @@ struct mapNormalCS : public xr_fixed_map<R_constant_table*, mapNormalStates>
 	float ssa;
 };
 
-#ifdef USE_DX11
 struct mapNormalAdvStages
 {
 	hs_type hs;
@@ -76,25 +71,13 @@ struct mapNormalPS : public xr_fixed_map<ps_type, mapNormalAdvStages>
 {
 	float ssa;
 };
-#else
-struct mapNormalPS : public xr_fixed_map<ps_type, mapNormalCS>
-{
-	float ssa;
-};
-#endif
 
-#if defined(USE_DX11)
 struct mapNormalGS : public xr_fixed_map<gs_type, mapNormalPS>
 {
 	float ssa;
 };
 
 struct mapNormalVS : public xr_fixed_map<vs_type, mapNormalGS> {};
-#else
-struct mapNormalVS : public xr_fixed_map<vs_type, mapNormalPS>
-{
-};
-#endif
 
 using mapNormal_T = mapNormalVS;
 using mapNormalPasses_T = mapNormal_T[SHADER_PASSES_MAX];
@@ -122,7 +105,6 @@ struct mapMatrixCS : public xr_fixed_map<R_constant_table*, mapMatrixStates>
 	float ssa;
 };
 
-#ifdef USE_DX11
 struct mapMatrixAdvStages
 {
 	hs_type hs;
@@ -134,23 +116,13 @@ struct mapMatrixPS : public xr_fixed_map<ps_type, mapMatrixAdvStages>
 {
 	float ssa;
 };
-#else
-struct mapMatrixPS : public xr_fixed_map<ps_type, mapMatrixCS>
-{
-	float ssa;
-};
-#endif
 
-#if defined(USE_DX11)
 struct mapMatrixGS : public xr_fixed_map<gs_type, mapMatrixPS>
 {
 	float ssa;
 };
 
 struct mapMatrixVS : public xr_fixed_map<vs_type, mapMatrixGS> {};
-#else
-struct mapMatrixVS : public xr_fixed_map<vs_type, mapMatrixPS> {};
-#endif
 
 using mapMatrix_T = mapMatrixVS;
 using mapMatrixPasses_T = mapMatrix_T[SHADER_PASSES_MAX];

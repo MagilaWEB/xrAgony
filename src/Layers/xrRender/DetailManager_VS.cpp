@@ -69,30 +69,14 @@ void CDetailManager::hw_Load_Geom()
 	}
 	u32 vSize = sizeof(vertHW);
 	Msg("* [DETAILS] %d v(%d), %d p", dwVerts, vSize, dwIndices / 3);
-
-#if !defined(USE_DX11)
-	// Determine POOL & USAGE
-	u32 dwUsage = D3DUSAGE_WRITEONLY;
-
-	// Create VB/IB
-	R_CHK(HW.pDevice->CreateVertexBuffer(dwVerts * vSize, dwUsage, 0, D3DPOOL_MANAGED, &hw_VB, nullptr));
-	HW.stats_manager.increment_stats_vb(hw_VB);
-	R_CHK(HW.pDevice->CreateIndexBuffer(dwIndices * 2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &hw_IB, nullptr));
-	HW.stats_manager.increment_stats_ib(hw_IB);
-
-#endif
 	Msg("* [DETAILS] Batch(%d), VB(%dK), IB(%dK)", hw_BatchSize, (dwVerts * vSize) / 1024, (dwIndices * 2) / 1024);
 
 	// Fill VB
 	{
 		vertHW* pV;
-#if defined(USE_DX11)
 		vertHW* pVOriginal;
 		pVOriginal = xr_alloc<vertHW>(dwVerts);
 		pV = pVOriginal;
-#else
-		R_CHK(hw_VB->Lock(0, 0, (void**)&pV, 0));
-#endif
 		for (CDetail*& D : objects)
 		{
 			for (u32 batch = 0; batch < hw_BatchSize; batch++)
@@ -112,25 +96,17 @@ void CDetailManager::hw_Load_Geom()
 				}
 			}
 		}
-#if defined(USE_DX11)
 		R_CHK(dx10BufferUtils::CreateVertexBuffer(&hw_VB, pVOriginal, dwVerts * vSize));
 		HW.stats_manager.increment_stats_vb(hw_VB);
 		xr_free(pVOriginal);
-#else
-		R_CHK(hw_VB->Unlock());
-#endif
 	}
 
 	// Fill IB
 	{
 		u16* pI;
-#if defined(USE_DX11)
 		u16* pIOriginal;
 		pIOriginal = xr_alloc<u16>(dwIndices);
 		pI = pIOriginal;
-#else
-		R_CHK(hw_IB->Lock(0, 0, (void**)(&pI), 0));
-#endif
 		for (const CDetail* D : objects)
 		{
 			u16 offset = 0;
@@ -141,13 +117,9 @@ void CDetailManager::hw_Load_Geom()
 				offset = u16(offset + u16(D->number_vertices));
 			}
 		}
-#if defined(USE_DX11)
 		R_CHK(dx10BufferUtils::CreateIndexBuffer(&hw_IB, pIOriginal, dwIndices * 2));
 		HW.stats_manager.increment_stats_ib(hw_IB);
 		xr_free(pIOriginal);
-#else
-		R_CHK(hw_IB->Unlock());
-#endif
 	}
 
 	// Declare geometry
@@ -269,14 +241,9 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 			RCache.set_c(strDir2D, wind);
 			RCache.set_c(strXForm, Device.mFullTransform);
 
-#if USE_DX11
 			//	Map constants to memory directly
 			Fvector4* c_storage{};
 			RCache.get_ConstantDirect(strArray, hw_BatchSize * sizeof(Fvector4) * 4, reinterpret_cast<void**>(&c_storage), nullptr, nullptr);
-#else
-			u32 c_base = hwc_array->vs.index;
-			Fvector4* c_storage = RCache.get_ConstantCache_Vertex().get_array_f().access(c_base);
-#endif
 
 			u32 dwBatch = 0;
 			for (SlotItem* Instance : vis)
@@ -304,17 +271,10 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 					//Device.Statistic->RenderDUMP_DT_Count += dwBatch;
 					u32 dwCNT_verts = dwBatch * Object.number_vertices;
 					u32 dwCNT_prims = (dwBatch * Object.number_indices) / 3;
-#if USE_DX11
 					RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
 					//RCache.stat.r.s_details.add(dwCNT_verts);
 
 					RCache.get_ConstantDirect(strArray, hw_BatchSize * sizeof(Fvector4) * 4, reinterpret_cast<void**>(&c_storage), nullptr, nullptr);
-#else
-					RCache.get_ConstantCache_Vertex().b_dirty = TRUE;
-					RCache.get_ConstantCache_Vertex().get_array_f().dirty(c_base, c_base + dwBatch * 4);
-					RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
-					//	RCache.stat.r.s_details.add(dwCNT_verts);
-#endif
 					// restart
 					dwBatch = 0;
 				}
@@ -325,15 +285,8 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 				//Device.Statistic->RenderDUMP_DT_Count += dwBatch;
 				u32 dwCNT_verts = dwBatch * Object.number_vertices;
 				u32 dwCNT_prims = (dwBatch * Object.number_indices) / 3;
-#if USE_DX11
 				RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
 				//RCache.stat.r.s_details.add(dwCNT_verts);
-#else
-				RCache.get_ConstantCache_Vertex().b_dirty = TRUE;
-				RCache.get_ConstantCache_Vertex().get_array_f().dirty(c_base, c_base + dwBatch * 4);
-				RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
-				//RCache.stat.r.s_details.add(dwCNT_verts);
-#endif
 			}
 		}
 		vOffset += hw_BatchSize * Object.number_vertices;

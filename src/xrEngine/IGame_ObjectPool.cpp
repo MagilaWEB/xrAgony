@@ -23,7 +23,7 @@ void IGame_ObjectPool::prefetch()
 	std::atomic_uint prefetch_it = 0;
 	size_t prefetch_send = 0;
 	size_t size = sect.Data.size();
-	tbb::task_group parallel;
+	static tbb::task_group parallel;
 	if (pApp->IsLoadingScreen())
 	{
 		parallel.run([&]() {

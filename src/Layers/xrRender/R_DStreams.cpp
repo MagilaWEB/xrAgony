@@ -11,10 +11,9 @@ int rsDIB_Size = 512;
 
 void _VertexStream::Create()
 {
-	RImplementation.Resources->Evict();
+	//RImplementation.Resources->Evict();
 
 	mSize = rsDVB_Size * 1024;
-#if defined(USE_DX11)
 	D3D_BUFFER_DESC bufferDesc;
 	bufferDesc.ByteWidth = mSize;
 	bufferDesc.Usage = D3D_USAGE_DYNAMIC;
@@ -24,10 +23,6 @@ void _VertexStream::Create()
 
 	R_CHK(HW.pDevice->CreateBuffer(&bufferDesc, 0, &pVB));
 	HW.stats_manager.increment_stats_vb(pVB);
-#else
-	R_CHK(HW.pDevice->CreateVertexBuffer(mSize, D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, 0, D3DPOOL_DEFAULT, &pVB, nullptr));
-	HW.stats_manager.increment_stats_vb(pVB);
-#endif
 
 	R_ASSERT(pVB);
 
@@ -46,9 +41,7 @@ void _VertexStream::Destroy()
 
 void* _VertexStream::Lock(u32 vl_Count, u32 Stride, u32& vOffset)
 {
-#ifdef USE_DX11
 	D3D11_MAPPED_SUBRESOURCE MappedSubRes;
-#endif
 
 #ifdef DEBUG
 	PGO(Msg("PGO:VB_LOCK:%d", vl_Count));
@@ -74,19 +67,9 @@ void* _VertexStream::Lock(u32 vl_Count, u32 Stride, u32& vOffset)
 		vOffset = 0;
 		mDiscardID++;
 
-#if defined(USE_DX11)
 		HW.pContext->Map(pVB, 0, D3D_MAP_WRITE_DISCARD, 0, &MappedSubRes);
 		pData = (BYTE*)MappedSubRes.pData;
 		pData += vOffset;
-#else
-		HRESULT res = pVB->Lock(mPosition, bytes_need, (void**)&pData, LOCKFLAGS_FLUSH);
-
-		if (res != D3D_OK)
-		{
-			Msg(" pVB->Lock - failed: res = %d,mPosition = %d, bytes_need = %d, &pData = %x, LOCKFLAGS_FLUSH", res,
-				mPosition, bytes_need, (void**)&pData);
-		}
-#endif
 	}
 	else
 	{
@@ -94,20 +77,9 @@ void* _VertexStream::Lock(u32 vl_Count, u32 Stride, u32& vOffset)
 		mPosition = vl_mPosition * Stride;
 		vOffset = vl_mPosition;
 
-#if defined(USE_DX11)
 		HW.pContext->Map(pVB, 0, D3D_MAP_WRITE_NO_OVERWRITE, 0, &MappedSubRes);
 		pData = (BYTE*)MappedSubRes.pData;
 		pData += vOffset * Stride;
-#else
-		HRESULT res = pVB->Lock(mPosition, bytes_need, (void**)&pData, LOCKFLAGS_APPEND);
-
-		if (res != D3D_OK)
-		{
-			Msg(" pVB->Lock - failed: res = %d,mPosition = %d, bytes_need = %d, &pData = %x, LOCKFLAGS_APPEND", res,
-				mPosition, bytes_need, (void**)&pData);
-		}
-
-#endif
 	}
 	VERIFY(pData);
 
@@ -125,11 +97,7 @@ void _VertexStream::Unlock(u32 Count, u32 Stride)
 
 	VERIFY(pVB);
 
-#if defined(USE_DX11)
 	HW.pContext->Unmap(pVB, 0);
-#else
-	pVB->Unlock();
-#endif
 }
 
 void _VertexStream::reset_begin()
@@ -159,11 +127,10 @@ void _VertexStream::_clear()
 void _IndexStream::Create()
 {
 	//dxRenderDeviceRender::Instance().Resources->Evict();
-	RImplementation.Resources->Evict();
+	//RImplementation.Resources->Evict();
 
 	mSize = rsDIB_Size * 1024;
 
-#if defined(USE_DX11)
 	D3D_BUFFER_DESC bufferDesc;
 	bufferDesc.ByteWidth = mSize;
 	bufferDesc.Usage = D3D_USAGE_DYNAMIC;
@@ -173,11 +140,6 @@ void _IndexStream::Create()
 
 	R_CHK(HW.pDevice->CreateBuffer(&bufferDesc, 0, &pIB));
 	HW.stats_manager.increment_stats_ib(pIB);
-#else
-	R_CHK(HW.pDevice->CreateIndexBuffer(
-		mSize, D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &pIB, nullptr));
-	HW.stats_manager.increment_stats_ib(pIB);
-#endif
 	R_ASSERT(pIB);
 
 	mPosition = 0;
@@ -195,9 +157,7 @@ void _IndexStream::Destroy()
 
 u16* _IndexStream::Lock(u32 Count, u32& vOffset)
 {
-#ifdef USE_DX11
 	D3D11_MAPPED_SUBRESOURCE MappedSubRes;
-#endif
 	PGO(Msg("PGO:IB_LOCK:%d", Count));
 	vOffset = 0;
 	BYTE* pLockedData = nullptr;
@@ -215,14 +175,11 @@ u16* _IndexStream::Lock(u32 Count, u32& vOffset)
 		dwFlags = LOCKFLAGS_FLUSH; // discard it's contens
 		mDiscardID++;
 	}
-#if defined(USE_DX11)
+
 	D3D_MAP MapMode = (dwFlags == LOCKFLAGS_APPEND) ? D3D_MAP_WRITE_NO_OVERWRITE : D3D_MAP_WRITE_DISCARD;
 	HW.pContext->Map(pIB, 0, MapMode, 0, &MappedSubRes);
 	pLockedData = (BYTE*)MappedSubRes.pData;
 	pLockedData += mPosition * 2;
-#else
-	pIB->Lock(mPosition * 2, Count * 2, (void**)&pLockedData, dwFlags);
-#endif
 	VERIFY(pLockedData);
 
 	vOffset = mPosition;
@@ -235,11 +192,7 @@ void _IndexStream::Unlock(u32 RealCount)
 	PGO(Msg("PGO:IB_UNLOCK:%d", RealCount));
 	mPosition += RealCount;
 	VERIFY(pIB);
-#if defined(USE_DX11)
 	HW.pContext->Unmap(pIB, 0);
-#else
-	pIB->Unlock();
-#endif
 }
 
 void _IndexStream::reset_begin()

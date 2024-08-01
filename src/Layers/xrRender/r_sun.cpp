@@ -524,10 +524,8 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 	// Accumulate
 	Target->phase_accumulator();
 
-#if USE_DX11
 	if (Target->use_minmax_sm_this_frame())
 		Target->create_minmax_SM();
-#endif
 
 	PIX_EVENT(SE_SUN_NEAR);
 

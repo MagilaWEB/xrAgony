@@ -45,9 +45,7 @@ void CSkeletonX::_Copy(CSkeletonX* B)
 	RMS_boneid = B->RMS_boneid;
 	RMS_bonecount = B->RMS_bonecount;
 
-#if defined(USE_DX11)
 	m_Indices = B->m_Indices;
-#endif
 }
 //////////////////////////////////////////////////////////////////////
 void CSkeletonX::_Render(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCount)
@@ -668,7 +666,6 @@ void CSkeletonX::_FillVerticesSoft4W(const Fmatrix& view, CSkeletonWallmark& wm,
 	}
 }
 
-#if defined(USE_DX11)
 void CSkeletonX::_DuplicateIndices(const char* /*N*/, IReader* data)
 {
 	//	We will have trouble with container since don't know were to take readable indices
@@ -682,4 +679,3 @@ void CSkeletonX::_DuplicateIndices(const char* /*N*/, IReader* data)
 	u32 crc = crc32(data->pointer(), size);
 	m_Indices.create(crc, iCount, (u16*)data->pointer());
 }
-#endif

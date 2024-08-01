@@ -7,12 +7,8 @@
 #include "sh_constant.h"
 #include "sh_rt.h"
 
-#if defined(USE_DX11)
 #include "Layers/xrRenderDX10/dx10R_Backend_Runtime.h"
 #include "Layers/xrRenderDX10/StateManager/dx10State.h"
-#else
-#include "Layers/xrRenderDX9/dx9R_Backend_Runtime.h"
-#endif
 
 IC void R_xforms::set_c_w(R_constant* C)
 {
@@ -71,17 +67,12 @@ IC ID3DDepthStencilView* CBackend::get_ZB()
 ICF void CBackend::set_States(ID3DState* _state)
 {
 	//	DX10 Manages states using it's own algorithm. Don't mess with it.
-#if !defined(USE_DX11)
-	if (state != _state)
-#endif
-	{
-		PGO(Msg("PGO:state_block"));
+	PGO(Msg("PGO:state_block"));
 #ifdef DEBUG
-		stat.states++;
+	stat.states++;
 #endif
-		state = _state;
-		state->Apply();
-	}
+	state = _state;
+	state->Apply();
 }
 
 IC void CBackend::set_Element(ShaderElement* S, u32 pass)
@@ -90,12 +81,10 @@ IC void CBackend::set_Element(ShaderElement* S, u32 pass)
 	set_States(P.state);
 	set_PS(P.ps);
 	set_VS(P.vs);
-#if defined(USE_DX11)
 	set_GS(P.gs);
 	set_HS(P.hs);
 	set_DS(P.ds);
 	set_CS(P.cs);
-#endif
 	set_Constants(P.constants);
 	set_Textures(P.T);
 }

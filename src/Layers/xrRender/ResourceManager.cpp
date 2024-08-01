@@ -62,13 +62,11 @@ IBlender* CResourceManager::_GetBlender(LPCSTR Name)
 		return 0;
 #else
 	//	TODO: DX10: When all shaders are ready switch to common path
-#if defined(USE_DX11)
 	if (I == m_blenders.end())
 	{
 		Msg("DX10: Shader '%s' not found in library.", Name);
 		return 0;
 	}
-#endif
 	if (I == m_blenders.end())
 	{
 		xrDebug::Fatal(DEBUG_INFO, "Shader '%s' not found in library.", Name);
@@ -278,14 +276,10 @@ Shader* CResourceManager::_cpp_Create(
 Shader* CResourceManager::_cpp_Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
 	//	TODO: DX10: When all shaders are ready switch to common path
-#if defined(USE_DX11)
 	IBlender* pBlender = _GetBlender(s_shader ? s_shader : "null");
 	if (!pBlender)
 		return nullptr;
 	return _cpp_Create(pBlender, s_shader, s_textures, s_constants, s_matrices);
-#else
-	return _cpp_Create(_GetBlender(s_shader ? s_shader : "null"), s_shader, s_textures, s_constants, s_matrices);
-#endif
 }
 
 Shader* CResourceManager::Create(IBlender* B, LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
@@ -296,7 +290,6 @@ Shader* CResourceManager::Create(IBlender* B, LPCSTR s_shader, LPCSTR s_textures
 Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
 	//	TODO: DX10: When all shaders are ready switch to common path
-#if defined(USE_DX11)
 	if (_lua_HasShader(s_shader))
 		return _lua_Create(s_shader, s_textures);
 	else
@@ -315,12 +308,6 @@ Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_co
 			}
 		}
 	}
-#else
-	if (_lua_HasShader(s_shader))
-		return _lua_Create(s_shader, s_textures);
-	else
-		return _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
-#endif
 }
 
 void CResourceManager::Delete(const Shader* S)
@@ -334,18 +321,13 @@ void CResourceManager::Delete(const Shader* S)
 
 void CResourceManager::DeferredUpload()
 {
-	if (!Device.b_is_Ready)
+	if (!Device.b_is_Ready || Device.IsReset())
 		return;
-
-#if defined(USE_DX11)
-	if (Device.IsReset())
-		return;
-#endif
 	
+	static tbb::task_group parallel;
 	std::atomic_uint texture_it = 0;
 	size_t texture_send = 0;
 	size_t size_texture = m_textures.size();
-	tbb::task_group parallel;
 	if (pApp->IsLoadingScreen())
 	{
 		parallel.run([&]() {
@@ -374,13 +356,8 @@ void CResourceManager::DeferredUpload()
 
 void CResourceManager::DeferredUnload()
 {
-	if (!Device.b_is_Ready)
+	if (!Device.b_is_Ready || Device.IsReset())
 		return;
-
-#if defined(USE_DX11)
-	if (Device.IsReset())
-		return;
-#endif
 
 	CHECK_TIME("Resource Manager DeferredUnload",
 		tbb::parallel_for_each(m_textures, [&](struct std::pair<const char*, CTexture*> m_tex)
@@ -438,10 +415,10 @@ void CResourceManager::_DumpMemoryUsage()
 	}
 }
 
-void CResourceManager::Evict()
-{
-	//	TODO: DX10: check if we really need this method
-#if !defined(USE_DX11)
-	CHK_DX(HW.pDevice->EvictManagedResources());
-#endif
-}
+//void CResourceManager::Evict()
+//{
+//	//	TODO: DX10: check if we really need this method
+//#if !defined(USE_DX11)
+//	CHK_DX(HW.pDevice->EvictManagedResources());
+//#endif
+//}

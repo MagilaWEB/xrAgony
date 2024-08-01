@@ -46,7 +46,6 @@ SPS::~SPS()
 	RImplementation.Resources->_DeletePS(this);
 }
 
-#if defined(USE_DX11)
 ///////////////////////////////////////////////////////////////////////
 // SGS
 SGS::~SGS()
@@ -90,7 +89,6 @@ SInputSignature::~SInputSignature()
 	_RELEASE(signature);
 	RImplementation.Resources->_DeleteInputSignature(this);
 }
-#endif
 
 ///////////////////////////////////////////////////////////////////////
 //	SState
@@ -105,7 +103,6 @@ SState::~SState()
 SDeclaration::~SDeclaration()
 {
 	RImplementation.Resources->_DeleteDecl(this);
-#if defined(USE_DX11)
 	xr_map<ID3DBlob*, ID3DInputLayout*>::iterator iLayout;
 	iLayout = vs_to_layout.begin();
 	for (; iLayout != vs_to_layout.end(); ++iLayout)
@@ -113,8 +110,4 @@ SDeclaration::~SDeclaration()
 		//	Release vertex layout
 		_RELEASE(iLayout->second);
 	}
-#else
-	//	Release vertex layout
-	_RELEASE(dcl);
-#endif
 }

@@ -112,21 +112,9 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 
 			u32 vStride = D3DXGetFVFVertexSize(fvf);
 
-#if defined(USE_DX11)
 			VERIFY(nullptr == p_rm_Vertices);
 			R_CHK(dx10BufferUtils::CreateVertexBuffer(&p_rm_Vertices, data->pointer(), vCount * vStride));
 			HW.stats_manager.increment_stats_vb(p_rm_Vertices);
-#else
-			BOOL bSoft = HW.Caps.geometry.bSoftware;
-			u32 dwUsage = D3DUSAGE_WRITEONLY | (bSoft ? D3DUSAGE_SOFTWAREPROCESSING : 0);
-			BYTE* bytes = nullptr;
-			VERIFY(nullptr == p_rm_Vertices);
-			R_CHK(HW.pDevice->CreateVertexBuffer(vCount * vStride, dwUsage, 0, D3DPOOL_MANAGED, &p_rm_Vertices, nullptr));
-			HW.stats_manager.increment_stats_vb(p_rm_Vertices);
-			R_CHK(p_rm_Vertices->Lock(0, 0, (void**)&bytes, 0));
-			CopyMemory(bytes, data->pointer(), vCount * vStride);
-			p_rm_Vertices->Unlock();
-#endif
 		}
 	}
 
@@ -152,35 +140,9 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 			iCount = data->r_u32();
 			dwPrimitives = iCount / 3;
 
-#if defined(USE_DX11)
-			//BOOL bSoft = HW.Caps.geometry.bSoftware || (dwFlags&VLOAD_FORCESOFTWARE);
-			// indices are read in model-wallmarks code
-			//u32 dwUsage = /*D3DUSAGE_WRITEONLY |*/ (bSoft?D3DUSAGE_SOFTWAREPROCESSING:0);			
-			//BYTE* bytes = 0;
-
-			//VERIFY(nullptr==p_rm_Indices);
-			//R_CHK
-			//(HW.pDevice->CreateIndexBuffer(iCount*2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &p_rm_Indices, 0));
-			//R_CHK(p_rm_Indices->Lock(0, 0, (void**)&bytes, 0));
-			//CopyMemory(bytes, data->pointer(), iCount*2);
-
 			VERIFY(nullptr == p_rm_Indices);
 			R_CHK(dx10BufferUtils::CreateIndexBuffer(&p_rm_Indices, data->pointer(), iCount * 2));
 			HW.stats_manager.increment_stats_ib(p_rm_Indices);
-#else
-			BOOL bSoft = HW.Caps.geometry.bSoftware;
-			u32 dwUsage = /*D3DUSAGE_WRITEONLY |*/ (
-				bSoft ? D3DUSAGE_SOFTWAREPROCESSING : 0); // indices are read in model-wallmarks code
-			BYTE* bytes = nullptr;
-
-			VERIFY(nullptr == p_rm_Indices);
-			R_CHK(
-				HW.pDevice->CreateIndexBuffer(iCount * 2, dwUsage, D3DFMT_INDEX16, D3DPOOL_MANAGED, &p_rm_Indices, nullptr));
-			HW.stats_manager.increment_stats_ib(p_rm_Indices);
-			R_CHK(p_rm_Indices->Lock(0, 0, (void**)&bytes, 0));
-			CopyMemory(bytes, data->pointer(), iCount * 2);
-			p_rm_Indices->Unlock();
-#endif
 		}
 	}
 

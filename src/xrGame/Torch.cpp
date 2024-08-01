@@ -170,9 +170,6 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 
 	torch_mode = 1;
 
-	bool b_r2 = !!psDeviceFlags.test(rsDX9);
-	b_r2 |= !!psDeviceFlags.test(rsDX11);
-
 	IKinematics* K = PKinematics(Visual());
 	CInifile* pUserData = K->LL_UserData();
 	R_ASSERT3(pUserData, "Empty Torch user data!", torch->get_visual());
@@ -183,13 +180,13 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 	guid_bone = K->LL_BoneID(pUserData->r_string(m_light_section, "guide_bone"));
 	VERIFY(guid_bone != BI_NONE);
 
-	Fcolor clr = pUserData->r_fcolor(m_light_section, (b_r2) ? "color_r2" : "color");
-	range = pUserData->r_float(m_light_section, (b_r2) ? "range_r2" : "range");
-	range2 = pUserData->r_float(m_light_section, (b_r2) ? "range_r2_2" : "range_2");
+	Fcolor clr = pUserData->r_fcolor(m_light_section, "color");
+	range = pUserData->r_float(m_light_section, "range");
+	range2 = pUserData->r_float(m_light_section, "range_2");
 
-	Fcolor clr_o = pUserData->r_fcolor(m_light_section, (b_r2) ? "omni_color_r2" : "omni_color");
-	range_o = pUserData->r_float(m_light_section, (b_r2) ? "omni_range_r2" : "omni_range");
-	range_o2 = pUserData->r_float(m_light_section, (b_r2) ? "omni_range_r2_2" : "omni_range_2");
+	Fcolor clr_o = pUserData->r_fcolor(m_light_section, "omni_color");
+	range_o = pUserData->r_float(m_light_section, "omni_range");
+	range_o2 = pUserData->r_float(m_light_section, "omni_range_2");
 
 	glow_radius = pUserData->r_float(m_light_section, "glow_radius");
 	glow_radius2 = pUserData->r_float(m_light_section, "glow_radius_2");

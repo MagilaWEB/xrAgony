@@ -12,4 +12,4 @@ XRAPI_API AISpaceBase* AISpace;
 XRAPI_API ISoundManager* Sound;
 XRAPI_API ui_core* UICore;
 
-XRAPI_API int CurrentRenderer;
+//XRAPI_API int CurrentRenderer;

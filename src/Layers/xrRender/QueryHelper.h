@@ -3,7 +3,6 @@
 #pragma once
 
 //	Implementation
-#if defined(USE_DX11)
 
 IC HRESULT CreateQuery(ID3DQuery** ppQuery, D3DQUERYTYPE Type)
 {
@@ -45,28 +44,5 @@ IC HRESULT ReleaseQuery(ID3DQuery* pQuery)
 	_RELEASE(pQuery);
 	return S_OK;
 }
-
-#else
-
-IC HRESULT CreateQuery(ID3DQuery** ppQuery, D3DQUERYTYPE Type)
-{
-	return HW.pDevice->CreateQuery(Type, ppQuery);
-}
-
-IC HRESULT GetData(ID3DQuery* pQuery, void* pData, UINT DataSize)
-{
-	return pQuery->GetData(pData, DataSize, D3DGETDATA_FLUSH);
-}
-
-IC HRESULT BeginQuery(ID3DQuery* pQuery)
-{
-	return pQuery->Issue(D3DISSUE_BEGIN);
-}
-
-IC HRESULT EndQuery(ID3DQuery* pQuery)
-{
-	return pQuery->Issue(D3DISSUE_END);
-}
-#endif
 
 #endif // QueryHelper_included
