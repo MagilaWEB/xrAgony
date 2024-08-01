@@ -342,7 +342,7 @@ void CResourceManager::DeferredUpload()
 		return;
 #endif
 	
-	size_t texture_it = 0;
+	std::atomic_uint texture_it = 0;
 	size_t texture_send = 0;
 	size_t size_texture = m_textures.size();
 	tbb::task_group parallel;

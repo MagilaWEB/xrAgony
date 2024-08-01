@@ -385,7 +385,7 @@ void CModelPool::Prefetch()
 	strconcat(sizeof(section), section, "prefetch_visuals_", g_pGamePersistent->m_game_params.m_game_type);
 	const CInifile::Sect& sect = pSettings->r_section(section);
 
-	size_t prefetch_it = 0;
+	std::atomic_uint prefetch_it = 0;
 	size_t prefetch_send = 0;
 	size_t size = sect.Data.size();
 	tbb::task_group parallel;
