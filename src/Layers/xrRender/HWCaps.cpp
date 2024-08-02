@@ -67,22 +67,55 @@ namespace
 
 	u32 GetATIGpuNum()
 	{
-		const auto atimgpud = XRay::LoadModule("ATIMGPUD");
-		if (!atimgpud->IsLoaded())
-			return 0;
+		constexpr int AGS_VERSION = AGS_MAKE_VERSION(AMD_AGS_VERSION_MAJOR, AMD_AGS_VERSION_MINOR, AMD_AGS_VERSION_PATCH);
 
-		using ATIQUERYMGPUCOUNT = INT(*)();
+		AGSConfiguration config
+		{
+			/*.allocCallback =*/ [](size_t size) -> void* { return xr_malloc(size); },
+			/*.freeCallback  =*/ [](void* ptr)   -> void { xr_free(ptr); }
+		};
+		AGSContext* ags{};
+		AGSGPUInfo gpuInfo{};
 
-		const auto AtiQueryMgpuCount = (ATIQUERYMGPUCOUNT)atimgpud->GetProcAddress("AtiQueryMgpuCount");
+		auto status = agsInitialize(AGS_VERSION, &config, &ags, &gpuInfo);
+		if (status != AGS_SUCCESS)
+			return 1;
 
-		if (!AtiQueryMgpuCount)
-			return 0;
+		D3D_FEATURE_LEVEL featureLevels[] =
+		{
+			D3D_FEATURE_LEVEL_11_0,
+			D3D_FEATURE_LEVEL_10_1,
+			D3D_FEATURE_LEVEL_10_0
+		};
+		AGSDX11DeviceCreationParams creationParams
+		{
+			/*.pAdapter       =*/ nullptr,
+			/*.DriverType     =*/ D3D_DRIVER_TYPE_UNKNOWN,
+			/*.Software       =*/ nullptr,
+			/*.Flags          =*/ 0,
+			/*.pFeatureLevels =*/ featureLevels,
+			/*.FeatureLevels  =*/ UINT(std::size(featureLevels)),
+			/*.SDKVersion     =*/ D3D11_SDK_VERSION,
+		};
 
-		const int iGpuNum = AtiQueryMgpuCount();
-		if (iGpuNum > 1)
-			Msg("* ATI MGPU: %d-Way CrossFire detected.", iGpuNum);
+		AGSDX11ExtensionParams extensionParams{ L"xrAgony", L"xrAgony Engine", 1602, 1602 };
+		extensionParams.crossfireMode = AGS_CROSSFIRE_MODE_EXPLICIT_AFR; // don't mess drivers
 
-		return iGpuNum;
+		AGSDX11ReturnedParams returnedParams{};
+		status = agsDriverExtensionsDX11_CreateDevice(ags, &creationParams, &extensionParams, &returnedParams);
+		if (status != AGS_SUCCESS)
+		{
+			Msg("! AMD AGS: Unable to get CrossFire GPU count (%d)", status);
+			agsDeInitialize(ags);
+			return 1;
+		}
+
+		const u32 crossfireGpuCount = returnedParams.crossfireGPUCount;
+		agsDriverExtensionsDX11_DestroyDevice(ags, returnedParams.pDevice, nullptr, returnedParams.pImmediateContext, nullptr);
+
+		Msg("* AMD AGS: %d-Way CrossFire detected.", crossfireGpuCount);
+		agsDeInitialize(ags);
+		return crossfireGpuCount;
 	}
 
 	u32 GetGpuNum()
