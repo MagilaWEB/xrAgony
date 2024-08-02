@@ -288,7 +288,7 @@ void ai_obstacle::compute_impl()
 	const_iterator B = level_graph.begin();
 	const_iterator E = level_graph.end();
 
-	m_area.clear();
+	m_area.resize(0);
 	merge_predicate predicate(this, m_area);
 	for (u32 x = x_min; x <= x_max; ++x)
 	{

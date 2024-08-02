@@ -71,7 +71,7 @@ void CPda::shedule_Update(u32 dt)
 
 void CPda::UpdateActiveContacts()
 {
-	m_active_contacts.clear();
+	m_active_contacts.resize(0);
 	xr_vector<IGameObject*>::iterator it = feel_touch.begin();
 	for (; it != feel_touch.end(); ++it)
 	{

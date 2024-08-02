@@ -330,7 +330,7 @@ void ISpatial_DB::q_ray(
 	xrCriticalSection::raii mt{ pcs };
 	Stats.Query.Begin();
 	q_result = &R;
-	q_result->clear();
+	q_result->resize(0);
 
 	if (_o & O_ONLYFIRST)
 	{

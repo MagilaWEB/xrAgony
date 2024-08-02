@@ -142,7 +142,7 @@ void CSoundRender_Core::update_events()
 	for (event& E : s_events)
 		Handler(E.first, E.second);
 
-	s_events.clear();
+	s_events.resize(0);
 }
 
 void CSoundRender_Core::statistic(CSound_stats* dest, CSound_stats_ext* ext)

@@ -420,7 +420,7 @@ XML_NODE XMLDocument::SearchForAttribute(
 
 pcstr XMLDocument::CheckUniqueAttrib(XML_NODE start_node, pcstr tag_name, pcstr attrib_name)
 {
-	m_AttribValues.clear();
+	m_AttribValues.resize(0);
 
 	int tags_num = GetNodesNum(start_node, tag_name);
 

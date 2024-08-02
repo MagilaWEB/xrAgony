@@ -209,7 +209,7 @@ void CObjectList::clear_crow_vec(Objects& o)
 		// Msg ("[%d][0x%08x]IAmNotACrowAnyMore (clear_crow_vec)", Device.dwFrame, dynamic_cast<void*>(it));
 		it->IAmNotACrowAnyMore();
 	}
-	o.clear();
+	o.resize(0);
 }
 
 void CObjectList::Update(bool bForce)
@@ -228,7 +228,7 @@ void CObjectList::Update(bool bForce)
 			stats.Updated = 0;
 
 			m_primary_crows.insert(m_primary_crows.end(), m_secondary_crows.begin(), m_secondary_crows.end());
-			m_secondary_crows.clear();
+			m_secondary_crows.resize(0);
 
 #if 0
 			std::sort(m_own_crows.begin(), m_own_crows.end());
@@ -264,7 +264,7 @@ void CObjectList::Update(bool bForce)
 			IGameObject** objects = (IGameObject**)_alloca(objects_count * sizeof(IGameObject*));
 			std::copy(workload->begin(), workload->end(), objects);
 
-			m_primary_crows.clear();
+			m_primary_crows.resize(0);
 
 			IGameObject** b = objects;
 			IGameObject** e = objects + objects_count;

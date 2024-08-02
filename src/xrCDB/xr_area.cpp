@@ -35,9 +35,9 @@ CObjectSpace::~CObjectSpace()
 int CObjectSpace::GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<IGameObject*>& q_nearest, const Fvector& point,
 	float range, IGameObject* ignore_object)
 {
-	q_spatial.clear();
+	q_spatial.resize(0);
 	// Query objects
-	q_nearest.clear();
+	q_nearest.resize(0);
 	Fsphere Q;
 	Q.set(point, range);
 	Fvector B;

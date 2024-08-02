@@ -13,7 +13,7 @@ IC obstacles_query::obstacles_query() { init(); }
 IC void obstacles_query::init() { m_crc = 0; }
 IC void obstacles_query::clear()
 {
-	m_area.clear();
+	m_area.resize(0);
 	m_obstacles.clear();
 	init();
 }

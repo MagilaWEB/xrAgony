@@ -552,7 +552,7 @@ void CUIActorMenu::highlight_ammo_for_weapon(PIItem weapon_item, CUIDragDropList
 	VERIFY(weapon_item);
 	VERIFY(ddlist);
 	static xr_vector<shared_str> ammo_types;
-	ammo_types.clear();
+	ammo_types.resize(0);
 
 	CWeapon* weapon = smart_cast<CWeapon*>(weapon_item);
 	if (!weapon)

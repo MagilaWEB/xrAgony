@@ -299,8 +299,8 @@ void CParticleGroup::SItem::Stop(BOOL def_stop)
 			::Render->model_Delete(pVisual);
 			*it = 0;
 		}
-		_children_related.clear();
-		_children_free.clear();
+		_children_related.resize(0);
+		_children_free.resize(0);
 	}
 }
 BOOL CParticleGroup::SItem::IsPlaying()

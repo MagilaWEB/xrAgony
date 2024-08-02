@@ -139,7 +139,7 @@ namespace CDB
 		RESULT& r_add();
 		void r_free();
 		ICF int r_count() { return rd.size(); };
-		ICF void r_clear() { rd.clear(); };
+		ICF void r_clear() { rd.resize(0); };
 		ICF void r_clear_compact() { rd.clear(); };
 	};
 

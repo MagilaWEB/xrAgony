@@ -68,4 +68,4 @@ void moving_objects::on_object_move(moving_object* moving_object)
 	m_tree->insert(moving_object);
 }
 
-void moving_objects::clear() { m_previous_collisions.clear(); }
+void moving_objects::clear() { m_previous_collisions.resize(0); }

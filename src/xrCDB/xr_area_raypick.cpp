@@ -181,7 +181,7 @@ BOOL CObjectSpace::RayQuery(collide::rq_results& dest, const collide::ray_defs& 
 	LPVOID user_data, collide::test_callback tb, IGameObject* ignore_object)
 {
 	BOOL _res = _RayQuery2(dest, R, CB, user_data, tb, ignore_object);
-	r_spatial.clear();
+	r_spatial.resize(0);
 	return (_res);
 }
 BOOL CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_defs& R, collide::rq_callback CB,

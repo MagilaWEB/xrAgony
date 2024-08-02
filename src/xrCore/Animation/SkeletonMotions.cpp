@@ -47,7 +47,7 @@ void CPartition::load(IKinematics* V, LPCSTR model_name)
 		auto it_e = S.Data.cend();
 		if (S.Data.size())
 		{
-			P[i].bones.clear();
+			P[i].bones.resize(0);
 		}
 		for (; it != it_e; ++it)
 		{

@@ -188,8 +188,8 @@ public:
 	IC rq_result* r_begin() { return &*results.begin(); }
 	//IC rq_result* r_end() { return &*results.end(); }
 	IC rqVec* r_get() { return &results; }
-	IC void r_clear() { results.clear(); }
-	IC void r_sort() { std::sort(results.begin(), results.end(), r_sort_pred); }
+	IC void r_clear() { results.resize(0); }
+	IC void r_sort() { results.sort(r_sort_pred); }
 	IC rqVec& r_results() { return results; }
 };
 
