@@ -388,7 +388,7 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 			Vertices1W.create(crc, V.vCount, (vertBoned1W*)_verts_);
 		}
 
-		u32 vStride = D3DXGetDeclVertexSize(dwDecl_01W, 0);
+		u32 vStride = dx10BufferUtils::GetDeclVertexSize(dwDecl_01W, 0);
 		VERIFY(vStride == sizeof(vertHW_1W));
 		//BYTE* bytes = 0;
 		VERIFY(nullptr == V.p_rm_Vertices);
@@ -436,7 +436,7 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 			Vertices2W.create(crc, V.vCount, (vertBoned2W*)_verts_);
 		}
 
-		u32 vStride = D3DXGetDeclVertexSize(dwDecl_2W, 0);
+		u32 vStride = dx10BufferUtils::GetDeclVertexSize(dwDecl_2W, 0);
 		VERIFY(vStride == sizeof(vertHW_2W));
 		// BYTE* bytes = 0;
 		VERIFY(nullptr == V.p_rm_Vertices);
@@ -484,7 +484,7 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 			Vertices3W.create(crc, V.vCount, (vertBoned3W*)_verts_);
 		}
 
-		u32 vStride = D3DXGetDeclVertexSize(dwDecl_3W, 0);
+		u32 vStride = dx10BufferUtils::GetDeclVertexSize(dwDecl_3W, 0);
 
 		VERIFY(vStride == sizeof(vertHW_3W));
 		//BYTE* bytes = 0;
@@ -536,7 +536,7 @@ void CSkeletonX_ext::_Load_hw(Fvisual& V, void* _verts_)
 			Vertices4W.create(crc, V.vCount, (vertBoned4W*)_verts_);
 		}
 
-		u32 vStride = D3DXGetDeclVertexSize(dwDecl_4W, 0);
+		u32 vStride = dx10BufferUtils::GetDeclVertexSize(dwDecl_4W, 0);
 
 		VERIFY(vStride == sizeof(vertHW_4W));
 		//BYTE* bytes = 0;

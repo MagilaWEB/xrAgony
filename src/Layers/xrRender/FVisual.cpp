@@ -110,7 +110,7 @@ void Fvisual::Load(const char* N, IReader* data, u32 dwFlags)
 			fvf = data->r_u32();
 			vCount = data->r_u32();
 
-			u32 vStride = D3DXGetFVFVertexSize(fvf);
+			u32 vStride = dx10BufferUtils::GetFVFVertexSize(fvf);
 
 			VERIFY(nullptr == p_rm_Vertices);
 			R_CHK(dx10BufferUtils::CreateVertexBuffer(&p_rm_Vertices, data->pointer(), vCount * vStride));

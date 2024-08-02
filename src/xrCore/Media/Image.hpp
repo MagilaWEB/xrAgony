@@ -13,7 +13,7 @@ enum class ImageFormat : u32
 	RGBA8 = 2,
 };
 
-class XRCORE_API Image
+class XRCORE_API Image final
 {
 private:
 #pragma pack(push, 1)
@@ -36,7 +36,7 @@ private:
 
 	ImageFormat format;
 	int channelCount;
-	u16 width, height;
+	u32 width, height;
 	void* data;
 
 public:
@@ -48,8 +48,12 @@ public:
 		data = nullptr;
 	}
 
-	~Image() {}
-	Image& Create(u16 width, u16 height, void* data, ImageFormat format);
+	~Image() {};
+	Image(u32 width, u32 height, void* data, ImageFormat format)
+	{
+		Create(width, height, data, format);
+	};
+	Image& Create(u32 width, u32 height, void* data, ImageFormat format);
 	void SaveTGA(IWriter& writer, bool align);
 	void SaveTGA(IWriter& writer, ImageFormat format, bool align);
 	void SaveTGA(const char* name, bool align);

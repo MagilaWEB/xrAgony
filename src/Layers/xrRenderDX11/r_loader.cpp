@@ -243,13 +243,13 @@ void CRender::LoadBuffers(CStreamReader* base_fs, BOOL _alternative)
 			fs->r(dcl, bufferSize);
 			fs->advance(-(int)bufferSize);
 
-			u32 dcl_len = D3DXGetDeclLength(dcl) + 1;
+			u32 dcl_len = dx10BufferUtils::GetDeclLength(dcl) + 1;
 			_DC[i].resize(dcl_len);
 			fs->r(_DC[i].begin(), dcl_len * sizeof(D3DVERTEXELEMENT9));
 
 			// count, size
 			u32 vCount = fs->r_u32();
-			u32 vSize = D3DXGetDeclVertexSize(dcl, 0);
+			u32 vSize = dx10BufferUtils::GetDeclVertexSize(dcl, 0);
 			if (Core.ParamFlags.test(Core.verboselog))
 				Msg("* [Loading VB] %d verts, %d Kb", vCount, (vCount * vSize) / 1024);
 

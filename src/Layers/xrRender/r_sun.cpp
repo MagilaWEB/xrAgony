@@ -36,27 +36,27 @@ static int facetable[6][4] = {
 //////////////////////////////////////////////////////////////////////////
 struct Frustum
 {
-	Frustum();
-	Frustum(const D3DXMATRIX* matrix);
+	Frustum(const XMFLOAT4X4* matrix);
 
-	D3DXPLANE camPlanes[6];
+	XMFLOAT4 camPlanes[6];
 	int nVertexLUT[6];
-	D3DXVECTOR3 pntList[8];
+	XMFLOAT3 pntList[8];
 };
+
 struct BoundingBox
 {
-	D3DXVECTOR3 minPt;
-	D3DXVECTOR3 maxPt;
+	XMFLOAT3 minPt;
+	XMFLOAT3 maxPt;
 
 	BoundingBox() : minPt(1e33f, 1e33f, 1e33f), maxPt(-1e33f, -1e33f, -1e33f) {}
 	BoundingBox(const BoundingBox& other) : minPt(other.minPt), maxPt(other.maxPt) {}
-	explicit BoundingBox(const D3DXVECTOR3* points, UINT n) : minPt(1e33f, 1e33f, 1e33f), maxPt(-1e33f, -1e33f, -1e33f)
+	explicit BoundingBox(const XMFLOAT3* points, UINT n) : minPt(1e33f, 1e33f, 1e33f), maxPt(-1e33f, -1e33f, -1e33f)
 	{
 		for (unsigned int i = 0; i < n; i++)
 			Merge(&points[i]);
 	}
 
-	explicit BoundingBox(const std::vector<D3DXVECTOR3>* points)
+	explicit BoundingBox(const std::vector<XMFLOAT3>* points)
 		: minPt(1e33f, 1e33f, 1e33f), maxPt(-1e33f, -1e33f, -1e33f)
 	{
 		for (unsigned int i = 0; i < points->size(); i++)
@@ -71,8 +71,8 @@ struct BoundingBox
 			Merge(&(*boxes)[i].minPt);
 		}
 	}
-	void Centroid(D3DXVECTOR3* vec) const { *vec = 0.5f * (minPt + maxPt); }
-	void Merge(const D3DXVECTOR3* vec)
+
+	void Merge(const XMFLOAT3* vec)
 	{
 		minPt.x = std::min(minPt.x, vec->x);
 		minPt.y = std::min(minPt.y, vec->y);
@@ -81,81 +81,48 @@ struct BoundingBox
 		maxPt.y = std::max(maxPt.y, vec->y);
 		maxPt.z = std::max(maxPt.z, vec->z);
 	}
-	D3DXVECTOR3 Point(int i) const
+	XMFLOAT3 Point(int i) const
 	{
-		return D3DXVECTOR3((i & 1) ? minPt.x : maxPt.x, (i & 2) ? minPt.y : maxPt.y, (i & 4) ? minPt.z : maxPt.z);
+		return XMFLOAT3((i & 1) ? minPt.x : maxPt.x, (i & 2) ? minPt.y : maxPt.y, (i & 4) ? minPt.z : maxPt.z);
 	}
 };
 
 ///////////////////////////////////////////////////////////////////////////
-BOOL LineIntersection2D(D3DXVECTOR2* result, const D3DXVECTOR2* lineA, const D3DXVECTOR2* lineB)
-{
-	//  if the lines are parallel, the lines will not intersect in a point
-	//  NOTE: assumes the rays are already normalized!!!!
-	VERIFY(_abs(D3DXVec2Dot(&lineA[1], &lineB[1])) < 1.f);
-
-	float x[2] = { lineA[0].x, lineB[0].x };
-	float y[2] = { lineA[0].y, lineB[0].y };
-	float dx[2] = { lineA[1].x, lineB[1].x };
-	float dy[2] = { lineA[1].y, lineB[1].y };
-
-	float x_diff = x[0] - x[1];
-	float y_diff = y[0] - y[1];
-
-	float s = (x_diff - (dx[1] / dy[1]) * y_diff) / ((dx[1] * dy[0] / dy[1]) - dx[0]);
-	// float t	= (x_diff + s*dx[0]) / dx[1];
-
-	*result = lineA[0] + s * lineA[1];
-	return TRUE;
-}
-///////////////////////////////////////////////////////////////////////////
 //  PlaneIntersection
 //	computes the point where three planes intersect
 //	returns whether or not the point exists.
-static inline BOOL PlaneIntersection(
-	D3DXVECTOR3* intersectPt, const D3DXPLANE* p0, const D3DXPLANE* p1, const D3DXPLANE* p2)
+static inline bool PlaneIntersection(
+	XMVECTOR& intersectPt, FXMVECTOR n0, FXMVECTOR n1, FXMVECTOR n2)
 {
-	D3DXVECTOR3 n0(p0->a, p0->b, p0->c);
-	D3DXVECTOR3 n1(p1->a, p1->b, p1->c);
-	D3DXVECTOR3 n2(p2->a, p2->b, p2->c);
+	XMVECTOR n1_n2 = XMVector3Cross(n1, n2);
+	XMVECTOR n2_n0 = XMVector3Cross(n2, n0);
+	XMVECTOR n0_n1 = XMVector3Cross(n0, n1);
 
-	D3DXVECTOR3 n1_n2, n2_n0, n0_n1;
-
-	D3DXVec3Cross(&n1_n2, &n1, &n2);
-	D3DXVec3Cross(&n2_n0, &n2, &n0);
-	D3DXVec3Cross(&n0_n1, &n0, &n1);
-
-	float cosTheta = D3DXVec3Dot(&n0, &n1_n2);
+	const float cosTheta = XMVectorGetX(XMVector3Dot(n0, n1_n2));
 
 	if (ALMOST_ZERO(cosTheta) || IS_SPECIAL(cosTheta))
-		return FALSE;
+		return false;
 
-	float secTheta = 1.f / cosTheta;
+	const float secTheta = 1.f / cosTheta;
 
-	n1_n2 = n1_n2 * p0->d;
-	n2_n0 = n2_n0 * p1->d;
-	n0_n1 = n0_n1 * p2->d;
+	n1_n2 = n1_n2 * XMVectorGetW(n0);
+	n2_n0 = n2_n0 * XMVectorGetW(n1);
+	n0_n1 = n0_n1 * XMVectorGetW(n2);
 
-	*intersectPt = -(n1_n2 + n2_n0 + n0_n1) * secTheta;
-	return TRUE;
-}
-
-Frustum::Frustum()
-{
-	for (int i = 0; i < 6; i++)
-		camPlanes[i] = D3DXPLANE(0.f, 0.f, 0.f, 0.f);
+	intersectPt = -(n1_n2 + n2_n0 + n0_n1) * secTheta;
+	return true;
 }
 
 //  build a frustum from a camera (projection, or viewProjection) matrix
-Frustum::Frustum(const D3DXMATRIX* matrix)
+Frustum::Frustum(const XMFLOAT4X4* matrix)
 {
 	//  build a view frustum based on the current view & projection matrices...
-	D3DXVECTOR4 column4(matrix->_14, matrix->_24, matrix->_34, matrix->_44);
-	D3DXVECTOR4 column1(matrix->_11, matrix->_21, matrix->_31, matrix->_41);
-	D3DXVECTOR4 column2(matrix->_12, matrix->_22, matrix->_32, matrix->_42);
-	D3DXVECTOR4 column3(matrix->_13, matrix->_23, matrix->_33, matrix->_43);
+	const XMVECTOR column4 = XMVectorSet(matrix->_14, matrix->_24, matrix->_34, matrix->_44);
+	const XMVECTOR column1 = XMVectorSet(matrix->_11, matrix->_21, matrix->_31, matrix->_41);
+	const XMVECTOR column2 = XMVectorSet(matrix->_12, matrix->_22, matrix->_32, matrix->_42);
+	const XMVECTOR column3 = XMVectorSet(matrix->_13, matrix->_23, matrix->_33, matrix->_43);
 
-	D3DXVECTOR4 planes[6];
+	XMVECTOR planes[6];
 	planes[0] = column4 - column1; // left
 	planes[1] = column4 + column1; // right
 	planes[2] = column4 - column2; // bottom
@@ -164,28 +131,24 @@ Frustum::Frustum(const D3DXMATRIX* matrix)
 	planes[5] = column4 + column3; // far
 	// ignore near & far plane
 
-	int p;
+	for (int p = 0; p < 6; p++) // normalize the planes
+		planes[p] = XMVector3Normalize(planes[p]);
 
-	for (p = 0; p < 6; p++) // normalize the planes
-	{
-		float dot = planes[p].x * planes[p].x + planes[p].y * planes[p].y + planes[p].z * planes[p].z;
-		dot = 1.f / _sqrt(dot);
-		planes[p] = planes[p] * dot;
-	}
-
-	for (p = 0; p < 6; p++)
-		camPlanes[p] = D3DXPLANE(planes[p].x, planes[p].y, planes[p].z, planes[p].w);
+	for (int p = 0; p < 6; p++)
+		XMStoreFloat4(&camPlanes[p], planes[p]);
 
 	//  build a bit-field that will tell us the indices for the nearest and farthest vertices from each plane...
 	for (int i = 0; i < 6; i++)
-		nVertexLUT[i] = ((planes[i].x < 0.f) ? 1 : 0) | ((planes[i].y < 0.f) ? 2 : 0) | ((planes[i].z < 0.f) ? 4 : 0);
+		nVertexLUT[i] = ((camPlanes[i].x < 0.f) ? 1 : 0) | ((camPlanes[i].y < 0.f) ? 2 : 0) | ((camPlanes[i].z < 0.f) ? 4 : 0);
 
 	for (int i = 0; i < 8; i++) // compute extrema
 	{
-		const D3DXPLANE& p0 = (i & 1) ? camPlanes[4] : camPlanes[5];
-		const D3DXPLANE& p1 = (i & 2) ? camPlanes[3] : camPlanes[2];
-		const D3DXPLANE& p2 = (i & 4) ? camPlanes[0] : camPlanes[1];
-		PlaneIntersection(&pntList[i], &p0, &p1, &p2);
+		XMVECTOR intersect;
+		PlaneIntersection(intersect,
+			(i & 1) ? planes[4] : planes[5],
+			(i & 2) ? planes[3] : planes[2],
+			(i & 4) ? planes[0] : planes[1]);
+		XMStoreFloat3(&pntList[i], intersect);
 	}
 }
 
@@ -347,8 +310,15 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 		float dist = light_top_plane.classify(Device.vCameraPosition);
 
 		float map_size = m_sun_cascades[cascade_ind].size;
-		D3DXMatrixOrthoOffCenterLH((D3DXMATRIX*)&mdir_Project, -map_size * 0.5f, map_size * 0.5f, -map_size * 0.5f,
-			map_size * 0.5f, 0.1, dist + /*sqrt(2)*/ 1.41421f * map_size);
+		//D3DXMatrixOrthoOffCenterLH((D3DXMATRIX*)&mdir_Project, -map_size * 0.5f, map_size * 0.5f, -map_size * 0.5f,
+		//	map_size * 0.5f, 0.1, dist + /*sqrt(2)*/ 1.41421f * map_size);
+
+		XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&mdir_Project),
+			XMMatrixOrthographicOffCenterLH(
+				-map_size * 0.5f, map_size * 0.5f, -map_size * 0.5f,
+				map_size * 0.5f, 0.1, dist + /*sqrt(2)*/ 1.41421f * map_size
+			)
+		);
 
 		//////////////////////////////////////////////////////////////////////////
 

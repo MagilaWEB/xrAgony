@@ -5,7 +5,7 @@
 
 using namespace XRay::Media;
 
-Image& Image::Create(u16 width, u16 height, void* data, ImageFormat format)
+Image& Image::Create(u32 width, u32 height, void* data, ImageFormat format)
 {
 	this->width = width;
 	this->height = height;

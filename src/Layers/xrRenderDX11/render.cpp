@@ -13,7 +13,6 @@
 #include "Layers/xrRender/dxUIShader.h"
 #include "Layers/xrRenderDX10/3DFluid/dx103DFluidManager.h"
 #include "Layers/xrRender/ShaderResourceTraits.h"
-#include "D3DX10Core.h"
 #include "xrCore/FileCRC32.h"
 
 CRender RImplementation;

@@ -12,11 +12,6 @@
 #include "du_cylinder.h"
 #include "xrCore/_obb.h"
 
-#pragma warning(push)
-#pragma warning(disable : 4995)
-#include "d3dx9.h"
-#pragma warning(pop)
-
 CDrawUtilities DUImpl;
 
 #define LINE_DIVISION 32 // не меньше 6!!!!!

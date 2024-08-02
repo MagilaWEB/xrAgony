@@ -30,8 +30,6 @@ void CRender::render_rain()
 
 	PIX_EVENT(render_rain);
 
-	D3DXMATRIX m_LightViewProj;
-
 	//	Use light as placeholder for rain data.
 	light RainLight;
 
@@ -176,8 +174,13 @@ void CRender::render_rain()
 
 		// D3DXMatrixOrthoOffCenterLH	((D3DXMATRIX*)&mdir_Project,bb.vMin.x,bb.vMax.x,  bb.vMin.y,bb.vMax.y,
 		// bb.vMin.z-tweak_rain_ortho_xform_initial_offs,bb.vMax.z);
-		D3DXMatrixOrthoOffCenterLH((D3DXMATRIX*)&mdir_Project, bb.vMin.x, bb.vMax.x, bb.vMin.y, bb.vMax.y,
-			bb.vMin.z - tweak_rain_ortho_xform_initial_offs, bb.vMin.z + 2 * tweak_rain_ortho_xform_initial_offs);
+		XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&mdir_Project),
+			XMMatrixOrthographicOffCenterLH(
+				bb.vMin.x, bb.vMax.x, bb.vMin.y, bb.vMax.y,
+				bb.vMin.z - tweak_rain_ortho_xform_initial_offs,
+				bb.vMin.z + 2 * tweak_rain_ortho_xform_initial_offs
+			)
+		);
 
 		cull_xform.mul(mdir_Project, mdir_View);
 
@@ -186,10 +189,16 @@ void CRender::render_rain()
 		// build viewport xform
 		float view_dim = float(limit);
 		float fTexelOffs = (.5f / RImplementation.o.smapsize);
-		Fmatrix m_viewport = {view_dim / 2.f, 0.0f, 0.0f, 0.0f, 0.0f, -view_dim / 2.f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-			0.0f, view_dim / 2.f + fTexelOffs, view_dim / 2.f + fTexelOffs, 0.0f, 1.0f};
+		Fmatrix m_viewport =
+		{
+			view_dim / 2.f, 0.0f, 0.0f, 0.0f,
+			0.0f, -view_dim / 2.f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			view_dim / 2.f + fTexelOffs, view_dim / 2.f + fTexelOffs, 0.0f, 1.0f
+		};
 		Fmatrix m_viewport_inv;
-		m_viewport_inv.invert_44(m_viewport);
+		XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&m_viewport_inv),
+			XMMatrixInverse(nullptr, XMLoadFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&m_viewport))));
 
 		// snap view-position to pixel
 		//	snap zero point to pixel
@@ -226,8 +235,7 @@ void CRender::render_rain()
 	r_dsgraph_render_subspace(cull_sector, &cull_frustum, cull_xform, cull_COP, FALSE);
 
 	// Finalize & Cleanup
-	RainLight.X.D.combine = cull_xform; //*((Fmatrix*)&m_LightViewProj);
-
+	RainLight.X.D.combine = cull_xform;
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)
 	{

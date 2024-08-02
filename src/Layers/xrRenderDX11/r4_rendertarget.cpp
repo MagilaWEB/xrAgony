@@ -14,7 +14,6 @@
 #include "dx11HDAOCSBlender.h"
 #include "Layers/xrRenderDX10/msaa/dx10MSAABlender.h"
 #include "Layers/xrRenderDX10/DX10 Rain/dx10RainBlender.h"
-#include <D3DX10Tex.h>
 
 void CRenderTarget::u_setrt(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, ID3DDepthStencilView* zb)
 {
@@ -1001,7 +1000,7 @@ CRenderTarget::CRenderTarget()
 
 				HW.pContext->CopySubresourceRegion(t_noise_surf_mipped, 0, 0, 0, 0, t_noise_surf[0], 0, 0);
 
-				D3DX11FilterTexture(HW.pContext, t_noise_surf_mipped, 0, D3DX10_FILTER_POINT);
+				//FilterTexture(HW.pContext, t_noise_surf_mipped, 0, D3DX10_FILTER_POINT);
 			}
 		}
 	}

@@ -1,17 +1,6 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#pragma warning(push)
-#pragma warning(disable : 4995)
-#include <d3dx9.h>
-#ifndef _EDITOR
-#pragma comment(lib, "d3dx9.lib")
-#include "xrEngine/Render.h"
-#endif
-#pragma warning(pop)
-
-#include <D3DX10Core.h>
-
 #include "Layers/xrRender/ResourceManager.h"
 #include "Layers/xrRender/tss.h"
 #include "Layers/xrRender/blenders/blender.h"
@@ -19,6 +8,8 @@
 #include "Layers/xrRenderDX10/dx10BufferUtils.h"
 #include "Layers/xrRenderDX10/dx10ConstantBuffer.h"
 #include "Layers/xrRender/ShaderResourceTraits.h"
+
+#include <FlexibleVertexFormat.h>
 
 SGS* CResourceManager::_CreateGS(LPCSTR Name) { return CreateShader<SGS>(Name); }
 void CResourceManager::_DeleteGS(const SGS* GS) { DestroyShader(GS); }
@@ -192,8 +183,8 @@ void CResourceManager::_DeletePS(const SPS* ps) { DestroyShader(ps); }
 static BOOL dcl_equal(D3DVERTEXELEMENT9* a, D3DVERTEXELEMENT9* b)
 {
 	// check sizes
-	u32 a_size = D3DXGetDeclLength(a);
-	u32 b_size = D3DXGetDeclLength(b);
+	u32 a_size = dx10BufferUtils::GetDeclLength(a);
+	u32 b_size = dx10BufferUtils::GetDeclLength(b);
 	if (a_size != b_size)
 		return FALSE;
 	return 0 == memcmp(a, b, a_size * sizeof(D3DVERTEXELEMENT9));
@@ -212,7 +203,7 @@ SDeclaration* CResourceManager::_CreateDecl(D3DVERTEXELEMENT9* dcl)
 
 	// Create _new
 	SDeclaration* D = new SDeclaration();
-	u32 dcl_size = D3DXGetDeclLength(dcl) + 1;
+	u32 dcl_size = dx10BufferUtils::GetDeclLength(dcl) + 1;
 	//	Don't need it for DirectX 10 here
 	// CHK_DX					(HW.pDevice->CreateVertexDeclaration(dcl,&D->dcl));
 	D->dcl_code.assign(dcl, dcl + dcl_size);
@@ -340,7 +331,7 @@ SGeometry* CResourceManager::CreateGeom(D3DVERTEXELEMENT9* decl, ID3DVertexBuffe
 	R_ASSERT(decl && vb);
 
 	SDeclaration* dcl = _CreateDecl(decl);
-	u32 vb_stride = D3DXGetDeclVertexSize(decl, 0);
+	u32 vb_stride = dx10BufferUtils::GetDeclVertexSize(decl, 0);
 
 	// ***** first pass - search already loaded shader
 	for (u32 it = 0; it < v_geoms.size(); it++)
@@ -361,9 +352,10 @@ SGeometry* CResourceManager::CreateGeom(D3DVERTEXELEMENT9* decl, ID3DVertexBuffe
 }
 SGeometry* CResourceManager::CreateGeom(u32 FVF, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib)
 {
-	D3DVERTEXELEMENT9 dcl[MAX_FVF_DECL_SIZE];
-	CHK_DX(D3DXDeclaratorFromFVF(FVF, dcl));
-	SGeometry* g = CreateGeom(dcl, vb, ib);
+	thread_local xr_vector<D3DVERTEXELEMENT9> decl;
+	[[maybe_unused]] const bool result = FVF::CreateDeclFromFVF(FVF, decl);
+	VERIFY(result);
+	SGeometry* g = CreateGeom(decl.data(), vb, ib);
 	return g;
 }
 

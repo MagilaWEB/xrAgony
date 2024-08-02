@@ -342,7 +342,6 @@ public:
 	virtual void Calculate();
 	virtual void Render();
 	virtual void Screenshot(ScreenshotMode mode = SM_NORMAL, LPCSTR name = 0);
-	virtual void Screenshot(ScreenshotMode mode, CMemoryWriter& memory_writer);
 	virtual void ScreenshotAsyncBegin();
 	virtual void ScreenshotAsyncEnd(CMemoryWriter& memory_writer);
 	virtual void OnFrame();
@@ -367,9 +366,6 @@ public:
 
 private:
 	xr_vector<D3D_SHADER_MACRO> m_ShaderOptions;
-
-protected:
-	virtual void ScreenshotImpl(ScreenshotMode mode, LPCSTR name, CMemoryWriter* memory_writer);
 
 private:
 	FS_FileSet m_file_set;
