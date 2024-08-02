@@ -189,18 +189,27 @@ void CDetailManager::cache_Decompress(Slot* S)
 
 			collide::rq_result RQ;
 
+			bool no_push = false;
+
 			// Adjust the position by the Y coordinate above the level.
 			/*BOOL _RayQuery(collide::rq_results & dest, const collide::ray_defs & rq, collide::rq_callback cb, LPVOID user_data,
 				collide::test_callback tb, IGameObject * ignore_object);*/
 			collide::rq_results rq_res{};
 			g_pGameLevel->ObjectSpace.RayQuery(rq_res, collide::ray_defs{ Item_P,  Fvector{ 0, -1.f, 0 }, 1000.f, CDB::OPT_CULL, collide::rqtStatic },
-			[&normal, verts, &Item](collide::rq_result& result, LPVOID params)
+			[&](collide::rq_result& result, LPVOID params)
 			{
 				auto LOCAL_RQ = reinterpret_cast<collide::rq_result*>(params);
 				CDB::TRI* T = g_pGameLevel->ObjectSpace.GetStaticTris() + result.element;
 
 				if(!result.O)
 				{		
+					CSector* sector = reinterpret_cast<CSector*>(RImplementation.getSector(T->sector));
+					if (sector != RImplementation.pOutdoorSector)
+					{
+						no_push = true;
+						return FALSE;
+					}
+
 					SGameMtl* mtl = GMLib.GetMaterialByIdx(T->material);
 					normal.mknormal(verts[T->verts[0]], verts[T->verts[1]], verts[T->verts[2]]);
 					// Ignore liquid and dynamic.
@@ -217,6 +226,9 @@ void CDetailManager::cache_Decompress(Slot* S)
 				nullptr,
 				nullptr
 			);
+
+			if (no_push)
+				continue;
 
 			// The exorbitant value means only one thing, the beam did not meet the geometry and flew away to the maximum distance.
 			if (RQ.range > 99.f)
