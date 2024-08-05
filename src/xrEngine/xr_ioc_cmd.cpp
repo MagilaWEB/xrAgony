@@ -685,10 +685,10 @@ void CCC_Register()
 	CMD3(CCC_Mask, "rs_render_statics", &psDeviceFlags, rsDrawStatic);
 	CMD3(CCC_Mask, "rs_render_dynamics", &psDeviceFlags, rsDrawDynamic);
 #endif
-	CMD3(CCC_Mask, "mt_particles", &psDeviceFlags, mtParticles);
-	CMD3(CCC_Mask, "mt_sound", &psDeviceFlags, mtSound);
+	//CMD3(CCC_Mask, "mt_particles", &psDeviceFlags, mtParticles);
+	//CMD3(CCC_Mask, "mt_sound", &psDeviceFlags, mtSound);
 	//CMD3(CCC_Mask, "mt_physics", &psDeviceFlags, mtPhysics);
-	CMD3(CCC_Mask, "mt_network", &psDeviceFlags, mtNetwork);
+	//CMD3(CCC_Mask, "mt_network", &psDeviceFlags, mtNetwork);
 
 	CMD4(CCC_Integer, "r_scope_fps_limit", &r_scope_fps_limit, 0, 124);
 	CMD4(CCC_Integer, "r_fps_limit", &g_GlobalFPSlimit, 0, 240);

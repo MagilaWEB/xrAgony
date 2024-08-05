@@ -191,6 +191,8 @@ void CRenderDevice::CalcFrameStats()
 
 void CRenderDevice::OnFrame()
 {
+	::Sound->update(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
+
 	if (!Device.Paused() && !load_prosses)
 	{
 		if (g_pGameLevel && g_pGameLevel->bReady)

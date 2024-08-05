@@ -221,7 +221,7 @@ public:
 	BOOL Paused();
 
 private:
-	bool load_prosses{ false };
+	std::atomic_bool load_prosses	{ false };
 	//Threding
 	xrThread mt_global_update		{ "GlobalUpdate", true };
 	xrThread mt_frame				{ "Frame", true, true };

@@ -150,10 +150,7 @@ void CParticlesObject::shedule_Update(u32 _dt)
 	if (m_bDead)
 		return;
 
-	if (psDeviceFlags.test(mtParticles))
-		Device.add_parallel2(this, &CParticlesObject::PerformAllTheWork);
-	else
-		PerformAllTheWork();
+	Device.add_parallel2(this, &CParticlesObject::PerformAllTheWork);
 }
 
 void CParticlesObject::PerformAllTheWork()

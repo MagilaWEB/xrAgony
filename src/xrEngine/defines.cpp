@@ -10,7 +10,7 @@ ECORE_API BOOL bDebug = FALSE;
 u32 psCurrentVidMode[2] = {1024, 768};
 u32 psCurrentBPP = 32;
 // release version always has "mt_*" enabled
-Flags32 psDeviceFlags = { rsDetails | mtSound | mtNetwork | rsDrawStatic | rsDrawDynamic};
+Flags32 psDeviceFlags = { rsDetails | rsDrawStatic | rsDrawDynamic};
 
 // textures
 int psTextureLOD = 1;

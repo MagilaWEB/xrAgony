@@ -235,7 +235,6 @@ public:
 	// Starting/Loading
 	virtual bool net_Start(const char* op_server, const char* op_client);
 	virtual void net_Stop();
-	virtual bool net_Start_client(const char* name);
 	virtual void net_Update();
 	virtual bool Load_GameSpecific_Before();
 	virtual bool Load_GameSpecific_After();
