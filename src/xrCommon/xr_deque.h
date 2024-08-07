@@ -16,7 +16,6 @@ public:
 	xr_deque() : inherited() {}
 	xr_deque(size_t _count, const T& _value) : inherited(_count, _value) {}
 	explicit xr_deque(size_t _count) : inherited(_count) {}
-	size_t size() const { return (size_t)inherited::size(); }
 
 	template <class _Ty>
 	IC const_iterator find(const _Ty& obj) const

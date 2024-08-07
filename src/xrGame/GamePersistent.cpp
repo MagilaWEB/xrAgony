@@ -393,8 +393,8 @@ void CGamePersistent::WeathersUpdate()
 						snd.play_at_pos(0, pos);
 
 #ifdef DEBUG
-						if (!snd._handle() && Core.IsCommandLine("-nosound"))
-							continue;
+						/*if (!snd._handle() && Core.IsCommandLine("-nosound"))
+							continue;*/
 #endif // DEBUG
 
 						VERIFY(snd._handle());
@@ -815,11 +815,11 @@ void CGamePersistent::OnFrame()
 		}
 	}
 
-#ifdef DEBUG
+//#ifdef DEBUG
 	// XXX nitrocaster PROFILER: temporarily disabled due to linkage issues
 	// if ((m_last_stats_frame + 1) < m_frame_counter)
 	//	profiler().clear		();
-#endif
+//#endif
 	UpdateDof();
 
 	if (!MainMenu()->IsActive())

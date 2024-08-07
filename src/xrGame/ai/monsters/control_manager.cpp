@@ -8,12 +8,6 @@
 #include "debug_text_tree.h"
 #endif
 
-enum EActiveComAction
-{
-	eRemove = u32(0),
-	eAdd
-};
-
 constexpr pcstr make_xrstr(ControlCom::EControlType e)
 {
 	switch (e)
@@ -71,13 +65,13 @@ void CControl_Manager::load(LPCSTR section)
 {
 	init_external();
 
-	for (auto it = m_control_elems.begin(); it != m_control_elems.end(); ++it)
-		it->second->load(section);
+	for (auto & it : m_control_elems)
+		it.second->load(section);
 }
 void CControl_Manager::reload(LPCSTR section)
 {
-	for (auto it = m_control_elems.begin(); it != m_control_elems.end(); ++it)
-		it->second->reload(section);
+	for (auto& it : m_control_elems)
+		it.second->reload(section);
 }
 
 void CControl_Manager::reinit()
@@ -88,62 +82,32 @@ void CControl_Manager::reinit()
 	// reinit pure first, base second, custom third
 
 	for (auto& it : m_control_elems)
-		if (is_pure(it.second))
-			it.second->reinit();
-
-	for (auto& it : m_control_elems)
-		if (is_base(it.second))
-			it.second->reinit();
-
-	for (auto& it : m_control_elems)
-		if (!is_pure(it.second) && !is_base(it.second))
-			it.second->reinit();
+		it.second->reinit();
 
 	// fill active elements
 	m_active_elems.clear();
 	m_active_elems.reserve(ControlCom::eControllersCount);
 	for (auto& it : m_control_elems)
-	{
 		if (it.second->is_active() && !is_locked(it.second))
 			m_active_elems.push_back(it.second);
-	}
 }
-
-struct predicate_remove
-{
-	IC bool operator()(const CControl_Com* com) { return (com == 0); }
-};
 
 void CControl_Manager::update_frame()
 {
-	if (!m_object->g_Alive())
+	if (!m_object->g_Alive() || m_active_elems.empty())
 		return;
 
 	for (auto& it : m_active_elems)
-	{
-		// update coms
-		if (it)
-			it->update_frame();
-	}
-
-	m_active_elems.erase(
-		std::remove_if(m_active_elems.begin(), m_active_elems.end(), predicate_remove()), m_active_elems.end());
+		it->update_frame();
 }
 
 void CControl_Manager::update_schedule()
 {
-	if (!m_object->g_Alive())
+	if (!m_object->g_Alive() || m_active_elems.empty())
 		return;
 
 	for (auto& it : m_active_elems)
-	{
-		// update coms
-		if (it)
-			it->update_schedule();
-	}
-
-	m_active_elems.erase(
-		std::remove_if(m_active_elems.begin(), m_active_elems.end(), predicate_remove()), m_active_elems.end());
+		it->update_schedule();
 }
 
 ControlCom::EControlType CControl_Manager::com_type(CControl_Com* com)
@@ -192,9 +156,7 @@ ControlCom::IComData* CControl_Manager::data(CControl_Com* who, ControlCom::ECon
 	// get_capturer
 	CControl_Com* capturer = target->ced()->capturer();
 	if (capturer == who)
-	{
 		return target->ced()->data();
-	}
 
 	return 0;
 }
@@ -271,9 +233,7 @@ CControl_Com* CControl_Manager::get_capturer(ControlCom::EControlType type)
 {
 	CControl_Com* target = m_control_elems[type];
 	if (!target || !target->ced())
-	{
-		return 0;
-	}
+		return nullptr;
 
 	return target->ced()->capturer();
 }
@@ -326,13 +286,13 @@ void CControl_Manager::release_pure(CControl_Com* com)
 void CControl_Manager::activate(ControlCom::EControlType type)
 {
 	m_control_elems[type]->set_active();
-	check_active_com(m_control_elems[type], eAdd);
+	check_active_com_add(m_control_elems[type]);
 	m_object->on_activate_control(type);
 }
 void CControl_Manager::deactivate(ControlCom::EControlType type)
 {
 	m_control_elems[type]->set_active(false);
-	check_active_com(m_control_elems[type], eRemove);
+	check_active_com_remove(m_control_elems[type]);
 }
 void CControl_Manager::deactivate(CControl_Com* com) { deactivate(com_type(com)); }
 bool CControl_Manager::is_captured(ControlCom::EControlType type)
@@ -358,7 +318,7 @@ void CControl_Manager::lock(CControl_Com* com, ControlCom::EControlType type)
 	m_control_elems[type]->ced()->set_locked();
 
 	// it's now locked so remove from active list
-	check_active_com(m_control_elems[type], eRemove);
+	check_active_com_remove(m_control_elems[type]);
 }
 
 void CControl_Manager::unlock(CControl_Com* com, ControlCom::EControlType type)
@@ -369,7 +329,7 @@ void CControl_Manager::unlock(CControl_Com* com, ControlCom::EControlType type)
 	m_control_elems[type]->ced()->set_locked(false);
 
 	// it's unlocked so add to active list
-	check_active_com(m_control_elems[type], eAdd);
+	check_active_com_add(m_control_elems[type]);
 }
 
 void CControl_Manager::path_stop(CControl_Com* com)
@@ -400,29 +360,20 @@ bool CControl_Manager::check_start_conditions(ControlCom::EControlType type)
 
 bool CControl_Manager::build_path_line(CControl_Com* com, const Fvector& target, u32 node, u32 vel_mask)
 {
-	CControl_Com* path = m_control_elems[ControlCom::eControlPath];
-	VERIFY(com == path->ced()->capturer());
-
+	VERIFY(com == m_control_elems[ControlCom::eControlPath]->ced()->capturer());
 	return (path_builder().build_special(target, node, vel_mask));
 }
 
-void CControl_Manager::check_active_com(CControl_Com* com, bool b_add)
+void CControl_Manager::check_active_com_add(CControl_Com* com)
 {
-	if (b_add)
-	{
-		if (com->is_active() && !com->ced()->is_locked())
-		{
-			auto it = std::find(m_active_elems.begin(), m_active_elems.end(), com);
-			if (it == m_active_elems.end())
-				m_active_elems.push_back(com);
-		}
-	}
-	else
-	{
-		auto it = std::find(m_active_elems.begin(), m_active_elems.end(), com);
-		if (it != m_active_elems.end())
-			(*it) = 0; // do not remove just mark
-	}
+	if (com->is_active() && !com->ced()->is_locked())
+		if (!m_active_elems.contain(com))
+			m_active_elems.push_back(com);
+}
+
+void CControl_Manager::check_active_com_remove(CControl_Com* com)
+{
+	std::erase(m_active_elems, com);
 }
 
 // Lain: made secure
@@ -430,8 +381,7 @@ void CControl_Manager::check_active_com(CControl_Com* com, bool b_add)
 
 void CControl_Manager::add_debug_info(debug::text_tree& root_s)
 {
-	u32 index = 0;
-	for (auto it = m_control_elems.begin(); it != m_control_elems.end(); ++it, ++index)
+	for (auto it = m_control_elems.begin(); it != m_control_elems.end(); ++it)
 	{
 		if (!it->second->is_inited())
 			continue;

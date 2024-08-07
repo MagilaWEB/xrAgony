@@ -334,7 +334,7 @@ void CControlJump::update_frame()
 		//---------------------------------------------------------------------------------------------------------------------------------
 		// Set Velocity from path
 		//---------------------------------------------------------------------------------------------------------------------------------
-		SControlMovementData* ctrl_move = (SControlMovementData*)m_man->data(this, ControlCom::eControlMovement);
+		SControlMovementData* ctrl_move = static_cast<SControlMovementData*>(m_man->data(this, ControlCom::eControlMovement));
 		VERIFY(ctrl_move);
 
 		ctrl_move->velocity_target = m_object->move().get_velocity_from_path();

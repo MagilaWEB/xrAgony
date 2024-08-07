@@ -17,10 +17,10 @@ public:
 
 private:
 	value_type _array[dim];
-	size_type count;
+	size_type count{ 0 };
 
 public:
-	svector() : count(0) {}
+	svector() = default;
 	svector(iterator p, int c) { assign(p, c); }
 	IC iterator begin() { return _array; }
 	IC iterator end() { return _array + count; }

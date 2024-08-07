@@ -22,7 +22,7 @@ class CControl_Manager
 	CBaseMonster* m_object;
 	xr_vector<IGameObject*> m_nearest;
 
-	using CONTROLLERS_VECTOR = xr_vector<CControl_Com *>;
+	using CONTROLLERS_VECTOR = xr_vector<CControl_Com*>;
 	using LISTENERS_MAP = xr_map<ControlCom::EEventType, CONTROLLERS_VECTOR>;
 	LISTENERS_MAP m_listeners;
 
@@ -31,8 +31,7 @@ class CControl_Manager
 	CONTROLLERS_MAP m_control_elems;
 	CONTROLLERS_MAP m_base_elems;
 
-	using COM_VEC = xr_vector<CControl_Com*>;
-	COM_VEC m_active_elems;
+	CONTROLLERS_VECTOR m_active_elems;
 
 	CControlAnimation* m_animation;
 	CControlDirection* m_direction;
@@ -110,5 +109,6 @@ private:
 	bool is_pure(CControl_Com*);
 	bool is_base(CControl_Com*);
 	bool is_locked(CControl_Com*);
-	void check_active_com(CControl_Com* com, bool b_add);
+	void check_active_com_add(CControl_Com* com);
+	void check_active_com_remove(CControl_Com* com);
 };

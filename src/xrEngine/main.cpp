@@ -118,7 +118,7 @@ ENGINE_API void Startup()
 	pcstr loadArgs = strstr(Core.Params, "-load ");
 	if (loadArgs)
 		Console->Execute(loadArgs + 1);
-
+	
 	// Initialize APP
 	Device.Create();
 	LALib.OnCreate();

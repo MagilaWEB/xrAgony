@@ -251,6 +251,16 @@ void CDetailManager::cache_Decompress(Slot* S)
 				xr_string name_material{ mtl->m_Name.c_str() };
 
 				// Where will we allow the grass to appear.
+#ifdef DEBUG
+				xr_string list_material[6]{
+					"default",		// Неопределённый базовый материал.
+					"grass",		// трава
+					"dirt",			// грязь
+					"water",		// вода
+					"earth",		// земля
+					"sand"			// песок? На некоторых локациях песок является травой...
+				};
+#else
 				constexpr xr_string list_material[6]{
 					"default",		// Неопределённый базовый материал.
 					"grass",		// трава
@@ -259,6 +269,7 @@ void CDetailManager::cache_Decompress(Slot* S)
 					"earth",		// земля
 					"sand"			// песок? На некоторых локациях песок является травой...
 				};
+#endif
 
 				constexpr size_t list_material_size = sizeof(list_material) / sizeof(xr_string);
 
