@@ -208,9 +208,6 @@ void CMainMenu::Activate(bool bActivate)
 			m_Flags.set(flNeedVidRestart, FALSE);
 			Console->Execute("vid_restart");
 		}
-
-		if(g_pGameLevel)
-			DestroyInternal();
 	}
 }
 

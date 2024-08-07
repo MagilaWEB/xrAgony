@@ -283,8 +283,8 @@ void CResourceManager::LS_Load()
 	};
 	ScriptEngine.init(exporterFunc, false);
 	// load shaders
-	const char* shaderPath = RImplementation.getShaderPath();
-	xr_vector<char*>* folder = FS.file_list_open("$game_shaders$", shaderPath, FS_ListFiles | FS_RootOnly);
+	//const char* shaderPath = RImplementation.getShaderPath();
+	xr_vector<char*>* folder = FS.file_list_open("$game_shaders$", "", FS_ListFiles | FS_RootOnly);
 	VERIFY(folder);
 	for (u32 it = 0; it < folder->size(); it++)
 	{
@@ -295,7 +295,7 @@ void CResourceManager::LS_Load()
 		*strext(namesp) = 0;
 		if (0 == namesp[0])
 			xr_strcpy(namesp, LUA_GLOBAL);
-		strconcat(sizeof(fn), fn, shaderPath, (*folder)[it]);
+		strconcat(sizeof(fn), fn, "", (*folder)[it]);
 		FS.update_path(fn, "$game_shaders$", fn);
 		ScriptEngine.load_file_into_namespace(fn, namesp);
 	}

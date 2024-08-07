@@ -497,7 +497,7 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 
 		if (b_is_Active)
 		{
-			Reset();
+			//Reset();
 			ShowWindow(m_hWnd, SW_SHOW);
 			xrThread::GlobalState(xrThread::dsOK);
 		}

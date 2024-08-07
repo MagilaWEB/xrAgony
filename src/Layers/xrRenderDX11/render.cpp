@@ -794,9 +794,7 @@ public:
 	HRESULT __stdcall Open(
 		D3D10_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
 	{
-		string_path pname;
-		strconcat(sizeof(pname), pname, ::Render->getShaderPath(), pFileName);
-		IReader* R = FS.r_open("$game_shaders$", pname);
+		IReader* R = FS.r_open("$game_shaders$", pFileName);
 		if (nullptr == R)
 		{
 			// possibly in shared directory or somewhere else - open directly
@@ -1389,12 +1387,11 @@ HRESULT CRender::shader_compile(LPCSTR name, IReader* fs, LPCSTR pFunctionName,
 	HRESULT _result = E_FAIL;
 
 	char extension[3];
-	string_path folder_name, folder;
+	string_path folder_name;
 
 	strncpy_s(extension, pTarget, 2);
-	strconcat(sizeof(folder), folder, "r3\\objects\\r4\\", name, ".", extension);
 
-	FS.update_path(folder_name, "$game_shaders$", folder);
+	FS.update_path(folder_name, "$game_shaders$", "");
 	xr_strcat(folder_name, "\\");
 
 	m_file_set.clear();
@@ -1404,7 +1401,7 @@ HRESULT CRender::shader_compile(LPCSTR name, IReader* fs, LPCSTR pFunctionName,
 	if (ps_use_precompiled_shaders == false || !match_shader_id(name, sh_name, m_file_set, temp_file_name))
 	{
 		string_path file;
-		strconcat(sizeof(file), file, "shaders_cache\\r4\\", name, ".", extension, "\\", sh_name);
+		strconcat(sizeof(file), file, "shaders_cache\\", name, ".", extension, "\\", sh_name);
 		FS.update_path(file_name, "$app_data_root$", file);
 	}
 	else
@@ -1414,7 +1411,7 @@ HRESULT CRender::shader_compile(LPCSTR name, IReader* fs, LPCSTR pFunctionName,
 	}
 
 	string_path shadersFolder;
-	FS.update_path(shadersFolder, "$game_shaders$", ::Render->getShaderPath());
+	FS.update_path(shadersFolder, "$game_shaders$", "");
 
 	u32 fileCrc = 0;
 	getFileCrc32(fs, shadersFolder, fileCrc);

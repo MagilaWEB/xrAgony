@@ -294,7 +294,6 @@ public:
 	// Information
 	virtual void DumpStatistics(IGameFont& font, IPerformanceAlert* alert) = 0;
 
-	virtual LPCSTR getShaderPath() = 0;
 	// virtual ref_shader getShader (int id) = 0;
 	virtual IRender_Sector* getSector(int id) = 0;
 	virtual IRenderVisual* getVisual(int id) = 0;

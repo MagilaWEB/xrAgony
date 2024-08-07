@@ -467,8 +467,8 @@ CRenderTarget::CRenderTarget()
 
 		// rt_smap_surf.create			(r2_RT_smap_surf,			size,size,nullrt		);
 		// rt_smap_ZB					= nullptr;
-		s_accum_mask.create(b_accum_mask, "r3\\accum_mask");
-		s_accum_direct.create(b_accum_direct, "r3\\accum_direct");
+		s_accum_mask.create(b_accum_mask, "accum_mask");
+		s_accum_direct.create(b_accum_direct, "accum_direct");
 
 		if (RImplementation.o.dx10_msaa)
 		{
@@ -479,8 +479,8 @@ CRenderTarget::CRenderTarget()
 
 			for (int i = 0; i < bound; ++i)
 			{
-				s_accum_direct_msaa[i].create(b_accum_direct_msaa[i], "r3\\accum_direct");
-				s_accum_mask_msaa[i].create(b_accum_mask_msaa[i], "r3\\accum_direct");
+				s_accum_direct_msaa[i].create(b_accum_direct_msaa[i], "accum_direct");
+				s_accum_mask_msaa[i].create(b_accum_mask_msaa[i], "accum_direct");
 			}
 		}
 		if (RImplementation.o.advancedpp)
@@ -507,7 +507,7 @@ CRenderTarget::CRenderTarget()
 				for (int i = 0; i < bound; ++i)
 				{
 					// s_accum_direct_volumetric_msaa[i].create		(b_accum_direct_volumetric_sun_msaa[i],
-					// "r3\\accum_direct");
+					// "accum_direct");
 					s_accum_direct_volumetric_msaa[i].create(snames[i]);
 					manually_assign_texture(s_accum_direct_volumetric_msaa[i], "s_smap", smapTarget);
 				}

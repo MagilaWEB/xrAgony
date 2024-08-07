@@ -821,6 +821,9 @@ void CGamePersistent::OnFrame()
 	//	profiler().clear		();
 #endif
 	UpdateDof();
+
+	if (!MainMenu()->IsActive())
+		MainMenu()->DestroyInternal();
 }
 
 #include "game_sv_single.h"

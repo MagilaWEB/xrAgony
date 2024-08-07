@@ -276,7 +276,7 @@ inline T* CResourceManager::CreateShader(const char* name, const char* filename 
 		// Open file
 		string_path cname;
 		pcstr shaderExt = ShaderTypeTraits<T>::GetShaderExt();
-		strconcat(sizeof(cname), cname, ::Render->getShaderPath(), shName, shaderExt);
+		strconcat(sizeof(cname), cname, shName, shaderExt);
 		FS.update_path(cname, "$game_shaders$", cname);
 
 		// Try to open
@@ -286,7 +286,7 @@ inline T* CResourceManager::CreateShader(const char* name, const char* filename 
 			string1024 tmp;
 			xr_sprintf(tmp, "CreateShader: %s is missing. Replacing it with stub_default%s", cname, shaderExt);
 			Msg(tmp);
-			strconcat(sizeof(cname), cname, ::Render->getShaderPath(), "stub_default", shaderExt);
+			strconcat(sizeof(cname), cname, "stub_default", shaderExt);
 			FS.update_path(cname, "$game_shaders$", cname);
 			file = FS.r_open(cname);
 		}

@@ -10,7 +10,7 @@
 #endif
 
 //--------------------------------------------------- Decompression
-IC float	Interpolate(float* base, u32 x, u32 y, u32 size)
+IC float Interpolate(float* base, u32 x, u32 y, u32 size)
 {
 	float	f = float(size);
 	float	fx = float(x) / f; float ifx = 1.f - fx;
@@ -27,7 +27,7 @@ IC float	Interpolate(float* base, u32 x, u32 y, u32 size)
 	return	(cx + cy) / 2;
 }
 
-IC bool		InterpolateAndDither(float* alpha255, u32 x, u32 y, u32 sx, u32 sy, u32 size, int dither[16][16])
+IC bool InterpolateAndDither(float* alpha255, u32 x, u32 y, u32 sx, u32 sy, u32 size, int dither[16][16])
 {
 	clamp(x, (u32)0, size - 1);
 	clamp(y, (u32)0, size - 1);
@@ -251,7 +251,8 @@ void CDetailManager::cache_Decompress(Slot* S)
 				xr_string name_material{ mtl->m_Name.c_str() };
 
 				// Where will we allow the grass to appear.
-				xr_string list_material[5]{
+				constexpr xr_string list_material[6]{
+					"default",		// Неопределённый базовый материал.
 					"grass",		// трава
 					"dirt",			// грязь
 					"water",		// вода
@@ -259,9 +260,11 @@ void CDetailManager::cache_Decompress(Slot* S)
 					"sand"			// песок? На некоторых локациях песок является травой...
 				};
 
+				constexpr size_t list_material_size = sizeof(list_material) / sizeof(xr_string);
+
 				bool ignore = true;
 
-				for (u32 it = 0; it < sizeof(list_material) / sizeof(xr_string); it++)
+				for (u32 it = 0; it < list_material_size; it++)
 				{
 					if (name_material.find(list_material[it]) != xr_string::npos)
 					{
@@ -271,7 +274,11 @@ void CDetailManager::cache_Decompress(Slot* S)
 				}
 
 				if (ignore)
+				{
+					//Msg("ignore detail material %s", name_material.c_str());
 					continue;
+				}
+					
 			}
 			else
 				continue;

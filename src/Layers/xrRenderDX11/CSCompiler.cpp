@@ -186,7 +186,7 @@ void CSCompiler::compile(const char* name)
 	}
 
 	string_path cname;
-	strconcat(sizeof(cname), cname, ::Render->getShaderPath(), name, ".cs");
+	strconcat(sizeof(cname), cname, name, ".cs");
 	FS.update_path(cname, "$game_shaders$", cname);
 
 	IReader* file = FS.r_open(cname);
