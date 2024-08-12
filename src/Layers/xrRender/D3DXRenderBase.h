@@ -2,7 +2,7 @@
 
 #include "xrEngine/Render.h"
 #include "xrCDB/ISpatial.h"
-#include "r__dsgraph_types.h"
+#include "r_dsgraph_types.h"
 #include "r__sector.h"
 #include "xr_effgamma.h"
 

@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Layers/xrRender/D3DXRenderBase.h"
-#include "Layers/xrRender/r__occlusion.h"
+#include "Layers/xrRender/r_occlusion.h"
 
 #include "Layers/xrRender/PSLibrary.h"
 
 #include "r_types.h"
-#include "r4_rendertarget.h"
+#include "r_rendertarget.h"
 
 #include "Layers/xrRender/hom.h"
 #include "Layers/xrRender/detailmanager.h"

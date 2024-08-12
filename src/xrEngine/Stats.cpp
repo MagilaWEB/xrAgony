@@ -198,7 +198,7 @@ void CStats::ShowXrThread()
 	{
 		if (thread.debug_info)
 		{
-			float color_result = thread.ms_time/15;
+			float color_result = thread.ms_time/25;
 			clamp(color_result, 0.f, 1.f);
 
 			const float revers_color_result = 1.f - color_result;

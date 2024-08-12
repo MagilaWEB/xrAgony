@@ -1,11 +1,7 @@
 #include "stdafx.h"
-#pragma hdrstop
-
 #include "Blender.h"
-
-//////////////////////////////////////////////////////////////////////
 #include "blender_clsid.h"
-IC bool p_sort(IBlender* A, IBlender* B) { return xr_stricmp(A->getComment(), B->getComment()) < 0; }
+
 #ifdef __BORLANDC__
 #define TYPES_EQUAL(A, B) (typeid(A) == typeid(B))
 #else
@@ -53,65 +49,17 @@ void IBlender::CreatePalette(xr_vector<IBlender*>& palette)
 	}
 
 	// Sort by desc and return
-	std::sort(palette.begin(), palette.end(), p_sort);
+	palette.sort([](IBlender* A, IBlender* B) {
+		return xr_stricmp(A->getComment(), B->getComment()) < 0;
+	});
 }
-
-#ifndef _EDITOR
-// Engine
-#include "xrEngine/Render.h"
-IBlender* IBlender::Create(CLASS_ID cls) { return ::RImplementation.blender_create(cls); }
-void IBlender::Destroy(IBlender*& B) { ::RImplementation.blender_destroy(B); }
-#else
-
-// Editor
-#include "Layers/xrRenderPC_R1/blenderdefault.h"
-#include "Layers/xrRenderPC_R1/blender_default_aref.h"
-#include "Layers/xrRenderPC_R1/blender_vertex.h"
-#include "Layers/xrRenderPC_R1/blender_vertex_aref.h"
-#include "blender_screen_set.h"
-#include "Layers/xrRenderPC_R1/blender_screen_gray.h"
-#include "blender_editor_wire.h"
-#include "blender_editor_selection.h"
-#include "blender_light.h"
-#include "Layers/xrRenderPC_R1/blender_LaEmB.h"
-#include "blender_Lm(EbB).h"
-#include "blender_BmmD.h"
-#include "blender_B.h"
-#include "blender_shadow_texture.h"
-#include "Layers/xrRenderPC_R1/blender_shadow_world.h"
-#include "Layers/xrRenderPC_R1/blender_blur.h"
-#include "Layers/xrRenderPC_R1/blender_model.h"
-#include "blender_model_ebb.h"
-#include "blender_detail_still.h"
-#include "blender_tree.h"
-#include "blender_particle.h"
 
 IBlender* IBlender::Create(CLASS_ID cls)
 {
-	switch (cls)
-	{
-	case B_DEFAULT: return new CBlender_default();
-	case B_DEFAULT_AREF: return new CBlender_default_aref();
-	case B_VERT: return new CBlender_Vertex();
-	case B_VERT_AREF: return new CBlender_Vertex_aref();
-	case B_SCREEN_SET: return new CBlender_Screen_SET();
-	case B_SCREEN_GRAY: return new CBlender_Screen_GRAY();
-	case B_EDITOR_WIRE: return new CBlender_Editor_Wire();
-	case B_EDITOR_SEL: return new CBlender_Editor_Selection();
-	case B_LIGHT: return new CBlender_LIGHT();
-	case B_LaEmB: return new CBlender_LaEmB();
-	case B_LmEbB: return new CBlender_LmEbB();
-	case B_B: return new CBlender_B();
-	case B_BmmD: return new CBlender_BmmD();
-	case B_SHADOW_WORLD: return new CBlender_ShWorld();
-	case B_BLUR: return new CBlender_Blur();
-	case B_MODEL: return new CBlender_Model();
-	case B_MODEL_EbB: return new CBlender_Model_EbB();
-	case B_DETAIL: return new CBlender_Detail_Still();
-	case B_TREE: return new CBlender_Tree();
-	case B_PARTICLE: return new CBlender_Particle();
-	}
-	return 0;
+	return ::RImplementation.blender_create(cls);
 }
-void IBlender::Destroy(IBlender*& B) { xr_delete(B); }
-#endif
+
+void IBlender::Destroy(IBlender*& B)
+{
+	::RImplementation.blender_destroy(B);
+}
