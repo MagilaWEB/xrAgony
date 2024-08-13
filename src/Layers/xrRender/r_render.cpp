@@ -145,11 +145,6 @@ void CRender::render_main(bool deffered)
 			}
 		}
 
-		bool IsCalculateBones{ false };
-
-		if(deffered)
-			LIMIT_UPDATE_FPS_CODE(_CalculateBones, 40, IsCalculateBones = true;)
-
 		// Traverse frustums
 		for (ISpatial* spatial : lstRenderables)
 		{
@@ -237,7 +232,7 @@ void CRender::render_main(bool deffered)
 						{
 							if (CalcSSADynamic(spatial_data.sphere.P, spatial_data.sphere.R) > 0.002f && GetDistFromCamera(spatial_data.sphere.P) < 220.f)
 							{
-								if (deffered && IsCalculateBones)
+								if (deffered)
 								{
 									CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual);
 									if (pKin)
@@ -297,7 +292,7 @@ void CRender::render_main(bool deffered)
 							{
 								if (CalcSSADynamic(spatial_data.sphere.P, spatial_data.sphere.R) > 0.002f && GetDistFromCamera(spatial_data.sphere.P) < 220.f)
 								{
-									if (deffered && IsCalculateBones)
+									if (deffered)
 									{
 										CKinematics* pKin = (CKinematics*)renderable->GetRenderData().visual;
 										if (pKin)

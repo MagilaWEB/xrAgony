@@ -522,45 +522,41 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 		);
 
 		// Determine visibility for dynamic part of scene
-		bool IsCalculateBones{ false };
-
-		LIMIT_UPDATE_FPS_CODE(_CalculateBones, 40, IsCalculateBones = true;)
-
-			for (ISpatial* spatial : lstRenderables)
+		for (ISpatial* spatial : lstRenderables)
+		{
+			CSector* sector = reinterpret_cast<CSector*>(spatial->GetSpatialData().sector);
+			if (nullptr == sector)
+				continue; // disassociated from S/P structure
+			if (PortalTraverser.i_marker != sector->r_marker)
+				continue; // inactive (untouched) sector
+			for (u32 v_it = 0; v_it < sector->r_frustums.size(); v_it++)
 			{
-				CSector* sector = reinterpret_cast<CSector*>(spatial->GetSpatialData().sector);
-				if (nullptr == sector)
-					continue; // disassociated from S/P structure
-				if (PortalTraverser.i_marker != sector->r_marker)
-					continue; // inactive (untouched) sector
-				for (u32 v_it = 0; v_it < sector->r_frustums.size(); v_it++)
+				set_Frustum(&(sector->r_frustums[v_it]));
+				if (!View->testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R))
+					continue;
+
+				// renderable
+				IRenderable* renderable = spatial->dcast_Renderable();
+				if (nullptr == renderable)
+					continue; // unknown, but renderable object (r1_glow???)
+
+				if (Device.vCameraPosition.distance_to_sqr(renderable->GetRenderData().xform.c) <= 5000.f)
 				{
-					set_Frustum(&(sector->r_frustums[v_it]));
-					if (!View->testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R))
-						continue;
-
-					// renderable
-					IRenderable* renderable = spatial->dcast_Renderable();
-					if (nullptr == renderable)
-						continue; // unknown, but renderable object (r1_glow???)
-
-					if (Device.vCameraPosition.distance_to_sqr(renderable->GetRenderData().xform.c) <= 5000.f && IsCalculateBones)
+					CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual);
+					if (pKin)
 					{
-						CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual);
-						if (pKin)
-						{
-							if (spatial->GetSpatialData().type & STYPE_RENDERABLESHADOW)
+						if (spatial->GetSpatialData().type & STYPE_RENDERABLESHADOW)
+							pKin->CalculateBones(TRUE);
+
+						if (spatial->GetSpatialData().type & STYPE_RENDERABLE)
+							if (ViewSave.testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R) == FALSE)
 								pKin->CalculateBones(TRUE);
-
-							if (spatial->GetSpatialData().type & STYPE_RENDERABLE)
-								if (ViewSave.testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R) == FALSE)
-									pKin->CalculateBones(TRUE);
-						}
 					}
-
-					renderable->renderable_Render();
 				}
+
+				renderable->renderable_Render();
 			}
+		}
 	}
 
 	if (g_pGameLevel && (phase == RImplementation.PHASE_SMAP) && ps_actor_shadow_flags.test(RFLAG_ACTOR_SHADOW))

@@ -69,7 +69,6 @@ public:
 		u32 query_order; // order of occlusion query
 		bool visible; // visible/invisible
 		bool pending; // test is still pending
-		u16 smap_ID;
 	} vis;
 
 	union _xform
@@ -79,7 +78,7 @@ public:
 			Fmatrix combine;
 			s32 minX, maxX;
 			s32 minY, maxY;
-			BOOL transluent;
+			bool transluent;
 		} D;
 		struct _P
 		{
@@ -96,7 +95,7 @@ public:
 			u32 size;
 			u32 posX;
 			u32 posY;
-			BOOL transluent;
+			bool transluent;
 		} S;
 	} X;
 #endif

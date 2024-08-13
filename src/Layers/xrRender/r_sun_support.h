@@ -63,14 +63,14 @@ public:
 		// compute planes for each polygon.
 		compute_planes();
 
-		for (u32 i = 0; i < LIGHT_CUBOIDSIDEPOLYS_COUNT; i++)
+		for (size_t i = 0; i < LIGHT_CUBOIDSIDEPOLYS_COUNT; i++)
 			VERIFY(light_cuboid_polys[i].plane.classify(light_ray.P) > 0);
 
-		u32 align_planes[2];
-		u32 align_planes_count = 0;
+		size_t align_planes[2];
+		size_t align_planes_count = 0;
 
 		// find one or two planes that align to view frustum from behind.
-		for (u32 i = 0; i < LIGHT_CUBOIDSIDEPOLYS_COUNT; i++)
+		for (size_t i = 0; i < LIGHT_CUBOIDSIDEPOLYS_COUNT; i++)
 		{
 			float tmp_dot = view_ray.D.dotproduct(light_cuboid_polys[i].plane.n);
 			if (tmp_dot <= EPS_L)
@@ -87,11 +87,11 @@ public:
 		align_vector.set(0.f, 0.f, 0.f);
 
 		// Align ray points to the align planes.
-		for (int p = 0; p < align_planes_count; ++p)
+		for (size_t p = 0; p < align_planes_count; ++p)
 		{
 			// Hack !
 			float min_dist = 10000;
-			for (u32 i = 0; i < VIEW_FRUSTUM_RAYS_COUNT; ++i)
+			for (size_t i = 0; i < VIEW_FRUSTUM_RAYS_COUNT; ++i)
 			{
 				float tmp_dist = 0;
 				Fvector tmp_point = view_frustum_rays[i].P;

@@ -39,7 +39,7 @@ private:
 		value_type* newNodes = (value_type*)allocator::alloc(Size(newLimit));
 		VERIFY(newNodes);
 
-		if constexpr (std::is_pod_v<T>)
+		if constexpr (std::is_standard_layout_v<T>)
 		{
 			ZeroMemory(newNodes, Size(newLimit));
 			if (pool)
