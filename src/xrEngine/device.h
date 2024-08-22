@@ -34,9 +34,14 @@ extern ENGINE_API float VIEWPORT_NEAR_HUD;
 class CRenderDeviceBase
 {
 public:
+	constexpr static float UI_BASE_WIDTH = 1024.f;
+	constexpr static float UI_BASE_HEIGHT = 768.f;
+
 	// Rendering resolution
 	u32 dwWidth;
 	u32 dwHeight;
+
+	float aspect_ratio{ 1.f };
 
 	// Real application window resolution
 	RECT m_rcWindowBounds;
@@ -159,7 +164,7 @@ private:
 	CTimer TimerMM;
 	RenderDeviceStatictics stats;
 
-	bool b_restart{ false };
+	std::atomic_bool b_restart{ false };
 
 	void _SetupStates();
 
@@ -221,12 +226,10 @@ public:
 	BOOL Paused();
 
 private:
-	bool load_prosses	{ false };
 	//Threding
 	xrThread mt_global_update		{ "GlobalUpdate", true };
 	xrThread mt_frame				{ "Frame", true, true };
 	xrThread mt_frame2				{ "Frame2", true, true };
-	xrThread mt_load				{ "load", true };
 	xrCriticalSection				ResetRender;
 
 public:
@@ -311,15 +314,7 @@ public:
 
 	const bool IsLoadingScreen();
 
-	ICF const bool IsLoadingProsses()
-	{
-		return load_prosses;
-	}
-
-	ICF xrThread* ThreadLoad()
-	{
-		return &mt_load;
-	}
+	const bool IsLoadingProsses();
 
 	bool on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& result);
 
@@ -331,8 +326,7 @@ private:
 	void d_Render();
 	void d_SVPRender();
 	void GlobalUpdate();
-	void b_Load();
-
+	
 	void message_loop();
 	virtual void AddSeqFrame(pureFrame* f, bool mt);
 	virtual void RemoveSeqFrame(pureFrame* f);

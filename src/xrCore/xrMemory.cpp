@@ -1,12 +1,5 @@
 #include "stdafx.h"
-
-#if defined(WINDOWS)
 #include <Psapi.h>
-#elif defined(LINUX)
-#include <sys/sysinfo.h>
-#include <sys/time.h>
-#include <sys/resource.h>
-#endif
 
 xrMemory Memory;
 // Also used in src\xrCore\xrDebug.cpp to prevent use of g_pStringContainer before it initialized
@@ -14,14 +7,8 @@ bool shared_str_initialized = false;
 
 XRCORE_API bool g_allow_heap_min = true;
 
-xrMemory::xrMemory()
-{
-}
-
 void xrMemory::_initialize()
 {
-	stat_calls = 0;
-
 	g_pStringContainer = new str_container();
 	shared_str_initialized = true;
 	g_pSharedMemoryContainer = new smem_container();
@@ -35,7 +22,7 @@ void xrMemory::_destroy()
 
 void xrMemory::GetProcessMemInfo(SProcessMemInfo& minfo)
 {
-	std::memset(&minfo, 0, sizeof(SProcessMemInfo));
+	memset(&minfo, 0, sizeof(SProcessMemInfo));
 
 	MEMORYSTATUSEX mem;
 	mem.dwLength = sizeof(mem);
@@ -48,7 +35,7 @@ void xrMemory::GetProcessMemInfo(SProcessMemInfo& minfo)
 
 	//--------------------------------------------------------------------
 	PROCESS_MEMORY_COUNTERS pc;
-	std::memset(&pc, 0, sizeof(PROCESS_MEMORY_COUNTERS));
+	memset(&pc, 0, sizeof(PROCESS_MEMORY_COUNTERS));
 	pc.cb = sizeof(pc);
 	if (GetProcessMemoryInfo(GetCurrentProcess(), &pc, sizeof(pc)))
 	{
@@ -61,7 +48,6 @@ void xrMemory::GetProcessMemInfo(SProcessMemInfo& minfo)
 
 XRCORE_API void vminfo(size_t* _free, size_t* reserved, size_t* committed)
 {
-#if defined(WINDOWS)
 	MEMORY_BASIC_INFORMATION memory_info;
 	memory_info.BaseAddress = 0;
 	*_free = *reserved = *committed = 0;
@@ -75,13 +61,6 @@ XRCORE_API void vminfo(size_t* _free, size_t* reserved, size_t* committed)
 		}
 		memory_info.BaseAddress = (char*)memory_info.BaseAddress + memory_info.RegionSize;
 	}
-#elif defined(LINUX)
-	struct sysinfo si;
-	sysinfo(&si);
-	*_free = si.freeram * si.mem_unit;
-	*reserved = si.bufferram * si.mem_unit;
-	*committed = (si.totalram - si.freeram + si.totalswap - si.freeswap) * si.mem_unit;
-#endif
 }
 
 XRCORE_API void log_vminfo()
@@ -98,7 +77,6 @@ XRCORE_API void log_vminfo()
 
 size_t xrMemory::mem_usage()
 {
-#if defined(WINDOWS)
 	PROCESS_MEMORY_COUNTERS pmc = {};
 	if (HANDLE h = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, GetCurrentProcessId()))
 	{
@@ -106,19 +84,12 @@ size_t xrMemory::mem_usage()
 		CloseHandle(h);
 	}
 	return pmc.PagefileUsage;
-#elif defined(LINUX)
-	struct rusage ru;
-	getrusage(RUSAGE_SELF, &ru);
-	return (size_t)ru.ru_maxrss;
-#endif
 }
 
 void xrMemory::mem_compact()
 {
-#if defined(WINDOWS)
 	RegFlushKey(HKEY_CLASSES_ROOT);
 	RegFlushKey(HKEY_CURRENT_USER);
-#endif
 
 	if (g_allow_heap_min)
 		_heapmin();
@@ -128,8 +99,6 @@ void xrMemory::mem_compact()
 	if (g_pSharedMemoryContainer)
 		g_pSharedMemoryContainer->clean();
 
-#if defined(WINDOWS)
 	if (strstr(Core.Params, "-swap_on_compact"))
 		SetProcessWorkingSetSize(GetCurrentProcess(), size_t(-1), size_t(-1));
-#endif
 }

@@ -158,7 +158,7 @@ ControlCom::IComData* CControl_Manager::data(CControl_Com* who, ControlCom::ECon
 	if (capturer == who)
 		return target->ced()->data();
 
-	return 0;
+	return nullptr;
 }
 
 // TODO: check construction of SControl_Element and check init in add-function

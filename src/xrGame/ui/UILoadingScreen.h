@@ -28,6 +28,7 @@ class UILoadingScreen : public pureRender, public ILoadingScreen, public CUIWind
 	CUIStatic* loadingTipNumber{ nullptr };
 	CUIStatic* loadingTip{ nullptr };
 	CMMSound* sound{ nullptr };
+	xrThread mt_load{ "load", true };
 	CTimer timer_show;
 
 	bool m_is_visibility{ false };
@@ -49,4 +50,7 @@ public:
 	void SetLevelLogo(pcstr name) override;
 	void SetStageTitle(pcstr title) override;
 	void SetStageTip(pcstr header, pcstr tipNumber, pcstr tip, pcstr level_name) override;
+
+private:
+	void b_Load();
 };

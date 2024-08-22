@@ -27,8 +27,6 @@ DECLARE_MESSAGE(ScreenResolutionChanged);
 template<class T>
 class MessageRegistry
 {
-	void* pmutex;
-
 	struct MessageObject
 	{
 		T* Object;
@@ -39,39 +37,24 @@ class MessageRegistry
 	xr_vector<MessageObject> messages;
 
 public:
-	MessageRegistry()
-	{
-		pmutex = xr_alloc<CRITICAL_SECTION>(1);
-		InitializeCriticalSection((CRITICAL_SECTION*)pmutex);
-	}
-
-	~MessageRegistry()
-	{
-		DeleteCriticalSection((CRITICAL_SECTION*)pmutex);
-		xr_free(pmutex);
-	}
+	MessageRegistry() = default;
 
 	void Clear()
 	{
-		EnterCriticalSection((CRITICAL_SECTION*)pmutex);
 		messages.clear();
-		LeaveCriticalSection((CRITICAL_SECTION*)pmutex);
 	}
 
 	constexpr void Add(T* object, const int priority = REG_PRIORITY_NORMAL)
 	{
-		EnterCriticalSection((CRITICAL_SECTION*)pmutex);
 		VERIFY(object);
 
 		messages.emplace_back(object, priority);
 
 		changed = true;
-		LeaveCriticalSection((CRITICAL_SECTION*)pmutex);
 	}
 
 	void Remove(T* object)
 	{
-		EnterCriticalSection((CRITICAL_SECTION*)pmutex);
 		for (MessageObject& msg : messages)
 		{
 			if (msg.Object == object)
@@ -82,21 +65,16 @@ public:
 		}
 
 		changed = true;
-		LeaveCriticalSection((CRITICAL_SECTION*)pmutex);
 	}
 
 	void Process()
 	{
-		EnterCriticalSection((CRITICAL_SECTION*)pmutex);
 		if (changed)
 			Resort();
 
 		if (messages.empty())
-		{
-			LeaveCriticalSection((CRITICAL_SECTION*)pmutex);
 			return;
-		}
-			
+
 
 		if (messages.front().Prio == REG_PRIORITY_CAPTURE)
 			messages.front().Object->OnPure();
@@ -109,8 +87,6 @@ public:
 					message.Object->OnPure();
 			}
 		}
-
-		LeaveCriticalSection((CRITICAL_SECTION*)pmutex);
 	}
 
 private:

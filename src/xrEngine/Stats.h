@@ -14,7 +14,6 @@ class ENGINE_API CStats : public pureRender
 private:
 	CGameFont* statsFont;
 	CGameFont* fpsFont;
-	CGameFont* pFontCPU;
 	CGameFont* pFontXrThread;
 	float fMem_calls;
 	xr_vector<shared_str> errors;

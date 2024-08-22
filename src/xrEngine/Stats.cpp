@@ -100,12 +100,12 @@ static void DumpSpatialStatistics(IGameFont& font, IPerformanceAlert* alert, ISp
 
 void CStats::Show()
 {
-	float memCalls = float(Memory.stat_calls);
-	if (memCalls > fMem_calls)
-		fMem_calls = memCalls;
-	else
-		fMem_calls = 0.9f * fMem_calls + 0.1f * memCalls;
-	Memory.stat_calls = 0;
+	//float memCalls = float(Memory.stat_calls);
+	//if (memCalls > fMem_calls)
+	//	fMem_calls = memCalls;
+	//else
+	//	fMem_calls = 0.9f * fMem_calls + 0.1f * memCalls;
+	//Memory.stat_calls = 0;
 
 	auto& font = *statsFont;
 	auto engineTotal = Device.GetStats().EngineTotal.result;
@@ -222,9 +222,6 @@ void CStats::OnDeviceCreate()
 	fpsFont->SetHeightI(0.03f);
 	fpsFont->SetColor(color_rgba(250, 250, 15, 180));
 
-	pFontCPU = new CGameFont("hud_font_di", CGameFont::fsDeviceIndependent);
-	pFontCPU->SetHeightI(0.018f);
-
 	pFontXrThread = new CGameFont("hud_font_di", CGameFont::fsDeviceIndependent);
 	pFontXrThread->SetHeightI(0.02f);
 	pFontXrThread->SetColor(color_rgba(255, 255, 0, 255));
@@ -246,7 +243,6 @@ void CStats::OnDeviceDestroy()
 	SetLogCB(nullptr);
 	xr_delete(statsFont);
 	xr_delete(fpsFont);
-	xr_delete(pFontCPU);
 	xr_delete(pFontXrThread);
 }
 

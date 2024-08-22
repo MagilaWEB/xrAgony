@@ -331,14 +331,18 @@ void CControlJump::update_frame()
 	// set velocity from path if we are on it
 	if (m_man->path_builder().is_moving_on_path())
 	{
+		auto c_move = m_man->data(this, ControlCom::eControlMovement);
+
 		//---------------------------------------------------------------------------------------------------------------------------------
 		// Set Velocity from path
 		//---------------------------------------------------------------------------------------------------------------------------------
-		SControlMovementData* ctrl_move = static_cast<SControlMovementData*>(m_man->data(this, ControlCom::eControlMovement));
-		VERIFY(ctrl_move);
-
-		ctrl_move->velocity_target = m_object->move().get_velocity_from_path();
-		ctrl_move->acc = flt_max;
+		if (c_move)
+		{
+			SControlMovementData* ctrl_move = (SControlMovementData*)c_move;
+			VERIFY(ctrl_move);
+			ctrl_move->velocity_target = m_object->move().get_velocity_from_path();
+			ctrl_move->acc = flt_max;
+		}
 		//---------------------------------------------------------------------------------------------------------------------------------
 	}
 
@@ -364,13 +368,11 @@ bool CControlJump::is_on_the_ground()
 
 	collide::rq_result l_rq;
 
-	bool on_the_ground = false;
 	if (Level().ObjectSpace.RayPick(trace_from, direction, m_trace_ground_range, collide::rqtStatic, l_rq, m_object))
-	{
 		if (l_rq.range < m_trace_ground_range)
-			on_the_ground = true;
-	}
-	return (on_the_ground);
+			return true;
+
+	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////

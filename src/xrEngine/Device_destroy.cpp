@@ -61,16 +61,14 @@ void CRenderDevice::ResetStart()
 		g_pGamePersistent->Environment().bNeed_re_create_env = true;
 	_SetupStates();
 
-	CHECK_TIME("RenderDevice::Reset", {
-		// TODO: Remove this! It may hide crash
-		Memory.mem_compact();
+	// TODO: Remove this! It may hide crash
+	Memory.mem_compact();
 
-		seqDeviceReset.Process();
-		if (dwWidth_before != dwWidth || dwHeight_before != dwHeight)
-			seqResolutionChanged.Process();
-		})
+	seqDeviceReset.Process();
+	if (dwWidth_before != dwWidth || dwHeight_before != dwHeight)
+		seqResolutionChanged.Process();
 
-		pInput->ClipCursor(true);
+	pInput->ClipCursor(true);
 
-		b_restart = false;
+	b_restart = false;
 }

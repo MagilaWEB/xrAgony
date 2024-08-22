@@ -64,7 +64,7 @@ public:
 		reset_data();
 	}
 	virtual void reset_data() {}
-	virtual ControlCom::IComData* data() { return 0; }
+	virtual ControlCom::IComData* data() { return nullptr; }
 	// init/deinit current work
 	virtual void on_capture() { reset_data(); }
 	virtual void on_release() {}

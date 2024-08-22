@@ -124,6 +124,8 @@ float ps_r__tf_Mipbias = -0.3f;
 float ps_r2_ssaLOD_A = 64.f;
 float ps_r2_ssaLOD_B = 48.f;
 
+float ps_font_scale = 1.f;
+
 // R2-specific
 Flags32 ps_r2_ls_flags = { R2FLAG_SUN
 //| R2FLAG_SUN_IGNORE_PORTALS
@@ -684,6 +686,8 @@ void xrRender_initconsole()
 	Fvector tw_min, tw_max;
 
 	CMD4(CCC_Float, "r__geometry_lod", &ps_r__LOD, 0.1f, 1.2f);
+
+	CMD4(CCC_Float, "r__font_scale", &ps_font_scale, .1f, 10.f);
 	//CMD4(CCC_Float, "r__geometry_lod_pow", &ps_r__LOD_Power, 0, 2);
 
 

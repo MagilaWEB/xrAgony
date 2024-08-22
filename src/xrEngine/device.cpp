@@ -38,8 +38,6 @@ void CRenderDevice::Run()
 
 	mt_global_update.Init([this]() { GlobalUpdate(); });
 
-	mt_load.Init([this]() { b_Load(); });
-
 	mt_frame.Init([this]() { OnFrame(); }, xrThread::sParalelRender);
 	mt_frame2.Init([this]() { OnFrame2(); }, xrThread::sParalelRender);
 
@@ -193,7 +191,7 @@ void CRenderDevice::OnFrame()
 {
 	::Sound->update(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
 
-	if (!Device.Paused() && !load_prosses)
+	if (Device.Paused() == FALSE && g_loading_events.empty())
 	{
 		if (g_pGameLevel && g_pGameLevel->bReady)
 		{
@@ -214,7 +212,7 @@ void CRenderDevice::OnFrame()
 
 void CRenderDevice::OnFrame2()
 {
-	if (!load_prosses)
+	if (g_loading_events.empty())
 	{
 		while (!seqParallel2.empty())
 		{
@@ -281,19 +279,6 @@ void CRenderDevice::d_SVPRender()
 
 		m_ScopeVP.SetRender(false);
 	}
-}
-
-void CRenderDevice::b_Load()
-{
-	if (g_loading_events.empty())
-	{
-		load_prosses = false;
-		return;
-	}
-
-	load_prosses = true;
-	if (g_loading_events.front() && g_loading_events.front()())
-		g_loading_events.pop_front();
 }
 
 void CRenderDevice::GlobalUpdate()
@@ -482,6 +467,11 @@ BOOL CRenderDevice::Paused() { return g_pauseMngr().Paused(); }
 const bool CRenderDevice::IsLoadingScreen()
 {
 	return pApp->IsLoadingScreen();
+}
+
+const bool CRenderDevice::IsLoadingProsses()
+{
+	return !g_loading_events.empty();
 }
 
 void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)

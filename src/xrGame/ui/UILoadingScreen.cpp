@@ -9,8 +9,6 @@
 
 #include "StdAfx.h"
 #include "UILoadingScreen.h"
-#include "UILoadingScreenHardcoded.h"
-
 #include "xrEngine/x_ray.h"
 #include "xrEngine/GameFont.h"
 #include "UIHelper.h"
@@ -28,15 +26,7 @@ UILoadingScreen::~UILoadingScreen()
 
 void UILoadingScreen::Initialize()
 {
-	bool result = uiXml.Load(CONFIG_PATH, UI_PATH, UI_PATH_DEFAULT, "ui_mm_loading_screen.xml");
-
-	if (!result) // Robustness? Yes!
-	{
-		if (UI().is_widescreen())
-			uiXml.Set(LoadingScreenXML16x9);
-		else
-			uiXml.Set(LoadingScreenXML);
-	}
+	uiXml.Load(CONFIG_PATH, UI_PATH, UI_PATH_DEFAULT, "ui_mm_loading_screen.xml");
 
 	CUIXmlInit::InitWindow(uiXml, "background", 0, this);
 
@@ -58,6 +48,15 @@ void UILoadingScreen::Initialize()
 
 	loadingTip = UIHelper::CreateStatic(uiXml, "loading_tip", this);
 	loadingTip->Show(false);
+}
+
+void UILoadingScreen::b_Load()
+{
+	if (g_loading_events.empty())
+		return;
+
+	if (g_loading_events.front() && g_loading_events.front()())
+		g_loading_events.pop_front();
 }
 
 void UILoadingScreen::Update(u16 stagesCompleted, u16 stagesTotal)
@@ -141,14 +140,13 @@ void UILoadingScreen::ChangeVisibility(bool state)
 		Device.seqRender.Add(this, 0);
 
 		m_is_visibility = true;
-
-		Device.ThreadLoad()->State(xrThread::dsOK);
+		mt_load.Init([this]() { b_Load(); });
 
 		MainMenu()->DestroyInternal();
 	}
 	else
 	{
-		Device.ThreadLoad()->State(xrThread::dsSleep);
+		mt_load.Stop();
 		Device.seqRender.Remove(this);
 
 		levelName->Show(false);

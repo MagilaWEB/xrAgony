@@ -1038,6 +1038,8 @@ void D3DXRenderBase::Reset(HWND hWnd, u32& dwWidth, u32& dwHeight, float& fWidth
 	dwWidth = HW.m_ChainDesc.BufferDesc.Width;
 	dwHeight = HW.m_ChainDesc.BufferDesc.Height;
 
+	Device.aspect_ratio = (Device.UI_BASE_WIDTH / Device.UI_BASE_HEIGHT) / (float(dwWidth) / float(dwHeight));
+
 	fWidth_2 = float(dwWidth / 2);
 	fHeight_2 = float(dwHeight / 2);
 	Resources->reset_end();
@@ -1073,6 +1075,7 @@ void D3DXRenderBase::Create(HWND hWnd, u32& dwWidth, u32& dwHeight, float& fWidt
 	HW.CreateDevice(hWnd, move_window);
 	dwWidth = HW.m_ChainDesc.BufferDesc.Width;
 	dwHeight = HW.m_ChainDesc.BufferDesc.Height;
+	Device.aspect_ratio = (Device.UI_BASE_WIDTH / Device.UI_BASE_HEIGHT) / (float(dwWidth) / float(dwHeight));
 	fWidth_2 = float(dwWidth / 2);
 	fHeight_2 = float(dwHeight / 2);
 	Resources = new CResourceManager();

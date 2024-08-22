@@ -1,12 +1,6 @@
 #pragma once
 struct xr_allocator
 {
-	template <typename T>
-	struct helper
-	{
-		typedef std::allocator<T> result;
-	};
-
 	template <typename T, typename... Args>
 	static void construct(T* ptr, Args&&... args)
 	{
