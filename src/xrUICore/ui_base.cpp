@@ -5,7 +5,6 @@
 
 CUICursor& GetUICursor() { return UI().GetUICursor(); };
 ui_core& UI() { return *::UICore; };
-extern ENGINE_API Fvector2 g_current_font_scale;
 
 void S2DVert::rotate_pt(const Fvector2& pivot, const float cosA, const float sinA, const float kx)
 {
@@ -216,7 +215,6 @@ ui_core::ui_core()
 	OnDeviceReset();
 
 	m_current_scale = &m_scale_;
-	g_current_font_scale.set(1.0f, 1.0f);
 	m_currentPointType = IUIRender::pttTL;
 }
 
@@ -236,16 +234,12 @@ void ui_core::pp_start()
 		float(::Render->getTarget()->get_height())));
 
 	m_current_scale = &m_pp_scale_;
-
-	g_current_font_scale.set(float(::Render->getTarget()->get_width()) / float(Device.dwWidth),
-		float(::Render->getTarget()->get_height()) / float(Device.dwHeight));
 }
 
 void ui_core::pp_stop()
 {
 	m_bPostprocess = false;
 	m_current_scale = &m_scale_;
-	g_current_font_scale.set(1.0f, 1.0f);
 }
 
 void ui_core::RenderFont() { Font().Render(); }

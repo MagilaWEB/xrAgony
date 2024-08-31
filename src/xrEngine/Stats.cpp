@@ -114,7 +114,6 @@ void CStats::Show()
 	if (vtune.enabled())
 	{
 		float sz = font.GetHeight();
-		font.SetHeightI(0.02f);
 		font.SetColor(0xFFFF0000);
 		font.OutSet(Device.dwWidth / 2.0f + (font.SizeOf_("--= tune =--") / 2.0f), Device.dwHeight / 2.0f);
 		font.OutNext("--= tune =--");
@@ -158,7 +157,6 @@ void CStats::Show()
 	if (psDeviceFlags.test(rsCameraPos))
 	{
 		float refHeight = font.GetHeight();
-		font.SetHeightI(0.02f);
 		font.SetColor(0xffffffff);
 		font.Out(10, 600, "CAMERA POSITION:  [%3.2f,%3.2f,%3.2f]", VPUSH(Device.vCameraPosition));
 		font.SetHeight(refHeight);
@@ -186,7 +184,8 @@ void CStats::Show()
 		else
 			fpsFont->SetColor(color_rgba(255, 51, 51, 255));
 
-		fpsFont->Out(float(Device.dwWidth - 40), 5, "%3d", fps);
+		
+		fpsFont->Out(float(Device.dwWidth - 2), 2, "%3d", fps);
 		fpsFont->OnRender();
 	}
 }
@@ -216,14 +215,13 @@ void CStats::OnDeviceCreate()
 {
 	g_bDisableRedText = !!strstr(Core.Params, "-xclsx");
 
-	statsFont = new CGameFont("stat_font", CGameFont::fsDeviceIndependent);
+	statsFont = new CGameFont("font_statistic", CGameFont::fsDeviceIndependent);
 
-	fpsFont = new CGameFont("hud_font_di", CGameFont::fsDeviceIndependent);
-	fpsFont->SetHeightI(0.03f);
+	fpsFont = new CGameFont("font_di", CGameFont::fsDeviceIndependent, 23);
 	fpsFont->SetColor(color_rgba(250, 250, 15, 180));
+	fpsFont->SetAligment(CGameFont::alRight);
 
-	pFontXrThread = new CGameFont("hud_font_di", CGameFont::fsDeviceIndependent);
-	pFontXrThread->SetHeightI(0.02f);
+	pFontXrThread = new CGameFont("font_statistic", CGameFont::fsDeviceIndependent);
 	pFontXrThread->SetColor(color_rgba(255, 255, 0, 255));
 
 #ifdef DEBUG

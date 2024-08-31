@@ -7,15 +7,18 @@
 class dxFontRender : public IFontRender
 {
 public:
-	dxFontRender();
+	dxFontRender() = default;
 	virtual ~dxFontRender();
 
-	virtual void Initialize(LPCSTR cShader, LPCSTR cTexture);
-	virtual void OnRender(CGameFont& owner);
+	virtual void Initialize(LPCSTR cShader, LPCSTR cTexture) override;
+	virtual void OnRender(CGameFont& owner) override;
+
+	virtual void CreateFontAtlas(u32 width, u32 height, pcstr name, void* bitmap) override;
 
 private:
 	ref_shader pShader;
 	ref_geom pGeom;
+	ref_texture pTexture;
 };
 
 #endif //	FontRender_included

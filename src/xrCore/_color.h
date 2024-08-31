@@ -24,6 +24,11 @@ constexpr u32 color_rgba(u32 r, u32 g, u32 b, u32 a) noexcept
 	return color_argb(a, r, g, b);
 }
 
+constexpr u32 color_rgb(u32 r, u32 g, u32 b) noexcept
+{
+	return color_argb(255, r, g, b);
+}
+
 ICF u32 color_argb_f(f32 a, f32 r, f32 g, f32 b) noexcept
 {
 #if 0

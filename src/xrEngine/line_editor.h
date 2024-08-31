@@ -11,6 +11,9 @@
 #include "IInputReceiver.h"
 #include "line_edit_control.h"
 
+constexpr char const* ioc_prompt = ">>> ";
+constexpr char const* ch_cursor = "_";
+
 namespace text_editor
 {
 class line_editor : public IInputReceiver

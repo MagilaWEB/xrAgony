@@ -225,9 +225,6 @@
     <ClCompile Include="Math\PLC_SSE.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="Text\MbHelpers.cpp">
-      <Filter>Text</Filter>
-    </ClCompile>
     <ClCompile Include="Debug\dxerr.cpp">
       <Filter>Debug core\DxErr</Filter>
     </ClCompile>

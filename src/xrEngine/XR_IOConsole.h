@@ -75,13 +75,31 @@ public:
 		MAX_TIPS_COUNT = 220
 	};
 
+	enum Console_mark // (int)=char
+	{
+		no_mark = ' ',
+		mark0 = '~',
+		mark1 = '!', // error
+		mark2 = '@', // console cmd
+		mark3 = '#',
+		mark4 = '$',
+		mark5 = '%',
+		mark6 = '^',
+		mark7 = '&',
+		mark8 = '*',
+		mark9 = '-', // green = ok
+		mark10 = '+',
+		mark11 = '=',
+		mark12 = '/'
+	};
+
 protected:
 	int scroll_delta{};
 
-	CGameFont* pFont{};
-	CGameFont* pFont2{};
+	CGameFont* pFont{ nullptr };
+	CGameFont* pFont2{ nullptr };
 
-	FactoryPtr<IUIShader>* m_hShader_back;
+	FactoryPtr<IUIShader>* m_hShader_back{ nullptr };
 
 	POINT m_mouse_pos;
 	bool m_disable_tips;
@@ -100,6 +118,7 @@ private:
 	int m_select_tip;
 	int m_start_tip;
 	u32 m_prev_length_str{};
+	float m_line_height{ 0.05f };
 
 public:
 	CConsole();
@@ -147,28 +166,10 @@ protected:
 
 	BENCH_SEC_SCRAMBLEMEMBER2
 
-	enum Console_mark // (int)=char
-	{
-		no_mark = ' ',
-		mark0 = '~',
-		mark1 = '!', // error
-		mark2 = '@', // console cmd
-		mark3 = '#',
-		mark4 = '$',
-		mark5 = '%',
-		mark6 = '^',
-		mark7 = '&',
-		mark8 = '*',
-		mark9 = '-', // green = ok
-		mark10 = '+',
-		mark11 = '=',
-		mark12 = '/'
-	};
-
 	bool is_mark(Console_mark type);
 	u32 get_mark_color(Console_mark type);
 
-	void DrawBackgrounds(bool bGame);
+	void DrawBackgrounds();
 	void DrawRect(Frect const& r, u32 color);
 	void OutFont(LPCSTR text, float& pos_y);
 	void Register_callbacks();

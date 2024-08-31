@@ -130,7 +130,6 @@
     </ClCompile>
     <ClCompile Include="stream_reader.cpp" />
     <ClCompile Include="string_concatenations.cpp" />
-    <ClCompile Include="Text\MbHelpers.cpp" />
     <ClCompile Include="Threading\Event.cpp" />
     <ClCompile Include="Threading\xrSyncronize.cpp" />
     <ClCompile Include="Threading\xrThread.cpp" />

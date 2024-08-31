@@ -42,6 +42,7 @@ public:
 	u32 dwHeight;
 
 	float aspect_ratio{ 1.f };
+	float screen_magnitude{ 1.f };
 
 	// Real application window resolution
 	RECT m_rcWindowBounds;

@@ -23,6 +23,8 @@ int g_PausedFPSlimit = 30;//Limit fps to Pause.
 int g_MainFPSlimit = 127;//Limit fps to main.
 int r_scope_fps_limit = 0;
 
+float r_font_scale = .5f;
+
 const xr_token vid_bpp_token[] =
 {
 	{"16", 16},
@@ -696,6 +698,8 @@ void CCC_Register()
 	CMD4(CCC_Integer, "r_main_fps_limit", &g_MainFPSlimit, 0, 240);
 
 	CMD4(CCC_Integer, "r_process_priority", &g_process_priority, 1, 6);
+
+	CMD4(CCC_Float, "r_font_scale", &r_font_scale, .2f, .8f);
 
 	// Render device states
 	CMD4(CCC_Integer, "r__supersample", &ps_r__Supersample, 1, 4);

@@ -19,11 +19,12 @@ u32 cut_string_by_length(CGameFont* pFont, LPCSTR src, LPSTR dst, u32 dst_size, 
 {
 	if (pFont->IsMultibyte())
 	{
-		u16 nPos = pFont->GetCutLengthPos(length, src);
+		/*u16 nPos = pFont->GetCutLengthPos(length, src);
 		VERIFY(nPos < dst_size);
 		strncpy_s(dst, dst_size, src, nPos);
 		dst[nPos] = '\0';
-		return nPos;
+		return nPos;*/
+		return 0;
 	}
 	else
 	{

@@ -57,8 +57,7 @@ extern XRCORE_API xrMemory Memory;
 #define CopyMemory(a, b, c) memcpy(a, b, c)
 #define FillMemory(a, b, c) memset(a, c, b)
 
-template <typename T>
-IC void xr_delete(T*& ptr)
+IC void xr_delete(auto && ptr)
 {
 	if (ptr)
 	{

@@ -168,22 +168,22 @@ void CUILines::ParseText(bool force)
 				const u32 tcolor = line->m_subLines[i].m_color;
 				u16 uFrom = 0, uPartLen = 0;
 				VERIFY(pszText);
-				u16 nMarkers = m_pFont->SplitByWidth(aMarkers, UBUFFER_SIZE, fTargetWidth, pszText);
-				for (u16 j = 0; j < nMarkers; j++)
-				{
-					uPartLen = aMarkers[j] - uFrom;
-					VERIFY((uPartLen > 0) && (uPartLen < MAX_MB_CHARS));
-					strncpy_s(szTempLine, pszText + uFrom, uPartLen);
-					szTempLine[uPartLen] = '\0';
-					tmp_line.AddSubLine(szTempLine, tcolor);
-					m_lines.push_back(tmp_line);
-					tmp_line.Clear();
-// Compiler bug :)
-#pragma warning(push)
-#pragma warning(disable : 4244)
-					uFrom += uPartLen;
-#pragma warning(pop)
-				}
+//				u16 nMarkers = m_pFont->SplitByWidth(aMarkers, UBUFFER_SIZE, fTargetWidth, pszText);
+//				for (u16 j = 0; j < nMarkers; j++)
+//				{
+//					uPartLen = aMarkers[j] - uFrom;
+//					VERIFY((uPartLen > 0) && (uPartLen < MAX_MB_CHARS));
+//					strncpy_s(szTempLine, pszText + uFrom, uPartLen);
+//					szTempLine[uPartLen] = '\0';
+//					tmp_line.AddSubLine(szTempLine, tcolor);
+//					m_lines.push_back(tmp_line);
+//					tmp_line.Clear();
+//// Compiler bug :)
+//#pragma warning(push)
+//#pragma warning(disable : 4244)
+//					uFrom += uPartLen;
+//#pragma warning(pop)
+//				}
 				strncpy_s(szTempLine, pszText + uFrom, MAX_MB_CHARS);
 				tmp_line.AddSubLine(szTempLine, tcolor);
 				m_lines.push_back(tmp_line);
@@ -261,7 +261,7 @@ float CUILines::GetVisibleHeight()
 		if (uFlags.test(flNeedReparse))
 			ParseText();
 
-		float _curr_h = m_pFont->CurrentHeight_();
+		float _curr_h = m_pFont->GetHeight();
 		UI().ClientToScreenScaledHeight(_curr_h);
 		return _curr_h * m_lines.size();
 	}
@@ -381,7 +381,7 @@ void CUILines::Draw(float x, float y)
 		Fvector2 pos;
 		// get vertical indent
 		pos.y = y + GetVIndentByAlign();
-		float height = m_pFont->CurrentHeight_();
+		float height = m_pFont->GetHeight();
 		UI().ClientToScreenScaledHeight(height);
 
 		u32 size = m_lines.size();

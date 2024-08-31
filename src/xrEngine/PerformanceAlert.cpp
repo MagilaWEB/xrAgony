@@ -12,7 +12,7 @@ void PerformanceAlert::Print(IGameFont& font, const char* format, ...)
 	font.SetHeight(fontBaseSize * 2);
 	va_list args;
 	va_start(args, format);
-	font.OutNextVA(format, args);
+	//font.OutNextVA(format, args);
 	va_end(args);
 	alertPos = font.GetPosition();
 	font.SetColor(refColor);

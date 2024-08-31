@@ -60,31 +60,6 @@ LPCSTR _GetFontTexName(LPCSTR section)
 	return pSettings->r_string(section, tex_names[def_idx]);
 }
 
-void _InitializeFont(CGameFont*& F, LPCSTR section, u32 flags)
-{
-	LPCSTR font_tex_name = _GetFontTexName(section);
-	R_ASSERT(font_tex_name);
-
-	LPCSTR sh_name = pSettings->r_string(section, "shader");
-	if (!F)
-	{
-		F = new CGameFont(sh_name, font_tex_name, flags);
-	}
-	else
-		F->Initialize(sh_name, font_tex_name);
-
-	if (pSettings->line_exist(section, "size"))
-	{
-		float sz = pSettings->r_float(section, "size");
-		if (flags & CGameFont::fsDeviceIndependent)
-			F->SetHeightI(sz);
-		else
-			F->SetHeight(sz);
-	}
-	if (pSettings->line_exist(section, "interval"))
-		F->SetInterval(pSettings->r_fvector2(section, "interval"));
-}
-
 CApplication::CApplication()
 {
 	loaded = false;
@@ -220,7 +195,7 @@ void CApplication::LoadBegin()
 
 	loaded = false;
 
-	_InitializeFont(pFontSystem, "ui_font_letterica18_russian", 0);
+	pFontSystem = new CGameFont("font_letterica");
 
 	load_stage = 0;
 

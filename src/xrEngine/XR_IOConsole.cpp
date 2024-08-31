@@ -15,82 +15,66 @@
 
 #include "Include/xrRender/UIRender.h"
 
-static float const UI_BASE_WIDTH = 1024.0f;
-static float const UI_BASE_HEIGHT = 768.0f;
-static float const LDIST = 0.05f;
-static u32 const cmd_history_max = 64;
+constexpr u32 cmd_history_max = 64;
 
-static u32 const prompt_font_color = color_rgba(228, 228, 255, 255);
-static u32 const tips_font_color = color_rgba(230, 250, 230, 255);
-static u32 const cmd_font_color = color_rgba(138, 138, 245, 255);
-static u32 const cursor_font_color = color_rgba(255, 255, 255, 255);
-static u32 const total_font_color = color_rgba(250, 250, 15, 180);
-static u32 const default_font_color = color_rgba(250, 250, 250, 250);
+constexpr u32 prompt_font_color = color_rgba(228, 228, 255, 255);
+constexpr u32 tips_font_color = color_rgba(230, 250, 230, 255);
+constexpr u32 cmd_font_color = color_rgba(138, 138, 245, 255);
+constexpr u32 cursor_font_color = color_rgba(255, 255, 255, 255);
+constexpr u32 total_font_color = color_rgba(250, 250, 15, 180);
+constexpr u32 default_font_color = color_rgba(250, 250, 250, 250);
 
-static u32 const back_color = color_rgba(20, 20, 20, 200);
-static u32 const tips_back_color = color_rgba(20, 20, 20, 200);
-static u32 const tips_select_color = color_rgba(90, 90, 140, 230);
-static u32 const tips_word_color = color_rgba(5, 100, 56, 200);
-static u32 const tips_scroll_back_color = color_rgba(15, 15, 15, 230);
-static u32 const tips_scroll_pos_color = color_rgba(70, 70, 70, 240);
+constexpr u32 back_color = color_rgba(20, 20, 20, 200);
+constexpr u32 tips_back_color = color_rgba(20, 20, 20, 200);
+constexpr u32 tips_select_color = color_rgba(90, 90, 140, 230);
+constexpr u32 tips_word_color = color_rgba(5, 100, 56, 200);
+constexpr u32 tips_scroll_back_color = color_rgba(15, 15, 15, 230);
+constexpr u32 tips_scroll_pos_color = color_rgba(70, 70, 70, 240);
 
 ENGINE_API CConsole* Console = nullptr;
 
-extern char const* const ioc_prompt;
-char const* const ioc_prompt = ">>> ";
+text_editor::line_edit_control& CConsole::ec()
+{
+	return m_editor->control();
+}
 
-extern char const* const ch_cursor;
-char const* const ch_cursor = "_";
+constexpr std::pair<CConsole::Console_mark, u32> mark_color[]
+{
+	{ CConsole::mark0, color_rgb(255, 255, 0) },
+	{ CConsole::mark1, color_rgb(255, 0, 0) },
+	{ CConsole::mark2, color_rgb(100, 100, 255) },
+	{ CConsole::mark3, color_rgba(0, 222, 205, 155) },
+	{ CConsole::mark4, color_rgb(255, 0, 255) },
+	{ CConsole::mark5, color_rgba(155, 55, 170, 155) },
+	{ CConsole::mark6, color_rgb(25, 200, 50) },
+	{ CConsole::mark7, color_rgb(255, 255, 0) },
+	{ CConsole::mark8, color_rgb(128, 128, 128) },
+	{ CConsole::mark9, color_rgb(0, 255, 0) },
+	{ CConsole::mark10, color_rgb(55, 155, 140) },
+	{ CConsole::mark11, color_rgb(205, 205, 105) },
+	{ CConsole::mark12, color_rgb(128, 128, 250) }
+};
 
-text_editor::line_edit_control& CConsole::ec() { return m_editor->control(); }
 u32 CConsole::get_mark_color(Console_mark type)
 {
-	u32 color = default_font_color;
-	switch (type)
-	{
-	case mark0: color = color_rgba(255, 255, 0, 255); break;
-	case mark1: color = color_rgba(255, 0, 0, 255); break;
-	case mark2: color = color_rgba(100, 100, 255, 255); break;
-	case mark3: color = color_rgba(0, 222, 205, 155); break;
-	case mark4: color = color_rgba(255, 0, 255, 255); break;
-	case mark5: color = color_rgba(155, 55, 170, 155); break;
-	case mark6: color = color_rgba(25, 200, 50, 255); break;
-	case mark7: color = color_rgba(255, 255, 0, 255); break;
-	case mark8: color = color_rgba(128, 128, 128, 255); break;
-	case mark9: color = color_rgba(0, 255, 0, 255); break;
-	case mark10: color = color_rgba(55, 155, 140, 255); break;
-	case mark11: color = color_rgba(205, 205, 105, 255); break;
-	case mark12: color = color_rgba(128, 128, 250, 255); break;
-	case no_mark:
-	default: break;
-	}
-	return color;
+	for (const auto [mark, color] : mark_color)
+		if (mark == type)
+			return color;
+
+	return default_font_color;
 }
 
 bool CConsole::is_mark(Console_mark type)
 {
-	switch (type)
-	{
-	case mark0:
-	case mark1:
-	case mark2:
-	case mark3:
-	case mark4:
-	case mark5:
-	case mark6:
-	case mark7:
-	case mark8:
-	case mark9:
-	case mark10:
-	case mark11:
-	case mark12: return true; break;
-	}
+	for (const auto [mark, color] : mark_color)
+		if (mark == type)
+			return true;
 	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-CConsole::CConsole() : m_hShader_back(nullptr)
+CConsole::CConsole()
 {
 	m_editor = new text_editor::line_editor((u32)CONSOLE_BUF_SIZE);
 	m_cmd_history_max = cmd_history_max;
@@ -137,9 +121,7 @@ void CConsole::RemoveCommand(IConsole_Command* cc)
 {
 	vecCMD_IT it = Commands.find(cc->Name());
 	if (Commands.end() != it)
-	{
 		Commands.erase(it);
-	}
 }
 
 void CConsole::OnFrame()
@@ -147,9 +129,7 @@ void CConsole::OnFrame()
 	m_editor->on_frame();
 
 	if (Device.dwFrame % 10 == 0)
-	{
 		update_tips();
-	}
 }
 
 void CConsole::OutFont(LPCSTR text, float& pos_y)
@@ -158,10 +138,9 @@ void CConsole::OutFont(LPCSTR text, float& pos_y)
 	float scr_width = 1.98f * Device.fWidth_2;
 	if (str_length > scr_width) // 1024.0f
 	{
-		float f = 0.0f;
 		int sz = 0;
 		int ln = 0;
-		PSTR one_line = (PSTR)_alloca((CONSOLE_BUF_SIZE + 1) * sizeof(char));
+		PSTR one_line = (PSTR)_malloca((CONSOLE_BUF_SIZE + 1) * sizeof(char));
 
 		while (text[sz] && (ln + sz < CONSOLE_BUF_SIZE - 5)) // перенос строк
 		{
@@ -172,23 +151,16 @@ void CConsole::OutFont(LPCSTR text, float& pos_y)
 			if (t > scr_width)
 			{
 				OutFont(text + sz + 1, pos_y);
-				pos_y -= LDIST;
+				pos_y -= m_line_height;
 				pFont->OutI(-1.0f, pos_y, "%s", one_line + ln);
 				ln = sz + 1;
-				f = 0.0f;
-			}
-			else
-			{
-				f = t;
 			}
 
 			++sz;
 		}
 	}
 	else
-	{
 		pFont->OutI(-1.0f, pos_y, "%s", text);
-	}
 }
 
 void CConsole::OnScreenResolutionChanged()
@@ -200,50 +172,23 @@ void CConsole::OnScreenResolutionChanged()
 void CConsole::OnRender()
 {
 	if (!bVisible)
-	{
 		return;
-	}
 
 	if (!m_hShader_back)
 	{
 		m_hShader_back = new FactoryPtr<IUIShader>();
 		(*m_hShader_back)->create("hud\\default", "ui\\ui_console"); // "ui\\ui_empty"
+		pFont = new CGameFont("font_console", CGameFont::fsDeviceIndependent);
+		pFont2 = new CGameFont("font_console_2", CGameFont::fsDeviceIndependent);
 	}
 
-	if (!pFont)
-	{
-		pFont = new CGameFont("hud_font_di", CGameFont::fsDeviceIndependent);
-		pFont->SetHeightI(0.025f);
-	}
-	if (!pFont2)
-	{
-		pFont2 = new CGameFont("hud_font_di2", CGameFont::fsDeviceIndependent);
-		pFont2->SetHeightI(0.025f);
-	}
+	m_line_height = pFont->GetHeight() / Device.fHeight_2;
 
-	bool bGame = false;
-	if ((g_pGameLevel && g_pGameLevel->bReady) ||
-		(g_pGamePersistent && g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive()))
-	{
-		bGame = true;
-	}
+	DrawBackgrounds();
 
-	DrawBackgrounds(bGame);
+	float dwMaxY = float(Device.dwHeight) * (.5f + m_line_height);
 
-	float fMaxY;
-	float dwMaxY = (float)Device.dwHeight;
-	// float dwMaxX=float(Device.dwWidth/2);
-	if (bGame)
-	{
-		fMaxY = 0.0f;
-		dwMaxY /= 2;
-	}
-	else
-	{
-		fMaxY = 1.0f;
-	}
-
-	float ypos = fMaxY - LDIST * 1.1f;
+	float ypos = m_line_height * 1.1f;
 	float scr_x = 1.0f / Device.fWidth_2;
 
 	//---------------------------------------------------------------------------------
@@ -286,11 +231,9 @@ void CConsole::OnRender()
 		vecTipsEx::iterator ite = m_tips.end();
 		for (u32 i = 0; itb != ite; ++itb, ++i) // tips
 		{
-			pFont->OutI(-1.0f + shift_x, fMaxY + i * LDIST, "%s", (*itb).text.c_str());
-			if (i >= VIEW_TIPS_COUNT - 1)
-			{
+			pFont->OutI(-1.0f + shift_x, ypos + m_line_height + i * m_line_height, "%s", (*itb).text.c_str());
+			if (i == VIEW_TIPS_COUNT - 1)
 				break; // for
-			}
 		}
 	}
 
@@ -314,20 +257,17 @@ void CConsole::OnRender()
 
 	// ---------------------
 	u32 log_line = LogFile->size() - 1;
-	ypos -= LDIST;
+	ypos -= m_line_height;
 	for (int i = log_line - scroll_delta; i >= 0; --i)
 	{
-		ypos -= LDIST;
+		ypos -= m_line_height;
 		if (ypos < -1.0f)
-		{
 			break;
-		}
-		LPCSTR ls = (*LogFile)[i].c_str();
 
+		LPCSTR ls = LogFile->at(i).c_str();
 		if (!ls)
-		{
 			continue;
-		}
+
 		Console_mark cm = (Console_mark)ls[0];
 		pFont->SetColor(get_mark_color(cm));
 		// u8 b = (is_mark( cm ))? 2 : 0;
@@ -339,18 +279,16 @@ void CConsole::OnRender()
 	xr_itoa(log_line, q, 10);
 	u32 qn = xr_strlen(q);
 	pFont->SetColor(total_font_color);
-	pFont->OutI(0.95f - 0.03f * qn, fMaxY - 2.0f * LDIST, "[%d]", log_line);
+	pFont->OutI(0.95f - 0.03f * qn, 2.0f * m_line_height, "[%d]", log_line);
 
 	pFont->OnRender();
 	pFont2->OnRender();
 }
 
-void CConsole::DrawBackgrounds(bool bGame)
+void CConsole::DrawBackgrounds()
 {
-	float ky = (bGame) ? 0.5f : 1.0f;
-
 	Frect r;
-	r.set(0.0f, 0.0f, float(Device.dwWidth), ky * float(Device.dwHeight));
+	r.set(0.0f, 0.0f, float(Device.dwWidth), float(Device.dwHeight) * (.5f + m_line_height));
 
 	::UIRender->SetShader(**m_hShader_back);
 	// 6 = back, 12 = tips, (VIEW_TIPS_COUNT+1)*6 = highlight_words, 12 = scroll
@@ -376,16 +314,15 @@ void CConsole::DrawBackgrounds(bool bGame)
 
 	float list_w = pFont->SizeOf_(max_str) + 2.0f * w1;
 
-	float font_h = pFont->CurrentHeight_();
+	float font_h = pFont->GetHeight();
 	float tips_h = std::min(m_tips.size(), (size_t)VIEW_TIPS_COUNT) * font_h;
-	tips_h += (m_tips.size() > 0) ? 5.0f : 0.0f;
 
 	Frect pr, sr;
 	pr.x1 = ioc_w + cur_cmd_w;
 	pr.x2 = pr.x1 + list_w;
 
-	pr.y1 = UI_BASE_HEIGHT * 0.5f;
-	pr.y1 *= float(Device.dwHeight) / UI_BASE_HEIGHT;
+	pr.y1 = Device.UI_BASE_HEIGHT * (0.5f + m_line_height);
+	pr.y1 *= float(Device.dwHeight) / Device.UI_BASE_HEIGHT;
 
 	pr.y2 = pr.y1 + tips_h;
 

@@ -17,22 +17,6 @@
 #include "Lines/UILines.h"
 #include "xrEngine/xr_input_xinput.h"
 
-#define ARIAL_FONT_NAME "arial"
-
-#define MEDIUM_FONT_NAME "medium"
-#define SMALL_FONT_NAME "small"
-
-#define GRAFFITI19_FONT_NAME "graffiti19"
-#define GRAFFITI22_FONT_NAME "graffiti22"
-#define GRAFFITI32_FONT_NAME "graffiti32"
-#define GRAFFITI50_FONT_NAME "graffiti50"
-
-#define LETTERICA16_FONT_NAME "letterica16"
-#define LETTERICA18_FONT_NAME "letterica18"
-#define LETTERICA25_FONT_NAME "letterica25"
-
-#define DI_FONT_NAME "di"
-
 //////////////////////////////////////////////////////////////////////////
 
 const char* const COLOR_DEFINITIONS = "color_defs.xml";
@@ -658,63 +642,48 @@ bool CUIXmlInitBase::InitFont(CUIXml& xml_doc, LPCSTR path, int index, u32& colo
 	color = GetColor(xml_doc, path, index, 0xff);
 
 	LPCSTR font_name = xml_doc.ReadAttrib(path, index, "font", nullptr);
+	int font_size = xml_doc.ReadAttribInt(path, index, "size", 0);
+
 	if (!font_name)
 	{
 		pFnt = nullptr;
 		return false;
 	}
+
+	if (!UI().Font().IsData(font_name))
+	{
+		Msg("~WARNING: The font in [%s] with the name [%s] could not be connected. The default font is set to [arial].", path, font_name);
+		for (auto& [name, section] : UI().Font().GetData())
+			Msg("-The font [%s] is available.", name);
+
+		font_name = "arial";
+	}
+
+
+	//pFnt = UI().Font().Get(font_name);
+	if (font_size == 0)
+		pFnt = UI().Font().Get(font_name);
 	else
 	{
-		if (!xr_strcmp(font_name, GRAFFITI19_FONT_NAME))
+		shared_str newName;
+		newName.printf("%s%d", font_name, font_size);
+
+		pFnt = UI().Font().Get(newName.c_str());
+
+		if (!pFnt)
 		{
-			pFnt = UI().Font().pFontGraffiti19Russian;
-		}
-		else if (!xr_strcmp(font_name, GRAFFITI22_FONT_NAME))
-		{
-			pFnt = UI().Font().pFontGraffiti22Russian;
-		}
-		else if (!xr_strcmp(font_name, GRAFFITI32_FONT_NAME))
-		{
-			pFnt = UI().Font().pFontGraffiti32Russian;
-		}
-		else if (!xr_strcmp(font_name, GRAFFITI50_FONT_NAME))
-		{
-			pFnt = UI().Font().pFontGraffiti50Russian;
-		}
-		else if (!xr_strcmp(font_name, "arial_14"))
-		{
-			pFnt = UI().Font().pFontArial14;
-		}
-		else if (!xr_strcmp(font_name, MEDIUM_FONT_NAME))
-		{
-			pFnt = UI().Font().pFontMedium;
-		}
-		else if (!xr_strcmp(font_name, SMALL_FONT_NAME))
-		{
-			pFnt = UI().Font().pFontStat;
-		}
-		else if (!xr_strcmp(font_name, LETTERICA16_FONT_NAME))
-		{
-			pFnt = UI().Font().pFontLetterica16Russian;
-		}
-		else if (!xr_strcmp(font_name, LETTERICA18_FONT_NAME))
-		{
-			pFnt = UI().Font().pFontLetterica18Russian;
-		}
-		else if (!xr_strcmp(font_name, LETTERICA25_FONT_NAME))
-		{
-			pFnt = UI().Font().pFontLetterica25;
-		}
-		else if (!xr_strcmp(font_name, DI_FONT_NAME))
-		{
-			pFnt = UI().Font().pFontDI;
-		}
-		else
-		{
-			R_ASSERT3(0, "unknown font", font_name);
-			pFnt = nullptr;
+			shared_str newName;
+			newName.printf("%d", font_size);
+			pFnt = UI().Font().Clone(font_name, newName.c_str(), font_size);
 		}
 	}
+
+	if (!pFnt)
+	{
+		FATAL("The font object could not be found!");
+		return false;
+	}
+
 	return true;
 }
 
