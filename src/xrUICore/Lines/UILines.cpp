@@ -341,13 +341,9 @@ void CUILines::Draw(float x, float y)
 	if (!uFlags.is(flComplexMode))
 	{
 		Fvector2 text_pos;
-		text_pos.set(0, 0);
+		text_pos.set(x + GetIndentByAlign(), y + GetVIndentByAlign());
 
-		text_pos.x = x + GetIndentByAlign();
-		//		text_pos.y = y + GetVIndentByAlign();
-		text_pos.y = y;
 		UI().ClientToScreenScaled(text_pos);
-		text_pos.y += GetVIndentByAlign();
 
 		if (uFlags.test(flPasswordMode))
 		{
@@ -384,10 +380,10 @@ void CUILines::Draw(float x, float y)
 		float height = m_pFont->GetHeight();
 		UI().ClientToScreenScaledHeight(height);
 
-		u32 size = m_lines.size();
+		size_t size = m_lines.size();
 
 		m_pFont->SetAligment((CGameFont::EAligment)m_eTextAlign);
-		for (int i = 0; i < (int)size; i++)
+		for (size_t i = 0; i < size; i++)
 		{
 			pos.x = x + GetIndentByAlign();
 			m_lines[i].Draw(m_pFont, pos.x, pos.y);

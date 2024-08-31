@@ -111,7 +111,7 @@ sPoly2D* C2DFrustum::ClipPoly(sPoly2D& S, sPoly2D& D) const
 
 void ui_core::OnDeviceReset()
 {
-	m_scale_.set(float(Device.dwWidth) / UI_BASE_WIDTH, float(Device.dwHeight) / UI_BASE_HEIGHT);
+	m_scale_.set(float(Device.dwWidth) / Device.UI_BASE_WIDTH, float(Device.dwHeight) / Device.UI_BASE_HEIGHT);
 
 	m_2DFrustum.CreateFromRect(Frect().set(0.0f, 0.0f, float(Device.dwWidth), float(Device.dwHeight)));
 }
@@ -139,7 +139,7 @@ void ui_core::ClientToScreenScaledWidth(float& src_and_dest) const
 void ui_core::ClientToScreenScaledHeight(float& src_and_dest) const
 {
 	if (m_currentPointType != IUIRender::pttLIT)
-		src_and_dest /= m_current_scale->y;
+		src_and_dest /= Device.screen_magnitude;
 }
 
 void ui_core::AlignPixel(float& src_and_dest) const
@@ -153,7 +153,7 @@ void ui_core::PushScissor(const Frect& r_tgt, bool overlapped)
 	if (UI().m_currentPointType == IUIRender::pttLIT)
 		return;
 
-	Frect r_top = {0.0f, 0.0f, UI_BASE_WIDTH, UI_BASE_HEIGHT};
+	Frect r_top = {0.0f, 0.0f, Device.UI_BASE_WIDTH, Device.UI_BASE_HEIGHT};
 	Frect result = r_tgt;
 	if (!m_Scissors.empty() && !overlapped)
 	{
@@ -162,7 +162,7 @@ void ui_core::PushScissor(const Frect& r_tgt, bool overlapped)
 	if (!result.intersection(r_top, r_tgt))
 		result.set(0.0f, 0.0f, 0.0f, 0.0f);
 
-	if (!(result.x1 >= 0 && result.y1 >= 0 && result.x2 <= UI_BASE_WIDTH && result.y2 <= UI_BASE_HEIGHT))
+	if (!(result.x1 >= 0 && result.y1 >= 0 && result.x2 <= Device.UI_BASE_WIDTH && result.y2 <= Device.UI_BASE_HEIGHT))
 	{
 		Msg("! r_tgt [%.3f][%.3f][%.3f][%.3f]", r_tgt.x1, r_tgt.y1, r_tgt.x2, r_tgt.y2);
 		Msg("! result [%.3f][%.3f][%.3f][%.3f]", result.x1, result.y1, result.x2, result.y2);
@@ -228,8 +228,9 @@ void ui_core::pp_start()
 {
 	m_bPostprocess = true;
 
-	m_pp_scale_.set(float(::Render->getTarget()->get_width()) / float(UI_BASE_WIDTH),
-		float(::Render->getTarget()->get_height()) / float(UI_BASE_HEIGHT));
+	m_pp_scale_.set(float(::Render->getTarget()->get_width()) / Device.UI_BASE_WIDTH,
+		float(::Render->getTarget()->get_height()) / Device.UI_BASE_HEIGHT);
+
 	m_2DFrustumPP.CreateFromRect(Frect().set(0.0f, 0.0f, float(::Render->getTarget()->get_width()),
 		float(::Render->getTarget()->get_height())));
 
@@ -245,7 +246,7 @@ void ui_core::pp_stop()
 void ui_core::RenderFont() { Font().Render(); }
 bool ui_core::is_widescreen()
 {
-	return (Device.dwWidth) / float(Device.dwHeight) > (UI_BASE_WIDTH / UI_BASE_HEIGHT + 0.01f);
+	return (Device.dwWidth) / float(Device.dwHeight) > (Device.UI_BASE_WIDTH / Device.UI_BASE_HEIGHT + 0.01f);
 }
 
 float ui_core::get_current_kx()
@@ -253,7 +254,7 @@ float ui_core::get_current_kx()
 	float h = float(Device.dwHeight);
 	float w = float(Device.dwWidth);
 
-	float res = (h / w) / (UI_BASE_HEIGHT / UI_BASE_WIDTH);
+	float res = (h / w) / (Device.UI_BASE_HEIGHT / Device.UI_BASE_WIDTH);
 	return res;
 }
 

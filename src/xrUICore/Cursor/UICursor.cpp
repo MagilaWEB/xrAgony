@@ -107,8 +107,8 @@ void CUICursor::UpdateCursorPosition(int _dx, int _dy)
 	{
 		Ivector2 pti;
 		IInputReceiver::IR_GetMousePosReal(pti);
-		vPos.x = (float)pti.x * (UI_BASE_WIDTH / (float)Device.m_rcWindowClient.right);
-		vPos.y = (float)pti.y * (UI_BASE_HEIGHT / (float)Device.m_rcWindowClient.bottom);
+		vPos.x = (float)pti.x * (Device.UI_BASE_WIDTH / (float)Device.m_rcWindowClient.right);
+		vPos.y = (float)pti.y * (Device.UI_BASE_HEIGHT / (float)Device.m_rcWindowClient.bottom);
 	}
 	else
 	{
@@ -116,16 +116,16 @@ void CUICursor::UpdateCursorPosition(int _dx, int _dy)
 		vPos.x += _dx * sens;
 		vPos.y += _dy * sens;
 	}
-	clamp(vPos.x, 0.f, UI_BASE_WIDTH);
-	clamp(vPos.y, 0.f, UI_BASE_HEIGHT);
+	clamp(vPos.x, 0.f, Device.UI_BASE_WIDTH);
+	clamp(vPos.y, 0.f, Device.UI_BASE_HEIGHT);
 }
 
 void CUICursor::SetUICursorPosition(Fvector2 pos)
 {
 	vPos = pos;
 	POINT p;
-	p.x = iFloor(vPos.x / (UI_BASE_WIDTH / (float)Device.m_rcWindowClient.right));
-	p.y = iFloor(vPos.y / (UI_BASE_HEIGHT / (float)Device.m_rcWindowClient.bottom));
+	p.x = iFloor(vPos.x / (Device.UI_BASE_WIDTH / (float)Device.m_rcWindowClient.right));
+	p.y = iFloor(vPos.y / (Device.UI_BASE_HEIGHT / (float)Device.m_rcWindowClient.bottom));
 	if (m_b_use_win_cursor)
 		ClientToScreen(Device.m_hWnd, (LPPOINT)&p);
 	SetCursorPos(p.x, p.y);

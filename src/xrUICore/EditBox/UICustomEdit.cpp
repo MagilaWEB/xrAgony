@@ -224,8 +224,8 @@ void CUICustomEdit::Draw()
 
 	if (m_bInputFocus) // draw cursor here
 	{
-		out.x = pos.x + 0.0f + TextItemControl()->m_TextOffset.x + TextItemControl()->GetIndentByAlign();
-		out.y = pos.y + 2.0f + TextItemControl()->m_TextOffset.y + TextItemControl()->GetVIndentByAlign();
+		out.x = pos.x + TextItemControl()->m_TextOffset.x + TextItemControl()->GetIndentByAlign();
+		out.y = pos.y + TextItemControl()->m_TextOffset.y + TextItemControl()->GetVIndentByAlign();
 		UI().ClientToScreenScaled(out);
 
 		out.x += m_dx_cur; // cursor_str

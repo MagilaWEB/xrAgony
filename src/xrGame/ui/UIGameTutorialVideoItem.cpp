@@ -77,11 +77,11 @@ void CUISequenceVideoItem::Load(CUIXml* xml, int idx)
 		Frect texture_coords = m_wnd->GetUIStaticItem().GetTextureRect();
 
 		bool is_16_9 = UI().is_widescreen();
-		float kw_image = UI_BASE_WIDTH / texture_coords.width();
+		float kw_image = Device.UI_BASE_WIDTH / texture_coords.width();
 
 		Fvector2 wnd_size;
 
-		wnd_size.x = UI_BASE_WIDTH;
+		wnd_size.x = Device.UI_BASE_WIDTH;
 		wnd_size.y = texture_coords.height() * kw_image;
 		if (is_16_9)
 			wnd_size.y *= 1.2f;

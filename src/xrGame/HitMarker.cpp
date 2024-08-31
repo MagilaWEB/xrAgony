@@ -189,7 +189,7 @@ SGrenadeMark::SGrenadeMark(const ui_shader& sh, CGrenade* grn)
 	m_UIStaticItem->SetShader(sh);
 	float xs = 640.0f;
 	float ys = 640.0f;
-	m_UIStaticItem->SetPos((UI_BASE_WIDTH - xs) * 0.5f, (UI_BASE_HEIGHT - ys) * 0.5f);
+	m_UIStaticItem->SetPos((Device.UI_BASE_WIDTH - xs) * 0.5f, (Device.UI_BASE_HEIGHT - ys) * 0.5f);
 	m_UIStaticItem->SetSize(Fvector2().set(xs, ys));
 }
 

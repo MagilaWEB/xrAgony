@@ -18,7 +18,7 @@
 
 CUIMessagesWindow::CUIMessagesWindow() : m_pChatLog(nullptr), m_pChatWnd(nullptr), m_pGameLog(nullptr)
 {
-	Init(0, 0, UI_BASE_WIDTH, UI_BASE_HEIGHT);
+	Init(0, 0, Device.UI_BASE_WIDTH, Device.UI_BASE_HEIGHT);
 }
 
 CUIMessagesWindow::~CUIMessagesWindow() {}

@@ -231,7 +231,7 @@ bool CMainMenu::ReloadUI()
 	m_startDialog->m_bWorkInPause = true;
 	m_startDialog->ShowDialog(true);
 
-	m_activatedScreenRatio = (float)Device.dwWidth / (float)Device.dwHeight > (UI_BASE_WIDTH / UI_BASE_HEIGHT + 0.01f);
+	m_activatedScreenRatio = (float)Device.dwWidth / (float)Device.dwHeight > (Device.UI_BASE_WIDTH / Device.UI_BASE_HEIGHT + 0.01f);
 	return true;
 }
 
@@ -367,7 +367,7 @@ void CMainMenu::OnFrame()
 	if (IsActive())
 	{
 		CheckForErrorDlg();
-		bool b_is_16_9 = (float)Device.dwWidth / (float)Device.dwHeight > (UI_BASE_WIDTH / UI_BASE_HEIGHT + 0.01f);
+		bool b_is_16_9 = (float)Device.dwWidth / (float)Device.dwHeight > (Device.UI_BASE_WIDTH / Device.UI_BASE_HEIGHT + 0.01f);
 		if (b_is_16_9 != m_activatedScreenRatio || mLanguageChanged)
 		{
 			mLanguageChanged = false;

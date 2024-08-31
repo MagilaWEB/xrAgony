@@ -55,7 +55,7 @@ void SBinocVisibleObj::create_default(u32 color)
 	m_rt.SetTextureColor(clr);
 	m_rb.SetTextureColor(clr);
 
-	cur_rect.set(0, 0, UI_BASE_WIDTH, UI_BASE_HEIGHT);
+	cur_rect.set(0, 0, Device.UI_BASE_WIDTH, Device.UI_BASE_HEIGHT);
 
 	m_flags.zero();
 }
@@ -124,10 +124,10 @@ void SBinocVisibleObj::Update()
 		return;
 
 	std::swap(mn.y, mx.y);
-	mn.x = (1.f + mn.x) / 2.f * UI_BASE_WIDTH;
-	mx.x = (1.f + mx.x) / 2.f * UI_BASE_WIDTH;
-	mn.y = (1.f - mn.y) / 2.f * UI_BASE_HEIGHT;
-	mx.y = (1.f - mx.y) / 2.f * UI_BASE_HEIGHT;
+	mn.x = (1.f + mn.x) / 2.f * Device.UI_BASE_WIDTH;
+	mx.x = (1.f + mx.x) / 2.f * Device.UI_BASE_WIDTH;
+	mn.y = (1.f - mn.y) / 2.f * Device.UI_BASE_HEIGHT;
+	mx.y = (1.f - mx.y) / 2.f * Device.UI_BASE_HEIGHT;
 
 	if (mx.x - mn.x < RECT_SIZE)
 		mx.x = mn.x + RECT_SIZE;

@@ -43,10 +43,9 @@ void dxFontRender::OnRender(CGameFont& owner)
 			FVF::TL* start = vertexes;
 
 			const float coof_size = owner.SizeCoof();
-			const float correction_y = (1.f - coof_size) * owner.Size / 4;
 
 			float X = str.x;
-			float Y = str.y + correction_y;
+			float Y = str.y;
 			float Y2 = Y + str.height * coof_size;
 
 			if (str.align)

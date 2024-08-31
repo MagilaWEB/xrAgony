@@ -50,16 +50,16 @@ void CUIZoneMap::Init()
 	{
 		float k = UI().get_current_kx();
 
-		sz.y *= UI_BASE_HEIGHT * k;
+		sz.y *= Device.UI_BASE_HEIGHT * k;
 		sz.x = sz.y / k;
 
 		m_clipFrame.SetWndSize(sz);
 
 		Fvector2 p = m_clipFrame.GetWndPos();
-		p.mul(UI_BASE_HEIGHT);
+		p.mul(Device.UI_BASE_HEIGHT);
 		m_clipFrame.SetWndPos(p);
 
-		m_background.SetHeight(m_background.GetHeight() * UI_BASE_HEIGHT);
+		m_background.SetHeight(m_background.GetHeight() * Device.UI_BASE_HEIGHT);
 		m_background.SetWidth(m_background.GetHeight() * k);
 	}
 
