@@ -1,23 +1,28 @@
-X-Ray Engine 1.6 expansion [![Build status](https://ci.appveyor.com/api/projects/status/vxccu3mfu33sp04i?svg=true)](https://ci.appveyor.com/project/Xottab-DUTY/xray-16)
-==========================
+# xrAgony Engine
+----
 
-This repository contains X-Ray Engine sources based on version 1.6.02.
-The original engine is used in S.T.A.L.K.E.R. Call of Pripyat game released by GSC Game World.
+xrAgony Engine - это улучшенная версия OpenXray(X-Ray Engine), игрового движка, используемого во всемирно известной серии игр S.T.A.L.K.E.R. от GSC Game World.
+----
+Этот репозиторий содержит исходный код xrAgony Engine, основанные на OpenXray, специально предназначенные для использования с модификацией A.G.O.N.Y.
+Оригинальный движок используется в игре S.T.A.L.K.E.R. Call of Pripyat (1.6.02), выпущенной GSC Game World, и любые изменения в этом движке разрешены только для ***некоммерческого*** использования 
+(см. [License.txt](https://github.com/avoitishin/xray-16/blob/master/License.txt) для получения подробной информации).
 
-It is a place to share ideas on what to implement, gather people that want to work on the engine,
-and work on the source code.
+Целью данного проекта является расширение возможностей движка и оптимизация исходного кода, исправление проблем и ошибок, изменение формы и перестройка X-Ray с использованием современных технологий, улусшение исходного кода для работы мультипоточном режиме.
 
-Changelist is available in [wiki](https://github.com/OpenXRay/xray-16/wiki/Changes).
+Движок использует современные библиотеки такие как:
+-[oneTBB](https://github.com/oneapi-src/oneTBB) которая упрощает работу по добавлению многопоточных паралейных задач;
+-[LuaJit](https://github.com/LuaJIT/LuaJIT) (JIT) обновлён компилятор для работы lua до версии 2.1.
 
-Build instructions: [doc/howto/build.txt](doc/howto/build.txt)
+Историю изменений gamedata мы ведём на отдельном github [xrAgony-gamedata](https://github.com/MagilaWEB/Agony-Gamedata).
 
-If you find a bug or have an enhancement request, file an [Issue](https://github.com/openxray/xray-16/issues).
+## Инструкции по сборке
+Данный проект поддерживается в Visual Studio 2022 и установленный компилятор clang. Требуется Windows SDK 10.0 или более новая версия.
 
-Pull requests appreciated! However, the following things should be taken into consideration:
-* We want to keep the game as close as possible to the vanilla game, so instead of introducing new gameplay features,
-  consider adding non-gameplay features, fixing bugs, improving performance and code quality
-* Major changes should be discussed before implementation
-* Follow the [procedures](doc/procedure)
+1. Откройте решение xrEngine фльтр resources в проекте.
+2. В теге `xrGameDir` пропишите желаемый путь вывода для скомпилированных двоичных файлов движка.
+3. В `libraries` нажмите собрать решение `LuaJit`.
+4. Нажмите собрать проект.
 
-Be advised that this project is not sanctioned by GSC Game World in any way – and they remain the copyright holders
-of all the original source code.
+* Примечания:
+* 1. В настоящее время работает Release/Win32, Debug/Win32.
+* 2. Debug/Win32 имеет крайне низкую производительность и подходит для отладки критических ошибок.
