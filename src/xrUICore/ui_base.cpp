@@ -216,10 +216,12 @@ ui_core::ui_core()
 
 	m_current_scale = &m_scale_;
 	m_currentPointType = IUIRender::pttTL;
+	Device.seqDeviceReset.Add(this, REG_PRIORITY_NORMAL);
 }
 
 ui_core::~ui_core()
 {
+	Device.seqDeviceReset.Remove(this);
 	xr_delete(m_pFontManager);
 	xr_delete(m_pUICursor);
 }

@@ -2,13 +2,13 @@
 #include "xrUICore/Lines/UILine.h"
 #include "xrUICore/uiabstract.h"
 
-class XRUICORE_API CUILines : public CDeviceResetNotifier
+class XRUICORE_API CUILines
 {
 	friend class CUICustomEdit;
 
 public:
 	CUILines();
-	virtual ~CUILines();
+	virtual ~CUILines() = default;
 
 	void SetText(LPCSTR text);
 	void SetTextST(LPCSTR text);
@@ -31,9 +31,6 @@ public:
 	void SetEllipsis(bool mode);
 
 	void Draw(float x, float y);
-
-	// CDeviceResetNotifier methods
-	virtual void OnDeviceReset();
 
 	// own methods
 	void Reset();

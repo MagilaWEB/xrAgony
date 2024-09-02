@@ -1,7 +1,7 @@
 #pragma once
 
 
-struct XRUICORE_API CFontManager : public pureDeviceReset
+struct XRUICORE_API CFontManager
 {
 	CFontManager();
 	~CFontManager();
@@ -39,7 +39,7 @@ struct XRUICORE_API CFontManager : public pureDeviceReset
 	std::pair<LPCSTR, LPCSTR> GetDataFont(const LPCSTR name_id) const;
 	DATA_FONT GetData() const;
 	void Render();
-	virtual void OnDeviceReset();
+	//virtual void OnDeviceReset();
 	
 private:
 	DATA_FONT FontsData;

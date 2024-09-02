@@ -61,12 +61,14 @@ CMainMenu::CMainMenu()
 	g_statHint = new CUIButtonHint();
 
 	Device.seqFrame.Add(this, REG_PRIORITY_LOW - 1000);
+	Device.seqDeviceReset.Add(this, REG_PRIORITY_HIGH);
 	mLanguageChanged = false;
 }
 
 CMainMenu::~CMainMenu()
 {
 	Device.seqFrame.Remove(this);
+	Device.seqDeviceReset.Remove(this);
 	xr_delete(g_btnHint);
 	xr_delete(g_statHint);
 	xr_delete(m_startDialog);

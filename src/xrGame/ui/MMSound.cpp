@@ -80,8 +80,6 @@ void CMMSound::music_Play()
 
 void CMMSound::music_Update()
 {
-
-
 	if (m_music_stereo.isPlaying() == false)
 		music_Play();
 }

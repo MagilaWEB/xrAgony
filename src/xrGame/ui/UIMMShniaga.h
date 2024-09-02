@@ -20,7 +20,7 @@ protected:
 	bool m_bPP;
 };
 
-class CUIMMShniaga : public CUIWindow, public CDeviceResetNotifier
+class CUIMMShniaga : public CUIWindow
 {
 public:
 	CUIMMShniaga();
@@ -34,7 +34,7 @@ public:
 	virtual bool OnKeyboardAction(int dik, EUIMessages keyboard_action);
 	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = 0);
 	void SetVisibleMagnifier(bool f);
-	virtual void OnDeviceReset();
+	//virtual void OnDeviceReset();
 	enum enum_page_id
 	{
 		epi_main = 0x00,

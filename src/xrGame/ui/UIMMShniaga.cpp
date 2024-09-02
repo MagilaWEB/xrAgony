@@ -123,7 +123,7 @@ void CUIMMShniaga::InitShniaga(CUIXml& xml_doc, LPCSTR path)
 	m_sound->music_Play();
 }
 
-void CUIMMShniaga::OnDeviceReset() {}
+//void CUIMMShniaga::OnDeviceReset() {}
 extern CActor* g_actor;
 
 void CUIMMShniaga::CreateList(xr_vector<CUITextWnd*>& lst, CUIXml& xml_doc, LPCSTR path)

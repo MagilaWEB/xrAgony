@@ -30,9 +30,9 @@ CUILines::CUILines()
 	uFlags.set(flColoringMode, TRUE);
 	uFlags.set(flCutWordsMode, FALSE);
 	uFlags.set(flRecognizeNewLine, TRUE);
+	//Device.seqDeviceReset.Add(this, REG_PRIORITY_HIGH);
 }
 
-CUILines::~CUILines() {}
 void CUILines::SetTextComplexMode(bool mode)
 {
 	uFlags.set(flComplexMode, mode);
@@ -393,7 +393,6 @@ void CUILines::Draw(float x, float y)
 	m_pFont->OnRender();
 }
 
-void CUILines::OnDeviceReset() { uFlags.set(flNeedReparse, TRUE); }
 float CUILines::GetIndentByAlign() const
 {
 	switch (m_eTextAlign)

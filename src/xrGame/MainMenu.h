@@ -17,7 +17,7 @@ class CMainMenu :
 	public pureRender,
 	public CDialogHolder,
 	public CUIWndCallback,
-	public CDeviceResetNotifier
+	public pureDeviceReset
 
 {
 	CUIDialogWnd* m_startDialog;
