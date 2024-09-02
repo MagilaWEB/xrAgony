@@ -5,7 +5,7 @@ class CUIXml;
 class CMMSound
 {
 public:
-	CMMSound();
+	CMMSound() = default;
 	~CMMSound();
 	void Init(CUIXml& xml_doc, LPCSTR path);
 	void whell_Play();

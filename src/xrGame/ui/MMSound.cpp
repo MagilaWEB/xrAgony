@@ -3,8 +3,11 @@
 #include "MMSound.h"
 #include "xrUICore/XML/xrUIXmlParser.h"
 
-CMMSound::CMMSound() {}
-CMMSound::~CMMSound() { all_Stop(); }
+CMMSound::~CMMSound()
+{
+	all_Stop();
+}
+
 void CMMSound::Init(CUIXml& xml_doc, LPCSTR path)
 {
 	string256 _path;
@@ -54,7 +57,11 @@ void CMMSound::whell_Click()
 		m_whell_click.play(nullptr, sm_2D);
 }
 
-void CMMSound::whell_UpdateMoving(float frequency) { m_whell.set_frequency(frequency); }
+void CMMSound::whell_UpdateMoving(float frequency)
+{
+	m_whell.set_frequency(frequency);
+}
+
 void CMMSound::music_Play()
 {
 	if (m_play_list.empty())
@@ -73,14 +80,17 @@ void CMMSound::music_Play()
 
 void CMMSound::music_Update()
 {
-	if (Device.Paused())
-		return;
 
-	if (0 == m_music_stereo._feedback())
+
+	if (m_music_stereo.isPlaying() == false)
 		music_Play();
 }
 
-void CMMSound::music_Stop() { m_music_stereo.stop(); }
+void CMMSound::music_Stop()
+{
+	m_music_stereo.stop();
+}
+
 void CMMSound::all_Stop()
 {
 	music_Stop();

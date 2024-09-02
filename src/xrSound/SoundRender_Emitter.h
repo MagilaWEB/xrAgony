@@ -73,6 +73,7 @@ public:
 public:
 	void Event_Propagade();
 	void SetIgnorePaused(bool b_ignore) override;
+	bool GetIgnorePaused() const override;
 	void Event_ReleaseOwner();
 	bool isPlaying() { return m_current_state != stStopped; }
 	bool is_2D() override { return b2D; }

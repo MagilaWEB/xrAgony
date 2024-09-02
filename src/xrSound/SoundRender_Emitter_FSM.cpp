@@ -213,7 +213,7 @@ void CSoundRender_Emitter::update(float dt)
 
 	// footer
 	bMoved = FALSE;
-	if (m_current_state != stStopped)
+	if (isPlaying())
 	{
 		if (fTime >= fTimeToPropagade)
 			Event_Propagade();

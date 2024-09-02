@@ -110,6 +110,7 @@ class XRSOUND_API CSound_emitter
 {
 public:
 	virtual void SetIgnorePaused(bool b_ignore) = 0;
+	virtual bool GetIgnorePaused() const = 0;
 	virtual bool is_2D() = 0;
 	virtual void switch_to_2D() = 0;
 	virtual void switch_to_3D() = 0;
@@ -121,6 +122,7 @@ public:
 	virtual void stop(bool isDeffered) = 0;
 	virtual const CSound_params* get_params() = 0;
 	virtual u32 play_time() = 0;
+	virtual bool isPlaying() = 0;
 };
 
 /// definition (Sound Stream Interface)
@@ -249,9 +251,6 @@ specific sub-systems
 struct ref_sound
 {
 	ref_sound_data_ptr _p;
-
-	ref_sound() {}
-	~ref_sound() {}
 	CSound_source* _handle() const { return _p ? _p->handle : nullptr; }
 	CSound_emitter* _feedback() { return _p ? _p->feedback : nullptr; }
 	IGameObject* _g_object() { VERIFY(_p); return _p->g_object; }
@@ -267,6 +266,15 @@ struct ref_sound
 	void SetIgnorePaused(bool b_ignore)
 	{
 		VerSndUnlocked(); ::Sound->SetIgnorePaused(*this, b_ignore);
+	}
+
+	bool GetIgnorePaused()
+	{
+		VerSndUnlocked();
+		if (_feedback())
+			return _feedback()->GetIgnorePaused();
+
+		return false;
 	}
 
 	void attach_tail(pcstr name)
@@ -297,6 +305,15 @@ struct ref_sound
 	void play_no_feedback(IGameObject* O, u32 flags = 0, float delay = 0.f, Fvector* pos = nullptr, float* vol = nullptr, float* freq = nullptr, Fvector2* range = nullptr)
 	{
 		VerSndUnlocked(); ::Sound->play_no_feedback(*this, O, flags, delay, pos, vol, freq, range);
+	}
+
+	bool isPlaying()
+	{
+		VerSndUnlocked();
+		if (_feedback())
+			return _feedback()->isPlaying();
+
+		return false;
 	}
 
 	void stop() { VerSndUnlocked(); if (_feedback()) _feedback()->stop(false); }

@@ -93,6 +93,11 @@ void CSoundRender_Emitter::SetIgnorePaused(bool b_ignore)
 	bIgnorePaused = b_ignore;
 }
 
+bool CSoundRender_Emitter::GetIgnorePaused() const
+{
+	return bIgnorePaused;
+}
+
 void CSoundRender_Emitter::switch_to_2D()
 {
 	b2D = true;

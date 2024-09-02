@@ -38,7 +38,7 @@ void CSoundRender_Core::CreateAllSources()
 	FS.file_list(flist, "$game_sounds$", FS_ListFiles, "*.ogg");
 	const size_t sizeBefore = s_sources.size();
 
-	static xrCriticalSection lock;
+	static FastLock lock;
 
 	tbb::parallel_for_each(flist, [&](const FS_File& file)
 	{
@@ -50,7 +50,7 @@ void CSoundRender_Core::CreateAllSources()
 			*strext(id) = 0;
 
 		{
-			xrCriticalSection::raii mt{ lock };
+			FastLock::raii mt{ lock };
 			const auto it = s_sources.find(id);
 			if (it != s_sources.end())
 				return;
@@ -60,9 +60,8 @@ void CSoundRender_Core::CreateAllSources()
 		CSoundRender_Source* S = new CSoundRender_Source();
 		S->load(id);
 
-		lock.Enter();
+		FastLock::raii mt{ lock };
 		s_sources.insert({ id, S });
-		lock.Leave();
 	});
 
 	Msg("Finished creating %d sound sources. Duration: %d ms", s_sources.size() - sizeBefore, T.GetElapsed_ms());
