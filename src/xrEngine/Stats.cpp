@@ -197,19 +197,18 @@ void CStats::ShowXrThread()
 	{
 		if (thread.debug_info)
 		{
-			float color_result = thread.ms_time/25;
+			float color_result = thread.GetTimeMs()/25;
 			clamp(color_result, 0.f, 1.f);
 
 			const float revers_color_result = 1.f - color_result;
 
 			pFontXrThread->SetColor(color_rgba(u32(255 * color_result), u32(255 * revers_color_result), 0, 255));
 
-			pFontXrThread->OutNext("Thread: Name[%s], ID[%d], time[%0.4f ms]", thread.Name(), thread.ID(), thread.ms_time);
+			pFontXrThread->OutNext("Thread: Name[%s], ID[%d], time[%0.4f ms]", thread.Name(), thread.ID(), thread.GetTimeMs());
 			pFontXrThread->OnRender();
 		}
 	});
 }
-
 
 void CStats::OnDeviceCreate()
 {

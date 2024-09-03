@@ -17,7 +17,7 @@ xrThread::~xrThread()
 		Stop();
 }
 
-void xrThread::worker_main()
+void xrThread::worker_main(stop_token s_token)
 {
 	thread_id = GetCurrentThreadId();
 	
@@ -31,29 +31,23 @@ void xrThread::worker_main()
 		Msg("~ A previous call to CoInitializeEx defined the concurrency model for the thread[%s] ID[%d] as a multithreaded apartment (MTA).\n\
 		It may also indicate that there has been a change from a neutral-flow module to a single-threaded module.", thread_name.c_str(), thread_id);
 	}
-
+	
 	if (thread_infinity)
 	{
-		while (true)
+		while (!s_token.stop_requested())
 		{
-			if (thread_state != dsOK)
+			if (thread_state == dsSleep)
 			{
-				if (thread_state != dsExit)
-				{
-					Sleep(10);
-					continue;
-				}
+				this_thread::yield();
+				this_thread::sleep_for(100ms);
+				continue;
 			}
 
 			if (thread_locked)
 				process.Wait();
 
 			if (thread_state == dsExit)
-			{
-				Msg("* Stop %s ID %d", thread_name.c_str(), thread_id);
-				done.Set();
 				break;
-			}
 
 			timer.Start();
 
@@ -66,8 +60,8 @@ void xrThread::worker_main()
 				done.Set();
 		}
 
-		if (thread_locked)
-			done.Set();
+		Msg("* Stop %s ID %d", thread_name.c_str(), thread_id);
+		done.Set();
 	}
 	else
 	{
@@ -102,7 +96,9 @@ void xrThread::Init(function<void()> &&fn, ParallelState state)
 		b_init = true;
 		all_obj_thread.push_back(move(this));
 
-		Thread = new jthread{ [this]() { worker_main(); } };
+		Thread = new jthread{ [this](stop_token s_token) -> void {
+			worker_main(s_token);
+		}};
 
 		global_parallel = state;
 	}
@@ -141,13 +137,10 @@ void xrThread::Wait() const
 
 void xrThread::StartWait() const
 {
-	if (thread_locked)
+	if (thread_locked && thread_state == dsOK)
 	{
-		if (thread_state == dsOK)
-		{
-			process.Set();
-			done.Wait();
-		}
+		process.Set();
+		done.Wait();
 	}
 }
 
@@ -191,6 +184,11 @@ void xrThread::Stop()
 		Thread->request_stop();
 		xr_delete(Thread);
 	}
+}
+
+float xrThread::GetTimeMs() const
+{
+	return ms_time;
 }
 
 void xrThread::id_main_thread(DWORD id)

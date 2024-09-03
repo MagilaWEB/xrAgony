@@ -20,23 +20,19 @@ class XRCORE_API xrThread
 	DWORD thread_id{ 0 };
 	Event process;
 	Event done;
-	std::jthread* Thread;
+	std::jthread* Thread{ nullptr };
 	bool thread_infinity{ false };
 	bool thread_locked{ false };
-	bool b_init{ false };
-	bool send_local_state{ false };
-	
-	bool global_parallel_process{ false };
-	
-	std::function<void()> update_function;
+	std::atomic_bool b_init{ false };
+	std::atomic_bool send_local_state{ false };
+	std::atomic_bool global_parallel_process{ false };
+
+	std::atomic<float> ms_time{ 0.f };
 
 	static IC DWORD main_thread_id;
 	static IC xr_list<xrThread*> all_obj_thread;
 
 public:
-	xrThread(const LPCSTR name, bool infinity = false, bool locked = false);
-	~xrThread();
-
 	enum ThreadState
 	{
 		dsOK = 0,
@@ -51,19 +47,24 @@ public:
 		sParalelRender
 	};
 	
-	float ms_time{ 0.f };
-	bool debug_info{ true };
-
 private:
 	ParallelState global_parallel{ sParalelNone };
-	ThreadState thread_state{ dsSleep };
+	std::atomic<ThreadState> thread_state{ dsSleep };
 
+	std::function<void()> update_function;
+
+private:
 	void g_State(const ThreadState new_state);
 
 	//Main function for worker thread.
-	void worker_main();
+	void worker_main(std::stop_token s_token);
 
 public:
+	xrThread(const LPCSTR name, bool infinity = false, bool locked = false);
+	~xrThread();
+	
+	bool debug_info{ true };
+
 	// Initializing and creating a Thread.
 	void Init(std::function<void()> &&fn, ParallelState state = sParalelNone);
 
@@ -99,6 +100,9 @@ public:
 
 	// Terminates the thread and destroys.
 	void Stop();
+
+	// Get the latest execution time in milliseconds.
+	float GetTimeMs() const;
 
 	// Remember the id of the main thread.
 	static void id_main_thread(DWORD id);
