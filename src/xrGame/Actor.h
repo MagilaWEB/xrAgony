@@ -75,7 +75,6 @@ class CActor : public CEntityAlive,
 
 private:
 	typedef CEntityAlive inherited;
-	u32 shedule_DT{ 0 };
 	float NET_Jump{ 0.f };
 
 public:

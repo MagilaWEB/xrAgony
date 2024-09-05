@@ -850,8 +850,6 @@ static bool bLook_cam_fp_zoom = false;
 BOOL g_b_COD_PickUpMode = FALSE;
 void CActor::UpdateCL()
 {
-	float dt = float(shedule_DT) / 1000.f;
-
 	// Check controls, create accel, prelimitary setup "mstate_real"
 
 	//----------- for E3 -----------------------------
@@ -859,7 +857,7 @@ void CActor::UpdateCL()
 	if (Level().CurrentControlEntity() == this)
 		//------------------------------------------------
 	{
-		g_cl_CheckControls(mstate_wishful, NET_SavedAccel, NET_Jump, dt);
+		g_cl_CheckControls(mstate_wishful, NET_SavedAccel, NET_Jump, Device.fTimeDelta);
 		{
 			/*
 			if (mstate_real & mcJump)
@@ -872,12 +870,12 @@ void CActor::UpdateCL()
 			}
 			*/
 		}
-		g_cl_Orientate(mstate_real, dt);
-		g_Orientate(mstate_real, dt);
+		g_cl_Orientate(mstate_real, Device.fTimeDelta);
+		g_Orientate(mstate_real, Device.fTimeDelta);
 
-		g_Physics(NET_SavedAccel, NET_Jump, dt);
+		g_Physics(NET_SavedAccel, NET_Jump, Device.fTimeDelta);
 
-		g_cl_ValidateMState(dt, mstate_wishful);
+		g_cl_ValidateMState(Device.fTimeDelta, mstate_wishful);
 		g_SetAnimation(mstate_real);
 
 		// Check for game-contacts
@@ -893,7 +891,7 @@ void CActor::UpdateCL()
 		// Dropping
 		if (b_DropActivated)
 		{
-			f_DropPower += dt * 0.1f;
+			f_DropPower += Device.fTimeDelta * 0.1f;
 			clamp(f_DropPower, 0.f, 1.f);
 		}
 		else
@@ -919,11 +917,11 @@ void CActor::UpdateCL()
 			//			NET_SavedAccel = NET_Last.p_accel;
 			//			mstate_real = mstate_wishful = NET_Last.mstate;
 
-			g_sv_Orientate(mstate_real, dt);
-			g_Orientate(mstate_real, dt);
-			g_Physics(NET_SavedAccel, NET_Jump, dt);
+			g_sv_Orientate(mstate_real, Device.fTimeDelta);
+			g_Orientate(mstate_real, Device.fTimeDelta);
+			g_Physics(NET_SavedAccel, NET_Jump, Device.fTimeDelta);
 			if (!m_bInInterpolation)
-				g_cl_ValidateMState(dt, mstate_wishful);
+				g_cl_ValidateMState(Device.fTimeDelta, mstate_wishful);
 			g_SetAnimation(mstate_real);
 
 			set_state_box(NET_Last.mstate);
@@ -1168,7 +1166,6 @@ void CActor::shedule_Update(u32 DT)
 	}
 
 	clamp(DT, 0u, 100u);
-	shedule_DT = DT;
 
 	inherited::shedule_Update(DT);
 

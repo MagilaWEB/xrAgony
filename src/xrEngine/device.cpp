@@ -16,6 +16,8 @@
 #include "xr_input.h"
 #include "splash.h"
 
+using namespace std;
+
 ENGINE_API CRenderDevice Device;
 ENGINE_API CLoadScreenRenderer load_screen_renderer;
 ENGINE_API xr_list<fastdelegate::FastDelegate<bool()>> g_loading_events;
@@ -95,7 +97,7 @@ BOOL CRenderDevice::Begin()
 	if (::Render->GetDeviceState() == DeviceState::Lost)
 	{
 		// If the device was lost, do not render until we get it back
-		Sleep(33);
+		this_thread::sleep_for(33ms);
 		return FALSE;
 	}
 
@@ -301,7 +303,7 @@ void CRenderDevice::GlobalUpdate()
 			const float updateDelta = 1000.f / limit;
 			const float elapsed = dwTime.GetElapsed_sec() * 1000;
 			if (elapsed < updateDelta)
-				Sleep(DWORD(updateDelta - elapsed));
+				this_thread::sleep_for(chrono::milliseconds(long long(updateDelta - elapsed)));
 
 			dwTime.Start();
 		}
@@ -368,7 +370,7 @@ void CRenderDevice::message_loop()
 			continue;
 		}
 
-		Sleep(30);
+		this_thread::sleep_for(30ms);
 	}
 
 	xrThread::GlobalState(xrThread::dsExit);

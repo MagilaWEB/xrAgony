@@ -57,6 +57,12 @@ public:
 		return duration_cast<milliseconds>(getElapsedTime()).count();
 	}
 
+	u64 GetElapsed_mi() const
+	{
+		using namespace std::chrono;
+		return duration_cast<microseconds>(getElapsedTime()).count();
+	}
+
 	float GetElapsed_sec() const
 	{
 		using namespace std::chrono;
