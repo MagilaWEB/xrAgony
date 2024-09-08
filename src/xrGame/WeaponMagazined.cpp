@@ -122,13 +122,13 @@ void CWeaponMagazined::Load(LPCSTR section)
 
 		//Alundaio: LAYERED_SND_SHOOT Silencer
 #ifdef LAYERED_SND_SHOOT
-		m_layered_sounds.LoadSound(section, "snd_silncer_shot", "sndSilencerShot", false, m_eSoundShot);
-		if (WeaponSoundExist(section, "snd_silncer_shot_actor"))
-			m_layered_sounds.LoadSound(section, "snd_silncer_shot_actor", "sndSilencerShotActor", false, m_eSoundShot);
+		m_layered_sounds.LoadSound(section, "snd_silencer_shot", "sndSilencerShot", false, m_eSoundShot);
+		if (WeaponSoundExist(section, "snd_silencer_shot_actor"))
+			m_layered_sounds.LoadSound(section, "snd_silencer_shot_actor", "sndSilencerShotActor", false, m_eSoundShot);
 #else
-		m_sounds.LoadSound(section, "snd_silncer_shot", "sndSilencerShot", false, m_eSoundShot);
-		if (WeaponSoundExist(section, "snd_silncer_shot_actor"))
-			m_sounds.LoadSound(section, "snd_silncer_shot_actor", "sndSilencerShotActor", false, m_eSoundShot);
+		m_sounds.LoadSound(section, "snd_silencer_shot", "sndSilencerShot", false, m_eSoundShot);
+		if (WeaponSoundExist(section, "snd_silencer_shot_actor"))
+			m_sounds.LoadSound(section, "snd_silencer_shot_actor", "sndSilencerShotActor", false, m_eSoundShot);
 #endif
 		//-Alundaio
 	}
@@ -648,7 +648,7 @@ void CWeaponMagazined::OnShot()
 		/*
 		if (strcmp(m_sSndShotCurrent.c_str(), "sndShot") == 0 && pSettings->line_exist(m_section_id, "snd_shoot_actor") && m_layered_sounds.FindSoundItem("sndShotActor", false))
 			m_layered_sounds.PlaySound("sndShotActor", get_LastFP(), H_Root(), !!GetHUDmode(), false, (u8)-1);
-		else if (strcmp(m_sSndShotCurrent.c_str(), "sndSilencerShot") == 0 && pSettings->line_exist(m_section_id, "snd_silncer_shot_actor")
+		else if (strcmp(m_sSndShotCurrent.c_str(), "sndSilencerShot") == 0 && pSettings->line_exist(m_section_id, "snd_silencer_shot_actor")
 			&& m_layered_sounds.FindSoundItem("sndSilencerShotActor", false))
 			m_layered_sounds.PlaySound("sndSilencerShotActor", get_LastFP(), H_Root(), !!GetHUDmode(), false, (u8)-1);
 		else
@@ -664,7 +664,7 @@ void CWeaponMagazined::OnShot()
 		/*
 		if (strcmp(m_sSndShotCurrent.c_str(), "sndShot") == 0 && pSettings->line_exist(m_section_id, "snd_shoot_actor")&& m_sounds.FindSoundItem("sndShotActor", false))
 			PlaySound("sndShotActor", get_LastFP(), (u8)(m_iShotNum - 1));
-		else if (strcmp(m_sSndShotCurrent.c_str(), "sndSilencerShot") == 0 && pSettings->line_exist(m_section_id, "snd_silncer_shot_actor") && m_sounds.FindSoundItem("sndSilencerShotActor", false))
+		else if (strcmp(m_sSndShotCurrent.c_str(), "sndSilencerShot") == 0 && pSettings->line_exist(m_section_id, "snd_silencer_shot_actor") && m_sounds.FindSoundItem("sndSilencerShotActor", false))
 			PlaySound("sndSilencerShotActor", get_LastFP(), (u8)(m_iShotNum - 1));
 		else
 		*/
@@ -1586,13 +1586,13 @@ bool CWeaponMagazined::install_upgrade_impl(LPCSTR section, bool test)
 		result |= process_if_exists_set(section, "silencer_flame_particles", &CInifile::r_string, m_sSilencerFlameParticles, test);
 		result |= process_if_exists_set(section, "silencer_smoke_particles", &CInifile::r_string, m_sSilencerSmokeParticles, test);
 
-		result2 = process_if_exists_set(section, "snd_silncer_shot", &CInifile::r_string, str, test);
+		result2 = process_if_exists_set(section, "snd_silencer_shot", &CInifile::r_string, str, test);
 		if (result2 && !test)
 		{
 #ifdef LAYERED_SND_SHOOT
-			m_layered_sounds.LoadSound(section, "snd_silncer_shot", "sndSilencerShot", false, m_eSoundShot);
+			m_layered_sounds.LoadSound(section, "snd_silencer_shot", "sndSilencerShot", false, m_eSoundShot);
 #else
-			m_sounds.LoadSound(section, "snd_silncer_shot", "sndSilencerShot", false, m_eSoundShot);
+			m_sounds.LoadSound(section, "snd_silencer_shot", "sndSilencerShot", false, m_eSoundShot);
 #endif
 		}
 		result |= result2;
