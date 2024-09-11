@@ -96,13 +96,15 @@ void CGameFont::InitFile()
 
 	FS.update_path(Data.FileFullPath, _game_fonts_, NameWithExt);
 
-	if (!CLocatorAPI::fileWinApi::FileExists(Data.FileFullPath))
+	IReader* FontFile = FS.r_open(Data.FileFullPath);
+	if (FontFile == nullptr)
 	{
 		xr_sprintf(NameWithExt, "%s\\%s.ttf", "rus", Data.File);
 		FS.update_path(Data.FileFullPath, _game_fonts_, NameWithExt);
 	}
 
-	if (!CLocatorAPI::fileWinApi::FileExists(Data.FileFullPath))
+	FontFile = FS.r_open(Data.FileFullPath);
+	if (FontFile == nullptr)
 	{
 		Msg("! Can't open font file [%s].", Data.FileFullPath);
 
@@ -110,10 +112,11 @@ void CGameFont::InitFile()
 		FS.update_path(Data.FileFullPath, _game_fonts_, NameWithExt);
 	}
 
-	if (!CLocatorAPI::fileWinApi::FileExists(Data.FileFullPath))
+	FontFile = FS.r_open(Data.FileFullPath);
+	if (FontFile == nullptr)
 		FATAL_F("The font could not be found [%s]", Data.FileFullPath);
 
-	FT_Error FTError = FT_New_Face(FreetypeLib, Data.FileFullPath, 0, &OurFont);
+	FT_Error FTError = FT_New_Memory_Face(FreetypeLib, (FT_Byte*)FontFile->pointer(), FontFile->length(), 0, &OurFont);
 	R_ASSERT3(FTError == 0, "FT_New_Memory_Face return error", Data.FileFullPath);
 }
 

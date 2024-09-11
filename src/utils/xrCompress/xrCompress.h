@@ -1,29 +1,29 @@
 #pragma once
-#ifndef XR_COMPRESS_H_INCLUDED
-#define XR_COMPRESS_H_INCLUDED
 
-class xrCompressor
+class xrCompressor final
 {
-	bool bnoFast;
-	bool bStoreFiles;
-	IWriter* fs_pack_writer;
+	size_t corrent_thread{ 0 };
+	size_t max_thread{ 0 };
 	CMemoryWriter fs_desc;
-	shared_str target_name;
-	IReader* pPackHeader;
-	CInifile* config_ltx;
-	xr_vector<char*>* files_list;
-	u32 XRP_MAX_SIZE;
-	u32 XRP_MAX_SIZE1;
-	u32 XRP_MAX_SIZE2;
-	u32 XRP_MAX_SIZE3;
-	u32 XRP_MAX_SIZE4;
-	u32 XRP_MAX_SIZE5;
-	int xrap_1536;
-	int xrap_1024;
-	int xrap_512;
-	xr_vector<char*>* folders_list;
 
-	// #include<windows.h>
+	bool multi_thread{ false };
+	std::atomic_bool bnoFast{ false };
+	std::atomic_bool bStoreFiles{ false };
+	IWriter* fs_pack_writer{ nullptr };
+
+	shared_str compress_forder{ nullptr };
+	shared_str target_name{ nullptr };
+	shared_str file_name{ nullptr };
+
+	IReader* pPackHeader{ nullptr };
+	CInifile* config_ltx{ nullptr };
+	xr_vector<LPCSTR> files_list;
+	xr_vector<LPCSTR> folders_list;
+
+	xrCriticalSection lock;
+
+	size_t XRP_MAX_SIZE{ 0 };
+
 	enum ConsoleColor
 	{
 		Black = 0,
@@ -47,52 +47,61 @@ class xrCompressor
 	struct ALIAS
 	{
 		LPCSTR path;
-		u32 crc;
-		u32 c_ptr;
-		u32 c_size_real;
-		u32 c_size_compressed;
+		size_t crc{ 0 };
+		size_t c_ptr{ 0 };
+		size_t c_size_real{ 0 };
+		size_t c_size_compressed{ 0 };
 	};
-	xr_multimap<u32, ALIAS> aliases;
+	xr_multimap<size_t, ALIAS> aliases;
 
 	xr_vector<shared_str> exclude_exts;
 	bool testSKIP(LPCSTR path);
-	ALIAS* testALIAS(IReader* base, u32 crc, u32& a_tests);
+	ALIAS* testALIAS(IReader* base, size_t crc, size_t& a_tests);
 	bool testEqual(LPCSTR path, IReader* base);
-	bool testVFS(LPCSTR path);
-	bool IsFolderAccepted(CInifile& ltx, LPCSTR path, BOOL& recurse);
+	bool testVFS(LPCSTR path) const;
+	bool IsFolderAccepted(LPCSTR path);
 
 	void GatherFiles(LPCSTR folder);
-	void XrpLTX(CInifile& ini);
 	void write_file_header(
-		LPCSTR file_name, const u32& crc, const u32& ptr, const u32& size_real, const u32& size_compressed);
+		LPCSTR file_name, const size_t& crc, const size_t& ptr, const size_t& size_real, const size_t& size_compressed);
 	void ClosePack();
 	void OpenPack(LPCSTR tgt_folder, int num);
 
-	void PerformWork();
-
 	void CompressOne(LPCSTR path);
 
-	u32 bytesSRC;
-	u32 bytesDST;
-	u32 filesTOTAL;
-	u32 filesSKIP;
-	u32 filesVFS;
-	u32 filesALIAS;
+	std::atomic_uint bytesSRC{ 0 };
+	std::atomic_uint bytesDST{ 0 };
+	std::atomic_uint filesTOTAL{ 0 };
+	std::atomic_uint filesSKIP{ 0 };
+	std::atomic_uint filesVFS{ 0 };
+	std::atomic_uint filesALIAS{ 0 };
 	CStatTimer t_compress;
-	u8* c_heap;
-	u32 dwTimeStart;
+	u8* c_heap{ nullptr };
+	std::atomic_uint dwTimeStart{ 0 };
 
 public:
-	xrCompressor();
+	xrCompressor(size_t num_thread, shared_str ltx, size_t max_threads);
 	~xrCompressor();
+	void PerformWork();
 	void SetFastMode(bool b) { bnoFast = b; }
 	void SetStoreFiles(bool b) { bStoreFiles = b; }
-	void SetMaxVolumeSize(u32 sz) { XRP_MAX_SIZE = sz; }
+	void SetMaxVolumeSize(size_t sz) { XRP_MAX_SIZE = sz; }
 	void SetTargetName(LPCSTR n) { target_name = n; }
+	void SetFileName(LPCSTR n) { file_name = n; }
+	void SetCompressForder(LPCSTR n) { compress_forder = n; }
 	void SetPackHeaderName(LPCSTR n);
 
-	void ProcessLTX(CInifile& ini);
+	void ProcessLTX();
 	void ProcessTargetFolder();
 };
 
-#endif
+static xrCriticalSection lock_print;
+
+template <typename... Args>
+void console_print(Args&&... args)
+{
+	xrCriticalSection::raii mt{ lock_print };
+	Msg(std::forward<Args>(args)...);
+	printf(std::forward<Args>(args)...);
+	printf("\n");
+}
