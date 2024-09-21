@@ -1,26 +1,24 @@
 #pragma once
+#include "xrCompressPack.h"
+#include "../xrCore/FTimer.h"
 
 class xrCompressor final
 {
-	size_t corrent_thread{ 0 };
-	size_t max_thread{ 0 };
-	CMemoryWriter fs_desc;
+	CInifile* config_ltx{ nullptr };
 
 	bool multi_thread{ false };
+
 	std::atomic_bool bnoFast{ false };
 	std::atomic_bool bStoreFiles{ false };
-	IWriter* fs_pack_writer{ nullptr };
 
-	shared_str compress_forder{ nullptr };
 	shared_str target_name{ nullptr };
 	shared_str file_name{ nullptr };
 
-	IReader* pPackHeader{ nullptr };
-	CInifile* config_ltx{ nullptr };
 	xr_vector<LPCSTR> files_list;
 	xr_vector<LPCSTR> folders_list;
-
-	xrCriticalSection lock;
+	xr_vector<shared_str> exclude_exts;
+	xr_vector<xrCompressorPack*> PackCompress;
+	CInifile::Sect filter_folders;
 
 	size_t XRP_MAX_SIZE{ 0 };
 
@@ -44,55 +42,92 @@ class xrCompressor final
 		White = 15
 	};
 
-	struct ALIAS
-	{
-		LPCSTR path;
-		size_t crc{ 0 };
-		size_t c_ptr{ 0 };
-		size_t c_size_real{ 0 };
-		size_t c_size_compressed{ 0 };
-	};
-	xr_multimap<size_t, ALIAS> aliases;
-
-	xr_vector<shared_str> exclude_exts;
 	bool testSKIP(LPCSTR path);
-	ALIAS* testALIAS(IReader* base, size_t crc, size_t& a_tests);
-	bool testEqual(LPCSTR path, IReader* base);
-	bool testVFS(LPCSTR path) const;
 	bool IsFolderAccepted(LPCSTR path);
 
 	void GatherFiles(LPCSTR folder);
-	void write_file_header(
-		LPCSTR file_name, const size_t& crc, const size_t& ptr, const size_t& size_real, const size_t& size_compressed);
-	void ClosePack();
-	void OpenPack(LPCSTR tgt_folder, int num);
 
-	void CompressOne(LPCSTR path);
+	//std::atomic_uint bytesSRC{ 0 };
+	//std::atomic_uint bytesDST{ 0 };
+	//std::atomic_uint filesTOTAL{ 0 };
+	//std::atomic_uint filesSKIP{ 0 };
+	//std::atomic_uint filesVFS{ 0 };
+	//std::atomic_uint filesALIAS{ 0 };
+	//size_t GatherFilesSIZE{ 0 };
+	//u8* c_heap{ nullptr };
 
-	std::atomic_uint bytesSRC{ 0 };
-	std::atomic_uint bytesDST{ 0 };
-	std::atomic_uint filesTOTAL{ 0 };
-	std::atomic_uint filesSKIP{ 0 };
-	std::atomic_uint filesVFS{ 0 };
-	std::atomic_uint filesALIAS{ 0 };
-	CStatTimer t_compress;
-	u8* c_heap{ nullptr };
-	std::atomic_uint dwTimeStart{ 0 };
+	//CTimer timer;
+public:
+	IC static xr_list<xrCompressor*> parallel_Compress;
 
 public:
-	xrCompressor(size_t num_thread, shared_str ltx, size_t max_threads);
+	xrCompressor(shared_str ltx);
 	~xrCompressor();
-	void PerformWork();
-	void SetFastMode(bool b) { bnoFast = b; }
-	void SetStoreFiles(bool b) { bStoreFiles = b; }
-	void SetMaxVolumeSize(size_t sz) { XRP_MAX_SIZE = sz; }
-	void SetTargetName(LPCSTR n) { target_name = n; }
-	void SetFileName(LPCSTR n) { file_name = n; }
-	void SetCompressForder(LPCSTR n) { compress_forder = n; }
+
+	IC bool IsMultiThread() const
+	{
+		return multi_thread;
+	};
+
+	IC void SetFastMode(bool b)
+	{
+		bnoFast = b;
+	};
+
+	IC bool GetFastMode() const
+	{
+		return bnoFast;
+	};
+
+	IC void SetStoreFiles(bool b) {
+		bStoreFiles = b;
+	};
+
+	IC bool GetStoreFiles() const
+	{
+		return bStoreFiles;
+	};
+
+	IC void SetMaxVolumeSize(size_t sz)
+	{
+		XRP_MAX_SIZE = sz;
+	};
+
+	IC void SetTargetName(LPCSTR n)
+	{
+		target_name = n;
+	};
+
+	IC LPCSTR GetTargetName() const
+	{
+		return target_name.c_str();
+	};
+
+	void SetFileName(LPCSTR n)
+	{
+		file_name = n;
+	}
+
+	LPCSTR GetFileName() const
+	{
+		return file_name.c_str();
+	}
+
+	IC auto& GetFolders()
+	{
+		return folders_list;
+	}
+
+	IC size_t MAX_SIZE() const
+	{
+		return XRP_MAX_SIZE;
+	};
+
 	void SetPackHeaderName(LPCSTR n);
 
 	void ProcessLTX();
 	void ProcessTargetFolder();
+	void PerformWork();
 };
 
 static xrCriticalSection lock_print;

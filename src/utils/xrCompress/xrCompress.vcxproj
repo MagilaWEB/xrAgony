@@ -77,10 +77,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="xrCompress.cpp" />
     <ClCompile Include="xrCompressDifference.cpp" />
+    <ClCompile Include="xrCompressPack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="xrCompress.h" />
+    <ClInclude Include="xrCompressPack.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)xrCore\xrCore.vcxproj">

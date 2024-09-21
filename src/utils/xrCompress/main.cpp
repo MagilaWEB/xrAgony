@@ -5,8 +5,7 @@
 #include <iostream>
 using namespace std;
 namespace fs = filesystem;
-
-constexpr u32 thread_size = 12;
+bool send_console_prosses{ true };
 
 #ifndef MOD_COMPRESS
 extern int ProcessDifference();
@@ -17,9 +16,6 @@ int __cdecl main(int argc, char* argv[])
 	xrDebug::Initialize();
 	Core.Initialize("xrCompress", 0, FALSE);
 	console_print("\n\nXrCompressor (modifided ""xrAgony)\n----------------------------------------------------------------------------");
-
-	static tbb::task_group parallel;
-	static xr_list<xrCompressor*> parallel_Compress;
 
 	LPCSTR params = GetCommandLine();
 
@@ -63,42 +59,17 @@ int __cdecl main(int argc, char* argv[])
 		FS._initialize(CLocatorAPI::flTargetFolderOnly, folder);
 		FS.append_path("$working_folder$", "", 0, false);
 
-		size_t max_threads{ 0 };
-		auto send = [&](size_t thread_count, shared_str ltx_name)
+		send_console_prosses = NULL == strstr(params, "-nosend_prosses");
+
+		CTimer time_global;
+		time_global.Start();
+
+		auto send = [&](shared_str ltx_name)
 		{
-			xrCompressor*& C = parallel_Compress.emplace_back(new xrCompressor{ thread_count, ltx_name, max_threads });
+			xrCompressor*& C = xrCompressor::parallel_Compress.emplace_back(new xrCompressor{ltx_name});
 			C->SetStoreFiles(NULL != strstr(params, "-store"));
 			C->SetFastMode(NULL != strstr(params, "-nocompress"));
 			C->SetTargetName(argv[1]);
-			C->SetFileName(argv[1]);
-			C->ProcessLTX();
-		};
-
-		auto melti_thread = [&max_threads](shared_str ltx_name) -> const bool
-		{
-			if (std::thread::hardware_concurrency() > thread_size)
-				max_threads = thread_size;
-			else
-				max_threads = std::thread::hardware_concurrency();
-
-			CInifile* ini = new CInifile(ltx_name.c_str());
-			const bool melti_thread = ini->r_bool("header", "multi_thread");
-			if (ini->line_exist("header", "max_threads"))
-			{
-				const u32 thread_count = ini->r_u32("header", "max_threads");
-				if (thread_count <= max_threads)
-					max_threads = thread_count;
-				else
-				{
-					console_print("ERROR: It is not possible to set the number of threads to [%d] so currently it is possible to set only [%d]!",
-						thread_count, max_threads);
-					cin.get();
-				}
-
-			}
-			xr_delete(ini);
-
-			return melti_thread;
 		};
 
 		LPCSTR p = strstr(params, "-ltx");
@@ -109,11 +80,7 @@ int __cdecl main(int argc, char* argv[])
 
 			console_print("Processing %s...", ltx_name);
 
-			if (melti_thread(ltx_name))
-				for (size_t it = 0; it < max_threads; it++)
-					send(it, ltx_name);
-			else
-				send(0, ltx_name);
+			send(ltx_name);
 		}
 		else
 		{
@@ -127,27 +94,24 @@ int __cdecl main(int argc, char* argv[])
 					path_ltx.append(entry.path().filename().string());
 			
 					console_print("\nProcessing %s...\n", path_ltx.string().c_str());
-
-					if (melti_thread(path_ltx.string().c_str()))
-						for (size_t it = 0; it < max_threads; it++)
-							send(it, path_ltx.string().c_str());
-					else
-						send(0, path_ltx.string().c_str());
+					send(path_ltx.string().c_str());
 				}
 			}
 		}
 
-		for (auto& compress : parallel_Compress)
+		tbb::parallel_for_each(xrCompressor::parallel_Compress, [&](xrCompressor* compress)
 		{
-			parallel.run([compress]() {
-				compress->PerformWork();
-			});
-		}
+			compress->ProcessLTX();
+			compress->PerformWork();
+		});
 
-		parallel.wait();
-
-		for (auto& compress : parallel_Compress)
+		for (auto& compress : xrCompressor::parallel_Compress)
 			xr_delete(compress);
+
+		console_print("--- Total execution time [%3.2f sec, %3.2f min]! ---",
+			time_global.GetElapsed_sec(), time_global.GetElapsed_sec() / 60);
+
+		console_print("--- Please press any key to close the window! ---");
 
 		/*LPCSTR p = strstr(params, "-ltx");
 		if (0 != p)
@@ -169,7 +133,7 @@ int __cdecl main(int argc, char* argv[])
 	}
 
 	cin.get();
-	parallel_Compress.clear();
+	xrCompressor::parallel_Compress.clear();
 
 	Core._destroy();
 	return 0;
