@@ -6,30 +6,14 @@ using namespace std;
 
 extern bool send_console_prosses;
 
-xrCompressorPack::xrCompressorPack(CInifile* _config, xrCompressor* _compressor, size_t _num_thread)
+xrCompressorPack::xrCompressorPack(xrCompressor* _compressor, size_t _num_thread)
 {
-	config = move(_config);
 	compressor = move(_compressor);
 	num_thread = _num_thread;
-
-	string128 s_num;
-	strconcat(
-		sizeof(name_path),
-		name_path,
-		compressor->GetTargetName(),
-		"\\..\\database\\",
-		compressor->GetFileName(),
-		num_thread ? "_" : "",
-		num_thread ? xr_itoa(num_thread, s_num, 10) : "",
-		".db"
-	);
-
-	xr_unlink(name_path);
 }
 
 xrCompressorPack::~xrCompressorPack()
 {
-	config = nullptr;
 	compressor = nullptr;
 
 	bytesSRC = 0;
@@ -48,8 +32,8 @@ void xrCompressorPack::StartCompress()
 		return;
 
 	//string256 caption{ "" };
-
-	OpenPack();
+	size_t num = 0;
+	OpenPack(num++);
 
 	for (const auto& folder : compressor->GetFolders())
 		write_file_header(folder, 0, 0, 0, 0);
@@ -65,11 +49,11 @@ void xrCompressorPack::StartCompress()
 		//xr_sprintf(caption, "Compress files: %d/%d - %d%%", file_it, files.size(), (file_it * 100) / files_list.size());
 		//SetWindowText(GetConsoleWindow(), caption);
 
-		//if (fs_pack_writer->tell() > compressor->MAX_SIZE()) //XRP_MAX_SIZE
-		//{
-		//	ClosePack();
-		//	OpenPack(pack_num++);
-		//}
+		if (fs_pack_writer->tell() > compressor->MAX_SIZE()) //XRP_MAX_SIZE
+		{
+			ClosePack();
+			OpenPack(num++);
+		}
 
 		CompressFile(file_path);
 	}
@@ -330,9 +314,29 @@ xrCompressorPack::ALIAS* xrCompressorPack::testALIAS(IReader* base, size_t crc)
 	return nullptr;
 }
 
-void xrCompressorPack::OpenPack()
+void xrCompressorPack::OpenPack(size_t num)
 {
 	VERIFY(nullptr == fs_pack_writer);
+
+	string128 s_thread;
+	string128 s_num;
+	string128 num_path;
+
+	strconcat(sizeof(num_path),
+		num_path,
+		num_thread ? "_" : "",
+		num_thread ? xr_itoa(num_thread, s_thread, 10) : "",
+		num ? "_" : "",
+		num ? xr_itoa(num, s_num, 10) : ""
+	);
+
+	xr_sprintf(	name_path, "%s\\..\\database\\%s%s.db",
+		compressor->GetTargetName(),
+		compressor->GetFileName(),
+		num_path
+	);
+
+	xr_unlink(name_path);
 
 	console_print("Start compress to file [%s]", name_path);
 	fs_pack_writer = FS.w_open(name_path);
@@ -347,10 +351,10 @@ void xrCompressorPack::OpenPack()
 
 	timer.Start();
 
-	if (config && config->section_exist("header"))
+	if (compressor->GetConfig()->section_exist("header"))
 	{
 		CMemoryWriter W;
-		CInifile::Sect& S = config->r_section("header");
+		CInifile::Sect& S = compressor->GetConfig()->r_section("header");
 		string4096 buff;
 		xr_sprintf(buff, "[%s]", S.Name.c_str());
 		W.w_string(buff);

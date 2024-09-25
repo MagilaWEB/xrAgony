@@ -6,7 +6,6 @@ class xrCompressorPack final
 {
 	CMemoryWriter fs_desc;
 
-	CInifile* config{ nullptr };
 	xrCompressor* compressor{ nullptr };
 	size_t num_thread{ 0 };
 
@@ -38,7 +37,7 @@ class xrCompressorPack final
 	xr_map<size_t, ALIAS> aliases;
 
 public:
-	xrCompressorPack(CInifile* _config, xrCompressor* _compressor, size_t _num_thread);
+	xrCompressorPack(xrCompressor* _compressor, size_t _num_thread);
 	~xrCompressorPack();
 
 	void StartCompress();
@@ -62,6 +61,6 @@ private:
 	void write_file_header(LPCSTR folder, const size_t& crc, const size_t& ptr, const size_t& size_real, const size_t& size_compressed);
 	bool testVFS(LPCSTR path) const;
 	ALIAS* testALIAS(IReader* base, size_t crc);
-	void OpenPack();
+	void OpenPack(size_t num);
 	void ClosePack();
 };

@@ -8,46 +8,25 @@ extern bool send_console_prosses;
 
 xrCompressor::xrCompressor(shared_str ltx)
 {
-	LPCSTR params = GetCommandLine();
-
-	if (strstr(params, "-128"))
-	{
-		XRP_MAX_SIZE = 1024 * 1024 * 128; // bytes (128Mb)
-		console_print("\nINFO: Pack in ~128mb");
-	}
-
-	if (strstr(params, "-512"))
-	{
-		XRP_MAX_SIZE = 1024 * 1024 * 512; // bytes (512Mb)
-		console_print("\nINFO: Pack in ~512mb");
-	}
-
-	if (strstr(params, "-256"))
-	{
-		XRP_MAX_SIZE = 1024 * 1024 * 256; // bytes (256Mb)
-		console_print("\nINFO: Pack in ~256mb");
-	}
-
-	if (strstr(params, "-640"))
-	{
-		XRP_MAX_SIZE = 1024 * 1024 * 640; // bytes (640Mb)
-		console_print("\nINFO: Pack in ~640mb");
-	}
-
-	if (strstr(params, "-768"))
-	{
-		XRP_MAX_SIZE = 1024 * 1024 * 768; // bytes (768Mb)
-
-		console_print("\nINFO: Pack in ~768mb");
-	}
-
-	if (strstr(params, "-1024"))
-	{
-		XRP_MAX_SIZE = 1024 * 1024 * 1024; // bytes (1024Mb)
-		console_print("\nINFO: Pack in ~1024mb");
-	}
-
 	config_ltx = new CInifile(ltx.c_str());
+
+	if (config_ltx->line_exist("header", "max_size"))
+	{
+		const size_t max_size = config_ltx->r_u32("header", "max_size");
+		XRP_MAX_SIZE = 1024 * 1024 * max_size;
+		console_print("\nINFO: Pack in ~%dmb", max_size);
+	}
+	else
+		XRP_MAX_SIZE = 1024 * 1024 * 1024; // bytes (1024Mb)
+
+	if (config_ltx->line_exist("header", "thread_max_size_memory"))
+	{
+		const size_t max_size = config_ltx->r_u32("header", "thread_max_size_memory");
+		THREAD_MAX_MEMORY_SIZE = 1024 * 1024 * max_size;
+		console_print("\nINFO: Pack in threads ~%dmb", max_size);
+	}
+	else
+		THREAD_MAX_MEMORY_SIZE = 1024 * 1024 * 128; // bytes (128Mb)
 
 	multi_thread = config_ltx->r_bool("header", "multi_thread");
 
@@ -159,13 +138,13 @@ void xrCompressor::PerformWork()
 {
 	if (IsMultiThread())
 	{
-		u32 count_compress = 0;
-		auto compress = PackCompress.emplace_back(new xrCompressorPack{ config_ltx, this, count_compress++ });
+		size_t count_compress = 0;
+		auto compress = PackCompress.emplace_back(new xrCompressorPack{ this, count_compress++ });
 
 		for (LPCSTR& file : files_list)
 		{
-			if (compress->GetGatherFilesSize() > MAX_SIZE())
-				compress = PackCompress.emplace_back(new xrCompressorPack{ config_ltx, this, count_compress++ });
+			if (compress->GetGatherFilesSize() > THREAD_MAX_MEMORY_SIZE)
+				compress = PackCompress.emplace_back(new xrCompressorPack{ this, count_compress++ });
 
 			compress->PushFile(file);
 		}
@@ -183,7 +162,7 @@ void xrCompressor::PerformWork()
 		return;
 	}
 
-	xrCompressorPack* compress = new xrCompressorPack{ config_ltx, this, 0 };
+	xrCompressorPack* compress = new xrCompressorPack{ this, 0 };
 
 	for (LPCSTR& file : files_list)
 		compress->PushFile(file);

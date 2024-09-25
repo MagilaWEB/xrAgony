@@ -19,6 +19,9 @@ int __cdecl main(int argc, char* argv[])
 
 	LPCSTR params = GetCommandLine();
 
+	CTimer time_global;
+	time_global.Start();
+
 #ifndef MOD_COMPRESS
 	if (strstr(params, "-diff"))
 	{
@@ -60,9 +63,6 @@ int __cdecl main(int argc, char* argv[])
 		FS.append_path("$working_folder$", "", 0, false);
 
 		send_console_prosses = NULL == strstr(params, "-nosend_prosses");
-
-		CTimer time_global;
-		time_global.Start();
 
 		auto send = [&](shared_str ltx_name)
 		{
@@ -108,11 +108,6 @@ int __cdecl main(int argc, char* argv[])
 		for (auto& compress : xrCompressor::parallel_Compress)
 			xr_delete(compress);
 
-		console_print("--- Total execution time [%3.2f sec, %3.2f min]! ---",
-			time_global.GetElapsed_sec(), time_global.GetElapsed_sec() / 60);
-
-		console_print("--- Please press any key to close the window! ---");
-
 		/*LPCSTR p = strstr(params, "-ltx");
 		if (0 != p)
 		{
@@ -131,6 +126,11 @@ int __cdecl main(int argc, char* argv[])
 			C.ProcessTargetFolder();
 		}*/
 	}
+
+	console_print("--- Total execution time [%3.2f sec, %3.2f min]! ---",
+		time_global.GetElapsed_sec(), time_global.GetElapsed_sec() / 60);
+
+	console_print("--- Please press any key to close the window! ---");
 
 	cin.get();
 	xrCompressor::parallel_Compress.clear();

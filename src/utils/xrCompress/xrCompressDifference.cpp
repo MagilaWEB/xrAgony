@@ -109,14 +109,14 @@ int ProcessDifference()
 		return 3;
 	}
 
-	CLocatorAPI* FS_new = NULL;
-	CLocatorAPI* FS_old = NULL;
+	CLocatorAPI* FS_new = nullptr;
+	CLocatorAPI* FS_old = nullptr;
 
-	xr_vector<char*>* file_list_old = NULL;
-	xr_vector<char*>* folder_list_old = NULL;
+	xr_vector<char*>* file_list_old = nullptr;
+	xr_vector<char*>* folder_list_old = nullptr;
 
-	xr_vector<char*>* file_list_new = NULL;
-	xr_vector<char*>* folder_list_new = NULL;
+	xr_vector<char*>* file_list_new = nullptr;
+	xr_vector<char*>* folder_list_new = nullptr;
 
 	sscanf(strstr(params, "-diff ") + 6, "%[^ ] ", new_folder);
 	sscanf(strstr(params, "-diff ") + 6 + xr_strlen(new_folder) + 1, "%[^ ] ", old_folder);

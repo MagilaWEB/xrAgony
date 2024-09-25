@@ -21,6 +21,7 @@ class xrCompressor final
 	CInifile::Sect filter_folders;
 
 	size_t XRP_MAX_SIZE{ 0 };
+	size_t THREAD_MAX_MEMORY_SIZE{ 0 };
 
 	enum ConsoleColor
 	{
@@ -63,6 +64,11 @@ public:
 public:
 	xrCompressor(shared_str ltx);
 	~xrCompressor();
+
+	IC CInifile* GetConfig()
+	{
+		return config_ltx;
+	};
 
 	IC bool IsMultiThread() const
 	{

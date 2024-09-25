@@ -74,8 +74,6 @@ void xrThread::worker_main(stop_token s_token)
 
 		if (thread_locked)
 			done.Set();
-
-		b_init = false;
 	}
 }
 
@@ -177,9 +175,10 @@ void xrThread::Stop()
 			all_obj_thread.erase(thread_obj);
 
 		if (thread_locked)
+		{
 			process.Set();
-
-		done.Wait();
+			done.Wait();
+		}
 
 		Thread->request_stop();
 		xr_delete(Thread);
