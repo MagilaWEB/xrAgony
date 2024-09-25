@@ -699,7 +699,7 @@ void CCC_Register()
 
 	CMD4(CCC_Integer, "r_process_priority", &g_process_priority, 1, 6);
 
-	CMD4(CCC_Float, "r_font_scale", &r_font_scale, .2f, .8f);
+	CMD4(CCC_Float, "r_font_scale", &r_font_scale, .3f, .7f);
 
 	// Render device states
 	CMD4(CCC_Integer, "r__supersample", &ps_r__Supersample, 1, 4);
