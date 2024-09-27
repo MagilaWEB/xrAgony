@@ -740,8 +740,9 @@ void CActor::Die(IGameObject* who)
 		cam_Set(eacFixedLookAt);
 	}
 
-	mstate_wishful &= ~mcAnyMove;
-	mstate_real &= ~mcAnyMove;
+	g_PerformDrop();
+
+	StopAnyMove();
 
 	xr_delete(m_sndShockEffector);
 }

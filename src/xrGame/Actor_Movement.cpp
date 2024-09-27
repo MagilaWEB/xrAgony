@@ -680,9 +680,7 @@ void CActor::StopAnyMove()
 	mstate_real &= ~mcAnyMove;
 
 	if (this == Level().CurrentViewEntity())
-	{
 		g_player_hud->OnMovementChanged((EMoveCommand)0);
-	}
 }
 
 bool CActor::is_jump() { return ((mstate_real & (mcJump | mcFall | mcLanding | mcLanding2)) != 0); }

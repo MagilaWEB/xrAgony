@@ -52,6 +52,9 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	if (load_screen_renderer.IsActive())
 		return;
 
+	if (!g_Alive())
+		return;
+
 	switch (cmd)
 	{
 	case kWPN_FIRE:
@@ -62,23 +65,12 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		u16 slot = inventory().GetActiveSlot();
 		if (inventory().ActiveItem() && (slot == INV_SLOT_3 || slot == INV_SLOT_2 || slot == KNIFE_SLOT))
 			mstate_wishful &= ~mcSprint;
-		//-----------------------------
-		if (OnServer())
-		{
-			NET_Packet P;
-			P.w_begin(M_PLAYER_FIRE);
-			P.w_u16(ID());
-			u_EventSend(P);
-		}
 	}
 	break;
 	default: {
 	}
 	break;
 	}
-
-	if (!g_Alive())
-		return;
 
 	if (m_holder && kUSE != cmd)
 	{

@@ -335,15 +335,10 @@ void CRender::render_main(bool deffered)
 				}
 			}
 		}
-
-		if (g_pGameLevel && psDeviceFlags.test(rsDrawDynamic) && (phase == PHASE_NORMAL))
-			g_hud->Render_Last();// HUD
 	}
 	else
 	{
 		set_Object(nullptr);
-		if (g_pGameLevel && psDeviceFlags.test(rsDrawDynamic) && (phase == PHASE_NORMAL))
-			g_hud->Render_Last();// HUD
 	}
 }
 
@@ -401,6 +396,7 @@ void CRender::Render()
 	render_main(true);
 	set_Recorder(nullptr);
 	r_pmask(true, false); // disable priority "1"
+
 	RImplementation.BasicStats.Culling.End();
 
 	const BOOL split_the_scene_to_minimize_wait = ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE);
@@ -426,6 +422,9 @@ void CRender::Render()
 		r_dsgraph_render_graph(0);
 		Target->disable_aniso();
 	}
+
+	if (g_pGameLevel && psDeviceFlags.test(rsDrawDynamic))
+		g_hud->Render_Last();// HUD
 
 	//******* Occlusion testing of volume-limited light-sources
 	Target->phase_occq();
