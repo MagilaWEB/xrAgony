@@ -42,6 +42,7 @@ class ENGINE_API CGameFont : public IGameFont
 
 	u16 Size{ 14 };
 	xr_map<int, Glyph*> GlyphData;
+	bool is_renders{ false };
 	
 protected:
 	//Style Style;
@@ -65,6 +66,14 @@ public:
 
 	IC pcstr GetSection() const { return pSection; };
 	IC size_t GetFlags() const { return uFlags; };
+	IC void Renders(bool renders)
+	{
+		is_renders = renders;
+	};
+	IC bool IsRenders() const
+	{
+		return is_renders;
+	};
 	virtual void Initialize(pcstr name, pcstr shader, pcstr style) override;
 	virtual void SetColor(size_t C) override { dwCurrentColor = C; }
 	virtual size_t GetColor() const override { return dwCurrentColor; }

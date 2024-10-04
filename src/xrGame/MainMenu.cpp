@@ -63,6 +63,21 @@ CMainMenu::CMainMenu()
 	Device.seqFrame.Add(this, REG_PRIORITY_LOW - 1000);
 	Device.seqDeviceReset.Add(this, REG_PRIORITY_HIGH);
 	mLanguageChanged = false;
+
+	// ...command line for auto start
+	pcstr startArgs = strstr(Core.Params, "-start ");
+	if (startArgs)
+	{
+		Console->Execute(startArgs + 1);
+		return;
+	}
+
+	pcstr loadArgs = strstr(Core.Params, "-load ");
+	if (loadArgs)
+	{
+		Console->Execute(loadArgs + 1);
+		return;
+	}
 }
 
 CMainMenu::~CMainMenu()
@@ -333,7 +348,7 @@ void CMainMenu::OnRender()
 	::Render->Render();
 
 	DoRenderDialogs();
-	UI().RenderFont();
+	//UI().RenderFont();
 	draw_wnds_rects();
 }
 

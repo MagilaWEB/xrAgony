@@ -296,41 +296,14 @@ void D3DXRenderBase::r_dsgraph_render_graph(u32 _priority)
 /*
 Предназначен для установки режима отрисовки HUD и возврата оригинального после отрисовки.
 */
-class hud_transform_helper
+struct hud_transform_helper
 {
-	Fmatrix Pold;
-	Fmatrix FTold;
 
-public:
 	hud_transform_helper()
 	{
-		extern ENGINE_API float psHUD_FOV;
-
-		// Change projection
-		Pold = Device.mProject;
-		FTold = Device.mFullTransform;
-
-		// XXX: Xottab_DUTY: custom FOV. Implement it someday
-		// It should be something like this:
-		// float customFOV;
-		// if (isCustomFOV)
-		//	 customFOV = V->getVisData().obj_data->m_hud_custom_fov;
-		// else
-		//	 customFOV = psHUD_FOV * Device.fFOV;
-		//
-		// Device.mProject.build_projection(deg2rad(customFOV), Device.fASPECT,
-		//	VIEWPORT_NEAR, g_pGamePersistent->Environment().CurrentEnv->far_plane);
-		//
-		// Look at the function:
-		// void __fastcall sorted_L1_HUD(mapSorted_Node* N)
-		// In the commit:
-		// https://github.com/ShokerStlk/xray-16-SWM/commit/869de0b6e74ac05990f541e006894b6fe78bd2a5#diff-4199ef700b18ce4da0e2b45dee1924d0R83
-
-		Device.mProject.build_projection(deg2rad(psHUD_FOV * Device.fFOV /* *Device.fASPECT*/), Device.fASPECT,
+		mProject.build_projection(deg2rad(Device.fFOV * .75f  /* *Device.fASPECT*/), Device.fASPECT,
 			VIEWPORT_NEAR_HUD, g_pGamePersistent->Environment().CurrentEnv->far_plane);
-
-		Device.mFullTransform.mul(Device.mProject, Device.mView);
-		RCache.set_xform_project(Device.mProject);
+		RCache.set_xform_project(mProject);
 
 		RImplementation.rmNear();
 	}
@@ -338,12 +311,12 @@ public:
 	~hud_transform_helper()
 	{
 		RImplementation.rmNormal();
-
 		// Restore projection
-		Device.mProject = Pold;
-		Device.mFullTransform = FTold;
 		RCache.set_xform_project(Device.mProject);
 	}
+
+private:
+	Fmatrix mProject;
 };
 
 IC void __fastcall render_item(auto* item)

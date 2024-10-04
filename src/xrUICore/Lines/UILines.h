@@ -16,7 +16,7 @@ public:
 	//--
 	void SetTextColor(u32 color);
 	u32 GetTextColor() { return m_dwTextColor; }
-	void SetFont(CGameFont* pFont);
+	void SetFont(CGameFont*& pFont);
 	CGameFont* GetFont() { return m_pFont; }
 	void SetTextAlignment(ETextAlignment al) { m_eTextAlign = al; }
 	ETextAlignment GetTextAlignment() { return m_eTextAlign; }

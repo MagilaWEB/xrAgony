@@ -1,5 +1,10 @@
 #pragma once
 
+constexpr float ORIGIN_OFFSET = -0.05f;		// inertia factor influence on position of torso (the smaller, the larger the inertia)
+constexpr float ORIGIN_OFFSET_AIM = -0.03f;	// (zoomed inertia factor)
+constexpr float TENDTO_SPEED = 5.f;			// barrel return speed
+constexpr float TENDTO_SPEED_AIM = 8.f;		// (zoomed return speed)
+
 class CSE_Abstract;
 class CPhysicItem;
 class NET_Packet;
@@ -186,14 +191,10 @@ public:
 	bool isHUDAnimationExist(pcstr anim_name) const;
 	struct inertion_params
 	{
-		float m_pitch_offset_r;
-		float m_pitch_offset_n;
-		float m_pitch_offset_d;
-		float m_pitch_low_limit;
-		float m_origin_offset;
-		float m_origin_offset_aim;
-		float m_tendto_speed;
-		float m_tendto_speed_aim;
+		float m_origin_offset = ORIGIN_OFFSET;
+		float m_origin_offset_aim = ORIGIN_OFFSET_AIM;
+		float m_tendto_speed = TENDTO_SPEED;
+		float m_tendto_speed_aim = TENDTO_SPEED_AIM;
 	};
 	inertion_params m_inertion_params;
 };

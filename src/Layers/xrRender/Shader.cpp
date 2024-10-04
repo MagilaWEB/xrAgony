@@ -8,13 +8,46 @@
 #include "Shader.h"
 #include "ResourceManager.h"
 // XXX: render scripts should call these destructors before resource manager gets destroyed
-STextureList::~STextureList() { RImplementation.Resources->_DeleteTextureList(this); }
-SMatrixList::~SMatrixList() { RImplementation.Resources->_DeleteMatrixList(this); }
-SConstantList::~SConstantList() { RImplementation.Resources->_DeleteConstantList(this); }
-SPass::~SPass() { RImplementation.Resources->_DeletePass(this); }
-ShaderElement::~ShaderElement() { RImplementation.Resources->_DeleteElement(this); }
-SGeometry::~SGeometry() { RImplementation.Resources->DeleteGeom(this); }
-Shader::~Shader() { RImplementation.Resources->Delete(this); }
+
+SMatrixList::~SMatrixList()
+{
+	RImplementation.Resources->_DeleteMatrixList(this);
+}
+
+void SMatrixList::_copy(const SMatrixList& Other)
+{
+	clear();
+	for (auto & matrix : Other)
+		push_back(matrix);
+}
+
+SConstantList::~SConstantList()
+{
+	RImplementation.Resources->_DeleteConstantList(this);
+}
+
+void SConstantList::_copy(const SConstantList& Other)
+{
+	clear();
+	for (auto& constant : Other)
+		push_back(constant);
+}
+
+SPass::~SPass()
+{
+	RImplementation.Resources->_DeletePass(this);
+}
+
+ShaderElement::~ShaderElement()
+{
+	RImplementation.Resources->_DeleteElement(this);
+}
+
+SGeometry::~SGeometry()
+{
+	RImplementation.Resources->DeleteGeom(this);
+}
+
 //////////////////////////////////////////////////////////////////////////
 void resptrcode_shader::create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
@@ -108,13 +141,42 @@ BOOL ShaderElement::equal(ShaderElement* S)
 	return equal(*S);
 }
 
-//
+void ShaderElement::_copy(const ShaderElement& Other)
+{
+	flags = Other.flags;
+
+	passes.clear();
+	for (size_t i = 0; i < Other.passes.size(); i++)
+		passes.push_back(Other.passes[i]);
+}
+
+Shader::~Shader()
+{
+	RImplementation.Resources->Delete(this);
+}
+
 BOOL Shader::equal(Shader& S)
 {
 	return E[0]->equal(&*S.E[0]) && E[1]->equal(&*S.E[1]) && E[2]->equal(&*S.E[2]) && E[3]->equal(&*S.E[3]) &&
 		E[4]->equal(&*S.E[4]);
 }
-BOOL Shader::equal(Shader* S) { return equal(*S); }
+
+BOOL Shader::equal(Shader* S)
+{
+	return equal(*S);
+}
+
+void Shader::_copy(Shader& Other)
+{
+	for (size_t i = 0; i < SHADER_ELEMENTS_MAX; i++)
+		E[i] = Other.E[i];
+}
+
+STextureList::~STextureList()
+{
+	RImplementation.Resources->_DeleteTextureList(this);
+}
+
 void STextureList::clear()
 {
 	iterator it = begin();
@@ -159,5 +221,9 @@ void STextureList::create_texture(u32 stage, pcstr textureName, bool evenIfNotNu
 			loader.second.create(textureName);
 		}
 	}
+}
 
+void STextureList::_copy(const STextureList& Other)
+{
+	assign(Other.begin(), Other.end());
 }

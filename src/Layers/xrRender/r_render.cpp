@@ -70,12 +70,12 @@ void CRender::render_main(bool deffered)
 			);
 
 			// (almost) Exact sorting order (front-to-back)
-			if (!lstRenderables.empty())
+	/*		if (!lstRenderables.empty())
 				lstRenderables.sort([](ISpatial* _1, ISpatial* _2) {
 					float d1 = _1->GetSpatialData().sphere.P.distance_to_sqr(Device.vCameraPosition);
 					float d2 = _2->GetSpatialData().sphere.P.distance_to_sqr(Device.vCameraPosition);
 					return d1 < d2;
-				});
+				});*/
 
 			// Determine visibility for dynamic part of scene
 			set_Object(nullptr);
@@ -423,9 +423,6 @@ void CRender::Render()
 		Target->disable_aniso();
 	}
 
-	if (g_pGameLevel && psDeviceFlags.test(rsDrawDynamic))
-		g_hud->Render_Last();// HUD
-
 	//******* Occlusion testing of volume-limited light-sources
 	Target->phase_occq();
 	LP_normal.clear();
@@ -451,6 +448,9 @@ void CRender::Render()
 		LP_normal.vis_prepare();
 	}
 	LP_normal.sort();
+
+	if (g_pGameLevel && psDeviceFlags.test(rsDrawDynamic))
+		g_hud->Render_Last();// HUD
 
 	//******* Main render :: PART-1 (second)
 	if (split_the_scene_to_minimize_wait)

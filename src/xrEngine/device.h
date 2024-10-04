@@ -248,7 +248,7 @@ public:
 	// Mode control
 	void DumpFlags();
 	IC CTimer_paused* GetTimerGlobal() { return &TimerGlobal; }
-	u32 TimerAsync() { return TimerGlobal.GetElapsed_ms(); }
+	size_t TimerAsync() { return (size_t)TimerGlobal.GetElapsed_ms(); }
 	// Creation & Destroying
 	void Create();
 	void Run();

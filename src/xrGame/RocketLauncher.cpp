@@ -60,26 +60,39 @@ void CRocketLauncher::DetachRocket(u16 rocket_id, bool bLaunch)
 		return;
 
 	VERIFY(pRocket);
-	auto It = std::find(m_rockets.begin(), m_rockets.end(), pRocket);
-	auto It_l = std::find(m_launched_rockets.begin(), m_launched_rockets.end(), pRocket);
 
-	if (OnServer())
-	{
-		VERIFY((It != m_rockets.end()) || (It_l != m_launched_rockets.end()));
-	};
+	bool find_result = false;
 
-	if (It != m_rockets.end())
+	if (!m_rockets.empty())
 	{
-		(*It)->m_bLaunched = bLaunch;
-		(*It)->H_SetParent(nullptr);
-		m_rockets.erase(It);
-	};
+		auto It = m_rockets.find(pRocket);
+		find_result = It != m_rockets.end();
 
-	if (It_l != m_launched_rockets.end())
+		if (OnServer())
+			VERIFY(find_result);
+
+		if (find_result)
+		{
+			(*It)->m_bLaunched = bLaunch;
+			(*It)->H_SetParent(nullptr);
+			m_rockets.erase(It);
+		}
+	}
+
+	if (!m_launched_rockets.empty())
 	{
-		(*It)->m_bLaunched = bLaunch;
-		(*It_l)->H_SetParent(nullptr);
-		m_launched_rockets.erase(It_l);
+		auto It_l = m_launched_rockets.find(pRocket);
+		find_result = It_l != m_launched_rockets.end();
+
+		if (OnServer())
+			VERIFY(find_result);
+
+		if (find_result)
+		{
+			(*It_l)->m_bLaunched = bLaunch;
+			(*It_l)->H_SetParent(nullptr);
+			m_launched_rockets.erase(It_l);
+		}
 	}
 }
 

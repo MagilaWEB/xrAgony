@@ -479,8 +479,9 @@ public:
 
 private:
 	//	DirectX 10 internal functionality
-	// void CreateConstantBuffers();
-	// void DestroyConstantBuffers();
+	ref_geom vs_L, vs_TL;
+	void InitializeDebugDraw();
+	void DestroyDebugDraw();
 	void ApplyVertexLayout();
 	void ApplyRTandZB();
 	void ApplyPrimitieTopology(D3D_PRIMITIVE_TOPOLOGY Topology);

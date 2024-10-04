@@ -46,7 +46,7 @@ public:
 
 	void pp_start();
 	void pp_stop();
-	void RenderFont();
+	//void RenderFont();
 
 	virtual void OnDeviceReset();
 	static bool is_widescreen();

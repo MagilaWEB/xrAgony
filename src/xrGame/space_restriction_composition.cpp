@@ -54,10 +54,8 @@ bool CSpaceRestrictionComposition::inside(const Fsphere& sphere)
 	if (!m_sphere.intersect(sphere))
 		return (false);
 
-	RESTRICTIONS::iterator I = m_restrictions.begin();
-	RESTRICTIONS::iterator E = m_restrictions.end();
-	for (; I != E; ++I)
-		if ((*I)->inside(sphere))
+	for (auto& resttiction : m_restrictions)
+		if (resttiction->inside(sphere))
 			return (true);
 
 	return (false);
@@ -122,7 +120,7 @@ void CSpaceRestrictionComposition::initialize()
 
 	m_initialized = true;
 
-	m_border.erase(std::remove_if(m_border.begin(), m_border.end(), CMergePredicate(this)), m_border.end());
+	std::erase_if(m_border, CMergePredicate(this));
 
 	process_borders();
 
@@ -138,15 +136,13 @@ void CSpaceRestrictionComposition::test_correctness()
 	m_test_storage.clear();
 
 	{
-		RESTRICTIONS::iterator I = m_restrictions.begin();
-		RESTRICTIONS::iterator E = m_restrictions.end();
-		for (; I != E; ++I)
+		for (auto& resttiction : m_restrictions)
 			m_test_storage.insert(
-				m_test_storage.end(), (*I)->object().m_test_storage.begin(), (*I)->object().m_test_storage.end());
+				m_test_storage.end(), resttiction->object().m_test_storage.begin(), resttiction->object().m_test_storage.end());
 	}
 
 	{
-		std::sort(m_test_storage.begin(), m_test_storage.end());
+		m_test_storage.sort();
 		m_test_storage.erase(std::unique(m_test_storage.begin(), m_test_storage.end()), m_test_storage.end());
 	}
 
@@ -156,27 +152,26 @@ void CSpaceRestrictionComposition::test_correctness()
 		return;
 	}
 
-	xr_vector<u32> nodes;
+	for (auto& resttiction : m_restrictions)
 	{
-		RESTRICTIONS::iterator I = m_restrictions.begin();
-		RESTRICTIONS::iterator E = m_restrictions.end();
-		for (; I != E; ++I)
-		{
-			VERIFY3(!(*I)->object().m_test_storage.empty(), "Restrictor has no border", *(*I)->object().name());
-			nodes.clear();
-			ai().level_graph().set_mask(border());
-			ai().graph_engine().search(ai().level_graph(), (*I)->object().m_test_storage.back(),
-				(*I)->object().m_test_storage.back(), &nodes, GraphEngineSpace::CFlooder());
-			ai().level_graph().clear_mask(border());
+		const bool b_empty_storage = resttiction->object().m_test_storage.empty();
+		VERIFY3(!b_empty_storage, "Restrictor has no border", *resttiction->object().name());
+		if (b_empty_storage)
+			break;
 
-			if (nodes.size() == 65535)
-				m_correct = true;
-			else
-				m_correct = (m_test_storage.size() <= nodes.size());
+		xr_vector<u32> nodes;
+		ai().level_graph().set_mask(border());
+		ai().graph_engine().search(ai().level_graph(), resttiction->object().m_test_storage.back(),
+			resttiction->object().m_test_storage.back(), &nodes, GraphEngineSpace::CFlooder());
+		ai().level_graph().clear_mask(border());
 
-			if (!m_correct)
-				break;
-		}
+		if (nodes.size() == 65535)
+			m_correct = true;
+		else
+			m_correct = (m_test_storage.size() <= nodes.size());
+
+		if (!m_correct)
+			break;
 	}
 }
 #endif

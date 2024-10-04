@@ -18,6 +18,8 @@ private:
 	void add_lines(
 		Fvector const* vertices, u32 const& vertex_count, u16 const* pairs, u32 const& pair_count, u32 const& color);
 
+	xr_vector<std::pair<Fvector2, size_t>> dbg_position_render_ui;
+
 public:
 	IC void render();
 
@@ -28,6 +30,7 @@ public:
 	void draw_obb(const Fmatrix& matrix, const u32& color);
 	void draw_obb(const Fmatrix& matrix, const Fvector& half_size, const u32& color);
 	void draw_ellipse(const Fmatrix& matrix, const u32& color);
+	void draw_position_ui(const Fvector& pos, const size_t& color);
 };
 
 #include "debug_renderer_inline.h"

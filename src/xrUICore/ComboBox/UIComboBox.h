@@ -7,7 +7,7 @@
 
 class CUIListBoxItem;
 
-class XRUICORE_API CUIComboBox : public CUIWindow, public CUIOptionsItem, public pureRender
+class XRUICORE_API CUIComboBox : public CUIWindow, public CUIOptionsItem//, public pureRender
 {
 	friend class CUIXmlInitBase;
 	typedef enum { LIST_EXPANDED, LIST_FONDED } E_COMBO_STATE;
@@ -24,7 +24,7 @@ public:
 	virtual void UndoOptValue(); // backup->current
 	virtual bool IsChangedOptValue() const; // backup!=current
 
-	virtual void OnRender(); // only for list-box
+	//virtual void OnRender(); // only for list-box
 
 	LPCSTR GetText();
 	LPCSTR GetTextOf(int index);

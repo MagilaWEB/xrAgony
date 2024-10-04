@@ -154,6 +154,7 @@ public:
 	ref_constant get(shared_str& name); // fast search
 
 	BOOL equal(R_constant_table& C);
+	void _copy(const R_constant_table& Other);
 	BOOL equal(R_constant_table* C) { return equal(*C); }
 	BOOL empty() { return 0 == table.size(); }
 private:

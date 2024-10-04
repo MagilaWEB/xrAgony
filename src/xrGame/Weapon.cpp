@@ -171,35 +171,30 @@ void CWeapon::UpdateXForm()
 
 void CWeapon::UpdateFireDependencies_internal()
 {
-	if (Device.dwFrame != dwFP_Frame)
+	if (GetHUDmode())
 	{
-		dwFP_Frame = Device.dwFrame;
-
+		HudItemData()->setup_firedeps(m_current_firedeps);
+		VERIFY(_valid(m_current_firedeps.m_FireParticlesXForm));
+	}
+	else
+	{
 		UpdateXForm();
 
-		if (GetHUDmode())
-		{
-			HudItemData()->setup_firedeps(m_current_firedeps);
-			VERIFY(_valid(m_current_firedeps.m_FireParticlesXForm));
-		}
-		else
-		{
-			// 3rd person or no parent
-			Fmatrix& parent = XFORM();
-			Fvector& fp = vLoadedFirePoint;
-			Fvector& fp2 = vLoadedFirePoint2;
-			Fvector& sp = vLoadedShellPoint;
+		// 3rd person or no parent
+		Fmatrix& parent = XFORM();
+		Fvector& fp = vLoadedFirePoint;
+		Fvector& fp2 = vLoadedFirePoint2;
+		Fvector& sp = vLoadedShellPoint;
 
-			parent.transform_tiny(m_current_firedeps.vLastFP, fp);
-			parent.transform_tiny(m_current_firedeps.vLastFP2, fp2);
-			parent.transform_tiny(m_current_firedeps.vLastSP, sp);
+		parent.transform_tiny(m_current_firedeps.vLastFP, fp);
+		parent.transform_tiny(m_current_firedeps.vLastFP2, fp2);
+		parent.transform_tiny(m_current_firedeps.vLastSP, sp);
 
-			m_current_firedeps.vLastFD.set(0.f, 0.f, 1.f);
-			parent.transform_dir(m_current_firedeps.vLastFD);
+		m_current_firedeps.vLastFD.set(0.f, 0.f, 1.f);
+		parent.transform_dir(m_current_firedeps.vLastFD);
 
-			m_current_firedeps.m_FireParticlesXForm.set(parent);
-			VERIFY(_valid(m_current_firedeps.m_FireParticlesXForm));
-		}
+		m_current_firedeps.m_FireParticlesXForm.set(parent);
+		VERIFY(_valid(m_current_firedeps.m_FireParticlesXForm));
 	}
 }
 

@@ -9,7 +9,6 @@
 #include "xrEngine/CameraManager.h"
 #include "xrEngine/FDemoRecord.h"
 #include "xrUICore/ui_base.h"
-#include "debug_renderer.h"
 #include "xrEngine/GameFont.h"
 
 u32 hud_adj_mode = 0;
@@ -150,9 +149,9 @@ void attachable_hud_item::tune(Ivector values)
 		if ((values.x) || (values.y) || (values.z))
 		{
 			Msg("[%s]", m_sect_name.c_str());
-			Msg("item_position				= %f,%f,%f", m_measures.m_item_attach[0].x, m_measures.m_item_attach[0].y,
+			Msg("item_position				= %f, %f, %f", m_measures.m_item_attach[0].x, m_measures.m_item_attach[0].y,
 				m_measures.m_item_attach[0].z);
-			Msg("item_orientation			= %f,%f,%f", m_measures.m_item_attach[1].x, m_measures.m_item_attach[1].y,
+			Msg("item_orientation				= %f, %f, %f", m_measures.m_item_attach[1].x, m_measures.m_item_attach[1].y,
 				m_measures.m_item_attach[1].z);
 			Log("-----------");
 		}
@@ -182,11 +181,11 @@ void attachable_hud_item::tune(Ivector values)
 		if ((values.x) || (values.y) || (values.z))
 		{
 			Msg("[%s]", m_sect_name.c_str());
-			Msg("fire_point				= %f,%f,%f", m_measures.m_fire_point_offset.x, m_measures.m_fire_point_offset.y,
+			Msg("fire_point					= %f, %f, %f", m_measures.m_fire_point_offset.x, m_measures.m_fire_point_offset.y,
 				m_measures.m_fire_point_offset.z);
-			Msg("fire_point2			= %f,%f,%f", m_measures.m_fire_point2_offset.x,
+			Msg("fire_point2					= %f, %f, %f", m_measures.m_fire_point2_offset.x,
 				m_measures.m_fire_point2_offset.y, m_measures.m_fire_point2_offset.z);
-			Msg("shell_point			= %f,%f,%f", m_measures.m_shell_point_offset.x,
+			Msg("shell_point					= %f, %f, %f", m_measures.m_shell_point_offset.x,
 				m_measures.m_shell_point_offset.y, m_measures.m_shell_point_offset.z);
 			Log("-----------");
 		}
@@ -199,21 +198,40 @@ void attachable_hud_item::debug_draw_firedeps()
 #ifdef DEBUG
 	bool bForce = (hud_adj_mode == 3 || hud_adj_mode == 4);
 
+	CDebugRenderer& render = Level().debug_renderer();
+
 	if (hud_adj_mode == 5 || hud_adj_mode == 6 || hud_adj_mode == 7 || bForce)
 	{
-		CDebugRenderer& render = Level().debug_renderer();
+		if (CWeapon* pWeapon = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem()))
+		{
+			if (hud_adj_mode == 5 || bForce)
+			{
+				render.draw_aabb(pWeapon->get_LastFP(), 0.02f, 0.02f, 0.02f, color_xrgb(0, 255, 255));
+				render.draw_position_ui(pWeapon->get_LastFP(), color_xrgb(255, 255, 255));
+			}
 
-		firedeps fd;
-		setup_firedeps(fd);
+			if (hud_adj_mode == 6)
+			{
+				render.draw_aabb(pWeapon->get_LastFP2(), 0.02f, 0.02f, 0.02f, color_xrgb(0, 255, 255));
+				render.draw_position_ui(pWeapon->get_LastFP2(), color_xrgb(255, 255, 255));
+			}
+			
+			if (hud_adj_mode == 7)
+			{
+				render.draw_aabb(pWeapon->get_LastSP(), 0.02f, 0.02f, 0.02f, color_xrgb(0, 255, 255));
+				render.draw_position_ui(pWeapon->get_LastSP(), color_xrgb(255, 255, 255));
+			}
+		}
+	}
 
-		if (hud_adj_mode == 5 || bForce)
-			render.draw_aabb(fd.vLastFP, 0.005f, 0.005f, 0.005f, color_xrgb(255, 0, 0));
+	if (hud_adj_mode)
+	{
+		Fvector cam_pos = Device.vCameraPosition;
+		Fvector cam_dir_m = Device.vCameraDirection;
+		cam_pos.add(cam_dir_m);
 
-		if (hud_adj_mode == 6)
-			render.draw_aabb(fd.vLastFP2, 0.005f, 0.005f, 0.005f, color_xrgb(0, 0, 255));
-
-		if (hud_adj_mode == 7)
-			render.draw_aabb(fd.vLastSP, 0.005f, 0.005f, 0.005f, color_xrgb(0, 255, 0));
+		render.draw_aabb(cam_pos, 0.002f, 0.002f, 0.002f, color_xrgb(0, 255, 0));
+		render.draw_aabb(Fvector{ cam_pos }.add(Fvector{0, -.001f, 0}), 0.1f, 0.f, 0.f, color_xrgb(0, 255, 0));
 	}
 #endif // DEBUG
 }
@@ -223,8 +241,6 @@ void player_hud::tune(Ivector _values)
 #ifndef MASTER_GOLD
 	Ivector values;
 	tune_remap(_values, values);
-
-	bool is_16x9 = UI().is_widescreen();
 
 	if (hud_adj_mode == 1 || hud_adj_mode == 2)
 	{
@@ -270,22 +286,22 @@ void player_hud::tune(Ivector _values)
 			if (idx == 0)
 			{
 				Msg("[%s]", m_attached_items[hud_adj_item_idx]->m_sect_name.c_str());
-				Msg("hands_position%s				= %f,%f,%f", (is_16x9) ? "_16x9" : "", pos_.x, pos_.y, pos_.z);
-				Msg("hands_orientation%s			= %f,%f,%f", (is_16x9) ? "_16x9" : "", rot_.x, rot_.y, rot_.z);
+				Msg("hands_position				= %f, %f, %f", pos_.x, pos_.y, pos_.z);
+				Msg("hands_orientation			= %f, %f, %f", rot_.x, rot_.y, rot_.z);
 				Log("-----------");
 			}
 			else if (idx == 1)
 			{
 				Msg("[%s]", m_attached_items[hud_adj_item_idx]->m_sect_name.c_str());
-				Msg("aim_hud_offset_pos%s				= %f,%f,%f", (is_16x9) ? "_16x9" : "", pos_.x, pos_.y, pos_.z);
-				Msg("aim_hud_offset_rot%s				= %f,%f,%f", (is_16x9) ? "_16x9" : "", rot_.x, rot_.y, rot_.z);
+				Msg("aim_hud_offset_pos				= %f, %f, %f", pos_.x, pos_.y, pos_.z);
+				Msg("aim_hud_offset_rot				= %f, %f, %f", rot_.x, rot_.y, rot_.z);
 				Log("-----------");
 			}
 			else if (idx == 2)
 			{
 				Msg("[%s]", m_attached_items[hud_adj_item_idx]->m_sect_name.c_str());
-				Msg("gl_hud_offset_pos%s				= %f,%f,%f", (is_16x9) ? "_16x9" : "", pos_.x, pos_.y, pos_.z);
-				Msg("gl_hud_offset_rot%s				= %f,%f,%f", (is_16x9) ? "_16x9" : "", rot_.x, rot_.y, rot_.z);
+				Msg("gl_hud_offset_pos				= %f, %f, %f", pos_.x, pos_.y, pos_.z);
+				Msg("gl_hud_offset_rot				= %f, %f, %f", rot_.x, rot_.y, rot_.z);
 				Log("-----------");
 			}
 		}
@@ -293,10 +309,10 @@ void player_hud::tune(Ivector _values)
 	else if (hud_adj_mode == 8 || hud_adj_mode == 9)
 	{
 		if (hud_adj_mode == 8 && (values.z))
-			_delta_pos += (values.z > 0) ? 0.001f : -0.001f;
+			_delta_pos += (values.z > 0) ? 0.0001f : -0.0001f;
 
 		if (hud_adj_mode == 9 && (values.z))
-			_delta_rot += (values.z > 0) ? 0.1f : -0.1f;
+			_delta_rot += (values.z > 0) ? 0.001f : -0.001f;
 	}
 	else
 	{
@@ -334,7 +350,7 @@ void hud_draw_adjust_mode()
 	};
 	if (_text)
 	{
-		CGameFont* F = UI().Font().pFontDI;
+		CGameFont* F = UI().Font().pFontArial14;
 		F->SetAligment(CGameFont::alCenter);
 		F->OutSetI(0.f, -0.8f);
 		F->SetColor(0xffffffff);

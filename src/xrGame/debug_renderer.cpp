@@ -119,4 +119,21 @@ void CDebugRenderer::draw_ellipse(const Fmatrix& matrix, const u32& color)
 	add_lines((Fvector*)&vertices[0], sizeof(vertices) / sizeof(Fvector), &pairs[0], sizeof(pairs) / (2 * sizeof(u16)),
 		color);
 }
+
+void CDebugRenderer::draw_position_ui(const Fvector& pos, const size_t& color)
+{
+	Fvector4 v_res;
+	Device.mFullTransform.transform(v_res, pos);
+
+	float x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
+	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
+
+	if (v_res.z < 0 || v_res.w < 0)
+		return;
+
+	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y < -1.f || v_res.y > 1.f)
+		return;
+
+	dbg_position_render_ui.push_back({ Fvector2{ x, y }, color });
+}
 #endif // DEBUG

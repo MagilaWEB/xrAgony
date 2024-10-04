@@ -228,12 +228,14 @@ R_constant_table* CResourceManager::_CreateConstantTable(R_constant_table& C)
 	if (C.empty())
 		return nullptr;
 
-	for (u32 it = 0; it < v_constant_tables.size(); it++)
-		if (v_constant_tables[it]->equal(C))
-			return v_constant_tables[it];
-	v_constant_tables.push_back(new R_constant_table(C));
-	v_constant_tables.back()->dwFlags |= xr_resource_flagged::RF_REGISTERED;
-	return v_constant_tables.back();
+	for (auto & constant : v_constant_tables)
+		if (constant->equal(C))
+			return constant;
+
+	R_constant_table*& newElem = v_constant_tables.emplace_back(new R_constant_table());
+	newElem->_copy(C);
+	newElem->dwFlags |= xr_resource_flagged::RF_REGISTERED;
+	return newElem;
 }
 void CResourceManager::_DeleteConstantTable(const R_constant_table* C)
 {
@@ -438,7 +440,7 @@ CMatrix* CResourceManager::_CreateMatrix(LPCSTR Name)
 	{
 		CMatrix* M = new CMatrix();
 		M->dwFlags |= xr_resource_flagged::RF_REGISTERED;
-		M->dwReference = 1;
+		M->dwReference.store(1);
 		m_matrices.emplace(M->set_name(Name), M);
 		return M;
 	}
@@ -456,11 +458,7 @@ void CResourceManager::_DeleteMatrix(const CMatrix* M)
 	}
 	Msg("! ERROR: Failed to find xform-def '%s'", *M->cName);
 }
-void CResourceManager::ED_UpdateMatrix(LPCSTR Name, CMatrix* data)
-{
-	CMatrix* M = _CreateMatrix(Name);
-	*M = *data;
-}
+
 //--------------------------------------------------------------------------------------------------------------
 CConstant* CResourceManager::_CreateConstant(LPCSTR Name)
 {
@@ -476,7 +474,7 @@ CConstant* CResourceManager::_CreateConstant(LPCSTR Name)
 	{
 		CConstant* C = new CConstant();
 		C->dwFlags |= xr_resource_flagged::RF_REGISTERED;
-		C->dwReference = 1;
+		C->dwReference.store(1);
 		m_constants.emplace(C->set_name(Name), C);
 		return C;
 	}
@@ -495,12 +493,6 @@ void CResourceManager::_DeleteConstant(const CConstant* C)
 	Msg("! ERROR: Failed to find R1-constant-def '%s'", *C->cName);
 }
 
-void CResourceManager::ED_UpdateConstant(LPCSTR Name, CConstant* data)
-{
-	CConstant* C = _CreateConstant(Name);
-	*C = *data;
-}
-
 //--------------------------------------------------------------------------------------------------------------
 bool cmp_tl(const std::pair<u32, ref_texture>& _1, const std::pair<u32, ref_texture>& _2)
 {
@@ -508,17 +500,15 @@ bool cmp_tl(const std::pair<u32, ref_texture>& _1, const std::pair<u32, ref_text
 }
 STextureList* CResourceManager::_CreateTextureList(STextureList& L)
 {
-	std::sort(L.begin(), L.end(), cmp_tl);
-	for (u32 it = 0; it < lst_textures.size(); it++)
-	{
-		STextureList* base = lst_textures[it];
-		if (L.equal(*base))
-			return base;
-	}
-	STextureList* lst = new STextureList(L);
-	lst->dwFlags |= xr_resource_flagged::RF_REGISTERED;
-	lst_textures.push_back(lst);
-	return lst;
+	L.sort(cmp_tl);
+	for (auto & texture_list : lst_textures)
+		if (L.equal(*texture_list))
+			return texture_list;
+
+	STextureList*& newTextureL = lst_textures.emplace_back(new STextureList());
+	newTextureL->_copy(L);
+	newTextureL->dwFlags |= xr_resource_flagged::RF_REGISTERED;
+	return newTextureL;
 }
 void CResourceManager::_DeleteTextureList(const STextureList* L)
 {
@@ -532,25 +522,24 @@ void CResourceManager::_DeleteTextureList(const STextureList* L)
 SMatrixList* CResourceManager::_CreateMatrixList(SMatrixList& L)
 {
 	BOOL bEmpty = TRUE;
-	for (u32 i = 0; i < L.size(); i++)
-		if (L[i])
+	for (auto & matrix : L)
+		if (matrix)
 		{
 			bEmpty = FALSE;
 			break;
 		}
+
 	if (bEmpty)
 		return nullptr;
 
-	for (u32 it = 0; it < lst_matrices.size(); it++)
-	{
-		SMatrixList* base = lst_matrices[it];
-		if (L.equal(*base))
-			return base;
-	}
-	SMatrixList* lst = new SMatrixList(L);
-	lst->dwFlags |= xr_resource_flagged::RF_REGISTERED;
-	lst_matrices.push_back(lst);
-	return lst;
+	for (auto & matrix : lst_matrices)
+		if (L.equal(*matrix))
+			return matrix;
+
+	SMatrixList*& newMatrixL = lst_matrices.emplace_back(new SMatrixList());
+	newMatrixL->_copy(L);
+	newMatrixL->dwFlags |= xr_resource_flagged::RF_REGISTERED;
+	return newMatrixL;
 }
 void CResourceManager::_DeleteMatrixList(const SMatrixList* L)
 {
@@ -564,26 +553,26 @@ void CResourceManager::_DeleteMatrixList(const SMatrixList* L)
 SConstantList* CResourceManager::_CreateConstantList(SConstantList& L)
 {
 	BOOL bEmpty = TRUE;
-	for (u32 i = 0; i < L.size(); i++)
-		if (L[i])
+	for (auto& lst_constant : L)
+		if (lst_constant)
 		{
 			bEmpty = FALSE;
 			break;
 		}
+
 	if (bEmpty)
 		return nullptr;
 
-	for (u32 it = 0; it < lst_constants.size(); it++)
-	{
-		SConstantList* base = lst_constants[it];
-		if (L.equal(*base))
-			return base;
-	}
-	SConstantList* lst = new SConstantList(L);
-	lst->dwFlags |= xr_resource_flagged::RF_REGISTERED;
-	lst_constants.push_back(lst);
-	return lst;
+	for (auto & lst_constant : lst_constants)
+		if (L.equal(*lst_constant))
+			return lst_constant;
+
+	SConstantList*& newConstantL = lst_constants.emplace_back(new SConstantList());
+	newConstantL->_copy(L);
+	newConstantL->dwFlags |= xr_resource_flagged::RF_REGISTERED;
+	return newConstantL;
 }
+
 void CResourceManager::_DeleteConstantList(const SConstantList* L)
 {
 	if (0 == (L->dwFlags & xr_resource_flagged::RF_REGISTERED))

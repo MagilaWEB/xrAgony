@@ -110,11 +110,6 @@ public:
 	void DBG_VerifyGeoms();
 	void DBG_VerifyTextures();
 
-	// Editor cooperation
-	void ED_UpdateBlender(LPCSTR Name, IBlender* data);
-	void ED_UpdateMatrix(LPCSTR Name, CMatrix* data);
-	void ED_UpdateConstant(LPCSTR Name, CConstant* data);
-
 	// Low level resource creation
 	CTexture* _CreateTexture(LPCSTR Name);
 	void _DeleteTexture(const CTexture* T);

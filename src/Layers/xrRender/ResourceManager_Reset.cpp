@@ -95,13 +95,12 @@ void CResourceManager::reset_end()
 	Dump(true);
 }
 
-template <class C>
-void mdump(C c)
+void mdump(auto c)
 {
 	if (0 == c.size())
 		return;
 	for (auto I = c.begin(); I != c.end(); I++)
-		Msg("*		: %3d: %s", I->second->dwReference, I->second->cName.c_str());
+		Msg("*		: %3d: %s", I->second->dwReference.load(), I->second->cName.c_str());
 }
 
 CResourceManager::~CResourceManager()

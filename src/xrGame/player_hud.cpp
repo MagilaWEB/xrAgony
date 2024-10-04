@@ -8,21 +8,9 @@
 #include "actoreffector.h"
 #include "xrEngine/IGame_Persistent.h"
 
-//Alun: defined in HudItem.cpp now
-extern const float PITCH_OFFSET_R;		// barrel movement sideways (to the left) with vertical camera turns
-extern const float PITCH_OFFSET_N;		// barrel rise / fall with vertical camera turns
-extern const float PITCH_OFFSET_D;		// barrel toward / away when the camera rotates vertically
-extern const float PITCH_LOW_LIMIT;		// minimum pitch value when used in conjunction with PITCH_OFFSET_N
-extern const float ORIGIN_OFFSET;		// inertia factor influence on position of torso (the smaller, the larger the inertia)
-extern const float ORIGIN_OFFSET_AIM;	// (zoomed inertia factor)
-extern const float TENDTO_SPEED;		// barrel return speed
-extern const float TENDTO_SPEED_AIM;	// (zoomed return speed)
-
 player_hud* g_player_hud = nullptr;
 Fvector _ancor_pos;
 Fvector _wpn_root_pos;
-Fvector m_hud_offset_pos = { 0.f, 0.f, 0.f }; //only in hud adj mode
-Fvector m_hand_offset_pos = { 0.f, 0.f, 0.f };
 
 float CalcMotionSpeed(const shared_str& anim_name)
 {
@@ -34,55 +22,43 @@ float CalcMotionSpeed(const shared_str& anim_name)
 
 player_hud_motion* player_hud_motion_container::find_motion(const shared_str& name)
 {
-	xr_vector<player_hud_motion>::iterator it = m_anims.begin();
-	xr_vector<player_hud_motion>::iterator it_e = m_anims.end();
-	for (; it != it_e; ++it)
-	{
-		const shared_str& s = (true) ? (*it).m_alias_name : (*it).m_base_name;
-		if (s == name)
-			return &*it;
-	}
-	return nullptr;
+	auto it = m_anims.find(name);
+	return it != m_anims.end() ? &it->second : nullptr;
 }
 
 void player_hud_motion_container::load(IKinematicsAnimated* model, const shared_str& sect)
 {
-	CInifile::Sect& _sect = pSettings->r_section(sect);
-	auto _b = _sect.Data.cbegin();
-	auto _e = _sect.Data.cend();
-	player_hud_motion* pm = nullptr;
-
 	string512 buff;
 	MotionID motion_ID;
 
-	for (; _b != _e; ++_b)
+	for (CInifile::Item& _b : pSettings->r_section(sect).Data)
 	{
-		if (strstr(_b->first.c_str(), "anm_") == _b->first.c_str())
+		if (strstr(_b.first.c_str(), "anm_") == _b.first.c_str())
 		{
-			const shared_str& anm = _b->second;
-			m_anims.resize(m_anims.size() + 1);
-			pm = &m_anims.back();
+			player_hud_motion pm;
+
+			const shared_str& anm = _b.second;
 			// base and alias name
-			pm->m_alias_name = _b->first;
+			pm.m_alias_name = _b.first;
 
 			if (_GetItemCount(anm.c_str()) == 1)
 			{
-				pm->m_base_name = anm;
-				pm->m_additional_name = anm;
-				pm->m_anim_speed = 1.f;
+				pm.m_base_name = anm;
+				pm.m_additional_name = anm;
+				pm.m_anim_speed = 1.f;
 			}
 			else
 			{
-				R_ASSERT2(_GetItemCount(anm.c_str()) <= 3, anm.c_str());
+				R_ASSERT2(_GetItemCount(anm.c_str()) <= 4, anm.c_str());
 				string512 str_item;
 				_GetItem(anm.c_str(), 0, str_item);
-				pm->m_base_name = str_item;
+				pm.m_base_name = str_item;
 
 				_GetItem(anm.c_str(), 1, str_item);
-				pm->m_additional_name = (strlen(str_item) > 0) ? pm->m_additional_name = str_item : pm->m_base_name;
+				pm.m_additional_name = (strlen(str_item) > 0) ? pm.m_additional_name = str_item : pm.m_base_name;
 
 				_GetItem(anm.c_str(), 2, str_item);
-				pm->m_anim_speed = strlen(str_item) > 0 ? atof(str_item) : 1.f;
+				pm.m_anim_speed = strlen(str_item) > 0 ? (float)atof(str_item) : 1.f;
 			}
 
 			// and load all motions for it
@@ -90,40 +66,50 @@ void player_hud_motion_container::load(IKinematicsAnimated* model, const shared_
 			for (u32 i = 0; i <= 8; ++i)
 			{
 				if (i == 0)
-					xr_strcpy(buff, pm->m_base_name.c_str());
+					xr_strcpy(buff, pm.m_base_name.c_str());
 				else
-					xr_sprintf(buff, "%s%d", pm->m_base_name.c_str(), i);
+					xr_sprintf(buff, "%s%d", pm.m_base_name.c_str(), i);
 
 				motion_ID = model->ID_Cycle_Safe(buff);
+
+				if (!motion_ID.valid() && i == 0)
+					motion_ID = model->ID_Cycle_Safe("hand_idle_doun");
+
 				if (motion_ID.valid())
 				{
-					pm->m_animations.resize(pm->m_animations.size() + 1);
-					pm->m_animations.back().mid = motion_ID;
-					pm->m_animations.back().name = buff;
+					pm.m_animations.resize(pm.m_animations.size() + 1);
+					pm.m_animations.back().mid = motion_ID;
+					pm.m_animations.back().name = buff;
 #ifdef DEBUG
 					//					Msg(" alias=[%s] base=[%s] name=[%s]",pm->m_alias_name.c_str(), pm->m_base_name.c_str(), buff);
 #endif // #ifdef DEBUG
 				}
 			}
-			R_ASSERT2(pm->m_animations.size(), make_string("motion not found [%s]", pm->m_base_name.c_str()).c_str());
+			VERIFY2(pm.m_animations.size(), make_string("motion not found [%s]", pm.m_base_name.c_str()).c_str());
+			m_anims.emplace(_b.first, std::move(pm));
 		}
 	}
 }
 
 Fvector& attachable_hud_item::hands_attach_pos()
 {
-	return Fvector{ m_measures.m_hands_attach[0] }.add(m_hand_offset_pos);
+	return m_measures.m_hands_attach[0];
 }
-Fvector& attachable_hud_item::hands_attach_rot() { return m_measures.m_hands_attach[1]; }
+
+Fvector& attachable_hud_item::hands_attach_rot()
+{
+	return m_measures.m_hands_attach[1];
+}
+
 Fvector& attachable_hud_item::hands_offset_pos()
 {
-	u8 idx = m_parent_hud_item->GetCurrentHudOffsetIdx();
-	return Fvector{ m_measures.m_hands_offset[0][idx] }.add(m_hud_offset_pos);
+	const u8 idx = m_parent_hud_item->GetCurrentHudOffsetIdx();
+	return m_measures.m_hands_offset[0][idx];
 }
 
 Fvector& attachable_hud_item::hands_offset_rot()
 {
-	u8 idx = m_parent_hud_item->GetCurrentHudOffsetIdx();
+	const u8 idx = m_parent_hud_item->GetCurrentHudOffsetIdx();
 	return m_measures.m_hands_offset[1][idx];
 }
 
@@ -151,10 +137,10 @@ void attachable_hud_item::update(bool bForce)
 {
 	if (!bForce && m_upd_firedeps_frame == Device.dwFrame)
 		return;
-	bool is_16x9 = UI().is_widescreen();
+	//bool is_16x9 = UI().is_widescreen();
 
-	if (!!m_measures.m_prop_flags.test(hud_item_measures::e_16x9_mode_now) != is_16x9)
-		m_measures.load(m_sect_name, m_model);
+	//if (!!m_measures.m_prop_flags.test(hud_item_measures::e_16x9_mode_now) != is_16x9)
+	//	m_measures.load(m_sect_name, m_model);
 
 	Fvector ypr = m_measures.m_item_attach[1];
 	ypr.mul(PI / 180.f);
@@ -181,25 +167,52 @@ void attachable_hud_item::update_hud_additional(Fmatrix& trans)
 	}
 }
 
-void attachable_hud_item::setup_firedeps(firedeps& fd)
+//ENGINE_API extern float psHUD_FOV;
+//void transform_to_hud(Fvector& pos)
+//{
+//	Fmatrix hud_p;
+//	hud_p.build_projection(deg2rad(Device.fFOV * .75f),
+//		Device.fASPECT,
+//		VIEWPORT_NEAR_HUD,
+//		g_pGamePersistent->Environment().CurrentEnv->far_plane);
+//
+//	Device.mView.transform_tiny(pos);
+//	hud_p.transform_tiny(pos);
+//
+//	Device.mProject.transform_tiny(pos);
+//	Device.mInvView.transform_tiny(pos);
+//}
+
+void attachable_hud_item::setup_firedeps(firedeps& fd, bool is_particles)
 {
-	update(false);
+	update(true);
 	// fire point&direction
+	Fvector correction_dir{};
+	Fvector correction_pos{};
 	if (m_measures.m_prop_flags.test(hud_item_measures::e_fire_point))
 	{
 		Fmatrix& fire_mat = m_model->LL_GetTransform(m_measures.m_fire_bone);
 		fire_mat.transform_tiny(fd.vLastFP, m_measures.m_fire_point_offset);
 		m_item_transform.transform_tiny(fd.vLastFP);
 
+
 		fd.vLastFD.set(m_measures.m_fire_direction);
 		m_item_transform.transform_dir(fd.vLastFD);
 		VERIFY(_valid(fd.vLastFD));
 		VERIFY(_valid(fd.vLastFD));
+		
+		correction_dir.sub(fd.vLastFD, Device.vCameraDirection);
+		correction_dir.mul(.5f);
+		correction_pos.mul(correction_dir, .33f);
+
+		fd.vLastFP.add(correction_pos);
+		fd.vLastFD.add(correction_dir);
 
 		fd.m_FireParticlesXForm.identity();
 		fd.m_FireParticlesXForm.k.set(fd.vLastFD);
-		Fvector::generate_orthonormal_basis_normalized(
-			fd.m_FireParticlesXForm.k, fd.m_FireParticlesXForm.j, fd.m_FireParticlesXForm.i);
+		Fvector::generate_orthonormal_basis_normalized(fd.m_FireParticlesXForm.k,
+			fd.m_FireParticlesXForm.j,
+			fd.m_FireParticlesXForm.i);
 		VERIFY(_valid(fd.m_FireParticlesXForm));
 	}
 
@@ -208,6 +221,7 @@ void attachable_hud_item::setup_firedeps(firedeps& fd)
 		Fmatrix& fire_mat = m_model->LL_GetTransform(m_measures.m_fire_bone2);
 		fire_mat.transform_tiny(fd.vLastFP2, m_measures.m_fire_point2_offset);
 		m_item_transform.transform_tiny(fd.vLastFP2);
+		fd.vLastFP2.add(correction_pos);
 		VERIFY(_valid(fd.vLastFP2));
 		VERIFY(_valid(fd.vLastFP2));
 	}
@@ -217,6 +231,7 @@ void attachable_hud_item::setup_firedeps(firedeps& fd)
 		Fmatrix& fire_mat = m_model->LL_GetTransform(m_measures.m_shell_bone);
 		fire_mat.transform_tiny(fd.vLastSP, m_measures.m_shell_point_offset);
 		m_item_transform.transform_tiny(fd.vLastSP);
+		fd.vLastSP.add(correction_pos);
 		VERIFY(_valid(fd.vLastSP));
 		VERIFY(_valid(fd.vLastSP));
 	}
@@ -235,15 +250,8 @@ bool attachable_hud_item::render_item_ui_query() { return m_parent_hud_item->ren
 void attachable_hud_item::render_item_ui() { m_parent_hud_item->render_item_3d_ui(); }
 void hud_item_measures::load(const shared_str& sect_name, IKinematics* K)
 {
-	bool is_16x9 = UI().is_widescreen();
-	string64 _prefix;
-	xr_sprintf(_prefix, "%s", is_16x9 ? "_16x9" : "");
-	string128 val_name;
-
-	strconcat(sizeof(val_name), val_name, "hands_position", _prefix);
-	m_hands_attach[0] = pSettings->r_fvector3(sect_name, val_name);
-	strconcat(sizeof(val_name), val_name, "hands_orientation", _prefix);
-	m_hands_attach[1] = pSettings->r_fvector3(sect_name, val_name);
+	m_hands_attach[0] = pSettings->r_fvector3(sect_name, "hands_position");
+	m_hands_attach[1] = pSettings->r_fvector3(sect_name, "hands_orientation");
 
 	m_item_attach[0] = pSettings->r_fvector3(sect_name, "item_position");
 	m_item_attach[1] = pSettings->r_fvector3(sect_name, "item_orientation");
@@ -284,15 +292,11 @@ void hud_item_measures::load(const shared_str& sect_name, IKinematics* K)
 	m_hands_offset[0][0].set(0, 0, 0);
 	m_hands_offset[1][0].set(0, 0, 0);
 
-	strconcat(sizeof(val_name), val_name, "aim_hud_offset_pos", _prefix);
-	m_hands_offset[0][1] = pSettings->r_fvector3(sect_name, val_name);
-	strconcat(sizeof(val_name), val_name, "aim_hud_offset_rot", _prefix);
-	m_hands_offset[1][1] = pSettings->r_fvector3(sect_name, val_name);
+	m_hands_offset[0][1] = pSettings->r_fvector3(sect_name, "aim_hud_offset_pos");
+	m_hands_offset[1][1] = pSettings->r_fvector3(sect_name, "aim_hud_offset_rot");
 
-	strconcat(sizeof(val_name), val_name, "gl_hud_offset_pos", _prefix);
-	m_hands_offset[0][2] = pSettings->r_fvector3(sect_name, val_name);
-	strconcat(sizeof(val_name), val_name, "gl_hud_offset_rot", _prefix);
-	m_hands_offset[1][2] = pSettings->r_fvector3(sect_name, val_name);
+	m_hands_offset[0][2] = pSettings->r_fvector3(sect_name, "gl_hud_offset_pos");
+	m_hands_offset[1][2] = pSettings->r_fvector3(sect_name, "gl_hud_offset_rot");
 
 	R_ASSERT2(pSettings->line_exist(sect_name, "fire_point") == pSettings->line_exist(sect_name, "fire_bone"),
 		sect_name.c_str());
@@ -301,14 +305,9 @@ void hud_item_measures::load(const shared_str& sect_name, IKinematics* K)
 	R_ASSERT2(pSettings->line_exist(sect_name, "shell_point") == pSettings->line_exist(sect_name, "shell_bone"),
 		sect_name.c_str());
 
-	m_prop_flags.set(e_16x9_mode_now, is_16x9);
+	//m_prop_flags.set(e_16x9_mode_now, is_16x9);
 
 	//Загрузка параметров инерции --#SM+# Begin--
-	m_inertion_params.m_pitch_offset_r = READ_IF_EXISTS(pSettings, r_float, sect_name, "pitch_offset_right", PITCH_OFFSET_R);
-	m_inertion_params.m_pitch_offset_n = READ_IF_EXISTS(pSettings, r_float, sect_name, "pitch_offset_up", PITCH_OFFSET_N);
-	m_inertion_params.m_pitch_offset_d = READ_IF_EXISTS(pSettings, r_float, sect_name, "pitch_offset_forward", PITCH_OFFSET_D);
-	m_inertion_params.m_pitch_low_limit = READ_IF_EXISTS(pSettings, r_float, sect_name, "pitch_offset_up_low_limit", PITCH_LOW_LIMIT);
-
 	m_inertion_params.m_origin_offset = READ_IF_EXISTS(pSettings, r_float, sect_name, "inertion_origin_offset", ORIGIN_OFFSET);
 	m_inertion_params.m_origin_offset_aim = READ_IF_EXISTS(pSettings, r_float, sect_name, "inertion_origin_aim_offset", ORIGIN_OFFSET_AIM);
 	m_inertion_params.m_tendto_speed = READ_IF_EXISTS(pSettings, r_float, sect_name, "inertion_tendto_speed", TENDTO_SPEED);
@@ -523,10 +522,10 @@ void player_hud::render_hud()
 	::Render->set_Transform(&m_transform);
 	::Render->add_Visual(m_model->dcast_RenderVisual(), true);
 
-	if (m_attached_items[0])
+	if (m_attached_items[0] && m_model->dcast_RenderVisual())
 		m_attached_items[0]->render();
 
-	if (m_attached_items[1])
+	if (m_attached_items[1] && m_model->dcast_RenderVisual())
 		m_attached_items[1]->render();
 }
 
@@ -555,25 +554,6 @@ u32 player_hud::motion_length(const MotionID& M, const CMotionDef*& md, float sp
 	}
 	return 0;
 }
-const Fvector& player_hud::attach_rot() const
-{
-	if (m_attached_items[0])
-		return m_attached_items[0]->hands_attach_rot();
-	else if (m_attached_items[1])
-		return m_attached_items[1]->hands_attach_rot();
-	else
-		return m_default;
-}
-
-const Fvector& player_hud::attach_pos() const
-{
-	if (m_attached_items[0])
-		return m_attached_items[0]->hands_attach_pos();
-	else if (m_attached_items[1])
-		return m_attached_items[1]->hands_attach_pos();
-	else
-		return m_default;
-}
 
 void player_hud::update(const Fmatrix& cam_trans)
 {
@@ -581,10 +561,31 @@ void player_hud::update(const Fmatrix& cam_trans)
 	update_inertion(trans);
 	update_additional(trans);
 
-	Fvector ypr = attach_rot();
-	ypr.mul(PI / 180.f);
-	m_attach_offset.setHPB(ypr.x, ypr.y, ypr.z);
-	m_attach_offset.translate_over(attach_pos());
+	auto attach_pos = [this](size_t part) {
+		Fvector pos{};
+		if (m_attached_items[part])
+			pos.set(m_attached_items[part]->hands_attach_pos());
+		else if (m_attached_items[!part])
+			pos.set(m_attached_items[!part]->hands_attach_pos());
+		return pos;
+	};
+
+	auto attach_rot = [this](size_t part) {
+		Fvector rote{};
+		if (m_attached_items[part])
+			rote.set(m_attached_items[part]->hands_attach_rot());
+		else if (m_attached_items[!part])
+			rote.set(m_attached_items[!part]->hands_attach_rot());
+
+		rote.mul(PI / 180.f);
+		return rote;
+	};
+
+	Fvector m1pos = attach_pos(0);
+	Fvector m1rot = attach_rot(0);
+	//getHPB
+	m_attach_offset.setHPB(m1rot.x, m1rot.y, m1rot.z);
+	m_attach_offset.translate_over(m1pos);
 	m_transform.mul(trans, m_attach_offset);
 	// insert inertion here
 
@@ -635,18 +636,10 @@ void player_hud::update_inertion(Fmatrix& trans)
 	{
 		attachable_hud_item* pMainHud = m_attached_items[0];
 
-		Fmatrix								xform;
-		Fvector& origin = trans.c;
-		xform = trans;
-
-
-		static Fvector						st_last_dir = { 0, 0, 0 };
+		if (st_last_pos.distance_to(trans.c) > 1.f)
+			st_last_pos.set(trans.c);
 
 		// load params
-		float m_pitch_offset_r = PITCH_OFFSET_R;
-		float m_pitch_offset_n = PITCH_OFFSET_N;
-		float m_pitch_offset_d = PITCH_OFFSET_D;
-		float m_pitch_low_limit = PITCH_LOW_LIMIT;
 		float m_origin_offset = ORIGIN_OFFSET;
 		float m_origin_offset_aim = ORIGIN_OFFSET_AIM;
 		float m_tendto_speed = TENDTO_SPEED;
@@ -657,10 +650,6 @@ void player_hud::update_inertion(Fmatrix& trans)
 			CHudItem* itm = pMainHud->m_parent_hud_item;
 			if (itm)
 			{
-				m_pitch_offset_r = itm->m_inertion_params.m_pitch_offset_r;
-				m_pitch_offset_n = itm->m_inertion_params.m_pitch_offset_n;
-				m_pitch_offset_d = itm->m_inertion_params.m_pitch_offset_d;
-				m_pitch_low_limit = itm->m_inertion_params.m_pitch_low_limit;
 				m_origin_offset = itm->m_inertion_params.m_origin_offset;
 				m_origin_offset_aim = itm->m_inertion_params.m_origin_offset_aim;
 				m_tendto_speed = itm->m_inertion_params.m_tendto_speed;
@@ -668,23 +657,13 @@ void player_hud::update_inertion(Fmatrix& trans)
 			}
 		}
 
-		// calc difference
-		Fvector								diff_dir;
-		diff_dir.sub(xform.k, st_last_dir);
+		Fvector diff_dir;
+		diff_dir.sub(trans.k, st_last_dir);
 
-		// clamp by PI_DIV_2
-		Fvector last;
-		last.normalize_safe(st_last_dir);
-		float dot = last.dotproduct(xform.k);
-		if (dot < EPS)
-		{
-			Fvector v0;
-			v0.crossproduct(st_last_dir, xform.k);
-			st_last_dir.crossproduct(xform.k, v0);
-			diff_dir.sub(xform.k, st_last_dir);
-		}
+		Fvector diff_pos;
+		diff_pos.sub(trans.c, st_last_pos);
 
-		// tend to forward
+		//// tend to forward
 		float _tendto_speed, _origin_offset;
 		if (pMainHud && pMainHud->m_parent_hud_item->GetCurrentHudOffsetIdx() > 0)
 		{ // inertia while "aiming"
@@ -698,20 +677,11 @@ void player_hud::update_inertion(Fmatrix& trans)
 		}
 
 		st_last_dir.mad(diff_dir, _tendto_speed * Device.fTimeDelta);
-		origin.mad(diff_dir, _origin_offset);
+		diff_dir.mul(_tendto_speed);
+		trans.k.mad(diff_dir, _origin_offset);
 
-		// pitch compensation
-		float pitch = angle_normalize_signed(xform.k.getP());
-
-		// movement in/out
-		origin.mad(xform.k, -pitch * m_pitch_offset_d);
-
-		// movement left
-		origin.mad(xform.i, -pitch * m_pitch_offset_r);
-
-		// movement up/down
-		clamp(pitch, m_pitch_low_limit, PI);
-		origin.mad(xform.j, -pitch * m_pitch_offset_n);
+		st_last_pos.mad(diff_pos, _tendto_speed * Device.fTimeDelta);
+		trans.c.mad(diff_pos, _origin_offset);
 	}
 }
 

@@ -84,22 +84,6 @@ IBlender* CResourceManager::_FindBlender(LPCSTR Name)
 		return I->second;
 }
 
-void CResourceManager::ED_UpdateBlender(LPCSTR Name, IBlender* data)
-{
-	LPSTR N = LPSTR(Name);
-	map_Blender::iterator I = m_blenders.find(N);
-	if (I != m_blenders.end())
-	{
-		R_ASSERT(data->getDescription().CLS == I->second->getDescription().CLS);
-		xr_delete(I->second);
-		I->second = data;
-	}
-	else
-	{
-		m_blenders.insert(std::make_pair(xr_strdup(Name), data));
-	}
-}
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -154,7 +138,8 @@ ShaderElement* CResourceManager::_CreateElement(ShaderElement& S)
 			return v_elements[it];
 
 	// Create _new_ entry
-	ShaderElement* N = new ShaderElement(S);
+	ShaderElement* N = new ShaderElement();
+	N->_copy(S);
 	N->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 	v_elements.push_back(N);
 	return N;
@@ -173,7 +158,7 @@ Shader* CResourceManager::_cpp_Create(
 	IBlender* B, LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
 	CBlender_Compile C;
-	Shader S;
+	Shader* N = new Shader();
 
 	//.
 	// if (strstr(s_shader,"transparent"))	__asm int 3;
@@ -206,7 +191,7 @@ Shader* CResourceManager::_cpp_Create(
 		//.		C.bDetail			= _GetDetailTexture(*C.L_textures[0],C.detail_texture,C.detail_scaler);
 		ShaderElement E;
 		C._cpp_Compile(&E);
-		S.E[0] = _CreateElement(E);
+		N->E[0] = _CreateElement(E);
 	}
 
 	// Compile element	(LOD1)
@@ -216,7 +201,7 @@ Shader* CResourceManager::_cpp_Create(
 		C.bDetail = m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
 		ShaderElement E;
 		C._cpp_Compile(&E);
-		S.E[1] = _CreateElement(E);
+		N->E[1] = _CreateElement(E);
 	}
 
 	// Compile element
@@ -225,7 +210,7 @@ Shader* CResourceManager::_cpp_Create(
 		C.bDetail = FALSE;
 		ShaderElement E;
 		C._cpp_Compile(&E);
-		S.E[2] = _CreateElement(E);
+		N->E[2] = _CreateElement(E);
 	}
 
 	// Compile element
@@ -234,7 +219,7 @@ Shader* CResourceManager::_cpp_Create(
 		C.bDetail = FALSE;
 		ShaderElement E;
 		C._cpp_Compile(&E);
-		S.E[3] = _CreateElement(E);
+		N->E[3] = _CreateElement(E);
 	}
 
 	// Compile element
@@ -243,7 +228,7 @@ Shader* CResourceManager::_cpp_Create(
 		C.bDetail = TRUE; //.$$$ HACK :)
 		ShaderElement E;
 		C._cpp_Compile(&E);
-		S.E[4] = _CreateElement(E);
+		N->E[4] = _CreateElement(E);
 	}
 
 	// Compile element
@@ -252,16 +237,19 @@ Shader* CResourceManager::_cpp_Create(
 		C.bDetail = FALSE;
 		ShaderElement E;
 		C._cpp_Compile(&E);
-		S.E[5] = _CreateElement(E);
+		N->E[5] = _CreateElement(E);
 	}
 
 	// Search equal in shaders array
-	for (u32 it = 0; it < v_shaders.size(); it++)
-		if (S.equal(v_shaders[it]))
-			return v_shaders[it];
+	for (auto & sheder : v_shaders)
+	{
+		if (N->equal(sheder))
+		{
+			xr_delete(N);
+			return sheder;
+		}
+	}
 
-	// Create _new_ entry
-	Shader* N = new Shader(S);
 	N->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 	v_shaders.push_back(N);
 	return N;
@@ -395,7 +383,7 @@ void CResourceManager::_DumpMemoryUsage()
 		{
 			u32 m = I->second->flags.MemoryUsage;
 			shared_str n = I->second->cName;
-			mtex.insert(std::make_pair(m, std::make_pair(I->second->dwReference, n)));
+			mtex.insert(std::make_pair(m, std::make_pair(I->second->dwReference.load(), n)));
 		}
 	}
 

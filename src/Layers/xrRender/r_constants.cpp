@@ -111,3 +111,9 @@ BOOL R_constant_table::equal(R_constant_table& C)
 
 	return TRUE;
 }
+
+void R_constant_table::_copy(const R_constant_table& Other)
+{
+	table = Other.table;
+	m_CBTable = Other.m_CBTable;
+}

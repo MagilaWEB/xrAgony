@@ -228,6 +228,9 @@ void CRenderTarget::phase_combine()
 
 		dxEnvDescriptorMixerRender& envdescren = *(dxEnvDescriptorMixerRender*)(&*envdesc.m_pDescriptorMixer);
 
+		if (envdescren.sky_r_textures_env.empty())
+			return;
+
 		// Setup textures
 		ID3DBaseTexture* e0 = envdescren.sky_r_textures_env[0].second->surface_get();
 		ID3DBaseTexture* e1 = envdescren.sky_r_textures_env[1].second->surface_get();

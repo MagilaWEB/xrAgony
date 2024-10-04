@@ -8,7 +8,19 @@
 
 #pragma once
 
-IC void CDebugRenderer::render() { ::DRender->Render(); }
+IC void CDebugRenderer::render()
+{
+	::DRender->Render();
+	for (auto & [pos, color] : dbg_position_render_ui)
+	{
+		UI().Font().pFontArial14->SetAligment(CGameFont::alCenter);
+		UI().Font().pFontArial14->SetColor(color);
+		UI().Font().pFontArial14->Out(pos.x, pos.y, "+");
+		UI().Font().pFontArial14->OnRender();
+	}
+
+	dbg_position_render_ui.clear();
+}
 IC void CDebugRenderer::draw_line(
 	const Fmatrix& matrix, const Fvector& vertex0, const Fvector& vertex1, const u32& color)
 {
@@ -24,8 +36,8 @@ IC void CDebugRenderer::draw_aabb(const Fvector& center, const float& half_radiu
 	Fvector half_radius;
 	half_radius.set(half_radius_x, half_radius_y, half_radius_z);
 
-	Fmatrix matrix;
-	matrix.translate(center);
+	Fmatrix matrix = Device.mInvView;
+	matrix.translate_over(center);
 
 	draw_obb(matrix, half_radius, color);
 }

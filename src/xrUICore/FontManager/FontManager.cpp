@@ -8,10 +8,13 @@ CFontManager::CFontManager()
 	//Device.seqDeviceReset.Add(this, REG_PRIORITY_HIGH);
 
 	InitializeFonts();
+	Device.seqRender.Add(this, 0);
 }
 
 CFontManager::~CFontManager()
 {
+	Device.seqRender.Remove(this);
+
 	for (auto& [FontName, FontObj] : pFonts)
 		xr_delete(FontObj);
 
@@ -40,20 +43,28 @@ void CFontManager::InitializeFonts()
 	pFontDI = Get("DI");
 
 	pFontArial14 = Clone("arial", "14", 14);
+	pFontArial14->Renders(true);
 
 	pFontGraffiti19Russian = Clone("graffiti", "19", 19);
+	pFontGraffiti19Russian->Renders(true);
 
 	pFontGraffiti22Russian = Clone("graffiti", "22", 22);
+	pFontGraffiti22Russian->Renders(true);
 
 	pFontGraffiti32Russian = Clone("graffiti", "32", 32);
+	pFontGraffiti32Russian->Renders(true);
 
 	pFontGraffiti50Russian = Clone("graffiti", "50", 50);
+	pFontGraffiti50Russian->Renders(true);
 
 	pFontLetterica16Russian = Clone("letterica", "16", 16);
+	pFontLetterica16Russian->Renders(true);
 
 	pFontLetterica18Russian = Clone("letterica", "18", 18);
+	pFontLetterica18Russian->Renders(true);
 
 	pFontLetterica25 = Clone("letterica", "25", 25);
+	pFontLetterica25->Renders(true);
 
 	pFontStat = Get("statistic");
 }
@@ -83,7 +94,11 @@ CGameFont* CFontManager::Clone(LPCSTR name_id, LPCSTR id_clone, u16 size)
 		if (!xr_strcmp(FontName, name_id))
 		{
 			if (xr_strcmp(FontName, newName))
-				return pFonts.emplace(newName.c_str(), new CGameFont(FonstObj->GetSection(), FonstObj->GetFlags(), size)).first->second;
+			{
+				auto&font = pFonts.emplace(newName.c_str(), new CGameFont(FonstObj->GetSection(), FonstObj->GetFlags(), size)).first->second;
+				font->Renders(false);
+				return font;
+			}
 			else
 			{
 				FATAL("You cannot clone a font with the same cloning id two or more times!");
@@ -119,13 +134,14 @@ CFontManager::DATA_FONT CFontManager::GetData() const
 	return FontsData;
 }
 
-void CFontManager::Render()
+void CFontManager::OnRender()
 {
 	if (Device.m_ScopeVP.IsSVPRender())
 		return;
 
 	for (auto & iter : pFonts)
-		iter.second->OnRender();
+		if(iter.second->IsRenders())
+			iter.second->OnRender();
 }
 
 //void CFontManager::OnDeviceReset()

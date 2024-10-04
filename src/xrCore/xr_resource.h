@@ -4,35 +4,30 @@
 #include "xrstring.h"
 
 // resource itself, the base class for all derived resources
-class XRCORE_API xr_resource
+struct XRCORE_API xr_resource
 {
-public:
 	enum
 	{
 		RF_REGISTERED = 1 << 0
 	};
 
-public:
-	u32 dwReference;
-	xr_resource() : dwReference(0) {}
+	std::atomic_uint dwReference{ 0 };
+	xr_resource() {};
 };
 
-class XRCORE_API xr_resource_flagged : public xr_resource
+struct XRCORE_API xr_resource_flagged : public xr_resource
 {
-public:
 	enum
 	{
 		RF_REGISTERED = 1 << 0
 	};
 
-public:
 	u32 dwFlags;
 	xr_resource_flagged() : dwFlags(0) {}
 };
 
-class XRCORE_API xr_resource_named : public xr_resource_flagged
+struct XRCORE_API xr_resource_named : public xr_resource_flagged
 {
-public:
 	shared_str cName;
 
 	const char* set_name(const char* name)
@@ -45,8 +40,8 @@ public:
 };
 
 // resptr_BASE
-template <class T>
-class resptr_base
+template <typename T>
+struct resptr_base
 {
 protected:
 	T* p_;
@@ -57,14 +52,14 @@ protected:
 	{
 		if (0 == p_)
 			return;
-		p_->dwReference++;
+		p_->dwReference.store(p_->dwReference.load() + 1);
 	}
 	void _dec()
 	{
 		if (0 == p_)
 			return;
-		p_->dwReference--;
-		if (0 == p_->dwReference)
+		p_->dwReference.store(p_->dwReference.load() - 1);
+		if (0 == p_->dwReference.load())
 			xr_delete(p_);
 	}
 
@@ -86,8 +81,8 @@ public:
 };
 
 // resptr_CORE
-template <class T, typename C>
-class resptr_core : public C
+template <typename T, typename C>
+struct resptr_core : public C
 {
 protected:
 	typedef resptr_core this_type;

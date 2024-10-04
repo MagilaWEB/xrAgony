@@ -55,6 +55,11 @@ public:
 	{
 		tbb::parallel_sort(inherited::begin(), inherited::end(), _Pred);
 	}
+
+	IC void sort()
+	{
+		tbb::parallel_sort(inherited::begin(), inherited::end());
+	}
 };
 
 #define DEF_VECTOR(N, T)\

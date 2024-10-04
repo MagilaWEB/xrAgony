@@ -12,7 +12,6 @@
 #include "x_ray.h"
 #include "xr_input.h"
 #include "xr_ioc_cmd.h"
-#include "XR_IOConsole.h"
 #include "xrCDB/ISpatial.h"
 #include "xrSASH.h"
 
@@ -110,14 +109,6 @@ ENGINE_API void Startup()
 {
 	execUserScript();
 	InitSound();
-
-	// ...command line for auto start
-	pcstr startArgs = strstr(Core.Params, "-start ");
-	if (startArgs)
-		Console->Execute(startArgs + 1);
-	pcstr loadArgs = strstr(Core.Params, "-load ");
-	if (loadArgs)
-		Console->Execute(loadArgs + 1);
 	
 	// Initialize APP
 	Device.Create();

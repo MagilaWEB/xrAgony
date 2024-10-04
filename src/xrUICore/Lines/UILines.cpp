@@ -281,7 +281,7 @@ void CUILines::SetTextColor(u32 color)
 	m_dwTextColor = color;
 }
 
-void CUILines::SetFont(CGameFont* pFont)
+void CUILines::SetFont(CGameFont*& pFont)
 {
 	if (pFont == m_pFont)
 		return;
@@ -390,6 +390,7 @@ void CUILines::Draw(float x, float y)
 			pos.y += height;
 		}
 	}
+
 	m_pFont->OnRender();
 }
 

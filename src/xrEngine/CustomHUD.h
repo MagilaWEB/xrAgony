@@ -27,7 +27,6 @@ public:
 
 	BENCH_SEC_SCRAMBLEVTBL2
 
-	virtual void Render_First() { ; }
 	virtual void Render_Last() { ; }
 	virtual void Render_Actor_Shadow() {}
 	BENCH_SEC_SCRAMBLEVTBL1

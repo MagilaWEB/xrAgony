@@ -26,7 +26,7 @@ struct player_hud_motion
 
 struct player_hud_motion_container
 {
-	xr_vector<player_hud_motion> m_anims;
+	xr_map<shared_str, player_hud_motion> m_anims;
 	player_hud_motion* find_motion(const shared_str& name);
 	void load(IKinematicsAnimated* model, const shared_str& sect);
 };
@@ -37,8 +37,7 @@ struct hud_item_measures
 	{
 		e_fire_point = (1 << 0),
 		e_fire_point2 = (1 << 1),
-		e_shell_point = (1 << 2),
-		e_16x9_mode_now = (1 << 3)
+		e_shell_point = (1 << 2)
 	};
 	Flags8 m_prop_flags;
 
@@ -96,7 +95,7 @@ struct attachable_hud_item
 	void load(const shared_str& sect_name);
 	void update(bool bForce);
 	void update_hud_additional(Fmatrix& trans);
-	void setup_firedeps(firedeps& fd);
+	void setup_firedeps(firedeps& fd, bool is_particles = false);
 	void render();
 	void render_item_ui();
 	bool render_item_ui_query();
@@ -156,8 +155,6 @@ private:
 	bool inertion_allowed();
 
 private:
-	const Fvector& attach_rot() const;
-	const Fvector& attach_pos() const;
 
 	shared_str m_sect_name;
 
@@ -165,6 +162,9 @@ private:
 	Fvector m_default{0,0,0};	//pos,rot
 
 	Fmatrix m_transform;
+	Fvector st_last_dir{};
+	Fvector st_last_pos{};
+
 	IKinematicsAnimated* m_model;
 	xr_vector<u16> m_ancors;
 	attachable_hud_item* m_attached_items[2];

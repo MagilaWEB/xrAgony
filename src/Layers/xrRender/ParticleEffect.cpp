@@ -373,7 +373,7 @@ __forceinline void magnitude_sse(Fvector& vec, float& res)
 }
 
 #include <immintrin.h>
-extern ENGINE_API float		psHUD_FOV;
+//extern ENGINE_API float		psHUD_FOV;
 void CParticleEffect::Render(float)
 {
 	u32		dwOffset, dwCount;
@@ -491,18 +491,18 @@ void CParticleEffect::Render(float)
 
 			if (dwCount)
 			{
-				Fmatrix Pold = Device.mProject;
-				Fmatrix FTold = Device.mFullTransform;
-				if (GetHudMode())
-				{
-					Device.mProject.build_projection(deg2rad(psHUD_FOV * Device.fFOV), Device.fASPECT, /*VIEWPORT_NEAR*/0.02f,
-						g_pGamePersistent->Environment().CurrentEnv->far_plane);
+				//Fmatrix Pold = Device.mProject;
+				//Fmatrix FTold = Device.mFullTransform;
+				//if (GetHudMode())
+				//{
+				//	Device.mProject.build_projection(deg2rad(Device.fFOV * 0.75f), Device.fASPECT, VIEWPORT_NEAR_HUD,
+				//		g_pGamePersistent->Environment().CurrentEnv->far_plane);
 
-					Device.mFullTransform.mul(Device.mProject, Device.mView);
-					RCache.set_xform_project(Device.mProject);
-					RImplementation.rmNear();
-					ApplyTexgen(Device.mFullTransform);
-				}
+				//	Device.mFullTransform.mul(Device.mProject, Device.mView);
+				//	RCache.set_xform_project(Device.mProject);
+				//	RImplementation.rmNear();
+				//	ApplyTexgen(Device.mFullTransform);
+				//}
 
 				RCache.set_xform_world(Fidentity);
 				RCache.set_Geometry(geom);
@@ -511,14 +511,14 @@ void CParticleEffect::Render(float)
 				RCache.Render(D3DPT_TRIANGLELIST, dwOffset, 0, dwCount, 0, dwCount / 2);
 				RCache.set_CullMode(CULL_CCW);
 
-				if (GetHudMode())
-				{
-					RImplementation.rmNormal();
-					Device.mProject = Pold;
-					Device.mFullTransform = FTold;
-					RCache.set_xform_project(Device.mProject);
-					ApplyTexgen(Device.mFullTransform);
-				}
+				//if (GetHudMode())
+				//{
+				//	RImplementation.rmNormal();
+				//	Device.mProject = Pold;
+				//	Device.mFullTransform = FTold;
+				//	RCache.set_xform_project(Device.mProject);
+				//	ApplyTexgen(Device.mFullTransform);
+				//}
 			}
 		}
 	}
@@ -574,7 +574,7 @@ IC void FillSprite(FVF::LIT*& pv, const Fvector& pos, const Fvector& dir, const 
 	pv->set(b.x + pos.x, b.y + pos.y, b.z + pos.z, clr, rb.x, lt.y);	pv++;
 }
 
-extern ENGINE_API float		psHUD_FOV;
+//extern ENGINE_API float		psHUD_FOV;
 void CParticleEffect::Render(float)
 {
 	u32		dwOffset, dwCount;
@@ -663,22 +663,22 @@ void CParticleEffect::Render(float)
 			RCache.Vertex.Unlock(dwCount, geom->vb_stride);
 			if (dwCount)
 			{
-#ifndef _EDITOR
-				Fmatrix Pold = Device.mProject;
-				Fmatrix FTold = Device.mFullTransform;
-				if (GetHudMode())
-				{
-					Device.mProject.build_projection(deg2rad(psHUD_FOV * Device.fFOV),
-						Device.fASPECT,
-						VIEWPORT_NEAR_HUD,
-						g_pGamePersistent->Environment().CurrentEnv->far_plane);
-
-					Device.mFullTransform.mul(Device.mProject, Device.mView);
-					RCache.set_xform_project(Device.mProject);
-					RImplementation.rmNear();
-					ApplyTexgen(Device.mFullTransform);
-				}
-#endif
+//#ifndef _EDITOR
+//				Fmatrix Pold = Device.mProject;
+//				Fmatrix FTold = Device.mFullTransform;
+//				if (GetHudMode())
+//				{
+//					Device.mProject.build_projection(deg2rad(Device.fFOV * 0.75f),
+//						Device.fASPECT,
+//						VIEWPORT_NEAR_HUD,
+//						g_pGamePersistent->Environment().CurrentEnv->far_plane);
+//
+//					Device.mFullTransform.mul(Device.mProject, Device.mView);
+//					RCache.set_xform_project(Device.mProject);
+//					RImplementation.rmNear();
+//					ApplyTexgen(Device.mFullTransform);
+//				}
+//#endif
 
 				RCache.set_xform_world(Fidentity);
 				RCache.set_Geometry(geom);
@@ -686,16 +686,16 @@ void CParticleEffect::Render(float)
 				RCache.set_CullMode(m_Def->m_Flags.is(CPEDef::dfCulling) ? (m_Def->m_Flags.is(CPEDef::dfCullCCW) ? CULL_CCW : CULL_CW) : CULL_NONE);
 				RCache.Render(D3DPT_TRIANGLELIST, dwOffset, 0, dwCount, 0, dwCount / 2);
 				RCache.set_CullMode(CULL_CCW);
-#ifndef _EDITOR
-				if (GetHudMode())
-				{
-					RImplementation.rmNormal();
-					Device.mProject = Pold;
-					Device.mFullTransform = FTold;
-					RCache.set_xform_project(Device.mProject);
-					ApplyTexgen(Device.mFullTransform);
-				}
-#endif
+//#ifndef _EDITOR
+//				if (GetHudMode())
+//				{
+//					RImplementation.rmNormal();
+//					Device.mProject = Pold;
+//					Device.mFullTransform = FTold;
+//					RCache.set_xform_project(Device.mProject);
+//					ApplyTexgen(Device.mFullTransform);
+//				}
+//#endif
 			}
 		}
 	}

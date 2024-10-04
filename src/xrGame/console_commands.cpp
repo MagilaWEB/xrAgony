@@ -64,13 +64,9 @@ extern u64 g_qwStartGameTime;
 extern u64 g_qwEStartGameTime;
 
 ENGINE_API
-extern	float	psHUD_FOV;
+//extern	float	psHUD_FOV;
 extern	float	psSqueezeVelocity;
-extern Fvector	m_hud_offset_pos;
-extern Fvector	m_hand_offset_pos;
 extern BOOL		g_use_aim_inertion;
-
-
 
 extern int x_m_x;
 extern int x_m_z;
@@ -620,6 +616,14 @@ public:
 	{
 		string_path saved_game;
 		strncpy_s(saved_game, sizeof(saved_game), args, _MAX_PATH - 1);
+		
+		if (!ai().get_alife())
+		{
+			LPSTR command;
+			STRCONCAT(command, "start server(", saved_game, "/single/alife/load)");
+			Console->Execute(command);
+			return;
+		}
 
 		if (!ai().get_alife())
 		{
@@ -1956,8 +1960,8 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "hud_crosshair", &psHUD_Flags, HUD_CROSSHAIR);
 	CMD3(CCC_Mask, "hud_crosshair_dist", &psHUD_Flags, HUD_CROSSHAIR_DIST);
 
-	CMD4(CCC_Float, "hud_fov", &psHUD_FOV, 0.1f, 1.0f);
-	CMD4(CCC_Float, "fov", &g_fov, 5.0f, 180.0f);
+	//CMD4(CCC_Float, "hud_fov", &psHUD_FOV, 0.1f, 1.0f);
+	CMD4(CCC_Float, "fov", &g_fov, 45.0f, 120.0f);
 	CMD4(CCC_Float, "scope_fov", &g_scope_fov, 5.0f, 180.0f);
 	CMD4(CCC_Integer, "g_use_aim_inertion", &g_use_aim_inertion, 0, 1);
 
@@ -2274,8 +2278,6 @@ void CCC_RegisterCommands()
 
 	CMD4(CCC_Vector3, "psp_cam_offset", &CCameraLook2::m_cam_offset, Fvector().set(-1000, -1000, -1000),
 		Fvector().set(1000, 1000, 1000));
-	CMD4(CCC_Vector3, "hud_offset_pos", &m_hud_offset_pos, Fvector().set(-1000, -1000, -1000), Fvector().set(1000, 1000, 1000));
-	CMD4(CCC_Vector3, "hand_offset_pos", &m_hand_offset_pos, Fvector().set(-1000, -1000, -1000), Fvector().set(1000, 1000, 1000));
 
 #ifdef DEBUG
 	CMD1(CCC_Crash, "crash");

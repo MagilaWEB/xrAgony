@@ -191,7 +191,7 @@ void LevelGraphDebugRender::DrawStalkers(int vid)
 	Fvector4 temp;
 	Device.mFullTransform.transform(temp, pos);
 	font.OutSetI(temp.x, -temp.y);
-	font.SetHeightI(0.05f / _sqrt(temp.w));
+	font.SetSize(20 / _sqrt(temp.w));
 	if (temp.z < 0 || temp.w < 0 || _abs(temp.x) > 1 || _abs(temp.y) > 1)
 		showText = false;
 	using ObjectRegistry = CALifeGraphRegistry::OBJECT_REGISTRY;
@@ -263,7 +263,7 @@ void LevelGraphDebugRender::DrawStalkers(int vid)
 		Device.mFullTransform.transform(temp, direction);
 		if (temp.z < 0 || temp.w < 0 || _abs(temp.x) > 1 || _abs(temp.y) > 1)
 			continue;
-		font.SetHeightI(0.05f / _sqrt(temp.w));
+		font.SetSize(20 / _sqrt(temp.w));
 	}
 }
 
@@ -286,7 +286,7 @@ void LevelGraphDebugRender::DrawObjects(int vid)
 	Fvector4 temp;
 	Device.mFullTransform.transform(temp, position);
 	font.OutSetI(temp.x, -temp.y);
-	font.SetHeightI(0.05f / _sqrt(temp.w));
+	font.SetSize(20 / _sqrt(temp.w));
 	bool showText = true;
 	if (temp.z < 0 || temp.w < 0 || _abs(temp.x) > 1 || _abs(temp.y) > 1)
 		showText = false;
@@ -359,7 +359,7 @@ void LevelGraphDebugRender::DrawObjects(int vid)
 		Device.mFullTransform.transform(temp, direction);
 		if (temp.z < 0 || temp.w < 0 || _abs(temp.x) > 1 || _abs(temp.y) > 1)
 			continue;
-		font.SetHeightI(0.05f / _sqrt(temp.w));
+		font.SetSize(20 / _sqrt(temp.w));
 	}
 }
 
@@ -588,7 +588,7 @@ void LevelGraphDebugRender::DrawNodes()
 	// display
 	u32 vid = obj->ai_location().level_vertex_id();
 	IGameFont* font = UI().Font().pFontDI;
-	font->SetHeightI(0.02f);
+	font->SetSize(20);
 	font->OutI(0.0f, 0.5f, "%f,%f,%f", VPUSH(objPos));
 	svector<u32, 128> linked;
 	{
@@ -685,7 +685,7 @@ void LevelGraphDebugRender::DrawNodes()
 				Device.mFullTransform.transform(tsmPos, offsetPos);
 				if (tsmPos.z < 0 || tsmPos.w < 0 || _abs(tsmPos.x) > 1 || _abs(tsmPos.y) > 1)
 					continue;
-				font->SetHeightI(0.05f / _sqrt(_abs(tsmPos.w)));
+				font->SetSize(14 / _sqrt(_abs(tsmPos.w)));
 				font->SetColor(0xffffffff);
 				font->OutI(tsmPos.x, -tsmPos.y, "~%d", Nid);
 			}

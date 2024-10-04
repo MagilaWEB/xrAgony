@@ -274,10 +274,6 @@ void CGameFont::Initialize(pcstr name, pcstr shader, pcstr style)
 	string128 textureName;
 	xr_sprintf(textureName, "$user$%s", pSection); //#TODO optimize
 
-#ifdef DEBUG
-	Msg("* Font %s Y size [%d - %d]", pSection, TargetDemensionY, Target2.y);
-#endif
-
 	pFontRender->CreateFontAtlas(TextureDimension, Target2.y, textureName, FontBitmap);
 	pFontRender->Initialize(shader, textureName);
 	FT_Done_Face(OurFont);
@@ -285,6 +281,8 @@ void CGameFont::Initialize(pcstr name, pcstr shader, pcstr style)
 
 	if (FontBitmap)
 		xr_delete(FontBitmap);
+
+	Renders(true);
 }
 
 void CGameFont::OutSet(float x, float y)
@@ -301,8 +299,7 @@ void CGameFont::OutSetI(float x, float y)
 void CGameFont::OnRender()
 {
 	pFontRender->OnRender(*this);
-	if (!strings.empty())
-		strings.resize(0);
+	strings.clear();
 }
 
 //u16 CGameFont::GetCutLengthPos(float fTargetWidth, pcstr pszText)

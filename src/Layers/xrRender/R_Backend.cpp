@@ -67,6 +67,9 @@ void CBackend::OnDeviceCreate()
 	Vertex.Create();
 	Index.Create();
 
+	// Debug Draw
+	InitializeDebugDraw();
+
 	// invalidate caching
 	Invalidate();
 }
@@ -80,4 +83,7 @@ void CBackend::OnDeviceDestroy()
 	// Quad
 	HW.stats_manager.decrement_stats_ib(QuadIB);
 	_RELEASE(QuadIB);
+
+	// Debug Draw
+	DestroyDebugDraw();
 }

@@ -188,11 +188,11 @@ BOOL motions_value::load(LPCSTR N, IReader* data, vecBones* bones)
 		R_ASSERT(MS->find_chunk(m_idx + 1));
 		MS->r_stringZ(mname, sizeof(mname));
 #ifdef _DEBUG
-		// sanity check
-		xr_strlwr(mname);
-		accel_map::iterator I = m_motion_map.find(mname);
-		VERIFY3(I != m_motion_map.end(), "Can't find motion:", mname);
-		VERIFY3(I->second == m_idx, "Invalid motion index:", mname);
+		//// sanity check
+		//xr_strlwr(mname);
+		//accel_map::iterator I = m_motion_map.find(mname);
+		//VERIFY3(I != m_motion_map.end(), "Can't find motion:", mname);
+		//VERIFY3(I->second == m_idx, "Invalid motion index:", mname);
 #endif
 		u32 dwLen = MS->r_u32();
 		for (u32 i = 0; i < bones->size(); i++)

@@ -352,7 +352,7 @@ BOOL CResourceManager::_lua_HasShader(LPCSTR s_shader)
 Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 {
 	CBlender_Compile C;
-	Shader S;
+	Shader* N = new Shader();
 
 	// undecorate
 	string256 undercorated;
@@ -378,9 +378,9 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 		C.bDetail = m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
 
 		if (C.bDetail)
-			S.E[0] = C._lua_Compile(s_shader, "normal_hq");
+			N->E[0] = C._lua_Compile(s_shader, "normal_hq");
 		else
-			S.E[0] = C._lua_Compile(s_shader, "normal");
+			N->E[0] = C._lua_Compile(s_shader, "normal");
 	}
 	else
 	{
@@ -388,7 +388,7 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 		{
 			C.iElement = 0;
 			C.bDetail = m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
-			S.E[0] = C._lua_Compile(s_shader, "normal");
+			N->E[0] = C._lua_Compile(s_shader, "normal");
 		}
 	}
 
@@ -397,7 +397,7 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 	{
 		C.iElement = 1;
 		C.bDetail = m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
-		S.E[1] = C._lua_Compile(s_shader, "normal");
+		N->E[1] = C._lua_Compile(s_shader, "normal");
 	}
 
 	// Compile element
@@ -405,8 +405,7 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 	{
 		C.iElement = 2;
 		C.bDetail = FALSE;
-		S.E[2] = C._lua_Compile(s_shader, "l_point");
-		;
+		N->E[2] = C._lua_Compile(s_shader, "l_point");
 	}
 
 	// Compile element
@@ -414,8 +413,7 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 	{
 		C.iElement = 3;
 		C.bDetail = FALSE;
-		S.E[3] = C._lua_Compile(s_shader, "l_spot");
-		;
+		N->E[3] = C._lua_Compile(s_shader, "l_spot");
 	}
 
 	// Compile element
@@ -423,16 +421,18 @@ Shader* CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 	{
 		C.iElement = 4;
 		C.bDetail = FALSE;
-		S.E[4] = C._lua_Compile(s_shader, "l_special");
+		N->E[4] = C._lua_Compile(s_shader, "l_special");
 	}
 
 	// Search equal in shaders array
 	for (u32 it = 0; it < v_shaders.size(); it++)
-		if (S.equal(v_shaders[it]))
+		if (N->equal(v_shaders[it]))
+		{
+			xr_delete(N);
 			return v_shaders[it];
+		}
 
 	// Create _new_ entry
-	Shader* N = new Shader(S);
 	N->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 	v_shaders.push_back(N);
 	return N;
