@@ -432,13 +432,9 @@ player_hud::~player_hud()
 	::Render->model_Delete(v);
 	m_model = nullptr;
 
-	xr_vector<attachable_hud_item*>::iterator it = m_pool.begin();
-	xr_vector<attachable_hud_item*>::iterator it_e = m_pool.end();
-	for (; it != it_e; ++it)
-	{
-		attachable_hud_item* a = *it;
-		xr_delete(a);
-	}
+	for (attachable_hud_item*& itm : m_pool)
+		xr_delete(itm);
+
 	m_pool.clear();
 }
 
@@ -687,14 +683,10 @@ void player_hud::update_inertion(Fmatrix& trans)
 
 attachable_hud_item* player_hud::create_hud_item(const shared_str& sect)
 {
-	xr_vector<attachable_hud_item*>::iterator it = m_pool.begin();
-	xr_vector<attachable_hud_item*>::iterator it_e = m_pool.end();
-	for (; it != it_e; ++it)
-	{
-		attachable_hud_item* itm = *it;
+	for (attachable_hud_item*& itm : m_pool)
 		if (itm->m_sect_name == sect)
 			return itm;
-	}
+
 	attachable_hud_item* res = new attachable_hud_item(this);
 	res->load(sect);
 	res->m_hand_motions.load(m_model, sect);
