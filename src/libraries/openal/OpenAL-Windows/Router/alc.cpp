@@ -18,12 +18,6 @@
  * Or go to http://www.gnu.org/copyleft/lgpl.html
  */
 
-#ifndef __MINGW32__
-#define _CRT_SECURE_NO_DEPRECATE // get rid of sprintf security warnings on VS2005
-//. #define HAVE_VISTA_HEADERS
-#endif
-
-
 #include <stdlib.h>
 #include <memory.h>
 #define AL_BUILD_LIBRARY
