@@ -1,4 +1,6 @@
 #pragma once
+#include "openal/al.h"
+#include "openal/efx-presets.h"
 #include "SoundRender.h"
 #include "SoundRender_Environment.h"
 #include "SoundRender_Cache.h"
@@ -37,6 +39,7 @@ public:
 	bool bUserEnvironment;
 	bool bEAX; // Boolean variable to indicate presence of EAX Extension
 	bool bDeferredEAX;
+	bool bEFX; // boolean variable to indicate presence of EFX Extension 
 	bool bReady;
 
 	CTimer Timer;
@@ -80,6 +83,7 @@ public:
 
 	// General
 	void _initialize() override = 0;
+	void _initializeDevice() override = 0;
 	void _clear() override = 0;
 	void _restart() override;
 
@@ -116,6 +120,10 @@ public:
 	void i_eax_listener_set(CSound_environment* E);
 	void i_eax_listener_get(CSound_environment* E);
 
+	// efx listener
+	bool i_efx_commit_setting();
+	void i_efx_listener_set(CSound_environment* _E);
+
 	virtual SoundEnvironment_LIB* get_env_library() { return s_environment; }
 	virtual void refresh_env_library();
 	virtual void set_user_env(CSound_environment* E);
@@ -143,6 +151,14 @@ public:
 	void env_load();
 	void env_unload();
 	void env_apply();
+
+protected: // EFX
+	EFXEAXREVERBPROPERTIES				efx_reverb;
+	ALuint								effect;
+	ALuint								slot;
+	void								InitAlEFXAPI();
+	bool 								EFXTestSupport();
+
 };
 
 extern CSoundRender_Core* SoundRender;

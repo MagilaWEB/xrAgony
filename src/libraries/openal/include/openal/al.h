@@ -233,6 +233,8 @@ typedef void ALvoid;
 #define AL_FORMAT_MONO16                          0x1101
 #define AL_FORMAT_STEREO8                         0x1102
 #define AL_FORMAT_STEREO16                        0x1103
+#define AL_FORMAT_MONO_FLOAT32                    0x10010
+#define AL_FORMAT_STEREO_FLOAT32                  0x10011
 
 /**
  * source specific reference distance

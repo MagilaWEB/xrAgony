@@ -77,8 +77,7 @@ ENGINE_API void InitInput()
 }
 
 ENGINE_API void destroyInput() { xr_delete(pInput); }
-ENGINE_API void InitSound() { ISoundManager::_create(); }
-ENGINE_API void destroySound() { ISoundManager::_destroy(); }
+
 ENGINE_API void destroySettings()
 {
 	auto s = const_cast<CInifile**>(&pSettings);
@@ -108,7 +107,7 @@ void execUserScript()
 ENGINE_API void Startup()
 {
 	execUserScript();
-	InitSound();
+	ISoundManager::_initDevice();
 	
 	// Initialize APP
 	Device.Create();
@@ -140,7 +139,7 @@ ENGINE_API void Startup()
 	else
 		Console->Destroy();
 	destroyEngine();
-	destroySound();
+	ISoundManager::_destroy();
 }
 
 ENGINE_API int RunApplication()
@@ -169,6 +168,7 @@ ENGINE_API int RunApplication()
 
 	InitEngine();
 	InitInput();
+	ISoundManager::_create();
 	InitConsole();
 	Engine.External.CreateRendererList();
 

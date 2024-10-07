@@ -368,17 +368,32 @@ void CGamePersistent::WeathersUpdate()
 			auto I = vec.cbegin();
 			const auto E = vec.cend();
 
+			if (pApp->IsLoadingScreen())
+				eff_vol_counter = 0.f;
+			else
+			{
+				float rays_collided_delta = (1.f - ((rays_collided - .9f) / .1f));
+				if (rays_collided_delta <= eff_vol_counter || bIndoor)
+					eff_vol_counter -= (Device.fTimeDelta * .8f);
+				else
+					eff_vol_counter += Device.fTimeDelta;
+
+				clamp(eff_vol_counter, 0.f, 1.f);
+			}
+
+
 			for (size_t idx = 0; I != E; ++I, ++idx)
 			{
 				CEnvAmbient::SSndChannel& ch = **I;
 				R_ASSERT(idx < 40);
+
+				ref_sound& snd = ch.get_rnd_sound();
+
 				if (ambient_sound_next_time[idx] == 0)//first
 					ambient_sound_next_time[idx] = Device.dwTimeGlobal + ch.get_rnd_sound_first_time();
 				else
 					if (Device.dwTimeGlobal > ambient_sound_next_time[idx])
 					{
-						ref_sound& snd = ch.get_rnd_sound();
-
 						Fvector pos;
 						float angle = ::Random.randF(PI_MUL_2);
 						pos.x = _cos(angle);
@@ -386,11 +401,10 @@ void CGamePersistent::WeathersUpdate()
 						pos.z = _sin(angle);
 						pos.normalize().mul(ch.get_rnd_sound_dist()).add(Device.vCameraPosition);
 						pos.y += 10.f;
+						snd.play_at_pos(nullptr, pos);
 
 						if (bIndoor)
 							snd.set_volume(0.f);
-
-						snd.play_at_pos(0, pos);
 
 #ifdef DEBUG
 						/*if (!snd._handle() && Core.IsCommandLine("-nosound"))
@@ -404,30 +418,18 @@ void CGamePersistent::WeathersUpdate()
 					}
 			}
 
-			if (pApp->IsLoadingScreen())
-				eff_vol_counter = 0.f;
-			else
-			{
-				if (bIndoor)
-					eff_vol_counter = 1.f - ((rays_collided - .9f) / .1f);
-				else
-					eff_vol_counter = 1.f;
-
-				clamp(eff_vol_counter, 0.f, 1.f);
-			}
-
 			g_pGamePersistent->Environment().CurrentEnv->rain_volume = eff_vol_counter;
 
 			for (CEnvAmbient::SSndChannel* snd_channel : vec)
 			{
 				for (ref_sound& snd : snd_channel->sounds())
 				{
-					if (snd._handle())
+					if (snd._handle() && snd.isPlaying())
 						snd.set_volume(eff_vol_counter);
 						
 
 					for (CEnvAmbient::SEffect* effect : env_amb->effects())
-						if (effect->sound._handle())
+						if (effect->sound._handle() && effect->sound.isPlaying())
 							effect->sound.set_volume(eff_vol_counter);
 				}
 			}
@@ -453,7 +455,7 @@ void CGamePersistent::WeathersUpdate()
 					ambient_particles->play_at_pos(pos);
 
 					if (eff->sound._handle())
-						eff->sound.play_at_pos(0, pos);
+						eff->sound.play_at_pos(nullptr, pos);
 
 					Environment().wind_blast_strength_start_value = Environment().wind_strength_factor;
 					Environment().wind_blast_strength_stop_value = eff->wind_blast_strength;
@@ -788,7 +790,11 @@ void CGamePersistent::OnFrame()
 		else
 		{
 			WeathersUpdate();
-			mt_identify_room.Init([this]() { LIMIT_UPDATE_FPS_CODE(_identify_room, 20, identify_room();) }, xrThread::sParalelFrame);
+			mt_identify_room.Init([this]()
+			{
+				LIMIT_UPDATE_FPS(_identify_room, 5) 
+				identify_room();
+			}, xrThread::sParalelFrame);
 		}
 	}
 

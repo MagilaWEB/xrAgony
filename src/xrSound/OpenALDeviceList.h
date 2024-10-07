@@ -6,6 +6,7 @@
 
 constexpr pcstr AL_GENERIC_HARDWARE = "Generic Hardware";
 constexpr pcstr AL_GENERIC_SOFTWARE = "Generic Software";
+constexpr pcstr AL_SOFT = "OpenAL Soft";
 
 struct ALDeviceDesc
 {
@@ -52,4 +53,5 @@ public:
 	pcstr GetDeviceName(u32 index) const;
 	void GetDeviceVersion(u32 index, int* major, int* minor);
 	void SelectBestDevice();
+	bool IS_OpenAL_Soft = false;
 };

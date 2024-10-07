@@ -520,7 +520,7 @@ virtual void Save (IWriter *F) {};
 
 //ENGINE_API BOOL r2_advanced_pp = FALSE; // advanced post process and effects
 
-u32 renderer_value = 3;
+//u32 renderer_value = 3;
 
 //class CCC_r2 : public CCC_Token
 //{
@@ -558,38 +558,12 @@ u32 renderer_value = 3;
 class CCC_soundDevice : public CCC_Token
 {
 	typedef CCC_Token inherited;
-
 public:
-	CCC_soundDevice(LPCSTR N) : inherited(N, &snd_device_id, nullptr) {};
-	virtual ~CCC_soundDevice() {}
-	virtual void Execute(LPCSTR args)
-	{
-		GetToken();
-		if (!tokens)
-			return;
-		inherited::Execute(args);
-	}
+	CCC_soundDevice(LPCSTR N, u32* V, const xr_token* T) : CCC_Token(N, V, T) {};
 
-	virtual void Status(TStatus& S)
+	virtual const xr_token* GetToken() noexcept override
 	{
-		GetToken();
-		if (!tokens)
-			return;
-		inherited::Status(S);
-	}
-
-	const xr_token* GetToken() noexcept override
-	{
-		tokens = snd_devices_token;
-		return inherited::GetToken();
-	}
-
-	virtual void Save(IWriter* F)
-	{
-		GetToken();
-		if (!tokens)
-			return;
-		inherited::Save(F);
+		return snd_devices_token;
 	}
 };
 
@@ -768,8 +742,7 @@ void CCC_Register()
 	CMD2(CCC_Float, "cam_slide_inert", &psCamSlideInert);
 
 	//CMD1(CCC_r2, "renderer");
-
-	CMD1(CCC_soundDevice, "snd_device");
+	CMD3(CCC_soundDevice, "snd_device", &snd_device_id, snd_devices_token);
 
 	// psSoundRolloff = pSettings->r_float ("sound","rolloff"); clamp(psSoundRolloff, EPS_S, 2.f);
 	psSoundOcclusionScale = pSettings->r_float("sound", "occlusion_scale");

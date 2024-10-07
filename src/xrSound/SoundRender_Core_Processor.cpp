@@ -101,19 +101,27 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 			target_defer->fill_parameters();
 	}
 
-	// update EAX
-	if (psSoundFlags.test(ss_EAX) && bEAX)
+	// update EAX or EFX
+	if (psSoundFlags.test(ss_EAX) && (bEAX || bEFX))
 	{
 		if (bListenerMoved)
 		{
-			bListenerMoved = false;
+			bListenerMoved = FALSE;
 			e_target = *get_environment(P);
 		}
 
 		e_current.lerp(e_current, e_target, dt_sec);
 
-		i_eax_listener_set(&e_current);
-		i_eax_commit_setting();
+		if (bEAX)
+		{
+			i_eax_listener_set(&e_current);
+			i_eax_commit_setting();
+		}
+		else
+		{
+			i_efx_listener_set(&e_current);
+			bEFX = i_efx_commit_setting();
+		}
 	}
 
 	// update listener

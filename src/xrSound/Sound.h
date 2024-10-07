@@ -155,6 +155,7 @@ namespace CDB
 class XRSOUND_API ISoundManager
 {
 	virtual void _initialize() = 0;
+	virtual void _initializeDevice() = 0;
 	virtual void _clear() = 0;
 
 protected:
@@ -165,6 +166,7 @@ protected:
 public:
 	virtual ~ISoundManager() {}
 	static void _create();
+	static void _initDevice();
 	static void _destroy();
 
 	virtual void SetIgnorePaused(ref_sound& S, bool b_ignore_p) = 0;

@@ -1,5 +1,5 @@
 #pragma once
-
+#include <openal\al.h>
 #include "SoundRender.h"
 
 class CSoundRender_Target
@@ -10,6 +10,7 @@ protected:
 
 public:
 	float priority;
+	bool alsoft_flag = false;
 
 protected:
 	OggVorbis_File ovf;
@@ -39,5 +40,6 @@ public:
 	virtual void rewind() = 0;
 	virtual void stop() = 0;
 	virtual void update() = 0;
+	virtual	void alAuxInit(ALuint slot) = 0;
 	virtual void fill_parameters() = 0;
 };

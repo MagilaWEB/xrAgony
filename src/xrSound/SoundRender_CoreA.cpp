@@ -29,42 +29,18 @@ bool CSoundRender_CoreA::EAXQuerySupport(bool isDeferred, const GUID* guid, u32 
 bool CSoundRender_CoreA::EAXTestSupport(bool isDeferred)
 {
 	EAXLISTENERPROPERTIES ep;
-	if (!EAXQuerySupport(
-		isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOM, &ep.lRoom, sizeof(LONG)))
-		return false;
-	if (!EAXQuerySupport(
-		isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOMHF, &ep.lRoomHF, sizeof(LONG)))
-		return false;
-	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOMROLLOFFFACTOR,
-						 &ep.flRoomRolloffFactor, sizeof(float)))
-		return false;
-	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_DECAYTIME,
-						 &ep.flDecayTime, sizeof(float)))
-		return false;
-	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_DECAYHFRATIO,
-						 &ep.flDecayHFRatio, sizeof(float)))
-		return false;
-	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REFLECTIONS,
-						 &ep.lReflections, sizeof(LONG)))
-		return false;
-	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REFLECTIONSDELAY,
-						 &ep.flReflectionsDelay, sizeof(float)))
-		return false;
-	if (!EAXQuerySupport(
-		isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REVERB, &ep.lReverb, sizeof(LONG)))
-		return false;
-	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REVERBDELAY,
-						 &ep.flReverbDelay, sizeof(float)))
-		return false;
-	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ENVIRONMENTDIFFUSION,
-						 &ep.flEnvironmentDiffusion, sizeof(float)))
-		return false;
-	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_AIRABSORPTIONHF,
-						 &ep.flAirAbsorptionHF, sizeof(float)))
-		return false;
-	if (!EAXQuerySupport(
-		isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_FLAGS, &ep.dwFlags, sizeof(DWORD)))
-		return false;
+	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOM, &ep.lRoom, sizeof(LONG))) 	return false;
+	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOMHF, &ep.lRoomHF, sizeof(LONG))) 	return FALSE;
+	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOMROLLOFFFACTOR, &ep.flRoomRolloffFactor, sizeof(float))) return false;
+	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_DECAYTIME, &ep.flDecayTime, sizeof(float))) return false;
+	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_DECAYHFRATIO, &ep.flDecayHFRatio, sizeof(float))) return false;
+	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REFLECTIONS, &ep.lReflections, sizeof(LONG))) 	return false;
+	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REFLECTIONSDELAY, &ep.flReflectionsDelay, sizeof(float))) return false;
+	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REVERB, &ep.lReverb, sizeof(LONG))) 	return false;
+	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REVERBDELAY, &ep.flReverbDelay, sizeof(float))) return false;
+	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ENVIRONMENTDIFFUSION, &ep.flEnvironmentDiffusion, sizeof(float))) return false;
+	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_AIRABSORPTIONHF, &ep.flAirAbsorptionHF, sizeof(float))) return false;
+	if (!EAXQuerySupport(isDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_FLAGS, &ep.dwFlags, sizeof(DWORD))) return false;
 	return true;
 }
 
@@ -78,8 +54,13 @@ void CSoundRender_CoreA::_initialize()
 		CHECK_OR_EXIT(0, "OpenAL: Can't create sound device.");
 		xr_delete(pDeviceList);
 	}
-	pDeviceList->SelectBestDevice();
+	
 	R_ASSERT(snd_device_id >= 0 && snd_device_id < pDeviceList->GetNumDevices());
+}
+
+void CSoundRender_CoreA::_initializeDevice()
+{
+	pDeviceList->SelectBestDevice();
 	const ALDeviceDesc& deviceDesc = pDeviceList->GetDeviceDesc(snd_device_id);
 	// OpenAL device
 	pDevice = alcOpenDevice(deviceDesc.name);
@@ -114,43 +95,49 @@ void CSoundRender_CoreA::_initialize()
 	// initialize listener
 	A_CHK(alListener3f(AL_POSITION, 0.f, 0.f, 0.f));
 	A_CHK(alListener3f(AL_VELOCITY, 0.f, 0.f, 0.f));
-	Fvector orient[2] = {{0.f, 0.f, 1.f}, {0.f, 1.f, 0.f}};
+	Fvector orient[2] = { {0.f, 0.f, 1.f}, {0.f, 1.f, 0.f} };
 	A_CHK(alListenerfv(AL_ORIENTATION, &orient[0].x));
 	A_CHK(alListenerf(AL_GAIN, 1.f));
-
-	// Check for EAX extension
-	bEAX = deviceDesc.props.eax && !deviceDesc.props.eax_unwanted;
-
-	eaxSet = (EAXSet)alGetProcAddress((pcstr)"EAXSet");
-	if (eaxSet == nullptr)
-		bEAX = false;
-	eaxGet = (EAXGet)alGetProcAddress((pcstr)"EAXGet");
-	if (eaxGet == nullptr)
-		bEAX = false;
-
-	if (bEAX)
+	if (!pDeviceList->IS_OpenAL_Soft)
 	{
-		bDeferredEAX = EAXTestSupport(true);
-		bEAX = EAXTestSupport(false);
+		// Check for EAX extension
+		bEAX = deviceDesc.props.eax && !deviceDesc.props.eax_unwanted;
+
+		eaxSet = (EAXSet)alGetProcAddress((pcstr)"EAXSet");
+		if (eaxSet == nullptr)
+			bEAX = false;
+		eaxGet = (EAXGet)alGetProcAddress((pcstr)"EAXGet");
+		if (eaxGet == nullptr)
+			bEAX = false;
+
+		if (bEAX)
+		{
+			bDeferredEAX = EAXTestSupport(true);
+			bEAX = EAXTestSupport(false);
+		}
+
+		Msg("[Generic Software] EAX 2.0 extension: %s", bEAX ? "present" : "absent");
+		Msg("[Generic Software] EAX 2.0 deferred: %s", bDeferredEAX ? "present" : "absent");
 	}
-
+	else if (deviceDesc.props.efx)
+	{
+		InitAlEFXAPI();
+		bEFX = EFXTestSupport();
+		Msg("[OpenAL Soft] EFX: %s", bEFX ? "present" : "absent");
+	}
 	inherited::_initialize();
-
-	//Alun: Because Hardware devices usually cannot support number greater then 32, unlike software
-	ALCint nummono;
-	alcGetIntegerv(pDevice, ALC_MONO_SOURCES, 1, &nummono);
-	int iMaxTargets = std::min(nummono, psSoundTargets);
-
-	Msg("SOUND: Max Mono Targets %d | psSoundTargets %d | supported %d", nummono, psSoundTargets, iMaxTargets);
-	//-Alun
 
 	// Pre-create targets
 	CSoundRender_Target* T = nullptr;
-	for (int tit = 0; tit < iMaxTargets; tit++)
+	for (u32 tit = 0; tit < u32(psSoundTargets); tit++)
 	{
 		T = new CSoundRender_TargetA();
 		if (T->_initialize())
 		{
+			if (bEFX)
+				T->alAuxInit(slot);
+
+			T->alsoft_flag = pDeviceList->IS_OpenAL_Soft;
 			s_targets.push_back(T);
 		}
 		else

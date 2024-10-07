@@ -3,7 +3,7 @@
 #include "SoundRender_CoreA.h"
 
 XRSOUND_API xr_token* snd_devices_token = nullptr;
-XRSOUND_API u32 snd_device_id = u32(-1);
+XRSOUND_API u32 snd_device_id = 0;
 
 void ISoundManager::_create()
 {
@@ -14,6 +14,12 @@ void ISoundManager::_create()
 	if (!SoundRender->bPresent)
 		return;
 	::Sound->_initialize();
+}
+void ISoundManager::_initDevice()
+{
+	if (!SoundRender->bPresent)
+		return;
+	::Sound->_initializeDevice();
 }
 
 void ISoundManager::_destroy()

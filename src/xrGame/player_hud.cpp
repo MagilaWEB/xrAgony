@@ -632,7 +632,7 @@ void player_hud::update_inertion(Fmatrix& trans)
 	{
 		attachable_hud_item* pMainHud = m_attached_items[0];
 
-		if (st_last_pos.distance_to(trans.c) > 1.f)
+		if (st_last_pos.distance_to(trans.c) > 3.f)
 			st_last_pos.set(trans.c);
 
 		// load params

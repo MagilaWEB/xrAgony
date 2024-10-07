@@ -257,7 +257,7 @@ bool CEnvironment::SetWeatherFX(shared_str name)
 		}
 		clamp(current_weight, 0.f, 1.f);
 
-		std::sort(CurrentWeather->begin(), CurrentWeather->end(), sort_env_etl_pred);
+		CurrentWeather->sort(sort_env_etl_pred);
 		CEnvDescriptor* C0 = CurrentWeather->at(0);
 		CEnvDescriptor* C1 = CurrentWeather->at(1);
 		CEnvDescriptor* CE = CurrentWeather->at(CurrentWeather->size() - 2);

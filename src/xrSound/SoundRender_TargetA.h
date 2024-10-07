@@ -29,6 +29,7 @@ public:
 	void rewind() override;
 	void stop() override;
 	void update() override;
+	void alAuxInit(ALuint slot) override;
 	void fill_parameters() override;
 	void source_changed();
 };
