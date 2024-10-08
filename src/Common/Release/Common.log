@@ -1,1 +1,0 @@
-﻿I:\xrAgony\src\Common\Common.vcxproj(111,5): warning MSB4011: невозможно повторно импортировать "C:\Users\belas\AppData\Local\Microsoft\MSBuild\v4.0\Microsoft.Cpp.Win32.user.props". Он уже был импортирован в "I:\xrAgony\src\Common\Common.vcxproj (108,5)". Скорее всего это связано с ошибкой при написании кода сборки. Повторный импорт будет пропущен. 
