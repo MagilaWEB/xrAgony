@@ -112,7 +112,7 @@ IC char* strext(const char* S) { return (char*)strrchr(S, '.'); }
 IC size_t xr_strlen(const char* S) { return strlen(S); }
 
 //#ifndef _EDITOR
-#ifndef MASTER_GOLD
+#ifndef MASTER
 
 IC int xr_strcpy(LPSTR destination, size_t const destination_size, LPCSTR source)
 {
@@ -135,7 +135,7 @@ IC int __cdecl xr_sprintf(char(&destination)[count], LPCSTR format_string, Args.
 {
 	return sprintf_s(destination, count, format_string, std::forward<Args>(args)...);
 }
-#else // #ifndef MASTER_GOLD
+#else // #ifndef MASTER
 
 IC int xr_strcpy(LPSTR destination, size_t const destination_size, LPCSTR source)
 {
@@ -160,15 +160,15 @@ IC int xr_strcat(LPSTR destination, size_t const buffer_size, LPCSTR source)
 template <typename ... Args>
 IC int __cdecl xr_sprintf(LPSTR destination, size_t const buffer_size, LPCSTR format_string, Args... args)
 {
-	return snprintf_s(destination, buffer_size, buffer_size - 1, format_string, std::forward<Args>(args)...);
+	return _snprintf_s(destination, buffer_size, buffer_size - 1, format_string, std::forward<Args>(args)...);
 }
 
 template <size_t count, typename ... Args>
 IC int __cdecl xr_sprintf(char (&destination)[count], LPCSTR format_string, Args... args)
 {
-	return snprintf_s(destination, count, count - 1, format_string, std::forward<Args>(args)...);
+	return _snprintf_s(destination, count, count - 1, format_string, std::forward<Args>(args)...);
 }
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 
 template <typename ... Args>
 IC xr_string make_string(LPCSTR format, Args... args)

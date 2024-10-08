@@ -19,9 +19,9 @@
 #include "level_path_builder.h"
 #include "ai_obstacle.h"
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 #include "ai_debug.h"
-#endif // MASTER_GOLD
+#endif // MASTER
 
 static const float check_time_delta = 1.f;
 
@@ -108,13 +108,13 @@ IC void stalker_movement_manager_obstacles::remove_query_objects(const Fvector& 
 
 void stalker_movement_manager_obstacles::build_level_path()
 {
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (!psAI_Flags.test(aiObstaclesAvoiding))
 	{
 		inherited::build_level_path();
 		return;
 	}
-#endif // MASTER_GOLD
+#endif // MASTER
 
 #ifdef DEBUG
 	CTimer timer;
@@ -135,10 +135,10 @@ void stalker_movement_manager_obstacles::build_level_path()
 	m_static_obstacles.inactive_query().copy(m_static_obstacles.active_query());
 	m_static_obstacles.inactive_query().update_objects(object().Position(), 10000.f);
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (!psAI_Flags.test(aiObstaclesAvoidingStatic))
 		m_dynamic_obstacles.inactive_query().copy(m_dynamic_obstacles.active_query());
-#endif // MASTER_GOLD
+#endif // MASTER
 
 	bool pure_search_tried = false;
 	bool pure_search_result = false;
@@ -168,9 +168,9 @@ void stalker_movement_manager_obstacles::build_level_path()
 
 			if (!pure_search_result)
 			{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 				Msg("! level_path().failed() during navigation");
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 				break;
 			}
 		}

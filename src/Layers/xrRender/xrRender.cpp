@@ -12,7 +12,7 @@ XR_EXPORT void SetupEnv()
 	::RenderFactory = &RenderFactoryImpl;
 	::DU = &DUImpl;
 	::UIRender = &UIRenderImpl;
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 	::DRender = &DebugRenderImpl;
 #endif
 	xrRender_initconsole();

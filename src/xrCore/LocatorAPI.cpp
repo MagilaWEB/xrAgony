@@ -463,9 +463,9 @@ void CLocatorAPI::unload_archive(CLocatorAPI::archive& A)
 		const file& entry = *I;
 		if (entry.vfs == A.vfs_idx)
 		{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 			Msg("unregistering file [%s]", I->name);
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 			auto str = pstr(I->name);
 			xr_free(str);
 			m_files.erase(I);

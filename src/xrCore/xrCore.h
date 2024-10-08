@@ -10,7 +10,7 @@
 #error Please enable multi-threaded library...
 #endif
 
-#if defined(MASTER_GOLD)
+#if defined(MASTER)
 //  release master gold
 #	if defined(__cpp_exceptions) && defined(XR_PLATFORM_WINDOWS)
 #		error Please disable exceptions...

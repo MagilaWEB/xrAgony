@@ -56,7 +56,7 @@ public:
 protected:
 	virtual bool use_parent_ai_locations() const = 0 { return !enabled(); }
 public:
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 	static CAttachableItem* m_dbgItem;
 	static Fvector get_angle_offset()
 	{

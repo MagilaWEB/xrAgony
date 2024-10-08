@@ -1146,9 +1146,9 @@ void CGameObject::shedule_Update(u32 dt)
 	//уничтожить
 	if (NeedToDestroyObject())
 	{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 		Msg("--NeedToDestroyObject for [%d][%d]", ID(), Device.dwFrame);
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 		DestroyObject();
 	}
 	// Msg("-SUB-:[%x][%s] CGameObject::shedule_Update",smart_cast<void*>(this),*cName());

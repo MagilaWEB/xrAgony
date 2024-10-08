@@ -27,7 +27,7 @@ void CTextureDescrMngr::LoadTHM(LPCSTR initial)
 {
 	FS_FileSet flist;
 	FS.file_list(flist, initial, FS_ListFiles, "*.thm");
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	Msg("%s, count of .thm files: %d", __FUNCTION__, flist.size());
 #endif
 
@@ -97,7 +97,7 @@ void CTextureDescrMngr::LoadTHM(LPCSTR initial)
 
 void CTextureDescrMngr::Load()
 {
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	CTimer timer;
 	timer.Start();
 #endif // #ifdef DEBUG
@@ -105,7 +105,7 @@ void CTextureDescrMngr::Load()
 	LoadTHM("$game_textures$");
 	LoadTHM("$level$");
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	Msg("%s, .thm loading time: %d ms", __FUNCTION__, timer.GetElapsed_ms());
 #endif
 }

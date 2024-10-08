@@ -65,7 +65,7 @@ CInventoryItem::~CInventoryItem()
 {
 	delete_data(m_net_updateData);
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	bool B_GOOD = (!m_pInventory ||
 		(std::find(m_pInventory->m_all.begin(), m_pInventory->m_all.end(), this) == m_pInventory->m_all.end()));
 	if (!B_GOOD)
@@ -78,7 +78,7 @@ CInventoryItem::~CInventoryItem()
 		Msg("! ERROR item_id[%d] H_Parent=[%s][%d] [%d]", object().ID(), p ? p->cName().c_str() : "none",
 			p ? p->ID() : -1, Device.dwFrame);
 	}
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 }
 
 void CInventoryItem::Load(LPCSTR section)

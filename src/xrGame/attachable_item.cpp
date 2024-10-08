@@ -15,7 +15,7 @@
 #include "xrUICore/ui_base.h"
 #include "xrEngine/GameFont.h"
 
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 CAttachableItem* CAttachableItem::m_dbgItem = nullptr;
 #endif
 
@@ -128,7 +128,7 @@ void CAttachableItem::afterDetach()
 	object().processing_deactivate();
 }
 
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 float ATT_ITEM_MOVE_CURR = 0.01f;
 float ATT_ITEM_ROT_CURR = 0.1f;
 

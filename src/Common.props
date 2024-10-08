@@ -6,6 +6,12 @@
 	  </ClCompile>
   </ItemDefinitionGroup>
 
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Master'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;COC_EDITION;MASTER;LUABIND_NO_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
       <PreprocessorDefinitions>DEBUG_COC;COC_EDITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -53,6 +59,11 @@
 	  <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$(Configuration.StartsWith('Master'))">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+
   <PropertyGroup Condition="$(Configuration.StartsWith('Release'))">
 	  <UseDebugLibraries>false</UseDebugLibraries>
 	  <LinkIncremental>false</LinkIncremental>
@@ -63,6 +74,7 @@
 	  <AdditionalIncludeDirectories>../;.;$(SolutionDir);$(xrLibraries);$(ProjectDir);$(xrSdkDir)include;$(xrSdkDir)include\oneapi;$(xrSdkDir)DXSDK/Include;$(xrLuaDir);$(xrLibraries)luabind;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 	  <!-- MultiProcessorCompilation don't compatible with LinkIncremental and UseDebugLibraries -->
 	  <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Debug'  ))">true</MultiProcessorCompilation>
+    <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Master'  ))">true</MultiProcessorCompilation>
 	  <MultiProcessorCompilation Condition="$(Configuration.StartsWith('Release'))">true</MultiProcessorCompilation>
 	  <!--
 		4251 : class 'x' needs to have dll-interface to be used by clients of class 'y'

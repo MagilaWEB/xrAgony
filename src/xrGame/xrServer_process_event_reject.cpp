@@ -52,10 +52,10 @@ bool xrServer::Process_event_reject(
 
 	if (0xffff == e_entity->ID_Parent)
 	{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 		Msg("! ERROR: can't detach independant object. entity[%s][%d], parent[%s][%d], section[%s]",
 			e_entity->name_replace(), id_entity, e_parent->name_replace(), id_parent, e_entity->s_name.c_str());
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 		return (false);
 	}
 

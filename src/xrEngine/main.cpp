@@ -15,7 +15,7 @@
 #include "xrCDB/ISpatial.h"
 #include "xrSASH.h"
 
-#ifdef MASTER_GOLD
+#ifdef MASTER
 #define NO_MULTI_INSTANCES
 #endif
 

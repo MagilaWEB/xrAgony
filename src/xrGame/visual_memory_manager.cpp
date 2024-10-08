@@ -28,10 +28,10 @@
 #include "memory_manager.h"
 #include "ai/monsters/basemonster/base_monster.h"
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 #include "actor.h"
 #include "ai_debug.h"
-#endif // MASTER_GOLD
+#endif // MASTER
 
 void SetActorVisibility(u16 who, float value);
 
@@ -430,13 +430,13 @@ bool CVisualMemoryManager::should_ignore_object(IGameObject const* object) const
 		return true;
 	}
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (smart_cast<CActor const*>(object) && psAI_Flags.test(aiIgnoreActor))
 	{
 		return true;
 	}
 	else
-#endif // MASTER_GOLD
+#endif // MASTER
 
 		if (CBaseMonster const* const monster = smart_cast<CBaseMonster const*>(object))
 		{

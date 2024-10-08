@@ -1386,9 +1386,9 @@ void CInventory::TryActivatePrevSlot()
 		PIItem prev_active_item = ItemFromSlot(PrevActiveSlot);
 		if (prev_active_item && !IsSlotBlocked(prev_active_item) && m_slots[PrevActiveSlot].CanBeActivated())
 		{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 			Msg("Set slots blocked: activating prev slot [%d], Frame[%d]", PrevActiveSlot, Device.dwFrame);
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 			Activate(PrevActiveSlot);
 			SetPrevActiveSlot(NO_ACTIVE_SLOT);
 		}
@@ -1408,9 +1408,9 @@ void CInventory::TryDeactivateActiveSlot()
 
 	if (active_item && (IsSlotBlocked(active_item) || !m_slots[ActiveSlot].CanBeActivated()))
 	{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 		Msg("Set slots blocked: activating slot [-1], Frame[%d]", Device.dwFrame);
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 		ItemFromSlot(ActiveSlot)->DiscardState();
 		Activate(NO_ACTIVE_SLOT);
 		SetPrevActiveSlot(ActiveSlot);

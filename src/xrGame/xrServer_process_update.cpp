@@ -9,10 +9,10 @@ void xrServer::Process_update(NET_Packet& P, ClientID sender)
 	xrClientData* CL = ID_to_client(sender);
 	R_ASSERT2(CL, "Process_update client not found");
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (g_Dump_Update_Read)
 		Msg("---- UPDATE_Read --- ");
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 
 	// while has information
 	while (!P.r_eof())
@@ -47,10 +47,10 @@ void xrServer::Process_update(NET_Packet& P, ClientID sender)
 		else
 			P.r_advance(size);
 	}
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (g_Dump_Update_Read)
 		Msg("-------------------- ");
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 }
 
 void xrServer::Process_save(NET_Packet& P, ClientID sender)

@@ -81,10 +81,10 @@ animation_action const& action::animation(MonsterSpace::EBodyState const& target
 
 	if (found == m_animations.end())
 	{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 		Msg("! There is no animation which can transfer bot to body_state [%i], selecting random transition",
 			target_body_state);
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 		return (animation());
 	}
 

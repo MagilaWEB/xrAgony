@@ -5,6 +5,10 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Master|Win32">
+      <Configuration>Master</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -18,6 +22,12 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(SolutionDir)Common.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Master|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -71,6 +81,31 @@
     <Link>
       <GenerateDebugInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">DebugFull</GenerateDebugInformation>
       <LinkTimeCodeGeneration Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+    <Link />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Master'">
+    <ClCompile>
+      <PreprocessorDefinitions>dNODEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">None</DebugInformationFormat>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">false</BufferSecurityCheck>
+      <ControlFlowGuard Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">false</ControlFlowGuard>
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">stdcpp20</LanguageStandard>
+      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">Neither</FavorSizeOrSpeed>
+      <OmitFramePointers Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">false</OmitFramePointers>
+      <EnableFiberSafeOptimizations Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">false</EnableFiberSafeOptimizations>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">Disabled</InlineFunctionExpansion>
+      <IntrinsicFunctions Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">false</IntrinsicFunctions>
+      <ConformanceMode Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">true</ConformanceMode>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">Disabled</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">false</WholeProgramOptimization>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">Level2</WarningLevel>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">DebugFull</GenerateDebugInformation>
+      <LinkTimeCodeGeneration Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">Default</LinkTimeCodeGeneration>
     </Link>
     <Link />
   </ItemDefinitionGroup>
@@ -149,11 +184,13 @@
     <ClCompile Include="ode\src\collision_kernel.cpp" />
     <ClCompile Include="ode\src\collision_quadtreespace.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="ode\src\collision_space.cpp" />
     <ClCompile Include="ode\src\collision_std.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Master|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="ode\src\collision_transform.cpp" />

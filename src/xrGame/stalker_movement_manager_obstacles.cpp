@@ -20,9 +20,9 @@
 #include "doors_manager.h"
 #include "level_path_builder.h"
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 #include "ai_debug.h"
-#endif // MASTER_GOLD
+#endif // MASTER
 
 static const u32 fail_check_time = 1000;
 
@@ -120,9 +120,9 @@ bool stalker_movement_manager_obstacles::can_build_restricted_path(const obstacl
 void stalker_movement_manager_obstacles::move_along_path_impl(
 	CPHMovementControl* movement_control, Fvector& dest_position, float time_delta)
 {
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (psAI_Flags.test(aiObstaclesAvoidingStatic))
-#endif // MASTER_GOLD
+#endif // MASTER
 	{
 		m_dynamic_obstacles.update();
 		if (!m_dynamic_obstacles.movement_enabled())
@@ -140,9 +140,9 @@ void stalker_movement_manager_obstacles::move_along_path_impl(
 	m_static_obstacles.update();
 
 	if (
-#ifndef MASTER_GOLD
+#ifndef MASTER
 		(!psAI_Flags.test(aiObstaclesAvoidingStatic) && m_dynamic_obstacles.need_path_to_rebuild()) ||
-#endif // MASTER_GOLD
+#endif // MASTER
 		m_static_obstacles.need_path_to_rebuild())
 		rebuild_path();
 
@@ -170,13 +170,13 @@ void stalker_movement_manager_obstacles::move_along_path(
 
 //	Msg								( "%6d stalker %s is going", Device.dwTimeGlobal, object().cName().c_str() );
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (!psAI_Flags.test(aiObstaclesAvoiding))
 	{
 		inherited::move_along_path(movement_control, dest_position, time_delta);
 		return;
 	}
-#endif // MASTER_GOLD
+#endif // MASTER
 
 	if (Device.dwTimeGlobal < (m_last_fail_time + fail_check_time))
 	{

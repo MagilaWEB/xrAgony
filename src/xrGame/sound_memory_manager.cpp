@@ -25,10 +25,10 @@
 #include "memory_manager.h"
 #include "xrEngine/IGame_Persistent.h"
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 #include "actor.h"
 #include "ai_debug.h"
-#endif // MASTER_GOLD
+#endif // MASTER
 
 #define SILENCE
 //#define SAVE_OWN_SOUNDS
@@ -115,10 +115,10 @@ IC bool is_sound_type(int s, const ESoundTypes& t) { return ((s & t) == t); }
 void CSoundMemoryManager::feel_sound_new(
 	IGameObject* object, int sound_type, CSound_UserDataPtr user_data, const Fvector& position, float sound_power)
 {
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (object && smart_cast<CActor*>(object) && psAI_Flags.test(aiIgnoreActor))
 		return;
-#endif // MASTER_GOLD
+#endif // MASTER
 
 	VERIFY(_valid(sound_power));
 	if (!m_sounds)

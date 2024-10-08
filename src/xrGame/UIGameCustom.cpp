@@ -364,7 +364,7 @@ void CMapListHelper::LoadMapInfo(const char* cfgName, const xr_string& levelName
 			}
 			else
 			{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 				Msg("added map [%s] [%s]", shLevelName.c_str(), shLevelVer.c_str());
 #endif
 				levelNames.push_back(levelDesc);

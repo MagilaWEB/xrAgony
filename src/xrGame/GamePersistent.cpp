@@ -34,9 +34,9 @@
 #include "xrEngine/x_ray.h"
 #include "ui/UILoadingScreen.h"
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 #include "custommonster.h"
-#endif // MASTER_GOLD
+#endif // MASTER
 
 #ifndef _EDITOR
 #include "ai_debug.h"
@@ -538,11 +538,11 @@ void CGamePersistent::WeathersUpdate()
 
 bool allow_intro()
 {
-#ifdef MASTER_GOLD
+#ifdef MASTER
 	if (g_SASH.IsRunning())
-#else // #ifdef MASTER_GOLD
+#else // #ifdef MASTER
 	if ((0 != strstr(Core.Params, "-nointro")) || g_SASH.IsRunning())
-#endif // #ifdef MASTER_GOLD
+#endif // #ifdef MASTER
 	{
 		return false;
 	}
@@ -686,7 +686,7 @@ void CGamePersistent::OnFrame()
 
 	if (Device.Paused())
 	{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 		if (Level().CurrentViewEntity() && IsGameTypeSingle())
 		{
 			if (!g_actor || (g_actor->ID() != Level().CurrentViewEntity()->ID()))
@@ -738,7 +738,7 @@ void CGamePersistent::OnFrame()
 				}
 			}
 		}
-#else // MASTER_GOLD
+#else // MASTER
 		if (g_actor && IsGameTypeSingle())
 		{
 			CCameraBase* C = nullptr;
@@ -776,7 +776,7 @@ void CGamePersistent::OnFrame()
 				}
 			}
 		}
-#endif // MASTER_GOLD
+#endif // MASTER
 	}
 	__super::OnFrame();
 

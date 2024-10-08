@@ -113,10 +113,10 @@ void CHelicopter::ExplodeHelicopter()
 void CHelicopter::SetDestPosition(Fvector* pos)
 {
 	m_movement.SetDestPosition(pos);
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (bDebug)
 		Msg("---SetDestPosition %f %f %f", pos->x, pos->y, pos->z);
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 }
 
 float CHelicopter::GetDistanceToDestPosition() { return m_movement.GetDistanceToDestPosition(); }
@@ -157,20 +157,20 @@ void CHelicopter::SetLinearAcc(float LAcc_fw, float LAcc_bw)
 void CHelicopter::SetSpeedInDestPoint(float sp)
 {
 	m_movement.SetSpeedInDestPoint(sp);
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (bDebug)
 		Msg("---SetSpeedInDestPoint %f", sp);
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 }
 
 float CHelicopter::GetSpeedInDestPoint(float sp) { return m_movement.GetSpeedInDestPoint(); }
 void CHelicopter::SetOnPointRangeDist(float d)
 {
 	m_movement.onPointRangeDist = d;
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (bDebug)
 		Msg("---SetOnPointRangeDist %f", d);
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 }
 
 float CHelicopter::GetOnPointRangeDist() { return m_movement.onPointRangeDist; }

@@ -43,7 +43,7 @@
 #include "xrPhysics/console_vars.h"
 #include "xrEngine/GameFont.h"
 
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 #include "level_debug.h"
 #include "ai/stalker/ai_stalker.h"
 #include "debug_renderer.h"
@@ -81,10 +81,12 @@ CLevel::CLevel()
 	m_space_restriction_manager = new CSpaceRestrictionManager();
 	m_client_spawn_manager = new CClientSpawnManager();
 	m_autosave_manager = new CAutosaveManager();
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 	m_debug_renderer = new CDebugRenderer();
+#if defined(DEBUG)
 	levelGraphDebugRender = new LevelGraphDebugRender();
 	m_level_debug = new CLevelDebug();
+#endif
 #endif
 	m_ph_commander = new CPHCommander();
 	m_ph_commander_scripts = new CPHCommander();
@@ -132,8 +134,10 @@ CLevel::~CLevel()
 	xr_delete(m_seniority_hierarchy_holder);
 	xr_delete(m_client_spawn_manager);
 	xr_delete(m_autosave_manager);
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
+#if defined(DEBUG)
 	xr_delete(levelGraphDebugRender);
+#endif
 	xr_delete(m_debug_renderer);
 #endif
 	::ScriptEngine->remove_script_process(ScriptProcessor::Level);
@@ -147,7 +151,7 @@ CLevel::~CLevel()
 	pObjects4CrPr.clear();
 	pActors4CrPr.clear();
 	ai().unload();
-#ifdef DEBUG
+#if defined(DEBUG)
 	xr_delete(m_level_debug);
 #endif
 	xr_delete(m_map_manager);
@@ -203,7 +207,7 @@ void CLevel::cl_Process_Event(u16 dest, u16 type, NET_Packet& P)
 	CGameObject* GO = smart_cast<CGameObject*>(O);
 	if (!GO)
 	{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 		Msg("! ERROR: c_EVENT[%d] : non-game-object", dest);
 #endif
 		return;
@@ -226,7 +230,7 @@ void CLevel::cl_Process_Event(u16 dest, u16 type, NET_Packet& P)
 		IGameObject* D = Objects.net_Find(id);
 		if (0 == D)
 		{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 			Msg("! ERROR: c_EVENT[%d] : unknown dest", id);
 #endif
 			ok = false;
@@ -234,7 +238,7 @@ void CLevel::cl_Process_Event(u16 dest, u16 type, NET_Packet& P)
 		CGameObject* GD = smart_cast<CGameObject*>(D);
 		if (!GD)
 		{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 			Msg("! ERROR: c_EVENT[%d] : non-game-object", id);
 #endif
 			ok = false;
@@ -507,6 +511,8 @@ void CLevel::OnRender()
 			stalker->dbg_draw_visibility_rays();
 		}
 	}
+#elif defined(MASTER)
+	debug_renderer().render();
 #endif
 }
 

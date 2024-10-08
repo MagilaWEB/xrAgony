@@ -209,7 +209,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 		return;
 	}
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	switch (key)
 	{
 	case DIK_F7:
@@ -464,7 +464,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 	//		return;
 #endif // DEBUG
 	}
-#endif // MASTER_GOLD
+#endif // MASTER
 
 	if (bindConsoleCmds.execute(key))
 		return;

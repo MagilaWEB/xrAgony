@@ -23,9 +23,9 @@
 ENGINE_API CApplication* pApp = nullptr;
 extern CRenderDevice Device;
 
-#ifdef MASTER_GOLD
+#ifdef MASTER
 #define NO_MULTI_INSTANCES
-#endif // #ifdef MASTER_GOLD
+#endif // #ifdef MASTER
 
 //////////////////////////////////////////////////////////////////////////
 LPCSTR _GetFontTexName(LPCSTR section)

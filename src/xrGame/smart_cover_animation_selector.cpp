@@ -106,7 +106,7 @@ MotionID animation_selector::select_animation(bool& animation_movement_controlle
 		if (!m_object->movement().current_params().cover()->can_fire())
 			return (m_skeleton_animated->ID_Cycle(m_animation.c_str()));
 
-#if 0 // ndef MASTER_GOLD
+#if 0 // ndef MASTER
 		if (!psAI_Flags.test((u32)aiUseSmartCoversAnimationSlot))
 			return			(m_skeleton_animated->ID_Cycle( m_animation.c_str()));
 
@@ -128,9 +128,9 @@ MotionID animation_selector::select_animation(bool& animation_movement_controlle
 		animation_id		= m_skeleton_animated->ID_Cycle_Safe( result );
 		VERIFY				(animation_id);
 		return				(animation_id);
-#else // #ifndef MASTER_GOLD
+#else // #ifndef MASTER
 		return (m_skeleton_animated->ID_Cycle(m_animation.c_str()));
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 	}
 
 	VERIFY(m_animation._get());

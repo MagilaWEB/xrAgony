@@ -17,7 +17,7 @@ ScheduledBase::~ScheduledBase()
 
 // XXX: WTF???
 // sad, but true
-// we need this to become MASTER_GOLD
+// we need this to become MASTER
 #ifndef DEBUG
 	Engine.Sheduler.Unregister(this);
 #endif // DEBUG

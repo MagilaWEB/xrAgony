@@ -23,10 +23,10 @@
 #include "memory_manager.h"
 #include "xrEngine/IGame_Persistent.h"
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 #include "actor.h"
 #include "ai_debug.h"
-#endif // MASTER_GOLD
+#endif // MASTER
 
 struct CHitObjectPredicate
 {
@@ -83,10 +83,10 @@ void CHitMemoryManager::reload(LPCSTR section)
 
 void CHitMemoryManager::add(float amount, const Fvector& vLocalDir, const IGameObject* who, s16 element)
 {
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (who && smart_cast<CActor const*>(who) && psAI_Flags.test(aiIgnoreActor))
 		return;
-#endif // MASTER_GOLD
+#endif // MASTER
 
 	VERIFY(m_hits);
 	if (!object().g_Alive())
@@ -147,10 +147,10 @@ void CHitMemoryManager::add(float amount, const Fvector& vLocalDir, const IGameO
 
 void CHitMemoryManager::add(const CHitObject& _hit_object)
 {
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (_hit_object.m_object && smart_cast<CActor const*>(_hit_object.m_object) && psAI_Flags.test(aiIgnoreActor))
 		return;
-#endif // MASTER_GOLD
+#endif // MASTER
 
 	VERIFY(m_hits);
 	if (!object().g_Alive())

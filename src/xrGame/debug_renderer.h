@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 
 #include "Include/xrRender/DebugRender.h"
 

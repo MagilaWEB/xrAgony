@@ -1857,9 +1857,9 @@ void CActor::OnHitHealthLoss(float NewHealth)
 
 	if (m_iLastHitterID != u16(-1))
 	{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 		Msg("On hit health loss of actor[%d], last hitter[%d]", ID(), m_iLastHitterID);
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 		NET_Packet P;
 		u_EventGen(P, GE_GAME_EVENT, ID());
 		P.w_u16(GAME_EVENT_PLAYER_HITTED);
@@ -1885,9 +1885,9 @@ void CActor::OnCriticalHitHealthLoss()
 	//-------------------------------------------------------------------
 	if (m_iLastHitterID != u16(-1))
 	{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 		Msg("On hit of actor[%d], last hitter[%d]", ID(), m_iLastHitterID);
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 		NET_Packet P;
 		u_EventGen(P, GE_GAME_EVENT, ID());
 		P.w_u16(GAME_EVENT_PLAYER_HITTED);
@@ -2069,8 +2069,8 @@ BOOL CActor::BonePassBullet(int boneID)
 
 void CActor::On_B_NotCurrentEntity()
 {
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	Msg("CActor::On_B_NotCurrentEntity");
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 	inventory().Items_SetCurrentEntityHud(false);
 };

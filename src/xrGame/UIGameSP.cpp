@@ -50,7 +50,7 @@ void CUIGameSP::SetClGame(game_cl_GameState* g)
 	m_game = smart_cast<game_cl_Single*>(g);
 	R_ASSERT(m_game);
 }
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 void attach_adjust_mode_keyb(int dik);
 void attach_draw_adjust_mode();
 void hud_adjust_mode_keyb(int dik);
@@ -91,7 +91,7 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 	if (Device.Paused())
 		return false;
 
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 	hud_adjust_mode_keyb(dik);
 	attach_adjust_mode_keyb(dik);
 #endif
@@ -145,7 +145,7 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 
 	return false;
 }
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 void CUIGameSP::Render()
 {
 	inherited::Render();

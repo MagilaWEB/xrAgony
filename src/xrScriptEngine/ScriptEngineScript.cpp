@@ -15,7 +15,7 @@
 
 void LuaLog(pcstr caMessage)
 {
-#if defined(COC_EDITION) || !defined(MASTER_GOLD)
+#if defined(COC_EDITION) || !defined(MASTER)
 	::ScriptEngine->script_log(LuaMessageType::Message, "%s", caMessage);
 #endif
 #if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)

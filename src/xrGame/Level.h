@@ -30,7 +30,7 @@ class CGameTaskManager;
 class CZoneList;
 class CStreamReader;
 
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 class CDebugRenderer;
 #endif
 
@@ -95,8 +95,10 @@ protected:
 	CSeniorityHierarchyHolder* m_seniority_hierarchy_holder = nullptr;
 	CClientSpawnManager* m_client_spawn_manager = nullptr;
 	CAutosaveManager* m_autosave_manager = nullptr;
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
+#if defined(DEBUG)
 	LevelGraphDebugRender* levelGraphDebugRender = nullptr;
+#endif
 	CDebugRenderer* m_debug_renderer = nullptr;
 #endif
 	CPHCommander* m_ph_commander = nullptr;
@@ -147,7 +149,7 @@ private:
 	ClientStatistics stats;
 
 public:
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 	CLevelDebug* m_level_debug = nullptr;
 #endif
 	// Network
@@ -276,7 +278,7 @@ public:
 	IC CSeniorityHierarchyHolder& seniority_holder();
 	IC CClientSpawnManager& client_spawn_manager();
 	IC CAutosaveManager& autosave_manager();
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 	IC CDebugRenderer& debug_renderer();
 #endif
 	IC CPHCommander& ph_commander();
@@ -331,7 +333,7 @@ public:
 public:
 	void remove_objects();
 
-#ifdef DEBUG
+#if defined(DEBUG)
 	LevelGraphDebugRender* GetLevelGraphDebugRender() const { return levelGraphDebugRender; }
 #endif
 };
@@ -341,7 +343,7 @@ IC CLevel& Level() { return *(CLevel*)g_pGameLevel; }
 IC game_cl_GameState& Game() { return *Level().game; }
 u32 GameID();
 
-#ifdef DEBUG
+#if defined(DEBUG)
 IC CLevelDebug& DBG() { return *(CLevelDebug*)Level().m_level_debug; }
 #endif
 
@@ -369,7 +371,7 @@ IC CAutosaveManager& CLevel::autosave_manager()
 	return *m_autosave_manager;
 }
 
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 IC CDebugRenderer& CLevel::debug_renderer()
 {
 	VERIFY(m_debug_renderer);

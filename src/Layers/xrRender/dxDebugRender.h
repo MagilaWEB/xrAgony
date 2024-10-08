@@ -2,7 +2,7 @@
 #define dxDebugRender_included
 #pragma once
 
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 
 #include "Include/xrRender/DebugRender.h"
 
@@ -28,9 +28,7 @@ public:
 	virtual void SetDebugShader(dbgShaderHandle shdHandle);
 	virtual void DestroyDebugShader(dbgShaderHandle shdHandle);
 
-#ifdef DEBUG
 	virtual void dbg_DrawTRI(Fmatrix& T, Fvector& p1, Fvector& p2, Fvector& p3, u32 C);
-#endif //	DEBUG
 
 private:
 	void try_render(u32 const& vertex_count, u32 const& index_count);

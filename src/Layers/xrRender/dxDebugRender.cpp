@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 
 #include "dxDebugRender.h"
 #include "dxUIShader.h"

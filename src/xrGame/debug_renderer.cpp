@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#ifdef DEBUG
+#if defined(MASTER) || defined(DEBUG)
 #include "debug_renderer.h"
 
 void CDebugRenderer::add_lines(

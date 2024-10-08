@@ -27,9 +27,9 @@ CSE_Abstract* xrServer::Process_spawn(
 
 			!E->m_gameType.MatchType((u16)game->Type()) || !E->match_configuration() || !game->OnPreCreate(E))
 		{
-#ifndef MASTER_GOLD
+#ifndef MASTER
 			Msg("- SERVER: Entity [%s] incompatible with current game type.", *E->s_name);
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 			F_entity_Destroy(E);
 			return nullptr;
 		}

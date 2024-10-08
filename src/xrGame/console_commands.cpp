@@ -1198,7 +1198,7 @@ struct CCC_JumpToLevel : public IConsole_Command
 	}
 };
 
-//#ifndef MASTER_GOLD
+//#ifndef MASTER
 class CCC_Script : public IConsole_Command
 {
 public:
@@ -1939,13 +1939,13 @@ void CCC_RegisterCommands()
 	CMD1(CCC_FlushLog, "flush"); // flush log
 	CMD1(CCC_ClearLog, "clear_log");
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	CMD1(CCC_ALifeTimeFactor, "al_time_factor"); // set time factor
 	CMD1(CCC_ALifeSwitchDistance, "al_switch_distance"); // set switch distance
 	CMD1(CCC_ALifeProcessTime, "al_process_time"); // set process time
 	CMD1(CCC_ALifeObjectsPerUpdate, "al_objects_per_update"); // set process time
 	CMD1(CCC_ALifeSwitchFactor, "al_switch_factor"); // set switch factor
-#endif // #ifndef MASTER_GOLD
+#endif // #ifndef MASTER
 
 	CMD3(CCC_Mask, "hud_weapon", &psHUD_Flags, HUD_WEAPON);
 	CMD3(CCC_Mask, "hud_info", &psHUD_Flags, HUD_INFO);
@@ -1970,7 +1970,7 @@ void CCC_RegisterCommands()
 	CMD1(CCC_DemoRecord, "demo_record");
 	CMD1(CCC_DemoRecordSetPos, "demo_set_cam_position");
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	// ai
 	CMD3(CCC_Mask, "mt_ai_vision", &g_mt_config, mtAiVision);
 	CMD3(CCC_Mask, "mt_level_path", &g_mt_config, mtLevelPath);
@@ -1981,16 +1981,16 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "mt_level_sounds", &g_mt_config, mtLevelSounds);
 	CMD3(CCC_Mask, "mt_alife", &g_mt_config, mtALife);
 	CMD3(CCC_Mask, "mt_map", &g_mt_config, mtMap);
-#endif // MASTER_GOLD
+#endif // MASTER
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	CMD3(CCC_Mask, "ai_obstacles_avoiding", &psAI_Flags, aiObstaclesAvoiding);
 	CMD3(CCC_Mask, "ai_obstacles_avoiding_static", &psAI_Flags, aiObstaclesAvoidingStatic);
 	CMD3(CCC_Mask, "ai_use_smart_covers", &psAI_Flags, aiUseSmartCovers);
 	CMD3(CCC_Mask, "ai_use_smart_covers_animation_slots", &psAI_Flags, (u32)aiUseSmartCoversAnimationSlot);
 	CMD4(CCC_Float, "ai_smart_factor", &g_smart_cover_factor, 0.f, 1000000.f);
 	CMD3(CCC_Mask, "lua_debug", &g_LuaDebug, 1);
-#endif // MASTER_GOLD
+#endif // MASTER
 
 #ifdef DEBUG
 	CMD3(CCC_Mask, "ai_debug", &psAI_Flags, aiDebug);
@@ -2069,9 +2069,9 @@ void CCC_RegisterCommands()
 	CMD1(CCC_ShowAnimationStats, "ai_show_animation_stats");
 #endif // DEBUG
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	CMD3(CCC_Mask, "ai_ignore_actor", &psAI_Flags, aiIgnoreActor);
-#endif // MASTER_GOLD
+#endif // MASTER
 
 	// Physics
 	CMD1(CCC_PHFps, "ph_frequency");
@@ -2266,10 +2266,10 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "cl_dynamiccrosshair", &psHUD_Flags, HUD_CROSSHAIR_DYNAMIC);
 	CMD1(CCC_MainMenu, "main_menu");
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	CMD1(CCC_StartTimeSingle, "start_time_single");
 	CMD4(CCC_TimeFactorSingle, "time_factor_single", &g_fTimeFactor, 0.f, 1000.0f);
-#endif // MASTER_GOLD
+#endif // MASTER
 
 	g_uCommonFlags.zero();
 	g_uCommonFlags.set(flAiUseTorchDynamicLights, TRUE);

@@ -421,7 +421,7 @@ void CDemoRecord::IR_OnKeyboardPress(int dik)
 		fLifeTime = -1;
 
  //Alundaio: Teleport to demo cam
-//#ifdef DEBUG // ndef MASTER_GOLD // Xottab_DUTY: Teleport to demo cam in Debug configuration
+//#ifdef DEBUG // ndef MASTER // Xottab_DUTY: Teleport to demo cam in Debug configuration
 	if (dik == DIK_RETURN)
 	{
 		if (Core.ParamFlags.test(Core.dev))

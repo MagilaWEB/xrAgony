@@ -15,9 +15,9 @@
 #include "magic_box3.h"
 #include "ai_obstacle.h"
 
-#ifndef MASTER_GOLD
+#ifndef MASTER
 #include "ai_debug.h"
-#endif // MASTER_GOLD
+#endif // MASTER
 
 #pragma warning(push)
 #pragma warning(disable : 4995)
@@ -492,7 +492,7 @@ void moving_objects::resolve_collisions()
 
 void moving_objects::query_action_dynamic(moving_object* object)
 {
-#ifndef MASTER_GOLD
+#ifndef MASTER
 	if (psAI_Flags.test(aiObstaclesAvoidingStatic))
 		return;
 
@@ -551,5 +551,5 @@ void moving_objects::query_action_dynamic(moving_object* object)
 	for (; I != E; ++I)
 		(*I)->action(moving_object::action_move);
 
-#endif // MASTER_GOLD
+#endif // MASTER
 }
