@@ -301,53 +301,53 @@ void CResourceManager::Delete(const Shader* S)
 	Msg("! ERROR: Failed to find complete shader");
 }
 
-void CResourceManager::DeferredUpload()
-{
-	if (!Device.b_is_Ready || Device.IsReset())
-		return;
-	
-	static tbb::task_group parallel;
-	std::atomic_uint texture_it = 0;
-	size_t texture_send = 0;
-	size_t size_texture = m_textures.size();
-	if (pApp->IsLoadingScreen())
-	{
-		parallel.run([&]() {
-			while (texture_send < 40)
-			{
-				const size_t result = size_t((float(texture_it) / size_texture) * 41);
-				if (result != texture_send)
-				{
-					pApp->SetLoadStageTitle("st_loading_textures");
-					texture_send = result;
-				}
-			}
-		});
-	}
-
-	CHECK_TIME("Resource Manager DeferredUpload",
-		tbb::parallel_for_each(m_textures, [&](struct std::pair<const char*, CTexture*> m_tex)
-		{
-			m_tex.second->Load();
-			texture_it++;
-		});
-	)
-
-	parallel.wait();
-}
-
-void CResourceManager::DeferredUnload()
-{
-	if (!Device.b_is_Ready || Device.IsReset())
-		return;
-
-	CHECK_TIME("Resource Manager DeferredUnload",
-		tbb::parallel_for_each(m_textures, [&](struct std::pair<const char*, CTexture*> m_tex)
-		{
-			m_tex.second->Unload();
-		});
-	)
-}
+//void CResourceManager::DeferredUpload()
+//{
+//	if (!Device.b_is_Ready.load() || Device.IsReset())
+//		return;
+//	
+//	//static tbb::task_group parallel;
+//	//std::atomic_uint texture_it = 0;
+//	//size_t texture_send = 0;
+//	//size_t size_texture = m_textures.size();
+//	//if (pApp->IsLoadingScreen())
+//	//{
+//	//	parallel.run([&]() {
+//	//		while (texture_send < 40)
+//	//		{
+//	//			const size_t result = size_t((float(texture_it) / size_texture) * 41);
+//	//			if (result != texture_send)
+//	//			{
+//	//				pApp->SetLoadStageTitle("st_loading_textures");
+//	//				texture_send = result;
+//	//			}
+//	//		}
+//	//	});
+//	//}
+//
+//	CHECK_TIME("Resource Manager DeferredUpload",
+//		tbb::parallel_for_each(m_textures, [](auto && m_tex)
+//		{
+//			m_tex.second->Load();
+//			//texture_it++;
+//		});
+//	)
+//
+//	//parallel.wait();
+//}
+//
+//void CResourceManager::DeferredUnload()
+//{
+//	if (!Device.b_is_Ready.load() || Device.IsReset())
+//		return;
+//
+//	CHECK_TIME("Resource Manager DeferredUnload",
+//		tbb::parallel_for_each(m_textures, [](auto && m_tex)
+//		{
+//			m_tex.second->Unload();
+//		});
+//	)
+//}
 
 void CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps)
 {

@@ -87,7 +87,7 @@ bool CLevel::net_start_client3()
 		::Render->grass_level_density = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_density", 1.f);
 		::Render->grass_level_scale = READ_IF_EXISTS(pGameIni, r_float, name().c_str(), "grass_scale", 1.f);
 
-		deny_m_spawn = FALSE;
+		//deny_m_spawn = FALSE;
 		// Load level
 		R_ASSERT2(Load(level_id), "Loading failed.");
 	}
@@ -125,21 +125,20 @@ bool CLevel::net_start_client4()
 	}
 	return true;
 }
-
-bool CLevel::net_start_client5()
-{
-	if (connected_to_server)
-	{
-		// Textures
-		pApp->SetLoadStageTitle("st_loading_textures");
-		::Render->DeferredLoad(FALSE);
-		::Render->ResourcesDeferredUpload();
-		//	LL_CheckTextures();
-
-		deny_m_spawn = TRUE;
-	}
-	return true;
-}
+//
+//bool CLevel::net_start_client5()
+//{
+//	if (connected_to_server)
+//	{
+//		// Textures
+//		pApp->SetLoadStageTitle("st_loading_textures");
+//		//::Render->DeferredLoad(FALSE);
+//		//::Render->ResourcesDeferredUpload();
+//
+//		deny_m_spawn = TRUE;
+//	}
+//	return true;
+//}
 
 bool CLevel::net_start_client6()
 {

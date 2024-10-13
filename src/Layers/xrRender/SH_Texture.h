@@ -102,11 +102,11 @@ private:
 public: //	Public class members (must be encapsulated further)
 	struct
 	{
-		u32 bLoaded : 1;
-		u32 bUser : 1;
-		u32 seqCycles : 1;
-		u32 MemoryUsage : 28;
-		u32 bLoadedAsStaging : 1;
+		bool bLoaded{ false };
+		bool bUser{ false };
+		bool bSeqCycles{ false };
+		bool bLoadedAsStaging{ false };
+		size_t MemoryUsage{ 0 };
 	} flags;
 
 	fastdelegate::FastDelegate<void(u32)> bind;

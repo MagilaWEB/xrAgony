@@ -114,7 +114,7 @@ void CRenderDevice::Clear() { ::Render->Clear(); }
 
 bool CRenderDevice::ActiveMain()
 {
-	return b_is_Active && g_pGamePersistent && g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive();
+	return b_is_Active.load() && g_pGamePersistent && g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive();
 }
 
 void CRenderDevice::End(void)
@@ -128,7 +128,7 @@ void CRenderDevice::End(void)
 			::Render->ResourcesDestroyNecessaryTextures();
 			Memory.mem_compact();
 			Msg("* MEMORY USAGE: %d K", Memory.mem_usage() / 1024);
-			Msg("* End of synchronization A[%d] R[%d]", b_is_Active, b_is_Ready);
+			Msg("* End of synchronization A[%d] R[%d]", b_is_Active.load(), b_is_Ready.load());
 #ifdef FIND_CHUNK_BENCHMARK_ENABLE
 			g_find_chunk_counter.flush();
 #endif
@@ -230,7 +230,7 @@ void CRenderDevice::d_Render()
 	CStatTimer renderTotalReal;
 	renderTotalReal.FrameStart();
 	renderTotalReal.Begin();
-	if (b_is_Active && Begin())
+	if (b_is_Active.load() && Begin())
 	{
 		seqRender.Process();
 		CalcFrameStats();
@@ -308,7 +308,7 @@ void CRenderDevice::GlobalUpdate()
 			dwTime.Start();
 		}
 
-		if (b_is_Active && ::Render->GetDeviceState() != DeviceState::Lost)
+		if (b_is_Active.load() && ::Render->GetDeviceState() != DeviceState::Lost)
 		{
 			if (r_scope_fps_limit)
 				LIMIT_UPDATE_FPS_CODE(SecondViewportRenderFps, r_scope_fps_limit, d_SVPRender();)
@@ -479,15 +479,15 @@ const bool CRenderDevice::IsLoadingProsses()
 void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 {
 	u16 fActive = LOWORD(wParam);
-	const BOOL fMinimized = (BOOL)HIWORD(wParam);
-	const BOOL isWndActive = (fActive != WA_INACTIVE && !fMinimized) ? TRUE : FALSE;
+	const bool fMinimized = (bool)HIWORD(wParam);
+	const bool isWndActive = fActive != WA_INACTIVE && !fMinimized;
 
-	if (isWndActive != b_is_Active)
+	if (isWndActive != b_is_Active.load())
 	{
-		b_is_Active = isWndActive;
-		pInput->ClipCursor(b_is_Active);
+		b_is_Active.store(isWndActive);
+		pInput->ClipCursor(isWndActive);
 
-		if (b_is_Active)
+		if (b_is_Active.load())
 		{
 			//Reset();
 			ShowWindow(m_hWnd, SW_SHOW);
@@ -500,7 +500,7 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 			seqParallel.clear();
 			seqParallel2.clear();
 
-			if (b_is_Active)
+			if (b_is_Active.load())
 			{
 				xrThread::GlobalState(xrThread::dsOK);
 				seqAppActivate.Process();

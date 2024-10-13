@@ -7,13 +7,13 @@
 
 void CRenderDevice::Destroy()
 {
-	if (!b_is_Ready)
+	if (!b_is_Ready.load())
 		return;
 	Log("Destroying Direct3D...");
 	pInput->ClipCursor(false);
 	::Render->ValidateHW();
 	::DU->OnDeviceDestroy();
-	b_is_Ready = false;
+	b_is_Ready.store(false);
 	Statistic->OnDeviceDestroy();
 	::Render->destroy();
 	::Render->OnDeviceDestroy(false);

@@ -285,7 +285,7 @@ void CUISequencer::Stop()
 
 void CUISequencer::OnFrame()
 {
-	if (!Device.b_is_Active)
+	if (!Device.b_is_Active.load())
 		return;
 	if (!IsActive())
 		return;

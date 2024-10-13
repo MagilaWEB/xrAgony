@@ -84,12 +84,15 @@ private:
 	xr_vector<Shader*> v_shaders;
 
 	xr_vector<ref_texture> m_necessary;
+
+	//prosesing
+	tbb::task_group task_louding;
+
 	// misc
 public:
 	CTextureDescrMngr m_textures_description;
 	//.	CInifile*											m_textures_description;
 	xr_vector<std::pair<shared_str, R_constant_setup*>> v_constant_setup;
-	BOOL bDeferredLoad;
 	CScriptEngine ScriptEngine;
 
 private:
@@ -180,7 +183,7 @@ public:
 	Shader* _lua_Create(LPCSTR s_shader, LPCSTR s_textures);
 	BOOL _lua_HasShader(LPCSTR s_shader);
 
-	CResourceManager() : bDeferredLoad(TRUE) {}
+	CResourceManager(){}
 	~CResourceManager();
 
 	void OnDeviceCreate(IReader* F);
@@ -204,9 +207,8 @@ public:
 	SGeometry* CreateGeom(u32 FVF, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib);
 
 	void DeleteGeom(const SGeometry* VS);
-	void DeferredLoad(BOOL E) { bDeferredLoad = E; }
-	void DeferredUpload();
-	void DeferredUnload();
+	//void DeferredUpload();
+	//void DeferredUnload();
 	//void Evict();
 	void StoreNecessaryTextures();
 	void DestroyNecessaryTextures();

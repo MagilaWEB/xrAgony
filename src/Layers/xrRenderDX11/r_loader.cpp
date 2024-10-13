@@ -22,7 +22,6 @@ void CRender::level_Load(IReader* fs)
 	R_ASSERT(!b_loaded);
 
 	// Begin
-	RImplementation.Resources->DeferredLoad(TRUE);
 	IReader* chunk;
 
 	static tbb::task_group parallel;

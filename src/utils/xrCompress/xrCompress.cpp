@@ -149,7 +149,7 @@ void xrCompressor::PerformWork()
 			compress->PushFile(file);
 		}
 		
-		tbb::parallel_for_each(PackCompress, [&](xrCompressorPack* compress)
+		tbb::parallel_for_each(PackCompress, [](xrCompressorPack* compress)
 		{
 			compress->StartCompress();
 		});

@@ -315,7 +315,7 @@ void CGameFont::OnRender()
 void CGameFont::MasterOut(bool bCheckDevice, bool bUseCoords, bool bScaleCoords, bool bUseSkip, float _x, float _y,
 	float _skip, pcstr fmt, va_list p)
 {
-	if (bCheckDevice && (!Device.b_is_Active))
+	if (bCheckDevice && (!Device.b_is_Active.load()))
 		return;
 
 	String rs;

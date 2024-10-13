@@ -197,7 +197,7 @@ void CLevel::ProcessGameSpawns()
 		}
 
 		auto check_progress{ [&]() {
-				const size_t result = size_t((float(object_synchronization_it) / object_synchronization_size) * 17);
+				const size_t result = size_t((float(object_synchronization_it) / object_synchronization_size) * 57);
 				if (result != object_synchronization_send)
 				{
 					pApp->SetLoadStageTitle("st_loading_object_synchronization");

@@ -261,7 +261,7 @@ CRT* CResourceManager::_CreateRT(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 Sam
 		CRT* RT = new CRT();
 		RT->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 		m_rtargets.emplace(RT->set_name(Name), RT);
-		if (Device.b_is_Ready)
+		if (Device.b_is_Ready.load())
 			RT->create(Name, w, h, f, SampleCount, useUAV);
 		return RT;
 	}
@@ -381,17 +381,21 @@ CTexture* CResourceManager::_CreateTexture(LPCSTR _Name)
 	xr_strcpy(Name, _Name); //. andy if (strext(Name)) *strext(Name)=0;
 	fix_texture_name(Name);
 	// ***** first pass - search already loaded texture
-	LPSTR N = LPSTR(Name);
-	auto I = m_textures.find(N);
+	auto I = m_textures.find(Name);
 	if (I != m_textures.end())
 		return I->second;
 
 	CTexture* T = new CTexture();
 	T->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 	m_textures.emplace(T->set_name(Name), T);
-	T->Preload();
-	if (Device.b_is_Ready && !bDeferredLoad)
+	
+	task_louding.run([T]
+	{
+		while (!Device.b_is_Ready.load())
+			std::this_thread::yield();
+
 		T->Load();
+	});
 	return T;
 }
 void CResourceManager::_DeleteTexture(const CTexture* T)

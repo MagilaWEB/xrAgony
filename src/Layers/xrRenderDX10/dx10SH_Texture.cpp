@@ -27,11 +27,6 @@ CTexture::CTexture()
 	pTheora = nullptr;
 	desc_cache = 0;
 	seqMSPF = 0;
-	flags.MemoryUsage = 0;
-	flags.bLoaded = false;
-	flags.bUser = false;
-	flags.seqCycles = FALSE;
-	flags.bLoadedAsStaging = FALSE;
 	m_material = 1.0f;
 	bind = fastdelegate::FastDelegate<void(u32)>(this, &CTexture::apply_load);
 }
@@ -204,7 +199,7 @@ void CTexture::ProcessStaging()
 	}
 	*/
 
-	flags.bLoadedAsStaging = FALSE;
+	flags.bLoadedAsStaging = false;
 
 	//	Check if texture was not copied _before_ it was converted.
 	ULONG RefCnt = pSurface->Release();
@@ -319,7 +314,7 @@ void CTexture::apply_seq(u32 dwStage)
 	// SEQ
 	u32 frame = Device.dwTimeContinual / seqMSPF; // Device.dwTimeGlobal
 	u32 frame_data = seqDATA.size();
-	if (flags.seqCycles)
+	if (flags.bSeqCycles)
 	{
 		u32 frame_id = frame % (frame_data * 2);
 		if (frame_id >= frame_data)
@@ -478,11 +473,11 @@ void CTexture::Load()
 		string256 buffer;
 		IReader* _fs = FS.r_open(fn);
 
-		flags.seqCycles = FALSE;
+		flags.bSeqCycles = false;
 		_fs->r_string(buffer, sizeof(buffer));
 		if (0 == xr_stricmp(buffer, "cycled"))
 		{
-			flags.seqCycles = TRUE;
+			flags.bSeqCycles = true;
 			_fs->r_string(buffer, sizeof(buffer));
 		}
 		u32 fps = atoi(buffer);
@@ -519,7 +514,7 @@ void CTexture::Load()
 
 		if (GetUsage() == D3D_USAGE_STAGING)
 		{
-			flags.bLoadedAsStaging = TRUE;
+			flags.bLoadedAsStaging = true;
 			bCreateView = false;
 		}
 
@@ -545,8 +540,8 @@ void CTexture::Unload()
 
 	//.	if (flags.bLoaded)		Msg		("* Unloaded: %s",cName.c_str());
 
-	flags.bLoaded = FALSE;
-	flags.bLoadedAsStaging = FALSE;
+	flags.bLoaded = false;
+	flags.bLoadedAsStaging = false;
 	if (!seqDATA.empty())
 	{
 		for (u32 I = 0; I < seqDATA.size(); I++)

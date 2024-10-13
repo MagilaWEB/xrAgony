@@ -99,7 +99,7 @@ int __cdecl main(int argc, char* argv[])
 			}
 		}
 
-		tbb::parallel_for_each(xrCompressor::parallel_Compress, [&](xrCompressor* compress)
+		tbb::parallel_for_each(xrCompressor::parallel_Compress, [](xrCompressor* compress)
 		{
 			compress->ProcessLTX();
 			compress->PerformWork();

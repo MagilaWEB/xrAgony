@@ -53,9 +53,8 @@ void CLevel::ClientReceive()
 		{
 			if (!bReady)
 			{
-				Msg("! Unconventional M_SPAWN received : map_data[%s] | bReady[%s] | deny_m_spawn[%s]",
-					(map_data.m_map_sync_received) ? "true" : "false", (bReady) ? "true" : "false",
-					deny_m_spawn ? "true" : "false");
+				Msg("! Unconventional M_SPAWN received : map_data[%s] | bReady[%s]",
+					(map_data.m_map_sync_received) ? "true" : "false", (bReady) ? "true" : "false");
 				break;
 			}
 

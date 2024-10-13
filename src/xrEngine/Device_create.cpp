@@ -20,7 +20,7 @@ void CRenderDevice::_SetupStates()
 
 void CRenderDevice::Create()
 {
-	if (b_is_Ready)
+	if (b_is_Ready.load())
 		return; // prevent double call
 	Statistic = new CStats();
 	bool gpuSW = !!strstr(Core.Params, "-gpu_sw");
@@ -39,7 +39,7 @@ void CRenderDevice::Create()
 	GetWindowRect(m_hWnd, &m_rcWindowBounds);
 	GetClientRect(m_hWnd, &m_rcWindowClient);
 	Memory.mem_compact();
-	b_is_Ready = TRUE;
+	b_is_Ready.store(true);
 	_SetupStates();
 	string_path fname;
 	FS.update_path(fname, "$game_data$", "shaders.xr");

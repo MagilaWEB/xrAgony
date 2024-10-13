@@ -1029,11 +1029,11 @@ void D3DXRenderBase::Reset(HWND hWnd, u32& dwWidth, u32& dwHeight, float& fWidth
 	Resources->reset_begin();
 	Memory.mem_compact();
 
-	ResourcesDeferredUnload();
+	//ResourcesDeferredUnload();
 
 	HW.Reset(hWnd);
 
-	ResourcesDeferredUpload();
+	//ResourcesDeferredUpload();
 
 	dwWidth = HW.m_ChainDesc.BufferDesc.Width;
 	dwHeight = HW.m_ChainDesc.BufferDesc.Height;
@@ -1101,9 +1101,8 @@ void D3DXRenderBase::overdrawEnd()
 	VERIFY(!"D3DXRenderBase::overdrawBegin not implemented.");
 }
 
-void D3DXRenderBase::DeferredLoad(bool E) { Resources->DeferredLoad(E); }
-void D3DXRenderBase::ResourcesDeferredUpload() { Resources->DeferredUpload(); }
-void D3DXRenderBase::ResourcesDeferredUnload() { Resources->DeferredUnload(); }
+//void D3DXRenderBase::ResourcesDeferredUpload() { Resources->DeferredUpload(); }
+//void D3DXRenderBase::ResourcesDeferredUnload() { Resources->DeferredUnload(); }
 void D3DXRenderBase::ResourcesGetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps)
 {
 	if (Resources)

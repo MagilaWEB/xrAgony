@@ -45,7 +45,7 @@ CMainMenu::CMainMenu()
 	m_startDialog = nullptr;
 	m_screenshotFrame = u32(-1);
 	g_pGamePersistent->m_pMainMenu = this;
-	if (Device.b_is_Ready)
+	if (Device.b_is_Ready.load())
 		OnDeviceCreate();
 	ReadTextureInfo();
 	CUIXmlInit::InitColorDefs();

@@ -212,7 +212,7 @@ public:
 protected:
 	bool net_start_result_total;
 	bool connected_to_server;
-	bool deny_m_spawn; // only for debug...
+	//bool deny_m_spawn; // only for debug...
 	void MakeReconnect();
 	LevelMapSyncData map_data;
 	bool synchronize_map_data();
@@ -225,7 +225,7 @@ protected:
 	bool net_start_client2();
 	bool net_start_client3();
 	bool net_start_client4();
-	bool net_start_client5();
+	//bool net_start_client5();
 	bool net_start_client6();
 
 public:

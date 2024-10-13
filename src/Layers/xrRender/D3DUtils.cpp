@@ -666,7 +666,7 @@ IC float _y2real(float y) { return (y + 1) * Device.dwHeight * 0.5f; }
 
 void CDrawUtilities::dbgDrawPlacement(const Fvector& p, int sz, u32 clr, LPCSTR caption, u32 clr_font)
 {
-	VERIFY(Device.b_is_Ready);
+	VERIFY(Device.b_is_Ready.load());
 	Fvector c;
 	float w = p.x * Device.mFullTransform._14 + p.y * Device.mFullTransform._24 + p.z * Device.mFullTransform._34 +
 		Device.mFullTransform._44;
@@ -1280,7 +1280,7 @@ void CDrawUtilities::DrawAxis(const Fmatrix& T)
 
 void CDrawUtilities::DrawObjectAxis(const Fmatrix& T, float sz, BOOL sel)
 {
-	VERIFY(Device.b_is_Ready);
+	VERIFY(Device.b_is_Ready.load());
 	_VertexStream* Stream = &RCache.Vertex;
 	Fvector c, r, n, d;
 	float w = T.c.x * Device.mFullTransform._14 + T.c.y * Device.mFullTransform._24 +
@@ -1341,7 +1341,7 @@ void CDrawUtilities::DrawObjectAxis(const Fmatrix& T, float sz, BOOL sel)
 
 void CDrawUtilities::DrawGrid()
 {
-	VERIFY(Device.b_is_Ready);
+	VERIFY(Device.b_is_Ready.load());
 	_VertexStream* Stream = &RCache.Vertex;
 	u32 vBase;
 	// fill VB
@@ -1359,7 +1359,7 @@ void CDrawUtilities::DrawGrid()
 
 void CDrawUtilities::DrawSelectionRect(const Ivector2& m_SelStart, const Ivector2& m_SelEnd)
 {
-	VERIFY(Device.b_is_Ready);
+	VERIFY(Device.b_is_Ready.load());
 	// fill VB
 	_VertexStream* Stream = &RCache.Vertex;
 	u32 vBase;

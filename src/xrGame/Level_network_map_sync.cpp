@@ -7,7 +7,7 @@
 
 bool CLevel::synchronize_map_data()
 {
-	deny_m_spawn = FALSE;
+	//deny_m_spawn = FALSE;
 	map_data.m_map_sync_received = true;
 	return synchronize_client();
 }
@@ -18,7 +18,7 @@ bool CLevel::synchronize_client()
 
 	if (game_configured)
 	{
-		deny_m_spawn = FALSE;
+		//deny_m_spawn = FALSE;
 		return true;
 	}
 

@@ -51,8 +51,8 @@ public:
 	RECT m_rcWindowClient;
 
 	u32 dwPrecacheFrame;
-	BOOL b_is_Ready;
-	BOOL b_is_Active;
+	std::atomic_bool b_is_Ready;
+	std::atomic_bool b_is_Active;
 
 	// Engine flow-control
 	u32 dwFrame;
@@ -210,8 +210,8 @@ public:
 	CRenderDevice() : m_dwWindowStyle(0), fWidth_2(0), fHeight_2(0)
 	{
 		m_hWnd = nullptr;
-		b_is_Active = FALSE;
-		b_is_Ready = FALSE;
+		b_is_Active.store(false);
+		b_is_Ready.store(false);
 		Timer.Start();
 		m_bNearer = FALSE;
 		m_ScopeVP.SetSVPActive(false);

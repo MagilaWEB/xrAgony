@@ -108,7 +108,7 @@ bool CLevel::net_start4()
 	g_loading_events.pop_front();
 
 	g_loading_events.emplace_front(this, &CLevel::net_start_client6);
-	g_loading_events.emplace_front(this, &CLevel::net_start_client5);
+	//g_loading_events.emplace_front(this, &CLevel::net_start_client5);
 	g_loading_events.emplace_front(this, &CLevel::net_start_client4);
 	g_loading_events.emplace_front(this, &CLevel::net_start_client3);
 	g_loading_events.emplace_front(this, &CLevel::net_start_client2);
