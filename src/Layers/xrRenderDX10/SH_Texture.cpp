@@ -28,7 +28,7 @@ CTexture::CTexture()
 	desc_cache = 0;
 	seqMSPF = 0;
 	m_material = 1.0f;
-	bind = fastdelegate::FastDelegate<void(u32)>(this, &CTexture::apply_load);
+	bind = [this](u32 dwStage) { apply_load(dwStage); };
 }
 
 CTexture::~CTexture()
@@ -113,13 +113,13 @@ ID3DBaseTexture* CTexture::surface_get()
 void CTexture::PostLoad()
 {
 	if (pTheora)
-		bind = fastdelegate::FastDelegate<void(u32)>(this, &CTexture::apply_theora);
+		bind = [this](u32 dwStage) { apply_theora(dwStage); };
 	else if (pAVI)
-		bind = fastdelegate::FastDelegate<void(u32)>(this, &CTexture::apply_avi);
+		bind = [this](u32 dwStage) { apply_avi(dwStage); };
 	else if (!seqDATA.empty())
-		bind = fastdelegate::FastDelegate<void(u32)>(this, &CTexture::apply_seq);
+		bind = [this](u32 dwStage) { apply_seq(dwStage); };
 	else
-		bind = fastdelegate::FastDelegate<void(u32)>(this, &CTexture::apply_normal);
+		bind = [this](u32 dwStage) { apply_normal(dwStage); };
 }
 
 void CTexture::apply_load(u32 dwStage)
@@ -309,8 +309,10 @@ void CTexture::apply_avi(u32 dwStage)
 	// CHK_DX(HW.pDevice->SetTexture(dwStage,pSurface));
 	Apply(dwStage);
 };
+
 void CTexture::apply_seq(u32 dwStage)
 {
+	xrCriticalSection::raii mt{ Lock };
 	// SEQ
 	u32 frame = Device.dwTimeContinual / seqMSPF; // Device.dwTimeGlobal
 	u32 frame_data = seqDATA.size();
@@ -469,6 +471,8 @@ void CTexture::Load()
 	}
 	else if (FS.exist(fn, "$game_textures$", *cName, ".seq"))
 	{
+		xrCriticalSection::raii mt{ Lock };
+
 		// Sequence
 		string256 buffer;
 		IReader* _fs = FS.r_open(fn);
@@ -542,6 +546,7 @@ void CTexture::Unload()
 
 	flags.bLoaded = false;
 	flags.bLoadedAsStaging = false;
+
 	if (!seqDATA.empty())
 	{
 		for (u32 I = 0; I < seqDATA.size(); I++)
@@ -564,7 +569,7 @@ void CTexture::Unload()
 	xr_delete(pAVI);
 	xr_delete(pTheora);
 
-	bind = fastdelegate::FastDelegate<void(u32)>(this, &CTexture::apply_load);
+	bind = [this](u32 dwStage) { apply_load(dwStage); };
 }
 
 void CTexture::desc_update()

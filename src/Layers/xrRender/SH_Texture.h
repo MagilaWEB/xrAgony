@@ -3,6 +3,7 @@
 #pragma once
 
 #include "xrCore/xr_resource.h"
+#include "xrCore/Threading/xrSyncronize.hpp"
 
 class ENGINE_API CAviPlayerCustom;
 class CTheoraSurface;
@@ -109,7 +110,7 @@ public: //	Public class members (must be encapsulated further)
 		size_t MemoryUsage{ 0 };
 	} flags;
 
-	fastdelegate::FastDelegate<void(u32)> bind;
+	std::function<void(u32)> bind;
 
 	CAviPlayerCustom* pAVI;
 	CTheoraSurface* pTheora;
@@ -136,6 +137,8 @@ private:
 	ID3DShaderResourceView* m_pSRView;
 	// Sequence view data
 	xr_vector<ID3DShaderResourceView*> m_seqSRView;
+
+	IC static xrCriticalSection Lock;
 };
 
 struct resptrcode_texture : public resptr_base<CTexture>

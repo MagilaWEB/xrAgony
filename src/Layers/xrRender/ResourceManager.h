@@ -85,15 +85,15 @@ private:
 
 	xr_vector<ref_texture> m_necessary;
 
-	//prosesing
-	tbb::task_group task_louding;
-
 	// misc
 public:
 	CTextureDescrMngr m_textures_description;
 	//.	CInifile*											m_textures_description;
 	xr_vector<std::pair<shared_str, R_constant_setup*>> v_constant_setup;
 	CScriptEngine ScriptEngine;
+
+	//loading
+	tbb::task_group task_louding_textures;
 
 private:
 	void LS_Load();
@@ -110,8 +110,10 @@ public:
 
 	map_Blender& _GetBlenders() { return m_blenders; }
 	// Debug
-	void DBG_VerifyGeoms();
+#ifdef DEBUG
+	//void DBG_VerifyGeoms();
 	void DBG_VerifyTextures();
+#endif
 
 	// Low level resource creation
 	CTexture* _CreateTexture(LPCSTR Name);

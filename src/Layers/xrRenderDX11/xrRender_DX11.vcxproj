@@ -312,12 +312,11 @@
     <ClCompile Include="..\xrRenderDX10\dx10BufferUtils.cpp" />
     <ClCompile Include="..\xrRenderDX10\dx10ConstantBuffer.cpp" />
     <ClCompile Include="..\xrRenderDX10\HW.cpp" />
-    <ClCompile Include="..\xrRenderDX10\dx10ResourceManager_Resources.cpp" />
-    <ClCompile Include="..\xrRenderDX10\dx10ResourceManager_Scripting.cpp" />
+    <ClCompile Include="..\xrRenderDX10\ResourceManager_Scripting.cpp" />
     <ClCompile Include="..\xrRenderDX10\dx10r_constants.cpp" />
     <ClCompile Include="..\xrRenderDX10\dx10r_constants_cache.cpp" />
-    <ClCompile Include="..\xrRenderDX10\dx10SH_RT.cpp" />
-    <ClCompile Include="..\xrRenderDX10\dx10SH_Texture.cpp" />
+    <ClCompile Include="..\xrRenderDX10\SH_RT.cpp" />
+    <ClCompile Include="..\xrRenderDX10\SH_Texture.cpp" />
     <ClCompile Include="..\xrRenderDX10\dx10StateUtils.cpp" />
     <ClCompile Include="..\xrRenderDX10\Texture.cpp" />
     <ClCompile Include="..\xrRenderDX10\dx10TextureUtils.cpp" />

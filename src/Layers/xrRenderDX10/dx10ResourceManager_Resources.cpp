@@ -389,13 +389,16 @@ CTexture* CResourceManager::_CreateTexture(LPCSTR _Name)
 	T->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 	m_textures.emplace(T->set_name(Name), T);
 	
-	task_louding.run([T]
+	T->Preload();
+
+	task_louding_textures.run([T]
 	{
 		while (!Device.b_is_Ready.load())
 			std::this_thread::yield();
 
 		T->Load();
 	});
+
 	return T;
 }
 void CResourceManager::_DeleteTexture(const CTexture* T)
