@@ -73,8 +73,7 @@ IC T* xr_alloc(size_t count)
 	return (T*)Memory.mem_alloc(count * sizeof(T));
 }
 
-template <typename T>
-IC void xr_free(T*& ptr)
+IC void xr_free(auto && ptr)
 {
 	if (ptr)
 	{

@@ -193,40 +193,24 @@ void CDetailManager::spawn_Slots(Fvector& view)
 	// Task performer
 	if (!Device.ActiveMain())
 	{
-		for (u32 i = 0; i < (u32)ps_r__detail_limit_spawn && !cache_task.empty(); i++)
+		cache_task.sort([view](Slot* slot, Slot* slot_2)
 		{
-			if (cache_task.empty())
-				break;
+			Fvector slot_position;
+			slot->vis.box.getcenter(slot_position);
+			Fvector slot_position_2;
+			slot_2->vis.box.getcenter(slot_position_2);
 
-			u32 cache_id = 0;
-			float cache_distance = flt_max;
+			float distance = view.distance_to_sqr(slot_position);
+			float distance_2 = view.distance_to_sqr(slot_position_2);
 
-			FOR_START(u32, 0, cache_task.size(), id)
-			{
-				// Gain access to data
-				Slot* slot = cache_task[id];
-				if (slot)
-				{
-					VERIFY(stPending == slot->type);
+			return distance < distance_2;
+		});
 
-					// Estimate
-					Fvector slot_position;
-					slot->vis.box.getcenter(slot_position);
-					float distance = view.distance_to_sqr(slot_position);
-
-					// Select
-					if (distance < cache_distance)
-					{
-						cache_distance = distance;
-						cache_id = id;
-					}
-				}
-			}
-			FOR_END
-
+		for (size_t i = 0; i < size_t(ps_r__detail_limit_spawn) && !cache_task.empty(); i++)
+		{
 			// Decompress and remove task
-			cache_Decompress(cache_task[cache_id]);
-			cache_task.erase(cache_task.begin() + cache_id);
+			cache_Decompress(cache_task[i]);
+			cache_task.erase(cache_task.begin() + i);
 		}
 	}
 }
