@@ -223,7 +223,7 @@ void CUIActorMenu::HighlightSectionInSlot(pcstr section, u8 type, u16 slot_id /*
 	for (u32 i = 0; i < cnt; ++i)
 	{
 		CUICellItem* ci = slot_list->GetItemIdx(i);
-		const PIItem item = static_cast<PIItem>(ci->m_pData);
+		const PIItem item = ci->m_pItem;
 		if (!item)
 			continue;
 
@@ -280,7 +280,7 @@ void CUIActorMenu::HighlightForEachInSlot(const luabind::functor<bool>& functor,
 	for (u32 i = 0; i < cnt; ++i)
 	{
 		CUICellItem* ci = slot_list->GetItemIdx(i);
-		PIItem item = (PIItem)ci->m_pData;
+		PIItem item = ci->m_pItem;
 		if (!item)
 			continue;
 

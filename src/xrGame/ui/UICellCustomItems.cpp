@@ -17,15 +17,15 @@ struct is_helper_pred
 
 } // namespace detail
 
-CUIInventoryCellItem::CUIInventoryCellItem(CInventoryItem* itm)
+CUIInventoryCellItem::CUIInventoryCellItem(CInventoryItem* item)
 {
-	m_pData = (void*)itm;
+	m_pItem = reinterpret_cast<PIItem>(item);
 
 	inherited::SetShader(InventoryUtilities::GetEquipmentIconsShader());
 
-	m_grid_size.set(itm->GetInvGridRect().rb);
+	m_grid_size.set(item->GetInvGridRect().rb);
 	Frect rect;
-	rect.lt.set(INV_GRID_WIDTHF * itm->GetInvGridRect().x1, INV_GRID_HEIGHTF * itm->GetInvGridRect().y1);
+	rect.lt.set(INV_GRID_WIDTHF * item->GetInvGridRect().x1, INV_GRID_HEIGHTF * item->GetInvGridRect().y1);
 
 	rect.rb.set(rect.lt.x + INV_GRID_WIDTHF * m_grid_size.x, rect.lt.y + INV_GRID_HEIGHTF * m_grid_size.y);
 
@@ -35,23 +35,23 @@ CUIInventoryCellItem::CUIInventoryCellItem(CInventoryItem* itm)
 	//Alundaio; Layered icon
 	u8 itrNum = 1;
 	pcstr field = "1icon_layer";
-	while (pSettings->line_exist(itm->m_section_id, field))
+	while (pSettings->line_exist(item->m_section_id, field))
 	{
 		string32 buf;
 
-		const pcstr section = pSettings->r_string(itm->m_section_id, field);
+		const pcstr section = pSettings->r_string(item->m_section_id, field);
 		if (!section)
 			continue;
 
 		Fvector2 offset;
-		offset.x = pSettings->r_float(itm->m_section_id,
+		offset.x = pSettings->r_float(item->m_section_id,
 									  strconcat(sizeof buf, buf, std::to_string(itrNum).c_str(), "icon_layer_x"));
-		offset.y = pSettings->r_float(itm->m_section_id,
+		offset.y = pSettings->r_float(item->m_section_id,
 									  strconcat(sizeof buf, buf, std::to_string(itrNum).c_str(), "icon_layer_y"));
 
 		pcstr field_scale = strconcat(sizeof buf, buf, std::to_string(itrNum).c_str(), "icon_layer_scale");
-		const float scale = pSettings->line_exist(itm->m_section_id, field_scale)
-						  ? pSettings->r_float(itm->m_section_id, field_scale)
+		const float scale = pSettings->line_exist(item->m_section_id, field_scale)
+						  ? pSettings->r_float(item->m_section_id, field_scale)
 						  : 1.0f;
 
 		CreateLayer(section, offset, scale);

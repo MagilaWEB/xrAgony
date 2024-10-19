@@ -131,7 +131,7 @@ void CUIActorMenu::DeInitDeadBodySearchMode() const
 
 bool CUIActorMenu::ToDeadBodyBag(CUICellItem* itm, bool b_use_cursor_pos)
 {
-	PIItem quest_item = (PIItem)itm->m_pData;
+	PIItem quest_item = itm->m_pItem;
 	if (quest_item->IsQuestItem())
 		return false;
 
@@ -184,7 +184,7 @@ bool CUIActorMenu::ToDeadBodyBag(CUICellItem* itm, bool b_use_cursor_pos)
 	else
 		new_owner->SetItem(i);
 
-	PIItem iitem = (PIItem)i->m_pData;
+	PIItem iitem = i->m_pItem;
 
 	if (m_pPartnerInvOwner)
 	{
@@ -234,10 +234,10 @@ void CUIActorMenu::TakeAllFromPartner(CUIWindow* w, void* d)
 		CUICellItem* ci = m_pDeadBodyBagList->GetItemIdx(i);
 		for (u32 j = 0; j < ci->ChildsCount(); ++j)
 		{
-			PIItem j_item = (PIItem)(ci->Child(j)->m_pData);
+			PIItem j_item = ci->Child(j)->m_pItem;
 			move_item_check(j_item, m_pPartnerInvOwner, m_pActorInvOwner, false);
 		}
-		PIItem item = (PIItem)(ci->m_pData);
+		PIItem item = ci->m_pItem;
 		move_item_check(item, m_pPartnerInvOwner, m_pActorInvOwner, false);
 	} // for i
 	m_pDeadBodyBagList->ClearAll(true); // false
@@ -253,11 +253,11 @@ void CUIActorMenu::TakeAllFromInventoryBox()
 		CUICellItem* ci = m_pDeadBodyBagList->GetItemIdx(i);
 		for (u32 j = 0; j < ci->ChildsCount(); ++j)
 		{
-			PIItem j_item = (PIItem)(ci->Child(j)->m_pData);
+			PIItem j_item = ci->Child(j)->m_pItem;
 			move_item_from_to(m_pInvBox->ID(), actor_id, j_item->object_id());
 		}
 
-		PIItem item = (PIItem)(ci->m_pData);
+		PIItem item = ci->m_pItem;
 		move_item_from_to(m_pInvBox->ID(), actor_id, item->object_id());
 	} // for i
 	m_pDeadBodyBagList->ClearAll(true); // false

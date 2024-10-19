@@ -67,10 +67,10 @@ bool is_item_in_list(CUIDragDropListEx* pList, PIItem item)
 		for (u16 k = 0; k < cell_item->ChildsCount(); k++)
 		{
 			CUICellItem* inv_cell_item = cell_item->Child(k);
-			if ((PIItem)inv_cell_item->m_pData == item)
+			if (inv_cell_item->m_pItem == item)
 				return true;
 		}
-		if ((PIItem)cell_item->m_pData == item)
+		if (cell_item->m_pItem == item)
 			return true;
 	}
 	return false;
@@ -183,7 +183,7 @@ void CUIActorMenu::DeInitTradeMode()
 
 bool CUIActorMenu::ToActorTrade(CUICellItem* itm, bool b_use_cursor_pos)
 {
-	PIItem iitem = (PIItem)itm->m_pData;
+	PIItem iitem = itm->m_pItem;
 	if (!CanMoveToPartner(iitem))
 	{
 		return false;
@@ -224,7 +224,7 @@ bool CUIActorMenu::ToActorTrade(CUICellItem* itm, bool b_use_cursor_pos)
 
 bool CUIActorMenu::ToPartnerTrade(CUICellItem* itm, bool b_use_cursor_pos)
 {
-	PIItem iitem = (PIItem)itm->m_pData;
+	PIItem iitem = itm->m_pItem;
 	SInvItemPlace pl;
 	pl.type = eItemPlaceRuck;
 	if (!m_pPartnerInvOwner->AllowItemToTrade(iitem, pl))
@@ -286,13 +286,10 @@ float CUIActorMenu::CalcItemsWeight(CUIDragDropListEx* pList)
 	for (u32 i = 0; i < pList->ItemsCount(); ++i)
 	{
 		CUICellItem* itm = pList->GetItemIdx(i);
-		PIItem iitem = (PIItem)itm->m_pData;
+		PIItem iitem = itm->m_pItem;
 		res += iitem->Weight();
 		for (u32 j = 0; j < itm->ChildsCount(); ++j)
-		{
-			PIItem jitem = (PIItem)itm->Child(j)->m_pData;
-			res += jitem->Weight();
-		}
+			res += itm->Child(j)->m_pItem->Weight();
 	}
 	return res;
 }
@@ -303,13 +300,10 @@ u32 CUIActorMenu::CalcItemsPrice(CUIDragDropListEx* pList, CTrade* pTrade, bool 
 	for (u32 i = 0; i < pList->ItemsCount(); ++i)
 	{
 		CUICellItem* itm = pList->GetItemIdx(i);
-		PIItem iitem = (PIItem)itm->m_pData;
+		PIItem iitem = itm->m_pItem;
 		res += pTrade->GetItemPrice(iitem, bBuying);
 		for (u32 j = 0; j < itm->ChildsCount(); ++j)
-		{
-			PIItem jitem = (PIItem)itm->Child(j)->m_pData;
-			res += pTrade->GetItemPrice(jitem, bBuying);
-		}
+			res += pTrade->GetItemPrice(itm->Child(j)->m_pItem, bBuying);
 	}
 
 	return res;
@@ -541,7 +535,7 @@ void CUIActorMenu::TransferItems(
 	while (pSellList->ItemsCount())
 	{
 		CUICellItem* cell_item = pSellList->RemoveItem(pSellList->GetItemIdx(0), false);
-		PIItem item = (PIItem)cell_item->m_pData;
+		PIItem item = (PIItem)cell_item->m_pItem;
 		pTrade->TransferItem(item, bBuying);
 
 		if (bBuying)
@@ -572,7 +566,7 @@ void CUIActorMenu::DonateCurrentItem(CUICellItem* cell_item)
 	if (!invlist->IsOwner(cell_item))
 		return;
 
-	PIItem item = static_cast<PIItem>(cell_item->m_pData);
+	PIItem item = cell_item->m_pItem;
 	if (!item)
 		return;
 

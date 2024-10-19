@@ -192,8 +192,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 		return;
 	}
 
-	PIItem pInvItem = (PIItem)pCellItem->m_pData;
-	m_pInvItem = pInvItem;
+	m_pInvItem = pCellItem->m_pItem;
 	Enable(nullptr != m_pInvItem);
 	if (!m_pInvItem)
 		return;
@@ -203,26 +202,23 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 	string256 str;
 	if (UIName)
 	{
-		UIName->SetText(pInvItem->NameItem());
+		UIName->SetText(m_pInvItem->NameItem());
 		UIName->AdjustHeightToText();
 		pos.y = UIName->GetWndPos().y + UIName->GetHeight() + 4.0f;
 	}
 	if (UIWeight)
 	{
 		LPCSTR kg_str = StringTable().translate("st_kg").c_str();
-		float weight = pInvItem->Weight();
+		float weight = m_pInvItem->Weight();
 
 		if (!weight)
 		{
-			if (CWeaponAmmo* ammo = dynamic_cast<CWeaponAmmo*>(pInvItem))
+			if (CWeaponAmmo* ammo = dynamic_cast<CWeaponAmmo*>(m_pInvItem))
 			{
 				// its helper item, m_boxCur is zero, so recalculate via CInventoryItem::Weight()
-				weight = pInvItem->CInventoryItem::Weight();
+				weight = m_pInvItem->CInventoryItem::Weight();
 				for (u32 j = 0; j < pCellItem->ChildsCount(); ++j)
-				{
-					PIItem jitem = (PIItem)pCellItem->Child(j)->m_pData;
-					weight += jitem->CInventoryItem::Weight();
-				}
+					weight += pCellItem->Child(j)->m_pItem->CInventoryItem::Weight();
 			}
 		}
 
@@ -287,16 +283,16 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 			pItem->SetFont(m_desc_info.pDescFont);
 			pItem->SetWidth(UIDesc->GetDesiredChildWidth());
 			pItem->SetTextComplexMode(true);
-			pItem->SetText(*pInvItem->ItemDescription());
+			pItem->SetText(*m_pInvItem->ItemDescription());
 			pItem->AdjustHeightToText();
 			UIDesc->AddWindow(pItem, true);
 		}
-		TryAddConditionInfo(*pInvItem, pCompareItem);
-		TryAddWpnInfo(*pInvItem, pCompareItem);
-		TryAddArtefactInfo(*pInvItem);
-		TryAddOutfitInfo(*pInvItem, pCompareItem);
-		TryAddUpgradeInfo(*pInvItem);
-		TryAddBoosterInfo(*pInvItem);
+		TryAddConditionInfo(*m_pInvItem, pCompareItem);
+		TryAddWpnInfo(*m_pInvItem, pCompareItem);
+		TryAddArtefactInfo(*m_pInvItem);
+		TryAddOutfitInfo(*m_pInvItem, pCompareItem);
+		TryAddUpgradeInfo(*m_pInvItem);
+		TryAddBoosterInfo(*m_pInvItem);
 
 		if (m_b_FitToHeight)
 		{
@@ -319,7 +315,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 		// Загружаем картинку
 		UIItemImage->SetShader(InventoryUtilities::GetEquipmentIconsShader());
 
-		Irect item_grid_rect = pInvItem->GetInvGridRect();
+		Irect item_grid_rect = m_pInvItem->GetInvGridRect();
 		Frect texture_rect;
 		texture_rect.lt.set(item_grid_rect.x1 * INV_GRID_WIDTH, item_grid_rect.y1 * INV_GRID_HEIGHT);
 		texture_rect.rb.set(item_grid_rect.x2 * INV_GRID_WIDTH, item_grid_rect.y2 * INV_GRID_HEIGHT);

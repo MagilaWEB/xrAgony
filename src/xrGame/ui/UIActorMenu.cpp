@@ -321,7 +321,7 @@ CUIDragDropListEx* CUIActorMenu::GetListByType(EDDListType t)
 }
 
 CUICellItem* CUIActorMenu::CurrentItem() { return m_pCurrentCellItem; }
-PIItem CUIActorMenu::CurrentIItem() { return (m_pCurrentCellItem) ? (PIItem)m_pCurrentCellItem->m_pData : nullptr; }
+PIItem CUIActorMenu::CurrentIItem() { return (m_pCurrentCellItem) ? m_pCurrentCellItem->m_pItem : nullptr; }
 void CUIActorMenu::SetCurrentItem(CUICellItem* itm)
 {
 	m_repair_mode = false;
@@ -340,12 +340,12 @@ void CUIActorMenu::SetCurrentItem(CUICellItem* itm)
 
 void CUIActorMenu::InfoCurItem(CUICellItem* cell_item)
 {
-	if (!cell_item || !cell_item->m_pData)
+	if (!cell_item || !cell_item->m_pItem)
 	{
 		m_ItemInfo->InitItem(nullptr);
 		return;
 	}
-	PIItem current_item = (PIItem)cell_item->m_pData;
+	PIItem current_item = cell_item->m_pItem;
 
 	PIItem compare_item = nullptr;
 	u16 compare_slot = current_item->BaseSlot();
@@ -372,7 +372,7 @@ void CUIActorMenu::InfoCurItem(CUICellItem* cell_item)
 			for (u32 j = 0; j < cell_item->ChildsCount(); ++j)
 			{
 				u32 tmp_price = 0;
-				PIItem jitem = (PIItem)cell_item->Child(j)->m_pData;
+				PIItem jitem = cell_item->Child(j)->m_pItem;
 				CInventoryOwner* ammo_owner = smart_cast<CInventoryOwner*>(jitem->m_pInventory->GetOwner());
 				if (ammo_owner && ammo_owner == m_pActorInvOwner)
 					tmp_price = m_partner_trade->GetItemPrice(jitem, true);
@@ -456,7 +456,7 @@ void CUIActorMenu::clear_highlight_lists()
 }
 void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 {
-	PIItem item = (PIItem)cell_item->m_pData;
+	PIItem item = cell_item->m_pItem;
 	if (!item)
 		return;
 
@@ -505,7 +505,7 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 }
 void CUIActorMenu::set_highlight_item(CUICellItem* cell_item)
 {
-	PIItem item = (PIItem)cell_item->m_pData;
+	PIItem item = cell_item->m_pItem;
 	if (!item)
 	{
 		return;
@@ -580,7 +580,7 @@ void CUIActorMenu::highlight_ammo_for_weapon(PIItem weapon_item, CUIDragDropList
 	for (u32 i = 0; i < cnt; ++i)
 	{
 		CUICellItem* ci = ddlist->GetItemIdx(i);
-		PIItem item = (PIItem)ci->m_pData;
+		PIItem item = ci->m_pItem;
 		if (!item)
 		{
 			continue;
@@ -621,7 +621,7 @@ void CUIActorMenu::highlight_weapons_for_ammo(PIItem ammo_item, CUIDragDropListE
 	for (u32 i = 0; i < cnt; ++i)
 	{
 		CUICellItem* ci = ddlist->GetItemIdx(i);
-		PIItem item = (PIItem)ci->m_pData;
+		PIItem item = ci->m_pItem;
 		if (!item)
 		{
 			continue;
@@ -663,7 +663,7 @@ void CUIActorMenu::highlight_weapons_for_ammo(PIItem ammo_item, CUIDragDropListE
 
 bool CUIActorMenu::highlight_addons_for_weapon(PIItem weapon_item, CUICellItem* ci)
 {
-	PIItem item = (PIItem)ci->m_pData;
+	PIItem item = ci->m_pItem;
 	if (!item)
 	{
 		return false;
@@ -710,7 +710,7 @@ void CUIActorMenu::highlight_weapons_for_addon(PIItem addon_item, CUIDragDropLis
 	for (u32 i = 0; i < cnt; ++i)
 	{
 		CUICellItem* ci = ddlist->GetItemIdx(i);
-		PIItem item = (PIItem)ci->m_pData;
+		PIItem item = ci->m_pItem;
 		if (!item)
 		{
 			continue;
@@ -829,7 +829,7 @@ void CUIActorMenu::UpdateConditionProgressBars()
 	for (u32 i = 0; i < cnt; ++i)
 	{
 		CUICellItem* ci = slot_list->GetItemIdx(i);
-		PIItem item = (PIItem)ci->m_pData;
+		PIItem item = ci->m_pItem;
 		if (!item)
 			continue;
 

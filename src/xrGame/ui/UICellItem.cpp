@@ -19,7 +19,7 @@ CUICellItem* CUICellItem::m_mouse_selected_item = nullptr;
 CUICellItem::CUICellItem()
 {
 	m_pParentList = nullptr;
-	m_pData = nullptr;
+	m_pItem = nullptr;
 	m_custom_draw = nullptr;
 	m_text = nullptr;
 	//-	m_mark				= nullptr;
@@ -107,7 +107,7 @@ void CUICellItem::Update()
 			GetMessageTarget()->SendMessage(this, DRAG_DROP_ITEM_FOCUSED_UPDATE, nullptr);
 	}
 
-	PIItem item = (PIItem)m_pData;
+	PIItem item = m_pItem;
 	if (item)
 	{
 		m_has_upgrade = item->has_any_upgrades();
@@ -203,18 +203,18 @@ void CUICellItem::SetOwnerList(CUIDragDropListEx* p)
 
 void CUICellItem::UpdateConditionProgressBar()
 {
-	if (!m_pData)
+	if (!m_pItem)
 		return;
 
 	if (m_pParentList && m_pParentList->GetConditionProgBarVisibility())
 	{
-		PIItem itm = static_cast<PIItem>(m_pData);
+		PIItem item = m_pItem;
 
-		if (itm && itm->IsUsingCondition())
+		if (item && item->IsUsingCondition())
 		{
-			float cond = itm->GetCondition();
+			float cond = item->GetCondition();
 
-			CEatableItem* eitm = smart_cast<CEatableItem*>(itm);
+			CEatableItem* eitm = smart_cast<CEatableItem*>(item);
 			if (eitm)
 			{
 				const u8 max_uses = eitm->GetMaxUses();
@@ -271,11 +271,11 @@ CUICellItem* CUICellItem::PopChild(CUICellItem* needed)
 	if (needed)
 	{
 		if (itm != needed)
-			std::swap(itm->m_pData, needed->m_pData);
+			std::swap(itm->m_pItem, needed->m_pItem);
 	}
 	else
 	{
-		std::swap(itm->m_pData, m_pData);
+		std::swap(itm->m_pItem, m_pItem);
 	}
 	UpdateItemText();
 	R_ASSERT(itm->ChildsCount() == 0);

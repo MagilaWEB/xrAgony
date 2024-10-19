@@ -501,7 +501,7 @@ bool CUICellContainer::AddSimilar(CUICellItem* itm)
 	extern int g_inv_highlight_equipped;
 	if (g_inv_highlight_equipped)
 	{
-		const PIItem iitem = static_cast<PIItem>(itm->m_pData);
+		const PIItem iitem = itm->m_pItem;
 		if (iitem && iitem->m_pInventory && iitem->m_pInventory->ItemFromSlot(iitem->BaseSlot()) == iitem)
 			return false;
 
@@ -541,7 +541,7 @@ CUICellItem* CUICellContainer::FindSimilar(CUICellItem* itm)
 		extern int g_inv_highlight_equipped;
 		if (g_inv_highlight_equipped)
 		{
-			auto iitem = static_cast<PIItem>(i->m_pData);
+			PIItem iitem = i->m_pItem;
 			if (iitem && iitem->m_pInventory && iitem->m_pInventory->ItemFromSlot(iitem->BaseSlot()) == iitem)
 				continue;
 

@@ -107,7 +107,7 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 				}
 			}
 
-			const PIItem _iitem = _citem ? static_cast<PIItem>(_citem->m_pData) : nullptr;
+			const PIItem _iitem = _citem ? _citem->m_pItem : nullptr;
 
 			CGameObject* GO1 = smart_cast<CGameObject*>(CurrentIItem());
 			CGameObject* GO2 = _iitem ? smart_cast<CGameObject*>(_iitem) : nullptr;
@@ -194,7 +194,7 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 			}
 		}
 
-		PIItem _iitem = _citem ? static_cast<PIItem>(_citem->m_pData) : nullptr;
+		PIItem _iitem = _citem ? _citem->m_pItem : nullptr;
 
 		CGameObject* GO1 = smart_cast<CGameObject*>(CurrentIItem());
 		CGameObject* GO2 = _iitem ? smart_cast<CGameObject*>(_iitem) : nullptr;
@@ -253,7 +253,7 @@ bool CUIActorMenu::OnItemDbClick(CUICellItem* itm)
 		{
 			break;
 		}
-		PIItem iitem_to_place = static_cast<PIItem>(itm->m_pData);
+		PIItem iitem_to_place = itm->m_pItem;
 		if (!m_pActorInvOwner->inventory().SlotIsPersistent(iitem_to_place->BaseSlot())
 			&& m_pActorInvOwner->inventory().ItemFromSlot(iitem_to_place->BaseSlot()) == iitem_to_place)
 		{
@@ -329,7 +329,7 @@ bool CUIActorMenu::OnItemFocusReceive(CUICellItem* itm)
 	luabind::functor<void> funct1;
 	if (::ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_OnItemFocusReceive", funct1))
 	{
-		PIItem _iitem = static_cast<PIItem>(itm->m_pData);
+		PIItem _iitem = itm->m_pItem;
 
 		CGameObject* GO = _iitem ? smart_cast<CGameObject*>(_iitem) : nullptr;
 		if (GO)
@@ -351,7 +351,7 @@ bool CUIActorMenu::OnItemFocusLost(CUICellItem* itm)
 	luabind::functor<void> funct1;
 	if (::ScriptEngine->functor("actor_menu_inventory.CUIActorMenu_OnItemFocusLost", funct1))
 	{
-		PIItem _iitem = static_cast<PIItem>(itm->m_pData);
+		PIItem _iitem = itm->m_pItem;
 
 		CGameObject* GO = _iitem ? smart_cast<CGameObject*>(_iitem) : nullptr;
 		if (GO)

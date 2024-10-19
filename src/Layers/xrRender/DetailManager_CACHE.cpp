@@ -206,8 +206,10 @@ void CDetailManager::spawn_Slots(Fvector& view)
 			return distance < distance_2;
 		});
 
-		for (size_t i = 0; i < size_t(ps_r__detail_limit_spawn) && !cache_task.empty(); i++)
+		for (size_t i = 0; (i < size_t(ps_r__detail_limit_spawn)) && !cache_task.empty(); i++)
 		{
+			if (cache_task.empty())
+				break;
 			// Decompress and remove task
 			cache_Decompress(cache_task[i]);
 			cache_task.erase(cache_task.begin() + i);

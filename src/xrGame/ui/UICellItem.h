@@ -73,7 +73,7 @@ public:
 	virtual void SetIsHelper(bool is_helper) { ; }
 public:
 	static CUICellItem* m_mouse_selected_item;
-	void* m_pData;
+	PIItem m_pItem;
 	int m_index;
 	u32 m_drawn_frame;
 	bool m_b_destroy_childs;

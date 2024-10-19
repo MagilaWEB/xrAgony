@@ -192,14 +192,10 @@ void CUIGameCustom::UpdateActorMenu()
 CScriptGameObject* CUIGameCustom::CurrentItemAtCell()
 {
 	CUICellItem* itm = ActorMenu->CurrentItem();
-	if (!itm->m_pData)
+	if (!itm->m_pItem)
 		return nullptr;
 
-	PIItem IItm = static_cast<PIItem>(itm->m_pData);
-	if (!IItm)
-		return nullptr;
-
-	CGameObject* GO = smart_cast<CGameObject*>(IItm);
+	CGameObject* GO = smart_cast<CGameObject*>(itm->m_pItem);
 
 	if (GO)
 		return GO->lua_game_object();

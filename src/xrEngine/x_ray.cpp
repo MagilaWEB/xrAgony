@@ -242,6 +242,7 @@ void CApplication::SetLoadStageTitle(pcstr ls_title)
 
 	++load_stage;
 
+	Msg("`load_stage[%d], max_load_stage[%d] ", load_stage, max_load_stage);
 	//Msg("- load_stage [%d]", load_stage);
 }
 

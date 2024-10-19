@@ -144,8 +144,7 @@ void CUIActorMenu::DropAllCurrentItem()
 		for (u32 i = 0; i < cnt; ++i)
 		{
 			CUICellItem* itm = CurrentItem()->PopChild(nullptr);
-			PIItem iitm = (PIItem)itm->m_pData;
-			SendEvent_Item_Drop(iitm, m_pActorInvOwner->object_id());
+			SendEvent_Item_Drop(itm->m_pItem, m_pActorInvOwner->object_id());
 		}
 
 		SendEvent_Item_Drop(CurrentIItem(), m_pActorInvOwner->object_id());
@@ -165,7 +164,7 @@ bool CUIActorMenu::DropAllItemsFromRuck(bool quest_force)
 	{
 		CUICellItem* ci = m_pInventoryBagList->GetItemIdx(i);
 		VERIFY(ci);
-		PIItem item = (PIItem)ci->m_pData;
+		PIItem item = ci->m_pItem;
 		VERIFY(item);
 
 		if (!quest_force && item->IsQuestItem())
@@ -177,8 +176,7 @@ bool CUIActorMenu::DropAllItemsFromRuck(bool quest_force)
 		for (u32 j = 0; j < cnt; ++j)
 		{
 			CUICellItem* child_ci = ci->PopChild(nullptr);
-			PIItem child_item = (PIItem)child_ci->m_pData;
-			SendEvent_Item_Drop(child_item, m_pActorInvOwner->object_id());
+			SendEvent_Item_Drop(child_ci->m_pItem, m_pActorInvOwner->object_id());
 		}
 		SendEvent_Item_Drop(item, m_pActorInvOwner->object_id());
 	}
@@ -473,7 +471,7 @@ void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
 
 bool CUIActorMenu::TryActiveSlot(CUICellItem* itm)
 {
-	PIItem iitem = (PIItem)itm->m_pData;
+	PIItem iitem = itm->m_pItem;
 	u16 slot = iitem->BaseSlot();
 
 	if (slot == GRENADE_SLOT)
@@ -507,8 +505,7 @@ bool CUIActorMenu::ToSlotScript(CScriptGameObject* GO, const bool force_place, u
 	for (auto& it : child_list)
 	{
 		CUICellItem* i = static_cast<CUICellItem*>(it);
-		const PIItem pitm = static_cast<PIItem>(i->m_pData);
-		if (pitm == iitem)
+		if (i->m_pItem == iitem)
 		{
 			ToSlot(i, force_place, slot_id);
 			return true;
@@ -521,7 +518,7 @@ bool CUIActorMenu::ToSlotScript(CScriptGameObject* GO, const bool force_place, u
 bool CUIActorMenu::ToSlot(CUICellItem* itm, bool force_place, u16 slot_id)
 {
 	CUIDragDropListEx* old_owner = itm->OwnerList();
-	PIItem iitem = (PIItem)itm->m_pData;
+	PIItem iitem = itm->m_pItem;
 
 	bool b_own_item = (iitem->parent_id() == m_pActorInvOwner->object_id());
 	if (slot_id == HELMET_SLOT)
@@ -633,7 +630,7 @@ bool CUIActorMenu::ToSlot(CUICellItem* itm, bool force_place, u16 slot_id)
 			if (!slot_cell)
 				return false;
 
-			if (static_cast<PIItem>(slot_cell->m_pData) != _iitem)
+			if (slot_cell->m_pItem != _iitem)
 				return false;
 
 			if (!ToBag(slot_cell, false))
@@ -641,14 +638,13 @@ bool CUIActorMenu::ToSlot(CUICellItem* itm, bool force_place, u16 slot_id)
 		}
 		else
 		{
-			//Alundaio: Since the player's inventory is being used as a slot we need to search for cell with matching m_pData
+			//Alundaio: Since the player's inventory is being used as a slot we need to search for cell with matching m_pItem
 			auto container = slot_list->GetContainer();
 			auto child_list = container->GetChildWndList();
 			for (auto& it : child_list)
 			{
 				CUICellItem* i = static_cast<CUICellItem*>(it);
-				const PIItem pitm = static_cast<PIItem>(i->m_pData);
-				if (pitm == _iitem)
+				if (i->m_pItem == _iitem)
 				{
 					if (ToBag(i, false))
 						break;
@@ -678,7 +674,7 @@ bool CUIActorMenu::ToSlot(CUICellItem* itm, bool force_place, u16 slot_id)
 
 bool CUIActorMenu::ToBag(CUICellItem* itm, bool b_use_cursor_pos)
 {
-	PIItem iitem = (PIItem)itm->m_pData;
+	PIItem iitem = itm->m_pItem;
 
 	bool b_own_item = (iitem->parent_id() == m_pActorInvOwner->object_id());
 
@@ -733,8 +729,7 @@ bool CUIActorMenu::ToBeltScript(CScriptGameObject* GO, const bool b_use_cursor_p
 	for (auto& it : child_list)
 	{
 		CUICellItem* i = static_cast<CUICellItem*>(it);
-		const PIItem pitm = static_cast<PIItem>(i->m_pData);
-		if (pitm == iitem)
+		if (i->m_pItem == iitem)
 		{
 			ToBelt(i, b_use_cursor_pos);
 			return true;
@@ -746,7 +741,7 @@ bool CUIActorMenu::ToBeltScript(CScriptGameObject* GO, const bool b_use_cursor_p
 
 bool CUIActorMenu::ToBelt(CUICellItem* itm, bool b_use_cursor_pos)
 {
-	PIItem iitem = (PIItem)itm->m_pData;
+	PIItem iitem = itm->m_pItem;
 	bool b_own_item = (iitem->parent_id() == m_pActorInvOwner->object_id());
 
 	if (m_pActorInvOwner->inventory().CanPutInBelt(iitem))
@@ -794,7 +789,7 @@ bool CUIActorMenu::ToBelt(CUICellItem* itm, bool b_use_cursor_pos)
 		//		PIItem	_iitem						= m_pActorInvOwner->inventory().ItemFromSlot(slot_id);
 
 		CUICellItem* slot_cell = belt_list->GetCellAt(belt_cell_pos).m_item;
-		//		VERIFY								(slot_cell && ((PIItem)slot_cell->m_pData)==_iitem);
+		//		VERIFY								(slot_cell && ((PIItem)slot_cell->m_pItem)==_iitem);
 
 		bool result = ToBag(slot_cell, false);
 		VERIFY(result);
@@ -822,7 +817,7 @@ bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
 	{
 		return false;
 	}
-	PIItem item = (PIItem)cell_itm->m_pData;
+	PIItem item = cell_itm->m_pItem;
 
 	CBottleItem* pBottleItem = smart_cast<CBottleItem*>(item);
 	CMedkit* pMedkit = smart_cast<CMedkit*>(item);
@@ -855,7 +850,7 @@ bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
 
 bool CUIActorMenu::ToQuickSlot(CUICellItem* itm)
 {
-	PIItem iitem = (PIItem)itm->m_pData;
+	PIItem iitem = (PIItem)itm->m_pItem;
 	CEatableItemObject* eat_item = smart_cast<CEatableItemObject*>(iitem);
 	if (!eat_item)
 		return false;
@@ -878,7 +873,7 @@ bool CUIActorMenu::ToQuickSlot(CUICellItem* itm)
 bool CUIActorMenu::OnItemDropped(PIItem itm, CUIDragDropListEx* new_owner, CUIDragDropListEx* old_owner)
 {
 	CUICellItem* _citem = (new_owner->ItemsCount() == 1) ? new_owner->GetItemIdx(0) : nullptr;
-	PIItem _iitem = _citem ? (PIItem)_citem->m_pData : nullptr;
+	PIItem _iitem = _citem ? (PIItem)_citem->m_pItem : nullptr;
 
 	if (!_iitem)
 		return false;
@@ -1064,7 +1059,7 @@ void CUIActorMenu::PropertiesBoxForWeapon(CUICellItem* cell_item, PIItem item, b
 		{
 			for (u32 i = 0; i < cell_item->ChildsCount(); ++i)
 			{
-				CWeaponMagazined* weap_mag = smart_cast<CWeaponMagazined*>((CWeapon*)cell_item->Child(i)->m_pData);
+				CWeaponMagazined* weap_mag = smart_cast<CWeaponMagazined*>((CWeapon*)cell_item->Child(i)->m_pItem);
 				if (weap_mag && weap_mag->GetAmmoElapsed())
 				{
 					b = true;
@@ -1386,7 +1381,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked(CUIWindow* w, void* d)
 			for (u32 i = 0; i < cell_item->ChildsCount(); ++i)
 			{
 				CUICellItem* child_itm = cell_item->Child(i);
-				PIItem child_iitm = (PIItem)(child_itm->m_pData);
+				PIItem child_iitm = (PIItem)(child_itm->m_pItem);
 				CWeapon* wpn = smart_cast<CWeapon*>(child_iitm);
 				if (child_iitm && wpn)
 				{
@@ -1402,7 +1397,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked(CUIWindow* w, void* d)
 			for (u32 i = 0; i < cell_item->ChildsCount(); ++i)
 			{
 				CUICellItem* child_itm = cell_item->Child(i);
-				PIItem child_iitm = (PIItem)(child_itm->m_pData);
+				PIItem child_iitm = (PIItem)(child_itm->m_pItem);
 				CWeapon* wpn = smart_cast<CWeapon*>(child_iitm);
 				if (child_iitm && wpn)
 				{
@@ -1418,7 +1413,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked(CUIWindow* w, void* d)
 			for (u32 i = 0; i < cell_item->ChildsCount(); ++i)
 			{
 				CUICellItem* child_itm = cell_item->Child(i);
-				PIItem child_iitm = (PIItem)(child_itm->m_pData);
+				PIItem child_iitm = (PIItem)(child_itm->m_pItem);
 				CWeapon* wpn = smart_cast<CWeapon*>(child_iitm);
 				if (child_iitm && wpn)
 				{
@@ -1435,7 +1430,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked(CUIWindow* w, void* d)
 		break;
 	case INVENTORY_UNLOAD_MAGAZINE:
 	{
-		CWeaponMagazined* weap_mag = smart_cast<CWeaponMagazined*>((CWeapon*)cell_item->m_pData);
+		CWeaponMagazined* weap_mag = smart_cast<CWeaponMagazined*>(cell_item->m_pItem);
 		if (!weap_mag)
 		{
 			break;
@@ -1444,7 +1439,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked(CUIWindow* w, void* d)
 		for (u32 i = 0; i < cell_item->ChildsCount(); ++i)
 		{
 			CUICellItem* child_itm = cell_item->Child(i);
-			CWeaponMagazined* child_weap_mag = smart_cast<CWeaponMagazined*>((CWeapon*)child_itm->m_pData);
+			CWeaponMagazined* child_weap_mag = smart_cast<CWeaponMagazined*>(child_itm->m_pItem);
 			if (child_weap_mag)
 			{
 				child_weap_mag->UnloadMagazine();
@@ -1513,7 +1508,7 @@ void CUIActorMenu::MoveArtefactsToBag()
 	while (m_pInventoryBeltList->ItemsCount())
 	{
 		CUICellItem* ci = m_pInventoryBeltList->GetItemIdx(0);
-		VERIFY(ci && ci->m_pData);
+		VERIFY(ci && ci->m_pItem);
 		ToBag(ci, false);
 	} // for i
 	m_pInventoryBeltList->ClearAll(true);

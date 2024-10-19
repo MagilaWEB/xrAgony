@@ -23,7 +23,7 @@ public:
 	virtual void SetIsHelper(bool is_helper);
 	bool IsHelperOrHasHelperChild();
 	void Update();
-	CInventoryItem* object() { return (CInventoryItem*)m_pData; }
+	CInventoryItem* object() { return reinterpret_cast<CInventoryItem*>(m_pItem); }
 
 	//Alundaio
 	void OnAfterChild(CUIDragDropListEx* parent_list) override;
@@ -49,7 +49,7 @@ public:
 	u32 CalculateAmmoCount();
 	virtual bool EqualTo(CUICellItem* itm);
 	virtual CUIDragItem* CreateDragItem();
-	CWeaponAmmo* object() { return (CWeaponAmmo*)m_pData; }
+	CWeaponAmmo* object() { return reinterpret_cast<CWeaponAmmo*>(m_pItem); }
 };
 
 class CUIWeaponCellItem : public CUIInventoryCellItem
@@ -84,7 +84,7 @@ public:
 	virtual void Draw();
 	virtual void SetTextureColor(u32 color);
 
-	CWeapon* object() { return (CWeapon*)m_pData; }
+	CWeapon* object() { return reinterpret_cast<CWeapon*>(m_pItem); }
 	virtual void OnAfterChild(CUIDragDropListEx* parent_list);
 	virtual CUIDragItem* CreateDragItem();
 	virtual bool EqualTo(CUICellItem* itm);

@@ -385,33 +385,26 @@ void CModelPool::Prefetch()
 	strconcat(sizeof(section), section, "prefetch_visuals_", g_pGamePersistent->m_game_params.m_game_type);
 	const CInifile::Sect& sect = pSettings->r_section(section);
 
-	std::atomic_uint prefetch_it = 0;
+	size_t prefetch_it = 0;
 	size_t prefetch_send = 0;
 	size_t size = sect.Data.size();
-	static tbb::task_group parallel;
-	if (pApp->IsLoadingScreen())
-	{
-		parallel.run([&]() {
-			while (prefetch_send < 10)
-			{
-				const size_t result = size_t((float(prefetch_it) / size) * 10);
-				if (result != prefetch_send)
-				{
-					pApp->SetLoadStageTitle("st_loading_prefetching_objects");
-					prefetch_send = result;
-				}
-			}
-		});
-	}
 
 	for (auto & item : sect.Data)
 	{
 		dxRender_Visual* V = Create(item.first.c_str());
 		Delete(V, FALSE);
-		prefetch_it++;
+
+		if (pApp->IsLoadingScreen())
+		{
+			const size_t result = size_t((float(prefetch_it++) / size) * 11);
+			if (result != prefetch_send)
+			{
+				pApp->SetLoadStageTitle("st_loading_prefetching_objects");
+				prefetch_send = result;
+			}
+		}
 	}
 
-	parallel.wait();
 	Logging(TRUE);
 }
 
