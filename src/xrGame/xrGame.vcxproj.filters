@@ -2055,9 +2055,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="mt_config.h">
-      <Filter>AI</Filter>
-    </ClInclude>
     <ClInclude Include="damage_manager.h">
       <Filter>AI\AComponents\DamageManager</Filter>
     </ClInclude>

@@ -21,7 +21,6 @@
 #include "xrEngine/x_ray.h"
 #include "restriction_space.h"
 #include "xrEngine/profiler.h"
-#include "mt_config.h"
 
 using namespace ALife;
 
@@ -109,7 +108,7 @@ void CALifeUpdateManager::shedule_Update(u32 dt)
 	if (!initialized())
 		return;
 
-	if (!m_first_time && g_mt_config.test(mtALife))
+	if (!m_first_time)
 	{
 		Device.add_parallel(this, &CALifeUpdateManager::update);
 		return;

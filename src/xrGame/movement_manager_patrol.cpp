@@ -15,7 +15,6 @@
 #include "custommonster.h"
 #include "level_path_builder.h"
 #include "detail_path_builder.h"
-#include "mt_config.h"
 
 void CMovementManager::process_patrol_path()
 {
@@ -49,7 +48,7 @@ void CMovementManager::process_patrol_path()
 		level_path_builder().setup(object().ai_location().level_vertex_id(), level_dest_vertex_id(),
 			patrol().extrapolate_path(), &patrol().destination_position());
 
-		if (can_use_distributed_computations(mtLevelPath))
+		if (can_use_distributed_computations())
 		{
 			level_path_builder().register_to_process();
 			break;
@@ -74,7 +73,7 @@ void CMovementManager::process_patrol_path()
 
 		detail_path_builder().setup(level_path().path(), level_path().intermediate_index());
 
-		if (can_use_distributed_computations(mtDetailPath))
+		if (can_use_distributed_computations())
 		{
 			detail_path_builder().register_to_process();
 			break;

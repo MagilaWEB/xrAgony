@@ -26,7 +26,6 @@
 #include "autosave_manager.h"
 #include "ClimableObject.h"
 #include "xrAICore/Navigation/level_graph.h"
-#include "mt_config.h"
 #include "phcommander.h"
 #include "map_manager.h"
 #include "xrEngine/CameraManager.h"
@@ -336,10 +335,7 @@ void CLevel::OnFrame()
 	if (m_bNeed_CrPr)
 		make_NetCorrectionPrediction();
 
-	if (g_mt_config.test(mtMap))
-		Device.add_parallel2(m_map_manager, &CMapManager::Update);
-	else
-		MapManager().Update();
+	Device.add_parallel2(m_map_manager, &CMapManager::Update);
 
 	if (IsGameTypeSingle() && Device.dwPrecacheFrame == 0)
 	{
@@ -364,12 +360,7 @@ void CLevel::OnFrame()
 	if (!Device.IsLoadingProsses())
 	{
 		// update static sounds
-		if (g_mt_config.test(mtLevelSounds))
-		{
-			Device.add_parallel(m_level_sound_manager, &CLevelSoundManager::Update);
-		}
-		else
-			m_level_sound_manager->Update();
+		Device.add_parallel(m_level_sound_manager, &CLevelSoundManager::Update);
 	}
 
 	if (pStatGraphR)

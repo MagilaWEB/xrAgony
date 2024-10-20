@@ -47,7 +47,6 @@
 #include "stalker_sound_data.h"
 #include "stalker_sound_data_visitor.h"
 #include "ai_stalker_space.h"
-#include "mt_config.h"
 #include "EffectorShot.h"
 #include "visual_memory_manager.h"
 #include "enemy_manager.h"
@@ -843,7 +842,7 @@ void CAI_Stalker::update_object_handler()
 {
 	if (!g_Alive())
 		return;
-
+	START_PROFILE("stalker/client_update/object_handler")
 	try
 	{
 		try
@@ -872,6 +871,8 @@ void CAI_Stalker::update_object_handler()
 		CObjectHandler::set_goal(eObjectActionIdle);
 		CObjectHandler::update();
 	}
+
+	STOP_PROFILE
 }
 
 void CAI_Stalker::create_anim_mov_ctrl(CBlend* b, Fmatrix* start_pose, bool local_animation)
@@ -906,22 +907,16 @@ void CAI_Stalker::UpdateCL()
 
 	if (g_Alive())
 	{
-		if (g_mt_config.test(mtObjectHandler) && CObjectHandler::planner().initialized())
+		if (CObjectHandler::planner().initialized())
 			Device.add_parallel2(this, &CAI_Stalker::update_object_handler);
 		else
-		{
-			START_PROFILE("stalker/client_update/object_handler")
-				update_object_handler();
-			STOP_PROFILE
-		}
+			update_object_handler();
 
 		if ((movement().speed(character_physics_support()->movement()) > EPS_L) &&
 			(eMovementTypeStand != movement().movement_type()) && (eMentalStateDanger == movement().mental_state()))
 		{
 			if ((eBodyStateStand == movement().body_state()) && (eMovementTypeRun == movement().movement_type()))
-			{
 				sound().play(eStalkerSoundRunningInDanger);
-			}
 			else
 			{
 				//				sound().play	(eStalkerSoundWalkingInDanger);
@@ -980,17 +975,10 @@ void CAI_Stalker::shedule_Update(u32 DT)
 		START_PROFILE("stalker/schedule_update")
 		VERIFY2(getEnabled() || PPhysicsShell(), *cName());
 
-	if (g_mt_config.test(mtObjectHandler))
-	{
-		if (!CObjectHandler::planner().initialized())
-			Device.add_parallel2(this, &CAI_Stalker::update_object_handler);
-	}
-	else if (!CObjectHandler::planner().initialized())
-	{
-		START_PROFILE("stalker/client_update/object_handler")
-			update_object_handler();
-		STOP_PROFILE
-	}
+
+	if (!CObjectHandler::planner().initialized())
+		Device.add_parallel2(this, &CAI_Stalker::update_object_handler);
+
 	//	if (Position().distance_to(Level().CurrentEntity()->Position()) <= 50.f)
 	//		Msg				("[%6d][SH][%s]",Device.dwTimeGlobal,*cName());
 	// Queue shrink
@@ -1017,14 +1005,7 @@ void CAI_Stalker::shedule_Update(u32 DT)
 #if 0 // def DEBUG
 		memory().visual().check_visibles();
 #endif
-		if (g_mt_config.test(mtAiVision))
-			Device.add_parallel2(this, &CCustomMonster::Exec_Visibility);
-		else
-		{
-			START_PROFILE("stalker/schedule_update/vision")
-				Exec_Visibility();
-			STOP_PROFILE
-		}
+		Device.add_parallel2(this, &CCustomMonster::Exec_Visibility);
 
 		START_PROFILE("stalker/schedule_update/memory")
 

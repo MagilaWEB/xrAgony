@@ -276,18 +276,15 @@ void CControlPathBuilder::make_inactual()
 	enable_movement(!enabled());
 }
 
-extern CActor* g_actor;
-
-bool CControlPathBuilder::can_use_distributed_computations(u32 option) const
+bool CControlPathBuilder::can_use_distributed_computations() const
 {
-	if (!g_actor)
+	if (!Actor())
 		return true;
 
-	VERIFY(Actor());
 	VERIFY(inherited_com::m_object);
 	if (Actor()->memory().visual().visible_right_now(inherited_com::m_object))
 		return false;
-	return inherited::can_use_distributed_computations(option);
+	return inherited::can_use_distributed_computations();
 }
 
 u32 CControlPathBuilder::find_nearest_vertex(

@@ -906,7 +906,6 @@
     <ClInclude Include="moving_objects_impl.h" />
     <ClInclude Include="moving_objects_inline.h" />
     <ClInclude Include="moving_object_inline.h" />
-    <ClInclude Include="mt_config.h" />
     <ClInclude Include="Needles.h" />
     <ClInclude Include="NET_Queue.h" />
     <ClInclude Include="NoGravityZone.h" />

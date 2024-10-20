@@ -33,7 +33,7 @@ int gen_random_in_range(lua_State* L, int a1, int a2)
 	std::uniform_real_distribution<> dist(a1, a2);
 	intgen.seed(ndrng());
 
-	return dist(intgen);
+	return (int)dist(intgen);
 }
 
 int math_randomseed(lua_State* L)

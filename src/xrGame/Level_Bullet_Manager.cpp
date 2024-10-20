@@ -8,7 +8,6 @@
 #include "game_cl_base.h"
 #include "Actor.h"
 #include "gamepersistent.h"
-#include "mt_config.h"
 
 
 #include "Include/xrRender/UIRender.h"
@@ -890,10 +889,7 @@ void CBulletManager::Render()
 void CBulletManager::CommitRenderSet() // @ the end of frame
 {
 	m_BulletsRendered = m_Bullets;
-	if (g_mt_config.test(mtBullets))
-		Device.add_parallel2(this, &CBulletManager::UpdateWorkload);
-	else
-		UpdateWorkload();
+	Device.add_parallel2(this, &CBulletManager::UpdateWorkload);
 }
 
 void CBulletManager::CommitEvents() // @ the start of frame

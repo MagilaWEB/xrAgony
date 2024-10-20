@@ -33,7 +33,6 @@
 #include "level_debug.h"
 #include "material_manager.h"
 #include "sound_user_data_visitor.h"
-#include "mt_config.h"
 #include "PHMovementControl.h"
 #include "xrEngine/profiler.h"
 #include "date_time.h"
@@ -330,19 +329,7 @@ void CCustomMonster::shedule_Update(u32 DT)
 	// *** general stuff
 	if (g_Alive())
 	{
-		if (g_mt_config.test(mtAiVision))
-#ifndef DEBUG
-			Device.add_parallel2(this, &CCustomMonster::Exec_Visibility);
-#else // DEBUG
-		{
-			if (!psAI_Flags.test(aiStalker) || !!smart_cast<CActor*>(Level().CurrentEntity()))
-				Device.add_parallel2(this, &CCustomMonster::Exec_Visibility);
-			else
-				Exec_Visibility();
-		}
-#endif // DEBUG
-		else
-			Exec_Visibility();
+		Device.add_parallel2(this, &CCustomMonster::Exec_Visibility);
 
 		memory().update(dt);
 	}
@@ -425,7 +412,13 @@ void CCustomMonster::net_update::lerp(CCustomMonster::net_update& A, CCustomMons
 	fHealth = A.fHealth * (1.f - f) + B.fHealth * f;
 }
 
-void CCustomMonster::update_sound_player() { sound().update(client_update_fdelta()); }
+void CCustomMonster::update_sound_player()
+{
+	START_PROFILE("CustomMonster/client_update/sound_player")
+		sound().update(client_update_fdelta());
+	STOP_PROFILE
+}
+
 void CCustomMonster::UpdateCL()
 {
 	START_PROFILE("CustomMonster/client_update")
@@ -457,14 +450,7 @@ void CCustomMonster::UpdateCL()
 	}
 	*/
 
-	if (g_mt_config.test(mtSoundPlayer))
-		Device.add_parallel(this, &CCustomMonster::update_sound_player);
-	else
-	{
-		START_PROFILE("CustomMonster/client_update/sound_player")
-			update_sound_player();
-		STOP_PROFILE
-	}
+	Device.add_parallel(this, &CCustomMonster::update_sound_player);
 
 	START_PROFILE("CustomMonster/client_update/network extrapolation")
 		if (NET.empty())
@@ -669,7 +655,7 @@ void CCustomMonster::Exec_Visibility()
 	// if (0==Sector())				return;
 	if (!g_Alive()) return;
 	if (getDestroy()) return;
-
+	START_PROFILE("stalker/schedule_update/vision")
 	Level().AIStats.Vis.Begin();
 	switch (eye_pp_stage % 2)
 	{
@@ -680,6 +666,7 @@ void CCustomMonster::Exec_Visibility()
 	}
 	++eye_pp_stage;
 	Level().AIStats.Vis.End();
+	STOP_PROFILE
 }
 
 void CCustomMonster::UpdateCamera()
