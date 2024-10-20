@@ -30,8 +30,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 class CObjectSpace;
 class CObjectList;
-class CPHWorld : public pureFrame,
-				 public IPHWorld,
+class CPHWorld : public IPHWorld,
 				 public cphysics_scripted,
 				 private Noncopyable
 #ifdef DEBUG
@@ -150,7 +149,7 @@ public:
 #ifdef DEBUG
 	virtual void OnRender();
 #endif
-	virtual void OnFrame() override;
+	virtual void OnFrame();
 	virtual const PHWorldStatistics& GetStats() override { return stats; }
 	virtual void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert) override;
 

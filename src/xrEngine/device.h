@@ -319,6 +319,9 @@ public:
 
 	bool on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& result);
 
+	void AddSeqFrame(pureFrame* f, bool mt);
+	void RemoveSeqFrame(pureFrame* f);
+
 private:
 	void ProcessPriority();
 	void CalcFrameStats();
@@ -329,8 +332,6 @@ private:
 	void GlobalUpdate();
 	
 	void message_loop();
-	virtual void AddSeqFrame(pureFrame* f, bool mt);
-	virtual void RemoveSeqFrame(pureFrame* f);
 
 	ICF const bool RunFunctionPointer()
 	{

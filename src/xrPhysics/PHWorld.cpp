@@ -190,6 +190,10 @@ dVector3 center			=	{level_center.x,0.f,level_center.z};
 	// const  dReal k_p=2400000.f;//550000.f;///1000000.f;
 	// const dReal k_d=200000.f;
 	dWorldSetERP(phWorld, ERP(world_spring, world_damping));
+
+	dWorldSetContactMaxCorrectingVel(phWorld, dInfinity);
+	dWorldSetContactSurfaceLayer(phWorld, dReal(0.0001));
+
 	dWorldSetCFM(phWorld, CFM(world_spring, world_damping));
 	// dWorldSetERP(phWorld,  0.2f);
 	// dWorldSetCFM(phWorld,  0.000001f);
@@ -251,6 +255,8 @@ void CPHWorld::OnFrame()
 	// DBG_DrawStatBeforeFrameStep();
 #endif
 	stats.MovCollision.Begin();
+	if(0 == Device().dwFrame % 30)
+		SetStep(ph_console::ph_step_time);
 	FrameStep(Device().fTimeDelta);
 	stats.MovCollision.End();
 #ifdef DEBUG

@@ -157,7 +157,7 @@ static void myDebug(int num, const char* msg, va_list ap)
 
 extern "C" ODE_API void dTestMatrixComparison()
 {
-	int i;
+	volatile int i;
 	printf("dTestMatrixComparison()\n");
 	dMessageFunction* orig_debug = dGetDebugHandler();
 
@@ -192,7 +192,7 @@ extern "C" ODE_API void dTestMatrixComparison()
 
 	// test broken sequences (with matrix error)
 	dRandSetSeed(seed);
-	int passcount = 0;
+	volatile int passcount = 0;
 	for (i = 1; i < 49; i++) {
 		if (setjmp(jump_buffer)) {
 			passcount++;

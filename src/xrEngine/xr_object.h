@@ -14,11 +14,7 @@
 #include "xrCommon/misc_math_types.h" // SRotation
 
 // fwd. decl.
-#ifdef RENDER
-struct IPhysicsShell;
-#else
 class IPhysicsShell;
-#endif
 class IRender_Sector;
 class IRender_ObjectSpecific;
 class CCustomHUD;
