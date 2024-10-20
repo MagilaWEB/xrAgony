@@ -205,7 +205,7 @@ dVector3 center			=	{level_center.x,0.f,level_center.z};
 	b_exist = true;
 
 	StepNumIterations(phIterations);
-	SetStep(ph_console::ph_step_time);
+	SetStep(Device().time_factor() / ph_console::ph_frequency);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -255,8 +255,10 @@ void CPHWorld::OnFrame()
 	// DBG_DrawStatBeforeFrameStep();
 #endif
 	stats.MovCollision.Begin();
+
 	if(0 == Device().dwFrame % 30)
-		SetStep(ph_console::ph_step_time);
+		SetStep(Device().time_factor() / ph_console::ph_frequency);
+
 	FrameStep(Device().fTimeDelta);
 	stats.MovCollision.End();
 #ifdef DEBUG

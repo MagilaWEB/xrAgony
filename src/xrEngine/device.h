@@ -118,6 +118,12 @@ public:
 	MessageRegistry<pureScreenResolutionChanged> seqResolutionChanged;
 
 	HWND m_hWnd;
+
+	IC const float time_factor() const
+	{
+		VERIFY(Timer.time_factor() == TimerGlobal.time_factor());
+		return (Timer.time_factor());
+	}
 };
 
 // refs
@@ -261,13 +267,10 @@ public:
 	void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert);
 
 	void time_factor(const float& time_factor); //--#SM+#--
-
 	IC const float time_factor() const
 	{
-		VERIFY(Timer.time_factor() == TimerGlobal.time_factor());
-		return (Timer.time_factor());
+		return CRenderDeviceBase::time_factor();
 	}
-
 	//Parallel execution in conjunction with the render.
 	template<class  PAR, class PAR_X>
 	ICF void add_parallel(PAR* pr_1, fastdelegate::FastDelegate<void()>::Parameters(PAR_X::* pr_2)())

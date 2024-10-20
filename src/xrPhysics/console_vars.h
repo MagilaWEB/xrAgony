@@ -7,5 +7,5 @@ struct XRPHYSICS_API ph_console
 	static int ph_tri_clear_disable_count; //= 10;
 	static float phBreakCommonFactor; //= 0.01f;
 	static float phRigidBreakWeaponFactor; //= 1.f;
-	static float ph_step_time; //=fixed_step;
+	static int ph_frequency;//= 75
 };

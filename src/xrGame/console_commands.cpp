@@ -1112,28 +1112,6 @@ public:
 			S[xr_strlen(S) - 1] = 0;
 	}
 };
-#endif // DEBUG
-
-class CCC_PHFps : public IConsole_Command
-{
-public:
-	CCC_PHFps(LPCSTR N) : IConsole_Command(N) {};
-	virtual void Execute(LPCSTR args)
-	{
-		float step_count = (float)atof(args);
-#ifndef DEBUG
-		clamp(step_count, 50.f, 200.f);
-#endif
-		// IPHWorld::SetStep(1.f/step_count);
-		ph_console::ph_step_time = 1.f / step_count;
-		// physics_world()->SetStep(1.f/step_count);
-		if (physics_world())
-			physics_world()->SetStep(ph_console::ph_step_time);
-	}
-	virtual void Status(TStatus& S) { xr_sprintf(S, "%3.5f", 1.f / ph_console::ph_step_time); }
-};
-
-#ifdef DEBUG
 
 /*
 struct CCC_NoClip : public CCC_Mask
@@ -1284,9 +1262,17 @@ public:
 		float time_factor = (float)atof(args);
 		clamp(time_factor, EPS, 1000.f);
 		Device.time_factor(time_factor);
+		if (physics_world())
+			physics_world()->SetStep(time_factor / ph_console::ph_frequency);
 	}
-	virtual void Status(TStatus& S) { xr_sprintf(S, sizeof(S), "%f", Device.time_factor()); }
-	virtual void Info(TInfo& I) { xr_strcpy(I, "[0.001 - 1000.0]"); }
+	virtual void Status(TStatus& S)
+	{
+		xr_sprintf(S, sizeof(S), "%f", Device.time_factor());
+	}
+	virtual void Info(TInfo& I)
+	{
+		xr_strcpy(I, "[0.001 - 1000.0]");
+	}
 	virtual void fill_tips(vecTips& tips, u32 mode)
 	{
 		TStatus str;
@@ -1939,7 +1925,7 @@ void CCC_RegisterCommands()
 	CMD1(CCC_FlushLog, "flush"); // flush log
 	CMD1(CCC_ClearLog, "clear_log");
 
-#ifndef MASTER
+#ifdef MASTER
 	CMD1(CCC_ALifeTimeFactor, "al_time_factor"); // set time factor
 	CMD1(CCC_ALifeSwitchDistance, "al_switch_distance"); // set switch distance
 	CMD1(CCC_ALifeProcessTime, "al_process_time"); // set process time
@@ -1970,7 +1956,6 @@ void CCC_RegisterCommands()
 	CMD1(CCC_DemoRecord, "demo_record");
 	CMD1(CCC_DemoRecordSetPos, "demo_set_cam_position");
 
-#ifndef MASTER
 	// ai
 	CMD3(CCC_Mask, "mt_ai_vision", &g_mt_config, mtAiVision);
 	CMD3(CCC_Mask, "mt_level_path", &g_mt_config, mtLevelPath);
@@ -1981,16 +1966,13 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "mt_level_sounds", &g_mt_config, mtLevelSounds);
 	CMD3(CCC_Mask, "mt_alife", &g_mt_config, mtALife);
 	CMD3(CCC_Mask, "mt_map", &g_mt_config, mtMap);
-#endif // MASTER
 
-#ifndef MASTER
 	CMD3(CCC_Mask, "ai_obstacles_avoiding", &psAI_Flags, aiObstaclesAvoiding);
 	CMD3(CCC_Mask, "ai_obstacles_avoiding_static", &psAI_Flags, aiObstaclesAvoidingStatic);
 	CMD3(CCC_Mask, "ai_use_smart_covers", &psAI_Flags, aiUseSmartCovers);
 	CMD3(CCC_Mask, "ai_use_smart_covers_animation_slots", &psAI_Flags, (u32)aiUseSmartCoversAnimationSlot);
 	CMD4(CCC_Float, "ai_smart_factor", &g_smart_cover_factor, 0.f, 1000000.f);
 	CMD3(CCC_Mask, "lua_debug", &g_LuaDebug, 1);
-#endif // MASTER
 
 #ifdef DEBUG
 	CMD3(CCC_Mask, "ai_debug", &psAI_Flags, aiDebug);
@@ -2069,12 +2051,10 @@ void CCC_RegisterCommands()
 	CMD1(CCC_ShowAnimationStats, "ai_show_animation_stats");
 #endif // DEBUG
 
-#ifndef MASTER
 	CMD3(CCC_Mask, "ai_ignore_actor", &psAI_Flags, aiIgnoreActor);
-#endif // MASTER
 
 	// Physics
-	CMD1(CCC_PHFps, "ph_frequency");
+	CMD4(CCC_Integer, "ph_frequency", &ph_console::ph_frequency, 20, 150);
 	CMD1(CCC_PHIterations, "ph_iterations");
 
 #ifdef DEBUG
@@ -2084,12 +2064,6 @@ void CCC_RegisterCommands()
 	CMD4(CCC_FloatBlock, "ph_rigid_break_weapon_factor", &ph_console::phRigidBreakWeaponFactor, 0.f, 1000000000.f);
 	CMD4(CCC_Integer, "ph_tri_clear_disable_count", &ph_console::ph_tri_clear_disable_count, 0, 255);
 	CMD4(CCC_FloatBlock, "ph_tri_query_ex_aabb_rate", &ph_console::ph_tri_query_ex_aabb_rate, 1.01f, 3.f);
-	CMD1(CCC_JumpToLevel, "jump_to_level");
-	CMD3(CCC_Mask, "g_god", &psActorFlags, AF_GODMODE);
-	CMD3(CCC_Mask, "g_unlimitedammo", &psActorFlags, AF_UNLIMITEDAMMO);
-	CMD1(CCC_Script, "run_script");
-	CMD1(CCC_ScriptCommand, "run_string");
-	CMD1(CCC_TimeFactor, "time_factor");
 #endif // DEBUG
 
 	if (Core.ParamFlags.test(Core.dev))
@@ -2251,22 +2225,19 @@ void CCC_RegisterCommands()
 
 	extern float dbg_text_height_scale;
 	CMD4(CCC_FloatBlock, "dbg_text_height_scale", &dbg_text_height_scale, 0.2f, 5.f);
-#endif
 
-#ifdef DEBUG
 	CMD4(CCC_Integer, "string_table_error_msg", &CStringTable::m_bWriteErrorsToLog, 0, 1);
 
 	CMD1(CCC_DumpInfos, "dump_infos");
 	CMD1(CCC_DumpTasks, "dump_tasks");
 	CMD1(CCC_DumpMap, "dump_map");
 	CMD1(CCC_DumpCreatures, "dump_creatures");
-
 #endif
 
 	CMD3(CCC_Mask, "cl_dynamiccrosshair", &psHUD_Flags, HUD_CROSSHAIR_DYNAMIC);
 	CMD1(CCC_MainMenu, "main_menu");
 
-#ifndef MASTER
+#ifdef MASTER
 	CMD1(CCC_StartTimeSingle, "start_time_single");
 	CMD4(CCC_TimeFactorSingle, "time_factor_single", &g_fTimeFactor, 0.f, 1000.0f);
 #endif // MASTER
@@ -2328,9 +2299,7 @@ void CCC_RegisterCommands()
 	// CMD4(CCC_Integer,	"use_new_ballistics",	&g_use_new_ballistics, 0, 1);
 	extern float g_bullet_time_factor;
 	CMD4(CCC_Float, "g_bullet_time_factor", &g_bullet_time_factor, 0.f, 10.f);
-#endif
 
-#ifdef DEBUG
 	extern BOOL g_ai_dbg_sight;
 	CMD4(CCC_Integer, "ai_dbg_sight", &g_ai_dbg_sight, 0, 1);
 #endif // #ifdef DEBUG

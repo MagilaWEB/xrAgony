@@ -10,4 +10,4 @@ int ph_console::ph_tri_clear_disable_count = 10;
 float ph_console::phBreakCommonFactor = 0.01f;
 float ph_console::phRigidBreakWeaponFactor = 1.f;
 
-float ph_console::ph_step_time = fixed_step;
+int ph_console::ph_frequency = 75;
