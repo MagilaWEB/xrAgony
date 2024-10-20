@@ -91,11 +91,11 @@ int dcTriListCollider::dSortedTriBox(const dReal* triSideAx0, const dReal* triSi
 		if (maxc == 1)
 			goto done;
 
-// get the second and third contact points by starting from `p' and going
-// along the two sides with the smallest projected length.
+		// get the second and third contact points by starting from `p' and going
+		// along the two sides with the smallest projected length.
 
-//(@slipch) it is not perfectly right for triangle collision
-// because it need to check if additional points are in the triangle but it seems cause no problem
+		//(@slipch) it is not perfectly right for triangle collision
+		// because it need to check if additional points are in the triangle but it seems cause no problem
 
 #define FOO(i, j, op)														\
 	CONTACT(contact, i* skip)->pos[0] = pos[0] op 2.f * hside[j] * R[0 + j]; \
@@ -178,7 +178,7 @@ int dcTriListCollider::dSortedTriBox(const dReal* triSideAx0, const dReal* triSi
 #undef FOO
 #undef BAR
 
-	done:;
+		done : ;
 
 		////////////////////////////////////////////////////////////// end (from geom.cpp dCollideBP)
 	}
@@ -291,7 +291,7 @@ int dcTriListCollider::dTriBox(const dReal* v0, const dReal* v1, const dReal* v2
 	// dVector3 triAx;
 	const dReal* triSideAx0 = T->side0; //{v1[0]-v0[0],v1[1]-v0[1],v1[2]-v0[2]};
 	const dReal* triSideAx1 = T->side1; //{v2[0]-v1[0],v2[1]-v1[1],v2[2]-v1[2]};
-	dVector3 triSideAx2 = {v0[0] - v2[0], v0[1] - v2[1], v0[2] - v2[2]};
+	dVector3 triSideAx2 = { v0[0] - v2[0], v0[1] - v2[1], v0[2] - v2[2] };
 	// dCROSS(triAx,=,triSideAx0,triSideAx1);
 	int code = 0;
 	dReal outDepth;
@@ -416,13 +416,13 @@ CMP(sd, c)										\
 }
 
 	TEST(0, 1)
-	TEST(1, 4)
-	TEST(2, 7)
+		TEST(1, 4)
+		TEST(2, 7)
 
 #undef CMP
 #undef TEST
 
-	unsigned int i;
+		unsigned int i;
 
 	dVector3 axis, outAx;
 
@@ -521,14 +521,14 @@ depth##ox = sidePr - dFabs(dist##ox);																				  \
 	// if( test_cross_side (outAx,outDepth,pos,signum,code,10,R,hside,p,triSideAx0,v0,v2) )
 	// return 0;
 	TEST(0, 2, 10)
-	TEST(1, 0, 13)
-	TEST(2, 1, 16)
+		TEST(1, 0, 13)
+		TEST(2, 1, 16)
 
 #undef TEST
 
-	//////////////////////////////////////////////////////////////////////
-	/// if we get to this poit tri touches box
-	dVector3 norm;
+		//////////////////////////////////////////////////////////////////////
+		/// if we get to this poit tri touches box
+		dVector3 norm;
 	unsigned int ret = 1;
 
 	if (code == 0)
@@ -552,7 +552,26 @@ depth##ox = sidePr - dFabs(dist##ox);																				  \
 		pos[1] = p[1];
 		pos[2] = p[2];
 
-///////////////////////////////////////////////////////////
+#define FOO(i, op)				 \
+	pos[0] op hside[i] * R[0 + i]; \
+	pos[1] op hside[i] * R[4 + i]; \
+	pos[2] op hside[i] * R[8 + i];
+#define BAR(i, iinc) \
+	if (A##iinc > 0) \
+	{				\
+		FOO(i, -=)	\
+	}				\
+	else			 \
+	{				\
+		FOO(i, +=)	\
+	}
+		BAR(0, 1);
+		BAR(1, 2);
+		BAR(2, 3);
+#undef FOO
+#undef BAR
+
+		///////////////////////////////////////////////////////////
 
 #define TRI_CONTAIN_POINT(pos)																				\
 	{																										\
@@ -578,93 +597,88 @@ depth##ox = sidePr - dFabs(dist##ox);																				  \
 		// along the two sides with the smallest projected length.
 
 		dReal* pdepth;
-		dContactGeom *prc, *c = CONTACT(contact, ret * skip);
+		dContactGeom* prc, * c = CONTACT(contact, ret * skip);
 		prc = c;
-
-		auto BAR = [&](u32 index, auto B, auto A, auto spoint, auto _sdepth) -> void
-		{
-			pdepth = &(c->depth);
-			*pdepth = _sdepth - B;
-
-			if (A > 0)
-			{
-				c->pos[0] = spoint[0] + 2.f * hside[index] * R[0 + index];
-				c->pos[1] = spoint[1] + 2.f * hside[index] * R[4 + index];
-				c->pos[2] = spoint[2] + 2.f * hside[index] * R[8 + index];
-			}
-			else
-			{
-				c->pos[0] = spoint[0] - 2.f * hside[index] * R[0 + index];
-				c->pos[1] = spoint[1] - 2.f * hside[index] * R[4 + index];
-				c->pos[2] = spoint[2] - 2.f * hside[index] * R[8 + index];
-			}
-
-			prc = c;
-			if (!(*pdepth < 0))
-			{
-				++ret;
-				c = CONTACT(contact, ret * skip);
-			}
-		};
-
+#define FOO(j, op, spoint)								\
+	c->pos[0] = spoint##[0] op 2.f * hside[j] * R[0 + j]; \
+	c->pos[1] = spoint##[1] op 2.f * hside[j] * R[4 + j]; \
+	c->pos[2] = spoint##[2] op 2.f * hside[j] * R[8 + j];
+#define BAR(side, sideinc, spos, sdepth)	  \
+	{										 \
+		pdepth = &(c->depth);				 \
+		*pdepth = sdepth - B##sideinc;		\
+		if (A##sideinc > 0)					\
+		{									 \
+			FOO(side, +, spos)				\
+		}									 \
+		else								  \
+		{									 \
+			FOO(side, -, spos)				\
+		}									 \
+		prc = c;							  \
+		if (!(*pdepth < 0))					\
+		{									 \
+			++ret;							\
+			c = CONTACT(contact, ret * skip); \
+		}									 \
+	}
 		// TRI_CONTAIN_POINT(CONTACT(contact,ret*skip)->pos)
 
 		if (B1 < B2)
 		{
-			BAR(0, B1, A1, pos, depth);
-
+			BAR(0, 1, pos, depth);
 			if (B2 < B3)
 			{
-				BAR(1, B2, A2, pos, depth);
-				BAR(0, B1, A1, prc->pos, prc->depth);
+				BAR(1, 2, pos, depth);
+				BAR(0, 1, prc->pos, prc->depth);
 			}
 			else
 			{
-				BAR(2, B3, A3, pos, depth);
-				BAR(0, B1, A1, prc->pos, prc->depth);
+				BAR(2, 3, pos, depth);
+				BAR(0, 1, prc->pos, prc->depth);
 			}
 		}
 		else
 		{
-			BAR(1, B2, A2, pos, depth);
+			BAR(1, 2, pos, depth);
 			if (B1 < B3)
 			{
-				BAR(0, B1, A1, pos, depth);
-				BAR(1, B2, A2, prc->pos, prc->depth);
+				BAR(0, 1, pos, depth);
+				BAR(1, 2, prc->pos, prc->depth);
 			}
 			else
 			{
-				BAR(2, B3, A3, pos, depth);
-				BAR(1, B2, A2, prc->pos, prc->depth);
+				BAR(2, 3, pos, depth);
+				BAR(1, 2, prc->pos, prc->depth);
 			}
 		}
-/*
+		/*
 
-if (B1 < B2) {
-  if (B3 < B1) goto use_side_3; else {
-	BAR(0,1,pos);	// use side 1
-	if (maxc == 2) goto done;
-	if (B2 < B3) goto contact2_2; else goto contact2_3;
-  }
-}
-else {
-  if (B3 < B2) {
-	use_side_3:	// use side 3
-	BAR(2,3,pos);
-	if (maxc == 2) goto done;
-	if (B1 < B2) goto contact2_1; else goto contact2_2;
-  }
-  else {
-	BAR(1,2,pos);	// use side 2
-	if (maxc == 2) goto done;
-	if (B1 < B3) goto contact2_1; else goto contact2_3;
-  }
-}
+		if (B1 < B2) {
+		  if (B3 < B1) goto use_side_3; else {
+			BAR(0,1,pos);	// use side 1
+			if (maxc == 2) goto done;
+			if (B2 < B3) goto contact2_2; else goto contact2_3;
+		  }
+		}
+		else {
+		  if (B3 < B2) {
+			use_side_3:	// use side 3
+			BAR(2,3,pos);
+			if (maxc == 2) goto done;
+			if (B1 < B2) goto contact2_1; else goto contact2_2;
+		  }
+		  else {
+			BAR(1,2,pos);	// use side 2
+			if (maxc == 2) goto done;
+			if (B1 < B3) goto contact2_1; else goto contact2_3;
+		  }
+		}
 
-contact2_1: BAR(0,1,pos); goto done;
-contact2_2: BAR(1,2,pos); goto done;
-contact2_3: BAR(2,3,pos); goto done;
-*/
+		contact2_1: BAR(0,1,pos); goto done;
+		contact2_2: BAR(1,2,pos); goto done;
+		contact2_3: BAR(2,3,pos); goto done;
+		*/
 #undef FOO
 #undef FOO1
 #undef BAR
