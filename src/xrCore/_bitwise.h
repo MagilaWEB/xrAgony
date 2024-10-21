@@ -3,6 +3,8 @@
 #define _BITWISE_
 #include "math_constants.h"
 #include "_types.h"
+#include <cmath>
+
 
 // float values defines
 #define fdSGN 0x080000000 // mask for sign bit
@@ -80,20 +82,7 @@ IC u64 btwCount1(u64 v) { return btwCount1(u32(v & u32(-1))) + btwCount1(u32(v >
 // Additionally, doesn't SSE2 have a fast ftol() ?
 ICF int iFloor(float x)
 {
-	int a = *(const int*)&x;
-	int exponent = 127 + 31 - (a >> 23 & 0xFF);
-	int r = ((u32)a << 8 | 1U << 31) >> exponent;
-	exponent += 31 - 127;
-	{
-		int imask = !((1 << exponent) - 1 >> 8 & a);
-		exponent -= 31 - 127 + 32;
-		exponent >>= 31;
-		a >>= 31;
-		r -= imask & a;
-		r &= exponent;
-		r ^= a;
-	}
-	return r;
+	return static_cast<int>(std::floor(x));
 }
 
 /* intCeil() is a non-interesting variant, since effectively
@@ -101,21 +90,7 @@ ICF int iFloor(float x)
  */
 ICF int iCeil(float x)
 {
-	int a = *(const int*)&x;
-	int exponent = 127 + 31 - (a >> 23 & 0xFF);
-	int r = ((u32)a << 8 | 1U << 31) >> exponent;
-	exponent += 31 - 127;
-	{
-		int imask = !((1 << exponent) - 1 >> 8 & a);
-		exponent -= 31 - 127 + 32;
-		exponent >>= 31;
-		a = ~(a - 1 >> 31); /* change sign */
-		r -= imask & a;
-		r &= exponent;
-		r ^= a;
-		r = -r; /* change sign */
-	}
-	return r; /* r = (int)(ceil(f)) */
+	return static_cast<int>(std::ceil(x)); /* r = (int)(ceil(f)) */
 }
 
 // Validity checks
@@ -128,7 +103,7 @@ IC bool fis_denormal(const float& f) { return !(*(int*)&f & 0x7f800000); }
 // Approximated calculations
 IC float apx_InvSqrt(const float& n)
 {
-	long tmp = long(0xBE800000) - *(long*)&n >> 1;
+	long tmp = (long(0xBE800000) - *(long*)&n) >> 1;
 	float y = *(float*)&tmp;
 	return y * (1.47f - 0.47f * n * y * y);
 }

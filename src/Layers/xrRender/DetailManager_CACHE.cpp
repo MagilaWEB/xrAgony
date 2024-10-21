@@ -203,16 +203,15 @@ void CDetailManager::spawn_Slots(Fvector& view)
 			float distance = view.distance_to_sqr(slot_position);
 			float distance_2 = view.distance_to_sqr(slot_position_2);
 
-			return distance < distance_2;
+			return distance > distance_2;
 		});
 
-		for (size_t i = 0; (i < size_t(ps_r__detail_limit_spawn)) && !cache_task.empty(); i++)
+		size_t it = 0;
+		while (!cache_task.empty() && it++ < ps_r__detail_limit_spawn)
 		{
-			if (cache_task.empty())
-				break;
 			// Decompress and remove task
-			cache_Decompress(cache_task[i]);
-			cache_task.erase(cache_task.begin() + i);
+			cache_Decompress(cache_task.back());
+			cache_task.pop_back();
 		}
 	}
 }

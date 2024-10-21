@@ -31,6 +31,14 @@
 
 #ifdef __cplusplus
 
+#include <limits>
+
+#ifdef dSINGLE
+constexpr float flt_infinity = std::numeric_limits<float>::infinity();
+#else
+constexpr float dbl_infinity = std::numeric_limits<double>::infinity();
+#endif
+
 extern "C" {
 
 #endif
@@ -61,9 +69,9 @@ extern "C" {
 /* Define the dInfinity macro */
 #ifdef INFINITY
 #ifdef dSINGLE
-#define dInfinity ((float)INFINITY)
+#define dInfinity flt_infinity
 #else
-#define dInfinity ((double)INFINITY)
+#define dInfinity dbl_infinity
 #endif
 #elif defined(HUGE_VAL)
 #ifdef dSINGLE

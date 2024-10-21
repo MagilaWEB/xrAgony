@@ -77,7 +77,7 @@ bool XMLDocument::Load(pcstr path, pcstr xml_filename, bool fatal)
 	if (!F)
 	{
 		if (fatal)
-			R_ASSERT3(F, "Can't find specified xml file", xml_filename);
+			R_ASSERT3(F, "Can't find specified xml file", xml_filename)
 		else
 			return false;
 	}
@@ -105,7 +105,7 @@ bool XMLDocument::Set(pcstr text, bool fatal)
 		pcstr offsetted = text + m_Doc.errorOffset();
 
 		if (fatal)
-			R_ASSERT3(false, str, offsetted);
+			R_ASSERT3(false, str, offsetted)
 		else
 			Log(str, offsetted);
 
