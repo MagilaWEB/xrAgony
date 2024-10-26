@@ -20,6 +20,7 @@ class xrCompressorPack final
 	std::atomic_uint filesSKIP{ 0 };
 	std::atomic_uint filesVFS{ 0 };
 	std::atomic_uint filesALIAS{ 0 };
+	std::atomic_uint filesFAIL{ 0 };
 	std::atomic_uint GatherFilesSIZE{ 0 };
 
 	CTimer timer;
@@ -34,7 +35,8 @@ class xrCompressorPack final
 		size_t c_size_real{ 0 };
 		size_t c_size_compressed{ 0 };
 	};
-	xr_map<size_t, ALIAS> aliases;
+	IC static xr_map<size_t, ALIAS> aliases;
+	IC static FastLock lock_aliases;
 
 public:
 	xrCompressorPack(xrCompressor* _compressor, size_t _num_thread);
@@ -54,7 +56,12 @@ public:
 		return name_path;
 	};
 
-	
+	IC static void ClearAliases()
+	{
+		for (auto& it : aliases)
+			xr_free(it.second.path);
+		aliases.clear();
+	}
 
 private:
 	void CompressFile(LPCSTR path);

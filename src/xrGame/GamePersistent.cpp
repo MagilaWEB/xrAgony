@@ -905,8 +905,6 @@ void CGamePersistent::OnAppActivate()
 		Device.Pause(FALSE, TRUE, TRUE, "CGP::OnAppActivate MP");
 
 	bEntryFlag = TRUE;
-
-	while (ShowCursor(false) > 0);
 }
 
 void CGamePersistent::OnAppDeactivate()

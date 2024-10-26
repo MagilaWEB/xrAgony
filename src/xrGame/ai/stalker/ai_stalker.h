@@ -789,7 +789,7 @@ public:
 	typedef fastdelegate::FastDelegate<void(Fmatrix&)> EyeMatrixCallback;
 
 private:
-	virtual BOOL AlwaysTheCrow();
+	virtual bool LimitUpdateCL();
 
 public:
 	IC void take_items_enabled(bool value);

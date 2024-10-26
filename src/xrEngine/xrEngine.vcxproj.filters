@@ -442,9 +442,6 @@
     <ClCompile Include="pure_relcase.cpp">
       <Filter>Game API\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="xr_object.cpp">
-      <Filter>Game API\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="xr_object_list.cpp">
       <Filter>Game API\Objects</Filter>
     </ClCompile>

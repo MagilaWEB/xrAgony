@@ -38,17 +38,13 @@ private:
 	Fmatrix m_xform;
 	Fmatrix m_xform_01;
 
-	xrCriticalSection MT;
-	volatile u32 MT_frame_rendered;
 	HOMStatistics stats;
-	xrThread mt_update{ "CHOM_UPDATE", true, true };
 
 	void Render_DB(CFrustum& base);
 
 public:
 	void Load();
 	void Unload();
-	void frame_update();
 	void Render(CFrustum& base);
 	//void Render_ZB();
 	//	void					Debug		();
@@ -56,11 +52,6 @@ public:
 	void occlude(Fbox2& /*space*/) {}
 	void Disable();
 	void Enable();
-
-	bool MT_Synced() const
-	{
-		return IGame_Persistent::MainMenuActiveOrLevelNotExist();
-	}
 
 	BOOL visible(vis_data& vis);
 	BOOL visible(Fbox3& B);

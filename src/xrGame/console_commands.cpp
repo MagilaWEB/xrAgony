@@ -1900,8 +1900,9 @@ public:
 void CCC_RegisterCommands()
 {
 	// options
-
 	CMD1(CCC_MemStats, "stat_memory");
+	CMD3(CCC_Mask, "lua_debug", &g_LuaDebug, 1);
+
 	// game
 	CMD3(CCC_Mask, "g_crouch_toggle", &psActorFlags, AF_CROUCH_TOGGLE);
 	CMD1(CCC_GameDifficulty, "g_game_difficulty");
@@ -1954,14 +1955,15 @@ void CCC_RegisterCommands()
 	CMD1(CCC_DemoRecordSetPos, "demo_set_cam_position");
 
 	// ai
+
+	CMD4(CCC_Float, "ai_smart_factor", &g_smart_cover_factor, 0.f, 1000000.f);
+
+
+#ifdef DEBUG
 	CMD3(CCC_Mask, "ai_obstacles_avoiding", &psAI_Flags, aiObstaclesAvoiding);
 	CMD3(CCC_Mask, "ai_obstacles_avoiding_static", &psAI_Flags, aiObstaclesAvoidingStatic);
 	CMD3(CCC_Mask, "ai_use_smart_covers", &psAI_Flags, aiUseSmartCovers);
 	CMD3(CCC_Mask, "ai_use_smart_covers_animation_slots", &psAI_Flags, (u32)aiUseSmartCoversAnimationSlot);
-	CMD4(CCC_Float, "ai_smart_factor", &g_smart_cover_factor, 0.f, 1000000.f);
-	CMD3(CCC_Mask, "lua_debug", &g_LuaDebug, 1);
-
-#ifdef DEBUG
 	CMD3(CCC_Mask, "ai_debug", &psAI_Flags, aiDebug);
 	CMD3(CCC_Mask, "ai_dbg_brain", &psAI_Flags, aiBrain);
 	CMD3(CCC_Mask, "ai_dbg_motion", &psAI_Flags, aiMotion);
@@ -2036,9 +2038,10 @@ void CCC_RegisterCommands()
 	CMD1(CCC_TuneAttachableItem, "dbg_adjust_attachable_item");
 
 	CMD1(CCC_ShowAnimationStats, "ai_show_animation_stats");
-#endif // DEBUG
 
 	CMD3(CCC_Mask, "ai_ignore_actor", &psAI_Flags, aiIgnoreActor);
+#endif // DEBUG
+
 
 	// Physics
 	CMD4(CCC_Integer, "ph_frequency", &ph_console::ph_frequency, 20, 150);

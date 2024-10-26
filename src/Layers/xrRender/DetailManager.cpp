@@ -250,8 +250,6 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 	RImplementation.BasicStats.DetailVisibility.Begin();
 	const float dist_optimization = (10 - (ps_r__details_opt_intensity - 1)) * 550.f;
 
-	CFrustum View{};
-	View.CreateFromMatrix(Device.mFullTransformSaved, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	float fade_limit = dm_fade * dm_fade;
 	float fade_start = 2.f;
 	float fade_range = fade_limit - fade_start;
@@ -266,7 +264,7 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 			if (MS.empty)
 				continue;
 
-			if (!View.testSphere_dirty(MS.vis.sphere.P, MS.vis.sphere.R))
+			if (!Device.ViewFromMatrix.testSphere_dirty(MS.vis.sphere.P, MS.vis.sphere.R))
 				continue;	// invisible-view frustum
 
 			for (u32 _i = 0; _i < (dm_cache1_count * dm_cache1_count); _i++)
@@ -278,7 +276,7 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 				if (S->empty)
 					continue;
 
-				if (!View.testSphere_dirty(S->vis.sphere.P, S->vis.sphere.R))
+				if (!Device.ViewFromMatrix.testSphere_dirty(S->vis.sphere.P, S->vis.sphere.R))
 					continue;	// invisible-view frustum
 
 				if (!RImplementation.HOM.visible(S->vis))

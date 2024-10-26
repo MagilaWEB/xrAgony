@@ -119,7 +119,7 @@ IC void FillSprite_Line(const Fvector& pos, const Fvector& dir, const float widt
 void CTracer::Render(const Fvector& pos, const Fvector& center, const Fvector& dir, float length, float width,
 	u8 colorID, float speed, bool bActor)
 {
-	if (::Render->ViewBase.testSphere_dirty((Fvector&)center, length * .5f))
+	if (Device.ViewFromMatrix.testSphere_dirty((Fvector&)center, length * .5f))
 	{
 		R_ASSERT(colorID < m_aColors.size());
 

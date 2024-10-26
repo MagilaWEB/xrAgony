@@ -1362,13 +1362,13 @@ bool CCustomZone::feel_touch_on_contact(IGameObject* O)
 	return (inherited::feel_touch_on_contact(O));
 }
 
-BOOL CCustomZone::AlwaysTheCrow()
+bool CCustomZone::LimitUpdateCL()
 {
 	bool b_idle = ZoneState() == eZoneStateIdle || ZoneState() == eZoneStateDisabled;
 	if (!b_idle || (m_zone_flags.test(eAlwaysFastmode) && IsEnabled()))
-		return TRUE;
+		return true;
 	else
-		return inherited::AlwaysTheCrow();
+		return inherited::LimitUpdateCL();
 }
 
 void CCustomZone::CalcDistanceTo(const Fvector& P, float& dist, float& radius)

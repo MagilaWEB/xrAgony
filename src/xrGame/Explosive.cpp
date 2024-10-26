@@ -497,7 +497,7 @@ void CExplosive::UpdateCL()
 	}
 	else
 	{
-		m_fExplodeDuration -= Device.fTimeDelta;
+		m_fExplodeDuration -= cast_game_object()->fDeltaT();
 		if (!m_bHideInExplosion && !m_bAlreadyHidden)
 		{
 			if (m_fExplodeHideDurationMax <= (m_fExplodeDurationMax - m_fExplodeDuration))

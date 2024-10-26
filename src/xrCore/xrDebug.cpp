@@ -64,7 +64,9 @@ void xrDebug::ShowMSGboxAboutError(LPCSTR title = "X-Ray A.G.O.N.Y. Engine", LPC
 {
 	FlushLog();
 
-	while (ShowCursor(true) < 0);
+	while (::ShowCursor(TRUE) < 0);
+	::ClipCursor(nullptr);
+
 	ShowWindow(GetActiveWindow(), SW_FORCEMINIMIZE);
 
 	MessageBox(

@@ -1347,7 +1347,7 @@ void CAI_Stalker::aim_target(Fvector& result, const CGameObject* object)
 	::aim_target(m_aim_bone_id, result, object);
 }
 
-BOOL CAI_Stalker::AlwaysTheCrow()
+bool CAI_Stalker::LimitUpdateCL()
 {
 	VERIFY(character_physics_support());
 	return (character_physics_support()->interactive_motion());

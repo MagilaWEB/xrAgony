@@ -39,7 +39,6 @@ void CTelekinesis::deactivate()
 	active = false;
 
 	// отпустить все объекты
-	//
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
 		(*it)->release();

@@ -34,9 +34,6 @@
     <Filter Include="shared memory/string library">
       <UniqueIdentifier>{7df0d0bd-ee41-4712-ace8-642189d21208}</UniqueIdentifier>
     </Filter>
-    <Filter Include="intrusive_ptr">
-      <UniqueIdentifier>{93a7b313-9b86-4fd4-82a0-9d4a7ec4639f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Compression">
       <UniqueIdentifier>{31e40506-2e4e-4860-be44-290fb6f03c61}</UniqueIdentifier>
     </Filter>
@@ -105,6 +102,9 @@
     </Filter>
     <Filter Include="Memory">
       <UniqueIdentifier>{0173b19d-898c-495c-8d22-2cc3d8436008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers\intrusive_ptr">
+      <UniqueIdentifier>{93a7b313-9b86-4fd4-82a0-9d4a7ec4639f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -438,7 +438,7 @@
       <Filter>shared memory/string library</Filter>
     </ClInclude>
     <ClInclude Include="intrusive_ptr.h">
-      <Filter>intrusive_ptr</Filter>
+      <Filter>Containers\intrusive_ptr</Filter>
     </ClInclude>
     <ClInclude Include="ppmd_compressor.h">
       <Filter>Compression\ppmd</Filter>

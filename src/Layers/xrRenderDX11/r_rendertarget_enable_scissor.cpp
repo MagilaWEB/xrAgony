@@ -18,7 +18,7 @@ void CRenderTarget::enable_dbt_bounds(light* L)
 		return;
 
 	u32 mask = 0xffffffff;
-	EFC_Visible vis = RImplementation.ViewBase.testSphere(L->spatial.sphere.P, L->spatial.sphere.R * 1.01f, mask);
+	EFC_Visible vis = Device.ViewFromMatrix.testSphere(L->spatial.sphere.P, L->spatial.sphere.R * 1.01f, mask);
 	if (vis != fcvFully)
 		return;
 

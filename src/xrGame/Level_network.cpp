@@ -29,47 +29,35 @@ void CLevel::remove_objects()
 {
 	if (!IsGameTypeSingle())
 		Msg("CLevel::remove_objects - Start");
-	BOOL b_stored = psDeviceFlags.test(rsDisableObjectsAsCrows);
+	//BOOL b_stored = psDeviceFlags.test(rsDisableObjectsAsCrows);
 
-	int loop = 5;
-	while (loop)
+	if (OnServer())
 	{
-		if (OnServer())
-		{
-			R_ASSERT(Server);
-			Server->SLS_Clear();
-		}
-
-		if (OnClient())
-			ClearAllObjects();
-		// XXX: why does one need to do this 20 times?
-		for (int i = 0; i < 20; ++i)
-		{
-			snd_Events.clear();
-
-			// ugly hack for checks that update is twice on frame
-			// we need it since we do updates for checking network messages
-			++(Device.dwFrame);
-			psDeviceFlags.set(rsDisableObjectsAsCrows, TRUE);
-			ClientReceive();
-
-			ProcessGameEvents();
-
-			Objects.Update(false);
-#ifdef DEBUG
-			Msg("Update objects list...");
-#endif // #ifdef DEBUG
-			Objects.dump_all_objects();
-		}
-
-		if (Objects.o_count() == 0)
-			break;
-		else
-		{
-			--loop;
-			Msg("Objects removal next loop. Active objects count=%d", Objects.o_count());
-		}
+		R_ASSERT(Server);
+		Server->SLS_Clear();
 	}
+
+	if (OnClient())
+		ClearAllObjects();
+
+	snd_Events.clear();
+
+	// ugly hack for checks that update is twice on frame
+	// we need it since we do updates for checking network messages
+	++Device.dwFrame;
+	//psDeviceFlags.set(rsDisableObjectsAsCrows, TRUE);
+	ClientReceive();
+
+	ProcessGameEvents();
+
+	Objects.Update(false);
+
+#ifdef DEBUG
+	Msg("Update objects list...");
+	Objects.dump_all_objects();
+#endif // #ifdef DEBUG
+
+	R_ASSERT(!Objects.o_count());
 
 	BulletManager().Clear();
 	ph_commander().clear();
@@ -77,7 +65,7 @@ void CLevel::remove_objects()
 
 	space_restriction_manager().clear();
 
-	psDeviceFlags.set(rsDisableObjectsAsCrows, b_stored);
+	//psDeviceFlags.set(rsDisableObjectsAsCrows, b_stored);
 	g_b_ClearGameCaptions = true;
 
 	::ScriptEngine->collect_all_garbage();

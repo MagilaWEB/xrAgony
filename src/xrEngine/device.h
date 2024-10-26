@@ -83,6 +83,8 @@ public:
 	Fmatrix mProjectSaved;
 	Fmatrix mFullTransformSaved;
 
+	CFrustum ViewFromMatrix;
+
 	float fFOV;
 	float fASPECT;
 
@@ -172,6 +174,7 @@ private:
 	RenderDeviceStatictics stats;
 
 	std::atomic_bool b_restart{ false };
+	std::atomic_bool b_cursor_on_window{ false };
 
 	void _SetupStates();
 

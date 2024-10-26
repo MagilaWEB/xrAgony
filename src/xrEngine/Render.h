@@ -261,7 +261,6 @@ public:
 	BENCH_SEC_SCRAMBLEMEMBER1
 
 	// data
-	CFrustum ViewBase;
 	CFrustum* View;
 
 public:

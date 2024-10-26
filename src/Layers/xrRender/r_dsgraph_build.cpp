@@ -1190,24 +1190,24 @@ void D3DXRenderBase::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 	BasicStats.FrameEnd();
 	auto renderTotal = Device.GetStats().RenderTotal.result;
 #define PPP(a) (100.f * float(a) / renderTotal)
-	font.OutNext("*** RENDER:	%2.2fms", renderTotal);
-	font.OutNext("Calc:		 %2.2fms, %2.1f%%", BasicStats.Culling.result, PPP(BasicStats.Culling.result));
-	font.OutNext("Skeletons:	%2.2fms, %d", BasicStats.Animation.result, BasicStats.Animation.count);
-	font.OutNext("Primitives:	%2.2fms, %2.1f%%", BasicStats.Primitives.result, PPP(BasicStats.Primitives.result));
-	font.OutNext("Wait-L:		%2.2fms", BasicStats.Wait.result);
-	font.OutNext("Skinning:	 %2.2fms", BasicStats.Skinning.result);
-	font.OutNext("DT_Vis/Cnt:	%2.2fms/%d", BasicStats.DetailVisibility.result, BasicStats.DetailCount);
-	font.OutNext("DT_Render:	%2.2fms", BasicStats.DetailRender.result);
-	font.OutNext("DT_Cache:	 %2.2fms", BasicStats.DetailCache.result);
-	font.OutNext("Wallmarks:	%2.2fms, %d/%d - %d", BasicStats.Wallmarks.result, BasicStats.StaticWMCount,
+	font.OutNext("*** RENDER:	%2.5fms", renderTotal);
+	font.OutNext("Calc:		 %2.5fms, %2.1f%%", BasicStats.Culling.result, PPP(BasicStats.Culling.result));
+	font.OutNext("Skeletons:	%2.5fms, %d", BasicStats.Animation.result, BasicStats.Animation.count);
+	font.OutNext("Primitives:	%2.5fms, %2.1f%%", BasicStats.Primitives.result, PPP(BasicStats.Primitives.result));
+	font.OutNext("Wait-L:		%2.5fms", BasicStats.Wait.result);
+	font.OutNext("Skinning:	 %2.5fms", BasicStats.Skinning.result);
+	font.OutNext("DT_Vis/Cnt:	%2.5fms/%d", BasicStats.DetailVisibility.result, BasicStats.DetailCount);
+	font.OutNext("DT_Render:	%2.5fms", BasicStats.DetailRender.result);
+	font.OutNext("DT_Cache:	 %2.5fms", BasicStats.DetailCache.result);
+	font.OutNext("Wallmarks:	%2.5fms, %d/%d - %d", BasicStats.Wallmarks.result, BasicStats.StaticWMCount,
 		BasicStats.DynamicWMCount, BasicStats.WMTriCount);
-	font.OutNext("Glows:		%2.2fms", BasicStats.Glows.result);
-	font.OutNext("Lights:		%2.2fms, %d", BasicStats.Lights.result, BasicStats.Lights.count);
-	font.OutNext("RT:			%2.2fms, %d", BasicStats.RenderTargets.result, BasicStats.RenderTargets.count);
-	font.OutNext("HUD:		  %2.2fms", BasicStats.HUD.result);
-	font.OutNext("P_calc:		%2.2fms", BasicStats.Projectors.result);
-	font.OutNext("S_calc:		%2.2fms", BasicStats.ShadowsCalc.result);
-	font.OutNext("S_render:	 %2.2fms, %d", BasicStats.ShadowsRender.result, BasicStats.ShadowsRender.count);
+	font.OutNext("Glows:		%2.5fms", BasicStats.Glows.result);
+	font.OutNext("Lights:		%2.5fms, %d", BasicStats.Lights.result, BasicStats.Lights.count);
+	font.OutNext("RT:			%2.5fms, %d", BasicStats.RenderTargets.result, BasicStats.RenderTargets.count);
+	font.OutNext("HUD:		  %2.5fms", BasicStats.HUD.result);
+	font.OutNext("P_calc:		%2.5fms", BasicStats.Projectors.result);
+	font.OutNext("S_calc:		%2.5fms", BasicStats.ShadowsCalc.result);
+	font.OutNext("S_render:	 %2.5fms, %d", BasicStats.ShadowsRender.result, BasicStats.ShadowsRender.count);
 	u32 occQs = BasicStats.OcclusionQueries ? BasicStats.OcclusionQueries : 1;
 	font.OutNext("Occ-query:	%03.1f", 100.f * f32(BasicStats.OcclusionCulled) / occQs);
 	font.OutNext("- queries:	%u", BasicStats.OcclusionQueries);

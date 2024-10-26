@@ -319,7 +319,7 @@ void CLevel::OnFrame()
 #endif
 	Fvector temp_vector;
 	m_feel_deny.feel_touch_update(temp_vector, 0.f);
-	psDeviceFlags.set(rsDisableObjectsAsCrows, false);
+	//psDeviceFlags.set(rsDisableObjectsAsCrows, false);
 	// commit events from bullet manager from prev-frame
 	stats.BulletManagerCommit.Begin();
 	BulletManager().CommitEvents();
@@ -552,20 +552,20 @@ void CLevel::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 	inherited::DumpStatistics(font, alert);
 	stats.FrameEnd();
 	font.OutNext("Client:");
-	font.OutNext("- receive:	%2.2fms, %d", stats.ClientRecv.result, stats.ClientRecv.count);
-	font.OutNext("- send:		%2.2fms, %d", stats.ClientSend.result, stats.ClientSend.count);
-	font.OutNext("- compress:	%2.2fms", stats.ClientCompressor.result);
-	font.OutNext("- int send:	%2.2fms, %d", stats.ClientSendInternal.result, stats.ClientSendInternal.count);
-	font.OutNext("- bmcommit:	%2.2fms, %d", stats.BulletManagerCommit.result, stats.BulletManagerCommit.count);
+	font.OutNext("- receive:	%2.5fms, %d", stats.ClientRecv.result, stats.ClientRecv.count);
+	font.OutNext("- send:		%2.5fms, %d", stats.ClientSend.result, stats.ClientSend.count);
+	font.OutNext("- compress:	%2.5fms", stats.ClientCompressor.result);
+	font.OutNext("- int send:	%2.5fms, %d", stats.ClientSendInternal.result, stats.ClientSendInternal.count);
+	font.OutNext("- bmcommit:	%2.5fms, %d", stats.BulletManagerCommit.result, stats.BulletManagerCommit.count);
 	stats.FrameStart();
 	AIStats.FrameEnd();
-	font.OutNext("AI think:	 %2.2fms, %d", AIStats.Think.result, AIStats.Think.count);
-	font.OutNext("- range:	  %2.2fms, %d", AIStats.Range.result, AIStats.Range.count);
-	font.OutNext("- path:		%2.2fms, %d", AIStats.Path.result, AIStats.Path.count);
-	font.OutNext("- node:		%2.2fms, %d", AIStats.Node.result, AIStats.Node.count);
-	font.OutNext("AI vision:	%2.2fms, %d", AIStats.Vis.result, AIStats.Vis.count);
-	font.OutNext("- query:	  %2.2fms", AIStats.VisQuery.result);
-	font.OutNext("- rayCast:	%2.2fms", AIStats.VisRayTests.result);
+	font.OutNext("AI think:	 %2.5fms, %d", AIStats.Think.result, AIStats.Think.count);
+	font.OutNext("- range:	  %2.5fms, %d", AIStats.Range.result, AIStats.Range.count);
+	font.OutNext("- path:		%2.5fms, %d", AIStats.Path.result, AIStats.Path.count);
+	font.OutNext("- node:		%2.5fms, %d", AIStats.Node.result, AIStats.Node.count);
+	font.OutNext("AI vision:	%2.5fms, %d", AIStats.Vis.result, AIStats.Vis.count);
+	font.OutNext("- query:	  %2.5fms", AIStats.VisQuery.result);
+	font.OutNext("- rayCast:	%2.5fms", AIStats.VisRayTests.result);
 	AIStats.FrameStart();
 }
 

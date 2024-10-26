@@ -29,12 +29,6 @@ int __cdecl main(int argc, char* argv[])
 	}
 	else
 #endif
-
-#ifndef MOD_XDB
-		if (strstr(params, "-pack"))
-#endif
-	{
-#ifndef MOD_COMPRESS
 		if (argc < 2)
 		{
 			console_print("ERROR: u must pass folder name as parameter.");
@@ -52,80 +46,80 @@ int __cdecl main(int argc, char* argv[])
 			Core._destroy();
 			return 3;
 		}
-#endif
 
-		string_path folder;
-		strconcat(sizeof(folder), folder, argv[1], "\\");
-		_strlwr_s(folder, sizeof(folder));
-		console_print("\nCompressing files (%s)...\n", folder);
+	string_path folder;
+	strconcat(sizeof(folder), folder, argv[1], "\\");
+	_strlwr_s(folder, sizeof(folder));
+	console_print("\nCompressing files (%s)...\n", folder);
 
-		FS._initialize(CLocatorAPI::flTargetFolderOnly, folder);
-		FS.append_path("$working_folder$", "", 0, false);
+	FS._initialize(CLocatorAPI::flTargetFolderOnly, folder);
+	FS.append_path("$working_folder$", "", 0, false);
 
-		send_console_prosses = NULL == strstr(params, "-nosend_prosses");
+	send_console_prosses = NULL == strstr(params, "-nosend_prosses");
 
-		auto send = [&](shared_str ltx_name)
+	auto send = [&](shared_str ltx_name)
+	{
+		xrCompressor*& C = xrCompressor::parallel_Compress.emplace_back(new xrCompressor{ ltx_name });
+		C->SetStoreFiles(NULL != strstr(params, "-store"));
+		C->SetFastMode(NULL != strstr(params, "-nocompress"));
+		C->SetTargetName(argv[1]);
+	};
+
+	LPCSTR p = strstr(params, "-ltx");
+	if (0 != p)
+	{
+		string64 ltx_name;
+		sscanf(strstr(params, "-ltx ") + 5, "%[^ ] ", ltx_name);
+
+		console_print("Processing %s...", ltx_name);
+
+		send(ltx_name);
+	}
+	else
+	{
+		fs::path path = fs::current_path();
+		path.append("compress");
+		if (fs::exists(path))
 		{
-			xrCompressor*& C = xrCompressor::parallel_Compress.emplace_back(new xrCompressor{ltx_name});
-			C->SetStoreFiles(NULL != strstr(params, "-store"));
-			C->SetFastMode(NULL != strstr(params, "-nocompress"));
-			C->SetTargetName(argv[1]);
-		};
-
-		LPCSTR p = strstr(params, "-ltx");
-		if (0 != p)
-		{
-			string64 ltx_name;
-			sscanf(strstr(params, "-ltx ") + 5, "%[^ ] ", ltx_name);
-
-			console_print("Processing %s...", ltx_name);
-
-			send(ltx_name);
-		}
-		else
-		{
-			fs::path path = fs::current_path();
-			path.append("compress");
-			if (fs::exists(path))
+			for (const auto& entry : fs::directory_iterator(path))
 			{
-				for (const auto& entry : fs::directory_iterator(path))
-				{
-					fs::path path_ltx = "compress\\";
-					path_ltx.append(entry.path().filename().string());
-			
-					console_print("\nProcessing %s...\n", path_ltx.string().c_str());
-					send(path_ltx.string().c_str());
-				}
+				fs::path path_ltx = "compress\\";
+				path_ltx.append(entry.path().filename().string());
+
+				console_print("\nProcessing %s...\n", path_ltx.string().c_str());
+				send(path_ltx.string().c_str());
 			}
 		}
-
-		tbb::parallel_for_each(xrCompressor::parallel_Compress, [](xrCompressor* compress)
-		{
-			compress->ProcessLTX();
-			compress->PerformWork();
-		});
-
-		for (auto& compress : xrCompressor::parallel_Compress)
-			xr_delete(compress);
-
-		/*LPCSTR p = strstr(params, "-ltx");
-		if (0 != p)
-		{
-			string64 ltx_name;
-			sscanf(strstr(params, "-ltx ") + 5, "%[^ ] ", ltx_name);
-
-			CInifile ini(ltx_name);
-			printf("Processing %s...\n", ltx_name);
-			C.ProcessLTX(ini);
-		}
-		else
-		{
-			string64 header_name;
-			sscanf(strstr(params, "-header ") + 8, "%[^ ] ", header_name);
-			C.SetPackHeaderName(header_name);
-			C.ProcessTargetFolder();
-		}*/
 	}
+
+	tbb::parallel_for_each(xrCompressor::parallel_Compress, [](xrCompressor* compress)
+	{
+		compress->ProcessLTX();
+		compress->PerformWork();
+	});
+
+	for (auto& compress : xrCompressor::parallel_Compress)
+		xr_delete(compress);
+
+	xrCompressorPack::ClearAliases();
+
+	/*LPCSTR p = strstr(params, "-ltx");
+	if (0 != p)
+	{
+		string64 ltx_name;
+		sscanf(strstr(params, "-ltx ") + 5, "%[^ ] ", ltx_name);
+
+		CInifile ini(ltx_name);
+		printf("Processing %s...\n", ltx_name);
+		C.ProcessLTX(ini);
+	}
+	else
+	{
+		string64 header_name;
+		sscanf(strstr(params, "-header ") + 8, "%[^ ] ", header_name);
+		C.SetPackHeaderName(header_name);
+		C.ProcessTargetFolder();
+	}*/
 
 	console_print("--- Total execution time [%3.2f sec, %3.2f min]! ---",
 		time_global.GetElapsed_sec(), time_global.GetElapsed_sec() / 60);

@@ -64,4 +64,4 @@ bool CTorridZone::Disable()
 
 // Lain: added
 bool CTorridZone::light_in_slow_mode() { return false; }
-BOOL CTorridZone::AlwaysTheCrow() { return true; }
+bool CTorridZone::LimitUpdateCL() { return true; }

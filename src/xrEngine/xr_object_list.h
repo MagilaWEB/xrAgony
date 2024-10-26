@@ -38,12 +38,6 @@ private:
 	Objects destroy_queue;
 	Objects objects_active;
 	Objects objects_sleeping;
-	u32 m_owner_thread_id;
-	/**
-	 * @brief m_primary_crows	- list of items of the primary thread
-	 * @brief m_secondary_crows - list of items of the secondary thread
-	 */
-	Objects m_primary_crows, m_secondary_crows;
 	ObjectUpdateStatistics stats;
 	u32 statsFrame;
 
@@ -74,20 +68,20 @@ public:
 	~CObjectList();
 
 	IGameObject* FindObjectByName(shared_str name);
-	IGameObject* FindObjectByName(pcstr name);
+	IGameObject* FindObjectByName(LPCSTR name);
 	IGameObject* FindObjectByCLS_ID(CLASS_ID cls);
 
 	void Load();
 	void Unload();
 
-	IGameObject* Create(pcstr name);
+	IGameObject* Create(LPCSTR name);
 	void Destroy(IGameObject* O);
 
 private:
-	void SingleUpdate(IGameObject* O);
+	void SingleUpdate(IGameObject* O, bool b_forced = false);
 
 public:
-	void Update(bool bForce);
+	void Update(bool bLast = true);
 
 	void net_Register(IGameObject* O);
 	void net_Unregister(IGameObject* O);
@@ -103,11 +97,13 @@ public:
 		return (map_NETID[ID]);
 	}
 
-	void o_crow(IGameObject* O);
 	void o_remove(Objects& v, IGameObject* O);
 	void o_activate(IGameObject* O);
 	void o_sleep(IGameObject* O);
-	IC u32 o_count() { return objects_active.size() + objects_sleeping.size(); };
+	IC u32 o_count()
+	{
+		return objects_active.size() + objects_sleeping.size();
+	};
 	IC IGameObject* o_get_by_iterator(u32 _it)
 	{
 		if (_it < objects_active.size())
@@ -124,15 +120,13 @@ public:
 #endif // #ifdef DEBUG
 
 private:
-	IC Objects& get_crows()
-	{
-		if (xrThread::get_main_id() == m_owner_thread_id)
-			return (m_primary_crows);
+	//IC Objects& get_crows()
+	//{
+	//	if (xrThread::get_main_id() == m_owner_thread_id)
+	//		return (m_primary_crows);
 
-		return (m_secondary_crows);
-	}
-
-	static void clear_crow_vec(Objects& o);
+	//	return (m_secondary_crows);
+	//}
 	static void dump_list(Objects& v, pcstr reason);
 };
 

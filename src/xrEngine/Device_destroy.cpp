@@ -11,6 +11,7 @@ void CRenderDevice::Destroy()
 		return;
 	Log("Destroying Direct3D...");
 	pInput->ClipCursor(false);
+	pInput->ShowCursor(false);
 	::Render->ValidateHW();
 	::DU->OnDeviceDestroy();
 	b_is_Ready.store(false);
@@ -51,7 +52,7 @@ void CRenderDevice::ResetStart()
 	xrCriticalSection::raii mt{ ResetRender };
 	const auto dwWidth_before = dwWidth;
 	const auto dwHeight_before = dwHeight;
-	pInput->ClipCursor(false);
+	//pInput->ClipCursor(false);
 
 	::Render->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
 	GetWindowRect(m_hWnd, &m_rcWindowBounds);
@@ -68,7 +69,7 @@ void CRenderDevice::ResetStart()
 	if (dwWidth_before != dwWidth || dwHeight_before != dwHeight)
 		seqResolutionChanged.Process();
 
-	pInput->ClipCursor(true);
+	//pInput->ClipCursor(true);
 
 	b_restart = false;
 }

@@ -23,8 +23,8 @@ class CSE_Abstract;
 class CInifile;
 
 //-----------------------------------------------------------------------------------------------------------
-#define CROW_RADIUS (30.f)
-#define CROW_RADIUS2 (60.f)
+
+//constexpr float CROW_RADIUS2 = 60.f * 2;
 
 xr_pure_interface IObjectPhysicsCollision;
 
@@ -80,7 +80,6 @@ union GameObjectProperties
 		u32 net_Local : 1;
 		u32 net_Ready : 1;
 		u32 net_SV_Update : 1;
-		u32 crow : 1;
 		u32 bPreDestroy : 1;
 	};
 	u32 storage;
@@ -142,8 +141,6 @@ public:
 #endif
 	virtual u32 GetUpdateFrame() const = 0;
 	virtual void SetUpdateFrame(u32 value) = 0;
-	virtual u32 GetCrowUpdateFrame() const = 0;
-	virtual void SetCrowUpdateFrame(u32 value) = 0;
 // Crow-MODE
 // if (object_is_visible)
 // if (object_is_near)
@@ -151,10 +148,9 @@ public:
 #ifdef DEBUG
 	virtual void DBGGetProps(GameObjectProperties& p) const = 0;
 #endif
-	virtual void MakeMeCrow() = 0;
-	virtual void IAmNotACrowAnyMore() = 0;
-	virtual BOOL AlwaysTheCrow() = 0;
-	virtual bool AmICrow() const = 0;
+
+	virtual bool LimitUpdateCL() = 0;
+	virtual bool LimitFrameUpdateCL() = 0;
 	// Network
 	virtual BOOL Local() const = 0;
 	virtual BOOL Remote() const = 0;
@@ -196,6 +192,8 @@ public:
 	virtual shared_str cNameVisual() const = 0;
 	virtual void cNameVisual_set(shared_str N) = 0;
 	// Properties
+	virtual const float fDeltaT() const = 0;
+	virtual const size_t dwDeltaT() const = 0;
 	virtual void processing_activate() = 0; // request to enable UpdateCL
 	virtual void processing_deactivate() = 0; // request to disable UpdateCL
 	virtual bool processing_enabled() = 0;

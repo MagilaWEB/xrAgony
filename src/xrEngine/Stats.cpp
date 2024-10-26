@@ -113,11 +113,11 @@ void CStats::Show()
 	auto alertPtr = g_bDisableRedText ? nullptr : &alertInstance;
 	if (vtune.enabled())
 	{
-		float sz = font.GetHeight();
+		//float sz = font.GetHeight();
 		font.SetColor(0xFFFF0000);
 		font.OutSet(Device.dwWidth / 2.0f + (font.SizeOf_("--= tune =--") / 2.0f), Device.dwHeight / 2.0f);
 		font.OutNext("--= tune =--");
-		font.SetHeight(sz);
+	//	font.SetHeight(sz);
 	}
 	// Show them
 	if (psDeviceFlags.test(rsStatistic))
@@ -128,11 +128,14 @@ void CStats::Show()
 		font.OutNext("Mapped:		%d", g_file_mapped_memory);
 #endif
 		Device.DumpStatistics(font, alertPtr);
-		font.OutNext("Memory:		%2.2f", fMem_calls);
+		//font.OutNext("Memory:		%2.2f", fMem_calls);
 		if (g_pGameLevel)
 			g_pGameLevel->DumpStatistics(font, alertPtr);
+
 		Engine.Sheduler.DumpStatistics(font, alertPtr);
+
 		g_pGamePersistent->DumpStatistics(font, alertPtr);
+
 		DumpSpatialStatistics(font, alertPtr, *g_SpatialSpace, engineTotal);
 		DumpSpatialStatistics(font, alertPtr, *g_SpatialSpacePhysic, engineTotal);
 		if (physics_world())

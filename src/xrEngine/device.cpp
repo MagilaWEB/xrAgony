@@ -253,16 +253,6 @@ void CRenderDevice::d_SVPRender()
 		if (g_pGameLevel)
 			g_pGameLevel->ActorApplyCamera();
 
-		if (dwPrecacheFrame)
-		{
-			float factor = float(dwPrecacheFrame) / float(dwPrecacheTotal);
-			float angle = PI_MUL_2 * factor;
-			vCameraDirection.set(_sin(angle), 0, _cos(angle));
-			vCameraDirection.normalize();
-			vCameraTop.set(0, 1, 0);
-			vCameraRight.crossproduct(vCameraTop, vCameraDirection);
-			mView.build_camera_dir(vCameraPosition, vCameraDirection, vCameraTop);
-		}
 		// Matrices
 		mInvView.invert(mView);
 		mFullTransform.mul(mProject, mView);
@@ -336,6 +326,8 @@ void CRenderDevice::GlobalUpdate()
 		::Render->SetCacheXform(mView, mProject);
 		mInvFullTransform.invert_44(mFullTransform);
 
+		ViewFromMatrix.CreateFromMatrix(mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
+
 		vCameraPositionSaved = vCameraPosition;
 		vCameraDirectionSaved = vCameraDirection;
 		vCameraTopSaved = vCameraTop;
@@ -355,14 +347,9 @@ void CRenderDevice::GlobalUpdate()
 
 void CRenderDevice::message_loop()
 {
-	ShowWindow(m_hWnd, SW_SHOW);
-
 	PeekMessage(&msg, nullptr, 0U, 0U, PM_NOREMOVE);
 	while (msg.message != WM_QUIT)
 	{
-		if ((!IsQUIT()) && b_restart)
-			ResetStart();
-
 		if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -370,7 +357,59 @@ void CRenderDevice::message_loop()
 			continue;
 		}
 
-		this_thread::sleep_for(30ms);
+		extern ENGINE_API u32 state_screen_mode;
+		if (state_screen_mode != 1)
+		{
+			RECT rect;
+			GetClientRect(m_hWnd, &rect);
+
+			POINT ul;
+			ul.x = rect.left;
+			ul.y = rect.top;
+
+			POINT lr;
+			lr.x = rect.right;
+			lr.y = rect.bottom;
+
+			MapWindowPoints(m_hWnd, nullptr, &ul, 1);
+			MapWindowPoints(m_hWnd, nullptr, &lr, 1);
+
+			rect.left = ul.x;
+			rect.top = ul.y;
+
+			rect.right = lr.x;
+			rect.bottom = lr.y;
+
+			static LPPOINT point = new POINT();
+			::GetCursorPos(point);
+
+			if (point->x < rect.left || point->x > rect.right || point->y < rect.top || point->y > rect.bottom)
+			{
+				if (!b_cursor_on_window.load())
+				{
+					b_cursor_on_window.store(true);
+					pInput->ShowCursor(true);
+					::ShowWindow(m_hWnd, SW_FORCEMINIMIZE);
+					::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
+					ResetStart();
+					::SetCursorPos(point->x, point->y);
+				}
+
+			}
+			else if (b_cursor_on_window.load())
+			{
+				b_cursor_on_window.store(false);
+
+				pInput->ShowCursor(false);
+				::SetForegroundWindow(m_hWnd);
+				::SetCursorPos(point->x, point->y);
+			}
+		}
+
+		if ((!IsQUIT()) && b_restart)
+			ResetStart();
+
+		this_thread::sleep_for(40ms);
 	}
 
 	xrThread::GlobalState(xrThread::dsExit);
@@ -417,7 +456,6 @@ void CRenderDevice::FrameMove()
 }
 
 ENGINE_API BOOL bShowPauseString = TRUE;
-#include "IGame_Persistent.h"
 
 void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 {
@@ -485,16 +523,15 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 	if (isWndActive != b_is_Active.load())
 	{
 		b_is_Active.store(isWndActive);
-		pInput->ClipCursor(isWndActive);
 
 		if (b_is_Active.load())
 		{
 			//Reset();
-			ShowWindow(m_hWnd, SW_SHOW);
+			ShowWindow(m_hWnd, SW_SHOWNORMAL);
 			xrThread::GlobalState(xrThread::dsOK);
 		}
 		else
-			ShowWindow(m_hWnd, SW_MINIMIZE); //Fixes a glitch with some applications when the window does not collapse if you quickly switch to another window.
+			pInput->ShowCursor(false);
 
 		functionPointer.push_back([&]() {
 			seqParallel.clear();

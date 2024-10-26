@@ -55,7 +55,6 @@ static const float base_spu_epsR = 0.05f;
 
 CGameObject::CGameObject() : SpatialBase(g_SpatialSpace), scriptBinder(this)
 {
-	dwFrame_AsCrow = u32(-1);
 	Props.storage = 0;
 	Parent = nullptr;
 	NameObject = nullptr;
@@ -99,21 +98,6 @@ CGameObject::~CGameObject()
 	cNameVisual_set(0);
 	cName_set(0);
 	cNameSect_set(0);
-}
-
-void CGameObject::MakeMeCrow()
-{
-	if (Props.crow)
-		return;
-	if (!processing_enabled())
-		return;
-	u32 const device_frame_id = Device.dwFrame;
-	u32 const object_frame_id = dwFrame_AsCrow;
-	if ((u32)_InterlockedCompareExchange((long*)&dwFrame_AsCrow, device_frame_id, object_frame_id) == device_frame_id)
-		return;
-	VERIFY(dwFrame_AsCrow == device_frame_id);
-	Props.crow = 1;
-	g_pGameLevel->Objects.o_crow(this);
 }
 
 void CGameObject::cName_set(shared_str N) { NameObject = N; }
@@ -566,7 +550,6 @@ BOOL CGameObject::net_Spawn(CSE_Abstract* DC)
 	// reinitialize flags
 	processing_activate();
 	setDestroy(false);
-	MakeMeCrow();
 	// ~
 	m_bObjectRemoved = false;
 	spawn_supplies();
@@ -960,7 +943,6 @@ IGameObject* CGameObject::H_SetParent(IGameObject* new_parent, bool just_before_
 	else
 		OnH_A_Independent(); // after detach
 	// if (Parent) Parent->H_ChildAdd (this);
-	MakeMeCrow();
 	return old_parent;
 }
 
@@ -1034,9 +1016,6 @@ Fvector CGameObject::get_last_local_point_on_mesh(Fvector const& local_point, u1
 
 void CGameObject::renderable_Render()
 {
-	//
-	MakeMeCrow();
-	// ~
 	::Render->set_Transform(&XFORM());
 	::Render->add_Visual(Visual());
 	Visual()->getVisData().hom_frame = Device.dwFrame;
@@ -1141,6 +1120,9 @@ void CGameObject::DestroyObject()
 	}
 }
 
+constexpr float LIMIT_UPDATE_CL_MIN_DIST = 50.f; //Растоние на котором начинаем пропускать кадры.
+constexpr float LIMIT_UPDATE_CL_DIST = LIMIT_UPDATE_CL_MIN_DIST + 800.f;
+constexpr float LIMIT_UPDATE_CL_LMIT_TIME = LIMIT_UPDATE_CL_MIN_DIST / LIMIT_UPDATE_CL_DIST;
 void CGameObject::shedule_Update(u32 dt)
 {
 	//уничтожить
@@ -1155,22 +1137,40 @@ void CGameObject::shedule_Update(u32 dt)
 	// IGameObject::shedule_Update(dt);
 	// consistency check
 	// Msg ("-SUB-:[%x][%s] IGameObject::shedule_Update",dynamic_cast<void*>(this),*cName());
+	if (Visual())
+	{
+		b_test_visual_visible = Device.ViewFromMatrix.testSphere_dirty
+		(
+			Visual()->getVisData().sphere.P,
+			Visual()->getVisData().sphere.R
+		);
+	}
+
+	if (float dist = Device.vCameraPosition.distance_to(Position()) > LIMIT_UPDATE_CL_MIN_DIST)
+	{
+		m_timer_limit_sec = (dist / LIMIT_UPDATE_CL_DIST) - LIMIT_UPDATE_CL_LMIT_TIME;
+		if (!b_test_visual_visible)
+			m_timer_limit_sec *= 3; // Обновлять в 3 раза реже если визуал объекта не видим.
+	}
+	else
+		m_timer_limit_sec = b_test_visual_visible ? .0f : .05f;
+
 	ScheduledBase::shedule_Update(dt);
-	spatial_update(base_spu_epsP * 1, base_spu_epsR * 1);
-	// Always make me crow on shedule-update
-	// Makes sure that update-cl called at least with freq of shedule-update
-	MakeMeCrow();
-	/*
-	if (AlwaysTheCrow()) MakeMeCrow ();
-	else if (Device.vCameraPosition.distance_to_sqr(Position()) < CROW_RADIUS*CROW_RADIUS) MakeMeCrow ();
-	*/
-	// ~
+	spatial_update(base_spu_epsP, base_spu_epsR);
 	scriptBinder.shedule_Update(dt);
 }
 
-BOOL CGameObject::net_SaveRelevant() { return scriptBinder.net_SaveRelevant(); }
+BOOL CGameObject::net_SaveRelevant()
+{
+	return scriptBinder.net_SaveRelevant();
+}
+
 //игровое имя объекта
-LPCSTR CGameObject::Name() const { return (*cName()); }
+LPCSTR CGameObject::Name() const
+{
+	return (*cName());
+}
+
 u32 CGameObject::ef_creature_type() const
 {
 	string16 temp;
@@ -1264,6 +1264,24 @@ void CGameObject::OnChangeVisual()
 		destroy_anim_mov_ctrl();
 }
 
+bool CGameObject::LimitFrameUpdateCL()
+{
+	fDeltaTime = m_timerDeltaUpdateCL.GetElapsed_sec();
+	dwDeltaTime = m_timerDeltaUpdateCL.GetElapsed_ms();
+
+	if (LimitUpdateCL())
+	{
+		if (dwDeltaTime < 1000)
+			return true;
+	}
+	else if (fDeltaTime < m_timer_limit_sec)
+		return true;
+
+	m_timerDeltaUpdateCL.Start();
+
+	return false;
+}
+
 bool CGameObject::shedule_Needed() { return (!getDestroy()); }
 void CGameObject::create_anim_mov_ctrl(CBlend* b, Fmatrix* start_pose, bool local_animation)
 {
@@ -1330,19 +1348,7 @@ void CGameObject::UpdateCL()
 		xrDebug::Fatal(DEBUG_INFO, "Object %s registered as 'collidable' but has no collidable model", *cName());
 #endif
 	spatial_update(base_spu_epsP * 5, base_spu_epsR * 5);
-	// crow
-	if (Parent == g_pGameLevel->CurrentViewEntity() || AlwaysTheCrow())
-		MakeMeCrow();
-	else
-	{
-		float dist = Device.vCameraPosition.distance_to_sqr(Position());
-		if (dist < CROW_RADIUS * CROW_RADIUS)
-			MakeMeCrow();
-		else if ((Visual() && Visual()->getVisData().hom_frame + 2 > Device.dwFrame) &&
-			dist < CROW_RADIUS2 * CROW_RADIUS2)
-			MakeMeCrow();
-	}
-	// ~
+	
 	//	if (!is_ai_obstacle())
 	//		return;
 

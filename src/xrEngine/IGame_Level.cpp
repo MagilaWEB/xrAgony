@@ -55,8 +55,8 @@ IGame_Level::~IGame_Level()
 void IGame_Level::net_Stop()
 {
 	// XXX: why update 6 times?
-	for (int i = 0; i < 6; i++)
-		Objects.Update(false);
+	//for (int i = 0; i < 6; i++) WTF!
+	Objects.Update();
 	// Destroy all objects
 	Objects.Unload();
 	IR_Release();
@@ -157,7 +157,7 @@ void IGame_Level::OnFrame()
 
 	// Update all objects
 	VERIFY(bReady);
-	Objects.Update(false);
+	Objects.Update();
 	g_hud->OnFrame();
 
 	// Ambience

@@ -193,7 +193,7 @@ extern u32 hud_adj_mode;
 
 void CMissile::UpdateCL()
 {
-	m_dwStateTime += Device.dwTimeDelta;
+	m_dwStateTime += dwDeltaT();
 
 	inherited::UpdateCL();
 
@@ -218,7 +218,7 @@ void CMissile::UpdateCL()
 			CActor* actor = smart_cast<CActor*>(H_Parent());
 			if (actor)
 			{
-				m_fThrowForce += (m_fForceGrowSpeed * Device.dwTimeDelta) * .001f;
+				m_fThrowForce += (m_fForceGrowSpeed * dwDeltaT()) * .001f;
 				clamp(m_fThrowForce, m_fMinForce, m_fMaxForce);
 			}
 		}

@@ -1,7 +1,6 @@
 #pragma once
 #include "xrCompressPack.h"
 #include "../xrCore/FTimer.h"
-
 class xrCompressor final
 {
 	CInifile* config_ltx{ nullptr };

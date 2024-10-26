@@ -114,12 +114,12 @@ void CZoneCampfire::StopIdleParticles(bool bIdleLight)
 		inherited::StopIdleParticles(bIdleLight);
 }
 
-BOOL CZoneCampfire::AlwaysTheCrow()
+bool CZoneCampfire::LimitUpdateCL()
 {
 	if (m_turn_time)
-		return TRUE;
+		return true;
 	else
-		return inherited::AlwaysTheCrow();
+		return inherited::LimitUpdateCL();
 }
 
 void CZoneCampfire::UpdateWorkload(u32 dt)

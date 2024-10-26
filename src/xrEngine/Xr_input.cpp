@@ -152,7 +152,7 @@ HRESULT CInput::CreateInputDevice(
 
 void CInput::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 {
-	font.OutNext("*** INPUT:	%2.2fms", pInput->GetStats().FrameTime.result);
+	font.OutNext("*** INPUT:	%2.5fms", pInput->GetStats().FrameTime.result);
 }
 
 void CInput::SetAllAcquire(BOOL bAcquire)
@@ -343,9 +343,9 @@ void CInput::ClipCursor(bool clip)
 {
 	if (clip)
 	{
-		ShowCursor(FALSE);
 		if (!Device.IsQUIT())
 			SetMouseAcquire(TRUE);
+
 		if (Device.m_hWnd)
 		{
 			RECT rect;
@@ -375,10 +375,17 @@ void CInput::ClipCursor(bool clip)
 	{
 		if (!Device.IsQUIT())
 			SetMouseAcquire(FALSE);
-		while (ShowCursor(TRUE) < 0)
-			;
+
 		::ClipCursor(nullptr);
 	}
+}
+
+void CInput::ShowCursor(bool show)
+{
+	if(show)
+		while (::ShowCursor(TRUE) < 0);
+	else
+		while (::ShowCursor(FALSE) >= 0);
 }
 
 void CInput::MouseUpdate()
@@ -578,13 +585,13 @@ void CInput::MouseUpdate()
 		if (offs[2])
 			cbStack.back()->IR_OnMouseWheel(offs[2]);
 	}
-	else
+	/*else
 	{
 		if (timeStamp[1] && ((dwCurTime - timeStamp[1]) >= mouse_property.mouse_dt))
 			cbStack.back()->IR_OnMouseStop(DIMOFS_Y, timeStamp[1] = 0);
 		if (timeStamp[0] && ((dwCurTime - timeStamp[0]) >= mouse_property.mouse_dt))
 			cbStack.back()->IR_OnMouseStop(DIMOFS_X, timeStamp[0] = 0);
-	}
+	}*/
 }
 
 //-------------------------------------------------------

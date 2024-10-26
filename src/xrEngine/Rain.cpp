@@ -293,7 +293,7 @@ void CEffect_Rain::Render()
 	sC.mul (.5f);
 	sR = sC.magnitude();
 	sC.add (pos_trail);
-	if (!::Render->ViewBase.testSphere_dirty(sC,sR)) continue;
+	if (!Device.ViewFromMatrix.testSphere_dirty(sC,sR)) continue;
 
 	static Fvector2 UV[2][4]={
 	{{0,1},{0,0},{1,1},{1,0}},
@@ -355,7 +355,7 @@ void CEffect_Rain::Render()
 	}
 
 	// Render
-	if (::Render->ViewBase.testSphere_dirty(P->bounds.P, P->bounds.R))
+	if (Device.ViewFromMatrix.testSphere_dirty(P->bounds.P, P->bounds.R))
 	{
 	// Build matrix
 	float scale = P->time / particles_time;

@@ -22,6 +22,7 @@ xrCompressorPack::~xrCompressorPack()
 	filesSKIP = 0;
 	filesVFS = 0;
 	filesALIAS = 0;
+	filesFAIL = 0;
 
 	files.clear();
 }
@@ -131,14 +132,16 @@ void xrCompressorPack::CompressFile(LPCSTR path)
 
 				c_size_compressed = c_size_max;
 
-				R_ASSERT(LZO_E_OK ==
-					lzo1x_999_compress(
-						(u8*)src->pointer(), c_size_real, c_data, (lzo_uintp)&c_size_compressed, c_heap));
+				if (compressor->GetFastMode())
+					R_ASSERT(LZO_E_OK == lzo1x_1_compress((u8*)src->pointer(), c_size_real, c_data, (lzo_uintp)&c_size_compressed, c_heap))
+				else
+					R_ASSERT(LZO_E_OK == lzo1x_999_compress((u8*)src->pointer(), c_size_real, c_data, (lzo_uintp)&c_size_compressed, c_heap))
 
 				if ((c_size_compressed + 16) >= c_size_real)
 				{
 					// Failed to compress - revert to VFS
 					filesVFS++;
+					filesFAIL++;
 					c_size_compressed = c_size_real;
 					fs_pack_writer->w(src->pointer(), c_size_real);
 					if (send_console_prosses)
@@ -151,8 +154,7 @@ void xrCompressorPack::CompressFile(LPCSTR path)
 					{
 						u8* c_out = xr_alloc<u8>(c_size_real);
 						size_t c_orig = c_size_real;
-						R_ASSERT(
-							LZO_E_OK == lzo1x_optimize(c_data, c_size_compressed, c_out, (lzo_uintp)&c_orig, NULL));
+						R_ASSERT(LZO_E_OK == lzo1x_optimize(c_data, c_size_compressed, c_out, (lzo_uintp)&c_orig, NULL));
 						R_ASSERT(c_orig == c_size_real);
 						xr_free(c_out);
 					} // bnoFast
@@ -191,6 +193,7 @@ void xrCompressorPack::CompressFile(LPCSTR path)
 		R.c_ptr = c_ptr;
 		R.c_size_real = c_size_real;
 		R.c_size_compressed = c_size_compressed;
+		FastLock::raii mt{ lock_aliases };
 		aliases.insert(std::make_pair(R.c_size_real, R));
 	}
 
@@ -291,23 +294,25 @@ bool xrCompressorPack::testVFS(LPCSTR path) const
 
 xrCompressorPack::ALIAS* xrCompressorPack::testALIAS(IReader* base, size_t crc)
 {
+	FastLock::raii mt{ lock_aliases };
 	auto I = aliases.lower_bound(base->length());
 
 	while (I != aliases.end() && (I->first == base->length()))
 	{
 		if (I->second.crc == crc)
 		{
-			bool res = false;
 			IReader* test = FS.r_open(I->second.path);
 
 			if (test->length() == base->length())
+			{
 				if (0 == memcmp(test->pointer(), base->pointer(), base->length()))
-					res = true;
+				{
+					FS.r_close(test);
+					return &I->second;
+				}
+			}
 
 			FS.r_close(test);
-
-			if (res)
-				return &I->second;
 		}
 		I++;
 	}
@@ -348,6 +353,7 @@ void xrCompressorPack::OpenPack(size_t num)
 	filesSKIP = 0;
 	filesVFS = 0;
 	filesALIAS = 0;
+	filesFAIL = 0;
 
 	timer.Start();
 
@@ -402,11 +408,7 @@ void xrCompressorPack::ClosePack()
 	FS.w_close(fs_pack_writer);
 	console_print("\nPack saved.");
 
-	console_print("\n\nFiles total/skipped/No compression/aliased: %d/%d/%d/%d\nOveral: %dK/%dK, %3.1f%%\nElapsed time[%3.2f sec]\n",
-		filesTOTAL.load(), filesSKIP.load(), filesVFS.load(), filesALIAS.load(), bytesDST.load() / 1024, bytesSRC.load() / 1024,
+	console_print("\n\nFiles total/skipped/No compression/aliased/fail compress: %d/%d/%d/%d/%d\nOveral: %dK/%dK, %3.1f%%\nElapsed time[%3.2f sec]\n",
+		filesTOTAL.load(), filesSKIP.load(), filesVFS.load(), filesALIAS.load(), filesFAIL.load(), bytesDST.load() / 1024, bytesSRC.load() / 1024,
 		100.f * float(bytesDST.load()) / float(bytesSRC.load()), timer.GetElapsed_sec());
-
-	for (auto& it : aliases)
-		xr_free(it.second.path);
-	aliases.clear();
 }

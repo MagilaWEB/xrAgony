@@ -213,7 +213,7 @@ void CHangingLamp::UpdateCL()
 
 	if (Alive() && light_render->get_active())
 	{
-		if (Visual() && Render->ViewBase.testSphere_dirty(spatial.sphere.P, spatial.sphere.R + light_render->get_homdata().sphere.R))
+		if (Visual() && Device.ViewFromMatrix.testSphere_dirty(spatial.sphere.P, spatial.sphere.R + light_render->get_homdata().sphere.R))
 			PKinematics(Visual())->CalculateBones();
 
 		// update T&R from light (main) bone
@@ -256,7 +256,7 @@ void CHangingLamp::UpdateCL()
 		if (lanim)
 		{
 			int frame;
-			u32 clr = lanim->CalculateBGR(Device.fTimeGlobal, frame); // возвращает в формате BGR
+			u32 clr = lanim->CalculateBGR(fDeltaT(), frame); // возвращает в формате BGR
 			Fcolor fclr;
 			fclr.set((float)color_get_B(clr), (float)color_get_G(clr), (float)color_get_R(clr), 1.f);
 			fclr.mul_rgb(fBrightness / 255.f);

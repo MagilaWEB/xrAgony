@@ -289,9 +289,9 @@ void CTorch::UpdateCL()
 		if (H_Parent()->XFORM().c.distance_to_sqr(Device.vCameraPosition) < _sqr(OPTIMIZATION_DISTANCE) || GameID() != eGameIDSingle)
 		{
 			// near camera
-			PKinematics(H_Parent()->Visual())->CalculateBones();
+			//PKinematics(H_Parent()->Visual())->CalculateBones();
 			PKinematics(H_Parent()->Visual())->CalculateBones(
-				!!Render->ViewBase.testSphere_dirty(H_Parent()->GetSpatialData().sphere.P,
+				!!Device.ViewFromMatrix.testSphere_dirty(H_Parent()->GetSpatialData().sphere.P,
 					H_Parent()->GetSpatialData().sphere.R + spatial.sphere.R + light_render->get_homdata().sphere.R)
 			);
 			M.mul_43(XFORM(), BI.mTransform);

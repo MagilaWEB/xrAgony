@@ -66,7 +66,7 @@ void CRender::render_main(bool deffered)
 				lstRenderables,
 				ISpatial_DB::O_ORDERED,
 				STYPE_RENDERABLE + STYPE_RENDERABLESHADOW + STYPE_PARTICLE + STYPE_LIGHTSOURCE,
-				ViewBase
+				Device.ViewFromMatrix
 			);
 
 			// (almost) Exact sorting order (front-to-back)
@@ -114,7 +114,7 @@ void CRender::render_main(bool deffered)
 			PortalTraverser.traverse
 			(
 				pLastSector,
-				ViewBase,
+				Device.ViewFromMatrix,
 				Device.vCameraPosition,
 				Device.mFullTransform,
 				CPortalTraverser::VQ_HOM + CPortalTraverser::VQ_SSA + CPortalTraverser::VQ_FADE
@@ -128,7 +128,7 @@ void CRender::render_main(bool deffered)
 			if (dont_test_sectors)
 			{
 				CSector* sector = reinterpret_cast<CSector*>(Sectors[0]);
-				set_Frustum(&ViewBase);
+				set_Frustum(&Device.ViewFromMatrix);
 				add_Geometry(sector->root());
 			}
 			else
@@ -242,6 +242,7 @@ void CRender::render_main(bool deffered)
 										//dbg_text_renderer(spatial->spatial.sphere.P);
 									}
 								}
+
 								if (spatial_data.sphere.R > 1.f)
 								{
 									// Rendering
@@ -250,7 +251,7 @@ void CRender::render_main(bool deffered)
 									set_Object(nullptr);
 								}
 							}
-							if (spatial_data.sphere.R <= 1.f)
+							else if (spatial_data.sphere.R <= 1.f)
 							{
 								// Rendering
 								set_Object(renderable);
@@ -302,6 +303,7 @@ void CRender::render_main(bool deffered)
 											//dbg_text_renderer(spatial->spatial.sphere.P);
 										}
 									}
+
 									if (spatial_data.sphere.R > 1.f)
 									{
 										// Rendering
@@ -310,7 +312,7 @@ void CRender::render_main(bool deffered)
 										set_Object(nullptr);
 									}
 								}
-								if (spatial_data.sphere.R <= 1.f)
+								else if (spatial_data.sphere.R <= 1.f)
 								{
 									// Rendering
 									set_Object(renderable);
@@ -372,12 +374,11 @@ void CRender::Render()
 		(u_diffuse2s(sunColor.r, sunColor.g, sunColor.b) > EPS);
 
 	// HOM
-	ViewBase.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	View = 0;
 	if (!ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))
 	{
 		HOM.Enable();
-		HOM.Render(ViewBase);
+		HOM.Render(Device.ViewFromMatrix);
 	}
 
 	//******* Z-prefill calc - DEFERRER RENDERER

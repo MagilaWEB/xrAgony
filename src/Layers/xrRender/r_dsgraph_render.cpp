@@ -439,9 +439,8 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	RImplementation.marker++; // !!! critical here
 
 	// Save and build new frustum, disable HOM
-	CFrustum ViewSave = ViewBase;
-	ViewBase = *_frustum;
-	View = &ViewBase;
+	CFrustum ViewSave = Device.ViewFromMatrix;
+	View = &(Device.ViewFromMatrix = *_frustum);
 
 	if (_precise_portals && RImplementation.rmPortals)
 	{
@@ -459,7 +458,7 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	}
 
 	// Traverse sector/portal structure
-	PortalTraverser.traverse(_sector, ViewBase, _cop, mCombined, 0);
+	PortalTraverser.traverse(_sector, Device.ViewFromMatrix, _cop, mCombined, 0);
 
 	// Determine visibility for static geometry hierrarhy
 	for (u32 s_it = 0; s_it < PortalTraverser.r_sectors.size(); s_it++)
@@ -483,7 +482,7 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 			lstRenderables,
 			ISpatial_DB::O_ORDERED,
 			STYPE_RENDERABLE + STYPE_RENDERABLESHADOW,
-			ViewBase
+			Device.ViewFromMatrix
 		);
 
 		// Determine visibility for dynamic part of scene
@@ -530,7 +529,7 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	}
 
 	// Restore
-	ViewBase = ViewSave;
+	Device.ViewFromMatrix = ViewSave;
 	View = nullptr;
 }
 

@@ -631,7 +631,7 @@ void LevelGraphDebugRender::DrawNodes()
 		if (Device.vCameraPosition.distance_to(vertexPos) > 30)
 			continue;
 		float sr = levelGraph->header().cell_size();
-		if (::Render->ViewBase.testSphere_dirty(vertexPos, sr))
+		if (Device.ViewFromMatrix.testSphere_dirty(vertexPos, sr))
 		{
 			u32 colorC = color_xrgb(0, 0, 255);
 			u32 colorT = color_xrgb(255, 255, 255);

@@ -19,7 +19,7 @@ public:
 	CMissile();
 	virtual ~CMissile();
 
-	virtual BOOL AlwaysTheCrow() { return TRUE; }
+	virtual bool LimitUpdateCL() { return false; }
 	virtual void render_item_ui();
 	virtual bool render_item_ui_query();
 

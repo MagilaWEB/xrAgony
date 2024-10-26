@@ -88,7 +88,7 @@ void CTextConsole::CreateLogWnd()
 	//---------------------------------------------------------------------------
 	R_ASSERT2(m_hLogWnd, "Unable to Create TextConsole Window!");
 	//---------------------------------------------------------------------------
-	ShowWindow(m_hLogWnd, SW_SHOW);
+	ShowWindow(m_hLogWnd, SW_SHOWNORMAL);
 	UpdateWindow(m_hLogWnd);
 	//-----------------------------------------------
 	LOGFONT lf;
@@ -144,7 +144,7 @@ void CTextConsole::Initialize()
 	CreateConsoleWnd();
 	CreateLogWnd();
 
-	ShowWindow(m_hConsoleWnd, SW_SHOW);
+	ShowWindow(m_hConsoleWnd, SW_SHOWNORMAL);
 	UpdateWindow(m_hConsoleWnd);
 
 	m_server_info.ResetData();

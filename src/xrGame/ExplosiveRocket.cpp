@@ -66,12 +66,9 @@ void CExplosiveRocket::OnH_B_Independent(bool just_before_destroy)
 void CExplosiveRocket::UpdateCL()
 {
 	if (eCollide == m_eState)
-	{
 		CExplosive::UpdateCL();
-		inherited::UpdateCL();
-	}
-	else
-		inherited::UpdateCL();
+
+	inherited::UpdateCL();
 }
 
 void CExplosiveRocket::OnEvent(NET_Packet& P, u16 type)

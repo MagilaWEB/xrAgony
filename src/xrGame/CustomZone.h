@@ -300,7 +300,7 @@ public:
 	virtual bool register_schedule() const { return true; }
 	// optimization FAST/SLOW mode
 public:
-	virtual BOOL AlwaysTheCrow();
+	virtual bool LimitUpdateCL();
 	void o_switch_2_fast();
 	void o_switch_2_slow();
 

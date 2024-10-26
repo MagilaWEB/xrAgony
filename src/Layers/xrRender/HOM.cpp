@@ -111,13 +111,10 @@ void CHOM::Load()
 	bEnabled = TRUE;
 	S->close();
 	FS.r_close(fs);
-
-	mt_update.Init([this]() { frame_update(); }, xrThread::sParalelRender);
 }
 
 void CHOM::Unload()
 {
-	mt_update.Stop();
 	xr_delete(m_pModel);
 	xr_free(m_pTris);
 	bEnabled = FALSE;
@@ -225,21 +222,6 @@ void CHOM::Render_DB(CFrustum& base)
 	}
 }
 
-void CHOM::frame_update()
-{
-	if (Device.ActiveMain())
-		return;
-	MT.Enter();
-	if (MT_frame_rendered != Device.dwFrame)
-	{
-		CFrustum ViewBase;
-		ViewBase.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
-		Enable();
-		Render(ViewBase);
-	}
-	MT.Leave();
-}
-
 void CHOM::Render(CFrustum& base)
 {
 	if (!bEnabled)
@@ -249,7 +231,6 @@ void CHOM::Render(CFrustum& base)
 	Raster.clear();
 	Render_DB(base);
 	Raster.propagade();
-	MT_frame_rendered = Device.dwFrame;
 	stats.Total.End();
 }
 
@@ -380,7 +361,7 @@ void CHOM::Enable() { bEnabled = m_pModel ? TRUE : FALSE; }
 void CHOM::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 {
 	stats.FrameEnd();
-	font.OutNext("HOM:		  %2.2fms, %u", stats.Total.result, stats.Total.count);
+	font.OutNext("HOM:		  %2.5fms, %u", stats.Total.result, stats.Total.count);
 	font.OutNext("- visible:	%u", stats.VisibleTriangleCount);
 	font.OutNext("- frustum:	%u", stats.FrustumTriangleCount);
 	font.OutNext("- total:	  %d", m_pModel ? m_pModel->get_tris_count() : 0);

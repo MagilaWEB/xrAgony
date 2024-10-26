@@ -7,25 +7,26 @@ bool CRenderDevice::on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 	{
 	case WM_SYSKEYDOWN:
 	{
-		return true;
+		return false;
 	}
 	case WM_SETFOCUS:
 	{
-		return (false);
+		return false;
 	}
 	case WM_KILLFOCUS:
 	{
-		return (true);
+		result = 1;
+		return true;
 	}
 	case WM_ACTIVATE:
 	{
 		OnWM_Activate(wParam, lParam);
-		return (false);
+		return false;
 	}
 	case WM_SETCURSOR:
 	{
 		result = 1;
-		return (true);
+		return true;
 	}
 	case WM_SYSCOMMAND:
 	{
@@ -37,7 +38,7 @@ bool CRenderDevice::on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 		case SC_MAXIMIZE:
 		case SC_MONITORPOWER: result = 1; return (true);
 		}
-		return (false);
+		return false;
 	}
 	case WM_CLOSE:
 	{
@@ -50,9 +51,9 @@ bool CRenderDevice::on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 			Engine.Event.Defer("KERNEL:disconnect");
 			Engine.Event.Defer("KERNEL:quit");
 			result = 1;
-			return (false);
+			return false;
 		}
-		return (true);
+		return true;
 	}
 	}
 

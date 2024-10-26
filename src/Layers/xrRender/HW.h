@@ -64,9 +64,6 @@ public:
 	virtual void OnAppDeactivate();
 
 	int maxRefreshRate = 200; //ECO_RENDER add
-
-	private:
-		bool m_move_window = true;
 };
 
 extern ECORE_API CHW HW;

@@ -50,7 +50,7 @@ void CRenderDevice::Initialize()
 
 void CRenderDevice::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 {
-	font.OutNext("*** ENGINE:	%2.2fms", stats.EngineTotal.result);
+	font.OutNext("*** ENGINE:	%2.5fms", stats.EngineTotal.result);
 	font.OutNext("FPS/RFPS:	 %3.1f/%3.1f", stats.fFPS, stats.fRFPS);
 	font.OutNext("TPS:		  %2.2f M", stats.fTPS);
 	if (alert && stats.fFPS < 30)

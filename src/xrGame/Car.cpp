@@ -428,7 +428,11 @@ void CCar::UpdateEx(float fov)
 	}
 }
 
-BOOL CCar::AlwaysTheCrow() { return (m_car_weapon && m_car_weapon->IsActive()); }
+bool CCar::LimitUpdateCL()
+{
+	return (m_car_weapon && m_car_weapon->IsActive());
+}
+
 void CCar::UpdateCL()
 {
 	inherited::UpdateCL();

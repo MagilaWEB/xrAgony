@@ -52,13 +52,11 @@ ENGINE_API std::string dbg_object_visual_geom_dump_string(const IGameObject* obj
  u32 net_Local : 1;
  u32 net_Ready : 1;
  u32 net_SV_Update : 1;
- u32 crow : 1;
  u32 bPreDestroy : 1;
  };
  u32 dbg_update_cl;
  #endif
  u32 dwFrame_UpdateCL;
- u32 dwFrame_AsCrow;
  */
 ENGINE_API std::string dbg_object_props_dump_string(const IGameObject* obj)
 {
@@ -69,21 +67,19 @@ ENGINE_API std::string dbg_object_props_dump_string(const IGameObject* obj)
 	const char* format =
 		" "
 		"net_ID :%d, bActiveCounter :%d, bEnabled :%s, bVisible :%s, bDestroy :%s, \n "
-		"net_Local %s, net_Ready :%s, net_SV_Update :%s, crow :%s, bPreDestroy : %s \n "
-		"dbg_update_cl: %d, dwFrame_UpdateCL: %d, dwFrame_AsCrow :%d, Device.dwFrame :%d, Device.dwTimeGlobal: %d \n";
+		"net_Local %s, net_Ready :%s, net_SV_Update :%s, bPreDestroy : %s \n "
+		"dbg_update_cl: %d, dwFrame_UpdateCL: %d, Device.dwFrame :%d, Device.dwTimeGlobal: %d \n";
 	auto enabled = get_string(bool(!!props.bEnabled)).c_str();
 	auto visible = get_string(bool(!!props.bVisible)).c_str();
 	auto destroy = get_string(bool(!!props.bDestroy)).c_str();
 	auto netLocal = get_string(bool(!!props.net_Local)).c_str();
 	auto netReady = get_string(bool(!!props.net_Ready)).c_str();
 	auto netSvUpdate = get_string(bool(!!props.net_SV_Update)).c_str();
-	auto crow = get_string(bool(!!props.crow)).c_str();
 	auto preDestroy = get_string(bool(!!props.bPreDestroy)).c_str();
 	auto updateFrameDbg = obj->GetDbgUpdateFrame();
 	auto updateFrame = obj->GetUpdateFrame();
-	auto updateFrameCrow = obj->GetCrowUpdateFrame();
 	return make_string(format, props.net_ID, props.bActiveCounter, enabled, visible, destroy, netLocal, netReady,
-		netSvUpdate, crow, preDestroy, updateFrameDbg, updateFrame, updateFrameCrow, Device.dwFrame,
+		netSvUpdate, preDestroy, updateFrameDbg, updateFrame, Device.dwFrame,
 		Device.dwTimeGlobal);
 }
 ENGINE_API std::string dbg_object_full_dump_string(const IGameObject* obj)

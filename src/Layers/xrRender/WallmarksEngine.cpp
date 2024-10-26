@@ -402,7 +402,7 @@ void CWallmarksEngine::Render()
 		for (auto &w_it : slot->static_items)
 		{
 			static_wallmark* W = w_it;
-			if (RImplementation.ViewBase.testSphere_dirty(W->bounds.P, W->bounds.R))
+			if (Device.ViewFromMatrix.testSphere_dirty(W->bounds.P, W->bounds.R))
 			{
 				RImplementation.BasicStats.StaticWMCount++;
 				float dst = Device.vCameraPosition.distance_to_sqr(W->bounds.P);
