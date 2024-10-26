@@ -317,7 +317,7 @@ void CPoltergeist::UpdateCL()
 	update_detection();
 	inherited::UpdateCL();
 
-	def_lerp(m_height, target_height, m_height_change_velocity, client_update_fdelta());
+	def_lerp(m_height, target_height, m_height_change_velocity, fDeltaT());
 
 	ability()->update_frame();
 

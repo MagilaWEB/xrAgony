@@ -332,7 +332,7 @@ void CMovementManager::on_frame(CPHMovementControl* movement_control, Fvector& d
 	if (enabled() && (m_path_state != ePathStatePathVerification) && (m_path_state != ePathStatePathCompleted))
 		update_path();
 
-	move_along_path(movement_control, dest_position, object().client_update_fdelta());
+	move_along_path(movement_control, dest_position, object().fDeltaT());
 }
 
 void CMovementManager::on_travel_point_change(const u32& previous_travel_point_index)

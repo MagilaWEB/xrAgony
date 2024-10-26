@@ -466,7 +466,7 @@ void CWeaponMagazined::OnStateSwitch(u32 S, u32 oldState)
 void CWeaponMagazined::UpdateCL()
 {
 	inherited::UpdateCL();
-	float dt = Device.fTimeDelta;
+	float dt = fDeltaT();
 
 	//когда происходит апдейт состояния оружия
 	//ничего другого не делать

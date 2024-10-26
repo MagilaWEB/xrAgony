@@ -66,7 +66,7 @@ void CGraviArtefact::UpdateCLChild()
 			if (Level().ObjectSpace.RayPick(Position(), dir, m_fJumpHeight, collide::rqtBoth, RQ, this))
 			{
 				dir.y = 1.f;
-				m_pPhysicsShell->applyImpulse(dir, 30.f * Device.fTimeDelta * m_pPhysicsShell->getMass());
+				m_pPhysicsShell->applyImpulse(dir, 30.f * fDeltaT() * m_pPhysicsShell->getMass());
 			}
 		}
 	}

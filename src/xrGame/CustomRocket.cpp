@@ -499,7 +499,7 @@ void CCustomRocket::UpdateEngine()
 		return;
 	}
 
-	m_dwEngineTime -= Device.dwTimeDelta;
+	m_dwEngineTime -= dwDeltaT();
 }
 
 //////////////////////////////////////////////////////////////////////////

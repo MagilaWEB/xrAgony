@@ -297,6 +297,7 @@ void CAI_Crow::Die(IGameObject* who)
 	const CGameObject* who_object = smart_cast<const CGameObject*>(who);
 	callback(GameObject::eDeath)(lua_game_object(), who_object ? who_object->lua_game_object() : 0);
 };
+
 void CAI_Crow::UpdateWorkload(float fdt)
 {
 	if (o_workload_frame == Device.dwFrame)
@@ -309,9 +310,10 @@ void CAI_Crow::UpdateWorkload(float fdt)
 	case eDeathFall: state_DeathFall(); break;
 	}
 }
+
 void CAI_Crow::UpdateCL()
 {
-	inherited::UpdateCL();
+	__super::UpdateCL();
 #ifdef DEBUG
 	VERIFY2(valid_pos(Position()), dbg_valide_pos_string(Position(), this, " CAI_Crow::UpdateCL		()"));
 #endif

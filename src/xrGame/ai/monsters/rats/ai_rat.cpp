@@ -482,7 +482,7 @@ void CAI_Rat::UpdateCL()
 	if (!Useful())
 	{
 		inherited::UpdateCL();
-		Exec_Look(Device.fTimeDelta);
+		Exec_Look(fDeltaT());
 
 		CMonsterSquad* squad = monster_squad().get_squad(this);
 

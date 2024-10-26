@@ -232,6 +232,14 @@ CActor::~CActor()
 	xr_delete(m_night_vision);
 }
 
+bool CActor::LimitFrameUpdateCL()
+{
+	fDeltaTime = m_timerDeltaUpdateCL.GetElapsed_sec();
+	dwDeltaTime = m_timerDeltaUpdateCL.GetElapsed_ms();
+	m_timerDeltaUpdateCL.Start();
+	return false;
+}
+
 void CActor::reinit()
 {
 	character_physics_support()->movement()->CreateCharacter();
@@ -871,12 +879,12 @@ void CActor::UpdateCL()
 			}
 			*/
 		}
-		g_cl_Orientate(mstate_real, Device.fTimeDelta);
-		g_Orientate(mstate_real, Device.fTimeDelta);
+		g_cl_Orientate(mstate_real, fDeltaT());
+		g_Orientate(mstate_real, fDeltaT());
 
-		g_Physics(NET_SavedAccel, NET_Jump, Device.fTimeDelta);
+		g_Physics(NET_SavedAccel, NET_Jump, fDeltaT());
 
-		g_cl_ValidateMState(Device.fTimeDelta, mstate_wishful);
+		g_cl_ValidateMState(fDeltaT(), mstate_wishful);
 		g_SetAnimation(mstate_real);
 
 		// Check for game-contacts
@@ -892,7 +900,7 @@ void CActor::UpdateCL()
 		// Dropping
 		if (b_DropActivated)
 		{
-			f_DropPower += Device.fTimeDelta * 0.1f;
+			f_DropPower += fDeltaT() * 0.1f;
 			clamp(f_DropPower, 0.f, 1.f);
 		}
 		else
@@ -953,7 +961,7 @@ void CActor::UpdateCL()
 		}
 	}
 
-	UpdateInventoryOwner(Device.dwTimeDelta);
+	UpdateInventoryOwner(dwDeltaT());
 
 	if (m_feel_touch_characters > 0)
 	{
@@ -971,9 +979,10 @@ void CActor::UpdateCL()
 	if (m_holder)
 		m_holder->UpdateEx(currentFOV());
 
-	m_snd_noise -= 0.3f * Device.fTimeDelta;
+	m_snd_noise -= 0.3f * fDeltaT();
 
-	inherited::UpdateCL();
+	__super::UpdateCL();
+
 	m_pPhysics_support->in_UpdateCL();
 
 	if (g_Alive())
@@ -985,7 +994,7 @@ void CActor::UpdateCL()
 	SetZoomAimingMode(false);
 	CWeapon* pWeapon = smart_cast<CWeapon*>(inventory().ActiveItem());
 
-	cam_Update(float(Device.dwTimeDelta) / 1000.0f, currentFOV());
+	cam_Update(fDeltaT(), currentFOV());
 
 	if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
 	{

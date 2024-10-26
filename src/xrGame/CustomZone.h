@@ -128,8 +128,8 @@ protected:
 	EZoneState m_eZoneState;
 
 	//текущее время пребывания зоны в определенном состоянии
-	int m_iStateTime;
-	int m_iPreviousStateTime;
+	u32 m_iStateTime;
+	u32 m_iPreviousStateTime;
 
 	u32 m_TimeToDisable;
 	u32 m_TimeToEnable;

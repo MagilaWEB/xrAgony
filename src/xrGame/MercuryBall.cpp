@@ -40,7 +40,7 @@ void CMercuryBall::UpdateCLChild()
 				Fvector dir;
 				dir.set(::Random.randF(-0.5f, 0.5f), 0.0f, ::Random.randF(-0.5f, 0.5f));
 				m_pPhysicsShell->applyImpulse(
-					dir, ::Random.randF(m_fImpulseMin, m_fImpulseMax) * Device.fTimeDelta * m_pPhysicsShell->getMass());
+					dir, ::Random.randF(m_fImpulseMin, m_fImpulseMax) * fDeltaT() * m_pPhysicsShell->getMass());
 			}
 		}
 	}

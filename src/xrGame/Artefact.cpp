@@ -171,7 +171,7 @@ void CArtefact::UpdateCL()
 	inherited::UpdateCL();
 
 	if (o_fastmode || m_activationObj)
-		UpdateWorkload(Device.dwTimeDelta);
+		UpdateWorkload();
 }
 
 void CArtefact::Interpolate()
@@ -192,7 +192,7 @@ void CArtefact::Interpolate()
 	}
 }
 
-void CArtefact::UpdateWorkload(u32 dt)
+void CArtefact::UpdateWorkload()
 {
 	VERIFY(!physics_world()->Processing());
 	// particles - velocity
@@ -238,8 +238,9 @@ void CArtefact::shedule_Update(u32 dt)
 		else
 			o_switch_2_slow();
 	}
+
 	if (!o_fastmode)
-		UpdateWorkload(dt);
+		UpdateWorkload();
 
 	if (!H_Parent() && m_detectorObj)
 	{

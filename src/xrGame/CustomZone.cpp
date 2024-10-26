@@ -419,7 +419,7 @@ bool CCustomZone::AccumulateState()
 void CCustomZone::UpdateWorkload(u32 dt)
 {
 	m_iPreviousStateTime = m_iStateTime;
-	m_iStateTime += (int)dt;
+	m_iStateTime += dt;
 
 	if (!IsEnabled())
 	{
@@ -467,7 +467,7 @@ void CCustomZone::UpdateCL()
 {
 	inherited::UpdateCL();
 	if (m_zone_flags.test(eFastMode))
-		UpdateWorkload(Device.dwTimeDelta);
+		UpdateWorkload(dwDeltaT());
 }
 
 // called as usual

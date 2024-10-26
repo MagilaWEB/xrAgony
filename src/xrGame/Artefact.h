@@ -27,7 +27,7 @@ public:
 
 	virtual void UpdateCL();
 	virtual void shedule_Update(u32 dt);
-	void UpdateWorkload(u32 dt);
+	void UpdateWorkload();
 
 	virtual bool CanTake() const;
 

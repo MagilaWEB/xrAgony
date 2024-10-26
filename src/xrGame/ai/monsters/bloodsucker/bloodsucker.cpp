@@ -585,7 +585,7 @@ void CAI_Bloodsucker::UpdateCL()
 	if (g_Alive())
 	{
 		// update vampire need
-		m_vampire_want_value += m_vampire_want_speed * client_update_fdelta();
+		m_vampire_want_value += m_vampire_want_speed * fDeltaT();
 		clamp(m_vampire_want_value, 0.f, 1.f);
 	}
 }

@@ -203,9 +203,6 @@ void CCustomMonster::reinit()
 	movement().reinit();
 	sound().reinit();
 
-	m_client_update_delta = 0;
-	m_last_client_update_time = Device.dwTimeGlobal;
-
 	eye_pp_stage = 0;
 	m_dwLastUpdateTime = 0xffffffff;
 	m_tEyeShift.set(0, 0, 0);
@@ -415,16 +412,13 @@ void CCustomMonster::net_update::lerp(CCustomMonster::net_update& A, CCustomMons
 void CCustomMonster::update_sound_player()
 {
 	START_PROFILE("CustomMonster/client_update/sound_player")
-		sound().update(client_update_fdelta());
+		sound().update(fDeltaT());
 	STOP_PROFILE
 }
 
 void CCustomMonster::UpdateCL()
 {
 	START_PROFILE("CustomMonster/client_update")
-		m_client_update_delta = (u32)std::min(Device.dwTimeGlobal - m_last_client_update_time, u32(100));
-	m_last_client_update_time = Device.dwTimeGlobal;
-
 #ifdef DEBUG
 	if (animation_movement())
 		animation_movement()->DBG_verify_position_not_chaged();

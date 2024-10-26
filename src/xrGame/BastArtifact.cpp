@@ -133,7 +133,7 @@ void CBastArtefact::UpdateCLChild()
 
 	//современем энергия по немногу тоже уменьшается
 	if (m_fEnergy > 0)
-		m_fEnergy -= m_fEnergyDecreasePerTime * Device.fTimeDelta;
+		m_fEnergy -= m_fEnergyDecreasePerTime * fDeltaT();
 
 	if (getVisible() && m_pPhysicsShell)
 	{
@@ -172,7 +172,7 @@ void CBastArtefact::UpdateCLChild()
 				dir.sub(this->Position());
 				dir.y += ::Random.randF(-0.05f, 0.5f);
 
-				m_pPhysicsShell->applyImpulse(dir, m_fStrikeImpulse * Device.fTimeDelta * m_pPhysicsShell->getMass());
+				m_pPhysicsShell->applyImpulse(dir, m_fStrikeImpulse * fDeltaT() * m_pPhysicsShell->getMass());
 			}
 			else
 			{

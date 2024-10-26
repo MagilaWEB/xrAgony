@@ -436,7 +436,7 @@ void CHelicopter::UpdateCL()
 
 	m_movement.Update();
 
-	m_stepRemains += Device.fTimeDelta;
+	m_stepRemains += fDeltaT();
 	while (m_stepRemains > STEP)
 	{
 		MoveStep();

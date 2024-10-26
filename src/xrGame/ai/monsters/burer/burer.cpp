@@ -288,9 +288,7 @@ void CBurer::UpdateGraviObject()
 		return;
 	}
 
-	float dt = float(Device.dwTimeGlobal - m_gravi_object.time_last_update);
-	float dist = dt * float(m_gravi.speed) / 1000.f;
-
+	float dist = dwDeltaT() * float(m_gravi.speed) / 1000.f;
 	if (dist < m_gravi.step)
 		return;
 
@@ -384,11 +382,9 @@ void CBurer::UpdateGraviObject()
 	Fvector snd_pos = m_gravi_object.cur_pos;
 	snd_pos.y += 0.5f;
 	if (sound_gravi_wave._feedback())
-	{
 		sound_gravi_wave.set_position(snd_pos);
-	}
 	else
-		::Sound->play_at_pos(sound_gravi_wave, 0, snd_pos);
+		::Sound->play_at_pos(sound_gravi_wave, nullptr, snd_pos);
 }
 
 void CBurer::UpdateCL()
