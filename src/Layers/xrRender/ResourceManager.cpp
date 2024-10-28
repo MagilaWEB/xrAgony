@@ -400,12 +400,25 @@ CTexture* CResourceManager::_CreateTexture(LPCSTR _Name)
 
 	T->Preload();
 
-	task_louding_textures.run([T]
+	task_louding_textures.run([this, Name]
 	{
 		while (!Device.b_is_Ready.load())
 			std::this_thread::yield();
 
-		T->Load();
+		size_t it{ 0 };
+		do
+		{
+			auto texture_it = m_textures.find(Name);
+			if (texture_it != m_textures.end())
+			{
+				(*texture_it).second->Load();
+				break;
+			}
+			else
+				std::this_thread::yield();
+		} while (++it < 10);
+
+		VERIFY3(it <= 10, "filed texture loading ", Name);
 	});
 
 	return T;
