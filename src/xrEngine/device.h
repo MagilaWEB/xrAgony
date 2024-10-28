@@ -175,6 +175,7 @@ private:
 
 	std::atomic_bool b_restart{ false };
 	std::atomic_bool b_cursor_on_window{ false };
+	std::atomic_bool b_alt_tab{ false };
 
 	void _SetupStates();
 
@@ -318,6 +319,16 @@ public:
 	{
 		return msg.message == WM_QUIT;
 	}
+
+	ICF const bool AltTab()
+	{
+		return b_alt_tab.load();
+	};
+
+	ICF void AltTab(bool b_alt_tab_)
+	{
+		return b_alt_tab.store(b_alt_tab_);
+	};
 
 	const bool IsLoadingScreen();
 

@@ -85,15 +85,15 @@ private:
 
 	xr_vector<ref_texture> m_necessary;
 
+	//loading
+	tbb::task_group task_louding_textures;
+
 	// misc
 public:
 	CTextureDescrMngr m_textures_description;
 	//.	CInifile*											m_textures_description;
 	xr_vector<std::pair<shared_str, R_constant_setup*>> v_constant_setup;
 	CScriptEngine ScriptEngine;
-
-	//loading
-	tbb::task_group task_louding_textures;
 
 private:
 	void LS_Load();
@@ -214,6 +214,7 @@ public:
 	//void Evict();
 	void StoreNecessaryTextures();
 	void DestroyNecessaryTextures();
+	IC void WaitTexturesLoad() { task_louding_textures.wait(); }
 	void Dump(bool bBrief);
 
 private:

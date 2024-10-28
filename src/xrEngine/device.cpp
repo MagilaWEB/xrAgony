@@ -230,6 +230,7 @@ void CRenderDevice::d_Render()
 	CStatTimer renderTotalReal;
 	renderTotalReal.FrameStart();
 	renderTotalReal.Begin();
+	::Render->ResourcesWaitTexturesLoad();
 	if (b_is_Active.load() && Begin())
 	{
 		seqRender.Process();
@@ -385,25 +386,17 @@ void CRenderDevice::message_loop()
 
 			if (point->x < rect.left || point->x > rect.right || point->y < rect.top || point->y > rect.bottom)
 			{
-				if (!b_cursor_on_window.load())
+				if (b_cursor_on_window.load() && !AltTab())
 				{
-					b_cursor_on_window.store(true);
+					b_cursor_on_window.store(false);
 					pInput->ShowCursor(true);
 					::ShowWindow(m_hWnd, SW_FORCEMINIMIZE);
-					::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
-					ResetStart();
+					::ShowWindow(m_hWnd, SHOW_OPENNOACTIVATE);
 					::SetCursorPos(point->x, point->y);
 				}
-
 			}
-			else if (b_cursor_on_window.load())
-			{
-				b_cursor_on_window.store(false);
-
-				pInput->ShowCursor(false);
-				::SetForegroundWindow(m_hWnd);
-				::SetCursorPos(point->x, point->y);
-			}
+			else if (!b_cursor_on_window.load())
+				b_cursor_on_window.store(true);
 		}
 
 		if ((!IsQUIT()) && b_restart)
@@ -524,14 +517,12 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM /*lParam*/)
 	{
 		b_is_Active.store(isWndActive);
 
-		if (b_is_Active.load())
+		if (isWndActive)
 		{
 			//Reset();
 			ShowWindow(m_hWnd, SW_SHOWNORMAL);
 			xrThread::GlobalState(xrThread::dsOK);
 		}
-		else
-			pInput->ShowCursor(false);
 
 		functionPointer.push_back([&]() {
 			seqParallel.clear();

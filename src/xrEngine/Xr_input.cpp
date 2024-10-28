@@ -217,7 +217,6 @@ void CInput::KeyUpdate()
 	}
 
 #ifndef _EDITOR
-	bool b_alt_tab = false;
 
 	if (!b_altF4 && KBState[DIK_F4] && (KBState[DIK_RMENU] || KBState[DIK_LMENU]))
 	{
@@ -243,24 +242,13 @@ void CInput::KeyUpdate()
 			if (od[i].dwData & 0x80)
 				cbStack.back()->IR_OnKeyboardPress(key);
 			else
-			{
 				cbStack.back()->IR_OnKeyboardRelease(key);
-#ifndef _EDITOR
-				if (key == DIK_TAB && (iGetAsyncKeyState(DIK_RMENU) || iGetAsyncKeyState(DIK_LMENU)))
-					b_alt_tab = true;
-#endif
-			}
 		}
 
 		for (u32 i = 0; i < COUNT_KB_BUTTONS; i++)
 			if (KBState[i])
 				cbStack.back()->IR_OnKeyboardHold(i);
 	}
-
-#ifndef _EDITOR
-	if (b_alt_tab)
-		SendMessage(Device.m_hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
-#endif
 	/*
 	#ifndef _EDITOR
 	//update xinput if exist

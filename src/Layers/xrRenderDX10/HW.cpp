@@ -372,9 +372,9 @@ void CHW::updateWindowProps(HWND m_hWnd)
 	if (bWindowed)
 	{
 		const bool bBordersMode = state_screen_mode != 3;
-		dwWindowStyle = WS_VISIBLE;
+		dwWindowStyle = WS_VISIBLE | WS_DLGFRAME;
 		if (bBordersMode)
-			dwWindowStyle |= WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
+			dwWindowStyle |= WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX;
 		SetWindowLongPtr(m_hWnd, GWL_STYLE, dwWindowStyle);
 		// When moving from fullscreen to windowed mode, it is important to
 		// adjust the window size after recreating the device rather than
@@ -386,35 +386,24 @@ void CHW::updateWindowProps(HWND m_hWnd)
 		// desktop.
 
 		RECT m_rcWindowBounds;
-		int fYOffset = 0;
-		static const bool bCenter = strstr(Core.Params, "-center_screen");
 
-		if (bCenter)
-		{
-			RECT DesktopRect;
+		RECT DesktopRect;
 
-			GetClientRect(GetDesktopWindow(), &DesktopRect);
+		GetClientRect(GetDesktopWindow(), &DesktopRect);
 
-			SetRect(&m_rcWindowBounds,
-				(DesktopRect.right - m_ChainDesc.BufferDesc.Width) / 2,
-				(DesktopRect.bottom - m_ChainDesc.BufferDesc.Height) / 2,
-				(DesktopRect.right + m_ChainDesc.BufferDesc.Width) / 2,
-				(DesktopRect.bottom + m_ChainDesc.BufferDesc.Height) / 2
-			);
-		}
-		else
-		{
-			if (bBordersMode)
-				fYOffset = GetSystemMetrics(SM_CYCAPTION); // size of the window title bar
-			SetRect(&m_rcWindowBounds, 0, 0, m_ChainDesc.BufferDesc.Width, m_ChainDesc.BufferDesc.Height);
-		};
+		SetRect(&m_rcWindowBounds,
+			(DesktopRect.right - m_ChainDesc.BufferDesc.Width) / 2,
+			(DesktopRect.bottom - m_ChainDesc.BufferDesc.Height) / 2,
+			(DesktopRect.right + m_ChainDesc.BufferDesc.Width) / 2,
+			(DesktopRect.bottom + m_ChainDesc.BufferDesc.Height) / 2
+		);
 
 		AdjustWindowRect(&m_rcWindowBounds, DWORD(dwWindowStyle), FALSE);
 
 		SetWindowPos(m_hWnd,
 			HWND_NOTOPMOST,
 			m_rcWindowBounds.left,
-			m_rcWindowBounds.top + fYOffset,
+			m_rcWindowBounds.top,
 			(m_rcWindowBounds.right - m_rcWindowBounds.left),
 			(m_rcWindowBounds.bottom - m_rcWindowBounds.top),
 			SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME
@@ -422,9 +411,6 @@ void CHW::updateWindowProps(HWND m_hWnd)
 	}
 	else
 		SetWindowLongPtr(m_hWnd, GWL_STYLE, dwWindowStyle = (WS_POPUP | WS_VISIBLE));
-
-	//SetForegroundWindow(m_hWnd);
-	//pInput->ClipCursor(true);
 }
 
 struct uniqueRenderingMode
