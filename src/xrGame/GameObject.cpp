@@ -1267,7 +1267,7 @@ void CGameObject::TestbVisibleVisual()
 		b_test_visual_visible = Device.ViewFromMatrix.testSphere_dirty(Visual()->getVisData().sphere.P,
 			Visual()->getVisData().sphere.R);
 
-	if (float dist = Device.vCameraPosition.distance_to(Position()) > obj_limit_update_cl_start_dist)
+	if (const float dist = Device.vCameraPosition.distance_to(Position()) > obj_limit_update_cl_start_dist)
 	{
 		m_timer_limit_sec = (dist / LIMIT_UPDATE_CL_DIST) - LIMIT_UPDATE_CL_LMIT_TIME;
 

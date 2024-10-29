@@ -1958,8 +1958,10 @@ void CCC_RegisterCommands()
 	{
 		extern ENGINE_API float obj_limit_update_cl_start_dist;
 		extern ENGINE_API float obj_limit_update_cl_dist;
+		extern ENGINE_API float obj_limit_update_cl_max_sec;
 		CMD4(CCC_Float, "obj_limit_update_cl_start_dist", &obj_limit_update_cl_start_dist, 5.f, 100.f);
 		CMD4(CCC_Float, "obj_limit_update_cl_dist", &obj_limit_update_cl_dist, 100.f, 2000.f);
+		CMD4(CCC_Float, "obj_limit_update_cl_max_sec", &obj_limit_update_cl_dist, .01f, 2.f);
 	}
 
 	// ai
