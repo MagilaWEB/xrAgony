@@ -108,7 +108,7 @@ bool IGame_Level::Load(u32 dwNum)
 	// Render-level Load
 	::Render->level_Load(LL_Stream);
 	// tscreate.FrameEnd ();
-	// Msg ("* S-CREATE: %f ms, %d times",tscreate.result,tscreate.count);
+	// Msg ("* S-CREATE: %f ms, %d times",tscreate.GetResult_ms(),tscreate.count);
 
 	// Objects
 	g_pGamePersistent->Environment().mods_load();

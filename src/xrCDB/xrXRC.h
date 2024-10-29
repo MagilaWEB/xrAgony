@@ -35,11 +35,11 @@ public:
 			RayQuery.FrameEnd();
 			BoxQuery.FrameEnd();
 			FrustumQuery.FrameEnd();
-			float newRayPs = RayQuery.count / RayQuery.result;
+			float newRayPs = RayQuery.count / RayQuery.GetResult_ms();
 			if (std::isnan(newRayPs))
 				newRayPs = 0;
 			RayPs = 0.99f * RayPs + 0.01f * newRayPs;
-			float newBoxPs = BoxQuery.count / BoxQuery.result;
+			float newBoxPs = BoxQuery.count / BoxQuery.GetResult_ms();
 			if (std::isnan(newBoxPs))
 				newBoxPs = 0;
 			BoxPs = 0.99f * BoxPs + 0.01f * newBoxPs;

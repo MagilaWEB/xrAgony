@@ -89,10 +89,10 @@ static void DumpSpatialStatistics(IGameFont& font, IPerformanceAlert* alert, ISp
 	stats.FrameEnd();
 #define PPP(a) (100.f * float(a) / engineTotal)
 	font.OutNext("%s:", db.Name);
-	font.OutNext("- query:	  %.2fms, %u", stats.Query.result, stats.Query.count);
+	font.OutNext("- query:	  %.2fms, %u", stats.Query.GetResult_ms(), stats.Query.count);
 	font.OutNext("- nodes/obj:  %u/%u", stats.NodeCount, stats.ObjectCount);
-	font.OutNext("- insert:	 %.2fms, %2.1f%%", stats.Insert.result, PPP(stats.Insert.result));
-	font.OutNext("- remove:	 %.2fms, %2.1f%%", stats.Remove.result, PPP(stats.Remove.result));
+	font.OutNext("- insert:	 %.2fms, %2.1f%%", stats.Insert.GetResult_ms(), PPP(stats.Insert.GetResult_ms()));
+	font.OutNext("- remove:	 %.2fms, %2.1f%%", stats.Remove.GetResult_ms(), PPP(stats.Remove.GetResult_ms()));
 #undef PPP
 	stats.FrameStart();
 #endif
@@ -108,7 +108,7 @@ void CStats::Show()
 	//Memory.stat_calls = 0;
 
 	auto& font = *statsFont;
-	auto engineTotal = Device.GetStats().EngineTotal.result;
+	auto engineTotal = Device.GetStats().EngineTotal.GetResult_ms();
 	PerformanceAlert alertInstance(font.GetHeight(), { 300, 300 });
 	auto alertPtr = g_bDisableRedText ? nullptr : &alertInstance;
 	if (vtune.enabled())
@@ -140,7 +140,7 @@ void CStats::Show()
 		DumpSpatialStatistics(font, alertPtr, *g_SpatialSpacePhysic, engineTotal);
 		if (physics_world())
 			physics_world()->DumpStatistics(font, alertPtr);
-		font.OutSet(200, 0);
+		font.OutSet(250, 0);
 		::Render->DumpStatistics(font, alertPtr);
 		font.OutSkip();
 		::Sound->DumpStatistics(font, alertPtr);
@@ -218,6 +218,7 @@ void CStats::OnDeviceCreate()
 	g_bDisableRedText = !!strstr(Core.Params, "-xclsx");
 
 	statsFont = new CGameFont("font_statistic", CGameFont::fsDeviceIndependent);
+	statsFont->SetColor(color_rgba(250, 250, 15, 180));
 
 	fpsFont = new CGameFont("font_di", CGameFont::fsDeviceIndependent, 23);
 	fpsFont->SetColor(color_rgba(250, 250, 15, 180));

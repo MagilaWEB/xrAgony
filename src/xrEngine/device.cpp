@@ -179,11 +179,11 @@ void CRenderDevice::CalcFrameStats()
 			FPS = u16(FPS + stats.fFPS)/2;
 		)
 
-		if (stats.RenderTotal.result > EPS_S)
+		if (stats.RenderTotal.GetResult_ms() > EPS_S)
 		{
 			u32 renderedPolys = ::Render->GetCacheStatPolys();
-			stats.fTPS = fInv * stats.fTPS + fOne * float(renderedPolys) / (stats.RenderTotal.result * 1000.f);
-			stats.fRFPS = fInv * stats.fRFPS + fOne * 1000.f / stats.RenderTotal.result;
+			stats.fTPS = fInv * stats.fTPS + fOne * float(renderedPolys) / (stats.RenderTotal.GetResult_ms() * 1000.f);
+			stats.fRFPS = fInv * stats.fRFPS + fOne * 1000.f / stats.RenderTotal.GetResult_ms();
 		}
 	}
 	stats.RenderTotal.FrameStart();

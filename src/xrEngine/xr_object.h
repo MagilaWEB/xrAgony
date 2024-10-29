@@ -151,6 +151,7 @@ public:
 
 	virtual bool LimitUpdateCL() = 0;
 	virtual bool LimitFrameUpdateCL() = 0;
+	virtual void TestbVisibleVisual() = 0;
 	// Network
 	virtual BOOL Local() const = 0;
 	virtual BOOL Remote() const = 0;

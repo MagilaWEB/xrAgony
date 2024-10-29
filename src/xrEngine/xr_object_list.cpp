@@ -28,14 +28,15 @@ ENGINE_API BOOL debug_destroy = TRUE;
 void CObjectList::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 {
 	stats.FrameEnd();
-	float engineTotal = Device.GetStats().EngineTotal.result;
-	float percentage = 100.0f * stats.Update.result / engineTotal;
-	font.OutNext("Objects:	  %2.5fms, %2.1f%%", stats.Update.result, percentage);
+	const float engineTotal = Device.GetStats().EngineTotal.GetResult_ms();
+	const float percentage = 100.0f * stats.Update.GetResult_ms() / engineTotal;
+	font.OutNext("Objects UpdateCL:%2.5fms, %2.1f%%", stats.Update.GetResult_ms(), percentage);
+	font.OutNext("- TestVisibleVisual:%2.5fms", stats.TestVisibleVisual.GetResult_ms());
 	//font.OutNext("- crow:		%d", stats.Crows);
-	font.OutNext("- active:	 %d", stats.Active);
-	font.OutNext("- total:	  %d", stats.Total);
-	if (alert && stats.Update.result > 3.0f)
-		alert->Print(font, "UpdateCL  > 3ms:  %3.1f", stats.Update.result);
+	font.OutNext("- active:	%d", stats.Active);
+	font.OutNext("- total:	%d", stats.Total);
+	if (alert && stats.Update.GetResult_ms() > 3.0f)
+		alert->Print(font, "UpdateCL  > 3ms:  %3.1f", stats.Update.GetResult_ms());
 }
 
 CObjectList::CObjectList()
@@ -161,6 +162,11 @@ void CObjectList::SingleUpdate(IGameObject* O, bool b_forced)
 	}
 }
 
+ENGINE_API float obj_limit_update_cl_start_dist = 10.f;
+ENGINE_API float obj_limit_update_cl_dist = 400.f;
+ENGINE_API float obj_limit_update_cl_max_sec = .5f;
+ENGINE_API float LIMIT_UPDATE_CL_DIST;
+ENGINE_API float LIMIT_UPDATE_CL_LMIT_TIME;
 void CObjectList::Update(bool bLast)
 {
 	if (statsFrame != Device.dwFrame)
@@ -175,9 +181,22 @@ void CObjectList::Update(bool bLast)
 		{
 			stats.Updated = 0;
 
+			
+			LIMIT_UPDATE_FPS_CODE(TestVisibleVisual, 3, {
+				stats.TestVisibleVisual.Begin();
+				tbb::parallel_for_each(objects_active, [](IGameObject* O) -> void
+				{
+					O->TestbVisibleVisual();
+				});
+				stats.TestVisibleVisual.End();
+			});
+
 			stats.Update.Begin();
 			stats.Active = objects_active.size();
 			stats.Total = objects_active.size() + objects_sleeping.size();
+
+			LIMIT_UPDATE_CL_DIST = obj_limit_update_cl_start_dist + obj_limit_update_cl_dist;
+			LIMIT_UPDATE_CL_LMIT_TIME = obj_limit_update_cl_start_dist / LIMIT_UPDATE_CL_DIST;
 
 			for (auto i_game_object : objects_active)
 				SingleUpdate(i_game_object);

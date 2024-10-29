@@ -234,9 +234,8 @@ CActor::~CActor()
 
 bool CActor::LimitFrameUpdateCL()
 {
-	fDeltaTime = m_timerDeltaUpdateCL.GetElapsed_sec();
-	dwDeltaTime = m_timerDeltaUpdateCL.GetElapsed_ms();
-	m_timerDeltaUpdateCL.Start();
+	fDeltaTime = Device.fTimeDelta;
+	dwDeltaTime = Device.dwTimeDelta;
 	return false;
 }
 
@@ -1260,7 +1259,7 @@ void CActor::shedule_Update(u32 DT)
 	{
 		const bool VisState = !HUDview() && !smart_cast<CHelicopter*>(m_holder);
 		setVisible(VisState);
-		if(VisState)
+		if(!VisState)
 			spatial_updatesector();
 	}
 

@@ -15,6 +15,7 @@ public:
 	{
 	public:
 		CStatTimer Update;
+		CStatTimer TestVisibleVisual;
 		u32 Updated;
 		u32 Crows;
 		u32 Active;
@@ -23,13 +24,18 @@ public:
 		IC void FrameStart()
 		{
 			Update.FrameStart();
+			TestVisibleVisual.FrameStart();
 			Updated = 0;
 			Crows = 0;
 			Active = 0;
 			Total = 0;
 		}
 
-		IC void FrameEnd() { Update.FrameEnd(); }
+		IC void FrameEnd()
+		{
+			TestVisibleVisual.FrameEnd();
+			Update.FrameEnd();
+		}
 	};
 
 private:

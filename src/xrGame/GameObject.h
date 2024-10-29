@@ -80,8 +80,6 @@ protected:
 	float fDeltaTime{ 0.f };
 	size_t dwDeltaTime{ 0 };
 
-	CTimer m_timerDeltaUpdateCL;
-
 private:
 	shared_str m_sTipText{};
 	bool m_bNonscriptUsable;
@@ -121,6 +119,7 @@ public:
 #endif
 	bool LimitFrameUpdateCL() override;
 	bool LimitUpdateCL() override { return false; }
+	void TestbVisibleVisual() override;
 	// Network
 	BOOL Local() const override { return Props.net_Local; }
 	BOOL Remote() const override { return !Props.net_Local; }

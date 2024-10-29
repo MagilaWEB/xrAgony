@@ -199,7 +199,7 @@ void CSoundRender_Core::DumpStatistics(IGameFont& font, IPerformanceAlert* alert
 	Stats.FrameEnd();
 	CSound_stats sndStat;
 	statistic(&sndStat, nullptr);
-	font.OutNext("*** SOUND:	%2.5fms", Stats.Update.result);
+	font.OutNext("*** SOUND:	%2.5fms", Stats.Update.GetResult_ms());
 	font.OutNext("Rendered:	 %d", sndStat._rendered);
 	font.OutNext("Simulated:	%d", sndStat._simulated);
 	font.OutNext("Events:		%d", sndStat._events);

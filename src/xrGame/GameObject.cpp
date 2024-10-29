@@ -1016,19 +1016,9 @@ Fvector CGameObject::get_last_local_point_on_mesh(Fvector const& local_point, u1
 
 void CGameObject::renderable_Render()
 {
-	if (Device.dwFrame % 5 == 0)
-	{
-		// Test every 5 frames
-		if (Device.m_ScopeVP.IsSVPRender())
-		{
-			b_test_visual_visibleVP = Device.ViewFromMatrix.testSphere_dirty(
-				Visual()->getVisData().sphere.P,
-				Visual()->getVisData().sphere.R
-			);
-		}
-		else if (b_test_visual_visibleVP)
-			b_test_visual_visibleVP = false;
-	}
+	if (!b_test_visual_visibleVP)
+		b_test_visual_visibleVP = Device.m_ScopeVP.IsSVPRender();
+
 	::Render->set_Transform(&XFORM());
 	::Render->add_Visual(Visual());
 	Visual()->getVisData().hom_frame = Device.dwFrame;
@@ -1133,9 +1123,11 @@ void CGameObject::DestroyObject()
 	}
 }
 
-constexpr float LIMIT_UPDATE_CL_MIN_DIST = 50.f; //Растоние на котором начинаем пропускать кадры.
-constexpr float LIMIT_UPDATE_CL_DIST = LIMIT_UPDATE_CL_MIN_DIST + 800.f;
-constexpr float LIMIT_UPDATE_CL_LMIT_TIME = LIMIT_UPDATE_CL_MIN_DIST / LIMIT_UPDATE_CL_DIST;
+extern ENGINE_API float obj_limit_update_cl_start_dist;
+extern ENGINE_API float obj_limit_update_cl_dist;
+extern ENGINE_API float obj_limit_update_cl_max_sec;
+extern ENGINE_API float LIMIT_UPDATE_CL_DIST;
+extern ENGINE_API float LIMIT_UPDATE_CL_LMIT_TIME;
 void CGameObject::shedule_Update(u32 dt)
 {
 	if (NeedToDestroyObject())
@@ -1145,29 +1137,6 @@ void CGameObject::shedule_Update(u32 dt)
 #endif // #ifdef MASTER
 		DestroyObject();
 	}
-
-	if (Visual())
-	{
-		b_test_visual_visible = Device.ViewFromMatrix.testSphere_dirty
-		(
-			Visual()->getVisData().sphere.P,
-			Visual()->getVisData().sphere.R
-		);
-	}
-
-	if (float dist = Device.vCameraPosition.distance_to(Position()) > LIMIT_UPDATE_CL_MIN_DIST)
-	{
-		m_timer_limit_sec = (dist / LIMIT_UPDATE_CL_DIST) - LIMIT_UPDATE_CL_LMIT_TIME;
-
-		// Update 3 times less often if the visual of the object is not visible.
-		// Update 3 times faster if the visual of the object is visible in optics (Preferably divided by the multiplicity of the sight).
-		if (!b_test_visual_visible && !b_test_visual_visibleVP)
-			m_timer_limit_sec *= 3;
-		else if(b_test_visual_visibleVP)
-			m_timer_limit_sec /= 3;
-	}
-	else
-		m_timer_limit_sec = b_test_visual_visible || b_test_visual_visibleVP ? .0f : .05f;
 
 	ScheduledBase::shedule_Update(dt);
 	spatial_update(base_spu_epsP, base_spu_epsR);
@@ -1280,20 +1249,42 @@ void CGameObject::OnChangeVisual()
 
 bool CGameObject::LimitFrameUpdateCL()
 {
-	fDeltaTime = m_timerDeltaUpdateCL.GetElapsed_sec();
-	dwDeltaTime = m_timerDeltaUpdateCL.GetElapsed_ms();
+	fDeltaTime += Device.fTimeDelta;
+	dwDeltaTime += Device.dwTimeDelta;
 
-	if (LimitUpdateCL())
-	{
-		if (dwDeltaTime < 1000)
-			return true;
-	}
-	else if (fDeltaTime < m_timer_limit_sec)
+	if (fDeltaTime < m_timer_limit_sec)
 		return true;
 
-	m_timerDeltaUpdateCL.Start();
+	fDeltaTime = Device.fTimeDelta;
+	dwDeltaTime = Device.dwTimeDelta;
 
-	return false;
+	return LimitUpdateCL();
+}
+
+void CGameObject::TestbVisibleVisual()
+{
+	if (Visual())
+		b_test_visual_visible = Device.ViewFromMatrix.testSphere_dirty(Visual()->getVisData().sphere.P,
+			Visual()->getVisData().sphere.R);
+
+	if (float dist = Device.vCameraPosition.distance_to(Position()) > obj_limit_update_cl_start_dist)
+	{
+		m_timer_limit_sec = (dist / LIMIT_UPDATE_CL_DIST) - LIMIT_UPDATE_CL_LMIT_TIME;
+
+		clamp(m_timer_limit_sec, 0.f, obj_limit_update_cl_max_sec);
+
+		// Update 3 times less often if the visual of the object is not visible.
+		// Update 3 times faster if the visual of the object is visible in optics (Preferably divided by the multiplicity of the sight).
+		if (!b_test_visual_visible && !b_test_visual_visibleVP)
+			m_timer_limit_sec *= 3;
+		else if (b_test_visual_visibleVP)
+			m_timer_limit_sec /= 3;
+	}
+	else
+		m_timer_limit_sec = b_test_visual_visible || b_test_visual_visibleVP ? .0f : .05f;
+
+	if (b_test_visual_visibleVP)
+		b_test_visual_visibleVP = false;
 }
 
 bool CGameObject::shedule_Needed() { return (!getDestroy()); }

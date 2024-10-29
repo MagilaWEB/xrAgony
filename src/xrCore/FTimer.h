@@ -168,7 +168,7 @@ public:
 	void FrameStart();
 	void FrameEnd();
 
-	void Begin()
+	IC void Begin()
 	{
 		if (!g_bEnableStatGather)
 			return;
@@ -176,7 +176,7 @@ public:
 		T.Start();
 	}
 
-	void End()
+	IC void End()
 	{
 		if (!g_bEnableStatGather)
 			return;
@@ -185,16 +185,26 @@ public:
 
 	Duration getElapsedTime() const { return accum; }
 
-	u64 GetElapsed_ms() const
+	IC u64 GetElapsed_ms() const
 	{
 		using namespace std::chrono;
 		return duration_cast<milliseconds>(getElapsedTime()).count();
 	}
 
-	float GetElapsed_sec() const
+	IC float GetElapsed_sec() const
 	{
 		using namespace std::chrono;
 		return duration_cast<duration<float>>(getElapsedTime()).count();
+	}
+
+	IC float GetResult_ms() const
+	{
+		return result * 1000;
+	}
+
+	IC float GetResult_sec() const
+	{
+		return result;
 	}
 };
 

@@ -1954,10 +1954,16 @@ void CCC_RegisterCommands()
 	CMD1(CCC_DemoRecord, "demo_record");
 	CMD1(CCC_DemoRecordSetPos, "demo_set_cam_position");
 
+	if (Core.ParamFlags.test(Core.dev))
+	{
+		extern ENGINE_API float obj_limit_update_cl_start_dist;
+		extern ENGINE_API float obj_limit_update_cl_dist;
+		CMD4(CCC_Float, "obj_limit_update_cl_start_dist", &obj_limit_update_cl_start_dist, 5.f, 100.f);
+		CMD4(CCC_Float, "obj_limit_update_cl_dist", &obj_limit_update_cl_dist, 100.f, 2000.f);
+	}
+
 	// ai
-
 	CMD4(CCC_Float, "ai_smart_factor", &g_smart_cover_factor, 0.f, 1000000.f);
-
 
 #ifdef DEBUG
 	CMD3(CCC_Mask, "ai_obstacles_avoiding", &psAI_Flags, aiObstaclesAvoiding);
