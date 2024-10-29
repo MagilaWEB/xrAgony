@@ -190,7 +190,7 @@ void attachable_hud_item::tune(Ivector values)
 			Log("-----------");
 		}
 	}
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 }
 
 void attachable_hud_item::debug_draw_firedeps()
@@ -321,7 +321,7 @@ void player_hud::tune(Ivector _values)
 			return;
 		hi->tune(values);
 	}
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 }
 
 void hud_draw_adjust_mode()

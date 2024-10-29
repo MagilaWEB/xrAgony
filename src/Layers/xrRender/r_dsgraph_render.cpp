@@ -485,47 +485,52 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 			Device.ViewFromMatrix
 		);
 
-		// Determine visibility for dynamic part of scene
-		for (ISpatial* spatial : lstRenderables)
+		auto renderable_spatial = [this, ViewSave](ISpatial* spatial) -> void
 		{
-			CSector* sector = reinterpret_cast<CSector*>(spatial->GetSpatialData().sector);
-			if (nullptr == sector)
-				continue; // disassociated from S/P structure
-			if (PortalTraverser.i_marker != sector->r_marker)
-				continue; // inactive (untouched) sector
-			for (CFrustum& frustum : sector->r_frustums)
+			if (CSector* sector = reinterpret_cast<CSector*>(spatial->GetSpatialData().sector))// disassociated from S/P structure
 			{
-				set_Frustum(&frustum);
-				if (!View->testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R))
-					continue;
-
-				// renderable
-				IRenderable* renderable = spatial->dcast_Renderable();
-				if (nullptr == renderable)
-					continue; // unknown, but renderable object (r1_glow???)
-
-				if (Device.vCameraPosition.distance_to_sqr(renderable->GetRenderData().xform.c) <= 5000.f)
+				if (PortalTraverser.i_marker == sector->r_marker)
 				{
-					CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual);
-					if (pKin)
+					for (CFrustum& frustum : sector->r_frustums)
 					{
-						if (spatial->GetSpatialData().type & STYPE_RENDERABLESHADOW)
-							pKin->CalculateBones(TRUE);
-						else if (spatial->GetSpatialData().type & STYPE_RENDERABLE)
-							if (ViewSave.testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R) == FALSE)
-								pKin->CalculateBones(TRUE);
+						set_Frustum(&frustum);
+						if (View->testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R))
+						{
+							if (IRenderable* renderable = spatial->dcast_Renderable())
+							{
+								if (Device.vCameraPosition.distance_to_sqr(renderable->GetRenderData().xform.c) <= 5000.f)
+								{
+									if (CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
+										if (spatial->GetSpatialData().type & STYPE_RENDERABLESHADOW)
+											pKin->CalculateBones(TRUE);
+										else if
+										(
+											(spatial->GetSpatialData().type & STYPE_RENDERABLE) &&
+											!ViewSave.testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R)
+										)
+											pKin->CalculateBones(TRUE);
+								}
+
+								renderable->renderable_Render();
+							}
+						}		
 					}
 				}
+			}
+		};
 
-				renderable->renderable_Render();
+		// Determine visibility for dynamic part of scene
+		for (ISpatial* spatial : lstRenderables)
+			renderable_spatial(spatial);
+
+		if (g_pGameLevel && (phase == RImplementation.PHASE_SMAP) && ps_actor_shadow_flags.test(RFLAG_ACTOR_SHADOW))
+		{
+			if (auto Spatial = g_hud->Render_Actor_Shadow())
+			{
+				PIX_EVENT_TEXT(L"Render Actor Shadow");
+				renderable_spatial(Spatial);
 			}
 		}
-	}
-
-	if (g_pGameLevel && (phase == RImplementation.PHASE_SMAP) && ps_actor_shadow_flags.test(RFLAG_ACTOR_SHADOW))
-	{
-		PIX_EVENT_TEXT(L"Render Actor Shadow");
-		g_hud->Render_Actor_Shadow(); // Actor Shadow
 	}
 
 	// Restore

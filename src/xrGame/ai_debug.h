@@ -39,7 +39,7 @@
 #define aiDrawGameGraphRealPos (1 << 28)
 #endif // DEBUG
 
-#ifndef MASTER
+#ifdef MASTER
 #define aiIgnoreActor (1 << 24)
 #define aiObstaclesAvoiding (1 << 28)
 #define aiObstaclesAvoidingStatic (1 << 29)

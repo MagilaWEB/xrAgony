@@ -18,6 +18,7 @@ ENGINE_API extern Flags32 psHUD_Flags;
 #define HUD_DRAW_RT2 (1 << 12)
 
 class IGameObject;
+class ISpatial;
 
 class ENGINE_API CCustomHUD : public FactoryObjectBase, public IEventReceiver, public pureScreenResolutionChanged
 {
@@ -27,13 +28,13 @@ public:
 
 	BENCH_SEC_SCRAMBLEVTBL2
 
-	virtual void Render_Last() { ; }
-	virtual void Render_Actor_Shadow() {}
+	virtual void Render_Last() = 0;
+	virtual ISpatial* Render_Actor_Shadow() = 0;
 	BENCH_SEC_SCRAMBLEVTBL1
 
-	virtual void OnFrame() { ; }
+	virtual void OnFrame() = 0;
 	virtual void OnEvent(EVENT /*E*/, u64 /*P1*/, u64 /*P2*/) { ; }
-	virtual void Load() { ; }
+	virtual void Load() = 0;
 	virtual void OnDisconnected() = 0;
 	virtual void OnConnected() = 0;
 	virtual void RenderActiveItemUI() = 0;

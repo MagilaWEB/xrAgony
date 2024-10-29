@@ -209,7 +209,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 		return;
 	}
 
-#ifndef MASTER
+#ifdef MASTER
 	switch (key)
 	{
 	case DIK_F7:

@@ -49,9 +49,9 @@ bool CLevel::Load_GameSpecific_After()
 				if (OBJ->length() == sizeof(u32))
 				{
 					ver = OBJ->r_u32();
-#ifndef MASTER
+#ifdef MASTER
 					Msg("PS new version, %d", ver);
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 					continue;
 				}
 			}

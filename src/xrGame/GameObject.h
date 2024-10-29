@@ -74,6 +74,7 @@ protected:
 	u32 dbg_update_cl;
 #endif
 	bool b_test_visual_visible{ true };
+	bool b_test_visual_visibleVP{ true };
 	u32 dwFrame_UpdateCL;
 	float m_timer_limit_sec{ 0.f };
 	float fDeltaTime{ 0.f };

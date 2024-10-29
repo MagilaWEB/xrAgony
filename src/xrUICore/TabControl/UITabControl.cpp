@@ -15,9 +15,9 @@ void CUITabControl::SetCurrentOptValue()
 	CUITabButton* b = GetButtonById(v);
 	if (nullptr == b)
 	{
-#ifndef MASTER
+#ifdef MASTER
 		Msg("! tab named [%s] doesnt exist", v.c_str());
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 		v = m_TabsArr[0]->m_btn_id;
 	}
 	SetActiveTab(v);

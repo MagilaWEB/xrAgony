@@ -15,7 +15,7 @@
 #include "magic_box3.h"
 #include "ai_obstacle.h"
 
-#ifndef MASTER
+#ifdef MASTER
 #include "ai_debug.h"
 #endif // MASTER
 
@@ -492,7 +492,7 @@ void moving_objects::resolve_collisions()
 
 void moving_objects::query_action_dynamic(moving_object* object)
 {
-#ifndef MASTER
+#ifdef MASTER
 	if (psAI_Flags.test(aiObstaclesAvoidingStatic))
 		return;
 

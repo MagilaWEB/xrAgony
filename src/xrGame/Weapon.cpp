@@ -1491,13 +1491,13 @@ void CWeapon::SwitchState(u32 S)
 {
 	if (OnClient()) return;
 
-#ifndef MASTER
+#ifdef MASTER
 	if (bDebug)
 	{
 		Msg("---Server is going to send GE_WPN_STATE_CHANGE to [%d], weapon_section[%s], parent[%s]", S,
 			cNameSect().c_str(), H_Parent() ? H_Parent()->cName().c_str() : "nullptr Parent");
 	}
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 
 	SetNextState(S);
 	if (CHudItem::object().Local() && !CHudItem::object().getDestroy() && m_pInventory && OnServer())

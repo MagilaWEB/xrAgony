@@ -128,9 +128,9 @@ MotionID animation_selector::select_animation(bool& animation_movement_controlle
 		animation_id		= m_skeleton_animated->ID_Cycle_Safe( result );
 		VERIFY				(animation_id);
 		return				(animation_id);
-#else // #ifndef MASTER
+#else // #ifdef MASTER
 		return (m_skeleton_animated->ID_Cycle(m_animation.c_str()));
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 	}
 
 	VERIFY(m_animation._get());

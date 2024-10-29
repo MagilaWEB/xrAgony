@@ -456,9 +456,9 @@ void CMissile::OnMotionMark(u32 state, const motion_marks& M)
 
 void CMissile::Throw()
 {
-#ifndef MASTER
+#ifdef MASTER
 	Msg("throw [%d]", Device.dwFrame);
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 	VERIFY(smart_cast<CEntity*>(H_Parent()));
 	setup_throw_params();
 

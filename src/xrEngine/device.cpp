@@ -260,6 +260,8 @@ void CRenderDevice::d_SVPRender()
 		::Render->SetCacheXform(mView, mProject);
 		mInvFullTransform.invert_44(mFullTransform);
 
+		ViewFromMatrix.CreateFromMatrix(mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
+
 		vCameraPositionSaved = vCameraPosition;
 
 		::Render->Begin();

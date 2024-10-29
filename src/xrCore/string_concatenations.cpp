@@ -57,11 +57,11 @@ static inline void process(pstr& i, pcstr e, u32 const index, pcstr (&strings)[c
 	if (i != e)
 		return;
 
-#ifndef MASTER
+#ifdef MASTER
 	process(index, count, strings);
-#else // #ifndef MASTER
+#else // #ifdef MASTER
 	--i;
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 }
 
 } // namespace strconcat_error

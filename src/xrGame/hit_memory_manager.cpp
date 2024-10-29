@@ -23,7 +23,7 @@
 #include "memory_manager.h"
 #include "xrEngine/IGame_Persistent.h"
 
-#ifndef MASTER
+#ifdef MASTER
 #include "actor.h"
 #include "ai_debug.h"
 #endif // MASTER
@@ -83,7 +83,7 @@ void CHitMemoryManager::reload(LPCSTR section)
 
 void CHitMemoryManager::add(float amount, const Fvector& vLocalDir, const IGameObject* who, s16 element)
 {
-#ifndef MASTER
+#ifdef MASTER
 	if (who && smart_cast<CActor const*>(who) && psAI_Flags.test(aiIgnoreActor))
 		return;
 #endif // MASTER
@@ -147,7 +147,7 @@ void CHitMemoryManager::add(float amount, const Fvector& vLocalDir, const IGameO
 
 void CHitMemoryManager::add(const CHitObject& _hit_object)
 {
-#ifndef MASTER
+#ifdef MASTER
 	if (_hit_object.m_object && smart_cast<CActor const*>(_hit_object.m_object) && psAI_Flags.test(aiIgnoreActor))
 		return;
 #endif // MASTER

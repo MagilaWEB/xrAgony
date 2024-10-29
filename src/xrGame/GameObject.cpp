@@ -50,8 +50,8 @@ extern MagicBox3 MagicMinBox(int iQuantity, const Fvector* akPoint);
 #include "PHDebug.h"
 #endif
 
-static const float base_spu_epsP = 0.05f;
-static const float base_spu_epsR = 0.05f;
+constexpr float base_spu_epsP = 0.05f;
+constexpr float base_spu_epsR = 0.05f;
 
 CGameObject::CGameObject() : SpatialBase(g_SpatialSpace), scriptBinder(this)
 {
@@ -1016,6 +1016,19 @@ Fvector CGameObject::get_last_local_point_on_mesh(Fvector const& local_point, u1
 
 void CGameObject::renderable_Render()
 {
+	if (Device.dwFrame % 5 == 0)
+	{
+		// Test every 5 frames
+		if (Device.m_ScopeVP.IsSVPRender())
+		{
+			b_test_visual_visibleVP = Device.ViewFromMatrix.testSphere_dirty(
+				Visual()->getVisData().sphere.P,
+				Visual()->getVisData().sphere.R
+			);
+		}
+		else if (b_test_visual_visibleVP)
+			b_test_visual_visibleVP = false;
+	}
 	::Render->set_Transform(&XFORM());
 	::Render->add_Visual(Visual());
 	Visual()->getVisData().hom_frame = Device.dwFrame;
@@ -1125,18 +1138,14 @@ constexpr float LIMIT_UPDATE_CL_DIST = LIMIT_UPDATE_CL_MIN_DIST + 800.f;
 constexpr float LIMIT_UPDATE_CL_LMIT_TIME = LIMIT_UPDATE_CL_MIN_DIST / LIMIT_UPDATE_CL_DIST;
 void CGameObject::shedule_Update(u32 dt)
 {
-	//уничтожить
 	if (NeedToDestroyObject())
 	{
-#ifndef MASTER
+#ifdef MASTER
 		Msg("--NeedToDestroyObject for [%d][%d]", ID(), Device.dwFrame);
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 		DestroyObject();
 	}
-	// Msg("-SUB-:[%x][%s] CGameObject::shedule_Update",smart_cast<void*>(this),*cName());
-	// IGameObject::shedule_Update(dt);
-	// consistency check
-	// Msg ("-SUB-:[%x][%s] IGameObject::shedule_Update",dynamic_cast<void*>(this),*cName());
+
 	if (Visual())
 	{
 		b_test_visual_visible = Device.ViewFromMatrix.testSphere_dirty
@@ -1149,11 +1158,16 @@ void CGameObject::shedule_Update(u32 dt)
 	if (float dist = Device.vCameraPosition.distance_to(Position()) > LIMIT_UPDATE_CL_MIN_DIST)
 	{
 		m_timer_limit_sec = (dist / LIMIT_UPDATE_CL_DIST) - LIMIT_UPDATE_CL_LMIT_TIME;
-		if (!b_test_visual_visible)
-			m_timer_limit_sec *= 3; // Обновлять в 3 раза реже если визуал объекта не видим.
+
+		// Update 3 times less often if the visual of the object is not visible.
+		// Update 3 times faster if the visual of the object is visible in optics (Preferably divided by the multiplicity of the sight).
+		if (!b_test_visual_visible && !b_test_visual_visibleVP)
+			m_timer_limit_sec *= 3;
+		else if(b_test_visual_visibleVP)
+			m_timer_limit_sec /= 3;
 	}
 	else
-		m_timer_limit_sec = b_test_visual_visible ? .0f : .05f;
+		m_timer_limit_sec = b_test_visual_visible || b_test_visual_visibleVP ? .0f : .05f;
 
 	ScheduledBase::shedule_Update(dt);
 	spatial_update(base_spu_epsP, base_spu_epsR);
@@ -1347,7 +1361,7 @@ void CGameObject::UpdateCL()
 	if (!CForm && (spatial.type & STYPE_COLLIDEABLE))
 		xrDebug::Fatal(DEBUG_INFO, "Object %s registered as 'collidable' but has no collidable model", *cName());
 #endif
-	spatial_update(base_spu_epsP * 5, base_spu_epsR * 5);
+	//spatial_update(base_spu_epsP * 5, base_spu_epsR * 5); MAGILA: I'm not sure if this spatial_update call is correct..
 	
 	//	if (!is_ai_obstacle())
 	//		return;

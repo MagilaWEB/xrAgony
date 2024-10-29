@@ -28,7 +28,7 @@
 #include "memory_manager.h"
 #include "ai/monsters/basemonster/base_monster.h"
 
-#ifndef MASTER
+#ifdef MASTER
 #include "actor.h"
 #include "ai_debug.h"
 #endif // MASTER
@@ -430,7 +430,7 @@ bool CVisualMemoryManager::should_ignore_object(IGameObject const* object) const
 		return true;
 	}
 
-#ifndef MASTER
+#ifdef MASTER
 	if (smart_cast<CActor const*>(object) && psAI_Flags.test(aiIgnoreActor))
 	{
 		return true;

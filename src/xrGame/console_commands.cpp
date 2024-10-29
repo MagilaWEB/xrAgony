@@ -1173,7 +1173,7 @@ struct CCC_JumpToLevel : public IConsole_Command
 	}
 };
 
-//#ifndef MASTER
+//#ifdef MASTER
 class CCC_Script : public IConsole_Command
 {
 public:
@@ -1929,7 +1929,7 @@ void CCC_RegisterCommands()
 	CMD1(CCC_ALifeProcessTime, "al_process_time"); // set process time
 	CMD1(CCC_ALifeObjectsPerUpdate, "al_objects_per_update"); // set process time
 	CMD1(CCC_ALifeSwitchFactor, "al_switch_factor"); // set switch factor
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 
 	CMD3(CCC_Mask, "hud_weapon", &psHUD_Flags, HUD_WEAPON);
 	CMD3(CCC_Mask, "hud_info", &psHUD_Flags, HUD_INFO);

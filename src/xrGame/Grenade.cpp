@@ -111,9 +111,9 @@ void CGrenade::State(u32 state, u32 old_state)
 			PutNextToSlot();
 			if (Local())
 			{
-#ifndef MASTER
+#ifdef MASTER
 				Msg("Destroying local grenade[%d][%d]", ID(), Device.dwFrame);
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 				DestroyObject();
 			}
 		};

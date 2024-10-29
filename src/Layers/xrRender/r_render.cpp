@@ -251,7 +251,8 @@ void CRender::render_main(bool deffered)
 									set_Object(nullptr);
 								}
 							}
-							else if (spatial_data.sphere.R <= 1.f)
+							
+							if (spatial_data.sphere.R <= 1.f)
 							{
 								// Rendering
 								set_Object(renderable);
@@ -312,7 +313,8 @@ void CRender::render_main(bool deffered)
 										set_Object(nullptr);
 									}
 								}
-								else if (spatial_data.sphere.R <= 1.f)
+								
+								if (spatial_data.sphere.R <= 1.f)
 								{
 									// Rendering
 									set_Object(renderable);

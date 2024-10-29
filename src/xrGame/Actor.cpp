@@ -1258,8 +1258,10 @@ void CActor::shedule_Update(u32 DT)
 	//если в режиме HUD, то сама модель актера не рисуется
 	if (!character_physics_support()->IsRemoved())
 	{
-		CHelicopter* heli = smart_cast<CHelicopter*>(m_holder);
-		setVisible(!HUDview() && !heli);
+		const bool VisState = !HUDview() && !smart_cast<CHelicopter*>(m_holder);
+		setVisible(VisState);
+		if(VisState)
+			spatial_updatesector();
 	}
 
 	//что актер видит перед собой

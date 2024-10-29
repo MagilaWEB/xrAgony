@@ -27,16 +27,12 @@ void CTextureDescrMngr::LoadTHM(LPCSTR initial)
 {
 	FS_FileSet flist;
 	FS.file_list(flist, initial, FS_ListFiles, "*.thm");
-#ifndef MASTER
+#ifdef MASTER
 	Msg("%s, count of .thm files: %d", __FUNCTION__, flist.size());
 #endif
 
 	for (auto& it : flist)
 	{
-#if 0//def DEBUG // XXX: make it as an option
-		//Alundaio: Print list of *.thm to find bad .thms!
-		Msg("%s", it.name.c_str());
-#endif
 		string_path fn;
 		FS.update_path(fn, initial, it.name.c_str());
 		IReader* F = FS.r_open(fn);
@@ -97,7 +93,7 @@ void CTextureDescrMngr::LoadTHM(LPCSTR initial)
 
 void CTextureDescrMngr::Load()
 {
-#ifndef MASTER
+#ifdef MASTER
 	CTimer timer;
 	timer.Start();
 #endif // #ifdef DEBUG
@@ -105,7 +101,7 @@ void CTextureDescrMngr::Load()
 	LoadTHM("$game_textures$");
 	LoadTHM("$level$");
 
-#ifndef MASTER
+#ifdef MASTER
 	Msg("%s, .thm loading time: %d ms", __FUNCTION__, timer.GetElapsed_ms());
 #endif
 }

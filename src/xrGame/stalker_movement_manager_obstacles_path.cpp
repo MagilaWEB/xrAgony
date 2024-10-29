@@ -19,7 +19,7 @@
 #include "level_path_builder.h"
 #include "ai_obstacle.h"
 
-#ifndef MASTER
+#ifdef MASTER
 #include "ai_debug.h"
 #endif // MASTER
 
@@ -108,7 +108,7 @@ IC void stalker_movement_manager_obstacles::remove_query_objects(const Fvector& 
 
 void stalker_movement_manager_obstacles::build_level_path()
 {
-#ifndef MASTER
+#ifdef MASTER
 	if (!psAI_Flags.test(aiObstaclesAvoiding))
 	{
 		inherited::build_level_path();
@@ -135,7 +135,7 @@ void stalker_movement_manager_obstacles::build_level_path()
 	m_static_obstacles.inactive_query().copy(m_static_obstacles.active_query());
 	m_static_obstacles.inactive_query().update_objects(object().Position(), 10000.f);
 
-#ifndef MASTER
+#ifdef MASTER
 	if (!psAI_Flags.test(aiObstaclesAvoidingStatic))
 		m_dynamic_obstacles.inactive_query().copy(m_dynamic_obstacles.active_query());
 #endif // MASTER
@@ -168,9 +168,9 @@ void stalker_movement_manager_obstacles::build_level_path()
 
 			if (!pure_search_result)
 			{
-#ifndef MASTER
+#ifdef MASTER
 				Msg("! level_path().failed() during navigation");
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 				break;
 			}
 		}

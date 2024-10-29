@@ -16,7 +16,7 @@
 
 struct lua_State;
 
-#ifndef MASTER
+#ifdef MASTER
 #define USE_DEBUGGER
 #define USE_LUA_STUDIO
 #endif

@@ -26,7 +26,7 @@ CPhysicsShellHolder::CPhysicsShellHolder() { init(); }
 CPhysicsShellHolder::~CPhysicsShellHolder()
 {
 	VERIFY(!m_pPhysicsShell);
-	//#ifndef MASTER
+	//#ifdef MASTER
 	// R_ASSERT( !m_pPhysicsShell );
 	//#endif
 	destroy_physics_shell(m_pPhysicsShell);

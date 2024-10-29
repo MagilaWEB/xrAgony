@@ -207,15 +207,15 @@ void CKinematics::CLBone(const CBoneData* bd, CBoneInstance& bi, const Fmatrix* 
 		else
 		{
 			BuildBoneMatrix(bd, bi, parent, channel_mask);
-#ifndef MASTER
+#ifdef MASTER
 			R_ASSERT2(_valid(bi.mTransform), "anim kils bone matrix");
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 			if (bi.callback())
 			{
 				bi.callback()(&bi);
-#ifndef MASTER
+#ifdef MASTER
 				R_ASSERT2(_valid(bi.mTransform), make_string("callback kils bone matrix bone: %s ", bd->name.c_str()));
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 			}
 		}
 		bi.mRenderTransform.mul_43(bi.mTransform, bd->m2b_transform);
@@ -227,7 +227,7 @@ void CKinematics::Bone_GetAnimPos(Fmatrix& pos, u16 id, u8 mask_channel, bool ig
 	R_ASSERT(id < LL_BoneCount());
 	CBoneInstance bi = LL_GetBoneInstance(id);
 	BoneChain_Calculate(&LL_GetData(id), bi, mask_channel, ignore_callbacks);
-#ifndef MASTER
+#ifdef MASTER
 	R_ASSERT(_valid(bi.mTransform));
 #endif
 	pos.set(bi.mTransform);

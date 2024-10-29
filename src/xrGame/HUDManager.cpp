@@ -84,19 +84,15 @@ void CHUDManager::Render_Last()
 	::Render->set_HUD(FALSE);
 }
 
-void CHUDManager::Render_Actor_Shadow() // added by KD
+ISpatial* CHUDManager::Render_Actor_Shadow()
 {
-	if (pUIGame == nullptr) return;
+	if (pUIGame)
+		if (auto object = g_pGameLevel->CurrentViewEntity())
+			if (auto actor = smart_cast<CActor*>(object))
+				if (actor->active_cam() == eacFirstEye)
+					return static_cast<ISpatial*>(actor);
 
-	auto object = g_pGameLevel->CurrentViewEntity();
-	if (object == nullptr) return;
-
-	auto actor = smart_cast<CActor*>(object);
-	if (!actor) return;
-
-	if (actor->active_cam() != eacFirstEye) return;
-	::Render->set_Object(object->H_Root());
-	object->renderable_Render();
+	 return nullptr;
 }
 
 #include "player_hud.h"

@@ -20,7 +20,7 @@
 #include "doors_manager.h"
 #include "level_path_builder.h"
 
-#ifndef MASTER
+#ifdef MASTER
 #include "ai_debug.h"
 #endif // MASTER
 
@@ -120,7 +120,7 @@ bool stalker_movement_manager_obstacles::can_build_restricted_path(const obstacl
 void stalker_movement_manager_obstacles::move_along_path_impl(
 	CPHMovementControl* movement_control, Fvector& dest_position, float time_delta)
 {
-#ifndef MASTER
+#ifdef MASTER
 	if (psAI_Flags.test(aiObstaclesAvoidingStatic))
 #endif // MASTER
 	{
@@ -140,7 +140,7 @@ void stalker_movement_manager_obstacles::move_along_path_impl(
 	m_static_obstacles.update();
 
 	if (
-#ifndef MASTER
+#ifdef MASTER
 		(!psAI_Flags.test(aiObstaclesAvoidingStatic) && m_dynamic_obstacles.need_path_to_rebuild()) ||
 #endif // MASTER
 		m_static_obstacles.need_path_to_rebuild())
@@ -170,7 +170,7 @@ void stalker_movement_manager_obstacles::move_along_path(
 
 //	Msg								( "%6d stalker %s is going", Device.dwTimeGlobal, object().cName().c_str() );
 
-#ifndef MASTER
+#ifdef MASTER
 	if (!psAI_Flags.test(aiObstaclesAvoiding))
 	{
 		inherited::move_along_path(movement_control, dest_position, time_delta);

@@ -135,7 +135,7 @@ IC int __cdecl xr_sprintf(char(&destination)[count], LPCSTR format_string, Args.
 {
 	return sprintf_s(destination, count, format_string, std::forward<Args>(args)...);
 }
-#else // #ifndef MASTER
+#else // #ifdef MASTER
 
 IC int xr_strcpy(LPSTR destination, size_t const destination_size, LPCSTR source)
 {
@@ -168,7 +168,7 @@ IC int __cdecl xr_sprintf(char (&destination)[count], LPCSTR format_string, Args
 {
 	return _snprintf_s(destination, count, count - 1, format_string, std::forward<Args>(args)...);
 }
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 
 template <typename ... Args>
 IC xr_string make_string(LPCSTR format, Args... args)

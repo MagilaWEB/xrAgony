@@ -249,9 +249,9 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 			pl.type = eItemPlaceRuck;
 			pl.slot_id = GRENADE_SLOT;
 		}
-#ifndef MASTER
+#ifdef MASTER
 		Msg("item place [%d]", pl);
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 
 		if (pl.type == eItemPlaceSlot)
 			lst_to_add = GetSlotList(pl.slot_id);
@@ -332,9 +332,9 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 			CUIDragDropListEx* curr = all_lists[i];
 			if (RemoveItemFromList(curr, pItem))
 			{
-#ifndef MASTER
+#ifdef MASTER
 				Msg("all ok. item [%d] removed from list", pItem->object_id());
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 				break;
 			}
 			++i;

@@ -34,7 +34,7 @@
 #include "xrEngine/x_ray.h"
 #include "ui/UILoadingScreen.h"
 
-#ifndef MASTER
+#ifdef MASTER
 #include "custommonster.h"
 #endif // MASTER
 
@@ -686,7 +686,7 @@ void CGamePersistent::OnFrame()
 
 	if (Device.Paused())
 	{
-#ifndef MASTER
+#ifdef MASTER
 		if (Level().CurrentViewEntity() && IsGameTypeSingle())
 		{
 			if (!g_actor || (g_actor->ID() != Level().CurrentViewEntity()->ID()))

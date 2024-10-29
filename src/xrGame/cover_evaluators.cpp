@@ -76,10 +76,10 @@ void CCoverEvaluatorBase::evaluate(CCoverPoint const* cover_point, float weight)
 		return;
 	}
 
-#ifndef MASTER
+#ifdef MASTER
 	if (!psAI_Flags.test(aiUseSmartCovers))
 		return;
-#endif // #ifndef MASTER
+#endif // #ifdef MASTER
 
 	smart_cover::cover const* tmp = static_cast<smart_cover::cover const*>(cover_point);
 	if (tmp->is_combat_cover())

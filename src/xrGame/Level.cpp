@@ -206,7 +206,7 @@ void CLevel::cl_Process_Event(u16 dest, u16 type, NET_Packet& P)
 	CGameObject* GO = smart_cast<CGameObject*>(O);
 	if (!GO)
 	{
-#ifndef MASTER
+#ifdef MASTER
 		Msg("! ERROR: c_EVENT[%d] : non-game-object", dest);
 #endif
 		return;
@@ -229,7 +229,7 @@ void CLevel::cl_Process_Event(u16 dest, u16 type, NET_Packet& P)
 		IGameObject* D = Objects.net_Find(id);
 		if (0 == D)
 		{
-#ifndef MASTER
+#ifdef MASTER
 			Msg("! ERROR: c_EVENT[%d] : unknown dest", id);
 #endif
 			ok = false;
@@ -237,7 +237,7 @@ void CLevel::cl_Process_Event(u16 dest, u16 type, NET_Packet& P)
 		CGameObject* GD = smart_cast<CGameObject*>(D);
 		if (!GD)
 		{
-#ifndef MASTER
+#ifdef MASTER
 			Msg("! ERROR: c_EVENT[%d] : non-game-object", id);
 #endif
 			ok = false;
