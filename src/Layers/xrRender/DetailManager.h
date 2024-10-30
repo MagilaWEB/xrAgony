@@ -28,7 +28,7 @@ const float		dm_slot_size = DETAIL_SLOT_SIZE;
 
 
 const u32 		dm_max_cache_size = 62001 * 2; // assuming max dm_size = 248
-class ECORE_API CDetailManager
+class ECORE_API CDetailManager final
 {
 public:
 	enum VisiblesType
@@ -194,6 +194,7 @@ private:
 	void							RessetScaleRandom();
 	void							DetailResset();
 
+	void							TestVisibleM(Fvector EYE);
 	void							UpdateVisibleM(Fvector EYE);
 	void							hw_Load();
 	void							hw_Load_Geom();

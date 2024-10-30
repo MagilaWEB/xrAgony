@@ -217,7 +217,6 @@ public:
 			DetailVisibility.FrameStart();
 			DetailRender.FrameStart();
 			DetailCache.FrameStart();
-			DetailCount = 0;
 			Wallmarks.FrameStart();
 			StaticWMCount = 0;
 			DynamicWMCount = 0;

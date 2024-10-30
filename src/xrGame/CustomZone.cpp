@@ -1368,7 +1368,7 @@ bool CCustomZone::LimitUpdateCL()
 	if (!b_idle || (m_zone_flags.test(eAlwaysFastmode) && IsEnabled()))
 		return true;
 	else
-		return inherited::LimitUpdateCL();
+		return false;
 }
 
 void CCustomZone::CalcDistanceTo(const Fvector& P, float& dist, float& radius)

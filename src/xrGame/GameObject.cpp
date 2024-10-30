@@ -1123,11 +1123,6 @@ void CGameObject::DestroyObject()
 	}
 }
 
-extern ENGINE_API float obj_limit_update_cl_start_dist;
-extern ENGINE_API float obj_limit_update_cl_dist;
-extern ENGINE_API float obj_limit_update_cl_max_sec;
-extern ENGINE_API float LIMIT_UPDATE_CL_DIST;
-extern ENGINE_API float LIMIT_UPDATE_CL_LMIT_TIME;
 void CGameObject::shedule_Update(u32 dt)
 {
 	if (NeedToDestroyObject())
@@ -1252,20 +1247,31 @@ bool CGameObject::LimitFrameUpdateCL()
 	fDeltaTime += Device.fTimeDelta;
 	dwDeltaTime += Device.dwTimeDelta;
 
+	if (LimitUpdateCL())
+		m_timer_limit_sec *= 2;
+
 	if (fDeltaTime < m_timer_limit_sec)
 		return true;
 
 	fDeltaTime = Device.fTimeDelta;
 	dwDeltaTime = Device.dwTimeDelta;
 
-	return LimitUpdateCL();
+	return false;
 }
 
+extern ENGINE_API float obj_limit_update_cl_start_dist;
+extern ENGINE_API float obj_limit_update_cl_dist;
+extern ENGINE_API float obj_limit_update_cl_max_sec;
+extern ENGINE_API float LIMIT_UPDATE_CL_DIST;
+extern ENGINE_API float LIMIT_UPDATE_CL_LMIT_TIME;
 void CGameObject::TestbVisibleVisual()
 {
 	if (Visual())
-		b_test_visual_visible = Device.ViewFromMatrix.testSphere_dirty(Visual()->getVisData().sphere.P,
-			Visual()->getVisData().sphere.R);
+	{
+		u32 mask = 0xff;
+		b_test_visual_visible = Device.ViewFromMatrix.testSAABB(Visual()->getVisData().sphere.P,
+			Visual()->getVisData().sphere.R, Visual()->getVisData().box.data(), mask) == fcvNone;
+	}
 
 	if (const float dist = Device.vCameraPosition.distance_to(Position()) > obj_limit_update_cl_start_dist)
 	{
@@ -1273,15 +1279,24 @@ void CGameObject::TestbVisibleVisual()
 
 		clamp(m_timer_limit_sec, 0.f, obj_limit_update_cl_max_sec);
 
-		// Update 3 times less often if the visual of the object is not visible.
+		// Update 2 times less often if the visual of the object is not visible.
 		// Update 3 times faster if the visual of the object is visible in optics (Preferably divided by the multiplicity of the sight).
 		if (!b_test_visual_visible && !b_test_visual_visibleVP)
-			m_timer_limit_sec *= 3;
+			m_timer_limit_sec *= 2;
 		else if (b_test_visual_visibleVP)
 			m_timer_limit_sec /= 3;
 	}
 	else
-		m_timer_limit_sec = b_test_visual_visible || b_test_visual_visibleVP ? .0f : .05f;
+	{
+		if (b_test_visual_visible || b_test_visual_visibleVP)
+			m_timer_limit_sec = .0f;
+		else
+		{
+			const float dist = Device.vCameraPosition.distance_to(Position());
+			obj_limit_update_cl_dist = dist / LIMIT_UPDATE_CL_DIST;
+			clamp(m_timer_limit_sec, 0.f, obj_limit_update_cl_max_sec);
+		}
+	}
 
 	if (b_test_visual_visibleVP)
 		b_test_visual_visibleVP = false;

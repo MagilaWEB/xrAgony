@@ -253,7 +253,7 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 	float fade_limit = dm_fade * dm_fade;
 	float fade_start = 2.f;
 	float fade_range = fade_limit - fade_start;
-
+	RImplementation.BasicStats.DetailCount = 0;
 	// Initialize 'vis' and 'cache'
 	// Collect objects for rendering
 	for (u32 _mz = 0; _mz < dm_cache1_line; _mz++)
@@ -263,8 +263,9 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 			CacheSlot1& MS = cache_level1[_mz][_mx];
 			if (MS.empty)
 				continue;
-
-			if (!Device.ViewFromMatrix.testSphere_dirty(MS.vis.sphere.P, MS.vis.sphere.R))
+			u32 mask = 0xff;
+			EFC_Visible res = Device.ViewFromMatrix.testSAABB(MS.vis.sphere.P, MS.vis.sphere.R, MS.vis.box.data(), mask);
+			if (res == fcvNone)
 				continue;	// invisible-view frustum
 
 			for (u32 _i = 0; _i < (dm_cache1_count * dm_cache1_count); _i++)
@@ -276,8 +277,9 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 				if (S->empty)
 					continue;
 
-				if (!Device.ViewFromMatrix.testSphere_dirty(S->vis.sphere.P, S->vis.sphere.R))
-					continue;	// invisible-view frustum
+				if (res == fcvPartial)
+					if (Device.ViewFromMatrix.testSAABB(S->vis.sphere.P, S->vis.sphere.R, S->vis.box.data(), mask) == fcvNone)
+						continue;	// invisible-view frustum
 
 				if (!RImplementation.HOM.visible(S->vis))
 					continue;	// invisible-occlusion
@@ -392,7 +394,7 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 
 							//Device.position_render_ui(Item->mRotY.c);
 							m_visibles[vis_id][sp.id].push_back(Item);
-
+							RImplementation.BasicStats.DetailCount++;
 							// Shadow!
 							if (dist_sq < ps_r__Detail_shadow_sun_density)
 								m_visibles_shadow_sun[vis_id][sp.id].push_back(Item);
