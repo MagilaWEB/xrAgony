@@ -207,7 +207,8 @@ void CDetailManager::spawn_Slots(Fvector& view)
 		});
 
 		size_t it = 0;
-		while (!cache_task.empty() && it++ < ps_r__detail_limit_spawn)
+		const size_t limit_spawn = static_cast<size_t>(ps_r__detail_limit_spawn);
+		while (!cache_task.empty() && it++ < limit_spawn)
 		{
 			// Decompress and remove task
 			cache_Decompress(cache_task.back());

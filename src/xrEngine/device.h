@@ -169,7 +169,7 @@ private:
 	MSG msg;
 
 	// Main objects used for creating and rendering the 3D scene
-	u64 m_dwWindowStyle;
+	DWORD m_dwWindowStyle;
 	CTimer TimerMM;
 	RenderDeviceStatictics stats;
 

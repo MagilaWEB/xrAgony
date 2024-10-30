@@ -103,7 +103,7 @@ void CSheduler::internal_Registration()
 	Registration.clear();
 }
 
-void CSheduler::internal_Register(ISheduled* object, BOOL realTime)
+void CSheduler::internal_Register(ISheduled* object, bool realTime)
 {
 	VERIFY(!object->GetSchedulerData().b_locked);
 
@@ -244,14 +244,14 @@ bool CSheduler::Registered(ISheduled* object) const
 }
 #endif // DEBUG
 
-void CSheduler::Register(ISheduled* A, BOOL RT)
+void CSheduler::Register(ISheduled* A, bool RT)
 {
 #ifdef DEBUG
 	VERIFY(!Registered(A));
 #endif
 
 	ItemReg R;
-	R.OP = TRUE;
+	R.OP = true;
 	R.RT = RT;
 	R.Object = A;
 	R.Object->GetSchedulerData().b_RT = RT;
@@ -280,8 +280,8 @@ void CSheduler::Unregister(ISheduled* A)
 	}
 
 	ItemReg R;
-	R.OP = FALSE;
-	R.RT = A->GetSchedulerData().b_RT;
+	R.OP = false;
+	R.RT = !!A->GetSchedulerData().b_RT;
 	R.Object = A;
 
 	Registration.push_back(R);
@@ -291,16 +291,12 @@ void CSheduler::EnsureOrder(ISheduled* Before, ISheduled* After)
 {
 	VERIFY(Before->GetSchedulerData().b_RT && After->GetSchedulerData().b_RT);
 
-	for (u32 i = 0; i < ItemsRT.size(); i++)
+	auto it = ItemsRT.find_if([After](Item item)
 	{
-		if (ItemsRT[i].Object == After)
-		{
-			Item A = ItemsRT[i];
-			ItemsRT.erase(ItemsRT.begin() + i);
-			ItemsRT.push_back(A);
-			return;
-		}
-	}
+		return item.Object == After;
+	});
+
+	std::rotate(ItemsRT.begin(), it, ItemsRT.end());
 }
 
 void CSheduler::Push(Item& item)

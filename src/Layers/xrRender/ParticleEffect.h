@@ -22,7 +22,7 @@ protected:
 	int m_HandleEffect;
 	int m_HandleActionList;
 
-	s32 m_MemDT;
+	u32 m_MemDT;
 
 	Fvector m_InitialPosition;
 
