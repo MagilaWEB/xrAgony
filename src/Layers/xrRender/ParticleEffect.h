@@ -1,13 +1,8 @@
 #ifndef ParticleEffectH
 #define ParticleEffectH
 #include "ParticleEffectDef.h"
-#ifdef _EDITOR
 #include "Layers/xrRender/FBasicVisual.h"
 #include "Layers/xrRender/dxParticleCustom.h"
-#else // _EDITOR
-#include "Layers/xrRender/FBasicVisual.h"
-#include "Layers/xrRender/dxParticleCustom.h"
-#endif // _EDITOR
 
 namespace PS
 {
@@ -45,8 +40,6 @@ public:
 	Flags8 m_RT_Flags;
 
 protected:
-	BOOL SaveActionList(IWriter& F);
-	BOOL LoadActionList(IReader& F);
 
 	void RefreshShader();
 
@@ -56,7 +49,6 @@ public:
 
 	void OnFrame(u32 dt);
 
-	u32 RenderTO();
 	virtual void Render(float LOD);
 	virtual void Copy(dxRender_Visual* pFrom);
 
