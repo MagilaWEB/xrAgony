@@ -47,4 +47,6 @@ void CRenderDevice::Create()
 	Statistic->OnDeviceCreate();
 	dwFrame = 0;
 	PreCache(0, false, false);
+
+	xBench::setupDevice(this);
 }

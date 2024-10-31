@@ -195,7 +195,7 @@ void CRenderDevice::OnFrame()
 
 	if (Device.Paused() == FALSE && g_loading_events.empty())
 	{
-		if (g_pGameLevel && g_pGameLevel->bReady)
+		if (isLevelReady())
 		{
 			LIMIT_UPDATE_FPS_CODE(UniqueCallLimit, 60, ::ScriptEngine->UpdateUniqueCall();)
 				::ScriptEngine->script_process(ScriptProcessor::Level)->update();
@@ -497,14 +497,17 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 		}
 	}
 
-BOOL CRenderDevice::Paused() { return g_pauseMngr().Paused(); }
+bool CRenderDevice::Paused() const
+{
+	return g_pauseMngr().Paused();
+}
 
-const bool CRenderDevice::IsLoadingScreen()
+bool CRenderDevice::IsLoadingScreen() const
 {
 	return pApp->IsLoadingScreen();
 }
 
-const bool CRenderDevice::IsLoadingProsses()
+bool CRenderDevice::IsLoadingProsses() const
 {
 	return !g_loading_events.empty();
 }
@@ -605,4 +608,14 @@ void CRenderDevice::time_factor(const float& time_factor)
 	Timer.time_factor(time_factor);
 	TimerGlobal.time_factor(time_factor);
 	psSoundTimeFactor = time_factor; //--#SM+#--
+}
+
+bool CRenderDevice::isLevelReady() const
+{
+	return g_pGameLevel && g_pGameLevel->bReady;
+}
+
+bool CRenderDevice::isGameProcess() const
+{
+	return isLevelReady() && !IsLoadingScreen() && !Paused();
 }

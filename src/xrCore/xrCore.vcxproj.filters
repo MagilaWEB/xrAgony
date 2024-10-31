@@ -273,6 +273,9 @@
     <ClCompile Include="Threading\Event.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
+    <ClCompile Include="bench.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -616,6 +619,9 @@
     </ClInclude>
     <ClInclude Include="Threading\Event.hpp">
       <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="bench.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

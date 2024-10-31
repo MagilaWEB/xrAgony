@@ -679,9 +679,7 @@ void CGamePersistent::OnFrame()
 	if (!m_intro && m_intro_event.empty() && pApp->IsLoaded())
 		load_screen_renderer.stop();
 
-	if (!g_pGameLevel)
-		return;
-	if (!g_pGameLevel->bReady)
+	if (!Device.isLevelReady())
 		return;
 
 	if (Device.Paused())

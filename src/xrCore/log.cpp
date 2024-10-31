@@ -25,6 +25,7 @@ size_t cached_log = 0;
 
 void FlushLog()
 {
+	aBench::flushStatistics();
 	if (!no_log)
 	{
 		logCS.Enter();
