@@ -167,7 +167,7 @@ ENGINE_API float obj_limit_update_cl_dist = 400.f;
 ENGINE_API float obj_limit_update_cl_max_sec = .5f;
 ENGINE_API float LIMIT_UPDATE_CL_DIST;
 ENGINE_API float LIMIT_UPDATE_CL_LMIT_TIME;
-void CObjectList::Update(bool bLast)
+void CObjectList::Update()
 {
 	if (statsFrame != Device.dwFrame)
 	{
@@ -209,7 +209,7 @@ void CObjectList::Update(bool bLast)
 	if (!destroy_queue.empty())
 	{
 		// Info
-		if (bLast)
+		if (g_pGameLevel->bReady)
 		{
 			for (auto oit : objects_active)
 				for (int it = destroy_queue.size() - 1; it >= 0; it--)

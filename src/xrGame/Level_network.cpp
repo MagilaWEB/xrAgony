@@ -27,72 +27,39 @@ extern bool g_b_ClearGameCaptions;
 
 void CLevel::remove_objects()
 {
-	if (!IsGameTypeSingle())
-		Msg("CLevel::remove_objects - Start");
-	//BOOL b_stored = psDeviceFlags.test(rsDisableObjectsAsCrows);
-
-	if (OnServer())
-	{
-		R_ASSERT(Server);
-		Server->SLS_Clear();
-	}
-
-	if (OnClient())
-		ClearAllObjects();
-
+	bReady = false;
+	Server->SLS_Clear();
 	snd_Events.clear();
-
-	// ugly hack for checks that update is twice on frame
-	// we need it since we do updates for checking network messages
 	++Device.dwFrame;
-	//psDeviceFlags.set(rsDisableObjectsAsCrows, TRUE);
 	ClientReceive();
-
 	ProcessGameEvents();
-
-	Objects.Update(false);
+	Objects.Update();
+	R_ASSERT(!Objects.o_count());
 
 #ifdef DEBUG
 	Msg("Update objects list...");
 	Objects.dump_all_objects();
 #endif // #ifdef DEBUG
 
-	R_ASSERT(!Objects.o_count());
-
 	BulletManager().Clear();
 	ph_commander().clear();
 	ph_commander_scripts().clear();
-
 	space_restriction_manager().clear();
-
-	//psDeviceFlags.set(rsDisableObjectsAsCrows, b_stored);
 	g_b_ClearGameCaptions = true;
-
 	::ScriptEngine->collect_all_garbage();
-
 	stalker_animation_data_storage().clear();
-
 	VERIFY(::Render);
 	::Render->models_Clear(FALSE);
-
 	::Render->clear_static_wallmarks();
 
 #ifdef DEBUG
 	if (!client_spawn_manager().registry().empty())
 		client_spawn_manager().dump();
-#endif // DEBUG
-
-#ifdef DEBUG
 	VERIFY(client_spawn_manager().registry().empty());
 #endif
+
 	client_spawn_manager().clear();
-
 	g_pGamePersistent->destroy_particles(false);
-
-	//.	xr_delete									(m_seniority_hierarchy_holder);
-	//.	m_seniority_hierarchy_holder				= new CSeniorityHierarchyHolder();
-	if (!IsGameTypeSingle())
-		Msg("CLevel::remove_objects - End");
 }
 
 #ifdef DEBUG
@@ -117,8 +84,6 @@ void CLevel::net_Stop()
 
 	if (g_tutorial2 && !g_tutorial->Persistent())
 		g_tutorial2->Stop();
-
-	bReady = false;
 
 	remove_objects();
 

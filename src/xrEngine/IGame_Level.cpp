@@ -54,13 +54,10 @@ IGame_Level::~IGame_Level()
 
 void IGame_Level::net_Stop()
 {
-	// XXX: why update 6 times?
-	//for (int i = 0; i < 6; i++) WTF!
-	Objects.Update();
-	// Destroy all objects
-	Objects.Unload();
+	//Objects.Update();
+	//Objects.Unload();
+	R_ASSERT(!Objects.o_count());
 	IR_Release();
-
 	bReady = false;
 }
 

@@ -87,7 +87,7 @@ private:
 	void SingleUpdate(IGameObject* O, bool b_forced = false);
 
 public:
-	void Update(bool bLast = true);
+	void Update();
 
 	void net_Register(IGameObject* O);
 	void net_Unregister(IGameObject* O);
