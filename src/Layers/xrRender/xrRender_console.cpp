@@ -652,6 +652,9 @@ public:
 };
 #endif // DEBUG
 
+float		ps_r__render_distance = 250.f;
+float		ps_r__render_distance_sqr = 62500.f;
+
 //-----------------------------------------------------------------------
 void xrRender_initconsole()
 {
@@ -866,5 +869,19 @@ void xrRender_initconsole()
 	CMD1(CCC_memory_stats, "render_memory_stats");
 
 	// CMD3(CCC_Mask, "r2_sun_ignore_portals", &ps_r2_ls_flags, R2FLAG_SUN_IGNORE_PORTALS);
+
+	class CCC_RenderDistance : public CCC_Float
+	{
+	public:
+		CCC_RenderDistance(LPCSTR N, float* V, float _min, float _max) : CCC_Float(N, V, _min, _max) {}
+
+		void Execute(LPCSTR args) override
+		{
+			__super::Execute(args);
+			ps_r__render_distance_sqr = _sqr(ps_r__render_distance);
+		}
+	};
+	
+	CMD4(CCC_RenderDistance, "r__render_distance", &ps_r__render_distance, 0.f, 3000.f);
 }
 #endif

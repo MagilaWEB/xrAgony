@@ -210,63 +210,69 @@ void CRender::render_main(bool deffered)
 				return v_res1.sub(v_res2).magnitude();
 			};
 
-			constexpr float base_fov = 67.f;
-			// Aproximate, adjusted by fov, distance from camera to position (For right work when looking though binoculars and scopes)
-			auto GetDistFromCamera = [](const Fvector& from_position) -> float
-			{
-				float distance = Device.vCameraPosition.distance_to(from_position);
-				float fov_K = base_fov / Device.fFOV;
-				float adjusted_distane = distance / fov_K;
+			auto renderable = spatial->dcast_Renderable();
+			if (!renderable)
+				continue;
 
-				return adjusted_distane;
-			};
+			float dist = renderable->getDistanceToCamera();
+			//dist /= spatial_data.sphere.R;
+			if (ps_r__render_distance_sqr && dist > ps_r__render_distance_sqr)
+				continue;
+
+			if (dist >= _sqr(g_pGamePersistent->Environment().CurrentEnv->fog_distance))
+				continue;
 
 			if (dont_test_sectors)
 			{
 				if (spatial_data.type & STYPE_RENDERABLE && psDeviceFlags.test(rsDrawDynamic))
 				{
-					// renderable
-					if (IRenderable* renderable = spatial->dcast_Renderable())
+					if (CalcSSADynamic(spatial_data.sphere.P, spatial_data.sphere.R) > .002f && deffered)
 					{
-						if (Device.vCameraPosition.distance_to_sqr(spatial_data.sphere.P) < _sqr(g_pGamePersistent->Environment().CurrentEnv->fog_distance))
+						if (auto pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
 						{
-							if (CalcSSADynamic(spatial_data.sphere.P, spatial_data.sphere.R) > 0.002f && GetDistFromCamera(spatial_data.sphere.P) < 220.f)
-							{
-								if (deffered)
-								{
-									CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual);
-									if (pKin)
-									{
-										pKin->CalculateBones(TRUE);
-										pKin->CalculateWallmarks();
-										//dbg_text_renderer(spatial->spatial.sphere.P);
-									}
-								}
-
-								if (spatial_data.sphere.R > 1.f)
-								{
-									// Rendering
-									set_Object(renderable);
-									renderable->renderable_Render();
-									set_Object(nullptr);
-								}
-							}
-							
-							if (spatial_data.sphere.R <= 1.f)
-							{
-								// Rendering
-								set_Object(renderable);
-								renderable->renderable_Render();
-								set_Object(nullptr);
-							}
+							pKin->CalculateBones(TRUE);
+							pKin->CalculateWallmarks();
+							//dbg_text_renderer(spatial->spatial.sphere.P);
 						}
 					}
-				}
 
-				if (spatial_data.type & STYPE_PARTICLE && !deffered)
+					// Rendering
+					set_Object(renderable);
+					renderable->renderable_Render();
+					set_Object(nullptr);
+				}
+				else if (spatial_data.type & STYPE_PARTICLE && !deffered)
 				{
-					// renderable
-					if (IRenderable* renderable = spatial->dcast_Renderable())
+					// Rendering
+					set_Object(renderable);
+					renderable->renderable_Render();
+					set_Object(nullptr);
+				}
+			}
+			else if (PortalTraverser.i_marker == sector->r_marker)
+			{
+				for (auto& view : sector->r_frustums)
+				{
+					if (!view.testSphere_dirty(spatial_data.sphere.P, spatial_data.sphere.R))
+						continue;
+
+					if (spatial_data.type & STYPE_RENDERABLE && psDeviceFlags.test(rsDrawDynamic))
+					{
+						if (CalcSSADynamic(spatial_data.sphere.P, spatial_data.sphere.R) > .002f && deffered)
+						{
+							if (auto pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
+							{
+								pKin->CalculateBones(TRUE);
+								pKin->CalculateWallmarks();
+							}
+						}
+
+						// Rendering
+						set_Object(renderable);
+						renderable->renderable_Render();
+						set_Object(nullptr);
+					}
+					else if (spatial_data.type & STYPE_PARTICLE && !deffered)
 					{
 						// Rendering
 						set_Object(renderable);
@@ -275,75 +281,10 @@ void CRender::render_main(bool deffered)
 					}
 				}
 			}
-			else
-			{
-				if (PortalTraverser.i_marker != sector->r_marker)
-					continue;	// inactive (untouched) sector
-
-				for (u32 v_it = 0; v_it < sector->r_frustums.size(); v_it++)
-				{
-					CFrustum& view = sector->r_frustums[v_it];
-					if (!view.testSphere_dirty(spatial_data.sphere.P, spatial_data.sphere.R))	continue;
-
-					if (spatial_data.type & STYPE_RENDERABLE && psDeviceFlags.test(rsDrawDynamic))
-					{
-						// renderable
-						if (IRenderable* renderable = spatial->dcast_Renderable())
-						{
-							if (Device.vCameraPosition.distance_to_sqr(spatial_data.sphere.P) < _sqr(g_pGamePersistent->Environment().CurrentEnv->fog_distance))
-							{
-								if (CalcSSADynamic(spatial_data.sphere.P, spatial_data.sphere.R) > 0.002f && GetDistFromCamera(spatial_data.sphere.P) < 220.f)
-								{
-									if (deffered)
-									{
-										CKinematics* pKin = (CKinematics*)renderable->GetRenderData().visual;
-										if (pKin)
-										{
-											pKin->CalculateBones(TRUE);
-											pKin->CalculateWallmarks();
-											//dbg_text_renderer(spatial->spatial.sphere.P);
-										}
-									}
-
-									if (spatial_data.sphere.R > 1.f)
-									{
-										// Rendering
-										set_Object(renderable);
-										renderable->renderable_Render();
-										set_Object(nullptr);
-									}
-								}
-								
-								if (spatial_data.sphere.R <= 1.f)
-								{
-									// Rendering
-									set_Object(renderable);
-									renderable->renderable_Render();
-									set_Object(nullptr);
-								}
-							}
-						}
-					}
-
-					if (spatial_data.type & STYPE_PARTICLE && !deffered)
-					{
-						// renderable
-						if (IRenderable* renderable = spatial->dcast_Renderable())
-						{
-							// Rendering
-							set_Object(renderable);
-							renderable->renderable_Render();
-							set_Object(nullptr);
-						}
-					}
-				}
-			}
 		}
 	}
 	else
-	{
 		set_Object(nullptr);
-	}
 }
 
 extern u32 g_r;
