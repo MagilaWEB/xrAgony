@@ -831,27 +831,13 @@ void CActor::g_Physics(Fvector& _accel, float jump, float dt)
 	}
 }
 
-float g_fov = 67.5f;
-float g_scope_fov = 75.0f;
-
 float CActor::currentFOV()
 {
-	if (!psHUD_Flags.is(HUD_WEAPON | HUD_WEAPON_RT | HUD_WEAPON_RT2))
-		return g_fov;
-
-	if (eacFirstEye == cam_active)
-	{
-		CWeapon* pWeapon = smart_cast<CWeapon*>(inventory().ActiveItem());
-		if (pWeapon && pWeapon->IsZoomed())
-		{
-			if (!pWeapon->ZoomTexture())
-				return atan(tan(g_fov * (0.5 * PI / 180)) / pWeapon->GetZoomFactor()) / (0.5 * PI / 180); //Alun: For iron sights, we use camera fov
-
-			if (!pWeapon->IsRotatingToZoom())
-				return atan(tan(g_scope_fov * (0.5 * PI / 180)) / pWeapon->GetZoomFactor()) / (0.5 * PI / 180); //Alun: This assumes scope has a fake 75 FOV so that no matter camera FOV the scope FOV is exactly the same
-		}
-	}
-	return g_fov;
+	if (psHUD_Flags.is(HUD_WEAPON | HUD_WEAPON_RT | HUD_WEAPON_RT2) && eacFirstEye == cam_active)
+		if (auto wpn = smart_cast<CWeapon*>(inventory().ActiveItem()))
+			if (float zoom_factor = wpn->GetZoomFactor())
+				return					(fMore(zoom_factor, 1.f)) ? rad2degHalf(atanf(Device.gAimFOVTan / zoom_factor)) : Device.gAimFOV;
+	return								Device.gFOV;
 }
 
 static bool bLook_cam_fp_zoom = false;

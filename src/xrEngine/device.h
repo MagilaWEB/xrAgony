@@ -96,9 +96,9 @@ public:
 	float fASPECT;
 	float iZoomSqr;
 
-	float gFOV;
-	float gAimFOV;
-	float gAimFOVTan;
+	float gFOV = 75.f;
+	float gAimFOV = 36.f;
+	float gAimFOVTan = 0.72654252800536088589546675748062f;
 
 	struct RenderDeviceStatictics final
 	{
