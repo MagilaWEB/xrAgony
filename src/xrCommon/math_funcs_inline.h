@@ -20,11 +20,24 @@ inline bool dsimilar(double a, double b, double cmp = EPS) { return _abs(a-b)<cm
 inline bool fis_zero(float val, float cmp = EPS_S) noexcept { return _abs(val) < cmp; }
 inline bool dis_zero(double val, double cmp = EPS_S) noexcept { return _abs(val) < cmp; }
 
+IC bool fLess			(float x, float y, float eps = EPS)		{ return (x < y - eps); }
+IC bool fLessOrEqual	(float x, float y, float eps = EPS)		{ return (x < y + eps); }
+IC bool fMore			(float x, float y, float eps = EPS)		{ return (y + eps < x); }
+IC bool fMoreOrEqual	(float x, float y, float eps = EPS)		{ return (y - eps < x); }
+IC bool fEqual			(float x, float y, float eps = EPS)		{ return (_abs(x - y) < eps); }
+IC bool fIsZero			(float x, float eps = EPS)				{ return (_abs(x) < eps); }
+
 // degree to radians and vice-versa
 constexpr float  deg2rad(float  val) noexcept { return val*M_PI / 180; }
 constexpr double deg2rad(double val) noexcept { return val*M_PI / 180; }
 constexpr float  rad2deg(float  val) noexcept { return val*180 / M_PI; }
-constexpr double rad2deg(double val) noexcept { return val*180 / M_PI;}
+constexpr double rad2deg(double val) noexcept { return val*180 / M_PI; }
+
+constexpr float deg2rad_half_mul = .5f * PI / 180.f;
+constexpr float rad2deg_half_mul = 2.f * 180.f / PI;
+
+ICF float deg2radHalf(float val) { return val * deg2rad_half_mul; }
+ICF float rad2degHalf(float val) { return val * rad2deg_half_mul; }
 
 // clamping/snapping
 template <class T>
