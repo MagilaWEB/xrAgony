@@ -747,32 +747,6 @@ void CGamePersistent::OnFrame()
 
 			Actor()->Cameras().UpdateFromCamera(C);
 			Actor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
-
-			if (psActorFlags.test(AF_NO_CLIP))
-			{
-				Device.dwTimeDelta = 0;
-				Device.fTimeDelta = 0.01f;
-				Actor()->UpdateCL();
-				Actor()->shedule_Update(0);
-
-				CSE_Abstract* e = Level().Server->ID_to_entity(Actor()->ID());
-				VERIFY(e);
-				CSE_ALifeCreatureActor* s_actor = smart_cast<CSE_ALifeCreatureActor*>(e);
-				VERIFY(s_actor);
-
-				if (s_actor)
-				{
-					for (u16 id : s_actor->children)
-					{
-						IGameObject* obj = Level().Objects.net_Find(id);
-						if (obj)
-						{
-							obj->shedule_Update(0);
-							obj->UpdateCL();
-						}
-					}
-				}
-			}
 		}
 #endif // MASTER
 	}

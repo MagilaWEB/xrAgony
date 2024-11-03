@@ -232,13 +232,6 @@ CActor::~CActor()
 	xr_delete(m_night_vision);
 }
 
-bool CActor::LimitFrameUpdateCL()
-{
-	fDeltaTime = Device.fTimeDelta;
-	dwDeltaTime = Device.dwTimeDelta;
-	return false;
-}
-
 void CActor::reinit()
 {
 	character_physics_support()->movement()->CreateCharacter();

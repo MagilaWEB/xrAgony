@@ -428,7 +428,7 @@ void CCar::UpdateEx(float fov)
 	}
 }
 
-bool CCar::LimitUpdateCL()
+bool CCar::alwaysUpdateCL()
 {
 	return (m_car_weapon && m_car_weapon->IsActive());
 }

@@ -35,6 +35,8 @@ extern void CreateUIGeom();
 extern void DestroyUIGeom();
 extern void InitHudSoundSettings();
 
+void load_static_data();
+
 #include "xrEngine/IGame_Persistent.h"
 void init_game_globals()
 {
@@ -50,6 +52,8 @@ void init_game_globals()
 	CHARACTER_RANK::InitInternal();
 	CHARACTER_REPUTATION::InitInternal();
 	MONSTER_COMMUNITY::InitInternal();
+
+	load_static_data();
 }
 
 extern CUIXml* g_uiSpotXml;
@@ -107,4 +111,9 @@ void clean_game_globals()
 	DestroyUIGeom();
 	xr_delete(pWpnScopeXml);
 	CUITextureMaster::FreeTexInfo();
+}
+
+void load_static_data()
+{
+	CGameObject::loadStaticData();
 }

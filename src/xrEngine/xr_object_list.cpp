@@ -31,7 +31,6 @@ void CObjectList::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 	const float engineTotal = Device.GetStats().EngineTotal.GetResult_ms();
 	const float percentage = 100.0f * stats.Update.GetResult_ms() / engineTotal;
 	font.OutNext("Objects UpdateCL:%2.5fms, %2.1f%%", stats.Update.GetResult_ms(), percentage);
-	font.OutNext("- TestVisibleVisual:%2.5fms", stats.TestVisibleVisual.GetResult_ms());
 	//font.OutNext("- crow:		%d", stats.Crows);
 	font.OutNext("- active:	%d", stats.Active);
 	font.OutNext("- total:	%d", stats.Total);
@@ -110,63 +109,6 @@ void CObjectList::o_sleep(IGameObject* O)
 	objects_sleeping.push_back(O);
 }
 
-void CObjectList::SingleUpdate(IGameObject* O, bool b_forced)
-{
-	if (Device.dwFrame == O->GetUpdateFrame())
-	{
-#ifdef DEBUG
-		// if (O->getDestroy())
-		// Msg ("- !!!processing_enabled ->destroy_queue.push_back %s[%d] frame [%d]",O->cName().c_str(), O->ID(),
-		// Device.dwFrame);
-#endif // #ifdef DEBUG
-
-		return;
-	}
-
-	if (!O->processing_enabled())
-	{
-#ifdef DEBUG
-		// if (O->getDestroy())
-		// Msg ("- !!!processing_enabled ->destroy_queue.push_back %s[%d] frame [%d]",O->cName().c_str(), O->ID(),
-		// Device.dwFrame);
-#endif // #ifdef DEBUG
-
-		return;
-	}
-
-	if (!b_forced && O->LimitFrameUpdateCL())
-	{
-		//Msg("- !!!LimitFrameUpdateCL %s[%d] frame [%d]", O->cName().c_str(), O->ID());
-		return;
-	}
-
-	if (O->H_Parent())
-		SingleUpdate(O->H_Parent(), true);
-
-	stats.Updated++;
-	O->SetUpdateFrame(Device.dwFrame);
-
-	// Msg ("[%d][0x%08x]IAmNotACrowAnyMore (CObjectList::SingleUpdate)", Device.dwFrame, dynamic_cast<void*>(O));
-
-	O->UpdateCL();
-
-#ifdef DEBUG
-	VERIFY3(O->GetDbgUpdateFrame() == Device.dwFrame, "Broken sequence of calls to 'UpdateCL'", *O->cName());
-#endif
-
-	if (O->H_Parent() && (O->H_Parent()->getDestroy() || O->H_Root()->getDestroy()))
-	{
-		// Push to destroy-queue if it isn't here already
-		Msg("! ERROR: incorrect destroy sequence for object[%d:%s], section[%s], parent[%d:%s]", O->ID(), *O->cName(),
-			*O->cNameSect(), O->H_Parent()->ID(), *O->H_Parent()->cName());
-	}
-}
-
-ENGINE_API float obj_limit_update_cl_start_dist = 10.f;
-ENGINE_API float obj_limit_update_cl_dist = 400.f;
-ENGINE_API float obj_limit_update_cl_max_sec = .5f;
-ENGINE_API float LIMIT_UPDATE_CL_DIST;
-ENGINE_API float LIMIT_UPDATE_CL_LMIT_TIME;
 void CObjectList::Update()
 {
 	if (statsFrame != Device.dwFrame)
@@ -174,35 +116,24 @@ void CObjectList::Update()
 		statsFrame = Device.dwFrame;
 		stats.FrameStart();
 	}
-	if (!Device.Paused())
+
+	if (!Device.Paused() && Device.fTimeDelta > EPS_S)
 	{
-		// Clients
-		if (Device.fTimeDelta > EPS_S)
+		stats.Updated = 0;
+		stats.Update.Begin();
+		stats.Active = objects_active.size();
+		stats.Total = objects_active.size() + objects_sleeping.size();
+
+		for (auto i_game_object : objects_active)
 		{
-			stats.Updated = 0;
-
-			
-			LIMIT_UPDATE_FPS_CODE(TestVisibleVisual, 3, {
-				stats.TestVisibleVisual.Begin();
-				tbb::parallel_for_each(objects_active, [](IGameObject* O) -> void
-				{
-					O->TestbVisibleVisual();
-				});
-				stats.TestVisibleVisual.End();
-			});
-
-			stats.Update.Begin();
-			stats.Active = objects_active.size();
-			stats.Total = objects_active.size() + objects_sleeping.size();
-
-			LIMIT_UPDATE_CL_DIST = obj_limit_update_cl_start_dist + obj_limit_update_cl_dist;
-			LIMIT_UPDATE_CL_LMIT_TIME = obj_limit_update_cl_start_dist / LIMIT_UPDATE_CL_DIST;
-
-			for (auto i_game_object : objects_active)
-				SingleUpdate(i_game_object);
-
-			stats.Update.End();
+			if (i_game_object->queryUpdateCL())
+			{
+				stats.Updated++;
+				i_game_object->update();
+			}
 		}
+
+		stats.Update.End();
 	}
 
 	// Destroy

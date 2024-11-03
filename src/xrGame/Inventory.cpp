@@ -744,55 +744,54 @@ void CInventory::RepackAmmo(PIItem pIItem)
 
 void CInventory::Update()
 {
-	if (OnServer())
+	if (auto ai = ActiveItem())
+		ai->object().update();
+
+	if (m_iActiveSlot != m_iNextActiveSlot)
 	{
-		if (m_iActiveSlot != m_iNextActiveSlot)
+		IGameObject* pActor_owner = smart_cast<IGameObject*>(m_pOwner);
+		if (Level().CurrentViewEntity() == pActor_owner)
 		{
-			IGameObject* pActor_owner = smart_cast<IGameObject*>(m_pOwner);
-			if (Level().CurrentViewEntity() == pActor_owner)
-			{
-				if ((m_iNextActiveSlot != NO_ACTIVE_SLOT) && ItemFromSlot(m_iNextActiveSlot) &&
-					!g_player_hud->allow_activation(ItemFromSlot(m_iNextActiveSlot)->cast_hud_item()))
-					return;
-			}
-			if (ActiveItem())
-			{
-				CHudItem* hi = ActiveItem()->cast_hud_item();
-
-				if (!hi->IsHidden())
-				{
-					if (hi->GetState() == CHUDState::eIdle && hi->GetNextState() == CHUDState::eIdle)
-						hi->SendDeactivateItem();
-
-					UpdateDropTasks();
-					return;
-				}
-			}
-
- 
-
-			if (GetNextActiveSlot() != NO_ACTIVE_SLOT)
-			{
-				PIItem tmp_next_active = ItemFromSlot(GetNextActiveSlot());
-				if (tmp_next_active)
-				{
-					if (IsSlotBlocked(tmp_next_active))
-					{
-						Activate(m_iActiveSlot);
-						return;
-					}
-					else
-					{
-						tmp_next_active->ActivateItem();
-					}
-				}
-			}
-
-			m_iActiveSlot = GetNextActiveSlot();
+			if ((m_iNextActiveSlot != NO_ACTIVE_SLOT) && ItemFromSlot(m_iNextActiveSlot) &&
+				!g_player_hud->allow_activation(ItemFromSlot(m_iNextActiveSlot)->cast_hud_item()))
+				return;
 		}
-		else if ((GetNextActiveSlot() != NO_ACTIVE_SLOT) && ActiveItem() && ActiveItem()->cast_hud_item()->IsHidden())
-			ActiveItem()->ActivateItem();
+		if (ActiveItem())
+		{
+			CHudItem* hi = ActiveItem()->cast_hud_item();
+
+			if (!hi->IsHidden())
+			{
+				if (hi->GetState() == CHUDState::eIdle && hi->GetNextState() == CHUDState::eIdle)
+					hi->SendDeactivateItem();
+
+				UpdateDropTasks();
+				return;
+			}
+		}
+
+		if (GetNextActiveSlot() != NO_ACTIVE_SLOT)
+		{
+			PIItem tmp_next_active = ItemFromSlot(GetNextActiveSlot());
+			if (tmp_next_active)
+			{
+				if (IsSlotBlocked(tmp_next_active))
+				{
+					Activate(m_iActiveSlot);
+					return;
+				}
+				else
+				{
+					tmp_next_active->ActivateItem();
+				}
+			}
+		}
+
+		m_iActiveSlot = GetNextActiveSlot();
 	}
+	else if ((GetNextActiveSlot() != NO_ACTIVE_SLOT) && ActiveItem() && ActiveItem()->cast_hud_item()->IsHidden())
+		ActiveItem()->ActivateItem();
+
 	UpdateDropTasks();
 }
 

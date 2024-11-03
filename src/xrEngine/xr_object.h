@@ -96,62 +96,14 @@ public:
 	using CALLBACK_VECTOR = svector<visual_callback, 6>;
 	using CALLBACK_VECTOR_IT = CALLBACK_VECTOR::iterator;
 	using CScriptCallbackExVoid = CScriptCallbackEx<void>;
-	// typedef xr_map<GameObject::ECallbackType, CScriptCallbackExVoid> CALLBACK_MAP;
-	// typedef CALLBACK_MAP::iterator CALLBACK_MAP_IT;
 
 	virtual ~IGameObject() = 0;
-// derived interfaces: some functions declared as final in base classes
-// IFactoryObject
-// virtual CLASS_ID &GetClassId() override = 0;
-// virtual IFactoryObject *_construct() override = 0;
-// ~IFactoryObject
-// ISpatial
-// virtual bool spatial_inside() override = 0;
-// virtual void spatial_register() override = 0;
-// virtual void spatial_unregister() override = 0;
-// virtual void spatial_move() override = 0;
-// virtual Fvector spatial_sector_point() override = 0;
-// virtual void spatial_updatesector() override = 0;
-// virtual IGameObject *dcast_GameObject() override = 0;
-// virtual Feel::Sound *dcast_FeelSound() override = 0;
-// virtual IRenderable *dcast_Renderable() override = 0;
-// virtual IRender_Light *dcast_Light() override = 0;
-// ~ISpatial
-// IScheduled
-// virtual SchedulerData &GetSchedulerData() override = 0;
-// virtual float shedule_Scale() override = 0;
-// virtual void shedule_Update(u32 dt) override = 0; // Called by sheduler
-// virtual shared_str shedule_Name() const override = 0;
-// virtual bool shedule_Needed() override = 0;
-// ~ISheduled
-// IRenderable
-// virtual RenderData &GetRenderData() override = 0;
-// virtual void renderable_Render() override = 0;
-// virtual IRender_ObjectSpecific *renderable_ROS() override = 0;
-// virtual BOOL renderable_ShadowGenerate() override = 0;
-// virtual BOOL renderable_ShadowReceive() override = 0;
-// ~IRenderable
-// ICollidable
-// virtual void SetCForm(ICollisionForm *cform) override = 0;
-// virtual ICollisionForm *GetCForm() const override = 0;
-// ~ICollidable
 #ifdef DEBUG
 	virtual u32 GetDbgUpdateFrame() const = 0;
 	virtual void SetDbgUpdateFrame(u32 value) = 0;
-#endif
-	virtual u32 GetUpdateFrame() const = 0;
-	virtual void SetUpdateFrame(u32 value) = 0;
-// Crow-MODE
-// if (object_is_visible)
-// if (object_is_near)
-// if (object_is_crow_always)
-#ifdef DEBUG
 	virtual void DBGGetProps(GameObjectProperties& p) const = 0;
 #endif
 
-	virtual bool LimitUpdateCL() = 0;
-	virtual bool LimitFrameUpdateCL() = 0;
-	virtual void TestbVisibleVisual() = 0;
 	// Network
 	virtual BOOL Local() const = 0;
 	virtual BOOL Remote() const = 0;
@@ -193,8 +145,6 @@ public:
 	virtual shared_str cNameVisual() const = 0;
 	virtual void cNameVisual_set(shared_str N) = 0;
 	// Properties
-	virtual const float fDeltaT() const = 0;
-	virtual const size_t dwDeltaT() const = 0;
 	virtual void processing_activate() = 0; // request to enable UpdateCL
 	virtual void processing_deactivate() = 0; // request to disable UpdateCL
 	virtual bool processing_enabled() = 0;
@@ -213,8 +163,6 @@ public:
 	// ~Properties
 	virtual void Load(LPCSTR section) = 0;
 	virtual void PostLoad(LPCSTR section) = 0; //--#SM+#--
-	// Update
-	virtual void UpdateCL() = 0; // Called each frame, so no need for dt
 	// Position stack
 	virtual u32 ps_Size() const = 0;
 	virtual GameObjectSavedPosition ps_Element(u32 id) const = 0;
@@ -355,6 +303,13 @@ public:
 	virtual void set_nonscript_usable(bool usable) = 0;
 	virtual CScriptBinderObject* GetScriptBinderObject() = 0;
 	virtual void SetScriptBinderObject(CScriptBinderObject* obj) = 0;
+
+private:
+	virtual void UpdateCL() = 0;
+
+public:
+	virtual bool queryUpdateCL() = 0;
+	virtual void update() = 0;
 };
 
 inline IGameObject::~IGameObject() {}
