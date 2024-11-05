@@ -318,11 +318,8 @@ void CRender::Render()
 
 	// HOM
 	View = 0;
-	if (!ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))
-	{
-		HOM.Enable();
-		HOM.Render(Device.ViewFromMatrix);
-	}
+	HOM.Enable();
+	HOM.Render(Device.ViewFromMatrix);
 
 	//******* Z-prefill calc - DEFERRER RENDERER
 	Target->phase_scene_prepare();
