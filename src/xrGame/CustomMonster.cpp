@@ -61,7 +61,7 @@
 void SetActorVisibility(u16 who, float value);
 extern int g_AI_inactive_time;
 
-#ifdef MASTER
+#if defined(MASTER) || defined(DEBUG)
 Flags32 psAI_Flags = { aiObstaclesAvoiding | aiUseSmartCovers };
 #endif // MASTER
 

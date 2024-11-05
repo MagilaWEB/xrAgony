@@ -211,8 +211,8 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 	static shared_str strXForm("xform");
 
 	// Matrices and offsets
-	u32 vOffset = 0;
-	u32 iOffset = 0;
+	size_t vOffset = 0;
+	size_t iOffset = 0;
 
 	CEnvDescriptor& desc = *g_pGamePersistent->Environment().CurrentEnv;
 	Fvector
@@ -223,10 +223,10 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 	c_sun.mul(.5f);
 
 	// Iterate
-	for (u32 O = 0; O < objects.size(); O++)
+	for (size_t O = 0; O < objects.size(); O++)
 	{
 		CDetail& Object = *objects[O];
-		xr_vector <SlotItem*> vis = v_list[O];
+		concurrent_vector <SlotItem*> vis = v_list[O];
 
 		if (!vis.empty())
 		{
@@ -242,39 +242,29 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 			RCache.set_c(strXForm, Device.mFullTransform);
 
 			//	Map constants to memory directly
+			constexpr size_t size_vector4 = sizeof(Fvector4) * 4;
 			Fvector4* c_storage{};
-			RCache.get_ConstantDirect(strArray, hw_BatchSize * sizeof(Fvector4) * 4, reinterpret_cast<void**>(&c_storage), nullptr, nullptr);
+			RCache.get_ConstantDirect(strArray, hw_BatchSize * size_vector4, reinterpret_cast<void**>(&c_storage), nullptr, nullptr);
 
-			u32 dwBatch = 0;
-			for (SlotItem* Instance : vis)
+			size_t dwBatch = 0;
+			for (SlotItem* Item : vis)
 			{
-				if (!Instance) continue;
+				size_t base = dwBatch * 4;
 
-				u32 base = dwBatch * 4;
-
-				// Build matrix ( 3x4 matrix, last row - color )
-				float scale = Instance->scale_calculated;
-				float scale_height = scale * ps_r__detail_height;
-				Fmatrix& M = Instance->mRotY;
-				c_storage[base + 0].set(M._11 * scale, M._21 * scale_height, M._31 * scale, M._41);
-				c_storage[base + 1].set(M._12 * scale, M._22 * scale_height, M._32 * scale, M._42);
-				c_storage[base + 2].set(M._13 * scale, M._23 * scale_height, M._33 * scale, M._43);
-
-				// Build color
-				float h = Instance->c_hemi;
-				float s = Instance->c_sun;
-				c_storage[base + 3].set(s, s, s, h);
+				// matrix ( 3x4 matrix, last row - color )
+				for(size_t i = 0; i < 4; i++)
+					c_storage[base + i] = std::move(Item->build_matrix[i]);
 
 				if (++dwBatch == hw_BatchSize)
 				{
 					// flush
 					//Device.Statistic->RenderDUMP_DT_Count += dwBatch;
-					u32 dwCNT_verts = dwBatch * Object.number_vertices;
-					u32 dwCNT_prims = (dwBatch * Object.number_indices) / 3;
+					size_t dwCNT_verts = dwBatch * Object.number_vertices;
+					size_t dwCNT_prims = (dwBatch * Object.number_indices) / 3;
 					RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
 					//RCache.stat.r.s_details.add(dwCNT_verts);
-
-					RCache.get_ConstantDirect(strArray, hw_BatchSize * sizeof(Fvector4) * 4, reinterpret_cast<void**>(&c_storage), nullptr, nullptr);
+					
+					RCache.get_ConstantDirect(strArray, hw_BatchSize * size_vector4, reinterpret_cast<void**>(&c_storage), nullptr, nullptr);
 					// restart
 					dwBatch = 0;
 				}
@@ -283,8 +273,8 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 			if (dwBatch)
 			{
 				//Device.Statistic->RenderDUMP_DT_Count += dwBatch;
-				u32 dwCNT_verts = dwBatch * Object.number_vertices;
-				u32 dwCNT_prims = (dwBatch * Object.number_indices) / 3;
+				size_t dwCNT_verts = dwBatch * Object.number_vertices;
+				size_t dwCNT_prims = (dwBatch * Object.number_indices) / 3;
 				RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
 				//RCache.stat.r.s_details.add(dwCNT_verts);
 			}

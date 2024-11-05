@@ -1,25 +1,14 @@
 // DetailManager.h: interface for the CDetailManager class.
 //
 //////////////////////////////////////////////////////////////////////
-
-#ifndef DetailManagerH
-#define DetailManagerH
 #pragma once
 
 #include "xrCore/xrPool.h"
 #include "DetailFormat.h"
 #include "DetailModel.h"
+#include "concurrent_vector.h"
 
-#ifdef _EDITOR
-//.	#include	"ESceneClassList.h"
-class CCustomObject;
-typedef u32	ObjClassID;
-
-typedef xr_list<CCustomObject*> 		ObjectList;
-typedef ObjectList::iterator 			ObjectIt;
-typedef xr_map<ObjClassID, ObjectList> 	ObjectMap;
-typedef ObjectMap::iterator 			ObjectPairIt;
-#endif
+using namespace ::concurrency;
 
 const int 		dm_cache1_count = 4;
 const int		dm_max_objects = 64;
@@ -51,10 +40,10 @@ private:
 	int			dither[16][16];
 
 	u32			dm_size = 24;
-	u32 		dm_cache1_line = 12;	//dm_size*2/dm_cache1_count
-	u32			dm_cache_line = 49;	//dm_size+1+dm_size
-	u32			dm_cache_size = 2401;	//dm_cache_line*dm_cache_line
-	float		dm_fade = 47.5;	//float(2*dm_size)-.5f;
+	u32 		dm_cache1_line = 12;		//dm_size*2/dm_cache1_count
+	u32			dm_cache_line = 49;			//dm_size+1+dm_size
+	u32			dm_cache_size = 2401;		//dm_cache_line*dm_cache_line
+	float		dm_fade = 47.5;				//float(2*dm_size)-.5f;
 
 	u32			dm_size_MAX;
 	u32			dm_cache1_line_MAX;
@@ -75,27 +64,21 @@ private:
 	struct SlotItem
 	{								// один кустик
 		float						scale;
-		float						scale_calculated;
 		float						scale_random;
 		Fmatrix						mRotY;
 		Fmatrix						mRotYCache;
 		bool						optimization;
-		u32							vis_ID;				// индекс в visibility списке он же тип [не качается, качается1, качается2]
+		u32							vis_ID;					// индекс в visibility списке он же тип [не качается, качается1, качается2]
 		float						c_hemi;
 		float						c_sun;
 		u32							sector_id;
-		//float						collision_size;
-		//float						collision_size_cache;
-		//bool						collision_save;
-		//float						humidity;
-		//bool						is_shelter;
+		Fvector4					build_matrix[4];		// 0,1,2 Build matrix ( 3x4 matrix) 3 Build color
 	};
 
-	DEFINE_VECTOR(SlotItem*, SlotItemVec, SlotItemVecIt);
 	struct SlotPart
 	{
-		u32							id;						// ID модельки
-		SlotItemVec					items;					// список кустиков
+		u32								id;					// ID модельки
+		concurrent_vector<SlotItem*>	items;				// список кустиков
 		//SlotItemVec					r_items[3];			// список кустиков for render
 	};
 
@@ -106,14 +89,14 @@ private:
 		stFORCEDWORD = 0xffffffff
 	};
 
-	struct	Slot					// распакованый слот размером DETAIL_SLOT_SIZE
+	struct	Slot											// распакованый слот размером DETAIL_SLOT_SIZE
 	{
 		struct
 		{
 			u32						empty : 1;
 			u32						type : 1;
 		};
-		int							sx, sz;				// координаты слота X x Y
+		int							sx, sz;					// координаты слота X x Y
 		vis_data					vis;
 		SlotPart					G[dm_obj_in_slot];
 
@@ -138,7 +121,7 @@ private:
 		}
 	};
 
-	typedef	xr_vector<xr_vector <SlotItem* > >	vis_list;
+	typedef	concurrent_vector<concurrent_vector <SlotItem* > >	vis_list;
 	typedef	svector<CDetail*, dm_max_objects>	DetailVec;
 	typedef	DetailVec::iterator					DetailIt;
 	typedef	poolSS<SlotItem, 512>				PSS;
@@ -194,7 +177,6 @@ private:
 	void							RessetScaleRandom();
 	void							DetailResset();
 
-	void							TestVisibleM(Fvector EYE);
 	void							UpdateVisibleM(Fvector EYE);
 	void							hw_Load();
 	void							hw_Load_Geom();
@@ -214,11 +196,9 @@ private:
 	void							spawn_Slots(Fvector& view);
 	BOOL							cache_Validate();
 	// cache grid to world
-	int								cg2w_X(int x) { return cache_cx - dm_size + x; }
-	int								cg2w_Z(int z) { return cache_cz - dm_size + (dm_cache_line - 1 - z); }
+	int								cg2w_X(int x) const { return cache_cx - dm_size + x; }
+	int								cg2w_Z(int z) const { return cache_cz - dm_size + (dm_cache_line - 1 - z); }
 	// world to cache grid 
-	int								w2cg_X(int x) { return x - cache_cx + dm_size; }
-	int								w2cg_Z(int z) { return cache_cz - dm_size + (dm_cache_line - 1 - z); }
+	int								w2cg_X(int x) const { return x - cache_cx + dm_size; }
+	int								w2cg_Z(int z) const { return cache_cz - dm_size + (dm_cache_line - 1 - z); }
 };
-
-#endif // DetailManagerH

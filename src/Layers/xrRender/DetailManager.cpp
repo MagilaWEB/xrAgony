@@ -256,7 +256,7 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 	RImplementation.BasicStats.DetailCount = 0;
 	// Initialize 'vis' and 'cache'
 	// Collect objects for rendering
-	for (u32 _mz = 0; _mz < dm_cache1_line; _mz++)
+	FOR_START(size_t, 0, dm_cache1_line, _mz)
 	{
 		for (u32 _mx = 0; _mx < dm_cache1_line; _mx++)
 		{
@@ -334,68 +334,30 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 								Item->scale_random = 1.f;
 						}
 
-						Item->scale_calculated = Item->scale;
-
-						if (Item->scale_calculated > 0.f)
+						if (float scale_calculated = Item->scale)
 						{
-							//colision
-							/*if ((!optimization) && (!Item->collision_save))
-							{
-								Item->collision_size_cache = 1.f;
-
-								for (const Fvector4& col : ::Render->grass_colision_pos)
-								{
-									float dist = Fvector{ col.x, col.z, col.y }.distance_to_sqr(Item->mRotY.c);
-									float radius = ps_r__grass_collision_radius * col.w;
-									if (dist < radius)
-									{
-										float reduce = (dist / radius);
-										if (reduce < ps_r__grass_collision_minimal)
-										{
-											reduce = ps_r__grass_collision_minimal;
-											Item->collision_save = true;
-											Item->collision_size_cache = reduce;
-											break;
-										}
-										Item->collision_size_cache = reduce;
-									}
-								}
-
-								if ((!Item->collision_save) && Item->collision_size_cache >= Item->collision_size)
-								{
-									Item->collision_size += (Device.fTimeDelta * ps_r__grass_collision_speed);
-									clamp(Item->collision_size, 0.01f, Item->collision_size_cache);
-								}
-								else
-									Item->collision_size = Item->collision_size_cache;
-							}*/
-
 							Item->mRotY.j.set(Item->mRotYCache.j);
-							//Item->mRotY.j.mul(Item->collision_size);
 
-							//humidity
-							/*if (!Item->is_shelter)
-							{
-								if (::Render->grass_humidity > .0f && Item->humidity < ::Render->grass_humidity)
-									Item->humidity += (::Render->grass_humidity * Device.fTimeDelta * 0.05f);
-								else if (Item->humidity > .0f)
-									Item->humidity -= 0.01f * Device.fTimeDelta;
+							scale_calculated *= ps_r__detail_scale * Item->scale_random;
 
-								clamp(Item->humidity, 0.f, 1.f);
+							// Build matrix ( 3x4 matrix, last row - color )
+							float scale = scale_calculated;
+							float scale_height = scale * ps_r__detail_height;
+							Fmatrix& M = Item->mRotY;
+							Item->build_matrix[0].set(M._11 * scale, M._21 * scale_height, M._31 * scale, M._41);
+							Item->build_matrix[1].set(M._12 * scale, M._22 * scale_height, M._32 * scale, M._42);
+							Item->build_matrix[2].set(M._13 * scale, M._23 * scale_height, M._33 * scale, M._43);
 
-								float humidity = 1.f - (Item->humidity / 3);
-								Item->mRotY.j.mul(humidity);
-							}*/
-
-							Item->scale_calculated *= ps_r__detail_scale * Item->scale_random;
-							
+							// Build color
+							float h = Item->c_hemi;
+							float s = Item->c_sun;
+							Item->build_matrix[3].set(s, s, s, h);
 
 							const u32 vis_id = Item->vis_ID;
 
-							//Device.position_render_ui(Item->mRotY.c);
 							m_visibles[vis_id][sp.id].push_back(Item);
 							RImplementation.BasicStats.DetailCount++;
-							// Shadow!
+
 							if (dist_sq < ps_r__Detail_shadow_sun_density)
 								m_visibles_shadow_sun[vis_id][sp.id].push_back(Item);
 
@@ -407,6 +369,7 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 			}
 		}
 	}
+	FOR_END
 	//::Render->grass_colision_pos.clear();
 	RImplementation.BasicStats.DetailVisibility.End();
 }
@@ -453,7 +416,7 @@ void CDetailManager::RessetScaleRandom()
 		}
 		FOR_END
 
-			dm_current_detail_scale_random = ps_r__detail_scale_random;
+		dm_current_detail_scale_random = ps_r__detail_scale_random;
 	}
 }
 
@@ -502,11 +465,12 @@ void CDetailManager::Frame()
 	VisiblesClear();
 
 	UpdateVisibleM(EYE);
-
-	FastLock::raii mt{ MT };
 	LIMIT_UPDATE_FPS_CODE(detail_cache_Update, ps_r__detail_limit_update, cache_Update(s_x, s_z, EYE);)
 	spawn_Slots(EYE);
 	RImplementation.BasicStats.DetailCache.End();
+	FastLock::raii mt{ MT };
+	DetailResset();
+	RessetScaleRandom();
 }
 
 void CDetailManager::Render(VisiblesType type)
@@ -518,8 +482,6 @@ void CDetailManager::Render(VisiblesType type)
 
 	{
 		FastLock::raii mt{ MT };
-		DetailResset();
-		RessetScaleRandom();
 	}
 
 	RImplementation.BasicStats.DetailRender.Begin();

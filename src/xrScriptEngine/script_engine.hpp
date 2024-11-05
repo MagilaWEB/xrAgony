@@ -16,7 +16,7 @@
 
 struct lua_State;
 
-#ifdef MASTER
+#if defined(MASTER) || defined(DEBUG)
 #define USE_DEBUGGER
 #define USE_LUA_STUDIO
 #endif
@@ -164,9 +164,8 @@ public:
 	static int lua_panic(lua_State* L);
 	static void lua_error(lua_State* L);
 	static int lua_pcall_failed(lua_State* L);
-#if 1 //!XRAY_EXCEPTIONS
 	static void lua_cast_failed(lua_State* L, const luabind::type_id& info);
-#endif
+
 #ifdef DEBUG
 	static void lua_hook_call(lua_State* L, lua_Debug* dbg);
 #endif

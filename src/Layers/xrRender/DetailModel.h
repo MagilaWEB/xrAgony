@@ -7,6 +7,8 @@
 class ECORE_API CDetail : public IRender_DetailModel
 {
 public:
+	size_t vOffset{ 0 };
+	size_t iOffset{ 0 };
 	void Load(IReader* S);
 	void Optimize();
 	virtual void Unload();
