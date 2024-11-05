@@ -4,24 +4,23 @@
 void fix_texture_name(LPSTR fn)
 {
 	LPSTR _ext = strext(fn);
-	if (_ext && (!xr_stricmp(_ext, ".tga") || !xr_stricmp(_ext, ".dds") || !xr_stricmp(_ext, ".bmp") ||
-		!xr_stricmp(_ext, ".ogm")))
+	if (_ext && (!xr_stricmp(_ext, ".tga") || !xr_stricmp(_ext, ".dds") || !xr_stricmp(_ext, ".bmp") || !xr_stricmp(_ext, ".ogm")))
 	{
 		*_ext = 0;
 	}
 }
 
-int get_texture_load_lod(LPCSTR fn)
+static int get_texture_load_lod(LPCSTR fn)
 {
 	ENGINE_API bool is_enough_address_space_available();
 	static bool enough_address_space_available = is_enough_address_space_available();
-	if (enough_address_space_available)
-		return psTextureLOD;
-	else
-		return 2;
+	if (psTextureLOD < 1)
+		return enough_address_space_available ? 0 : 1;
+
+	return psTextureLOD;
 }
 
-u32 calc_texture_size(int lod, u32 mip_cnt, u32 orig_size)
+static u32 calc_texture_size(int lod, u32 mip_cnt, u32 orig_size)
 {
 	if (1 == mip_cnt)
 		return orig_size;
@@ -37,11 +36,10 @@ u32 calc_texture_size(int lod, u32 mip_cnt, u32 orig_size)
 	return iFloor(res);
 }
 
-const float _BUMPHEIGH = 8.f;
 //////////////////////////////////////////////////////////////////////
 // Utility pack
 //////////////////////////////////////////////////////////////////////
-IC u32 GetPowerOf2Plus1(u32 v)
+static u32 GetPowerOf2Plus1(u32 v)
 {
 	u32 cnt = 0;
 	while (v)
@@ -51,7 +49,8 @@ IC u32 GetPowerOf2Plus1(u32 v)
 	};
 	return cnt;
 }
-IC void Reduce(int& w, int& h, int& l, int& skip)
+
+static void Reduce(int& w, int& h, int& l, int& skip)
 {
 	while ((l > 1) && skip)
 	{
@@ -67,7 +66,7 @@ IC void Reduce(int& w, int& h, int& l, int& skip)
 		h = 1;
 }
 
-IC void Reduce(UINT& w, UINT& h, int l, int skip)
+static void Reduce(size_t& w, size_t& h, size_t& l, int skip)
 {
 	while ((l > 1) && skip)
 	{
@@ -83,15 +82,11 @@ IC void Reduce(UINT& w, UINT& h, int l, int skip)
 		h = 1;
 }
 
-ID3DBaseTexture* CRender::texture_load(LPCSTR fRName, u32& ret_msize, bool bStaging)
+ID3DBaseTexture* CRender::texture_load(LPCSTR fRName, u32& ret_msize)
 {
 	//  Moved here just to avoid warning
 	DirectX::TexMetadata IMG;
 	DirectX::ScratchImage texture;
-
-	//  Staging control
-	static bool bAllowStaging = !strstr(Core.Params, "-no_staging");
-	bStaging &= bAllowStaging;
 
 	ID3DBaseTexture* pTexture2D = nullptr;
 	// IDirect3DCubeTexture9*	pTextureCUBE	= nullptr;

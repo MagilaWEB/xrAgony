@@ -102,7 +102,7 @@ void CTexture::surface_set(ID3DBaseTexture* surf)
 
 ID3DBaseTexture* CTexture::surface_get()
 {
-	if (flags.bLoadedAsStaging)
+	if (flags.bLoadedAsStaging.load())
 		ProcessStaging();
 
 	if (pSurface)
@@ -124,17 +124,24 @@ void CTexture::PostLoad()
 
 void CTexture::apply_load(u32 dwStage)
 {
-	if (!flags.bLoaded)
-		Load();
-	else
-		PostLoad();
-	bind(dwStage);
+	task_apply_louding.run([this, dwStage]
+	{
+		while (!Device.b_is_Ready.load())
+			std::this_thread::yield();
+
+		if (!flags.bLoaded.load())
+			Load();
+		else
+			PostLoad();
+		bind(dwStage);
+	});
+	
 };
 
 void CTexture::ProcessStaging()
 {
 	VERIFY(pSurface);
-	VERIFY(flags.bLoadedAsStaging);
+	VERIFY(flags.bLoadedAsStaging.load());
 
 	ID3DBaseTexture* pTargetSurface = 0;
 
@@ -199,7 +206,7 @@ void CTexture::ProcessStaging()
 	}
 	*/
 
-	flags.bLoadedAsStaging = false;
+	flags.bLoadedAsStaging.store(false);
 
 	//	Check if texture was not copied _before_ it was converted.
 	ULONG RefCnt = pSurface->Release();
@@ -214,7 +221,7 @@ void CTexture::ProcessStaging()
 
 void CTexture::Apply(u32 dwStage)
 {
-	if (flags.bLoadedAsStaging)
+	if (flags.bLoadedAsStaging.load())
 		ProcessStaging();
 
 	// if( !RImplementation.o.dx10_msaa )
@@ -316,7 +323,7 @@ void CTexture::apply_seq(u32 dwStage)
 	// SEQ
 	u32 frame = Device.dwTimeContinual / seqMSPF; // Device.dwTimeGlobal
 	u32 frame_data = seqDATA.size();
-	if (flags.bSeqCycles)
+	if (flags.bSeqCycles.load())
 	{
 		u32 frame_id = frame % (frame_data * 2);
 		if (frame_id >= frame_data)
@@ -347,18 +354,18 @@ void CTexture::Preload()
 
 void CTexture::Load()
 {
-	flags.bLoaded = true;
+	flags.bLoaded.store(true);
 	desc_cache = 0;
 	if (pSurface)
 		return;
 
-	flags.bUser = false;
-	flags.MemoryUsage = 0;
+	flags.bUser.store(true);
+	flags.MemoryUsage.store(0);
 	if (0 == xr_stricmp(*cName, "$null"))
 		return;
 	if (0 != strstr(*cName, "$user$"))
 	{
-		flags.bUser = true;
+		flags.bUser.store(true);
 		return;
 	}
 
@@ -381,7 +388,7 @@ void CTexture::Load()
 		}
 		else
 		{
-			flags.MemoryUsage = pTheora->Width(true) * pTheora->Height(true) * 4;
+			flags.MemoryUsage.store(pTheora->Width(true) * pTheora->Height(true) * 4);
 			pTheora->Play(TRUE, Device.dwTimeContinual);
 
 			// Now create texture
@@ -432,7 +439,7 @@ void CTexture::Load()
 		}
 		else
 		{
-			flags.MemoryUsage = pAVI->m_dwWidth * pAVI->m_dwHeight * 4;
+			flags.MemoryUsage.store(pAVI->m_dwWidth * pAVI->m_dwHeight * 4);
 
 			// Now create texture
 			ID3DTexture2D* pTexture = 0;
@@ -477,11 +484,11 @@ void CTexture::Load()
 		string256 buffer;
 		IReader* _fs = FS.r_open(fn);
 
-		flags.bSeqCycles = false;
+		flags.bSeqCycles.store(false);
 		_fs->r_string(buffer, sizeof(buffer));
 		if (0 == xr_stricmp(buffer, "cycled"))
 		{
-			flags.bSeqCycles = true;
+			flags.bSeqCycles.store(true);
 			_fs->r_string(buffer, sizeof(buffer));
 		}
 		u32 fps = atoi(buffer);
@@ -502,7 +509,7 @@ void CTexture::Load()
 					seqDATA.push_back(pSurface);
 					m_seqSRView.push_back(0);
 					HW.pDevice->CreateShaderResourceView(seqDATA.back(), nullptr, &m_seqSRView.back());
-					flags.MemoryUsage += mem;
+					flags.MemoryUsage.store(flags.MemoryUsage.load() + mem);
 				}
 			}
 		}
@@ -514,11 +521,11 @@ void CTexture::Load()
 		// Normal texture
 		u32 mem = 0;
 		// pSurface = ::RImplementation.texture_load	(*cName,mem);
-		pSurface = ::RImplementation.texture_load(*cName, mem, true);
+		pSurface = ::RImplementation.texture_load(*cName, mem);
 
 		if (GetUsage() == D3D_USAGE_STAGING)
 		{
-			flags.bLoadedAsStaging = true;
+			flags.bLoadedAsStaging.store(true);
 			bCreateView = false;
 		}
 
@@ -526,7 +533,7 @@ void CTexture::Load()
 		if (pSurface)
 		{
 			// pSurface->SetPriority	(PRIORITY_NORMAL);
-			flags.MemoryUsage = mem;
+			flags.MemoryUsage.store(mem);
 			if (bCreateView)
 				CHK_DX(HW.pDevice->CreateShaderResourceView(pSurface, nullptr, &m_pSRView));
 		}
@@ -544,8 +551,8 @@ void CTexture::Unload()
 
 	//.	if (flags.bLoaded)		Msg		("* Unloaded: %s",cName.c_str());
 
-	flags.bLoaded = false;
-	flags.bLoadedAsStaging = false;
+	flags.bLoaded.store(false);
+	flags.bLoadedAsStaging.store(false);
 
 	if (!seqDATA.empty())
 	{

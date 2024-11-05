@@ -60,7 +60,7 @@ public:
 	ID3DBaseTexture* surface_get();
 
 
-	BOOL isUser() { return flags.bUser; }
+	bool isUser() { return flags.bUser.load(); }
 
 	u32 get_Width()
 	{
@@ -103,11 +103,11 @@ private:
 public: //	Public class members (must be encapsulated further)
 	struct
 	{
-		bool bLoaded{ false };
-		bool bUser{ false };
-		bool bSeqCycles{ false };
-		bool bLoadedAsStaging{ false };
-		size_t MemoryUsage{ 0 };
+		std::atomic_bool bLoaded{ false };
+		std::atomic_bool bUser{ false };
+		std::atomic_bool bSeqCycles{ false };
+		std::atomic_bool bLoadedAsStaging{ false };
+		std::atomic_uint MemoryUsage{ 0 };
 	} flags;
 
 	std::function<void(u32)> bind;
@@ -139,6 +139,8 @@ private:
 	xr_vector<ID3DShaderResourceView*> m_seqSRView;
 
 	IC static xrCriticalSection Lock;
+	//loading
+	IC static tbb::task_group task_apply_louding;
 };
 
 struct resptrcode_texture : public resptr_base<CTexture>
