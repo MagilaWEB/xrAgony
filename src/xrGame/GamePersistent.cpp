@@ -679,9 +679,7 @@ void CGamePersistent::OnFrame()
 	if (!m_intro && m_intro_event.empty() && pApp->IsLoaded())
 		load_screen_renderer.stop();
 
-	if (!g_pGameLevel)
-		return;
-	if (!g_pGameLevel->bReady)
+	if (!Device.isLevelReady())
 		return;
 
 	if (Device.Paused())
@@ -749,32 +747,6 @@ void CGamePersistent::OnFrame()
 
 			Actor()->Cameras().UpdateFromCamera(C);
 			Actor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
-
-			if (psActorFlags.test(AF_NO_CLIP))
-			{
-				Device.dwTimeDelta = 0;
-				Device.fTimeDelta = 0.01f;
-				Actor()->UpdateCL();
-				Actor()->shedule_Update(0);
-
-				CSE_Abstract* e = Level().Server->ID_to_entity(Actor()->ID());
-				VERIFY(e);
-				CSE_ALifeCreatureActor* s_actor = smart_cast<CSE_ALifeCreatureActor*>(e);
-				VERIFY(s_actor);
-
-				if (s_actor)
-				{
-					for (u16 id : s_actor->children)
-					{
-						IGameObject* obj = Level().Objects.net_Find(id);
-						if (obj)
-						{
-							obj->shedule_Update(0);
-							obj->UpdateCL();
-						}
-					}
-				}
-			}
 		}
 #endif // MASTER
 	}
@@ -858,6 +830,8 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 		LPSTR saved_name = (LPSTR)(P1);
 
 		Level().remove_objects();
+		Level().bReady = true;
+
 		game_sv_Single* game = smart_cast<game_sv_Single*>(Level().Server->GetGameState());
 		R_ASSERT(game);
 		game->restart_simulator(saved_name);

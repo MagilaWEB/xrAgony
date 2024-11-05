@@ -73,12 +73,7 @@ protected:
 #ifdef DEBUG
 	u32 dbg_update_cl;
 #endif
-	bool b_test_visual_visible{ true };
-	bool b_test_visual_visibleVP{ true };
 	u32 dwFrame_UpdateCL;
-	float m_timer_limit_sec{ 0.f };
-	float fDeltaTime{ 0.f };
-	size_t dwDeltaTime{ 0 };
 
 private:
 	shared_str m_sTipText{};
@@ -111,15 +106,8 @@ public:
 #ifdef DEBUG
 	u32 GetDbgUpdateFrame() const override { return dbg_update_cl; }
 	void SetDbgUpdateFrame(u32 value) override { dbg_update_cl = value; }
-#endif
-	u32 GetUpdateFrame() const override { return dwFrame_UpdateCL; }
-	void SetUpdateFrame(u32 value) override { dwFrame_UpdateCL = value; }
-#ifdef DEBUG
 	void DBGGetProps(GameObjectProperties& p) const override { p = Props; }
 #endif
-	bool LimitFrameUpdateCL() override;
-	bool LimitUpdateCL() override { return false; }
-	void TestbVisibleVisual() override;
 	// Network
 	BOOL Local() const override { return Props.net_Local; }
 	BOOL Remote() const override { return !Props.net_Local; }
@@ -174,8 +162,6 @@ public:
 	void cNameVisual_set(shared_str N) override;
 	shared_str shedule_Name() const override { return cName(); };
 	// Properties
-	const float fDeltaT() const override { return fDeltaTime; };
-	const size_t dwDeltaT() const override { return dwDeltaTime; };
 	void processing_activate() override; // request to enable UpdateCL
 	void processing_deactivate() override; // request to disable UpdateCL
 	bool processing_enabled() override { return !!Props.bActiveCounter; }
@@ -222,7 +208,6 @@ public:
 	// Methods
 	void Load(LPCSTR section) override;
 	void PostLoad(LPCSTR section) override; //--#SM+#--
-	void UpdateCL() override; // Called each frame, so no need for dt
 	void OnChangeVisual() override;
 	// object serialization
 	void net_Save(NET_Packet& packet) override;
@@ -379,6 +364,47 @@ private: // XXX: move to GameObjectBase
 	u32 new_level_vertex_id() const;
 	void update_ai_locations(bool decrement_reference);
 	void SetKinematicsCallback(bool set);
+
+private:
+	enum
+	{
+		eNonVisible,
+		eMainViewport,
+		eSecondViewport
+	};
+
+private:
+	inline static float					s_update_radius_1;
+	inline static float					s_update_radius_2;
+	inline static float					s_update_delta_radius;
+	inline static float					s_update_time;
+	inline static float					s_update_radius_invisible_k;
+	
+	u8									b_visibility_status						= 0;
+	u8									b_visibility_status_next				= 0;
+	float								m_next_update_time						= 0.f;
+	float								fDeltaTime								= 0.f;
+	size_t								dwDeltaTime								= 0;
+	float								m_last_update_time_f					= 0.f;
+	size_t								m_last_update_time_dw					= 0;
+	
+	void								calc_next_update_time					();
+
+	void								on_distance_update						() override;
+
+protected:
+	void								UpdateCL								() override;
+
+public:
+	static void							loadStaticData							();
+	
+	float								fDeltaT									() const		{ return fDeltaTime; };
+	size_t								dwDeltaT								() const		{ return dwDeltaTime; };
+
+	void								update									() override;
+	bool								queryUpdateCL							() override;
+	
+	virtual bool						alwaysUpdateCL							()		{ return false; }
 };
 #pragma pack(pop)
 

@@ -1945,24 +1945,24 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "hud_crosshair_dist", &psHUD_Flags, HUD_CROSSHAIR_DIST);
 
 	//CMD4(CCC_Float, "hud_fov", &psHUD_FOV, 0.1f, 1.0f);
-	CMD4(CCC_Float, "fov", &g_fov, 45.0f, 120.0f);
-	CMD4(CCC_Float, "scope_fov", &g_scope_fov, 5.0f, 180.0f);
+	CMD4(CCC_Float, "g_fov", &Device.gFOV, 1.0f, 120.0f);
+	class CCC_AimFOV : public CCC_Float
+	{
+	public:
+		CCC_AimFOV(LPCSTR N, float* V, float _min, float _max) : CCC_Float(N, V, _min, _max) {}
+		void Execute(LPCSTR args) override
+		{
+			__super::Execute(args);
+			Device.gAimFOVTan = tanf(deg2radHalf(Device.gAimFOV));
+		}
+	};
+	CMD4(CCC_AimFOV, "g_aim_fov", &Device.gAimFOV, 1.f, 120.0f);
 	CMD4(CCC_Integer, "g_use_aim_inertion", &g_use_aim_inertion, 0, 1);
 
 	// Demo
 	CMD1(CCC_DemoPlay, "demo_play");
 	CMD1(CCC_DemoRecord, "demo_record");
 	CMD1(CCC_DemoRecordSetPos, "demo_set_cam_position");
-
-	if (Core.ParamFlags.test(Core.dev))
-	{
-		extern ENGINE_API float obj_limit_update_cl_start_dist;
-		extern ENGINE_API float obj_limit_update_cl_dist;
-		extern ENGINE_API float obj_limit_update_cl_max_sec;
-		CMD4(CCC_Float, "obj_limit_update_cl_start_dist", &obj_limit_update_cl_start_dist, 5.f, 100.f);
-		CMD4(CCC_Float, "obj_limit_update_cl_dist", &obj_limit_update_cl_dist, 100.f, 2000.f);
-		CMD4(CCC_Float, "obj_limit_update_cl_max_sec", &obj_limit_update_cl_dist, .01f, 2.f);
-	}
 
 	// ai
 	CMD4(CCC_Float, "ai_smart_factor", &g_smart_cover_factor, 0.f, 1000000.f);

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef _CPS_Instance_H_
-#define _CPS_Instance_H_
 
 #include "xrCDB/ISpatial.h"
 #include "ISheduled.h"
@@ -36,6 +34,7 @@ public:
 	virtual shared_str shedule_Name() const { return shared_str("particle_instance"); };
 	virtual void shedule_Update(u32 dt);
 	virtual IRenderable* dcast_Renderable() { return this; }
-};
 
-#endif
+private:
+	float								calc_distance_to_camera					() const override;
+};

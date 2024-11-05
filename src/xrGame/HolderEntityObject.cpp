@@ -97,7 +97,7 @@ void CHolderEntityObject::UpdateCL()
 
 	if (OwnerActor() && OwnerActor()->IsMyCamera())
 	{
-		cam_Update(fDeltaT(), g_fov);
+		cam_Update(fDeltaT(), Device.gFOV);
 		OwnerActor()->Cameras().UpdateFromCamera(Camera());
 		OwnerActor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
 	}
@@ -171,7 +171,7 @@ void CHolderEntityObject::OnMouseMove(int dx, int dy)
 {
 	if (Remote()) return;
 	CCameraBase* C = camera;
-	float scale = C->f_fov / g_fov * psMouseSens * psMouseSensScale / 50.f;
+	float scale = C->f_fov / Device.gFOV * psMouseSens * psMouseSensScale / 50.f;
 	if (dx)
 	{
 		float d = float(dx) * scale;

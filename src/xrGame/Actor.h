@@ -82,8 +82,7 @@ public:
 	virtual ~CActor();
 
 public:
-	virtual bool LimitUpdateCL() { return false; }
-	virtual bool LimitFrameUpdateCL();
+	bool alwaysUpdateCL() final { return true; }
 	virtual CAttachmentOwner* cast_attachment_owner() { return this; }
 	virtual CInventoryOwner* cast_inventory_owner() { return this; }
 	virtual CActor* cast_actor() { return this; }

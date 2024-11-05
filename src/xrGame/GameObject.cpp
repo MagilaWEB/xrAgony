@@ -1016,21 +1016,12 @@ Fvector CGameObject::get_last_local_point_on_mesh(Fvector const& local_point, u1
 
 void CGameObject::renderable_Render()
 {
-	if (!b_test_visual_visibleVP)
-		b_test_visual_visibleVP = Device.m_ScopeVP.IsSVPRender();
+	b_visibility_status_next = (Device.m_ScopeVP.IsSVPRender()) ? eSecondViewport : eMainViewport;
 
 	::Render->set_Transform(&XFORM());
 	::Render->add_Visual(Visual());
 	Visual()->getVisData().hom_frame = Device.dwFrame;
 }
-
-/*
-float CGameObject::renderable_Ambient	()
-{
-	return (ai().get_level_graph() && ai().level_graph().valid_vertex_id(level_vertex_id()) ?
-float(level_vertex()->light()/15.f) : 1.f);
-}
-*/
 
 GameObjectSavedPosition CGameObject::ps_Element(u32 ID) const
 {
@@ -1242,66 +1233,6 @@ void CGameObject::OnChangeVisual()
 		destroy_anim_mov_ctrl();
 }
 
-bool CGameObject::LimitFrameUpdateCL()
-{
-	fDeltaTime += Device.fTimeDelta;
-	dwDeltaTime += Device.dwTimeDelta;
-
-	if (LimitUpdateCL())
-		m_timer_limit_sec *= 2;
-
-	if (fDeltaTime < m_timer_limit_sec)
-		return true;
-
-	fDeltaTime = Device.fTimeDelta;
-	dwDeltaTime = Device.dwTimeDelta;
-
-	return false;
-}
-
-extern ENGINE_API float obj_limit_update_cl_start_dist;
-extern ENGINE_API float obj_limit_update_cl_dist;
-extern ENGINE_API float obj_limit_update_cl_max_sec;
-extern ENGINE_API float LIMIT_UPDATE_CL_DIST;
-extern ENGINE_API float LIMIT_UPDATE_CL_LMIT_TIME;
-void CGameObject::TestbVisibleVisual()
-{
-	if (Visual())
-	{
-		u32 mask = 0xff;
-		b_test_visual_visible = Device.ViewFromMatrix.testSAABB(Visual()->getVisData().sphere.P,
-			Visual()->getVisData().sphere.R, Visual()->getVisData().box.data(), mask) == fcvNone;
-	}
-
-	if (const float dist = Device.vCameraPosition.distance_to(Position()) > obj_limit_update_cl_start_dist)
-	{
-		m_timer_limit_sec = (dist / LIMIT_UPDATE_CL_DIST) - LIMIT_UPDATE_CL_LMIT_TIME;
-
-		clamp(m_timer_limit_sec, 0.f, obj_limit_update_cl_max_sec);
-
-		// Update 2 times less often if the visual of the object is not visible.
-		// Update 3 times faster if the visual of the object is visible in optics (Preferably divided by the multiplicity of the sight).
-		if (!b_test_visual_visible && !b_test_visual_visibleVP)
-			m_timer_limit_sec *= 2;
-		else if (b_test_visual_visibleVP)
-			m_timer_limit_sec /= 3;
-	}
-	else
-	{
-		if (b_test_visual_visible || b_test_visual_visibleVP)
-			m_timer_limit_sec = .0f;
-		else
-		{
-			const float dist = Device.vCameraPosition.distance_to(Position());
-			obj_limit_update_cl_dist = dist / LIMIT_UPDATE_CL_DIST;
-			clamp(m_timer_limit_sec, 0.f, obj_limit_update_cl_max_sec);
-		}
-	}
-
-	if (b_test_visual_visibleVP)
-		b_test_visual_visibleVP = false;
-}
-
 bool CGameObject::shedule_Needed() { return (!getDestroy()); }
 void CGameObject::create_anim_mov_ctrl(CBlend* b, Fmatrix* start_pose, bool local_animation)
 {
@@ -1381,7 +1312,6 @@ void CGameObject::UpdateCL()
 	on_matrix_change(m_previous_matrix);
 	m_previous_matrix = XFORM();
 }
-
 
 void CGameObject::on_matrix_change(const Fmatrix& previous) { obstacle().on_move(); }
 #ifdef DEBUG
@@ -1515,3 +1445,75 @@ void CGameObject::set_tip_text(LPCSTR new_text) { m_sTipText = new_text; }
 void CGameObject::set_tip_text_default() { m_sTipText = nullptr; }
 bool CGameObject::nonscript_usable() { return m_bNonscriptUsable; }
 void CGameObject::set_nonscript_usable(bool usable) { m_bNonscriptUsable = usable; }
+
+//--------------------------------------------------------------------------------------------------------------------//
+
+bool CGameObject::queryUpdateCL()
+{
+	if (Device.dwFrame == dwFrame_UpdateCL || Parent)
+		return							false;
+
+	if (b_visibility_status_next != b_visibility_status)
+	{
+		b_visibility_status				= b_visibility_status_next;
+		calc_next_update_time			();
+	}
+	b_visibility_status_next			= eNonVisible;
+
+	return								(alwaysUpdateCL() || m_next_update_time < Device.fTimeGlobal);
+}
+
+void CGameObject::on_distance_update()
+{
+	calc_next_update_time				();
+}
+
+void CGameObject::calc_next_update_time()
+{
+	float dist							= get_distance_to_camera_base();
+	switch (b_visibility_status)
+	{
+	case eNonVisible:
+		dist							*= s_update_radius_invisible_k;
+		break;
+	case eMainViewport:
+		dist							*= Device.iZoomSqr;
+		break;
+	case eSecondViewport:
+		dist							*= Device.m_ScopeVP.getIZoomSqr();
+		break;
+	}
+
+	m_next_update_time					= m_last_update_time_f;
+	if (dist > s_update_radius_2)
+		m_next_update_time				+= s_update_time;
+	else if (dist > s_update_radius_1)
+		m_next_update_time				+= s_update_time * (dist - s_update_radius_1) / s_update_delta_radius;
+}
+
+void CGameObject::update()
+{
+	dwFrame_UpdateCL					= Device.dwFrame;
+
+	fDeltaTime							= Device.fTimeGlobal - m_last_update_time_f;
+	m_last_update_time_f				= Device.fTimeGlobal;
+
+	dwDeltaTime							= Device.dwTimeGlobal - m_last_update_time_dw;
+	m_last_update_time_dw				= Device.dwTimeGlobal;
+
+	calc_next_update_time				();
+
+	UpdateCL							();
+}
+
+void CGameObject::loadStaticData()
+{
+	s_update_radius_1					= pSettings->r_float("system", "update_radius_1");
+	s_update_radius_1					*= s_update_radius_1;
+	s_update_radius_2					= pSettings->r_float("system", "update_radius_2");
+	s_update_radius_2					*= s_update_radius_2;
+	s_update_delta_radius				= s_update_radius_2 - s_update_radius_1;
+	s_update_radius_invisible_k			= pSettings->r_float("system", "update_radius_invisible_k");
+	s_update_radius_invisible_k			*= s_update_radius_invisible_k;
+	s_update_time						= pSettings->r_float("system", "update_time");
+}

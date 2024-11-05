@@ -23,8 +23,11 @@ bool force_flush_log = false;
 IWriter* LogWriter;
 size_t cached_log = 0;
 
-void FlushLog()
+void FlushLog(bool flush_statistics)
 {
+	if (flush_statistics)
+		aBench::flushStatistics();
+
 	if (!no_log)
 	{
 		logCS.Enter();
@@ -81,7 +84,7 @@ void AddOne(const char* split)
 		cached_log += xr_strlen(split) + 2;
 
 		if (force_flush_log || cached_log >= 32768)
-			FlushLog();
+			FlushLog(false);
 
 		//-RvP
 	}

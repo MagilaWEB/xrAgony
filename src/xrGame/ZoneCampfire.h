@@ -14,7 +14,7 @@ protected:
 
 	virtual void PlayIdleParticles(bool bIdleLight = true);
 	virtual void StopIdleParticles(bool bIdleLight = true);
-	virtual bool LimitUpdateCL();
+	virtual bool alwaysUpdateCL();
 	virtual void UpdateWorkload(u32 dt);
 
 public:

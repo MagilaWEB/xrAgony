@@ -263,7 +263,7 @@ public:
 			return false;
 		return m_zoom_params.m_bHideCrosshairInZoom || ZoomTexture();
 	}
-	IC float GetZoomFactor() const { return m_zoom_params.m_fCurrentZoomFactor; }
+	IC float GetZoomFactor() const { return (m_zoom_params.m_bIsZoomModeNow) ? m_zoom_params.m_fCurrentZoomFactor : 0.f; }
 	IC void SetZoomFactor(float f) { m_zoom_params.m_fCurrentZoomFactor = f; }
 	virtual float CurrentZoomFactor();
 	//показывает, что оружие находится в соостоянии поворота для приближенного прицеливания

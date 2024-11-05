@@ -19,7 +19,7 @@ public:
 	CMissile();
 	virtual ~CMissile();
 
-	virtual bool LimitUpdateCL() { return false; }
+	virtual bool alwaysUpdateCL() { return true; }
 	virtual void render_item_ui();
 	virtual bool render_item_ui_query();
 

@@ -639,7 +639,7 @@ protected:
 public:
 	CCar(void);
 	virtual ~CCar(void);
-	virtual bool LimitUpdateCL();
+	virtual bool alwaysUpdateCL();
 
 public:
 	virtual CEntity* cast_entity() { return this; }

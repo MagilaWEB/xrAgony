@@ -789,7 +789,7 @@ public:
 	typedef fastdelegate::FastDelegate<void(Fmatrix&)> EyeMatrixCallback;
 
 private:
-	virtual bool LimitUpdateCL();
+	virtual bool alwaysUpdateCL();
 
 public:
 	IC void take_items_enabled(bool value);
@@ -814,6 +814,9 @@ public:
 
 private:
 	ignored_touched_objects_type m_ignored_touched_objects;
+
+private:
+	bool								m_in_combat								= false;
 };
 
 #include "ai_stalker_inline.h"

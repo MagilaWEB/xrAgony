@@ -120,6 +120,7 @@
     <ClCompile Include="Animation\interp.cpp" />
     <ClCompile Include="Animation\Motion.cpp" />
     <ClCompile Include="Animation\SkeletonMotions.cpp" />
+    <ClCompile Include="bench.cpp" />
     <ClCompile Include="clsid.cpp" />
     <ClCompile Include="Compression\lzo_compressor.cpp" />
     <ClCompile Include="Compression\rt_compressor.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="Animation\Motion.hpp" />
     <ClInclude Include="Animation\SkeletonMotionDefs.hpp" />
     <ClInclude Include="Animation\SkeletonMotions.hpp" />
+    <ClInclude Include="bench.h" />
     <ClInclude Include="buffer_vector.h" />
     <ClInclude Include="buffer_vector_inline.h" />
     <ClInclude Include="cdecl_cast.hpp" />

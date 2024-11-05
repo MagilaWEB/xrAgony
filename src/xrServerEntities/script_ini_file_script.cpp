@@ -50,6 +50,8 @@ CScriptIniFile* reload_system_ini()
 	string_path fname;
 	FS.update_path(fname, "$game_config$", "system.ltx");
 	pSettings = new CInifile(fname);
+	extern void load_static_data();
+	load_static_data();
 	return (CScriptIniFile*)pSettings;
 }
 

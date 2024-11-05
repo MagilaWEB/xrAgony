@@ -1362,7 +1362,7 @@ bool CCustomZone::feel_touch_on_contact(IGameObject* O)
 	return (inherited::feel_touch_on_contact(O));
 }
 
-bool CCustomZone::LimitUpdateCL()
+bool CCustomZone::alwaysUpdateCL()
 {
 	bool b_idle = ZoneState() == eZoneStateIdle || ZoneState() == eZoneStateDisabled;
 	if (!b_idle || (m_zone_flags.test(eAlwaysFastmode) && IsEnabled()))

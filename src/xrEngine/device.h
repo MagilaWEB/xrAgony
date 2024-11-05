@@ -31,7 +31,14 @@ extern ENGINE_API float VIEWPORT_NEAR_HUD;
 
 #pragma pack(pop)
 
-class CRenderDeviceBase
+class IRenderDevice
+{
+public:
+	virtual bool isGameProcess() const = 0;
+	virtual CTimer_paused* GetTimerGlobal() = 0;
+};
+
+class CRenderDeviceBase : public IRenderDevice
 {
 public:
 	constexpr static float UI_BASE_WIDTH = 1024.f;
@@ -87,6 +94,11 @@ public:
 
 	float fFOV;
 	float fASPECT;
+	float iZoomSqr;
+
+	float gFOV = 75.f;
+	float gAimFOV = 36.f;
+	float gAimFOVTan = 0.72654252800536088589546675748062f;
 
 	struct RenderDeviceStatictics final
 	{
@@ -137,6 +149,9 @@ public:
 	{
 		bool m_bIsActive		{ false };	// Флаг активации рендера во второй вьюпорт
 		bool m_bStartRender		{ false };	// Флаг начала рендеринга.
+		float m_zoom			= 1.f;
+		float m_izoom_sqr		= 1.f;
+		float m_fov				= 1.f;
 		
 	public:
 		Fvector		m_vPosition;
@@ -163,6 +178,13 @@ public:
 		{
 			return IsSVPActive() && m_bStartRender;
 		}
+
+		float getIZoomSqr() const { return m_izoom_sqr; }
+		float getZoom() const { return m_zoom; }
+		float getFOV() const { return m_fov; }
+
+		void setZoom(float val) { m_zoom = val; m_izoom_sqr = _sqr(1.f / val); }
+		void setFOV(float val) { m_fov = val; }
 	};
 
 private:
@@ -234,7 +256,7 @@ public:
 	}
 
 	void Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason);
-	BOOL Paused();
+	bool Paused() const;
 
 private:
 	//Threding
@@ -257,7 +279,7 @@ public:
 
 	// Mode control
 	void DumpFlags();
-	IC CTimer_paused* GetTimerGlobal() { return &TimerGlobal; }
+	IC CTimer_paused* GetTimerGlobal() override { return &TimerGlobal; }
 	size_t TimerAsync() { return (size_t)TimerGlobal.GetElapsed_ms(); }
 	// Creation & Destroying
 	void Create();
@@ -330,9 +352,8 @@ public:
 		return b_alt_tab.store(b_alt_tab_);
 	};
 
-	const bool IsLoadingScreen();
-
-	const bool IsLoadingProsses();
+	bool IsLoadingScreen() const;
+	bool IsLoadingProsses() const;
 
 	bool on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& result);
 
@@ -361,6 +382,10 @@ private:
 
 		return fPointerStart;
 	}
+
+public:
+	bool								isLevelReady							() const;
+	bool 								isGameProcess							() const override;
 };
 
 extern ENGINE_API CRenderDevice Device;

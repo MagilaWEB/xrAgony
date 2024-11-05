@@ -40,7 +40,7 @@ LogCallback XRCORE_API SetLogCB(const LogCallback& cb);
 void XRCORE_API CreateLog(BOOL no_log = FALSE);
 void InitLog();
 void CloseLog();
-void XRCORE_API FlushLog();
+void XRCORE_API FlushLog(bool flush_statistics = true);
 
 extern XRCORE_API xr_vector<xr_string>* LogFile;
 extern XRCORE_API BOOL LogExecCB;

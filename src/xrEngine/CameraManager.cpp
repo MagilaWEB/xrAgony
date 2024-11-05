@@ -316,6 +316,7 @@ void CCameraManager::UpdatePPEffectors()
 void CCameraManager::ApplyDevice(float _viewport_near)
 {
 	// Device params
+	float zoom;
 	if (Device.m_ScopeVP.IsSVPRender())
 	{
 		Device.mView.build_camera_dir(Device.m_ScopeVP.m_vPosition, Device.m_ScopeVP.m_vDirection, Device.m_ScopeVP.m_vNormal);
@@ -323,7 +324,9 @@ void CCameraManager::ApplyDevice(float _viewport_near)
 		Device.vCameraDirection.set(Device.m_ScopeVP.m_vDirection);
 		Device.vCameraTop.set(Device.m_ScopeVP.m_vNormal);
 		Device.vCameraRight.set(Device.m_ScopeVP.m_vRight);
-		Device.fFOV = m_cam_info.fFov * g_pGamePersistent->m_pGShaderConstants->hud_params.z;
+
+		Device.fFOV = Device.m_ScopeVP.getFOV();
+		Device.iZoomSqr = Device.m_ScopeVP.getIZoomSqr();
 	}
 	else
 	{
@@ -333,13 +336,15 @@ void CCameraManager::ApplyDevice(float _viewport_near)
 		Device.vCameraDirection.set(m_cam_info.d);
 		Device.vCameraTop.set(m_cam_info.n);
 		Device.vCameraRight.set(m_cam_info.r);
+
 		Device.fFOV = m_cam_info.fFov;
+		zoom = (Device.fFOV == Device.gAimFOV) ? 1.f : tanf(Device.gAimFOVTan) / tanf(deg2radHalf(Device.fFOV));
+		Device.iZoomSqr = _sqr(1.f / zoom);
 	}
 
 	// projection
 	Device.fASPECT = m_cam_info.fAspect;
-
-	Device.mProject.build_projection(deg2rad(Device.fFOV), m_cam_info.fAspect, _viewport_near, m_cam_info.fFar);
+	Device.mProject.build_projection(deg2rad(Device.fFOV), m_cam_info.fAspect, _viewport_near * zoom, m_cam_info.fFar);
 
 	if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu->IsActive())
 		ResetPP();
