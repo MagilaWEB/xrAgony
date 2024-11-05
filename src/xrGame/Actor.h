@@ -773,6 +773,9 @@ protected:
 	bool m_bNightVisionOn;
 	bool m_bNightVisionAllow;
 	CNightVisionEffector* m_night_vision;
+
+public:
+	void update() override;
 };
 
 extern bool isActorAccelerated(u32 mstate, bool ZoomMode);

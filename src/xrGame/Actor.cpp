@@ -2198,3 +2198,15 @@ void CActor::on_requested_spawn(IGameObject* object)
 	object->XFORM().getXYZi(xyz);
 	r_torso.yaw = xyz.y;
 }
+
+void CActor::update()
+{
+	if (auto active_item = inventory().ActiveItem())
+	{
+		active_item->object().fSetDeltaT(fDeltaT());
+		active_item->object().dwSetDeltaT(dwDeltaT());
+		active_item->object().update();
+	}
+
+	__super::update();
+}

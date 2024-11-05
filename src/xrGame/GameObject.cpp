@@ -1502,16 +1502,6 @@ void CGameObject::update()
 		dwDeltaTime = Device.dwTimeGlobal - m_last_update_time_dw;
 		m_last_update_time_dw = Device.dwTimeGlobal;
 
-		if (auto inv_owner = cast_inventory_owner())
-		{
-			if (auto active_item = inv_owner->inventory().ActiveItem())
-			{
-				active_item->object().fSetDeltaT(fDeltaTime);
-				active_item->object().dwSetDeltaT(dwDeltaTime);
-				active_item->object().update();
-			}
-		}
-
 		calc_next_update_time();
 	}
 

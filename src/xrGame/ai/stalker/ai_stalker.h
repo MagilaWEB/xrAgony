@@ -811,12 +811,12 @@ public:
 	typedef xr_vector<IGameObject*> ignored_touched_objects_type;
 	inline ignored_touched_objects_type& ignored_touched_objects() { return m_ignored_touched_objects; }
 	void generate_take_event(IGameObject const* const object) const;
+	void update() override;
 
 private:
 	ignored_touched_objects_type m_ignored_touched_objects;
-
-private:
 	bool								m_in_combat								= false;
+
 };
 
 #include "ai_stalker_inline.h"
