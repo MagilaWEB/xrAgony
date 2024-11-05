@@ -1493,17 +1493,29 @@ void CGameObject::calc_next_update_time()
 
 void CGameObject::update()
 {
-	dwFrame_UpdateCL					= Device.dwFrame;
+	if (!Parent)
+	{
+		dwFrame_UpdateCL = Device.dwFrame;
+		fDeltaTime = Device.fTimeGlobal - m_last_update_time_f;
+		m_last_update_time_f = Device.fTimeGlobal;
 
-	fDeltaTime							= Device.fTimeGlobal - m_last_update_time_f;
-	m_last_update_time_f				= Device.fTimeGlobal;
+		dwDeltaTime = Device.dwTimeGlobal - m_last_update_time_dw;
+		m_last_update_time_dw = Device.dwTimeGlobal;
 
-	dwDeltaTime							= Device.dwTimeGlobal - m_last_update_time_dw;
-	m_last_update_time_dw				= Device.dwTimeGlobal;
+		if (auto inv_owner = cast_inventory_owner())
+		{
+			if (auto active_item = inv_owner->inventory().ActiveItem())
+			{
+				active_item->object().fSetDeltaT(fDeltaTime);
+				active_item->object().dwSetDeltaT(dwDeltaTime);
+				active_item->object().update();
+			}
+		}
 
-	calc_next_update_time				();
+		calc_next_update_time();
+	}
 
-	UpdateCL							();
+	UpdateCL();
 }
 
 void CGameObject::loadStaticData()

@@ -744,9 +744,6 @@ void CInventory::RepackAmmo(PIItem pIItem)
 
 void CInventory::Update()
 {
-	if (auto ai = ActiveItem())
-		ai->object().update();
-
 	if (m_iActiveSlot != m_iNextActiveSlot)
 	{
 		IGameObject* pActor_owner = smart_cast<IGameObject*>(m_pOwner);

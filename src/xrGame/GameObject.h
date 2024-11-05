@@ -51,16 +51,16 @@ class CScriptCallbackEx;
 
 #pragma pack(push, 4)
 class CGameObject : public IGameObject,
-					public FactoryObjectBase,
-					public SpatialBase,
-					public ScheduledBase,
-					public RenderableBase,
-					public CollidableBase
+	public FactoryObjectBase,
+	public SpatialBase,
+	public ScheduledBase,
+	public RenderableBase,
+	public CollidableBase
 {
 	BENCH_SEC_SCRAMBLEMEMBER1
-	BENCH_SEC_SCRAMBLEVTBL2
-	// Some property variables
-	GameObjectProperties Props;
+		BENCH_SEC_SCRAMBLEVTBL2
+		// Some property variables
+		GameObjectProperties Props;
 	shared_str NameObject;
 	shared_str NameSection;
 	shared_str NameVisual;
@@ -102,7 +102,7 @@ protected:
 public:
 	CGameObject();
 	virtual ~CGameObject();
-// XXX: review
+	// XXX: review
 #ifdef DEBUG
 	u32 GetDbgUpdateFrame() const override { return dbg_update_cl; }
 	void SetDbgUpdateFrame(u32 value) override { dbg_update_cl = value; }
@@ -229,7 +229,7 @@ public:
 	void ForceTransform(const Fmatrix& m) override {}
 	void OnHUDDraw(CCustomHUD* hud) override {}
 	void OnRenderHUD(IGameObject* pCurViewEntity) override {} //--#SM+#--
-	void OnOwnedCameraMove(CCameraBase* pCam, float fOldYaw, float fOldPitch) override  {} //--#SM+#--
+	void OnOwnedCameraMove(CCameraBase* pCam, float fOldYaw, float fOldPitch) override {} //--#SM+#--
 	BOOL Ready() override { return getReady(); } // update only if active and fully initialized by/for network
 	void renderable_Render() override;
 	void OnEvent(NET_Packet& P, u16 type) override;
@@ -379,32 +379,34 @@ private:
 	inline static float					s_update_delta_radius;
 	inline static float					s_update_time;
 	inline static float					s_update_radius_invisible_k;
-	
-	u8									b_visibility_status						= 0;
-	u8									b_visibility_status_next				= 0;
-	float								m_next_update_time						= 0.f;
-	float								fDeltaTime								= 0.f;
-	size_t								dwDeltaTime								= 0;
-	float								m_last_update_time_f					= 0.f;
-	size_t								m_last_update_time_dw					= 0;
-	
-	void								calc_next_update_time					();
 
-	void								on_distance_update						() override;
+	u8									b_visibility_status = 0;
+	u8									b_visibility_status_next = 0;
+	float								m_next_update_time = 0.f;
+	float								fDeltaTime = 0.f;
+	size_t								dwDeltaTime = 0;
+	float								m_last_update_time_f = 0.f;
+	size_t								m_last_update_time_dw = 0;
+
+	void								calc_next_update_time();
+
+	void								on_distance_update() override;
 
 protected:
-	void								UpdateCL								() override;
+	void								UpdateCL() override;
 
 public:
-	static void							loadStaticData							();
-	
-	float								fDeltaT									() const		{ return fDeltaTime; };
-	size_t								dwDeltaT								() const		{ return dwDeltaTime; };
+	static void							loadStaticData();
 
-	void								update									() override;
-	bool								queryUpdateCL							() override;
-	
-	virtual bool						alwaysUpdateCL							()		{ return false; }
+	float								fDeltaT() const { return fDeltaTime; };
+	size_t								dwDeltaT() const { return dwDeltaTime; };
+	void								fSetDeltaT(float fDelta) { fDeltaTime = fDelta; };
+	void								dwSetDeltaT(size_t dwDelta) { dwDeltaTime = dwDelta; };
+
+	void								update() override;
+	bool								queryUpdateCL() override;
+
+	virtual bool						alwaysUpdateCL() { return false; }
 };
 #pragma pack(pop)
 
