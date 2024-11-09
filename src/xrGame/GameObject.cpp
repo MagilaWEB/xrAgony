@@ -1521,12 +1521,9 @@ void CGameObject::update()
 
 void CGameObject::loadStaticData()
 {
-	s_update_radius_1					= pSettings->r_float("system", "update_radius_1");
-	s_update_radius_1					*= s_update_radius_1;
-	s_update_radius_2					= pSettings->r_float("system", "update_radius_2");
-	s_update_radius_2					*= s_update_radius_2;
+	s_update_radius_1					= _sqr(pSettings->r_float("system", "update_radius_1"));
+	s_update_radius_2					= _sqr(pSettings->r_float("system", "update_radius_2"));
 	s_update_delta_radius				= s_update_radius_2 - s_update_radius_1;
-	s_update_radius_invisible_k			= pSettings->r_float("system", "update_radius_invisible_k");
-	s_update_radius_invisible_k			*= s_update_radius_invisible_k;
+	s_update_radius_invisible_k			= _sqr(pSettings->r_float("system", "update_radius_invisible_k"));
 	s_update_time						= pSettings->r_float("system", "update_time");
 }
