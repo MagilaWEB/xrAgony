@@ -22,6 +22,7 @@ void CRenderDevice::Create()
 {
 	if (b_is_Ready.load())
 		return; // prevent double call
+
 	Statistic = new CStats();
 	bool gpuSW = !!strstr(Core.Params, "-gpu_sw");
 	bool gpuNonPure = !!strstr(Core.Params, "-gpu_nopure");
@@ -47,6 +48,4 @@ void CRenderDevice::Create()
 	Statistic->OnDeviceCreate();
 	dwFrame = 0;
 	PreCache(0, false, false);
-
-	xBench::setupDevice(this);
 }

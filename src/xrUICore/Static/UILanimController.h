@@ -58,7 +58,7 @@ public:
 	}
 	virtual void ResetColorAnimation()
 	{
-		m_lanim_clr.m_lanim_start_time = Device.dwTimeContinual / 1000.0f + m_lanim_clr.m_lanim_delay_time / 1000.0f;
+		m_lanim_clr.m_lanim_start_time = ::IDevice->TimeContinual() / 1000.0f + m_lanim_clr.m_lanim_delay_time / 1000.0f;
 	}
 	virtual bool IsColorAnimationPresent()
 	{
@@ -68,7 +68,7 @@ public:
 		if (m_lanim_clr.m_lanimFlags.test(LA_CYCLIC) || m_lanim_clr.m_lanim_start_time < 0.0f)
 			return true;
 
-		float t = Device.dwTimeContinual / 1000.0f;
+		float t = ::IDevice->TimeContinual() / 1000.0f;
 		if (t - m_lanim_clr.m_lanim_start_time < m_lanim_clr.m_lanim->Length_sec())
 			return true;
 		else
@@ -82,7 +82,7 @@ public:
 		if (m_lanim_clr.m_lanim_start_time < 0.0f)
 			ResetColorAnimation();
 
-		float t = Device.dwTimeContinual / 1000.0f;
+		float t = ::IDevice->TimeContinual() / 1000.0f;
 
 		if (t < m_lanim_clr.m_lanim_start_time) // consider animation delay
 			return;

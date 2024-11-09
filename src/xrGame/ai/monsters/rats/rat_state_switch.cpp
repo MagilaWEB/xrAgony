@@ -91,7 +91,7 @@ bool CAI_Rat::get_if_tp_entity()
 	return false;
 }
 
-void CAI_Rat::set_previous_query_time() { m_previous_query_time = Device.dwTimeGlobal; }
+void CAI_Rat::set_previous_query_time() { m_previous_query_time = ::IDevice->TimeGlobal_ms(); }
 SRotation CAI_Rat::sub_rotation()
 {
 	Fvector tTemp;
@@ -120,7 +120,7 @@ bool CAI_Rat::switch_if_porsuit()
 
 void CAI_Rat::set_dir()
 {
-	if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
+	if ((::IDevice->TimeGlobal_ms() - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
 	{
 		CMonsterSquad* squad = monster_squad().get_squad(this);
 		Fvector m_enemy_position = memory().enemy().selected()->Position();
@@ -146,13 +146,13 @@ void CAI_Rat::set_dir()
 
 void CAI_Rat::set_dir_m()
 {
-	if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
+	if ((::IDevice->TimeGlobal_ms() - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
 		m_tGoalDir.set(memory().memory(memory().enemy().selected()).m_object_params.m_position);
 }
 
 void CAI_Rat::set_sp_dir()
 {
-	if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
+	if ((::IDevice->TimeGlobal_ms() - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
 		m_tGoalDir = m_tSpawnPosition;
 }
 
@@ -162,7 +162,7 @@ bool CAI_Rat::switch_if_no_enemy()
 	if (!switch_if_enemy() ||
 		(switch_if_enemy() &&
 			(!switch_if_alife() ||
-				((Device.dwTimeGlobal - memory().memory(memory().enemy().selected()).m_level_time > m_dwRetreatTime) &&
+				((::IDevice->TimeGlobal_ms() - memory().memory(memory().enemy().selected()).m_level_time > m_dwRetreatTime) &&
 					((m_tLastSound.dwTime < m_dwLastUpdateTime) || !m_tLastSound.tpEntity ||
 						(m_tLastSound.tpEntity->g_Team() == g_Team()) || !bfCheckIfSoundFrightful())))))
 	{
@@ -188,7 +188,7 @@ bool CAI_Rat::switch_to_free_recoil()
 bool CAI_Rat::switch_if_lost_time()
 {
 	if (switch_if_enemy() &&
-		(Device.dwTimeGlobal - memory().memory(memory().enemy().selected()).m_level_time >= m_dwLostMemoryTime))
+		(::IDevice->TimeGlobal_ms() - memory().memory(memory().enemy().selected()).m_level_time >= m_dwLostMemoryTime))
 	{
 		memory().enable(memory().enemy().selected(), false);
 		return true;
@@ -198,7 +198,7 @@ bool CAI_Rat::switch_if_lost_time()
 
 bool CAI_Rat::switch_if_lost_rtime()
 {
-	if (Device.dwTimeGlobal - memory().memory(memory().enemy().selected()).m_level_time >= m_dwLostRecoilTime)
+	if (::IDevice->TimeGlobal_ms() - memory().memory(memory().enemy().selected()).m_level_time >= m_dwLostRecoilTime)
 	{
 		return true;
 	}
@@ -274,7 +274,7 @@ void CAI_Rat::set_rew_cur_position()
 
 void CAI_Rat::set_home_pos()
 {
-	if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
+	if ((::IDevice->TimeGlobal_ms() - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
 		m_tGoalDir.set(m_home_position);
 }
 
@@ -297,7 +297,7 @@ void CAI_Rat::set_movement_type(bool bCanAdjustSpeed, bool bStraightForward)
 
 bool CAI_Rat::check_completion_no_way()
 {
-	if (time_to_next_attack + time_old_attack < Device.dwTimeGlobal)
+	if (time_to_next_attack + time_old_attack < ::IDevice->TimeGlobal_ms())
 		return true;
 	return false;
 }

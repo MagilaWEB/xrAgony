@@ -14,7 +14,7 @@ void CBackend::OnFrameEnd()
 
 void CBackend::OnFrameBegin()
 {
-	PGO(Msg("PGO:*****frame[%d]*****", Device.dwFrame));
+	PGO(Msg("PGO:*****frame[%d]*****", ::IDevice->getFrame()));
 	Invalidate();
 	// DX9 sets base rt nd base zb by default
 	RImplementation.rmNormal();

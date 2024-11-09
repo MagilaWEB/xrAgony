@@ -83,7 +83,7 @@ void CStateBloodsuckerVampireAbstract::finalize()
 	inherited::finalize();
 
 	object->set_visibility_state(CAI_Bloodsucker::full_visibility);
-	CAI_Bloodsucker::m_time_last_vampire = Device.dwTimeGlobal;
+	CAI_Bloodsucker::m_time_last_vampire = ::IDevice->TimeGlobal_ms();
 }
 
 TEMPLATE_SPECIALIZATION
@@ -92,7 +92,7 @@ void CStateBloodsuckerVampireAbstract::critical_finalize()
 	inherited::critical_finalize();
 
 	object->set_visibility_state(CAI_Bloodsucker::full_visibility);
-	CAI_Bloodsucker::m_time_last_vampire = Device.dwTimeGlobal;
+	CAI_Bloodsucker::m_time_last_vampire = ::IDevice->TimeGlobal_ms();
 }
 
 TEMPLATE_SPECIALIZATION
@@ -117,7 +117,7 @@ bool CStateBloodsuckerVampireAbstract::check_start_conditions()
 	if (actor->input_external_handler_installed())
 		return false;
 
-	if (CAI_Bloodsucker::m_time_last_vampire + object->m_vampire_min_delay > Device.dwTimeGlobal)
+	if (CAI_Bloodsucker::m_time_last_vampire + object->m_vampire_min_delay > ::IDevice->TimeGlobal_ms())
 		return false;
 
 	return true;

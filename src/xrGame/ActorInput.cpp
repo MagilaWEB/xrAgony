@@ -491,7 +491,7 @@ void CActor::ActorUse()
 						if (!m_pPersonWeLookingAt->deadbody_closed_status())
 						{
 							if (pEntityAliveWeLookingAt->AlreadyDie() &&
-								pEntityAliveWeLookingAt->GetLevelDeathTime() + 3000 < Device.dwTimeGlobal)
+								pEntityAliveWeLookingAt->GetLevelDeathTime() + 3000 < ::IDevice->TimeGlobal_ms())
 								// 99.9% dead
 								pGameSP->StartCarBody(this, m_pPersonWeLookingAt);
 						}
@@ -704,9 +704,9 @@ void CActor::NoClipFly(int cmd)
 {
 	Fvector cur_pos{ Device.vCameraDirectionSaved }; // = Position();
 	Fvector m_pos_x{};
-	float scale = Device.fTimeDelta * 4;
+	float scale = ::IDevice->TimeDelta_sec() * 4;
 	if (pInput->iGetAsyncKeyState(DIK_LSHIFT))
-		scale = Device.fTimeDelta * 15;
+		scale = ::IDevice->TimeDelta_sec() * 15;
 
 	switch (cmd)
 	{

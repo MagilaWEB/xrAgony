@@ -110,7 +110,7 @@ void CWeaponShotEffector::Relax()
 	float time_to_relax = _abs(m_angle_vert) / m_cam_recoil.RelaxSpeed;
 	float relax_speed_horz = (fis_zero(time_to_relax)) ? 0.0f : _abs(m_angle_horz) / time_to_relax;
 
-	float dt = Device.fTimeDelta;
+	float dt = ::IDevice->TimeDelta_sec();
 
 	if (m_angle_horz >= 0.0f) // h
 	{
@@ -159,7 +159,7 @@ void CWeaponShotEffector::Update()
 	m_prev_angle_horz = m_angle_horz;
 
 	//	Msg( " <<[%d]  v=%.4f  dv=%.4f	a=%d s=%d  fr=%d", m_shot_numer, m_angle_vert, m_delta_vert, m_actived,
-	// m_first_shot, Device.dwFrame );
+	// m_first_shot, ::IDevice->getFrame() );
 }
 
 void CWeaponShotEffector::GetDeltaAngle(Fvector& angle)
@@ -182,7 +182,7 @@ void CWeaponShotEffector::SetRndSeed(s32 Seed)
 	{
 		m_LastSeed = Seed;
 		//		m_Random.seed		(Seed);
-		m_Random.seed(Device.dwFrame);
+		m_Random.seed(::IDevice->getFrame());
 	}
 }
 
@@ -202,7 +202,7 @@ void CWeaponShotEffector::ChangeHP(float* pitch, float* yaw)
 	//		m_actived = false;
 	//	}
 	//	Msg( "[%d]  pitch = %.4f	yaw = %.4f	fs=%d	a=%d  fr=%d", m_shot_numer, *pitch, *yaw, m_first_shot,
-	// m_actived, Device.dwFrame );
+	// m_actived, ::IDevice->getFrame() );
 }
 
 //-----------------------------------------------------------------------------

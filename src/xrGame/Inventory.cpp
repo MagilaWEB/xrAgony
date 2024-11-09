@@ -270,14 +270,14 @@ bool CInventory::DropItem(CGameObject* pObj, bool just_before_destroy, bool dont
 				if (just_before_destroy)
 				{
 #ifdef DEBUG
-					Msg("---DropItem activating slot [-1], forced, Frame[%d]", Device.dwFrame);
+					Msg("---DropItem activating slot [-1], forced, Frame[%d]", ::IDevice->getFrame());
 #endif // #ifdef DEBUG
 					Activate(NO_ACTIVE_SLOT, true);
 				}
 				else
 				{
 #ifdef DEBUG
-					Msg("---DropItem activating slot [-1], Frame[%d]", Device.dwFrame);
+					Msg("---DropItem activating slot [-1], Frame[%d]", ::IDevice->getFrame());
 #endif // #ifdef DEBUG
 					Activate(NO_ACTIVE_SLOT);
 				}
@@ -359,7 +359,7 @@ bool CInventory::Slot(u16 slot_id, PIItem pIItem, bool bNotActivate, bool strict
 		(!bNotActivate))
 	{
 #ifdef DEBUG
-		Msg("---To Slot: activating slot [%d], Frame[%d]", slot_id, Device.dwFrame);
+		Msg("---To Slot: activating slot [%d], Frame[%d]", slot_id, ::IDevice->getFrame());
 #endif // #ifdef DEBUG
 		Activate(slot_id);
 	}
@@ -483,7 +483,7 @@ void CInventory::Activate(u16 slot, bool bForce)
 		//			if ( !xr_strcmp("jup_b43_stalker_assistant_pri6695", name) )
 		//				LogStackTrace	("");
 		//			Msg				( "[%6d][%s] CInventory::Activate changing next active slot to %d",
-		// Device.dwTimeGlobal,
+		// ::IDevice->TimeGlobal_ms(),
 		// name, slot );
 		//		}
 		m_iNextActiveSlot = slot;
@@ -499,7 +499,7 @@ void CInventory::Activate(u16 slot, bool bForce)
 		return;
 
 #ifdef DEBUG
-//	Msg("--- Activating slot [%d], inventory owner: [%s], Frame[%d]", slot, m_pOwner->Name(), Device.dwFrame);
+//	Msg("--- Activating slot [%d], inventory owner: [%s], Frame[%d]", slot, m_pOwner->Name(), ::IDevice->getFrame());
 #endif // #ifdef DEBUG
 
 	//активный слот не выбран
@@ -512,7 +512,7 @@ void CInventory::Activate(u16 slot, bool bForce)
 			//				if ( !xr_strcmp("jup_b43_stalker_assistant_pri6695", name) )
 			//					LogStackTrace	("");
 			//				Msg				( "[%6d][%s] CInventory::Activate changing next active slot2 to %d",
-			// Device.dwTimeGlobal, name, slot );
+			// ::IDevice->TimeGlobal_ms(), name, slot );
 			//			}
 			m_iNextActiveSlot = slot;
 		}
@@ -550,7 +550,7 @@ void CInventory::Activate(u16 slot, bool bForce)
 			//				if ( !xr_strcmp("jup_b43_stalker_assistant_pri6695", name) )
 			//					LogStackTrace	("");
 			//!				Msg				("[%6d][%s] CInventory::Activate changing active slot from %d to %d",
-			//! Device.dwTimeGlobal,
+			//! ::IDevice->TimeGlobal_ms(),
 			//! name, m_iActiveSlot, slot );
 			//!			}
 
@@ -561,7 +561,7 @@ void CInventory::Activate(u16 slot, bool bForce)
 		//			if ( !xr_strcmp("jup_b43_stalker_assistant_pri6695", name) && !slot )
 		//				LogStackTrace	("");
 		//			Msg				( "[%6d][%s] CInventory::Activate changing next active slot3 to %d",
-		// Device.dwTimeGlobal,
+		// ::IDevice->TimeGlobal_ms(),
 		// name, slot );
 		//		}
 		m_iNextActiveSlot = slot;
@@ -1328,7 +1328,7 @@ bool CInventory::isBeautifulForActiveSlot(CInventoryItem* pIItem)
 	return (false);
 }
 
-void CInventory::InvalidateState() throw() { m_dwModifyFrame = Device.dwFrame; }
+void CInventory::InvalidateState() throw() { m_dwModifyFrame = ::IDevice->getFrame(); }
 
 //.#include "WeaponHUD.h"
 void CInventory::Items_SetCurrentEntityHud(bool current_entity)
@@ -1383,7 +1383,7 @@ void CInventory::TryActivatePrevSlot()
 		if (prev_active_item && !IsSlotBlocked(prev_active_item) && m_slots[PrevActiveSlot].CanBeActivated())
 		{
 #ifdef MASTER
-			Msg("Set slots blocked: activating prev slot [%d], Frame[%d]", PrevActiveSlot, Device.dwFrame);
+			Msg("Set slots blocked: activating prev slot [%d], Frame[%d]", PrevActiveSlot, ::IDevice->getFrame());
 #endif // #ifdef MASTER
 			Activate(PrevActiveSlot);
 			SetPrevActiveSlot(NO_ACTIVE_SLOT);
@@ -1405,7 +1405,7 @@ void CInventory::TryDeactivateActiveSlot()
 	if (active_item && (IsSlotBlocked(active_item) || !m_slots[ActiveSlot].CanBeActivated()))
 	{
 #ifdef MASTER
-		Msg("Set slots blocked: activating slot [-1], Frame[%d]", Device.dwFrame);
+		Msg("Set slots blocked: activating slot [-1], Frame[%d]", ::IDevice->getFrame());
 #endif // #ifdef MASTER
 		ItemFromSlot(ActiveSlot)->DiscardState();
 		Activate(NO_ACTIVE_SLOT);

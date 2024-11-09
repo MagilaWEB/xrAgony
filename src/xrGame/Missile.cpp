@@ -200,7 +200,7 @@ void CMissile::UpdateCL()
 	CActor* pActor = smart_cast<CActor*>(H_Parent());
 	if (pActor && !pActor->AnyMove() && this == pActor->inventory().ActiveItem())
 	{
-		if (hud_adj_mode == 0 && GetState() == eIdle && (Device.dwTimeGlobal - m_dw_curr_substate_time > 20000))
+		if (hud_adj_mode == 0 && GetState() == eIdle && (::IDevice->TimeGlobal_ms() - m_dw_curr_substate_time > 20000))
 		{
 			SwitchState(eBore);
 			ResetSubStateTime();
@@ -358,9 +358,9 @@ void CMissile::OnAnimationEnd(u32 state)
 void CMissile::UpdatePosition(const Fmatrix& trans) { XFORM().mul(trans, offset()); }
 void CMissile::UpdateXForm()
 {
-	if (Device.dwFrame != dwXF_Frame)
+	if (::IDevice->getFrame() != dwXF_Frame)
 	{
-		dwXF_Frame = Device.dwFrame;
+		dwXF_Frame = ::IDevice->getFrame();
 
 		if (0 == H_Parent())
 			return;
@@ -457,7 +457,7 @@ void CMissile::OnMotionMark(u32 state, const motion_marks& M)
 void CMissile::Throw()
 {
 #ifdef MASTER
-	Msg("throw [%d]", Device.dwFrame);
+	Msg("throw [%d]", ::IDevice->getFrame());
 #endif // #ifdef MASTER
 	VERIFY(smart_cast<CEntity*>(H_Parent()));
 	setup_throw_params();
@@ -582,9 +582,9 @@ void CMissile::UpdateFireDependencies_internal()
 	if (0 == H_Parent())
 		return;
 
-	if (Device.dwFrame != dwFP_Frame)
+	if (::IDevice->getFrame() != dwFP_Frame)
 	{
-		dwFP_Frame = Device.dwFrame;
+		dwFP_Frame = ::IDevice->getFrame();
 
 		UpdateXForm();
 

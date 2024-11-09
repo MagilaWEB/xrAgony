@@ -100,7 +100,7 @@ void CAI_Rat::SelectAnimation(const Fvector& /**_view/**/, const Fvector& /**_mo
 	if (psAI_Flags.is(aiAnimation))
 	{
 		IKinematicsAnimated* skeleton_animated = smart_cast<IKinematicsAnimated*>(Visual());
-		Msg("%6d %s animation : %s (%f,%f)", Device.dwTimeGlobal, "Global",
+		Msg("%6d %s animation : %s (%f,%f)", ::IDevice->TimeGlobal_ms(), "Global",
 			skeleton_animated->LL_MotionDefName_dbg(m_tpCurrentGlobalAnimation), movement().m_body.current.yaw,
 			movement().m_body.target.yaw);
 	}

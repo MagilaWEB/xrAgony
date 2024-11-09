@@ -273,10 +273,10 @@ void CAI_Stalker::Hit(SHit* pHDS)
 					CNotYetVisibleObject new_object;
 					new_object.m_object = smart_cast<const CGameObject*>(pHDS->initiator());
 					new_object.m_value = 1.0f;
-					new_object.m_prev_time = Device.dwTimeGlobal - 1;
-					new_object.m_update_time = Device.dwTimeGlobal;
+					new_object.m_prev_time = ::IDevice->TimeGlobal_ms() - 1;
+					new_object.m_update_time = ::IDevice->TimeGlobal_ms();
 					memory().visual().add_not_yet_visible_object(new_object);
-					memory().visual().add_visible_object(pHDS->initiator(), Device.fTimeDelta);
+					memory().visual().add_visible_object(pHDS->initiator(), ::IDevice->TimeDelta_sec());
 				}
 			}
 		}
@@ -290,7 +290,7 @@ void CAI_Stalker::Hit(SHit* pHDS)
 				!fis_zero(HDS.damage()) && brain().affect_cover())
 			{
 				agent_manager().location().add(
-					new CDangerCoverLocation(cover, Device.dwTimeGlobal, DANGER_INTERVAL, DANGER_DISTANCE));
+					new CDangerCoverLocation(cover, ::IDevice->TimeGlobal_ms(), DANGER_INTERVAL, DANGER_DISTANCE));
 			}
 		}
 
@@ -750,10 +750,10 @@ float CAI_Stalker::pick_distance()
 
 void CAI_Stalker::update_can_kill_info()
 {
-	if (m_pick_frame_id == Device.dwFrame)
+	if (m_pick_frame_id == ::IDevice->getFrame())
 		return;
 
-	m_pick_frame_id = Device.dwFrame;
+	m_pick_frame_id = ::IDevice->getFrame();
 	m_can_kill_member = false;
 	m_can_kill_enemy = false;
 
@@ -860,7 +860,7 @@ bool CAI_Stalker::fire_make_sense()
 	if (last_time_seen == u32(-1))
 		return (false);
 
-	if (Device.dwTimeGlobal > last_time_seen + FIRE_MAKE_SENSE_INTERVAL)
+	if (::IDevice->TimeGlobal_ms() > last_time_seen + FIRE_MAKE_SENSE_INTERVAL)
 		return (false);
 
 	// if we do not have a weapon
@@ -1115,7 +1115,7 @@ void CAI_Stalker::update_throw_params()
 void CAI_Stalker::on_throw_completed()
 {
 	agent_manager().member().on_throw_completed();
-	m_last_throw_time = Device.dwTimeGlobal;
+	m_last_throw_time = ::IDevice->TimeGlobal_ms();
 }
 
 bool CAI_Stalker::critically_wounded()
@@ -1159,7 +1159,7 @@ bool CAI_Stalker::critical_wound_external_conditions_suitable()
 	if (!agent_manager().member().registered_in_combat(this))
 		return (false);
 
-	//	Msg								("%6d executing critical hit",Device.dwTimeGlobal);
+	//	Msg								("%6d executing critical hit",::IDevice->TimeGlobal_ms());
 	animation().global().make_inactual();
 	return (true);
 }

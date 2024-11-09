@@ -15,7 +15,7 @@ void light::vis_prepare()
 	//		. camera inside light volume	= visible,	shedule for 'small' interval
 	//		. perform testing				= ???,		pending
 
-	u32 frame = Device.dwFrame;
+	u32 frame = ::IDevice->getFrame();
 	if (frame < vis.frame2test)
 		return;
 
@@ -75,7 +75,7 @@ void light::vis_update()
 		return;
 	}
 
-	u32 frame = Device.dwFrame;
+	u32 frame = ::IDevice->getFrame();
 	u64 fragments = RImplementation.occq_get(vis.query_id);
 	// Log					("",fragments);
 	vis.visible = (fragments > static_cast<u64>(cullfragments));

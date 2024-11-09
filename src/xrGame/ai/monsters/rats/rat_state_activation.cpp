@@ -115,11 +115,11 @@ void CAI_Rat::activate_state_attack_range()
 {
 	if (!m_attack_rebuild)
 	{
-		time_attack_rebuild = Device.dwTimeGlobal;
+		time_attack_rebuild = ::IDevice->TimeGlobal_ms();
 		m_attack_rebuild = true;
 	}
 
-	if (m_attack_rebuild && Device.dwTimeGlobal - time_attack_rebuild > 5000)
+	if (m_attack_rebuild && ::IDevice->TimeGlobal_ms() - time_attack_rebuild > 5000)
 	{
 		m_attack_rebuild = false;
 	}
@@ -158,7 +158,7 @@ void CAI_Rat::activate_state_eat()
 	Fvector temp_position;
 	memory().item().selected()->Center(temp_position);
 
-	if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
+	if ((::IDevice->TimeGlobal_ms() - m_previous_query_time > TIME_TO_GO) || !m_previous_query_time)
 		m_tGoalDir.set(temp_position);
 
 	vfUpdateTime(m_fTimeUpdateDelta);
@@ -171,9 +171,9 @@ void CAI_Rat::activate_state_eat()
 	if (a && angle_difference(y, -movement().m_body.current.yaw) < PI_DIV_6)
 	{
 		m_fSpeed = 0;
-		if (Device.dwTimeGlobal - m_previous_query_time > m_dwHitInterval)
+		if (::IDevice->TimeGlobal_ms() - m_previous_query_time > m_dwHitInterval)
 		{
-			m_previous_query_time = Device.dwTimeGlobal;
+			m_previous_query_time = ::IDevice->TimeGlobal_ms();
 			const CEntityAlive* const_corpse = smart_cast<const CEntityAlive*>(memory().item().selected());
 			VERIFY(const_corpse);
 			CEntityAlive* corpse = const_cast<CEntityAlive*>(const_corpse);

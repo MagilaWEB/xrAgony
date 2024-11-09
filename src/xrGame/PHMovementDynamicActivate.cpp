@@ -17,7 +17,7 @@ bool CPHMovementControl::ActivateBoxDynamic(
 		m_character->get_body_position(character_body_pos);
 		Fvector dif;
 		dif.sub(trying_poses[id], character_body_pos);
-		if (Device.dwTimeGlobal - trying_times[id] < 500 && dif.magnitude() < 0.05f)
+		if (::IDevice->TimeGlobal_ms() - trying_times[id] < 500 && dif.magnitude() < 0.05f)
 			return false;
 	}
 	if (!m_character || m_character->PhysicsRefObject()->ObjectPPhysicsShell())
@@ -78,7 +78,7 @@ bool CPHMovementControl::ActivateBoxDynamic(
 
 	if (!ret && character_exist)
 	{
-		trying_times[id] = Device.dwTimeGlobal;
+		trying_times[id] = ::IDevice->TimeGlobal_ms();
 
 		// trying_poses[id].set(cast_fv(dBodyGetPosition(m_character->get_body())));
 		m_character->GetBodyPosition(trying_poses[id]); //.set(cast_fv(dBodyGetPosition(m_character->get_body())));

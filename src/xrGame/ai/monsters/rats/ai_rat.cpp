@@ -258,7 +258,7 @@ BOOL CAI_Rat::net_Spawn(CSE_Abstract* DC)
 		if (ai().game_graph().mask(movement().locations().vertex_types()[j].tMask,
 				ai().game_graph().vertex(ai_location().game_vertex_id())->vertex_type()))
 		{
-			m_time_to_change_graph_point = Device.dwTimeGlobal + ::Random32.random(60000) + 60000;
+			m_time_to_change_graph_point = ::IDevice->TimeGlobal_ms() + ::Random32.random(60000) + 60000;
 			break;
 		}
 
@@ -509,7 +509,7 @@ void CAI_Rat::UpdateCL()
 void CAI_Rat::UpdatePositionAnimation()
 {
 	Fmatrix l_tSavedTransform = XFORM();
-	m_fTimeUpdateDelta = Device.fTimeDelta;
+	m_fTimeUpdateDelta = ::IDevice->TimeDelta_sec();
 	move(m_bCanAdjustSpeed, m_bStraightForward);
 	float y, p, b;
 	XFORM().getHPB(y, p, b);

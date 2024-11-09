@@ -64,7 +64,7 @@ void SStaticSound::Update(u32 game_time, u32 global_time)
 		}
 		else
 		{
-			if (Device.dwTimeGlobal >= m_StopTime)
+			if (::IDevice->TimeGlobal_ms() >= m_StopTime)
 				m_Source.stop_deferred();
 		}
 	}
@@ -200,7 +200,7 @@ void CLevelSoundManager::Update()
 		return;
 	// static sounds
 	u32 game_time = Level().GetGameDayTimeMS();
-	u32 engine_time = Device.dwTimeGlobal;
+	u32 engine_time = ::IDevice->TimeGlobal_ms();
 
 	for (u32 k = 0; k < m_StaticSounds.size(); ++k)
 	{

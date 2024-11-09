@@ -28,7 +28,7 @@ bool first_bullet_controller::is_bullet_first(float actor_linear_velocity) const
 	if (m_actor_velocity_limit < actor_linear_velocity)
 		return false;
 
-	return ((m_last_short_time + m_shot_timeout) <= Device.dwTimeGlobal);
+	return ((m_last_short_time + m_shot_timeout) <= ::IDevice->TimeGlobal_ms());
 }
 
-void first_bullet_controller::make_shot() { m_last_short_time = Device.dwTimeGlobal; }
+void first_bullet_controller::make_shot() { m_last_short_time = ::IDevice->TimeGlobal_ms(); }

@@ -52,7 +52,7 @@ bool CStateMonsterLookToUnprotectedAreaAbstract::check_completion()
 {
 	if (data.time_out != 0)
 	{
-		if (this->time_state_started + data.time_out < Device.dwTimeGlobal)
+		if (this->time_state_started + data.time_out < ::IDevice->TimeGlobal_ms())
 			return true;
 	}
 	else if (!this->object->control().direction().is_turning())

@@ -78,7 +78,7 @@ void CUICellItem::init()
 
 void CUICellItem::Draw()
 {
-	m_drawn_frame = Device.dwFrame;
+	m_drawn_frame = ::IDevice->getFrame();
 
 	inherited::Draw();
 	if (m_custom_draw)

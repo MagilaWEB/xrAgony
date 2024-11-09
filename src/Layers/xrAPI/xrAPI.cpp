@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Layers/xrAPI/xrAPI.h"
 
+XRAPI_API IRenderDevice* IDevice;
 XRAPI_API IRender* Render;
 XRAPI_API IDebugRender* DRender;
 XRAPI_API CDUInterface* DU;

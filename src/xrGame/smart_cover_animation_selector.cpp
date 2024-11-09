@@ -82,17 +82,17 @@ MotionID animation_selector::select_animation(bool& animation_movement_controlle
 			if (!m_planner->initialized())
 			{
 				//				Msg				("%6d no planner update, planner is not initialized, exiting",
-				// Device.dwTimeGlobal);
+				// ::IDevice->TimeGlobal_ms());
 				return (m_object->animation().assign_global_animation(animation_movement_controller));
 			}
 		}
 
-		//		Msg					("%6d updating planner", Device.dwTimeGlobal);
+		//		Msg					("%6d updating planner", ::IDevice->TimeGlobal_ms());
 		m_planner->update();
 
 		if (!m_planner->initialized())
 		{
-			//			Msg				("%6d planner is not initialized after update, exiting", Device.dwTimeGlobal);
+			//			Msg				("%6d planner is not initialized after update, exiting", ::IDevice->TimeGlobal_ms());
 			return (m_object->animation().assign_global_animation(animation_movement_controller));
 		}
 
@@ -176,7 +176,7 @@ MotionID animation_selector::select_animation(bool& animation_movement_controlle
 		return (result);
 	}
 
-	//	Msg					( "%d on_mark", Device.dwTimeGlobal );
+	//	Msg					( "%d on_mark", ::IDevice->TimeGlobal_ms() );
 	current_operator()->on_mark();
 	return (result);
 }

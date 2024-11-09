@@ -247,7 +247,7 @@ void xrServer::entity_Destroy(CSE_Abstract*& P)
 #endif
 	R_ASSERT(P);
 	entities.erase(P->ID);
-	m_tID_Generator.vfFreeID(P->ID, Device.TimerAsync());
+	m_tID_Generator.vfFreeID(P->ID, ::IDevice->TimerAsync_ms());
 
 	if (P->owner && P->owner->owner == P)
 		P->owner->owner = nullptr;
@@ -367,7 +367,7 @@ void xrServer::GetServerInfo( CServerInfo* si )
 	string256 tmp256;
 
 	LPCSTR time =
-		InventoryUtilities::GetTimeAsString(Device.dwTimeGlobal, InventoryUtilities::etpTimeToSecondsAndDay).c_str();
+		InventoryUtilities::GetTimeAsString(::IDevice->TimeGlobal_ms(), InventoryUtilities::etpTimeToSecondsAndDay).c_str();
 	si->AddItem("Uptime", time, RGB(255, 228, 0));
 
 	xr_strcpy(tmp256, "single");

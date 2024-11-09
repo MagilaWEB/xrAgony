@@ -374,9 +374,9 @@ void CGamePersistent::WeathersUpdate()
 			{
 				float rays_collided_delta = (1.f - ((rays_collided - .9f) / .1f));
 				if (rays_collided_delta <= eff_vol_counter || bIndoor)
-					eff_vol_counter -= (Device.fTimeDelta * .8f);
+					eff_vol_counter -= (::IDevice->TimeDelta_sec() * .8f);
 				else
-					eff_vol_counter += Device.fTimeDelta;
+					eff_vol_counter += ::IDevice->TimeDelta_sec();
 
 				clamp(eff_vol_counter, 0.f, 1.f);
 			}
@@ -390,9 +390,9 @@ void CGamePersistent::WeathersUpdate()
 				ref_sound& snd = ch.get_rnd_sound();
 
 				if (ambient_sound_next_time[idx] == 0)//first
-					ambient_sound_next_time[idx] = Device.dwTimeGlobal + ch.get_rnd_sound_first_time();
+					ambient_sound_next_time[idx] = ::IDevice->TimeGlobal_ms() + ch.get_rnd_sound_first_time();
 				else
-					if (Device.dwTimeGlobal > ambient_sound_next_time[idx])
+					if (::IDevice->TimeGlobal_ms() > ambient_sound_next_time[idx])
 					{
 						Fvector pos;
 						float angle = ::Random.randF(PI_MUL_2);
@@ -413,7 +413,7 @@ void CGamePersistent::WeathersUpdate()
 
 						VERIFY(snd._handle());
 						const u32 _length_ms = iFloor(snd.get_length_sec() * 1000.0f);
-						ambient_sound_next_time[idx] = Device.dwTimeGlobal + _length_ms + ch.get_rnd_sound_time();
+						ambient_sound_next_time[idx] = ::IDevice->TimeGlobal_ms() + _length_ms + ch.get_rnd_sound_time();
 						//Msg("- Playing ambient sound channel [%s] file[%s]", ch.m_load_section.c_str(), snd._handle()->file_name());
 					}
 			}
@@ -435,18 +435,18 @@ void CGamePersistent::WeathersUpdate()
 			}
 
 			// start effect
-			if (!bIndoor && (ambient_particles == nullptr) && Device.dwTimeGlobal > ambient_effect_next_time)
+			if (!bIndoor && (ambient_particles == nullptr) && ::IDevice->TimeGlobal_ms() > ambient_effect_next_time)
 			{
 				CEnvAmbient::SEffect* eff = env_amb->get_rnd_effect();
 				if (eff)
 				{
 					Environment().wind_gust_factor = eff->wind_gust_factor;
-					ambient_effect_next_time = Device.dwTimeGlobal + env_amb->get_rnd_effect_time();
-					ambient_effect_stop_time = Device.dwTimeGlobal + eff->life_time;
-					ambient_effect_wind_start = Device.fTimeGlobal;
-					ambient_effect_wind_in_time = Device.fTimeGlobal + eff->wind_blast_in_time;
-					ambient_effect_wind_end = Device.fTimeGlobal + eff->life_time / 1000.f;
-					ambient_effect_wind_out_time = Device.fTimeGlobal + eff->life_time / 1000.f + eff->wind_blast_out_time;
+					ambient_effect_next_time = ::IDevice->TimeGlobal_ms() + env_amb->get_rnd_effect_time();
+					ambient_effect_stop_time = ::IDevice->TimeGlobal_ms() + eff->life_time;
+					ambient_effect_wind_start = IDevice->TimeGlobal_sec();
+					ambient_effect_wind_in_time = IDevice->TimeGlobal_sec() + eff->wind_blast_in_time;
+					ambient_effect_wind_end = IDevice->TimeGlobal_sec() + eff->life_time / 1000.f;
+					ambient_effect_wind_out_time = IDevice->TimeGlobal_sec() + eff->life_time / 1000.f + eff->wind_blast_out_time;
 					ambient_effect_wind_on = true;
 
 					ambient_particles = CParticlesObject::Create(eff->particles.c_str(), FALSE, false);
@@ -476,14 +476,14 @@ void CGamePersistent::WeathersUpdate()
 
 			if (delta != 0.f)
 			{
-				float cur_in = Device.fTimeGlobal - start_time;
+				float cur_in = IDevice->TimeGlobal_sec() - start_time;
 				return cur_in / delta;
 			}
 			
 			return 0.f;
 		};
 
-		if (Device.fTimeGlobal >= ambient_effect_wind_start && Device.fTimeGlobal <= ambient_effect_wind_in_time && ambient_effect_wind_on)
+		if (IDevice->TimeGlobal_sec() >= ambient_effect_wind_start && IDevice->TimeGlobal_sec() <= ambient_effect_wind_in_time && ambient_effect_wind_on)
 		{
 			const float d_time = t_delta(ambient_effect_wind_in_time, ambient_effect_wind_start);
 
@@ -503,7 +503,7 @@ void CGamePersistent::WeathersUpdate()
 		}
 
 		// stop if time exceed or indoor
-		if (bIndoor || Device.dwTimeGlobal >= ambient_effect_stop_time)
+		if (bIndoor || ::IDevice->TimeGlobal_ms() >= ambient_effect_stop_time)
 		{
 			if (ambient_particles)
 				ambient_particles->Stop();
@@ -511,7 +511,7 @@ void CGamePersistent::WeathersUpdate()
 			Environment().wind_gust_factor = 0.f;
 		}
 
-		if (Device.fTimeGlobal >= ambient_effect_wind_end && ambient_effect_wind_on)
+		if (IDevice->TimeGlobal_sec() >= ambient_effect_wind_end && ambient_effect_wind_on)
 		{
 			Environment().wind_blast_strength_start_value = Environment().wind_strength_factor;
 			Environment().wind_blast_strength_stop_value = 0.f;
@@ -519,7 +519,7 @@ void CGamePersistent::WeathersUpdate()
 			ambient_effect_wind_on = false;
 		}
 
-		if (Device.fTimeGlobal >= ambient_effect_wind_end && Device.fTimeGlobal <= ambient_effect_wind_out_time)
+		if (IDevice->TimeGlobal_sec() >= ambient_effect_wind_end && IDevice->TimeGlobal_sec() <= ambient_effect_wind_out_time)
 		{
 			Environment().wind_strength_factor = 
 				Environment().wind_blast_strength_start_value +
@@ -527,7 +527,7 @@ void CGamePersistent::WeathersUpdate()
 				(Environment().wind_blast_strength_stop_value - Environment().wind_blast_strength_start_value);
 		}
 
-		if (Device.fTimeGlobal > ambient_effect_wind_out_time && ambient_effect_wind_out_time != 0.f)
+		if (IDevice->TimeGlobal_sec() > ambient_effect_wind_out_time && ambient_effect_wind_out_time != 0.f)
 			Environment().wind_strength_factor = 0.0;
 
 		// if particles not playing - destroy
@@ -667,7 +667,7 @@ void CGamePersistent::OnFrame()
 	{
 		xr_delete(g_tutorial);
 	}
-	if (0 == Device.dwFrame % 200)
+	if (0 == ::IDevice->getFrame() % 200)
 		CUITextureMaster::FreeCachedShaders();
 
 #ifdef DEBUG
@@ -709,8 +709,8 @@ void CGamePersistent::OnFrame()
 					if (psActorFlags.test(AF_NO_CLIP))
 					{
 						Actor()->SetDbgUpdateFrame(0);
-						Device.dwTimeDelta = 0;
-						Device.fTimeDelta = 0.01f;
+						IDevice->TimeDelta_ms() = 0;
+						::IDevice->TimeDelta_sec() = 0.01f;
 						Actor()->UpdateCL();
 						Actor()->shedule_Update(0);
 						Actor()->SetDbgUpdateFrame(0);
@@ -772,7 +772,7 @@ void CGamePersistent::OnFrame()
 
 	if (pDemoFile)
 	{
-		if (Device.dwTimeGlobal > uTime2Change)
+		if (::IDevice->TimeGlobal_ms() > uTime2Change)
 		{
 			// Change level + play demo
 			if (pDemoFile->elapsed() < 3)
@@ -845,7 +845,7 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 		xr_sprintf(cmd, "demo_play %s", demo);
 		Console->Execute(cmd);
 		xr_free(demo);
-		uTime2Change = Device.TimerAsync() + u32(P2) * 1000;
+		uTime2Change = ::IDevice->TimerAsync_ms() + u32(P2) * 1000;
 	}
 }
 

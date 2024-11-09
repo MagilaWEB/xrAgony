@@ -20,7 +20,7 @@ struct CTimeIntrusiveBase : public intrusive_base
 	template <typename T>
 	void release(T*) XR_NOEXCEPT
 	{
-		m_last_time_dec = Device.dwTimeGlobal;
+		m_last_time_dec = ::IDevice->TimeGlobal_ms();
 	}
 
 	using intrusive_base::release;

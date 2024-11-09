@@ -1,23 +1,11 @@
 #pragma once
-#ifndef xr_device
-#define xr_device
-
-// Note:
-// ZNear - always 0.0f
-// ZFar - always 1.0f
-
-// class ENGINE_API CResourceManager;
-// class ENGINE_API CGammaControl;
-
+#include "IDevice.hpp"
 #include "pure.h"
-
 #include "xrCore/FTimer.h"
 #include "Stats.h"
 #include "xrCommon/xr_list.h"
 #include "xrCore/fastdelegate.h"
 #include "xrCore/ModuleLookup.hpp"
-
-extern u32 g_dwFPSlimit;
 
 extern ENGINE_API float VIEWPORT_NEAR;
 extern ENGINE_API float VIEWPORT_NEAR_HUD;
@@ -27,19 +15,31 @@ extern ENGINE_API float VIEWPORT_NEAR_HUD;
 #include "Include/xrRender/FactoryPtr.h"
 #include "Render.h"
 
-#pragma pack(push, 4)
-
-#pragma pack(pop)
-
-class IRenderDevice
+struct RenderDeviceStatictics final
 {
-public:
-	virtual bool isGameProcess() const = 0;
-	virtual CTimer_paused* GetTimerGlobal() = 0;
+	CStatTimer RenderTotal; // pureRender
+	CStatTimer EngineTotal; // pureFrame
+	float fFPS, fRFPS, fTPS; // FPS, RenderFPS, TPS
+
+	RenderDeviceStatictics()
+	{
+		fFPS = 30.f;
+		fRFPS = 30.f;
+		fTPS = 0;
+	}
 };
 
-class CRenderDeviceBase : public IRenderDevice
+// refs
+class ENGINE_API CRenderDevice final : public IRenderDevice
 {
+	// Engine flow-control
+	size_t dwFrame			{ 0 };
+	float m_time_delta_sec	{ 0.f };
+	float m_time_global_sec	{ 0.f };
+	size_t m_time_delta_ms	{ 0 };
+	size_t m_time_global_ms	{ 0 };
+	size_t dwTimeContinual	{ 0 };
+
 public:
 	constexpr static float UI_BASE_WIDTH = 1024.f;
 	constexpr static float UI_BASE_HEIGHT = 768.f;
@@ -62,14 +62,6 @@ public:
 	std::atomic_bool b_is_Active;
 
 	// Engine flow-control
-	u32 dwFrame;
-
-	float fTimeDelta;
-	float fTimeGlobal;
-	u32 dwTimeDelta;
-	u32 dwTimeGlobal;
-	u32 dwTimeContinual;
-
 	Fvector vCameraPosition;
 	Fvector vCameraDirection;
 	Fvector vCameraTop;
@@ -100,22 +92,6 @@ public:
 	float gAimFOV = 36.f;
 	float gAimFOVTan = 0.72654252800536088589546675748062f;
 
-	struct RenderDeviceStatictics final
-	{
-		CStatTimer RenderTotal; // pureRender
-		CStatTimer EngineTotal; // pureFrame
-		float fFPS, fRFPS, fTPS; // FPS, RenderFPS, TPS
-
-		RenderDeviceStatictics()
-		{
-			fFPS = 30.f;
-			fRFPS = 30.f;
-			fTPS = 0;
-		}
-	};
-
-	virtual const RenderDeviceStatictics& GetStats() const = 0;
-
 protected:
 	CTimer_paused Timer;
 	CTimer_paused TimerGlobal;
@@ -132,17 +108,6 @@ public:
 	MessageRegistry<pureScreenResolutionChanged> seqResolutionChanged;
 
 	HWND m_hWnd;
-
-	IC const float time_factor() const
-	{
-		VERIFY(Timer.time_factor() == TimerGlobal.time_factor());
-		return (Timer.time_factor());
-	}
-};
-
-// refs
-class ENGINE_API CRenderDevice final : public CRenderDeviceBase
-{
 public:
 
 	struct ENGINE_API CScopeVP final
@@ -226,14 +191,12 @@ public:
 
 	void DumpResourcesMemoryUsage() { ::Render->ResourcesDumpMemoryUsage(); }
 
-	MessageRegistry<pureFrame>					seqFrameMT;
-	MessageRegistry<pureDeviceReset>			seqDeviceReset;
+	MessageRegistry<pureFrame>				seqFrameMT;
+	MessageRegistry<pureDeviceReset>		seqDeviceReset;
 	xr_list<fastdelegate::FastDelegate<>>	seqParallel;
 	xr_list<fastdelegate::FastDelegate<>>	seqParallel2;
 	xr_list<fastdelegate::FastDelegate<>>	segParallelLoad;
-	xr_list<std::function<void()>>				functionPointer;
-
-	
+	xr_list<std::function<void()>>			functionPointer;
 
 	CScopeVP m_ScopeVP;
 
@@ -241,6 +204,7 @@ public:
 
 	CRenderDevice() : m_dwWindowStyle(0), fWidth_2(0), fHeight_2(0)
 	{
+		::IDevice = this;
 		m_hWnd = nullptr;
 		b_is_Active.store(false);
 		b_is_Ready.store(false);
@@ -280,7 +244,6 @@ public:
 	// Mode control
 	void DumpFlags();
 	IC CTimer_paused* GetTimerGlobal() override { return &TimerGlobal; }
-	size_t TimerAsync() { return (size_t)TimerGlobal.GetElapsed_ms(); }
 	// Creation & Destroying
 	void Create();
 	void Run();
@@ -289,14 +252,22 @@ public:
 	bool IsReset() const;
 	void ResetStart();
 	void Initialize();
+
 	const RenderDeviceStatictics& GetStats() const override { return stats; }
 	void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert);
 
-	void time_factor(const float& time_factor); //--#SM+#--
-	IC const float time_factor() const
-	{
-		return CRenderDeviceBase::time_factor();
-	}
+	IC void incrementFrame() override { ++dwFrame; };
+	size_t getFrame() const override;
+	size_t TimeGlobal_ms() const override;
+	size_t TimeDelta_ms() const override;
+	float TimeDelta_sec() const override;
+	float TimeGlobal_sec() const override;
+	size_t TimeContinual() const override;
+	void time_factor(float time_factor) override;
+	float time_factor() const override;
+	size_t TimerAsync_ms() const override;
+	float TimerAsync_sec() const override;
+
 	//Parallel execution in conjunction with the render.
 	template<class  PAR, class PAR_X>
 	ICF void add_parallel(PAR* pr_1, fastdelegate::FastDelegate<void()>::Parameters(PAR_X::* pr_2)())
@@ -406,5 +377,3 @@ public:
 	bool b_need_user_input;
 };
 extern ENGINE_API CLoadScreenRenderer load_screen_renderer;
-
-#endif

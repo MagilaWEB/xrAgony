@@ -25,13 +25,13 @@ BOOL	AAA_test		()
 
 void CConstant::Calculate()
 {
-	if (dwFrame == Device.dwFrame)
+	if (dwFrame == ::IDevice->getFrame())
 		return;
-	dwFrame = Device.dwFrame;
+	dwFrame = ::IDevice->getFrame();
 	if (modeProgrammable == dwMode)
 		return;
 
-	float t = Device.fTimeGlobal;
+	float t = IDevice->TimeGlobal_sec();
 	set_float(_R.Calculate(t), _G.Calculate(t), _B.Calculate(t), _A.Calculate(t));
 }
 

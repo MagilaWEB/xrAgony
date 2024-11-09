@@ -272,7 +272,7 @@ void CControlJump::select_next_anim_state()
 
 float CControlJump::relative_time()
 {
-	float time = ((Device.dwTimeGlobal - m_time_started) / 1000.f) / m_jump_time;
+	float time = ((::IDevice->TimeGlobal_ms() - m_time_started) / 1000.f) / m_jump_time;
 	if (time > 1.f)
 		time = 1.f;
 
@@ -621,7 +621,7 @@ bool CControlJump::can_jump(Fvector const& target, bool const aggressive_jump)
 	if (m_time_next_allowed != 0)
 	{
 		// in aggressive mode we can jump after 1/3 of m_delay_after_jump
-		if (m_time_next_allowed - (int)aggressive_jump * (2 * m_delay_after_jump / 3) > Device.dwTimeGlobal)
+		if (m_time_next_allowed - (int)aggressive_jump * (2 * m_delay_after_jump / 3) > ::IDevice->TimeGlobal_ms())
 		{
 			return false;
 		}

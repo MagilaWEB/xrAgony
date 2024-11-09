@@ -532,25 +532,25 @@ void CLevel::IR_OnKeyboardHold(int key)
 	// Lain: added
 	if (key == DIK_UP)
 	{
-		static u32 time = Device.dwTimeGlobal;
-		if (Device.dwTimeGlobal - time > 20)
+		static u32 time = ::IDevice->TimeGlobal_ms();
+		if (::IDevice->TimeGlobal_ms() - time > 20)
 		{
 			if (CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()))
 			{
 				DBG().debug_info_up();
-				time = Device.dwTimeGlobal;
+				time = ::IDevice->TimeGlobal_ms();
 			}
 		}
 	}
 	else if (key == DIK_DOWN)
 	{
-		static u32 time = Device.dwTimeGlobal;
-		if (Device.dwTimeGlobal - time > 20)
+		static u32 time = ::IDevice->TimeGlobal_ms();
+		if (::IDevice->TimeGlobal_ms() - time > 20)
 		{
 			if (CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()))
 			{
 				DBG().debug_info_down();
-				time = Device.dwTimeGlobal;
+				time = ::IDevice->TimeGlobal_ms();
 			}
 		}
 	}

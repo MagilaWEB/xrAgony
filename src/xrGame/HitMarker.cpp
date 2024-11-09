@@ -155,7 +155,7 @@ void CHitMarker::net_Relcase(IGameObject* obj)
 
 SHitMark::SHitMark(const ui_shader& sh, const Fvector& dir)
 {
-	m_StartTime = Device.fTimeGlobal;
+	m_StartTime = IDevice->TimeGlobal_sec();
 	m_lanim = LALib.FindItem("hud_hit_mark");
 	m_HitDirection = dir.getH();
 	m_UIStaticItem = new CUIStaticItem();
@@ -165,11 +165,11 @@ SHitMark::SHitMark(const ui_shader& sh, const Fvector& dir)
 }
 
 SHitMark::~SHitMark() { xr_delete(m_UIStaticItem); }
-bool SHitMark::IsActive() { return ((Device.fTimeGlobal - m_StartTime) < m_lanim->Length_sec()); }
+bool SHitMark::IsActive() { return ((IDevice->TimeGlobal_sec() - m_StartTime) < m_lanim->Length_sec()); }
 void SHitMark::Draw(float cam_dir)
 {
 	int frame;
-	u32 clr = m_lanim->CalculateRGB(Device.fTimeGlobal - m_StartTime, frame);
+	u32 clr = m_lanim->CalculateRGB(IDevice->TimeGlobal_sec() - m_StartTime, frame);
 	m_UIStaticItem->SetTextureColor(subst_alpha(m_UIStaticItem->GetTextureColor(), color_get_A(clr)));
 
 	m_UIStaticItem->Render(cam_dir + m_HitDirection);
@@ -181,7 +181,7 @@ SGrenadeMark::SGrenadeMark(const ui_shader& sh, CGrenade* grn)
 {
 	p_grenade = grn;
 	removed_grenade = false;
-	m_LastTime = Device.fTimeGlobal;
+	m_LastTime = IDevice->TimeGlobal_sec();
 	m_LightAnim = LALib.FindItem("hud_hit_mark");
 	m_Angle = 0.0f;
 
@@ -197,14 +197,14 @@ SGrenadeMark::~SGrenadeMark() { xr_delete(m_UIStaticItem); }
 void SGrenadeMark::Update(float angle)
 {
 	m_Angle = angle;
-	m_LastTime = Device.fTimeGlobal;
+	m_LastTime = IDevice->TimeGlobal_sec();
 }
 
-bool SGrenadeMark::IsActive() const { return (2.0f * (Device.fTimeGlobal - m_LastTime) < m_LightAnim->Length_sec()); }
+bool SGrenadeMark::IsActive() const { return (2.0f * (IDevice->TimeGlobal_sec() - m_LastTime) < m_LightAnim->Length_sec()); }
 void SGrenadeMark::Draw(float cam_dir)
 {
 	int frame;
-	u32 clr = m_LightAnim->CalculateRGB(2.0f * (Device.fTimeGlobal - m_LastTime), frame);
+	u32 clr = m_LightAnim->CalculateRGB(2.0f * (IDevice->TimeGlobal_sec() - m_LastTime), frame);
 	m_UIStaticItem->SetTextureColor(subst_alpha(m_UIStaticItem->GetTextureColor(), color_get_A(clr)));
 
 	m_UIStaticItem->Render(cam_dir + m_Angle);

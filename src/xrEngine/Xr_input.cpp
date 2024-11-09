@@ -277,7 +277,7 @@ void CInput::KeyUpdate()
 	cbStack.back()->IR_OnMouseMove ( dx, dy );
 	}
 
-	if(Device.fTimeGlobal > stop_vibration_time)
+	if(IDevice->TimeGlobal_sec() > stop_vibration_time)
 	{
 	stop_vibration_time = flt_max;
 	set_vibration (0, 0);
@@ -659,7 +659,7 @@ void CInput::OnFrame(void)
 	{
 		stats.FrameStart();
 		stats.FrameTime.Begin();
-		dwCurTime = Device.TimerAsync();
+		dwCurTime = ::IDevice->TimerAsync_ms();
 		if (pKeyboard)
 			KeyUpdate();
 		if (pMouse)
@@ -701,7 +701,7 @@ void CInput::exclusive_mode(const bool& exclusive)
 bool CInput::get_exclusive_mode() { return g_exclusive; }
 void CInput::feedback(u16 s1, u16 s2, float time)
 {
-	stop_vibration_time = Device.fTimeGlobal + time;
+	stop_vibration_time = IDevice->TimeGlobal_sec() + time;
 #ifndef _EDITOR
 	//. set_vibration (s1, s2);
 #endif

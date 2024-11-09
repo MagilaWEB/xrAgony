@@ -36,7 +36,7 @@ void CAI_Rat::feel_sound_new(
 		if ((this != who) && ((m_tLastSound.dwTime <= m_dwLastUpdateTime) || (m_tLastSound.fPower <= power)))
 		{
 			m_tLastSound.eSoundType = ESoundTypes(eType);
-			m_tLastSound.dwTime = Device.dwTimeGlobal;
+			m_tLastSound.dwTime = ::IDevice->TimeGlobal_ms();
 			m_tLastSound.fPower = power;
 			m_tLastSound.tSavedPosition = Position;
 			m_tLastSound.tpEntity = smart_cast<CEntityAlive*>(who);

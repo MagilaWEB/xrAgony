@@ -353,7 +353,7 @@ void CAI_Bloodsucker::BoneCallback(CBoneInstance* B)
 {
 	CAI_Bloodsucker* this_class = static_cast<CAI_Bloodsucker*>(B->callback_param());
 
-	this_class->Bones.Update(B, Device.dwTimeGlobal);
+	this_class->Bones.Update(B, ::IDevice->TimeGlobal_ms());
 }
 
 void CAI_Bloodsucker::vfAssignBones()
@@ -504,12 +504,12 @@ void CAI_Bloodsucker::set_visibility_state(visibility_t new_state)
 		return;
 	}
 
-	if (Device.dwTimeGlobal < m_visibility_state_last_changed_time + get_visibility_state_change_min_delay())
+	if (::IDevice->TimeGlobal_ms() < m_visibility_state_last_changed_time + get_visibility_state_change_min_delay())
 	{
 		return;
 	}
 
-	m_visibility_state_last_changed_time = Device.dwTimeGlobal;
+	m_visibility_state_last_changed_time = ::IDevice->TimeGlobal_ms();
 
 	m_visibility_state = new_state;
 
@@ -544,11 +544,11 @@ void CAI_Bloodsucker::update_invisibility()
 	{
 		set_visibility_state(full_visibility);
 	}
-	else if (Device.dwTimeGlobal < m_runaway_invisible_time + default_runaway_invisible_time / 6)
+	else if (::IDevice->TimeGlobal_ms() < m_runaway_invisible_time + default_runaway_invisible_time / 6)
 	{
 		set_visibility_state(partial_visibility);
 	}
-	else if (Device.dwTimeGlobal < m_runaway_invisible_time + default_runaway_invisible_time)
+	else if (::IDevice->TimeGlobal_ms() < m_runaway_invisible_time + default_runaway_invisible_time)
 	{
 		set_visibility_state(no_visibility);
 	}

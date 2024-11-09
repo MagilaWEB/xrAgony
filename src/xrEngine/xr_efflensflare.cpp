@@ -261,13 +261,13 @@ static Fvector2 RayDeltas[CLensFlare::MAX_RAYS] = {
 };
 void CLensFlare::OnFrame(shared_str id)
 {
-	if (dwFrame == Device.dwFrame)
+	if (dwFrame == ::IDevice->getFrame())
 		return;
 #ifndef _EDITOR
 	if (!g_pGameLevel)
 		return;
 #endif
-	dwFrame = Device.dwFrame;
+	dwFrame = ::IDevice->getFrame();
 
 	R_ASSERT(_valid(g_pGamePersistent->Environment().CurrentEnv->sun_dir));
 	vSunDir.mul(g_pGamePersistent->Environment().CurrentEnv->sun_dir, -1);
@@ -292,21 +292,21 @@ void CLensFlare::OnFrame(shared_str id)
 			m_State = lfsHide;
 		break;
 	case lfsShow:
-		m_StateBlend = m_Current ? (m_StateBlend + m_Current->m_StateBlendUpSpeed * Device.fTimeDelta * tf) : 1.f + EPS;
+		m_StateBlend = m_Current ? (m_StateBlend + m_Current->m_StateBlendUpSpeed * ::IDevice->TimeDelta_sec() * tf) : 1.f + EPS;
 		if (m_StateBlend >= 1.f)
 			m_State = lfsIdle;
 		break;
 	case lfsHide:
-		m_StateBlend = m_Current ? (m_StateBlend - m_Current->m_StateBlendDnSpeed * Device.fTimeDelta * tf) : 0.f - EPS;
+		m_StateBlend = m_Current ? (m_StateBlend - m_Current->m_StateBlendDnSpeed * ::IDevice->TimeDelta_sec() * tf) : 0.f - EPS;
 		if (m_StateBlend <= 0.f)
 		{
 			m_State = lfsShow;
 			m_Current = desc;
-			m_StateBlend = m_Current ? m_Current->m_StateBlendUpSpeed * Device.fTimeDelta * tf : 0;
+			m_StateBlend = m_Current ? m_Current->m_StateBlendUpSpeed * ::IDevice->TimeDelta_sec() * tf : 0;
 		}
 		break;
 	}
-	// Msg ("%6d : [%s] -> [%s]", Device.dwFrame, state_to_string(previous_state), state_to_string(m_State));
+	// Msg ("%6d : [%s] -> [%s]", ::IDevice->getFrame(), state_to_string(previous_state), state_to_string(m_State));
 	clamp(m_StateBlend, 0.f, 1.f);
 
 	if ((m_Current == 0) || (LightColor.magnitude_rgb() == 0.f))
@@ -372,9 +372,9 @@ void CLensFlare::OnFrame(shared_str id)
 #ifdef _EDITOR
 	float dist = UI->ZFar();
 	if (Tools->RayPick(Device.m_Camera.GetPosition(), vSunDir, dist))
-		fBlend = fBlend - BLEND_DEC_SPEED * Device.fTimeDelta;
+		fBlend = fBlend - BLEND_DEC_SPEED * ::IDevice->TimeDelta_sec();
 	else
-		fBlend = fBlend + BLEND_INC_SPEED * Device.fTimeDelta;
+		fBlend = fBlend + BLEND_INC_SPEED * ::IDevice->TimeDelta_sec();
 #else
 
 	// Side vectors to bend normal.
@@ -435,8 +435,8 @@ void CLensFlare::OnFrame(shared_str id)
 
 	fVisResult *= (1.0f / float(MAX_RAYS));
 
-	// blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,Device.fTimeDelta);
-	blend_lerp(fBlend, fVisResult, BLEND_DEC_SPEED, Device.fTimeDelta);
+	// blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,::IDevice->TimeDelta_sec());
+	blend_lerp(fBlend, fVisResult, BLEND_DEC_SPEED, ::IDevice->TimeDelta_sec());
 
 /*
 IGameObject* o_main = g_pGameLevel->CurrentViewEntity();
@@ -457,7 +457,7 @@ m_ray_cache.result = FALSE ;
 }
 }
 
-blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,Device.fTimeDelta);
+blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,::IDevice->TimeDelta_sec());
 */
 /*
  IGameObject* o_main = g_pGameLevel->CurrentViewEntity();
@@ -477,7 +477,7 @@ blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,Device.fTimeDelta);
  m_ray_cache.result = FALSE ;
  }
  }
- blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,Device.fTimeDelta);
+ blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,::IDevice->TimeDelta_sec());
  */
 #endif
 	clamp(fBlend, 0.0f, 1.0f);

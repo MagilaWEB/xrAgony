@@ -223,9 +223,9 @@ void CUIHudStatesWnd::Update()
 
 void CUIHudStatesWnd::UpdateHealth(CActor* actor)
 {
-	//	if ( Device.dwTimeGlobal - m_timer_1sec > 1000 ) // 1 sec
+	//	if ( ::IDevice->TimeGlobal_ms() - m_timer_1sec > 1000 ) // 1 sec
 	//	{
-	//		m_timer_1sec = Device.dwTimeGlobal;
+	//		m_timer_1sec = ::IDevice->TimeGlobal_ms();
 	//	}
 
 	float cur_health = actor->GetfHealth();
@@ -423,7 +423,7 @@ void CUIHudStatesWnd::UpdateZones()
 	}
 	m_radia_hit = m_zone_cur_power[ALife::infl_rad];
 
-	/*	if ( Device.dwFrame % 20 == 0 )
+	/*	if ( ::IDevice->getFrame() % 20 == 0 )
 		{
 			Msg(" self = %.2f	hit = %.2f", m_radia_self, m_radia_hit );
 		}*/
@@ -445,9 +445,9 @@ void CUIHudStatesWnd::UpdateZones()
 
 	for (int i = 0; i < ALife::infl_max_count; ++i)
 	{
-		if (Device.fTimeDelta < 1.0f)
+		if (::IDevice->TimeDelta_sec() < 1.0f)
 		{
-			m_zone_cur_power[i] *= 0.9f * (1.0f - Device.fTimeDelta);
+			m_zone_cur_power[i] *= 0.9f * (1.0f - ::IDevice->TimeDelta_sec());
 		}
 		if (m_zone_cur_power[i] < 0.01f)
 		{
@@ -525,7 +525,7 @@ void CUIHudStatesWnd::UpdateZones()
 		}
 		else
 		{
-			zone_info.snd_time += Device.fTimeDelta;
+			zone_info.snd_time += ::IDevice->TimeDelta_sec();
 		}
 	} // for itb
 }

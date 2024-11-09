@@ -21,7 +21,6 @@
 #include "xrServerEntities/phnetstate.h"
 #include "geometrybits.h"
 #include "console_vars.h"
-#include "xrEngine/device.h"
 #include "xrEngine/defines.h"
 #include "xrCDB/xr_area.h"
 #include "xrCore/fs_internal.h"
@@ -42,13 +41,12 @@
 CPHWorld* ph_world = 0;
 
 IPHWorld* __stdcall physics_world() { return ph_world; }
-void __stdcall create_physics_world(CObjectSpace* os, CObjectList* lo, CRenderDeviceBase* dv) // IPHWorldUpdateCallbck &commander,
+void __stdcall create_physics_world(CObjectSpace* os, CObjectList* lo) // IPHWorldUpdateCallbck &commander,
 {
 	ph_world = new CPHWorld(); //&commander
 	VERIFY(os);
 	//		VERIFY( lo );
-	VERIFY(dv);
-	ph_world->Create(os, lo, dv);
+	ph_world->Create(os, lo);
 }
 
 void __stdcall destroy_physics_world()
@@ -117,7 +115,7 @@ CPHWorld::CPHWorld()
 	: // IPHWorldUpdateCallbck		*_update_callback
 	m_update_callback(&empty_update_callback),
 	m_default_contact_shotmark(0), m_default_character_contact_shotmark(0), physics_step_time_callback(0),
-	m_object_space(0), m_level_objects(0), m_device(0)
+	m_object_space(0), m_level_objects(0)
 {
 	disable_count = 0;
 	m_frame_time = 0.f;
@@ -144,20 +142,19 @@ void CPHWorld::SetStep(float s)
 	world_damping = 1.0f * DAMPING(world_cfm, world_erp);
 	if (ph_world && ph_world->Exist())
 	{
-		float frame_time = Device().fTimeDelta;
+		float frame_time = ::IDevice->TimeDelta_sec();
 		u32 it_number = iFloor(frame_time / fixed_step);
 		frame_time -= it_number * fixed_step;
 		ph_world->m_previous_frame_time = frame_time;
 		ph_world->m_frame_time = frame_time;
 	}
 }
-void CPHWorld::Create(CObjectSpace* os, CObjectList* lo, CRenderDeviceBase* dv)
+void CPHWorld::Create(CObjectSpace* os, CObjectList* lo)
 {
 	LoadParams();
 	dWorldID phWorld = 0;
 	m_object_space = os;
 	m_level_objects = lo;
-	m_device = dv;
 	mt_PHWorld.Init([this]() { OnFrame(); }, xrThread::sParalelRender);
 	//Device().AddSeqFrame(this, mt);
 
@@ -205,7 +202,7 @@ dVector3 center			=	{level_center.x,0.f,level_center.z};
 	b_exist = true;
 
 	StepNumIterations(phIterations);
-	SetStep(Device().time_factor() / ph_console::ph_frequency);
+	SetStep(::IDevice->time_factor() / ph_console::ph_frequency);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -243,7 +240,7 @@ void CPHWorld::SetGravity(float g)
 void CPHWorld::OnFrame()
 {
 	stats.FrameStart();
-	// Msg									("------------- physics: %d / %d",u32(Device.dwFrame),u32(m_steps_num));
+	// Msg									("------------- physics: %d / %d",u32(::IDevice->getFrame()),u32(m_steps_num));
 	//просчитать полет пуль
 	/*
 	Device.Statistic->TEST0.Begin		();
@@ -256,10 +253,10 @@ void CPHWorld::OnFrame()
 #endif
 	stats.MovCollision.Begin();
 
-	if(0 == Device().dwFrame % 30)
-		SetStep(Device().time_factor() / ph_console::ph_frequency);
+	if(0 == ::IDevice->getFrame() % 30)
+		SetStep(::IDevice->time_factor() / ph_console::ph_frequency);
 
-	FrameStep(Device().fTimeDelta);
+	FrameStep(::IDevice->TimeDelta_sec());
 	stats.MovCollision.End();
 #ifdef DEBUG
 	// DBG_DrawStatAfterFrameStep();
@@ -271,7 +268,7 @@ void CPHWorld::OnFrame()
 void CPHWorld::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 {
 	stats.FrameEnd();
-	float engineTotal = Device().GetStats().EngineTotal.GetResult_ms();
+	float engineTotal = ::IDevice->GetStats().EngineTotal.GetResult_ms();
 	float percentage = 100.0f * stats.MovCollision.GetResult_ms() / engineTotal;
 	font.OutNext("Physics:	  %2.5fms, %2.1f%%", stats.MovCollision.GetResult_ms(), percentage);
 	font.OutNext("- collider:	%2.5fms", stats.Collision.GetResult_ms());
@@ -526,7 +523,7 @@ void CPHWorld::FrameStep(dReal step)
 #endif
 	b_processing = true;
 
-	start_time = Device().dwTimeGlobal; // - u32(m_frame_time*1000);
+	start_time = ::IDevice->TimeGlobal_ms(); // - u32(m_frame_time*1000);
 	if (ph_console::g_bDebugDumpPhysicsStep && it_number > 20)
 		Msg("!!!TOO MANY PHYSICS STEPS PER FRAME = %d !!!", it_number);
 	for (UINT i = 0; i < it_number; ++i)

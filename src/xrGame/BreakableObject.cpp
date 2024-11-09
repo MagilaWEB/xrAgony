@@ -54,7 +54,7 @@ BOOL CBreakableObject::net_Spawn(CSE_Abstract* DC)
 void CBreakableObject::shedule_Update(u32 dt)
 {
 	inherited::shedule_Update(dt);
-	if (m_pPhysicsShell && !bRemoved && Device.dwTimeGlobal - m_break_time > m_remove_time)
+	if (m_pPhysicsShell && !bRemoved && ::IDevice->TimeGlobal_ms() - m_break_time > m_remove_time)
 		SendDestroy();
 }
 void CBreakableObject::UpdateCL()
@@ -211,7 +211,7 @@ void CBreakableObject::Break()
 		dir.normalize();
 		m_pPhysicsShell->get_ElementByStoreOrder(i)->applyImpulseTrace(pos, dir, Random.randF(0.5f, 3.f), 0);
 	}
-	m_break_time = Device.dwTimeGlobal;
+	m_break_time = ::IDevice->TimeGlobal_ms();
 	SheduleRegister();
 }
 

@@ -267,7 +267,7 @@ void CStateGroupAttackAbstract::execute()
 
 						this->object->set_current_animation(6);
 						this->object->b_state_check = false;
-						m_time_start_drive_out = Device.dwTimeGlobal;
+						m_time_start_drive_out = ::IDevice->TimeGlobal_ms();
 						this->select_state(eStateAttack_ControlFire);
 					}
 					else
@@ -282,14 +282,14 @@ void CStateGroupAttackAbstract::execute()
 
 				case eStateAttack_ControlFire:
 					if (this->object->Position().distance_to(enemy_pos) > 7.f + m_delta_distance ||
-						Device.dwTimeGlobal - m_time_start_drive_out > this->object->m_drive_out_time)
+						::IDevice->TimeGlobal_ms() - m_time_start_drive_out > this->object->m_drive_out_time)
 					{
 						if (this->object->get_custom_anim_state())
 						{
 							this->object->anim_end_reinit();
 						}
 
-						if (Device.dwTimeGlobal - m_time_start_drive_out > this->object->m_drive_out_time)
+						if (::IDevice->TimeGlobal_ms() - m_time_start_drive_out > this->object->m_drive_out_time)
 						{
 							m_drive_out = true;
 						}

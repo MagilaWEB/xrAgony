@@ -23,7 +23,7 @@ void CAI_Rat::Exec_Action(float /**dt/**/)
 	{
 	case eRatActionAttackBegin:
 	{
-		u32 dwTime = Device.dwTimeGlobal;
+		u32 dwTime = ::IDevice->TimeGlobal_ms();
 		sound().play(eRatSoundAttack); //,0,0,m_dwHitInterval+1,m_dwHitInterval);
 		if (memory().enemy().selected() && memory().enemy().selected()->g_Alive() &&
 			(dwTime - m_dwStartAttackTime > m_dwHitInterval))
@@ -78,7 +78,7 @@ void CAI_Rat::HitSignal(float amount, Fvector& vLocalDir, IGameObject* who, s16 
 	// Save event
 	Fvector D;
 	XFORM().transform_dir(D, vLocalDir);
-	m_hit_time = Device.dwTimeGlobal;
+	m_hit_time = ::IDevice->TimeGlobal_ms();
 	m_hit_direction.set(D);
 	m_hit_direction.normalize();
 	m_tHitPosition = who->Position();
@@ -109,7 +109,7 @@ float CAI_Rat::evaluate(const CItemManager* manager, const CGameObject* object) 
 	VERIFY(entity_alive);
 	if (!entity_alive->g_Alive())
 	{
-		if ((Device.dwTimeGlobal - entity_alive->GetLevelDeathTime() < m_dwEatCorpseInterval) &&
+		if ((::IDevice->TimeGlobal_ms() - entity_alive->GetLevelDeathTime() < m_dwEatCorpseInterval) &&
 			(entity_alive->m_fFood > 0) && (m_bEatMemberCorpses || (entity_alive->g_Team() != g_Team())) &&
 			(m_bCannibalism || (entity_alive->CLS_ID != CLS_ID)))
 			return (entity_alive->m_fFood * entity_alive->m_fFood) * Position().distance_to(entity_alive->Position());
@@ -122,7 +122,7 @@ float CAI_Rat::evaluate(const CItemManager* manager, const CGameObject* object) 
 
 void CAI_Rat::update_morale()
 {
-	u32 dwCurTime = Device.dwTimeGlobal;
+	u32 dwCurTime = ::IDevice->TimeGlobal_ms();
 	clamp(m_fMorale, m_fMoraleMinValue, m_fMoraleMaxValue);
 
 	if (dwCurTime - m_dwMoraleLastUpdateTime <= m_dwMoraleRestoreTimeInterval)

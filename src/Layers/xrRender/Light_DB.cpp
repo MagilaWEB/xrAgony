@@ -167,9 +167,9 @@ light* CLight_DB::Create()
 
 void CLight_DB::add_light(light* L)
 {
-	if (Device.dwFrame == L->frame_render)
+	if (::IDevice->getFrame() == L->frame_render)
 		return;
-	L->frame_render = Device.dwFrame;
+	L->frame_render = ::IDevice->getFrame();
 	if (RImplementation.o.noshadows)
 		L->flags.bShadow = FALSE;
 	if (L->flags.bStatic)		//&& !ps_r2_ls_flags.test(R2FLAG_R1LIGHTS)

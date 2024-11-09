@@ -67,7 +67,7 @@ void CMapSpot::Update()
 	inherited::Update();
 	if (m_bCursorOverWindow)
 	{
-		if (Device.dwTimeGlobal > (m_dwFocusReceiveTime + 500))
+		if (::IDevice->TimeGlobal_ms() > (m_dwFocusReceiveTime + 500))
 		{
 			GetMessageTarget()->SendMessage(this, MAP_SHOW_HINT, nullptr);
 		}
@@ -297,7 +297,7 @@ void CComplexMapSpot::Update()
 {
 	inherited::Update();
 
-	m_last_delay += Device.dwTimeDelta;
+	m_last_delay += IDevice->TimeDelta_ms();
 	if (m_last_delay > 310)
 	{
 		m_last_delay = 0;

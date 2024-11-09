@@ -7,16 +7,16 @@ using namespace extrapolation;
 static u32 extrapolate_pose_update_mseconds = 50;
 void points::update(const Fmatrix& m)
 {
-	if (Device.dwTimeGlobal - last_update < extrapolate_pose_update_mseconds)
+	if (::IDevice->TimeGlobal_ms() - last_update < extrapolate_pose_update_mseconds)
 		return;
-	m_points.push_back(point().set(pose().set(m), Device.fTimeGlobal));
-	last_update = Device.dwTimeGlobal;
+	m_points.push_back(point().set(pose().set(m), IDevice->TimeGlobal_sec()));
+	last_update = ::IDevice->TimeGlobal_ms();
 }
 
 void points::init(const Fmatrix& m)
 {
-	m_points.fill_in(point().set(pose().set(m), Device.fTimeGlobal));
-	last_update = Device.dwTimeGlobal;
+	m_points.fill_in(point().set(pose().set(m), IDevice->TimeGlobal_sec()));
+	last_update = ::IDevice->TimeGlobal_ms();
 }
 
 static void spline_coefs_linar(const point& p0, const point& p1, pose& a0, pose& a1)

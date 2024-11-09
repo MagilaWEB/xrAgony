@@ -395,6 +395,9 @@
       <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="StickyKeyFilter.hpp" />
+    <ClInclude Include="IDevice.hpp">
+      <Filter>Rendering Device</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -656,5 +659,6 @@
     <None Include="..\Common.props">
       <Filter>resources</Filter>
     </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

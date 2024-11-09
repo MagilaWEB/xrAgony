@@ -350,8 +350,8 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 			ang_speed = m_fAngSpeed3;
 		}
 
-		m_vT.mul(m_vVelocity, Device.fTimeDelta * speed);
-		m_vR.mul(m_vAngularVelocity, Device.fTimeDelta * ang_speed);
+		m_vT.mul(m_vVelocity, ::IDevice->TimeDelta_sec() * speed);
+		m_vR.mul(m_vAngularVelocity, ::IDevice->TimeDelta_sec() * ang_speed);
 
 		m_HPB.x -= m_vR.y;
 		m_HPB.y -= m_vR.x;
@@ -389,7 +389,7 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 		info.d.set(m_Camera.k);
 		info.p.set(m_Camera.c);
 
-		fLifeTime -= Device.fTimeDelta;
+		fLifeTime -= ::IDevice->TimeDelta_sec();
 
 		m_vT.set(0, 0, 0);
 		m_vR.set(0, 0, 0);

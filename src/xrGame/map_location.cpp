@@ -117,7 +117,7 @@ void CMapLocation::LoadSpot(LPCSTR type, bool bReload)
 	if (m_ttl > 0)
 	{
 		m_flags.set(eTTL, TRUE);
-		m_actual_time = Device.dwTimeGlobal + m_ttl * 1000;
+		m_actual_time = ::IDevice->TimeGlobal_ms() + m_ttl * 1000;
 	}
 
 	s = g_uiSpotXml->ReadAttrib(path_base, 0, "pos_to_actor", nullptr);
@@ -369,14 +369,14 @@ void CMapLocation::CalcLevelName()
 
 bool CMapLocation::Update() // returns actual
 {
-	R_ASSERT(m_cached.m_updatedFrame != Device.dwFrame);
+	R_ASSERT(m_cached.m_updatedFrame != ::IDevice->getFrame());
 
 	if (m_flags.test(eTTL))
 	{
-		if (m_actual_time < Device.dwTimeGlobal)
+		if (m_actual_time < ::IDevice->TimeGlobal_ms())
 		{
 			m_cached.m_Actuality = false;
-			m_cached.m_updatedFrame = Device.dwFrame;
+			m_cached.m_updatedFrame = ::IDevice->getFrame();
 			return m_cached.m_Actuality;
 		}
 	}
@@ -396,7 +396,7 @@ bool CMapLocation::Update() // returns actual
 	else
 		m_cached.m_Actuality = false;
 
-	m_cached.m_updatedFrame = Device.dwFrame;
+	m_cached.m_updatedFrame = ::IDevice->getFrame();
 	return m_cached.m_Actuality;
 }
 

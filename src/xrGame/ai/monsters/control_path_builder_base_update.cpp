@@ -52,7 +52,7 @@ void CControlPathBuilderBase::update_target_point()
 	//-----------------------------------------------------------------------
 
 	// сохранить текущее время
-	m_last_time_target_set = Device.dwTimeGlobal;
+	m_last_time_target_set = ::IDevice->TimeGlobal_ms();
 
 	// параметры установлены, включаем актуальность
 	m_target_actual = true;

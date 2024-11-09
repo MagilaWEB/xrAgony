@@ -80,7 +80,7 @@ void CAdvancedDetector::UpdateAf()
 			item_type->detect_snds.m_activeSnd->snd.set_frequency(snd_freq);
 	}
 	else
-		af_info.snd_time += Device.fTimeDelta;
+		af_info.snd_time += ::IDevice->TimeDelta_sec();
 
 	ui().SetValue(_diff, dir_to_artefact);
 }
@@ -125,13 +125,13 @@ void CUIArtefactDetectorAdv::update()
 
 		a								*= 2.0f;
 
-		m_curr_ang_speed				= m_curr_ang_speed + a*Device.fTimeDelta;
+		m_curr_ang_speed				= m_curr_ang_speed + a*::IDevice->TimeDelta_sec();
 		clamp							(m_curr_ang_speed,-2.0f,2.0f);
-		float _add						= m_curr_ang_speed*Device.fTimeDelta;
+		float _add						= m_curr_ang_speed*::IDevice->TimeDelta_sec();
 
 		m_cur_y_rot						+= _add;
 	*/
-	m_cur_y_rot = angle_inertion_var(m_cur_y_rot, dest_y_rot, PI_DIV_4, PI_MUL_4, PI_MUL_2, Device.fTimeDelta);
+	m_cur_y_rot = angle_inertion_var(m_cur_y_rot, dest_y_rot, PI_DIV_4, PI_MUL_4, PI_MUL_2, ::IDevice->TimeDelta_sec());
 }
 void CAdvancedDetector::on_a_hud_attach()
 {

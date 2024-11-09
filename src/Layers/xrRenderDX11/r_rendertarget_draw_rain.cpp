@@ -145,7 +145,7 @@ void CRenderTarget::draw_rain(light& RainSetup)
 			// Fvector			direction	= RainSetup.direction	;
 			Fvector normal;
 			normal.setHP(1, 0);
-			// w_shift		+=	0.003f*Device.fTimeDelta;
+			// w_shift		+=	0.003f*::IDevice->TimeDelta_sec();
 			// Fvector			position;	position.set(0,0,0);
 			// m_xform.build_camera_dir	(position,direction,normal)	;
 			m_xform.identity();

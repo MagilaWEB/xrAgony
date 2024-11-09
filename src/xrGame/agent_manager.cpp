@@ -112,13 +112,13 @@ float CAgentManager::shedule_Scale() { return (.5f); }
 
 void CAgentManager::update()
 {
-	if (Device.dwTimeGlobal <= m_last_update_time)
+	if (::IDevice->TimeGlobal_ms() <= m_last_update_time)
 		return;
 
-	if (Device.dwTimeGlobal - m_last_update_time < m_update_rate)
+	if (::IDevice->TimeGlobal_ms() - m_last_update_time < m_update_rate)
 		return;
 
-	m_last_update_time = Device.dwTimeGlobal;
+	m_last_update_time = ::IDevice->TimeGlobal_ms();
 	update_impl();
 }
 

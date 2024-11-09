@@ -145,7 +145,7 @@ void CUIStatic::Update()
 		if (m_lanim_xform.m_lanim_start_time < 0.0f)
 			ResetXformAnimation();
 
-		float t = Device.dwTimeGlobal / 1000.0f;
+		float t = ::IDevice->TimeGlobal_sec();
 
 		if (m_lanim_xform.m_lanimFlags.test(LA_CYCLIC) ||
 			t - m_lanim_xform.m_lanim_start_time < m_lanim_xform.m_lanim->Length_sec())
@@ -172,7 +172,7 @@ void CUIStatic::Update()
 	}
 
 	if (CursorOverWindow() && m_stat_hint_text.size() && !g_statHint->Owner() &&
-		Device.dwTimeGlobal > m_dwFocusReceiveTime + 700)
+		::IDevice->TimeGlobal_ms() > m_dwFocusReceiveTime + 700)
 	{
 		g_statHint->SetHintText(this, m_stat_hint_text.c_str());
 
@@ -198,7 +198,7 @@ void CUIStatic::Update()
 	}
 }
 
-void CUIStatic::ResetXformAnimation() { m_lanim_xform.m_lanim_start_time = Device.dwTimeGlobal / 1000.0f; }
+void CUIStatic::ResetXformAnimation() { m_lanim_xform.m_lanim_start_time = ::IDevice->TimeGlobal_ms() / 1000.0f; }
 void CUIStatic::SetShader(const ui_shader& sh) { m_UIStaticItem.SetShader(sh); }
 CUILines* CUIStatic::TextItemControl()
 {

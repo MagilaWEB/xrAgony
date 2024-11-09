@@ -23,7 +23,7 @@ void CMovementManager::process_patrol_path()
 
 	if (!patrol().actual() && (m_path_state > ePathStateSelectPatrolPoint))
 	{
-		//		Msg					("[%6d][%s] actuality is false 2",Device.dwFrame,*object().cName());
+		//		Msg					("[%6d][%s] actuality is false 2",::IDevice->getFrame(),*object().cName());
 		m_path_state = ePathStateSelectPatrolPoint;
 	}
 
@@ -87,7 +87,7 @@ void CMovementManager::process_patrol_path()
 	{
 		if (!patrol().actual())
 		{
-			//				Msg				("[%6d][%s] actuality is false 3",Device.dwFrame,*object().cName());
+			//				Msg				("[%6d][%s] actuality is false 3",::IDevice->getFrame(),*object().cName());
 			m_path_state = ePathStateSelectPatrolPoint;
 		}
 		else if (!level_path().actual())
@@ -97,7 +97,7 @@ void CMovementManager::process_patrol_path()
 		else if (detail().completed(object().Position(), !detail().state_patrol_path()))
 		{
 			//							Msg				("[%6d][%s] detail path is
-			// completed",Device.dwFrame,*object().cName());
+			// completed",::IDevice->getFrame(),*object().cName());
 			//							Msg				(
 			//								"[path_size=%d][curr_id=%d][last_pp=%d] start_position=[%f][%f][%f]
 			// stop_position=[%f][%f][%f] position=[%f][%f][%f]",
@@ -122,7 +122,7 @@ void CMovementManager::process_patrol_path()
 	{
 		if (!patrol().actual())
 		{
-			//				Msg				("[%6d][%s] actuality is false 4",Device.dwFrame,*object().cName());
+			//				Msg				("[%6d][%s] actuality is false 4",::IDevice->getFrame(),*object().cName());
 			m_path_state = ePathStateSelectPatrolPoint;
 		}
 		break;

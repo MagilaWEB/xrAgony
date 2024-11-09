@@ -16,7 +16,7 @@ void CStateBurerAttackRunAroundAbstract::initialize()
 {
 	inherited::initialize();
 
-	time_started = Device.dwTimeGlobal;
+	time_started = ::IDevice->TimeGlobal_ms();
 	dest_direction.set(0.f, 0.f, 0.f);
 
 	// select point
@@ -73,7 +73,7 @@ bool CStateBurerAttackRunAroundAbstract::check_start_conditions() { return true;
 TEMPLATE_SPECIALIZATION
 bool CStateBurerAttackRunAroundAbstract::check_completion()
 {
-	if ((time_started + this->object->m_max_runaway_time < Device.dwTimeGlobal) ||
+	if ((time_started + this->object->m_max_runaway_time < ::IDevice->TimeGlobal_ms()) ||
 		(this->object->control().path_builder().is_moving_on_path() && this->object->control().path_builder().is_path_end(2.f)))
 	{
 		this->object->dir().face_target(this->object->EnemyMan.get_enemy());

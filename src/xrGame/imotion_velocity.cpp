@@ -20,7 +20,7 @@ void imotion_velocity::state_end()
 {
 	VERIFY(shell);
 	inherited::state_end();
-	shell->AnimToVelocityState(Device.fTimeDelta, default_l_limit * 10, default_w_limit * 10);
+	shell->AnimToVelocityState(::IDevice->TimeDelta_sec(), default_l_limit * 10, default_w_limit * 10);
 	shell->set_ApplyByGravity(true);
 }
 
@@ -28,7 +28,7 @@ void imotion_velocity::collide() {}
 void imotion_velocity::move_update()
 {
 	VERIFY(shell);
-	if (!shell->AnimToVelocityState(Device.fTimeDelta, 2 * default_l_limit, 10.f * default_w_limit))
+	if (!shell->AnimToVelocityState(::IDevice->TimeDelta_sec(), 2 * default_l_limit, 10.f * default_w_limit))
 		flags.set(fl_switch_dm_toragdoll, TRUE);
 	Fmatrix sv;
 	sv.set(shell->mXFORM);

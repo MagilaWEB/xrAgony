@@ -152,7 +152,7 @@ void CUICustomEdit::Update()
 
 	if (!ec().get_key_state(text_editor::ks_force))
 	{
-		m_last_key_state_time = Device.dwTimeGlobal;
+		m_last_key_state_time = ::IDevice->TimeGlobal_ms();
 	}
 
 	inherited::Update();

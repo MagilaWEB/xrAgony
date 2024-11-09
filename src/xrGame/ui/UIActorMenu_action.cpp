@@ -372,7 +372,7 @@ bool CUIActorMenu::OnItemFocusedUpdate(CUICellItem* itm)
 		}
 	}
 	VERIFY(m_ItemInfo);
-	if (Device.dwTimeGlobal < itm->FocusReceiveTime() + m_ItemInfo->delay)
+	if (::IDevice->TimeGlobal_ms() < itm->FocusReceiveTime() + m_ItemInfo->delay)
 	{
 		return true; // false
 	}

@@ -82,15 +82,15 @@ void dxRainRender::Render(CEffect_Rain& owner)
 		// physics and time control
 		CEffect_Rain::Item& one = owner.items[I];
 
-		if (one.dwTime_Hit < Device.dwTimeGlobal)
+		if (one.dwTime_Hit < ::IDevice->TimeGlobal_ms())
 			owner.Hit(one.Phit);
-		if (one.dwTime_Life < Device.dwTimeGlobal)
+		if (one.dwTime_Life < ::IDevice->TimeGlobal_ms())
 			owner.Born(one, source_radius);
 
 		// последняя дельта ??
-		//.		float xdt		= float(one.dwTime_Hit-Device.dwTimeGlobal)/1000.f;
-		//.		float dt		= Device.fTimeDelta;//xdt<Device.fTimeDelta?xdt:Device.fTimeDelta;
-		float dt = Device.fTimeDelta;
+		//.		float xdt		= float(one.dwTime_Hit-::IDevice->TimeGlobal_ms())/1000.f;
+		//.		float dt		= ::IDevice->TimeDelta_sec();//xdt<::IDevice->TimeDelta_sec()?xdt:::IDevice->TimeDelta_sec();
+		float dt = ::IDevice->TimeDelta_sec();
 		one.P.mad(one.D, one.fSpeed * dt);
 		Fvector wdir;
 		wdir.set(one.P.x - vEye.x, 0, one.P.z - vEye.z);
@@ -202,7 +202,7 @@ void dxRainRender::Render(CEffect_Rain& owner)
 		return;
 
 	{
-		float dt = Device.fTimeDelta;
+		float dt = ::IDevice->TimeDelta_sec();
 		_IndexStream& _IS = RCache.Index;
 		RCache.set_Shader(DM_Drop->shader);
 

@@ -20,7 +20,7 @@ public:
 	CMonsterStateInterface(CBaseMonster* p_object) : m_object(p_object) {}
 	virtual ~CMonsterStateInterface() {}
 	virtual void* get_data() = 0 {}
-	virtual void initialize() { time_state_started = Device.dwTimeGlobal; }
+	virtual void initialize() { time_state_started = ::IDevice->TimeGlobal_ms(); }
 	virtual void execute() {}
 	virtual bool check_completion() { return true; }
 protected:

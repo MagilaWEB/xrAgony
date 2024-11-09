@@ -85,7 +85,7 @@ void CDemoPlay::stat_Start()
 	VERIFY(!stat_started);
 	stat_started = TRUE;
 	Sleep(1);
-	stat_StartFrame = Device.dwFrame;
+	stat_StartFrame = ::IDevice->getFrame();
 	stat_Timer_frame.Start();
 	stat_Timer_total.Start();
 	stat_table.clear();
@@ -108,7 +108,7 @@ void CDemoPlay::stat_Stop()
 	float rfps_min, rfps_max, rfps_middlepoint, rfps_average;
 
 	// total
-	u32 dwFramesTotal = Device.dwFrame - stat_StartFrame;
+	u32 dwFramesTotal = ::IDevice->getFrame() - stat_StartFrame;
 	rfps_average = float(dwFramesTotal) / stat_total;
 
 	// min/max/average
@@ -227,7 +227,7 @@ BOOL CDemoPlay::ProcessCam(SCamEffectorInfo& info)
 
 	if (stat_started)
 	{
-		// g_SASH.DisplayFrame(Device.fTimeGlobal);
+		// g_SASH.DisplayFrame(IDevice->TimeGlobal_sec());
 	}
 	else
 	{
@@ -247,8 +247,8 @@ BOOL CDemoPlay::ProcessCam(SCamEffectorInfo& info)
 		Fvector R;
 		Fmatrix mRotate;
 		m_pMotion->_Evaluate(m_MParam->Frame(), info.p, R);
-		m_MParam->Update(Device.fTimeDelta, 1.f, true);
-		fLifeTime -= Device.fTimeDelta;
+		m_MParam->Update(::IDevice->TimeDelta_sec(), 1.f, true);
+		fLifeTime -= ::IDevice->TimeDelta_sec();
 		if (m_MParam->bWrapped)
 		{
 			stat_Stop();
@@ -266,7 +266,7 @@ BOOL CDemoPlay::ProcessCam(SCamEffectorInfo& info)
 			return TRUE;
 		}
 
-		fStartTime += Device.fTimeDelta;
+		fStartTime += ::IDevice->TimeDelta_sec();
 
 		float ip;
 		float p = fStartTime / fSpeed;
@@ -324,7 +324,7 @@ BOOL CDemoPlay::ProcessCam(SCamEffectorInfo& info)
 		info.d.set(mInvCamera._31, mInvCamera._32, mInvCamera._33);
 		info.p.set(mInvCamera._41, mInvCamera._42, mInvCamera._43);
 
-		fLifeTime -= Device.fTimeDelta;
+		fLifeTime -= ::IDevice->TimeDelta_sec();
 	}
 	return TRUE;
 }

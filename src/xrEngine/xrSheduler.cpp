@@ -109,8 +109,8 @@ void CSheduler::internal_Register(ISheduled* object, bool realTime)
 
 	// Fill item structure
 	Item item;
-	item.dwTimeForExecute = Device.dwTimeGlobal;
-	item.dwTimeOfLastExecute = Device.dwTimeGlobal;
+	item.dwTimeForExecute = ::IDevice->TimeGlobal_ms();
+	item.dwTimeOfLastExecute = ::IDevice->TimeGlobal_ms();
 	item.scheduled_name = object->shedule_Name();
 	item.Object = object;
 
@@ -316,7 +316,7 @@ extern	int sheduler_smoother_frame_size;
 void CSheduler::ProcessStep()
 {
 	// Normal priority
-	const u32 dwTime = Device.dwTimeGlobal;
+	const u32 dwTime = ::IDevice->TimeGlobal_ms();
 	//CTimer eTimer;
 
 	xr_map<u32, xr_list<u32>> deferredUpdateInfo;
@@ -345,7 +345,7 @@ void CSheduler::ProcessStep()
 		const u32 Elapsed = dwTime - item.dwTimeOfLastExecute;
 
 		// Real update call
-		// Msg("------- %d:", Device.dwFrame);
+		// Msg("------- %d:", ::IDevice->getFrame());
 
 		// Calc next update interval
 		const u32 dwMinDelay = _max(u32(30), item.Object->GetSchedulerData().t_min);
@@ -421,11 +421,11 @@ void CSheduler::Update()
 	isSheduleInProgress = true;
 
 #ifdef DEBUG_SCHEDULER
-	Msg("SCHEDULER: PROCESS STEP %d", Device.dwFrame);
+	Msg("SCHEDULER: PROCESS STEP %d", ::IDevice->getFrame());
 #endif
 	// Realtime priority
 	m_processing_now = true;
-	const u32 dwTime = Device.dwTimeGlobal;
+	const u32 dwTime = ::IDevice->TimeGlobal_ms();
 	for (Item & item : ItemsRT)
 	{
 		R_ASSERT(item.Object);
@@ -451,7 +451,7 @@ void CSheduler::Update()
 	ProcessStep();
 	m_processing_now = false;
 #ifdef DEBUG_SCHEDULER
-	Msg("SCHEDULER: PROCESS STEP FINISHED %d", Device.dwFrame);
+	Msg("SCHEDULER: PROCESS STEP FINISHED %d", ::IDevice->getFrame());
 #endif
 	clamp(psShedulerTarget, 3.f, 66.f);
 	psShedulerCurrent = 0.9f * psShedulerCurrent + 0.1f * psShedulerTarget;

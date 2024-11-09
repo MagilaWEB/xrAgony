@@ -77,7 +77,7 @@ float CEnemyManager::do_evaluate(const CEntityAlive* object) const { return (m_o
 float CEnemyManager::evaluate(const CEntityAlive* object) const
 {
 	//	Msg						("[%6d] enemy manager %s evaluates
-	//%s",Device.dwTimeGlobal,*m_object->cName(),*object->cName());
+	//%s",::IDevice->TimeGlobal_ms(),*m_object->cName(),*object->cName());
 
 	bool actor = (!!smart_cast<CActor const*>(object));
 	if (actor)
@@ -166,7 +166,7 @@ void CEnemyManager::set_ready_to_save()
 		return;
 
 	//	Msg							("%6d %s DEcreased enemy counter for player (%d ->
-	//%d)",Device.dwTimeGlobal,*m_object->cName(),Level().autosave_manager().not_ready_count(),Level().autosave_manager().not_ready_count()-1);
+	//%d)",::IDevice->TimeGlobal_ms(),*m_object->cName(),Level().autosave_manager().not_ready_count(),Level().autosave_manager().not_ready_count()-1);
 	Level().autosave_manager().dec_not_ready();
 	m_ready_to_save = true;
 }
@@ -231,12 +231,12 @@ bool CEnemyManager::change_from_wounded(const CEntityAlive* current, const CEnti
 IC bool CEnemyManager::enemy_inertia(const CEntityAlive* previous_enemy) const
 {
 	if (smart_cast<CActor const*>(m_selected))
-		return (Device.dwTimeGlobal <= (m_last_enemy_change + ENEMY_INERTIA_TIME_TO_ACTOR));
+		return (::IDevice->TimeGlobal_ms() <= (m_last_enemy_change + ENEMY_INERTIA_TIME_TO_ACTOR));
 
 	if (previous_enemy && smart_cast<CActor const*>(previous_enemy))
-		return (Device.dwTimeGlobal <= (m_last_enemy_change + ENEMY_INERTIA_TIME_FROM_ACTOR));
+		return (::IDevice->TimeGlobal_ms() <= (m_last_enemy_change + ENEMY_INERTIA_TIME_FROM_ACTOR));
 
-	return (Device.dwTimeGlobal <= (m_last_enemy_change + ENEMY_INERTIA_TIME_TO_SOMEBODY));
+	return (::IDevice->TimeGlobal_ms() <= (m_last_enemy_change + ENEMY_INERTIA_TIME_TO_SOMEBODY));
 }
 
 void CEnemyManager::on_enemy_change(const CEntityAlive* previous_enemy)
@@ -246,13 +246,13 @@ void CEnemyManager::on_enemy_change(const CEntityAlive* previous_enemy)
 
 	if (!previous_enemy->g_Alive())
 	{
-		m_last_enemy_change = Device.dwTimeGlobal;
+		m_last_enemy_change = ::IDevice->TimeGlobal_ms();
 		return;
 	}
 
 	if (change_from_wounded(selected(), previous_enemy))
 	{
-		m_last_enemy_change = Device.dwTimeGlobal;
+		m_last_enemy_change = ::IDevice->TimeGlobal_ms();
 		return;
 	}
 
@@ -264,11 +264,11 @@ void CEnemyManager::on_enemy_change(const CEntityAlive* previous_enemy)
 
 	if (!m_object->memory().visual().visible_now(previous_enemy) && m_object->memory().visual().visible_now(selected()))
 	{
-		m_last_enemy_change = Device.dwTimeGlobal;
+		m_last_enemy_change = ::IDevice->TimeGlobal_ms();
 		return;
 	}
 
-	m_last_enemy_change = Device.dwTimeGlobal;
+	m_last_enemy_change = ::IDevice->TimeGlobal_ms();
 }
 
 void CEnemyManager::remove_wounded()
@@ -310,7 +310,7 @@ void CEnemyManager::process_wounded(bool& only_wounded)
 	{
 #if 0 // def _DEBUG
 		if (g_enemy_manager_second_update)
-			Msg					("%6d ONLY WOUNDED LEFT %s",Device.dwTimeGlobal,*m_object->cName());
+			Msg					("%6d ONLY WOUNDED LEFT %s",::IDevice->TimeGlobal_ms(),*m_object->cName());
 #endif // _DEBUG
 		return;
 	}
@@ -373,7 +373,7 @@ void CEnemyManager::try_change_enemy()
 		if (selected() && previous_selected)
 			on_enemy_change(previous_selected);
 		else
-			m_last_enemy_change = Device.dwTimeGlobal;
+			m_last_enemy_change = ::IDevice->TimeGlobal_ms();
 	}
 
 	if (selected() != previous_selected)
@@ -387,7 +387,7 @@ void CEnemyManager::update()
 	if (!m_ready_to_save)
 	{
 		//		Msg						("%6d %s DEcreased enemy counter for player (%d ->
-		//%d)",Device.dwTimeGlobal,*m_object->cName(),Level().autosave_manager().not_ready_count(),Level().autosave_manager().not_ready_count()-1);
+		//%d)",::IDevice->TimeGlobal_ms(),*m_object->cName(),Level().autosave_manager().not_ready_count(),Level().autosave_manager().not_ready_count()-1);
 		Level().autosave_manager().dec_not_ready();
 	}
 
@@ -397,20 +397,20 @@ void CEnemyManager::update()
 
 	if (selected())
 	{
-		m_last_enemy_time = Device.dwTimeGlobal;
+		m_last_enemy_time = ::IDevice->TimeGlobal_ms();
 		m_last_enemy = selected();
 	}
 
 	if (!m_ready_to_save)
 	{
 		//		Msg						("%6d %s INcreased enemy counter for player (%d ->
-		//%d)",Device.dwTimeGlobal,*m_object->cName(),Level().autosave_manager().not_ready_count(),Level().autosave_manager().not_ready_count()+1);
+		//%d)",::IDevice->TimeGlobal_ms(),*m_object->cName(),Level().autosave_manager().not_ready_count(),Level().autosave_manager().not_ready_count()+1);
 		Level().autosave_manager().inc_not_ready();
 	}
 
 #if 0 // def _DEBUG
 	if (g_enemy_manager_second_update && selected() && smart_cast<const CAI_Stalker*>(selected()) && smart_cast<const CAI_Stalker*>(selected())->wounded())
-		Msg						("%6d WOUNDED CHOOSED %s",Device.dwTimeGlobal,*m_object->cName());
+		Msg						("%6d WOUNDED CHOOSED %s",::IDevice->TimeGlobal_ms(),*m_object->cName());
 #endif // _DEBUG
 
 	STOP_PROFILE

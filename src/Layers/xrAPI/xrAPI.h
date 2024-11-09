@@ -1,5 +1,6 @@
 #pragma once
 
+struct IRenderDevice;
 class IRender;
 class IRenderFactory;
 class IDebugRender;
@@ -13,6 +14,7 @@ class AISpaceBase;
 class ISoundManager;
 class ui_core;
 
+extern XRAPI_API IRenderDevice* IDevice;
 extern XRAPI_API IRender* Render;
 extern XRAPI_API IDebugRender* DRender;
 extern XRAPI_API CDUInterface* DU;

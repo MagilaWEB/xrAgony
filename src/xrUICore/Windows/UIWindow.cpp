@@ -202,12 +202,12 @@ bool CUIWindow::OnMouseAction(float x, float y, EUIMessages mouse_action)
 	if (WINDOW_LBUTTON_DOWN == mouse_action)
 	{
 		static u32 _last_db_click_frame = 0;
-		u32 dwCurTime = Device.dwTimeContinual;
+		u32 dwCurTime = ::IDevice->TimeContinual();
 
-		if ((_last_db_click_frame != Device.dwFrame) && (dwCurTime - m_dwLastClickTime < DOUBLE_CLICK_TIME))
+		if ((_last_db_click_frame != ::IDevice->getFrame()) && (dwCurTime - m_dwLastClickTime < DOUBLE_CLICK_TIME))
 		{
 			mouse_action = WINDOW_LBUTTON_DB_CLICK;
-			_last_db_click_frame = Device.dwFrame;
+			_last_db_click_frame = ::IDevice->getFrame();
 		}
 
 		m_dwLastClickTime = dwCurTime;
@@ -297,7 +297,7 @@ bool CUIWindow::OnMouseDown(int mouse_btn) { return false; }
 void CUIWindow::OnMouseUp(int mouse_btn) {}
 void CUIWindow::OnFocusReceive()
 {
-	m_dwFocusReceiveTime = Device.dwTimeGlobal;
+	m_dwFocusReceiveTime = ::IDevice->TimeGlobal_ms();
 	m_bCursorOverWindow = true;
 
 	if (GetMessageTarget())

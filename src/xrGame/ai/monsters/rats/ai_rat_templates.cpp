@@ -180,7 +180,7 @@ void CAI_Rat::make_turn()
 	}
 
 	//	Msg					("%6d : Rat %s, %f -> %f
-	//[%f]",Device.dwTimeGlobal,*cName(),movement().m_body.current.pitch,movement().m_body.target.pitch,get_custom_pitch_speed(0.f));
+	//[%f]",::IDevice->TimeGlobal_ms(),*cName(),movement().m_body.current.pitch,movement().m_body.target.pitch,get_custom_pitch_speed(0.f));
 
 	m_turning = true;
 	movement().m_body.speed = PI_MUL_2;
@@ -381,7 +381,7 @@ void CAI_Rat::move(bool bCanAdjustSpeed, bool bStraightForward)
 	if (m_bNoWay &&
 		(!m_turning || (angle_difference(movement().m_body.target.yaw, movement().m_body.current.yaw) < EPS_L)))
 	{
-		if ((Device.dwTimeGlobal - m_previous_query_time > TIME_TO_RETURN) || (!m_previous_query_time))
+		if ((::IDevice->TimeGlobal_ms() - m_previous_query_time > TIME_TO_RETURN) || (!m_previous_query_time))
 		{
 			movement().m_body.target.yaw = movement().m_body.current.yaw + PI;
 			movement().m_body.target.yaw = angle_normalize(movement().m_body.target.yaw);
@@ -395,7 +395,7 @@ void CAI_Rat::move(bool bCanAdjustSpeed, bool bStraightForward)
 			if (!m_walk_on_way)
 				m_tGoalDir.add(Position(), tTemp);
 
-			m_previous_query_time = Device.dwTimeGlobal;
+			m_previous_query_time = ::IDevice->TimeGlobal_ms();
 		}
 		if (!m_walk_on_way)
 			make_turn();
@@ -427,7 +427,7 @@ void CAI_Rat::select_next_home_position()
 				{
 					m_current_graph_point = m_next_graph_point;
 					m_next_graph_point = (*i).vertex_id();
-					m_time_to_change_graph_point = Device.dwTimeGlobal + ::Random32.random(60000) + 60000;
+					m_time_to_change_graph_point = ::IDevice->TimeGlobal_ms() + ::Random32.random(60000) + 60000;
 					return;
 				}
 		}
@@ -447,7 +447,7 @@ void CAI_Rat::select_next_home_position()
 					{
 						m_current_graph_point = m_next_graph_point;
 						m_next_graph_point = (*i).vertex_id();
-						m_time_to_change_graph_point = Device.dwTimeGlobal + ::Random32.random(60000) + 60000;
+						m_time_to_change_graph_point = ::IDevice->TimeGlobal_ms() + ::Random32.random(60000) + 60000;
 						return;
 					}
 					++iBranches;

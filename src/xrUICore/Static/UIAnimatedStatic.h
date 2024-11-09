@@ -59,7 +59,7 @@ public:
 	void Play()
 	{
 		m_bPlaying = true;
-		m_prevTime = Device.dwTimeContinual;
+		m_prevTime = ::IDevice->TimeContinual();
 	}
 	void Stop() { m_bPlaying = false; }
 	void Rewind(u32 delta = 0)

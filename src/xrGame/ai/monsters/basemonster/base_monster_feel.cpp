@@ -72,7 +72,7 @@ void CBaseMonster::feel_sound_new(
 	// register in sound memory
 	if (power >= db().m_fSoundThreshold)
 	{
-		SoundMemory.HearSound(who, eType, Position, power, Device.dwTimeGlobal);
+		SoundMemory.HearSound(who, eType, Position, power, ::IDevice->TimeGlobal_ms());
 	}
 }
 #define MAX_LOCK_TIME 2.f
@@ -211,7 +211,7 @@ void CBaseMonster::HitEntity(
 
 		Morale.on_attack_success();
 
-		m_time_last_attack_success = Device.dwTimeGlobal;
+		m_time_last_attack_success = ::IDevice->TimeGlobal_ms();
 	}
 }
 

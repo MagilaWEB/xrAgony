@@ -34,8 +34,6 @@ void CRenderDevice::Run()
 	Log("Starting engine...");
 
 	// Startup timers and calculate timer delta
-	dwTimeGlobal = 0;
-
 	seqAppStart.Process();
 
 	mt_global_update.Init([this]() { GlobalUpdate(); });
@@ -147,7 +145,7 @@ void CRenderDevice::End(void)
 	// end scene
 	// Present goes here, so call OA Frame end.
 	if (g_SASH.IsBenchmarkRunning())
-		g_SASH.DisplayFrame(Device.fTimeGlobal);
+		g_SASH.DisplayFrame(m_time_global_sec);
 	::Render->End();
 }
 
@@ -168,9 +166,9 @@ void CRenderDevice::CalcFrameStats()
 {
 	stats.RenderTotal.FrameEnd();
 	// calc FPS & TPS
-	if (fTimeDelta > EPS_S)
+	if (m_time_delta_sec > EPS_S)
 	{
-		float fps = 1.f / fTimeDelta;
+		float fps = 1.f / m_time_delta_sec;
 		float fOne = 0.3f;
 		float fInv = 1.0f - fOne;
 		stats.fFPS = fInv * stats.fFPS + fOne * fps;
@@ -247,7 +245,7 @@ void CRenderDevice::d_SVPRender()
 {
 	if (m_ScopeVP.IsSVPActive() && !ActiveMain())
 	{
-		dwFrame++;
+		incrementFrame();
 		Core.dwFrame = dwFrame;
 		m_ScopeVP.SetRender(true);
 
@@ -415,29 +413,29 @@ u32 app_inactive_time_start = 0;
 
 void CRenderDevice::FrameMove()
 {
-	dwFrame++;
+	incrementFrame();
 	Core.dwFrame = dwFrame;
 	dwTimeContinual = TimerMM.GetElapsed_ms() - app_inactive_time;
 
 	Timer.Start(); // previous frame
 
 	// floating point
-	float che_fTimeDelta = fTimeGlobal;
-	fTimeGlobal = TimerGlobal.GetElapsed_sec(); //float(qTime)*CPU::cycles2seconds;
-	fTimeDelta = fTimeGlobal - che_fTimeDelta;
+	float che_fTimeDelta = m_time_global_sec;
+	m_time_global_sec = TimerGlobal.GetElapsed_sec(); //float(qTime)*CPU::cycles2seconds;
+	m_time_delta_sec = m_time_global_sec - che_fTimeDelta;
 
-	if (fTimeDelta > .1f)
-		fTimeDelta = .1f; // limit to 15fps minimum
+	if (m_time_delta_sec > .1f)
+		m_time_delta_sec = .1f; // limit to 15fps minimum
 
-	if (fTimeDelta <= 0.f)
-		fTimeDelta = EPS_S + EPS_S; // limit to 15fps minimum
+	if (m_time_delta_sec <= 0.f)
+		m_time_delta_sec = EPS_S + EPS_S; // limit to 15fps minimum
 
 	if (Paused())
-		fTimeDelta = 0.0f;
+		m_time_delta_sec = 0.0f;
 	// integer
-	u32 _old_global = dwTimeGlobal;
-	dwTimeGlobal = TimerGlobal.GetElapsed_ms();
-	dwTimeDelta = dwTimeGlobal - _old_global;
+	size_t _old_global = m_time_global_ms;
+	m_time_global_ms = TimerGlobal.GetElapsed_ms();
+	m_time_delta_ms = m_time_global_ms - _old_global;
 
 	xrThread::StartGlobal(xrThread::sParalelFrame);
 	// Frame move
@@ -480,7 +478,7 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 	{
 		if (bTimer && g_pauseMngr().Paused())
 		{
-			fTimeDelta = EPS_S + EPS_S;
+			m_time_delta_sec = EPS_S + EPS_S;
 			g_pauseMngr().Pause(FALSE);
 		}
 		if (bSound)
@@ -564,8 +562,7 @@ void CRenderDevice::RemoveSeqFrame(pureFrame* f)
 }
 
 CRenderDevice* get_device() { return &Device; }
-u32 script_time_global() { return Device.dwTimeGlobal; }
-
+u32 script_time_global() { return Device.TimeGlobal_ms(); }
 SCRIPT_EXPORT(Device, (),
 	{
 		module(luaState)
@@ -603,11 +600,57 @@ void CLoadScreenRenderer::OnRender()
 	pApp->load_draw_internal();
 }
 
-void CRenderDevice::time_factor(const float& time_factor)
+size_t CRenderDevice::getFrame() const
+{
+	return dwFrame;
+}
+
+size_t CRenderDevice::TimeGlobal_ms() const
+{
+	return m_time_global_ms;
+}
+
+size_t CRenderDevice::TimeDelta_ms() const
+{
+	return m_time_delta_ms;
+}
+
+float CRenderDevice::TimeDelta_sec() const
+{
+	return m_time_delta_sec;
+}
+
+float CRenderDevice::TimeGlobal_sec() const
+{
+	return m_time_global_sec;
+}
+
+size_t CRenderDevice::TimeContinual() const
+{
+	return dwTimeContinual;
+}
+
+size_t CRenderDevice::TimerAsync_ms() const
+{
+	return static_cast<size_t>(TimerGlobal.GetElapsed_ms());
+}
+
+float CRenderDevice::TimerAsync_sec() const
+{
+	return TimerGlobal.GetElapsed_sec();
+}
+
+void CRenderDevice::time_factor(float time_factor)
 {
 	Timer.time_factor(time_factor);
 	TimerGlobal.time_factor(time_factor);
 	psSoundTimeFactor = time_factor; //--#SM+#--
+}
+
+float CRenderDevice::time_factor() const
+{
+	VERIFY(Timer.time_factor() == TimerGlobal.time_factor());
+	return (Timer.time_factor());
 }
 
 bool CRenderDevice::isLevelReady() const

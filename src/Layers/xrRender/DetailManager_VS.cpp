@@ -36,12 +36,12 @@ short QC(float v)
 
 float CDetailManager::hw_timeDelta()
 {
-	float fDelta = Device.fTimeGlobal - m_global_time_old;
+	float fDelta = IDevice->TimeGlobal_sec() - m_global_time_old;
 
 	if ((fDelta < 0) || (fDelta > 1))
 		fDelta = 0.03f;
 
-	m_global_time_old = Device.fTimeGlobal;
+	m_global_time_old = IDevice->TimeGlobal_sec();
 
 	return fDelta;
 }
@@ -162,8 +162,8 @@ void CDetailManager::hw_Render(VisiblesType type)
 	m_time_rot_2 += (PI_MUL_2 * fDelta / swing_current.rot2);
 	m_time_pos += (swing_current.speed * fDelta);
 
-	//float tm_rot1 = (PI_MUL_2*Device.fTimeGlobal/swing_current.rot1);
-	//float tm_rot2 = (PI_MUL_2*Device.fTimeGlobal/swing_current.rot2);
+	//float tm_rot1 = (PI_MUL_2*IDevice->TimeGlobal_sec()/swing_current.rot1);
+	//float tm_rot2 = (PI_MUL_2*IDevice->TimeGlobal_sec()/swing_current.rot2);
 	float tm_rot1 = m_time_rot_1;
 	float tm_rot2 = m_time_rot_2;
 

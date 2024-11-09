@@ -336,7 +336,7 @@ void CCustomMonster::shedule_Update(u32 DT)
 	if (dt > 3)
 		return;
 
-	m_dwCurrentTime = Device.dwTimeGlobal;
+	m_dwCurrentTime = ::IDevice->TimeGlobal_ms();
 
 	VERIFY(_valid(Position()));
 	if (Remote())
@@ -351,10 +351,10 @@ void CCustomMonster::shedule_Update(u32 DT)
 			ProcessScripts();
 		else
 		{
-			if (Device.dwFrame > spawn_time() + g_AI_inactive_time)
+			if (::IDevice->getFrame() > spawn_time() + g_AI_inactive_time)
 				Think();
 		}
-		m_dwLastUpdateTime = Device.dwTimeGlobal;
+		m_dwLastUpdateTime = ::IDevice->TimeGlobal_ms();
 		Level().AIStats.Think.End();
 
 		// Look and action streams
@@ -453,7 +453,7 @@ void CCustomMonster::UpdateCL()
 			return;
 		}
 
-	m_dwCurrentTime = Device.dwTimeGlobal;
+	m_dwCurrentTime = ::IDevice->TimeGlobal_ms();
 
 	// distinguish interpolation/extrapolation
 	u32 dwTime = Level().timeServer() - NET_Latency;
@@ -708,7 +708,7 @@ BOOL CCustomMonster::net_Spawn(CSE_Abstract* DC)
 	{
 		set_death_time();
 		//		Msg						("%6d : Object [%d][%s][%s] is spawned
-		// DEAD",Device.dwTimeGlobal,ID(),*cName(),*cNameSect());
+		// DEAD",::IDevice->TimeGlobal_ms(),ID(),*cName(),*cNameSect());
 	}
 
 	if (ai().get_level_graph() && UsedAI_Locations() && (e->ID_Parent == 0xffff))
@@ -992,19 +992,19 @@ bool CCustomMonster::update_critical_wounded(const u16& bone_id, const float& po
 	// object should not be critical wounded
 	VERIFY(m_critical_wound_type == u32(-1));
 	// check 'multiple updates during last hit' situation
-	VERIFY(Device.dwTimeGlobal >= m_last_hit_time);
+	VERIFY(::IDevice->TimeGlobal_ms() >= m_last_hit_time);
 
 	if (m_critical_wound_threshold < 0)
 		return (false);
 
-	float time_delta = m_last_hit_time ? float(Device.dwTimeGlobal - m_last_hit_time) / 1000.f : 0.f;
+	float time_delta = m_last_hit_time ? float(::IDevice->TimeGlobal_ms() - m_last_hit_time) / 1000.f : 0.f;
 	m_critical_wound_accumulator += power - m_critical_wound_decrease_quant * time_delta;
 	clamp(m_critical_wound_accumulator, 0.f, m_critical_wound_threshold);
 
 #if 0 // def _DEBUG
 	Msg(
 		"%6d [%s] update_critical_wounded: %f[%f] (%f,%f) [%f]",
-		Device.dwTimeGlobal,
+		::IDevice->TimeGlobal_ms(),
 		*cName(),
 		m_critical_wound_accumulator,
 		power,
@@ -1014,7 +1014,7 @@ bool CCustomMonster::update_critical_wounded(const u16& bone_id, const float& po
 	);
 #endif // DEBUG
 
-	m_last_hit_time = Device.dwTimeGlobal;
+	m_last_hit_time = ::IDevice->TimeGlobal_ms();
 	if (m_critical_wound_accumulator < m_critical_wound_threshold)
 		return (false);
 

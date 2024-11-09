@@ -147,12 +147,12 @@ void CBaseMonster::update_pos_by_grouping_behaviour()
 
 	if (!m_last_grouping_behaviour_update_tick)
 	{
-		m_last_grouping_behaviour_update_tick = Device.dwTimeGlobal;
+		m_last_grouping_behaviour_update_tick = ::IDevice->TimeGlobal_ms();
 	}
 
-	const float dt = 0.001f * (Device.dwTimeGlobal - m_last_grouping_behaviour_update_tick);
+	const float dt = 0.001f * (::IDevice->TimeGlobal_ms() - m_last_grouping_behaviour_update_tick);
 
-	m_last_grouping_behaviour_update_tick = Device.dwTimeGlobal;
+	m_last_grouping_behaviour_update_tick = ::IDevice->TimeGlobal_ms();
 
 	const Fvector old_pos = Position();
 	Fvector offs = acc * dt;
@@ -265,7 +265,7 @@ bool CBaseMonster::enemy_accessible()
 			return false;
 	}
 
-	if (Device.dwTimeGlobal < m_first_tick_enemy_inaccessible + 3000)
+	if (::IDevice->TimeGlobal_ms() < m_first_tick_enemy_inaccessible + 3000)
 		return true;
 
 	return false;
@@ -273,7 +273,7 @@ bool CBaseMonster::enemy_accessible()
 
 bool CBaseMonster::at_home()
 {
-	return !m_first_tick_object_not_at_home || (Device.dwTimeGlobal < m_first_tick_object_not_at_home + 4000);
+	return !m_first_tick_object_not_at_home || (::IDevice->TimeGlobal_ms() < m_first_tick_object_not_at_home + 4000);
 }
 
 void CBaseMonster::update_enemy_accessible_and_at_home_info()
@@ -281,7 +281,7 @@ void CBaseMonster::update_enemy_accessible_and_at_home_info()
 	if (!Home->at_home())
 	{
 		if (!m_first_tick_object_not_at_home)
-			m_first_tick_object_not_at_home = Device.dwTimeGlobal;
+			m_first_tick_object_not_at_home = ::IDevice->TimeGlobal_ms();
 	}
 	else
 		m_first_tick_object_not_at_home = 0;
@@ -296,13 +296,13 @@ void CBaseMonster::update_enemy_accessible_and_at_home_info()
 	if (::enemy_inaccessible(this))
 	{
 		if (!m_first_tick_enemy_inaccessible)
-			m_first_tick_enemy_inaccessible = Device.dwTimeGlobal;
+			m_first_tick_enemy_inaccessible = ::IDevice->TimeGlobal_ms();
 
-		m_last_tick_enemy_inaccessible = Device.dwTimeGlobal;
+		m_last_tick_enemy_inaccessible = ::IDevice->TimeGlobal_ms();
 	}
 	else
 	{
-		if (m_last_tick_enemy_inaccessible && Device.dwTimeGlobal - m_last_tick_enemy_inaccessible > 3000)
+		if (m_last_tick_enemy_inaccessible && ::IDevice->TimeGlobal_ms() - m_last_tick_enemy_inaccessible > 3000)
 		{
 			m_first_tick_enemy_inaccessible = 0;
 			m_last_tick_enemy_inaccessible = 0;
@@ -349,7 +349,7 @@ void CBaseMonster::shedule_Update(u32 dt)
 #ifdef DEBUG
 	if (is_paused())
 	{
-		dbg_update_cl = Device.dwFrame;
+		dbg_update_cl = ::IDevice->getFrame();
 		return;
 	}
 #endif

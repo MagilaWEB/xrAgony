@@ -130,7 +130,7 @@ void CLevelChanger::feel_touch_new(IGameObject* tpObject)
 		pGameSP->ChangeLevel(
 			m_game_vertex_id, m_level_vertex_id, m_position, m_angles, p, r, b, m_invite_str, m_b_enabled);
 
-	m_entrance_time = Device.fTimeGlobal;
+	m_entrance_time = IDevice->TimeGlobal_sec();
 }
 
 bool CLevelChanger::get_reject_pos(Fvector& p, Fvector& r)
@@ -182,7 +182,7 @@ void CLevelChanger::update_actor_invitation()
 		if (!l_tpActor->g_Alive())
 			continue;
 
-		if (m_entrance_time + 5.0f < Device.fTimeGlobal)
+		if (m_entrance_time + 5.0f < IDevice->TimeGlobal_sec())
 		{
 			CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
 			Fvector p, r;
@@ -192,7 +192,7 @@ void CLevelChanger::update_actor_invitation()
 				pGameSP->ChangeLevel(
 					m_game_vertex_id, m_level_vertex_id, m_position, m_angles, p, r, b, m_invite_str, m_b_enabled);
 
-			m_entrance_time = Device.fTimeGlobal;
+			m_entrance_time = IDevice->TimeGlobal_sec();
 		}
 	}
 }

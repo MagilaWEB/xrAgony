@@ -83,7 +83,7 @@ void CPolterSpecialAbility::on_die()
 
 void CPolterSpecialAbility::on_hit(SHit* pHDS)
 {
-	if (m_object->g_Alive() && (pHDS->hit_type == ALife::eHitTypeFireWound) && (Device.dwFrame != m_last_hit_frame))
+	if (m_object->g_Alive() && (pHDS->hit_type == ALife::eHitTypeFireWound) && (::IDevice->getFrame() != m_last_hit_frame))
 	{
 		if (BI_NONE != pHDS->bone())
 		{
@@ -99,7 +99,7 @@ void CPolterSpecialAbility::on_hit(SHit* pHDS)
 		}
 	}
 
-	m_last_hit_frame = Device.dwFrame;
+	m_last_hit_frame = ::IDevice->getFrame();
 }
 
 //////////////////////////////////////////////////////////////////////////

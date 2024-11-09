@@ -10,7 +10,7 @@ void CRenderTarget::u_calc_tc_noise(Fvector2& p0, Fvector2& p1)
 	VERIFY2(tw && th, "Noise scale can't be zero in any way");
 
 	// calculate shift from FPSes
-	im_noise_time -= Device.fTimeDelta;
+	im_noise_time -= ::IDevice->TimeDelta_sec();
 	if (im_noise_time < 0)
 	{
 		im_noise_shift_w = ::Random.randI(tw ? tw : 1);

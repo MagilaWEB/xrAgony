@@ -1,0 +1,4 @@
+// Файлы указаний помогают среде IDE Visual Studio интерпретировать идентификаторы Visual C++
+// (например, имена функций и макросов).
+// Дополнительные сведения: https://go.microsoft.com/fwlink/?linkid=865984
+#define SCRIPT_EXPORT(id, dependencies, __VA_ARGS__) using namespace luabind; namespace { __pragma(optimize("s", on)) static void id##_ScriptExport(lua_State* luaState) __VA_ARGS__ static const XRay::ScriptExporter::Node id##_Node( #id, {SCRIPT_INHERIT dependencies}, id##_ScriptExport); }

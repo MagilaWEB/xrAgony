@@ -5,7 +5,7 @@
 
 #include "ai/weighted_random.h"
 
-inline TTime current_time() { return Device.dwTimeGlobal; }
+inline TTime current_time() { return ::IDevice->TimeGlobal_ms(); }
 template <typename _Object>
 class CStateMonsterAttackOnRun : public CState<_Object>
 {

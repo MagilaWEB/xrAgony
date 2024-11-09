@@ -170,7 +170,7 @@ TEMPLATE_SPECIALIZATION
 bool CStateMonsterAttackAbstract::check_find_enemy_state()
 {
 	// check state find enemy
-	if (this->object->EnemyMan.get_enemy_time_last_seen() + FIND_ENEMY_DELAY < Device.dwTimeGlobal)
+	if (this->object->EnemyMan.get_enemy_time_last_seen() + FIND_ENEMY_DELAY < ::IDevice->TimeGlobal_ms())
 		return true;
 	return false;
 }
@@ -186,10 +186,10 @@ bool CStateMonsterAttackAbstract::check_run_away_state()
 		if (!this->get_state(eStateAttack_RunAway)->check_completion())
 			return true;
 		else
-			m_time_next_run_away = Device.dwTimeGlobal + 10000;
+			m_time_next_run_away = ::IDevice->TimeGlobal_ms() + 10000;
 	}
 	else if ((this->object->EnemyMan.get_enemy() != Actor()) && this->object->Morale.is_despondent() &&
-		(m_time_next_run_away < Device.dwTimeGlobal))
+		(m_time_next_run_away < ::IDevice->TimeGlobal_ms()))
 	{
 		return true;
 	}

@@ -133,7 +133,7 @@ void CRenderTarget::phase_bloom()
 
 		// Perform combine (all scalers must account for 4 samples + final diffuse multiply);
 		float s = ps_r2_ls_bloom_threshold; // scale
-		f_bloom_factor = .9f * f_bloom_factor + .1f * ps_r2_ls_bloom_speed * Device.fTimeDelta; // speed
+		f_bloom_factor = .9f * f_bloom_factor + .1f * ps_r2_ls_bloom_speed * ::IDevice->TimeDelta_sec(); // speed
 		if (!RImplementation.o.dx10_msaa)
 			RCache.set_Element(s_bloom->E[0]);
 		else

@@ -219,7 +219,7 @@ void CStateMonsterBackstubEnemy<_Object>::initialize()
 	object->path().prepare_builder();
 	m_last_health = object->conditions().GetHealth();
 	m_encircle = data.start_with_encircle;
-	m_encircle_end_tick = Device.dwTimeGlobal + detail::bloodsucker::encircle_time;
+	m_encircle_end_tick = ::IDevice->TimeGlobal_ms() + detail::bloodsucker::encircle_time;
 	m_next_change_behaviour_tick = 0;
 }
 
@@ -228,18 +228,18 @@ void CStateMonsterBackstubEnemy<_Object>::execute()
 {
 	// on hit, change behaviour
 	if (object->conditions().GetHealth() < m_last_health - detail::bloodsucker::loose_health_diff &&
-		Device.dwTimeGlobal > m_next_change_behaviour_tick)
+		::IDevice->TimeGlobal_ms() > m_next_change_behaviour_tick)
 	{
-		m_next_change_behaviour_tick = Device.dwTimeGlobal + detail::bloodsucker::change_behaviour_time;
+		m_next_change_behaviour_tick = ::IDevice->TimeGlobal_ms() + detail::bloodsucker::change_behaviour_time;
 		m_last_health = object->conditions().GetHealth();
 		m_encircle = !m_encircle;
 		if (m_encircle)
 		{
-			m_encircle_end_tick = Device.dwTimeGlobal + detail::bloodsucker::encircle_time;
+			m_encircle_end_tick = ::IDevice->TimeGlobal_ms() + detail::bloodsucker::encircle_time;
 		}
 	}
 
-	if (Device.dwTimeGlobal > m_encircle_end_tick)
+	if (::IDevice->TimeGlobal_ms() > m_encircle_end_tick)
 	{
 		if (object->EnemyMan.enemy_see_me_now())
 		{

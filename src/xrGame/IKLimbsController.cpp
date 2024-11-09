@@ -179,11 +179,11 @@ bool CIKLimbsController::PredictObjectShift(const SCalculateData cd[max_size])
 		return false;
 	//{
 	//	predict_shift = 0;
-	//	predict_time_shift = Device.fTimeDelta;
+	//	predict_time_shift = ::IDevice->TimeDelta_sec();
 	//}
 
 	if (predict_time_shift < EPS_S)
-		predict_time_shift = Device.fTimeDelta;
+		predict_time_shift = ::IDevice->TimeDelta_sec();
 	_object_shift.set_taget(predict_shift, predict_time_shift);
 	return true;
 }
@@ -382,7 +382,7 @@ void CIKLimbsController::Update()
 
 	/*
 	Fmatrix predict;
-	_pose_extrapolation.extrapolate( predict, Device.fTimeGlobal  );
+	_pose_extrapolation.extrapolate( predict, IDevice->TimeGlobal_sec()  );
 
 
 
@@ -390,7 +390,7 @@ void CIKLimbsController::Update()
 	DBG_DrawMatrix( m_object->XFORM(), 1 );
 	DBG_DrawMatrix( predict, 1 );
 
-	_pose_extrapolation.extrapolate( predict, Device.fTimeGlobal + 1  );
+	_pose_extrapolation.extrapolate( predict, IDevice->TimeGlobal_sec() + 1  );
 	DBG_DrawMatrix( predict, 1 );
 	*/
 }

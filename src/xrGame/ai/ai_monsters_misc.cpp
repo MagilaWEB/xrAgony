@@ -104,7 +104,7 @@ u32 dwfChooseAction(u32 dwActionRefreshRate, float fMinProbability0, float fMinP
 
 	CGroupHierarchyHolder& Group = Level().seniority_holder().team(dwTeam).squad(dwSquad).group(dwGroup);
 
-	if (Device.dwTimeGlobal - Group.m_dwLastActionTime < dwActionRefreshRate)
+	if (::IDevice->TimeGlobal_ms() - Group.m_dwLastActionTime < dwActionRefreshRate)
 	{
 		switch (Group.m_dwLastAction)
 		{
@@ -164,7 +164,7 @@ u32 dwfChooseAction(u32 dwActionRefreshRate, float fMinProbability0, float fMinP
 	if (bfGetActionSuccessProbability(
 			Members, VisibleEnemies, fMinProbability0, *ai().ef_storage().m_pfVictoryProbability))
 	{
-		Group.m_dwLastActionTime = Device.dwTimeGlobal;
+		Group.m_dwLastActionTime = ::IDevice->TimeGlobal_ms();
 		Group.m_dwLastAction = 0;
 		WRITE_QUERY_TO_LOG("Attack");
 		return (a0);
@@ -172,7 +172,7 @@ u32 dwfChooseAction(u32 dwActionRefreshRate, float fMinProbability0, float fMinP
 	else if (bfGetActionSuccessProbability(
 				 Members, VisibleEnemies, fMinProbability1, *ai().ef_storage().m_pfVictoryProbability))
 	{
-		Group.m_dwLastActionTime = Device.dwTimeGlobal;
+		Group.m_dwLastActionTime = ::IDevice->TimeGlobal_ms();
 		Group.m_dwLastAction = 1;
 		WRITE_QUERY_TO_LOG("Attack 1");
 		return (a1);
@@ -180,7 +180,7 @@ u32 dwfChooseAction(u32 dwActionRefreshRate, float fMinProbability0, float fMinP
 	else if (bfGetActionSuccessProbability(
 				 Members, VisibleEnemies, fMinProbability2, *ai().ef_storage().m_pfVictoryProbability))
 	{
-		Group.m_dwLastActionTime = Device.dwTimeGlobal;
+		Group.m_dwLastActionTime = ::IDevice->TimeGlobal_ms();
 		Group.m_dwLastAction = 2;
 		WRITE_QUERY_TO_LOG("Defend");
 		return (a2);
@@ -188,14 +188,14 @@ u32 dwfChooseAction(u32 dwActionRefreshRate, float fMinProbability0, float fMinP
 	else if (bfGetActionSuccessProbability(
 				 Members, VisibleEnemies, fMinProbability3, *ai().ef_storage().m_pfVictoryProbability))
 	{
-		Group.m_dwLastActionTime = Device.dwTimeGlobal;
+		Group.m_dwLastActionTime = ::IDevice->TimeGlobal_ms();
 		Group.m_dwLastAction = 3;
 		WRITE_QUERY_TO_LOG("Defend 1");
 		return (a3);
 	}
 	else
 	{
-		Group.m_dwLastActionTime = Device.dwTimeGlobal;
+		Group.m_dwLastActionTime = ::IDevice->TimeGlobal_ms();
 		Group.m_dwLastAction = 4;
 		WRITE_QUERY_TO_LOG("Retreat");
 		return (a4);

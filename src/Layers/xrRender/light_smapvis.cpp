@@ -16,7 +16,7 @@ void smapvis::invalidate()
 {
 	state = state_counting;
 	testQ_V = 0;
-	frame_sleep = Device.dwFrame + ps_r__LightSleepFrames;
+	frame_sleep = ::IDevice->getFrame() + ps_r__LightSleepFrames;
 	invisible.clear();
 }
 void smapvis::begin()
@@ -69,7 +69,7 @@ void smapvis::end()
 			RImplementation.r_dsgraph_insert_static(testQ_V);
 			RImplementation.r_dsgraph_render_graph(0);
 			RImplementation.occq_end(testQ_id);
-			testQ_frame = Device.dwFrame + 1; // get result on next frame
+			testQ_frame = ::IDevice->getFrame() + 1; // get result on next frame
 		}
 		break;
 	case state_usingTC:
@@ -81,7 +81,7 @@ void smapvis::end()
 void smapvis::flushoccq()
 {
 	// the tough part
-	if (testQ_frame != Device.dwFrame)
+	if (testQ_frame != ::IDevice->getFrame())
 		return;
 	if ((state != state_working) || (!testQ_V))
 		return;
@@ -110,7 +110,7 @@ void smapvis::flushoccq()
 }
 void smapvis::resetoccq()
 {
-	if (testQ_frame == (Device.dwFrame + 1))
+	if (testQ_frame == (::IDevice->getFrame() + 1))
 		testQ_frame--;
 	flushoccq();
 }

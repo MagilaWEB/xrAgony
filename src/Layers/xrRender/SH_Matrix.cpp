@@ -3,9 +3,9 @@
 
 void CMatrix::Calculate()
 {
-	if (dwFrame == Device.dwFrame)
+	if (dwFrame == ::IDevice->getFrame())
 		return;
-	dwFrame = Device.dwFrame;
+	dwFrame = ::IDevice->getFrame();
 
 	// Switch on mode
 	switch (dwMode)
@@ -15,7 +15,7 @@ void CMatrix::Calculate()
 	case modeTCM:
 	{
 		Fmatrix T;
-		float sU = 1, sV = 1, t = Device.fTimeGlobal;
+		float sU = 1, sV = 1, t = IDevice->TimeGlobal_sec();
 		tc_trans(xform, .5f, .5f);
 		if (tcm & tcmRotate)
 		{

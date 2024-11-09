@@ -139,11 +139,11 @@ void CUIFixedScrollBar::ClampByViewRect()
 u32 last_hold_tm = 0;
 bool CUIFixedScrollBar::OnKeyboardHold(int dik)
 {
-	if (dik == MOUSE_1 && (last_hold_tm + m_hold_delay) < Device.dwTimeContinual)
+	if (dik == MOUSE_1 && (last_hold_tm + m_hold_delay) < ::IDevice->TimeContinual())
 	{
 		if (OnMouseDownEx())
 		{
-			last_hold_tm = Device.dwTimeContinual;
+			last_hold_tm = ::IDevice->TimeContinual();
 			return true;
 		}
 	}

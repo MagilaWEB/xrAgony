@@ -47,7 +47,7 @@ bool CStalkerActionDead::fire() const
 	if (!object().character_physics_support()->can_drop_active_weapon())
 		return (true);
 
-	if (Device.dwTimeGlobal - object().GetLevelDeathTime() > 500)
+	if (::IDevice->TimeGlobal_ms() - object().GetLevelDeathTime() > 500)
 		return (false);
 
 	return (true);

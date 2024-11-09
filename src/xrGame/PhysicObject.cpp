@@ -351,7 +351,7 @@ void CPhysicObject::UpdateCL()
 
 	if (!is_active(bones_snd_player))
 		return;
-	bones_snd_player->update(Device.fTimeDelta, *this);
+	bones_snd_player->update(::IDevice->TimeDelta_sec(), *this);
 }
 void CPhysicObject::PHObjectPositionUpdate()
 {
@@ -647,7 +647,7 @@ void CPhysicObject::net_Import(NET_Packet& P)
 	}*/
 
 	net_update_PItem N;
-	N.dwTimeStamp = Device.dwTimeGlobal;
+	N.dwTimeStamp = ::IDevice->TimeGlobal_ms();
 
 	net_Import_PH_Params(P, N, num_items);
 	////////////////////////////////////////////
@@ -820,7 +820,7 @@ float CPhysicObject::interpolate_states(
 	net_update_PItem const& first, net_update_PItem const& last, SPHNetState& current)
 {
 	float ret_val = 0.f;
-	u32 CurTime = Device.dwTimeGlobal;
+	u32 CurTime = ::IDevice->TimeGlobal_ms();
 
 	if (CurTime == last.dwTimeStamp)
 		return 0.f;

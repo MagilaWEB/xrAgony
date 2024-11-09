@@ -98,7 +98,7 @@ void CHitMemoryManager::add(float amount, const Fvector& vLocalDir, const IGameO
 	if (who && !fis_zero(amount))
 	{
 		m_last_hit_object_id = who->ID();
-		m_last_hit_time = Device.dwTimeGlobal;
+		m_last_hit_time = ::IDevice->TimeGlobal_ms();
 	}
 
 	object().callback(GameObject::eHit)(m_object->lua_game_object(), amount, vLocalDir,
@@ -123,7 +123,7 @@ void CHitMemoryManager::add(float amount, const Fvector& vLocalDir, const IGameO
 		hit_object.m_first_game_time = Level().GetGameTime();
 #endif
 #ifdef USE_FIRST_LEVEL_TIME
-		hit_object.m_first_level_time = Device.dwTimeGlobal;
+		hit_object.m_first_level_time = ::IDevice->TimeGlobal_ms();
 #endif
 		hit_object.m_amount = amount;
 
@@ -291,13 +291,13 @@ void CHitMemoryManager::save(NET_Packet& packet) const
 		packet.w_float((*I).m_self_params.m_orientation.roll);
 #endif // USE_ORIENTATION
 #ifdef USE_LEVEL_TIME
-		packet.w_u32((Device.dwTimeGlobal > (*I).m_level_time) ? (Device.dwTimeGlobal - (*I).m_level_time) : 0);
+		packet.w_u32((::IDevice->TimeGlobal_ms() > (*I).m_level_time) ? (::IDevice->TimeGlobal_ms() - (*I).m_level_time) : 0);
 #endif // USE_LAST_LEVEL_TIME
 #ifdef USE_LEVEL_TIME
-		packet.w_u32((Device.dwTimeGlobal > (*I).m_last_level_time) ? (Device.dwTimeGlobal - (*I).m_last_level_time) : 0);
+		packet.w_u32((::IDevice->TimeGlobal_ms() > (*I).m_last_level_time) ? (::IDevice->TimeGlobal_ms() - (*I).m_last_level_time) : 0);
 #endif // USE_LAST_LEVEL_TIME
 #ifdef USE_FIRST_LEVEL_TIME
-		packet.w_u32((Device.dwTimeGlobal >= (*I).m_level_time) ? (Device.dwTimeGlobal - (*I).m_first_level_time) : 0);
+		packet.w_u32((::IDevice->TimeGlobal_ms() >= (*I).m_level_time) ? (::IDevice->TimeGlobal_ms() - (*I).m_first_level_time) : 0);
 #endif // USE_FIRST_LEVEL_TIME
 		packet.w_vec3((*I).m_direction);
 		packet.w_u16((*I).m_bone_index);
@@ -339,21 +339,21 @@ void CHitMemoryManager::load(IReader& packet)
 		packet.r_float(object.m_self_params.m_orientation.roll);
 #endif
 #ifdef USE_LEVEL_TIME
-		object.m_level_time = Device.dwTimeGlobal - packet.r_u32();
-		if (object.m_level_time > Device.dwTimeGlobal)
-			object.m_level_time = Device.dwTimeGlobal;
-		// VERIFY(Device.dwTimeGlobal > object.m_level_time);
+		object.m_level_time = ::IDevice->TimeGlobal_ms() - packet.r_u32();
+		if (object.m_level_time > ::IDevice->TimeGlobal_ms())
+			object.m_level_time = ::IDevice->TimeGlobal_ms();
+		// VERIFY(::IDevice->TimeGlobal_ms() > object.m_level_time);
 #endif // USE_LEVEL_TIME
 #ifdef USE_LAST_LEVEL_TIME
-		object.m_last_level_time = Device.dwTimeGlobal - packet.r_u32();
-		if (object.m_last_level_time > Device.dwTimeGlobal)
-			object.m_last_level_time = Device.dwTimeGlobal;
-		// VERIFY(Device.dwTimeGlobal > object.m_last_level_time);
+		object.m_last_level_time = ::IDevice->TimeGlobal_ms() - packet.r_u32();
+		if (object.m_last_level_time > ::IDevice->TimeGlobal_ms())
+			object.m_last_level_time = ::IDevice->TimeGlobal_ms();
+		// VERIFY(::IDevice->TimeGlobal_ms() > object.m_last_level_time);
 #endif // USE_LAST_LEVEL_TIME
 #ifdef USE_FIRST_LEVEL_TIME
-		VERIFY(Device.dwTimeGlobal >= (*I).m_first_level_time);
+		VERIFY(::IDevice->TimeGlobal_ms() >= (*I).m_first_level_time);
 		object.m_first_level_time = packet.r_u32();
-		object.m_first_level_time = Device.dwTimeGlobal - object.m_first_level_time;
+		object.m_first_level_time = ::IDevice->TimeGlobal_ms() - object.m_first_level_time;
 #endif // USE_FIRST_LEVEL_TIME
 		packet.r_fvector3(object.m_direction);
 		object.m_bone_index = packet.r_u16();

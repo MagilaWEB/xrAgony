@@ -105,7 +105,7 @@ void CZombie::BoneCallback(CBoneInstance* B)
 	CZombie* this_class = static_cast<CZombie*>(B->callback_param());
 
 	START_PROFILE("Zombie/Bones Update");
-	this_class->Bones.Update(B, Device.dwTimeGlobal);
+	this_class->Bones.Update(B, ::IDevice->TimeGlobal_ms());
 	STOP_PROFILE("AI/Zombie/Bones Update");
 }
 
@@ -154,9 +154,9 @@ void CZombie::Hit(SHit* pHDS)
 	if (!g_Alive())
 		return;
 
-	if ((pHDS->hit_type == ALife::eHitTypeFireWound) && (Device.dwFrame != last_hit_frame))
+	if ((pHDS->hit_type == ALife::eHitTypeFireWound) && (::IDevice->getFrame() != last_hit_frame))
 	{
-		if (!com_man().ta_is_active() && (time_resurrect + TIME_RESURRECT_RESTORE < Device.dwTimeGlobal) &&
+		if (!com_man().ta_is_active() && (time_resurrect + TIME_RESURRECT_RESTORE < ::IDevice->TimeGlobal_ms()) &&
 			(conditions().GetHealth() < health_death_threshold))
 		{
 			if (conditions().GetHealth() <
@@ -166,7 +166,7 @@ void CZombie::Hit(SHit* pHDS)
 				active_triple_idx = u8(Random.randI(FAKE_DEATH_TYPES_COUNT));
 				com_man().ta_activate(anim_triple_death[active_triple_idx]);
 				move().stop();
-				time_dead_start = Device.dwTimeGlobal;
+				time_dead_start = ::IDevice->TimeGlobal_ms();
 
 				if (fake_death_left == 0)
 					fake_death_left = 1;
@@ -175,7 +175,7 @@ void CZombie::Hit(SHit* pHDS)
 		}
 	}
 
-	last_hit_frame = Device.dwFrame;
+	last_hit_frame = ::IDevice->getFrame();
 }
 
 void CZombie::shedule_Update(u32 dt)
@@ -184,13 +184,13 @@ void CZombie::shedule_Update(u32 dt)
 
 	if (time_dead_start != 0)
 	{
-		if (time_dead_start + TIME_FAKE_DEATH < Device.dwTimeGlobal)
+		if (time_dead_start + TIME_FAKE_DEATH < ::IDevice->TimeGlobal_ms())
 		{
 			time_dead_start = 0;
 
 			com_man().ta_pointbreak();
 
-			time_resurrect = Device.dwTimeGlobal;
+			time_resurrect = ::IDevice->TimeGlobal_ms();
 		}
 	}
 }

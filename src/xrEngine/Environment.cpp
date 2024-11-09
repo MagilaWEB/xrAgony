@@ -421,7 +421,7 @@ void CEnvironment::lerp(float& current_weight)
 void CEnvironment::OnFrame()
 {
 #ifdef _EDITOR
-	SetGameTime(fGameTime + Device.fTimeDelta * fTimeFactor, fTimeFactor);
+	SetGameTime(fGameTime + ::IDevice->TimeDelta_sec() * fTimeFactor, fTimeFactor);
 	if (fsimilar(ed_to_time, DAY_LENGTH) && fsimilar(ed_from_time, 0.f))
 	{
 		if (fGameTime > DAY_LENGTH)
@@ -473,7 +473,7 @@ void CEnvironment::OnFrame()
 //#endif // #ifdef MASTER
 
 	PerlinNoise1D->SetFrequency(wind_gust_factor * MAX_NOISE_FREQ);
-	wind_strength_factor = clampr(PerlinNoise1D->GetContinious(Device.fTimeGlobal) + 0.5f, 0.f, 1.f);
+	wind_strength_factor = clampr(PerlinNoise1D->GetContinious(IDevice->TimeGlobal_sec()) + 0.5f, 0.f, 1.f);
 
 	shared_str l_id = (current_weight < 0.5f) ? Current[0]->lens_flare_id : Current[1]->lens_flare_id;
 	eff_LensFlare->OnFrame(l_id);

@@ -14,8 +14,8 @@ CTextConsole::CTextConsole()
 	m_dwStartLine = 0;
 
 	m_bNeedUpdate = false;
-	m_dwLastUpdateTime = Device.dwTimeGlobal;
-	m_last_time = Device.dwTimeGlobal;
+	m_dwLastUpdateTime = ::IDevice->TimeGlobal_ms();
+	m_last_time = ::IDevice->TimeGlobal_ms();
 }
 
 CTextConsole::~CTextConsole() { m_pMainWnd = nullptr; }
@@ -138,8 +138,8 @@ void CTextConsole::Initialize()
 	inherited::Initialize();
 
 	m_pMainWnd = &Device.m_hWnd;
-	m_dwLastUpdateTime = Device.dwTimeGlobal;
-	m_last_time = Device.dwTimeGlobal;
+	m_dwLastUpdateTime = ::IDevice->TimeGlobal_ms();
+	m_last_time = ::IDevice->TimeGlobal_ms();
 
 	CreateConsoleWnd();
 	CreateLogWnd();
@@ -182,9 +182,9 @@ void CTextConsole::OnPaint()
 	PAINTSTRUCT ps;
 	BeginPaint(m_hLogWnd, &ps);
 
-	if (/*m_bNeedUpdate*/ Device.dwFrame % 2)
+	if (/*m_bNeedUpdate*/ ::IDevice->getFrame() % 2)
 	{
-		// m_dwLastUpdateTime = Device.dwTimeGlobal;
+		// m_dwLastUpdateTime = ::IDevice->TimeGlobal_ms();
 		// m_bNeedUpdate = false;
 
 		GetClientRect(m_hLogWnd, &wRC);
@@ -283,9 +283,9 @@ void CTextConsole::DrawLog(HDC hDC, RECT* pRect)
 		}
 	}
 
-	if (g_pGameLevel && (Device.dwTimeGlobal - m_last_time > 500))
+	if (g_pGameLevel && (::IDevice->TimeGlobal_ms() - m_last_time > 500))
 	{
-		m_last_time = Device.dwTimeGlobal;
+		m_last_time = ::IDevice->TimeGlobal_ms();
 
 		m_server_info.ResetData();
 		g_pGameLevel->GetLevelInfo(&m_server_info);
@@ -314,7 +314,7 @@ inherited::IR_OnKeyboardPress( dik );
 void CTextConsole::OnFrame()
 {
 	inherited::OnFrame();
-	/* if ( !m_bNeedUpdate && m_dwLastUpdateTime + 1000/g_svTextConsoleUpdateRate > Device.dwTimeGlobal )
+	/* if ( !m_bNeedUpdate && m_dwLastUpdateTime + 1000/g_svTextConsoleUpdateRate > ::IDevice->TimeGlobal_ms() )
 	 {
 	 return;
 	 }

@@ -33,7 +33,7 @@ bool CStateMonsterLookToPointAbstract::check_completion()
 {
 	if (data.action.time_out != 0)
 	{
-		if (this->time_state_started + data.action.time_out < Device.dwTimeGlobal)
+		if (this->time_state_started + data.action.time_out < ::IDevice->TimeGlobal_ms())
 			return true;
 	}
 	else if (!this->object->control().direction().is_turning())

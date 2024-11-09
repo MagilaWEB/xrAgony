@@ -39,7 +39,7 @@ CUIMapWnd::CUIMapWnd()
 
 	//	UIMainMapHeader			= nullptr;
 	m_scroll_mode = false;
-	m_nav_timing = Device.dwTimeGlobal;
+	m_nav_timing = ::IDevice->TimeGlobal_ms();
 	hint_wnd = nullptr;
 	g_map_wnd = this;
 	m_cur_location = nullptr;

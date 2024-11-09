@@ -31,9 +31,9 @@ void CMercuryBall::UpdateCLChild()
 {
 	if (getVisible() && m_pPhysicsShell)
 	{
-		if (Device.TimerAsync() - m_timeLastUpdate > m_timeToUpdate)
+		if (::IDevice->TimerAsync_ms() - m_timeLastUpdate > m_timeToUpdate)
 		{
-			m_timeLastUpdate = Device.TimerAsync();
+			m_timeLastUpdate = ::IDevice->TimerAsync_ms();
 
 			if (::Random.randF(0.f, 1.0f) > 0.6f)
 			{

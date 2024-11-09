@@ -107,11 +107,11 @@ void CUIMotionIcon::Update()
 		float _diff = _abs(m_luminosity - cur_pos);
 		if (m_luminosity > cur_pos)
 		{
-			cur_pos += _diff * Device.fTimeDelta;
+			cur_pos += _diff * ::IDevice->TimeDelta_sec();
 		}
 		else
 		{
-			cur_pos -= _diff * Device.fTimeDelta;
+			cur_pos -= _diff * ::IDevice->TimeDelta_sec();
 		}
 		clamp(cur_pos, 0.f, 100.f);
 		m_luminosity_progress.SetPos(cur_pos / 100.f);

@@ -35,7 +35,7 @@ public:
 
 	virtual BOOL ProcessCam(SCamEffectorInfo& info)
 	{
-		fLifeTime -= Device.fTimeDelta;
+		fLifeTime -= ::IDevice->TimeDelta_sec();
 		return Valid();
 	};
 	;

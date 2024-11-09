@@ -416,12 +416,12 @@ void CCar::UpdateEx(float fov)
 	DbgUbdateCl();
 #endif
 
-	//	Log("UpdateCL",Device.dwFrame);
+	//	Log("UpdateCL",::IDevice->getFrame());
 	// XFORM().set(m_pPhysicsShell->mXFORM);
 	VisualUpdate(fov);
 	if (OwnerActor() && OwnerActor()->IsMyCamera())
 	{
-		cam_Update(Device.fTimeDelta, fov);
+		cam_Update(::IDevice->TimeDelta_sec(), fov);
 		OwnerActor()->Cameras().UpdateFromCamera(Camera());
 		if (eacFirstEye == active_camera->tag && !Level().Cameras().GetCamEffector(cefDemo))
 			OwnerActor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
@@ -472,7 +472,7 @@ void CCar::VisualUpdate(float fov)
 		//
 		// 		if(OwnerActor() && OwnerActor()->IsMyCamera())
 		// 		{
-		// 			cam_Update(Device.fTimeDelta, fov);
+		// 			cam_Update(::IDevice->TimeDelta_sec(), fov);
 		// 			OwnerActor()->Cameras().Update(Camera());
 		// 			OwnerActor()->Cameras().ApplyDevice();
 		// 		}
@@ -1075,7 +1075,7 @@ void CCar::Unclutch() { b_clutch = false; }
 void CCar::Starter()
 {
 	b_starting = true;
-	m_dwStartTime = Device.dwTimeGlobal;
+	m_dwStartTime = ::IDevice->TimeGlobal_ms();
 }
 void CCar::UpdatePower()
 {
@@ -1157,7 +1157,7 @@ void CCar::StartBreaking()
 	if (!b_breaks)
 	{
 		b_breaks = true;
-		m_break_start = Device.fTimeGlobal;
+		m_break_start = IDevice->TimeGlobal_sec();
 	}
 }
 void CCar::StopBreaking()
@@ -1379,7 +1379,7 @@ void CCar::UpdateBack()
 	if (b_breaks)
 	{
 		float k = 1.f;
-		float time = (Device.fTimeGlobal - m_break_start);
+		float time = (IDevice->TimeGlobal_sec() - m_break_start);
 		if (time < m_break_time)
 		{
 			k *= (time / m_break_time);
@@ -1574,7 +1574,7 @@ float CCar::EnginePower()
 		{
 			value = Parabola(m_min_rpm);
 		}
-		else if (Device.dwTimeGlobal - m_dwStartTime > 1000)
+		else if (::IDevice->TimeGlobal_ms() - m_dwStartTime > 1000)
 			b_starting = false;
 	}
 	if (value > m_current_engine_power)

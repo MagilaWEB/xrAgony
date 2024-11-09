@@ -235,7 +235,7 @@ void CScriptEntity::ProcessScripts()
 #ifdef _DEBUG
 //		if (!xr_strcmp("m_stalker_wounded",*object().cName()))
 //			Msg			("%6d Processing action :
-//%s",Device.dwTimeGlobal,*l_tpEntityAction->m_tAnimationAction.m_caAnimationToPlay);
+//%s",::IDevice->TimeGlobal_ms(),*l_tpEntityAction->m_tAnimationAction.m_caAnimationToPlay);
 #endif
 
 		if (m_tpCurrentEntityAction != l_tpEntityAction)
@@ -249,7 +249,7 @@ void CScriptEntity::ProcessScripts()
 #ifdef _DEBUG
 //		if (!xr_strcmp("m_stalker_wounded",*object().cName()))
 //			Msg			("%6d Action completed :
-//%s",Device.dwTimeGlobal,*l_tpEntityAction->m_tAnimationAction.m_caAnimationToPlay);
+//%s",::IDevice->TimeGlobal_ms(),*l_tpEntityAction->m_tAnimationAction.m_caAnimationToPlay);
 #endif
 
 		vfFinishAction(l_tpEntityAction);
@@ -382,7 +382,7 @@ bool CScriptEntity::bfAssignSound(CScriptEntityAction* tpEntityAction)
 			{
 #ifdef _DEBUG
 //				Msg									("%6d Starting sound
-//%s",Device.dwTimeGlobal,*l_tSoundAction.m_caSoundToPlay);
+//%s",::IDevice->TimeGlobal_ms(),*l_tSoundAction.m_caSoundToPlay);
 #endif
 				const Fmatrix& l_tMatrix = GetUpdatedMatrix(
 					l_tSoundAction.m_caBoneName, l_tSoundAction.m_tSoundPosition, l_tSoundAction.m_tSoundAngles);
@@ -472,7 +472,7 @@ bool CScriptEntity::bfAssignMovement(CScriptEntityAction* tpEntityAction)
 #endif
 		m_monster->movement().set_path_type(MovementManager::ePathTypeLevelPath);
 		//			Msg			("%6d Object %s, position
-		//[%f][%f][%f]",Device.dwTimeGlobal,*l_tpGameObject->cName(),VPUSH(l_tpGameObject->Position()));
+		//[%f][%f][%f]",::IDevice->TimeGlobal_ms(),*l_tpGameObject->cName(),VPUSH(l_tpGameObject->Position()));
 		m_monster->movement().detail().set_dest_position(l_tpGameObject->Position());
 		m_monster->movement().set_level_dest_vertex(l_tpGameObject->ai_location().level_vertex_id());
 		break;
@@ -619,7 +619,7 @@ bool CScriptEntity::bfScriptAnimation()
 #ifdef DEBUG
 // if (!xr_strcmp("m_stalker_wounded",*object().cName()))
 //	Msg				("%6d Playing animation : %s , Object
-//%s",Device.dwTimeGlobal,*GetCurrentAction()->m_tAnimationAction.m_caAnimationToPlay, *object().cName());
+//%s",::IDevice->TimeGlobal_ms(),*GetCurrentAction()->m_tAnimationAction.m_caAnimationToPlay, *object().cName());
 #endif
 		m_tpScriptAnimation = m_tpNextAnimation;
 		IKinematicsAnimated* skeleton_animated = smart_cast<IKinematicsAnimated*>(object().Visual());

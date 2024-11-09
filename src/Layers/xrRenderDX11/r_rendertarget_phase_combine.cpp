@@ -40,12 +40,12 @@ void CRenderTarget::phase_combine()
 	Fvector2 p0, p1;
 
 	//*** exposure-pipeline
-	u32 gpu_id = Device.dwFrame % HW.Caps.iGPUNum;
+	u32 gpu_id = ::IDevice->getFrame() % HW.Caps.iGPUNum;
 
 	if (Device.m_ScopeVP.IsSVPActive()) //--#SM+#-- +SecondVP+
 	{
 		// clang-format off
-		gpu_id = (Device.dwFrame - 1) % HW.Caps.iGPUNum;
+		gpu_id = (::IDevice->getFrame() - 1) % HW.Caps.iGPUNum;
 		// Фикс "мерцания" tonemapping (HDR) после выключения двойного рендера. 
 		// Побочный эффект - при работе двойного рендера скорость изменения tonemapping (HDR) падает в два раза
 		// Мерцание связано с тем, что HDR для своей работы хранит уменьшенние копии "прошлых кадров"

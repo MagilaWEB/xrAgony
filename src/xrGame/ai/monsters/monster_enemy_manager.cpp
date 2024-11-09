@@ -100,7 +100,7 @@ void CMonsterEnemyManager::update()
 	// обновить флаги
 	flags.zero();
 
-	if ((prev_enemy == enemy) && (time_last_seen != Device.dwTimeGlobal))
+	if ((prev_enemy == enemy) && (time_last_seen != ::IDevice->TimeGlobal_ms()))
 		flags._or (FLAG_ENEMY_LOST_SIGHT);
 	if (prev_enemy && !prev_enemy->g_Alive())
 		flags._or (FLAG_ENEMY_DIE);

@@ -113,14 +113,14 @@ void CEffect_Rain::RenewItem(Item& dest, float height, BOOL bHit)
 	dest.uv_set = Random.randI(2);
 	if (bHit)
 	{
-		dest.dwTime_Life = Device.dwTimeGlobal + iFloor(1000.f * height / dest.fSpeed) - Device.dwTimeDelta;
-		dest.dwTime_Hit = Device.dwTimeGlobal + iFloor(1000.f * height / dest.fSpeed) - Device.dwTimeDelta;
+		dest.dwTime_Life = ::IDevice->TimeGlobal_ms() + iFloor(1000.f * height / dest.fSpeed) - IDevice->TimeDelta_ms();
+		dest.dwTime_Hit = ::IDevice->TimeGlobal_ms() + iFloor(1000.f * height / dest.fSpeed) - IDevice->TimeDelta_ms();
 		dest.Phit.mad(dest.P, dest.D, height);
 	}
 	else
 	{
-		dest.dwTime_Life = Device.dwTimeGlobal + iFloor(1000.f * height / dest.fSpeed) - Device.dwTimeDelta;
-		dest.dwTime_Hit = Device.dwTimeGlobal + iFloor(2 * 1000.f * height / dest.fSpeed) - Device.dwTimeDelta;
+		dest.dwTime_Life = ::IDevice->TimeGlobal_ms() + iFloor(1000.f * height / dest.fSpeed) - IDevice->TimeDelta_ms();
+		dest.dwTime_Hit = ::IDevice->TimeGlobal_ms() + iFloor(2 * 1000.f * height / dest.fSpeed) - IDevice->TimeDelta_ms();
 		dest.Phit.set(dest.P);
 	}
 }
@@ -156,7 +156,7 @@ void CEffect_Rain::OnFrame()
 
 	//	// float f = 0.9f*hemi_factor + 0.1f*hemi_val;
 	//	float f = hemi_val;
-	//	float t = Device.fTimeDelta;
+	//	float t = ::IDevice->TimeDelta_sec();
 	//	clamp(t, 0.001f, 1.0f);
 	//	hemi_factor = hemi_factor * (1.0f - t) + f * t;
 	//}
@@ -234,13 +234,13 @@ void CEffect_Rain::Render()
 	// physics and time control
 	Item& one = items[I];
 
-	if (one.dwTime_Hit<Device.dwTimeGlobal) Hit (one.Phit);
-	if (one.dwTime_Life<Device.dwTimeGlobal) Born(one,source_radius);
+	if (one.dwTime_Hit<::IDevice->TimeGlobal_ms()) Hit (one.Phit);
+	if (one.dwTime_Life<::IDevice->TimeGlobal_ms()) Born(one,source_radius);
 
 	// последняя дельта ??
-	//. float xdt = float(one.dwTime_Hit-Device.dwTimeGlobal)/1000.f;
-	//. float dt = Device.fTimeDelta;//xdt<Device.fTimeDelta?xdt:Device.fTimeDelta;
-	float dt = Device.fTimeDelta;
+	//. float xdt = float(one.dwTime_Hit-::IDevice->TimeGlobal_ms())/1000.f;
+	//. float dt = ::IDevice->TimeDelta_sec();//xdt<::IDevice->TimeDelta_sec()?xdt:::IDevice->TimeDelta_sec();
+	float dt = ::IDevice->TimeDelta_sec();
 	one.P.mad (one.D,one.fSpeed*dt);
 
 	Device.Statistic->TEST1.Begin();
@@ -330,7 +330,7 @@ void CEffect_Rain::Render()
 	if (0==P) return;
 
 	{
-	float dt = Device.fTimeDelta;
+	float dt = ::IDevice->TimeDelta_sec();
 	_IndexStream& _IS = RCache.Index;
 	RCache.set_Shader (DM_Drop->shader);
 

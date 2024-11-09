@@ -47,14 +47,14 @@ void CROS_impl::add(light* source)
 	for (xr_vector<Item>::iterator I = track.begin(); I != track.end(); I++)
 		if (source == I->source)
 		{
-			I->frame_touched = Device.dwFrame;
+			I->frame_touched = ::IDevice->getFrame();
 			return;
 		}
 
 	// Register _new_
 	track.push_back(Item());
 	Item& L = track.back();
-	L.frame_touched = Device.dwFrame;
+	L.frame_touched = ::IDevice->getFrame();
 	L.source = source;
 	L.cache.verts[0].set(0, 0, 0);
 	L.cache.verts[1].set(0, 0, 0);
@@ -155,15 +155,15 @@ inline void CROS_impl::accum_hemi(float* hemi_cube, Fvector3& dir, float scale)
 void CROS_impl::update(IRenderable* O)
 {
 	// clip & verify
-	if (dwFrame == Device.dwFrame)
+	if (dwFrame == ::IDevice->getFrame())
 		return;
-	dwFrame = Device.dwFrame;
+	dwFrame = ::IDevice->getFrame();
 	if (nullptr == O)
 		return;
 	if (nullptr == O->GetRenderData().visual)
 		return;
 	VERIFY(dynamic_cast<CROS_impl*>(O->renderable_ROS()));
-	// float	dt			=	Device.fTimeDelta;
+	// float	dt			=	::IDevice->TimeDelta_sec();
 
 	IGameObject* _object = dynamic_cast<IGameObject*>(O);
 
@@ -325,14 +325,14 @@ extern float ps_r2_lt_smooth;
 // hemi & sun: update and smooth
 void CROS_impl::update_smooth(IRenderable* O)
 {
-	if (dwFrameSmooth == Device.dwFrame)
+	if (dwFrameSmooth == ::IDevice->getFrame())
 		return;
 
-	dwFrameSmooth = Device.dwFrame;
+	dwFrameSmooth = ::IDevice->getFrame();
 
 	smart_update(O);
 
-	float l_f = Device.fTimeDelta * ps_r2_lt_smooth;
+	float l_f = ::IDevice->TimeDelta_sec() * ps_r2_lt_smooth;
 	clamp(l_f, 0.f, 1.f);
 	float l_i = 1.f - l_f;
 	hemi_smooth = hemi_value * l_f + hemi_smooth * l_i;
@@ -415,7 +415,7 @@ void CROS_impl::calc_sky_hemi_value(Fvector& position, IGameObject* _object)
 void CROS_impl::prepare_lights(Fvector& position, IRenderable* O)
 {
 	IGameObject* _object = dynamic_cast<IGameObject*>(O);
-	float dt = Device.fTimeDelta;
+	float dt = ::IDevice->TimeDelta_sec();
 
 	vis_data& vis = O->GetRenderData().visual->getVisData();
 	float radius;
@@ -445,7 +445,7 @@ void CROS_impl::prepare_lights(Fvector& position, IRenderable* O)
 
 		std::erase_if(track, [&](CROS_impl::Item& cros_item) {
 			// remove untouched lights
-			if (cros_item.frame_touched != Device.dwFrame)
+			if (cros_item.frame_touched != ::IDevice->getFrame())
 				return true;
 
 			// Trace visibility

@@ -200,7 +200,7 @@ void CParticleGroup::SItem::StartRelatedChild(CParticleEffect* emitter, LPCSTR e
 
 	C->SetHudMode(emitter->GetHudMode());
 
-	float fDT_STEPP = Device.fTimeDelta;
+	float fDT_STEPP = ::IDevice->TimeDelta_sec();
 	Fmatrix M;
 	M.identity();
 	Fvector	vel;
@@ -231,7 +231,7 @@ void CParticleGroup::SItem::StopRelatedChild(u32 idx)
 
 void CParticleGroup::SItem::StartFreeChild(CParticleEffect* emitter, LPCSTR nm, PAPI::Particle& m)
 {
-	float fDT_STEPP = Device.fTimeDelta;
+	float fDT_STEPP = ::IDevice->TimeDelta_sec();
 	CParticleEffect* C = static_cast<CParticleEffect*>(RImplementation.model_CreatePE(nm));
 	C->SetHudMode(emitter->GetHudMode());
 	if (!C->IsLooped())
@@ -348,7 +348,7 @@ void OnGroupParticleDead(void* owner, u32 param, PAPI::Particle& m, u32 idx)
 
 void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& box, bool& bPlaying)
 {
-	float fDT_STEPP = Device.fTimeDelta;
+	float fDT_STEPP = ::IDevice->TimeDelta_sec();
 	CParticleEffect* E1 = static_cast<CParticleEffect*>(_effect);
 	if (E1) {
 		E1->OnFrame(u_dt);

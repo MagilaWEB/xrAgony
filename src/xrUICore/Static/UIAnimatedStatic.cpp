@@ -41,8 +41,8 @@ void CUIAnimatedStatic::Update()
 	}
 
 	// Прибавляем время кадра
-	m_uTimeElapsed += Device.dwTimeContinual - m_prevTime;
-	m_prevTime = Device.dwTimeContinual;
+	m_uTimeElapsed += ::IDevice->TimeContinual() - m_prevTime;
+	m_prevTime = ::IDevice->TimeContinual();
 
 	// Если анимация закончилась
 	if (m_uTimeElapsed > m_uAnimationDuration)

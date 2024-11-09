@@ -217,7 +217,7 @@ IC void CSpaceRestrictionHolder::collect_garbage()
 	for (; I != E;)
 	{
 		if (!(*I).second->shape() && (*I).second->released() &&
-			(Device.dwTimeGlobal >= (*I).second->m_last_time_dec + time_to_delete))
+			(::IDevice->TimeGlobal_ms() >= (*I).second->m_last_time_dec + time_to_delete))
 		{
 			J = I;
 			++I;

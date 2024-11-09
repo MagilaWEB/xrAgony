@@ -255,13 +255,13 @@ void CUIMainIngameWnd::Draw()
 	// show IO icon
 	bool IOActive = (FS.dwOpenCounter > 0);
 	if (IOActive)
-		UIStaticDiskIO_start_time = Device.fTimeGlobal;
+		UIStaticDiskIO_start_time = IDevice->TimeGlobal_sec();
 
-	if ((UIStaticDiskIO_start_time + 1.0f) < Device.fTimeGlobal)
+	if ((UIStaticDiskIO_start_time + 1.0f) < IDevice->TimeGlobal_sec())
 		UIStaticDiskIO->Show(false);
 	else
 	{
-		u32 alpha = clampr(iFloor(255.f * (1.f - (Device.fTimeGlobal - UIStaticDiskIO_start_time) / 1.f)), 0, 255);
+		u32 alpha = clampr(iFloor(255.f * (1.f - (IDevice->TimeGlobal_sec() - UIStaticDiskIO_start_time) / 1.f)), 0, 255);
 		UIStaticDiskIO->Show(true);
 		UIStaticDiskIO->SetTextureColor(color_rgba(255, 255, 255, alpha));
 	}
@@ -322,7 +322,7 @@ void CUIMainIngameWnd::Update()
 
 	UpdatePickUpItem();
 
-	if (Device.dwFrame % 10)
+	if (::IDevice->getFrame() % 10)
 		return;
 
 	bool b_God = GodMode()? true : false;

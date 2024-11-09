@@ -61,7 +61,7 @@ void storage::collect_garbage()
 			if (!object->released())
 				return (false);
 
-			if (Device.dwTimeGlobal < object->m_last_time_dec + time_to_delete)
+			if (::IDevice->TimeGlobal_ms() < object->m_last_time_dec + time_to_delete)
 				return (false);
 
 			::description* temp = object;

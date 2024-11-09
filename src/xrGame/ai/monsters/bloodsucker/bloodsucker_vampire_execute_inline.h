@@ -196,7 +196,7 @@ TEMPLATE_SPECIALIZATION
 void CStateBloodsuckerVampireExecuteAbstract::execute_vampire_prepare()
 {
 	this->object->com_man().ta_activate(this->object->anim_triple_vampire);
-	time_vampire_started = Device.dwTimeGlobal;
+	time_vampire_started = ::IDevice->TimeGlobal_ms();
 
 	this->object->sound().play(CAI_Bloodsucker::eVampireGrasp);
 }
@@ -217,7 +217,7 @@ void CStateBloodsuckerVampireExecuteAbstract::execute_vampire_continue()
 	this->object->sound().play(CAI_Bloodsucker::eVampireSucking);
 
 	// проверить на грави удар
-	if (time_vampire_started + VAMPIRE_TIME_HOLD < Device.dwTimeGlobal)
+	if (time_vampire_started + VAMPIRE_TIME_HOLD < ::IDevice->TimeGlobal_ms())
 	{
 		m_action = eActionFire;
 	}

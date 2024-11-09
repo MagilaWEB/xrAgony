@@ -108,8 +108,8 @@ void CALifeSwitchManager::switch_online(CSE_ALifeDynamicObject* object)
 	START_PROFILE("ALife/switch/switch_online")
 #ifdef DEBUG
 	//	if (psAI_Flags.test(aiALife))
-	Msg("[LSS][%d] Going online [%d][%s][%d] ([%f][%f][%f] : [%f][%f][%f]), on '%s'", Device.dwFrame,
-		Device.dwTimeGlobal, object->name_replace(), object->ID, VPUSH(graph().actor()->o_Position),
+	Msg("[LSS][%d] Going online [%d][%s][%d] ([%f][%f][%f] : [%f][%f][%f]), on '%s'", ::IDevice->getFrame(),
+		::IDevice->TimeGlobal_ms(), object->name_replace(), object->ID, VPUSH(graph().actor()->o_Position),
 		VPUSH(object->o_Position), "*SERVER*");
 #endif
 	object->switch_online();
@@ -121,8 +121,8 @@ void CALifeSwitchManager::switch_offline(CSE_ALifeDynamicObject* object)
 	START_PROFILE("ALife/switch/switch_offline")
 #ifdef DEBUG
 	//	if (psAI_Flags.test(aiALife))
-	Msg("[LSS][%d] Going offline [%d][%s][%d] ([%f][%f][%f] : [%f][%f][%f]), on '%s'", Device.dwFrame,
-		Device.dwTimeGlobal, object->name_replace(), object->ID, VPUSH(graph().actor()->o_Position),
+	Msg("[LSS][%d] Going offline [%d][%s][%d] ([%f][%f][%f] : [%f][%f][%f]), on '%s'", ::IDevice->getFrame(),
+		::IDevice->TimeGlobal_ms(), object->name_replace(), object->ID, VPUSH(graph().actor()->o_Position),
 		VPUSH(object->o_Position), "*SERVER*");
 #endif
 	object->switch_offline();
@@ -194,8 +194,8 @@ void CALifeSwitchManager::try_switch_online(CSE_ALifeDynamicObject* I)
 
 	VERIFY2((ai().game_graph().vertex(I->m_tGraphID)->level_id() != ai().level_graph().level_id()) ||
 			!Level().Objects.net_Find(I->ID) || Level().Objects.dump_all_objects(),
-		make_string("frame [%d] time [%d] object [%s] with id [%d] is offline, but is on the level", Device.dwFrame,
-			Device.dwTimeGlobal, I->name_replace(), I->ID));
+		make_string("frame [%d] time [%d] object [%s] with id [%d] is offline, but is on the level", ::IDevice->getFrame(),
+			::IDevice->TimeGlobal_ms(), I->name_replace(), I->ID));
 
 	I->try_switch_online();
 

@@ -820,7 +820,7 @@ void CDetailPathManager::add_patrol_point()
 void CDetailPathManager::build_smooth_path(const xr_vector<u32>& level_path, u32 intermediate_index)
 {
 	//	Msg									("[%6d][%s] started to build detail
-	// path",Device.dwFrame,*m_restricted_object->object().cName());
+	// path",::IDevice->getFrame(),*m_restricted_object->object().cName());
 	START_PROFILE("Build Path/Detail Path");
 
 	m_failed = true;
@@ -877,5 +877,5 @@ void CDetailPathManager::build_smooth_path(const xr_vector<u32>& level_path, u32
 
 	STOP_PROFILE;
 	//	Msg									("[%6d][%s] build_detail_path
-	//[%d][%d][%d]",Device.dwFrame,*m_restricted_object->object().cName(),path().size(),curr_travel_point_index(),last_patrol_point());
+	//[%d][%d][%d]",::IDevice->getFrame(),*m_restricted_object->object().cName(),path().size(),curr_travel_point_index(),last_patrol_point());
 }

@@ -57,7 +57,7 @@ void CParticlesObject::Init(LPCSTR p_name, IRender_Sector* S, BOOL bAutoRemove)
 	shedule.t_max = 50;
 	shedule_register();
 
-	dwLastTime = Device.dwTimeGlobal;
+	dwLastTime = ::IDevice->TimeGlobal_ms();
 }
 
 //----------------------------------------------------
@@ -115,7 +115,7 @@ void CParticlesObject::Play(bool bHudMode)
 	V->Play();
 	u32 dt = 1000 / Device.FPS;
 	clamp<u32>(dt, 1, 32);
-	dwLastTime = Device.dwTimeGlobal - dt;
+	dwLastTime = ::IDevice->TimeGlobal_ms() - dt;
 	m_bStopping = false;
 	PerformAllTheWork();
 }
@@ -129,7 +129,7 @@ void CParticlesObject::play_at_pos(const Fvector& pos, BOOL xform)
 	V->Play();
 	u32 dt = 1000 / Device.FPS;
 	clamp<u32>(dt, 1, 32);
-	dwLastTime = Device.dwTimeGlobal - dt;
+	dwLastTime = ::IDevice->TimeGlobal_ms() - dt;
 	m_bStopping = false;
 	PerformAllTheWork();
 }
@@ -160,12 +160,12 @@ void CParticlesObject::PerformAllTheWork()
 
 	xrCriticalSection::raii mt{ po_lock };
 	// Update
-	u32 dt = Device.dwTimeGlobal - dwLastTime;
+	u32 dt = ::IDevice->TimeGlobal_ms() - dwLastTime;
 	if (dt)
 	{
 		IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 		V->OnFrame(dt);
-		dwLastTime = Device.dwTimeGlobal;
+		dwLastTime = ::IDevice->TimeGlobal_ms();
 	}
 	UpdateSpatial();
 }
@@ -202,12 +202,12 @@ void CParticlesObject::renderable_Render()
 {
 	xrCriticalSection::raii mt{ po_lock };
 	VERIFY(renderable.visual);
-	u32 dt = Device.dwTimeGlobal - dwLastTime;
+	u32 dt = ::IDevice->TimeGlobal_ms() - dwLastTime;
 	if (dt)
 	{
 		IParticleCustom* V = smart_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 		V->OnFrame(dt);
-		dwLastTime = Device.dwTimeGlobal;
+		dwLastTime = ::IDevice->TimeGlobal_ms();
 	}
 
 	::Render->set_Transform(&renderable.xform);

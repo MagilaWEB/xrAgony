@@ -109,7 +109,7 @@ void CUIZoneMap::Update()
 	if (!pActor)
 		return;
 
-	if (!(Device.dwFrame % 20) && IsGameTypeSingle())
+	if (!(::IDevice->getFrame() % 20) && IsGameTypeSingle())
 	{
 		string16 text_str;
 		xr_strcpy(text_str, sizeof(text_str), "");

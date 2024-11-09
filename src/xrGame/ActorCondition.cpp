@@ -65,7 +65,7 @@ CActorCondition::CActorCondition(CActor* object) : inherited(object)
 	m_zone_danger[ALife::infl_acid] = 0.0f;
 	m_zone_danger[ALife::infl_psi] = 0.0f;
 	m_zone_danger[ALife::infl_electra] = 0.0f;
-	m_f_time_affected = Device.fTimeGlobal;
+	m_f_time_affected = IDevice->TimeGlobal_sec();
 
 	m_max_power_restore_speed = 0.0f;
 	m_max_wound_protection = 0.0f;
@@ -303,7 +303,7 @@ void CActorCondition::UpdateBoosters()
 void CActorCondition::AffectDamage_InjuriousMaterialAndMonstersInfluence()
 {
 	float one = 0.1f;
-	float tg = Device.fTimeGlobal;
+	float tg = IDevice->TimeGlobal_sec();
 	if (m_f_time_affected + one > tg)
 	{
 		return;

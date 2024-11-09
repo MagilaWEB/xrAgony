@@ -92,7 +92,7 @@ _value_type CStalkerPropertyEvaluatorEnemies::evaluate()
 	if (m_dont_wait && *m_dont_wait)
 		return (false);
 
-	if (Device.dwTimeGlobal < m_object->memory().enemy().last_enemy_time() + m_time_to_wait)
+	if (::IDevice->TimeGlobal_ms() < m_object->memory().enemy().last_enemy_time() + m_time_to_wait)
 		return (true);
 
 	return (false);
@@ -423,7 +423,7 @@ _value_type CStalkerPropertyEvaluatorShouldThrowGrenade::evaluate()
 		return (false);
 
 	// do not throw grenades too often
-	if (object().last_throw_time() + object().throw_time_interval() >= Device.dwTimeGlobal)
+	if (object().last_throw_time() + object().throw_time_interval() >= ::IDevice->TimeGlobal_ms())
 		return (false);
 
 	// throw grenades only in case when we have them
@@ -522,7 +522,7 @@ _value_type CStalkerPropertyEvaluatorUseSuddenness::evaluate()
 	u32 last_time_seen = visual_memory_manager->visible_object_time_last_seen(object().dcast_GameObject());
 	if (last_time_seen == u32(-1))
 		return (true);
-	if (Device.dwTimeGlobal < last_time_seen + 10000)
+	if (::IDevice->TimeGlobal_ms() < last_time_seen + 10000)
 		return (false);
 	return (true);
 }

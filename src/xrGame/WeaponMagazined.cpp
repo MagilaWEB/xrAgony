@@ -498,10 +498,10 @@ void CWeaponMagazined::UpdateCL()
 
 void CWeaponMagazined::UpdateSounds()
 {
-	if (Device.dwFrame == dwUpdateSounds_Frame)
+	if (::IDevice->getFrame() == dwUpdateSounds_Frame)
 		return;
 
-	dwUpdateSounds_Frame = Device.dwFrame;
+	dwUpdateSounds_Frame = ::IDevice->getFrame();
 
 	Fvector P = get_LastFP();
 	m_sounds.SetPosition("sndShow", P);

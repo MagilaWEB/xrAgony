@@ -66,13 +66,13 @@ void CStateGroupPanicAbstract::check_force_state()
 	if ((this->current_substate == eStatePanic_FaceUnprotectedArea))
 	{
 		// если видит врага
-		if (this->object->EnemyMan.get_enemy_time_last_seen() == Device.dwTimeGlobal)
+		if (this->object->EnemyMan.get_enemy_time_last_seen() == ::IDevice->TimeGlobal_ms())
 		{
 			this->select_state(eStatePanic_Run);
 			return;
 		}
 		// если получил hit
-		if (this->object->HitMemory.get_last_hit_time() + 5000 > Device.dwTimeGlobal)
+		if (this->object->HitMemory.get_last_hit_time() + 5000 > ::IDevice->TimeGlobal_ms())
 		{
 			this->select_state(eStatePanic_Run);
 			return;

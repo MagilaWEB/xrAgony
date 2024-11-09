@@ -299,14 +299,14 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 	m_fAttenuation = pSettings->r_float(cNameSect(), "attenuation");
 	m_owner_id = Z->m_owner_id;
 	if (m_owner_id != u32(-1))
-		m_ttl = Device.dwTimeGlobal + 40000; // 40 sec
+		m_ttl = ::IDevice->TimeGlobal_ms() + 40000; // 40 sec
 	else
 		m_ttl = u32(-1);
 
 	m_TimeToDisable = Z->m_disabled_time * 1000;
 	m_TimeToEnable = Z->m_enabled_time * 1000;
 	m_TimeShift = Z->m_start_time_shift * 1000;
-	m_StartTime = Device.dwTimeGlobal;
+	m_StartTime = ::IDevice->TimeGlobal_ms();
 	m_zone_flags.set(eUseOnOffTime, (m_TimeToDisable != 0) && (m_TimeToEnable != 0));
 
 	if (m_zone_flags.test(eIdleLight))
@@ -337,7 +337,7 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 
 	m_iPreviousStateTime = m_iStateTime = 0;
 
-	m_dwLastTimeMoved = Device.dwTimeGlobal;
+	m_dwLastTimeMoved = ::IDevice->TimeGlobal_ms();
 	m_vPrevPos.set(Position());
 
 	if (spawn_ini() && spawn_ini()->line_exist("fast_mode", "always_fast"))
@@ -536,7 +536,7 @@ void CCustomZone::shedule_Update(u32 dt)
 
 	if (!IsGameTypeSingle() && Local())
 	{
-		if (Device.dwTimeGlobal > m_ttl)
+		if (::IDevice->TimeGlobal_ms() > m_ttl)
 			DestroyObject();
 	}
 }
@@ -698,7 +698,7 @@ void CCustomZone::UpdateIdleLight()
 	VERIFY(m_pIdleLAnim);
 
 	int frame = 0;
-	u32 clr = m_pIdleLAnim->CalculateBGR(Device.fTimeGlobal, frame); // возвращает в формате BGR
+	u32 clr = m_pIdleLAnim->CalculateBGR(IDevice->TimeGlobal_sec(), frame); // возвращает в формате BGR
 	Fcolor fclr;
 	fclr.set((float)color_get_B(clr) / 255.f, (float)color_get_G(clr) / 255.f, (float)color_get_R(clr) / 255.f, 1.f);
 
@@ -958,7 +958,7 @@ void CCustomZone::StartBlowoutLight()
 	if (!m_pLight || m_fLightTime <= 0.f)
 		return;
 
-	m_fLightTimeLeft = (float)Device.dwTimeGlobal + m_fLightTime * 1000.0f;
+	m_fLightTimeLeft = (float)::IDevice->TimeGlobal_ms() + m_fLightTime * 1000.0f;
 
 	m_pLight->set_color(m_LightColor.r, m_LightColor.g, m_LightColor.b);
 	m_pLight->set_range(m_fLightRange);
@@ -977,11 +977,11 @@ void CCustomZone::StopBlowoutLight()
 
 void CCustomZone::UpdateBlowoutLight()
 {
-	if (m_fLightTimeLeft > (float)Device.dwTimeGlobal)
+	if (m_fLightTimeLeft > (float)::IDevice->TimeGlobal_ms())
 	{
-		float time_k = m_fLightTimeLeft - (float)Device.dwTimeGlobal;
+		float time_k = m_fLightTimeLeft - (float)::IDevice->TimeGlobal_ms();
 
-		//		m_fLightTimeLeft -= Device.fTimeDelta;
+		//		m_fLightTimeLeft -= ::IDevice->TimeDelta_sec();
 		clamp(time_k, 0.0f, m_fLightTime * 1000.0f);
 
 		float scale = time_k / (m_fLightTime * 1000.0f);
@@ -1001,10 +1001,10 @@ void CCustomZone::UpdateBlowoutLight()
 
 void CCustomZone::AffectObjects()
 {
-	if (m_dwAffectFrameNum == Device.dwFrame)
+	if (m_dwAffectFrameNum == ::IDevice->getFrame())
 		return;
 
-	m_dwAffectFrameNum = Device.dwFrame;
+	m_dwAffectFrameNum = ::IDevice->getFrame();
 
 	if (Device.dwPrecacheFrame)
 		return;
@@ -1041,13 +1041,13 @@ void CCustomZone::OnMove()
 {
 	if (m_dwLastTimeMoved == 0)
 	{
-		m_dwLastTimeMoved = Device.dwTimeGlobal;
+		m_dwLastTimeMoved = ::IDevice->TimeGlobal_ms();
 		m_vPrevPos.set(Position());
 	}
 	else
 	{
-		float time_delta = float(Device.dwTimeGlobal - m_dwLastTimeMoved) / 1000.f;
-		m_dwLastTimeMoved = Device.dwTimeGlobal;
+		float time_delta = float(::IDevice->TimeGlobal_ms() - m_dwLastTimeMoved) / 1000.f;
+		m_dwLastTimeMoved = ::IDevice->TimeGlobal_ms();
 
 		Fvector vel;
 
@@ -1302,7 +1302,7 @@ void CCustomZone::UpdateOnOffState()
 		return;
 
 	bool dest_state;
-	u32 t = (Device.dwTimeGlobal - m_StartTime + m_TimeShift) % (m_TimeToEnable + m_TimeToDisable);
+	u32 t = (::IDevice->TimeGlobal_ms() - m_StartTime + m_TimeShift) % (m_TimeToEnable + m_TimeToDisable);
 	if (t < m_TimeToEnable)
 	{
 		dest_state = true;

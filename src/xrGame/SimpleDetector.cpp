@@ -72,7 +72,7 @@ void CSimpleDetector::UpdateAf()
 			item_type->detect_snds.m_activeSnd->snd.set_frequency(snd_freq);
 	}
 	else
-		af_info.snd_time += Device.fTimeDelta;
+		af_info.snd_time += ::IDevice->TimeDelta_sec();
 }
 
 void CUIArtefactDetectorSimple::construct(CSimpleDetector* p)
@@ -99,7 +99,7 @@ void CUIArtefactDetectorSimple::Flash(bool bOn, float fRelPower)
 	if (bOn)
 	{
 		K->LL_SetBoneVisible(m_flash_bone, TRUE, TRUE);
-		m_turn_off_flash_time = Device.dwTimeGlobal + iFloor(fRelPower * 1000.0f);
+		m_turn_off_flash_time = ::IDevice->TimeGlobal_ms() + iFloor(fRelPower * 1000.0f);
 	}
 	else
 	{
@@ -151,7 +151,7 @@ void CUIArtefactDetectorSimple::update()
 		if (m_flash_bone == BI_NONE)
 			setup_internals();
 
-		if (m_turn_off_flash_time && m_turn_off_flash_time < Device.dwTimeGlobal)
+		if (m_turn_off_flash_time && m_turn_off_flash_time < ::IDevice->TimeGlobal_ms())
 			Flash(false, 0.0f);
 
 		firedeps fd;
@@ -164,7 +164,7 @@ void CUIArtefactDetectorSimple::update()
 			m_on_off_light->set_active(true);
 
 		int frame = 0;
-		u32 clr = m_pOnOfLAnim->CalculateRGB(Device.fTimeGlobal, frame);
+		u32 clr = m_pOnOfLAnim->CalculateRGB(IDevice->TimeGlobal_sec(), frame);
 		Fcolor fclr;
 		fclr.set(clr);
 		m_on_off_light->set_color(fclr);

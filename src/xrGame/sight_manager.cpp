@@ -127,9 +127,9 @@ void CSightManager::Exec_Look(float time_delta)
 #ifdef SIGHT_DEBUG
 	if (object().cName() == "level_prefix_stalker")
 	{
-		Msg("[%6d][%s] BEFORE BODY [%f] -> [%f]", Device.dwTimeGlobal, object().cName().c_str(),
+		Msg("[%6d][%s] BEFORE BODY [%f] -> [%f]", ::IDevice->TimeGlobal_ms(), object().cName().c_str(),
 			object().movement().m_body.current.yaw, object().movement().m_body.target.yaw);
-		Msg("[%6d][%s] BEFORE HEAD [%f] -> [%f]", Device.dwTimeGlobal, object().cName().c_str(),
+		Msg("[%6d][%s] BEFORE HEAD [%f] -> [%f]", ::IDevice->TimeGlobal_ms(), object().cName().c_str(),
 			object().movement().m_head.current.yaw, object().movement().m_head.target.yaw);
 	}
 #endif // #ifdef SIGHT_DEBUG
@@ -149,13 +149,13 @@ void CSightManager::Exec_Look(float time_delta)
 
 #ifdef DEBUG
 	if (g_ai_dbg_sight)
-		Msg("%6d [%s] before body[%f]->[%f], head[%f]->[%f]", Device.dwTimeGlobal, object().cName().c_str(),
+		Msg("%6d [%s] before body[%f]->[%f], head[%f]->[%f]", ::IDevice->TimeGlobal_ms(), object().cName().c_str(),
 			body.current.yaw, body.target.yaw, head.current.yaw, head.target.yaw);
 #endif // #ifdef DEBUG
 	vfValidateAngleDependency(body.current.yaw, body.target.yaw, head.current.yaw);
 #ifdef DEBUG
 	if (g_ai_dbg_sight)
-		Msg("%6d [%s] after  body[%f]->[%f], head[%f]->[%f]", Device.dwTimeGlobal, object().cName().c_str(),
+		Msg("%6d [%s] after  body[%f]->[%f], head[%f]->[%f]", ::IDevice->TimeGlobal_ms(), object().cName().c_str(),
 			body.current.yaw, body.target.yaw, head.current.yaw, head.target.yaw);
 #endif // #ifdef DEBUG
 
@@ -179,7 +179,7 @@ void CSightManager::Exec_Look(float time_delta)
 
 #ifdef DEBUG
 	if (g_ai_dbg_sight)
-		Msg("%6d [%s] after2 body[%f]->[%f], head[%f]->[%f]", Device.dwTimeGlobal, object().cName().c_str(),
+		Msg("%6d [%s] after2 body[%f]->[%f], head[%f]->[%f]", ::IDevice->TimeGlobal_ms(), object().cName().c_str(),
 			body.current.yaw, body.target.yaw, head.current.yaw, head.target.yaw);
 #endif // #ifdef DEBUG
 
@@ -194,9 +194,9 @@ void CSightManager::Exec_Look(float time_delta)
 
 	if (object().cName() == "level_prefix_stalker")
 	{
-		Msg("[%6d][%s] AFTER  BODY [%f] -> [%f]", Device.dwTimeGlobal, object().cName().c_str(),
+		Msg("[%6d][%s] AFTER  BODY [%f] -> [%f]", ::IDevice->TimeGlobal_ms(), object().cName().c_str(),
 			object().movement().m_body.current.yaw, object().movement().m_body.target.yaw);
-		Msg("[%6d][%s] AFTER  HEAD [%f][%f] -> [%f][%f]", Device.dwTimeGlobal, object().cName().c_str(),
+		Msg("[%6d][%s] AFTER  HEAD [%f][%f] -> [%f][%f]", ::IDevice->TimeGlobal_ms(), object().cName().c_str(),
 			object().movement().m_head.current.yaw, object().movement().m_head.current.pitch,
 			object().movement().m_head.target.yaw, object().movement().m_head.target.pitch);
 	}
@@ -210,7 +210,7 @@ void CSightManager::Exec_Look(float time_delta)
 
 #ifdef DEBUG
 	if (g_ai_dbg_sight)
-		Msg("%6d [%s] after3 body[%f]->[%f], head[%f]->[%f]", Device.dwTimeGlobal, object().cName().c_str(),
+		Msg("%6d [%s] after3 body[%f]->[%f], head[%f]->[%f]", ::IDevice->TimeGlobal_ms(), object().cName().c_str(),
 			body.current.yaw, body.target.yaw, head.current.yaw, head.target.yaw);
 #endif // #ifdef DEBUG
 
@@ -264,7 +264,7 @@ void CSightManager::update()
 					m_max_right_angle))
 		{
 			m_turning_in_place = true;
-			//			Msg				("%6d started turning in place",Device.dwTimeGlobal);
+			//			Msg				("%6d started turning in place",::IDevice->TimeGlobal_ms());
 			object().movement().m_body.target.yaw = object().movement().m_head.current.yaw;
 		}
 		else
@@ -282,7 +282,7 @@ void CSightManager::update()
 	else
 	{
 		m_turning_in_place = false;
-		//		Msg					("%6d stopped turning in place",Device.dwTimeGlobal);
+		//		Msg					("%6d stopped turning in place",::IDevice->TimeGlobal_ms());
 		object().movement().m_body.target.yaw = object().movement().m_body.current.yaw;
 	}
 
@@ -522,14 +522,14 @@ void CSightManager::process_action(float const time_delta)
 	Fvector const& factors = current_action().use_torso_look() ? s_danger_factors : s_free_factors;
 	VERIFY(_valid(factors));
 	//	if ( object().cName() == "level_prefix_stalker" ) {
-	//		Msg							("[%6d][%6d] [%f] + [%f] = [%f] ([%f])",  Device.dwFrame, Device.dwTimeGlobal,
+	//		Msg							("[%6d][%6d] [%f] + [%f] = [%f] ([%f])",  ::IDevice->getFrame(), ::IDevice->TimeGlobal_ms(),
 	// m_current.m_head.m_factor,		s_factor_lerp_speed*time_delta,		lerp ( m_current.m_head.m_factor,
 	// factors.x,
 	// s_factor_lerp_speed*time_delta ), factors.x );
-	//		Msg							("[%6d][%6d] [%f] + [%f] = [%f] ([%f])",  Device.dwFrame, Device.dwTimeGlobal,
+	//		Msg							("[%6d][%6d] [%f] + [%f] = [%f] ([%f])",  ::IDevice->getFrame(), ::IDevice->TimeGlobal_ms(),
 	// m_current.m_shoulder.m_factor,	s_factor_lerp_speed*time_delta,		lerp ( m_current.m_shoulder.m_factor,
 	// factors.y, s_factor_lerp_speed*time_delta ), factors.y );
-	//		Msg							("[%6d][%6d] [%f] + [%f] = [%f] ([%f])",  Device.dwFrame, Device.dwTimeGlobal,
+	//		Msg							("[%6d][%6d] [%f] + [%f] = [%f] ([%f])",  ::IDevice->getFrame(), ::IDevice->TimeGlobal_ms(),
 	// m_current.m_spine.m_factor,	s_factor_lerp_speed*time_delta,		lerp ( m_current.m_spine.m_factor,
 	// factors.z,
 	// s_factor_lerp_speed*time_delta ), factors.z );
@@ -783,7 +783,7 @@ void CSightManager::enable(bool const value)
 		return;
 
 	m_enabled = value;
-	//	Msg					("[%d][%s] sight_enabled[%c]", Device.dwTimeGlobal, object().cName().c_str(), value ? '+' :
+	//	Msg					("[%d][%s] sight_enabled[%c]", ::IDevice->TimeGlobal_ms(), object().cName().c_str(), value ? '+' :
 	//'-');
 
 	if (!m_enabled)

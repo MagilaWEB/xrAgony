@@ -76,7 +76,7 @@ CInventoryItem::~CInventoryItem()
 			Msg("parent name is [%s]", p->cName().c_str());
 
 		Msg("! ERROR item_id[%d] H_Parent=[%s][%d] [%d]", object().ID(), p ? p->cName().c_str() : "none",
-			p ? p->ID() : -1, Device.dwFrame);
+			p ? p->ID() : -1, ::IDevice->getFrame());
 	}
 #endif // #ifdef MASTER
 }
@@ -384,7 +384,7 @@ void CInventoryItem::net_Import(NET_Packet& P)
 	}*/
 
 	net_update_IItem N;
-	N.dwTimeStamp = Device.dwTimeGlobal;
+	N.dwTimeStamp = ::IDevice->TimeGlobal_ms();
 
 	net_Import_PH_Params(P, N, num_items);
 	////////////////////////////////////////////
@@ -1073,7 +1073,7 @@ float CInventoryItem::interpolate_states(
 	net_update_IItem const& first, net_update_IItem const& last, SPHNetState& current)
 {
 	float ret_val = 0.f;
-	u32 CurTime = Device.dwTimeGlobal;
+	u32 CurTime = ::IDevice->TimeGlobal_ms();
 
 	if (CurTime == last.dwTimeStamp)
 		return 0.f;

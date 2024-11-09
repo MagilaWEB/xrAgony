@@ -149,12 +149,12 @@ void CMonsterSoundMemory::UpdateHearing()
 {
 	// удаление устаревших звуков
 	Sounds.erase(
-		std::remove_if(Sounds.begin(), Sounds.end(), pred_remove_nonactual_sounds(Device.dwTimeGlobal - time_memory)),
+		std::remove_if(Sounds.begin(), Sounds.end(), pred_remove_nonactual_sounds(::IDevice->TimeGlobal_ms() - time_memory)),
 		Sounds.end());
 
 	// пересчитать value
 	for (xr_vector<SoundElem>::iterator I = Sounds.begin(); I != Sounds.end(); ++I)
-		I->CalcValue(Device.dwTimeGlobal, monster->Position());
+		I->CalcValue(::IDevice->TimeGlobal_ms(), monster->Position());
 
 	// update help sound
 	if (m_time_help_sound + time_help_sound_remember < time())

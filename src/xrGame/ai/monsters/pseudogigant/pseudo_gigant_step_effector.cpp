@@ -13,7 +13,7 @@ CPseudogigantStepEffector::CPseudogigantStepEffector(float time, float amp, floa
 
 BOOL CPseudogigantStepEffector::ProcessCam(SCamEffectorInfo& info)
 {
-	fLifeTime -= Device.fTimeDelta;
+	fLifeTime -= ::IDevice->TimeDelta_sec();
 	if (fLifeTime < 0)
 		return FALSE;
 

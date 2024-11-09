@@ -43,7 +43,7 @@ CUIRankingWnd::CUIRankingWnd()
 	m_last_monster_icon = "";
 	m_last_weapon_icon = "";
 #endif
-	m_previous_time = Device.dwTimeGlobal;
+	m_previous_time = ::IDevice->TimeGlobal_ms();
 	m_delay = 3000;
 }
 
@@ -83,9 +83,9 @@ void CUIRankingWnd::Show(bool status)
 
 void CUIRankingWnd::Update()
 {
-	if (Device.dwTimeGlobal - m_previous_time > m_delay)
+	if (::IDevice->TimeGlobal_ms() - m_previous_time > m_delay)
 	{
-		m_previous_time = Device.dwTimeGlobal;
+		m_previous_time = ::IDevice->TimeGlobal_ms();
 		update_info();
 	}
 }

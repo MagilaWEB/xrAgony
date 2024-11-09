@@ -191,7 +191,7 @@ void CRenderTarget::accum_direct_cascade(u32 sub_phase, Fmatrix& xform, Fmatrix&
 			// float	w_speed				= g_pGamePersistent->Environment().CurrentEnv->wind_velocity	;
 			Fvector normal;
 			normal.setHP(w_dir, 0);
-			w_shift += 0.003f * Device.fTimeDelta;
+			w_shift += 0.003f * ::IDevice->TimeDelta_sec();
 			Fvector position;
 			position.set(0, 0, 0);
 			m_xform.build_camera_dir(position, direction, normal);

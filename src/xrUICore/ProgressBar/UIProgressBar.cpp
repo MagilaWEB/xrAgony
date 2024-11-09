@@ -94,7 +94,7 @@ void CUIProgressBar::Update()
 		float _diff = m_ProgressPos.y - m_ProgressPos.x;
 
 		float _length = (m_MaxPos - m_MinPos);
-		float _val = _length * (1.0f - m_inertion) * Device.fTimeDelta;
+		float _val = _length * (1.0f - m_inertion) * ::IDevice->TimeDelta_sec();
 
 		_val = _min(_abs(_val), _abs(_diff));
 		_val *= _sign(_diff);
@@ -150,5 +150,5 @@ void CUIProgressBar::Draw()
 		m_UIProgressItem.Draw();
 		UI().PopScissor();
 	}
-	m_last_render_frame = Device.dwFrame;
+	m_last_render_frame = ::IDevice->getFrame();
 }

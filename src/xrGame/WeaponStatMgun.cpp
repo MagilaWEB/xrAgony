@@ -229,8 +229,8 @@ void CWeaponStatMgun::UpdateBarrelDir()
 			m_allow_fire = FALSE;
 	}
 
-	m_cur_x_rot = angle_inertion_var(m_cur_x_rot, m_tgt_x_rot, 0.5f, 3.5f, PI_DIV_6, Device.fTimeDelta);
-	m_cur_y_rot = angle_inertion_var(m_cur_y_rot, m_tgt_y_rot, 0.5f, 3.5f, PI_DIV_6, Device.fTimeDelta);
+	m_cur_x_rot = angle_inertion_var(m_cur_x_rot, m_tgt_x_rot, 0.5f, 3.5f, PI_DIV_6, ::IDevice->TimeDelta_sec());
+	m_cur_y_rot = angle_inertion_var(m_cur_y_rot, m_tgt_y_rot, 0.5f, 3.5f, PI_DIV_6, ::IDevice->TimeDelta_sec());
 }
 
 void CWeaponStatMgun::cam_Update(float dt, float fov)
@@ -253,8 +253,8 @@ void CWeaponStatMgun::cam_Update(float dt, float fov)
 	d.getHP(des_cam_dir.x, des_cam_dir.y);
 	des_cam_dir.mul(-1.0f);
 
-	Camera()->yaw = angle_inertion_var(Camera()->yaw, des_cam_dir.x, 0.5f, 7.5f, PI_DIV_6, Device.fTimeDelta);
-	Camera()->pitch = angle_inertion_var(Camera()->pitch, des_cam_dir.y, 0.5f, 7.5f, PI_DIV_6, Device.fTimeDelta);
+	Camera()->yaw = angle_inertion_var(Camera()->yaw, des_cam_dir.x, 0.5f, 7.5f, PI_DIV_6, ::IDevice->TimeDelta_sec());
+	Camera()->pitch = angle_inertion_var(Camera()->pitch, des_cam_dir.y, 0.5f, 7.5f, PI_DIV_6, ::IDevice->TimeDelta_sec());
 
 	if (OwnerActor())
 	{

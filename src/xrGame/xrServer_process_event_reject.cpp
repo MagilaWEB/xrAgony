@@ -10,26 +10,26 @@ bool xrServer::Process_event_reject(
 	CSE_Abstract* e_entity = game->get_entity_from_eid(id_entity);
 
 	//	R_ASSERT2( e_entity, make_string( "entity not found. parent_id = [%d], entity_id = [%d], frame = [%d]",
-	// id_parent, id_entity, Device.dwFrame ).c_str() );
+	// id_parent, id_entity, ::IDevice->getFrame() ).c_str() );
 	VERIFY2(e_entity, make_string("entity not found. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent,
-						  id_entity, Device.dwFrame)
+						  id_entity, ::IDevice->getFrame())
 						  .c_str());
 	if (!e_entity)
 	{
 		Msg("! ERROR on rejecting: entity not found. parent_id = [%d], entity_id = [%d], frame = [%d].", id_parent,
-			id_entity, Device.dwFrame);
+			id_entity, ::IDevice->getFrame());
 		return false;
 	}
 
 	//	R_ASSERT2( e_parent, make_string( "parent not found. parent_id = [%d], entity_id = [%d], frame = [%d]",
-	// id_parent, id_entity, Device.dwFrame ).c_str() );
+	// id_parent, id_entity, ::IDevice->getFrame() ).c_str() );
 	VERIFY2(e_parent, make_string("parent not found. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent,
-						  id_entity, Device.dwFrame)
+						  id_entity, ::IDevice->getFrame())
 						  .c_str());
 	if (!e_parent)
 	{
 		Msg("! ERROR on rejecting: parent not found. parent_id = [%d], entity_id = [%d], frame = [%d].", id_parent,
-			id_entity, Device.dwFrame);
+			id_entity, ::IDevice->getFrame());
 		return false;
 	}
 
@@ -66,7 +66,7 @@ bool xrServer::Process_event_reject(
 	if (e_entity->ID_Parent != id_parent)
 	{
 		Msg("! ERROR: e_entity->ID_Parent = [%d]  parent = [%d][%s]  entity_id = [%d]  frame = [%d]",
-			e_entity->ID_Parent, id_parent, e_parent->name_replace(), id_entity, Device.dwFrame);
+			e_entity->ID_Parent, id_parent, e_parent->name_replace(), id_entity, ::IDevice->getFrame());
 		// it can't be !!!
 	}
 

@@ -131,7 +131,7 @@ void CAgentLocationManager::make_suitable(CAI_Stalker* object, const CCoverPoint
 		if ((*I)->cover()->m_position.distance_to_sqr(location->position()) <= _sqr(5.f))
 		{
 			//			Msg						("%6d : object [%s] disabled cover for object
-			//[%s]",Device.dwFrame,*object->cName(),*(*I)->object().cName());
+			//[%s]",::IDevice->getFrame(),*object->cName(),*(*I)->object().cName());
 			(*I)->object().on_cover_blocked((*I)->cover());
 			(*I)->cover(0);
 		}
@@ -182,7 +182,7 @@ float CAgentLocationManager::danger(const CCoverPoint* cover, CAI_Stalker* membe
 	LOCATIONS::const_iterator E = m_danger_locations.end();
 	for (; I != E; ++I)
 	{
-		if (Device.dwTimeGlobal > (*I)->m_level_time + (*I)->m_interval)
+		if (::IDevice->TimeGlobal_ms() > (*I)->m_level_time + (*I)->m_interval)
 			continue;
 
 		if (!(*I)->mask().test(mask))
@@ -192,7 +192,7 @@ float CAgentLocationManager::danger(const CCoverPoint* cover, CAI_Stalker* membe
 		if (distance > (*I)->m_radius)
 			continue;
 
-		result *= float(Device.dwTimeGlobal - (*I)->m_level_time) / float((*I)->m_interval);
+		result *= float(::IDevice->TimeGlobal_ms() - (*I)->m_level_time) / float((*I)->m_interval);
 	}
 
 	return (result);

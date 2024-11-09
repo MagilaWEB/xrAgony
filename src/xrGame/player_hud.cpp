@@ -135,7 +135,7 @@ bool attachable_hud_item::set_bone_visible(const shared_str& bone_name, BOOL bVi
 
 void attachable_hud_item::update(bool bForce)
 {
-	if (!bForce && m_upd_firedeps_frame == Device.dwFrame)
+	if (!bForce && m_upd_firedeps_frame == ::IDevice->getFrame())
 		return;
 	//bool is_16x9 = UI().is_widescreen();
 
@@ -148,7 +148,7 @@ void attachable_hud_item::update(bool bForce)
 	m_attach_offset.translate_over(m_measures.m_item_attach[0]);
 
 	m_parent->calc_transform(m_attach_place_idx, m_attach_offset, m_item_transform);
-	m_upd_firedeps_frame = Device.dwFrame;
+	m_upd_firedeps_frame = ::IDevice->getFrame();
 
 	IKinematicsAnimated* ka = m_model->dcast_PKinematicsAnimated();
 	if (ka)
@@ -672,11 +672,11 @@ void player_hud::update_inertion(Fmatrix& trans)
 			_origin_offset = m_origin_offset;
 		}
 
-		st_last_dir.mad(diff_dir, _tendto_speed * Device.fTimeDelta);
+		st_last_dir.mad(diff_dir, _tendto_speed * ::IDevice->TimeDelta_sec());
 		diff_dir.mul(_tendto_speed);
 		trans.k.mad(diff_dir, _origin_offset);
 
-		st_last_pos.mad(diff_pos, _tendto_speed * Device.fTimeDelta);
+		st_last_pos.mad(diff_pos, _tendto_speed * ::IDevice->TimeDelta_sec());
 		trans.c.mad(diff_pos, _origin_offset);
 	}
 }

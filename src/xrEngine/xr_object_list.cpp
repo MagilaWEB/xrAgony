@@ -111,13 +111,13 @@ void CObjectList::o_sleep(IGameObject* O)
 
 void CObjectList::Update()
 {
-	if (statsFrame != Device.dwFrame)
+	if (statsFrame != ::IDevice->getFrame())
 	{
-		statsFrame = Device.dwFrame;
+		statsFrame = ::IDevice->getFrame();
 		stats.FrameStart();
 	}
 
-	if (!Device.Paused() && Device.fTimeDelta > EPS_S)
+	if (!Device.Paused() && ::IDevice->TimeDelta_sec() > EPS_S)
 	{
 		stats.Updated = 0;
 		stats.Update.Begin();
@@ -174,7 +174,7 @@ void CObjectList::Update()
 #ifdef DEBUG
 			if (debug_destroy)
 				Msg("Destroying object[%x][%x] [%d][%s] frame[%d]", dynamic_cast<void*>(O), O, O->ID(), *O->cName(),
-					Device.dwFrame);
+					::IDevice->getFrame());
 #endif // DEBUG
 			O->net_Destroy();
 			Destroy(O);
@@ -420,7 +420,7 @@ void CObjectList::register_object_to_destroy(IGameObject* object_to_destroy)
 		if (!O->getDestroy() && O->H_Parent() == object_to_destroy)
 		{
 			Msg("setDestroy called, but not-destroyed child found parent[%d] child[%d]", object_to_destroy->ID(),
-				O->ID(), Device.dwFrame);
+				O->ID(), ::IDevice->getFrame());
 			O->setDestroy(true);
 		}
 	}
@@ -431,7 +431,7 @@ void CObjectList::register_object_to_destroy(IGameObject* object_to_destroy)
 		if (!O->getDestroy() && O->H_Parent() == object_to_destroy)
 		{
 			Msg("setDestroy called, but not-destroyed child found parent[%d] child[%d]", object_to_destroy->ID(),
-				O->ID(), Device.dwFrame);
+				O->ID(), ::IDevice->getFrame());
 			O->setDestroy(true);
 		}
 	}

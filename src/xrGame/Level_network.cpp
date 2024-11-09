@@ -30,7 +30,7 @@ void CLevel::remove_objects()
 	bReady = false;
 	Server->SLS_Clear();
 	snd_Events.clear();
-	++Device.dwFrame;
+	::IDevice->incrementFrame();
 	ClientReceive();
 	ProcessGameEvents();
 	Objects.Update();

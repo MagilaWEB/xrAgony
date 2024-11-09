@@ -21,7 +21,7 @@ void CStateMonsterFindEnemyAngryAbstract::execute()
 TEMPLATE_SPECIALIZATION
 bool CStateMonsterFindEnemyAngryAbstract::check_completion()
 {
-	if (this->time_state_started + 4000 > Device.dwTimeGlobal)
+	if (this->time_state_started + 4000 > ::IDevice->TimeGlobal_ms())
 		return false;
 	return true;
 }

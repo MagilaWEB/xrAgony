@@ -31,7 +31,7 @@ TEMPLATE_SPECIALIZATION
 bool CStateMonsterPanicRunAbstract::check_completion()
 {
 	const float dist_to_enemy = this->object->Position().distance_to(this->object->EnemyMan.get_enemy_position());
-	const u32 time_delta = Device.dwTimeGlobal - this->object->EnemyMan.get_enemy_time_last_seen();
+	const u32 time_delta = ::IDevice->TimeGlobal_ms() - this->object->EnemyMan.get_enemy_time_last_seen();
 
 	if (dist_to_enemy < MIN_DIST_TO_ENEMY)
 		return false;

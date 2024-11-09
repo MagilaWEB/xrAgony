@@ -46,12 +46,12 @@ public:
 	IC void SetState(u32 v)
 	{
 		m_hud_item_state = v;
-		m_dw_curr_state_time = Device.dwTimeGlobal;
+		m_dw_curr_state_time = ::IDevice->TimeGlobal_ms();
 		ResetSubStateTime();
 	}
 	IC void SetNextState(u32 v) { m_nextState = v; }
-	IC u32 CurrStateTime() const { return Device.dwTimeGlobal - m_dw_curr_state_time; }
-	IC void ResetSubStateTime() { m_dw_curr_substate_time = Device.dwTimeGlobal; }
+	IC u32 CurrStateTime() const { return ::IDevice->TimeGlobal_ms() - m_dw_curr_state_time; }
+	IC void ResetSubStateTime() { m_dw_curr_substate_time = ::IDevice->TimeGlobal_ms(); }
 	virtual void SwitchState(u32 S) = 0;
 	virtual void OnStateSwitch(u32 S, u32 oldState) = 0;
 };

@@ -980,7 +980,7 @@ void CAI_Stalker::shedule_Update(u32 DT)
 		Device.add_parallel2(this, &CAI_Stalker::update_object_handler);
 
 	//	if (Position().distance_to(Level().CurrentEntity()->Position()) <= 50.f)
-	//		Msg				("[%6d][SH][%s]",Device.dwTimeGlobal,*cName());
+	//		Msg				("[%6d][SH][%s]",::IDevice->TimeGlobal_ms(),*cName());
 	// Queue shrink
 	VERIFY(_valid(Position()));
 	u32 dwTimeCL = Level().timeServer() - NET_Latency;
@@ -1038,10 +1038,10 @@ void CAI_Stalker::shedule_Update(u32 DT)
 				ProcessScripts();
 			else
 #ifdef DEBUG
-				if (Device.dwFrame > (spawn_time() + g_AI_inactive_time))
+				if (::IDevice->getFrame() > (spawn_time() + g_AI_inactive_time))
 #endif
 					Think();
-			m_dwLastUpdateTime = Device.dwTimeGlobal;
+			m_dwLastUpdateTime = ::IDevice->TimeGlobal_ms();
 			Level().AIStats.Think.End();
 			VERIFY(_valid(Position()));
 
@@ -1119,7 +1119,7 @@ void CAI_Stalker::spawn_supplies()
 void CAI_Stalker::Think()
 {
 	START_PROFILE("stalker/schedule_update/think")
-		u32 update_delta = Device.dwTimeGlobal - m_dwLastUpdateTime;
+		u32 update_delta = ::IDevice->TimeGlobal_ms() - m_dwLastUpdateTime;
 
 	START_PROFILE("stalker/schedule_update/think/brain")
 		//	try {

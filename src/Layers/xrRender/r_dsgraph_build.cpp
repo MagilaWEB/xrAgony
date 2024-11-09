@@ -363,7 +363,7 @@ IC bool VisibleToRender(IRenderVisual* pVisual, bool isStatic, bool sm, Fmatrix&
 	}
 
 	if (sm) // Highest cut off for shadow map
-		adjusted_dist /= sphere_radius_sqr / _sqr<float>(opt_shadow);
+		adjusted_dist /= sphere_radius_sqr / _sqr(opt_shadow);
 	else if (isStatic)
 		adjusted_dist /= sphere_radius_sqr / _sqr<float>(opt_static / 4.f);
 	else if(!isStatic)

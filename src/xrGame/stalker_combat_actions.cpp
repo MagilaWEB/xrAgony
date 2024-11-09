@@ -101,7 +101,7 @@ void CStalkerActionGetItemToKill::finalize()
 void CStalkerActionGetItemToKill::execute()
 {
 #ifdef TEST_MENTAL_STATE
-	VERIFY((start_level_time() == Device.dwTimeGlobal) || (object().movement().mental_state() == eMentalStateDanger));
+	VERIFY((start_level_time() == ::IDevice->TimeGlobal_ms()) || (object().movement().mental_state() == eMentalStateDanger));
 #endif // TEST_MENTAL_STATE
 
 	inherited::execute();
@@ -162,7 +162,7 @@ void CStalkerActionMakeItemKilling::finalize()
 void CStalkerActionMakeItemKilling::execute()
 {
 #ifdef TEST_MENTAL_STATE
-	VERIFY((start_level_time() == Device.dwTimeGlobal) || (object().movement().mental_state() == eMentalStateDanger));
+	VERIFY((start_level_time() == ::IDevice->TimeGlobal_ms()) || (object().movement().mental_state() == eMentalStateDanger));
 #endif // TEST_MENTAL_STATE
 
 	inherited::execute();
@@ -323,7 +323,7 @@ void CStalkerActionGetReadyToKill::finalize()
 void CStalkerActionGetReadyToKill::execute()
 {
 #ifdef TEST_MENTAL_STATE
-	VERIFY((start_level_time() == Device.dwTimeGlobal) || (object().movement().mental_state() == eMentalStateDanger));
+	VERIFY((start_level_time() == ::IDevice->TimeGlobal_ms()) || (object().movement().mental_state() == eMentalStateDanger));
 #endif // TEST_MENTAL_STATE
 
 	inherited::execute();
@@ -430,7 +430,7 @@ void CStalkerActionKillEnemy::finalize() { inherited::finalize(); }
 void CStalkerActionKillEnemy::execute()
 {
 #ifdef TEST_MENTAL_STATE
-	VERIFY((start_level_time() == Device.dwTimeGlobal) || (object().movement().mental_state() == eMentalStateDanger));
+	VERIFY((start_level_time() == ::IDevice->TimeGlobal_ms()) || (object().movement().mental_state() == eMentalStateDanger));
 #endif // TEST_MENTAL_STATE
 
 	inherited::execute();
@@ -502,7 +502,7 @@ void CStalkerActionTakeCover::finalize() { inherited::finalize(); }
 void CStalkerActionTakeCover::execute()
 {
 #ifdef TEST_MENTAL_STATE
-	VERIFY((start_level_time() == Device.dwTimeGlobal) || (object().movement().mental_state() == eMentalStateDanger));
+	VERIFY((start_level_time() == ::IDevice->TimeGlobal_ms()) || (object().movement().mental_state() == eMentalStateDanger));
 #endif // TEST_MENTAL_STATE
 
 	inherited::execute();
@@ -558,7 +558,7 @@ void CStalkerActionTakeCover::execute()
 		aim_ready();
 		//Alundaio: Prevent stalkers from staring at floor or ceiling for this action
 		u32 const level_time = object().memory().visual().visible_object_time_last_seen(mem_object.m_object);
-		if (Device.dwTimeGlobal >= level_time + 3000 && _abs(
+		if (::IDevice->TimeGlobal_ms() >= level_time + 3000 && _abs(
 			object().Position().y - mem_object.m_object_params.m_position.y) > 3.5f)
 		{
 			Fvector3 Vpos = {
@@ -588,10 +588,10 @@ void CStalkerActionLookOut::initialize()
 {
 	inherited::initialize();
 
-	if (Device.dwTimeGlobal >= m_last_change_time + CROUCH_LOOK_OUT_DELTA)
+	if (::IDevice->TimeGlobal_ms() >= m_last_change_time + CROUCH_LOOK_OUT_DELTA)
 	{
 		m_storage->set_property(eWorldPropertyUseCrouchToLookOut, !!m_crouch_look_out_random.random(2));
-		m_last_change_time = Device.dwTimeGlobal;
+		m_last_change_time = ::IDevice->TimeGlobal_ms();
 	}
 
 	object().movement().set_desired_direction(0);
@@ -634,7 +634,7 @@ void CStalkerActionLookOut::finalize() { inherited::finalize(); }
 void CStalkerActionLookOut::execute()
 {
 #ifdef TEST_MENTAL_STATE
-	VERIFY((start_level_time() == Device.dwTimeGlobal) || (object().movement().mental_state() == eMentalStateDanger));
+	VERIFY((start_level_time() == ::IDevice->TimeGlobal_ms()) || (object().movement().mental_state() == eMentalStateDanger));
 #endif // TEST_MENTAL_STATE
 
 	inherited::execute();
@@ -649,7 +649,7 @@ void CStalkerActionLookOut::execute()
 
 	//Alundaio: Prevent stalkers from staring at floor or ceiling for this action
 	u32 const level_time = object().memory().visual().visible_object_time_last_seen(mem_object.m_object);
-	if (Device.dwTimeGlobal >= level_time + 3000 && _abs(
+	if (::IDevice->TimeGlobal_ms() >= level_time + 3000 && _abs(
 		object().Position().y - mem_object.m_object_params.m_position.y) > 3.5f)
 	{
 		Fvector3 Vpos = {
@@ -728,7 +728,7 @@ void CStalkerActionHoldPosition::finalize() { inherited::finalize(); }
 void CStalkerActionHoldPosition::execute()
 {
 #ifdef TEST_MENTAL_STATE
-	VERIFY((start_level_time() == Device.dwTimeGlobal) || (object().movement().mental_state() == eMentalStateDanger));
+	VERIFY((start_level_time() == ::IDevice->TimeGlobal_ms()) || (object().movement().mental_state() == eMentalStateDanger));
 #endif // TEST_MENTAL_STATE
 
 	inherited::execute();
@@ -749,7 +749,7 @@ void CStalkerActionHoldPosition::execute()
 
 	//Alundaio: Prevent stalkers from staring at floor or ceiling for this action
 	u32 const level_time = object().memory().visual().visible_object_time_last_seen(mem_object.m_object);
-	if (Device.dwTimeGlobal >= level_time + 3000 && _abs(
+	if (::IDevice->TimeGlobal_ms() >= level_time + 3000 && _abs(
 		object().Position().y - mem_object.m_object_params.m_position.y) > 3.5f)
 	{
 		Fvector3 Vpos = {
@@ -811,7 +811,7 @@ void CStalkerActionDetourEnemy::initialize()
 #ifdef DISABLE_COVER_BEFORE_DETOUR
 	if (/**(Random.randF(1.f) < .8f) && /**/ object().agent_manager().member().member(m_object).cover())
 		object().agent_manager().location().add(
-			new CDangerCoverLocation(object().agent_manager().member().member(m_object).cover(), Device.dwTimeGlobal,
+			new CDangerCoverLocation(object().agent_manager().member().member(m_object).cover(), ::IDevice->TimeGlobal_ms(),
 				TEMP_DANGER_INTERVAL, TEMP_DANGER_DISTANCE, object().agent_manager().member().mask(&object())));
 #endif
 
@@ -837,7 +837,7 @@ void CStalkerActionDetourEnemy::finalize()
 void CStalkerActionDetourEnemy::execute()
 {
 #ifdef TEST_MENTAL_STATE
-	VERIFY((start_level_time() == Device.dwTimeGlobal) || (object().movement().mental_state() == eMentalStateDanger));
+	VERIFY((start_level_time() == ::IDevice->TimeGlobal_ms()) || (object().movement().mental_state() == eMentalStateDanger));
 #endif // TEST_MENTAL_STATE
 
 	inherited::execute();
@@ -880,7 +880,7 @@ void CStalkerActionDetourEnemy::execute()
 
 	//Alundaio: Prevent stalkers from staring at floor or ceiling for this action
 	u32 const level_time = object().memory().visual().visible_object_time_last_seen(mem_object.m_object);
-	if (Device.dwTimeGlobal >= level_time + 3000 && _abs(
+	if (::IDevice->TimeGlobal_ms() >= level_time + 3000 && _abs(
 		object().Position().y - mem_object.m_object_params.m_position.y) > 3.5f)
 	{
 		Fvector3 Vpos = {
@@ -972,7 +972,7 @@ void CStalkerActionHideFromGrenade::initialize()
 void CStalkerActionHideFromGrenade::execute()
 {
 #ifdef TEST_MENTAL_STATE
-	VERIFY((start_level_time() == Device.dwTimeGlobal) || (object().movement().mental_state() == eMentalStateDanger));
+	VERIFY((start_level_time() == ::IDevice->TimeGlobal_ms()) || (object().movement().mental_state() == eMentalStateDanger));
 #endif // TEST_MENTAL_STATE
 
 	inherited::execute();
@@ -1057,7 +1057,7 @@ void CStalkerActionSuddenAttack::finalize() { inherited::finalize(); }
 void CStalkerActionSuddenAttack::execute()
 {
 #ifdef TEST_MENTAL_STATE
-	VERIFY((start_level_time() == Device.dwTimeGlobal) || (object().movement().mental_state() == eMentalStateDanger));
+	VERIFY((start_level_time() == ::IDevice->TimeGlobal_ms()) || (object().movement().mental_state() == eMentalStateDanger));
 #endif // TEST_MENTAL_STATE
 
 	inherited::execute();
@@ -1079,7 +1079,7 @@ void CStalkerActionSuddenAttack::execute()
 	{
 		//Alundaio: Prevent stalkers from staring at floor or ceiling for this action
 		u32 const level_time = object().memory().visual().visible_object_time_last_seen(mem_object.m_object);
-		if (Device.dwTimeGlobal >= level_time + 3000 && _abs(
+		if (::IDevice->TimeGlobal_ms() >= level_time + 3000 && _abs(
 			object().Position().y - mem_object.m_object_params.m_position.y) > 3.5f)
 		{
 			Fvector3 Vpos = {
@@ -1175,7 +1175,7 @@ void CStalkerActionKillEnemyIfPlayerOnThePath::finalize()
 void CStalkerActionKillEnemyIfPlayerOnThePath::execute()
 {
 #ifdef TEST_MENTAL_STATE
-	VERIFY((start_level_time() == Device.dwTimeGlobal) || (object().movement().mental_state() == eMentalStateDanger));
+	VERIFY((start_level_time() == ::IDevice->TimeGlobal_ms()) || (object().movement().mental_state() == eMentalStateDanger));
 #endif // TEST_MENTAL_STATE
 
 	inherited::execute();
@@ -1387,7 +1387,7 @@ void CStalkerCombatActionSmartCover::execute()
 		return;
 
 	u32 const level_time = object().memory().visual().visible_object_time_last_seen(enemy);
-	if (level_time + s_wait_enemy_in_smart_cover_time >= Device.dwTimeGlobal)
+	if (level_time + s_wait_enemy_in_smart_cover_time >= ::IDevice->TimeGlobal_ms())
 		return;
 
 	if (object().agent_manager().member().can_detour() || !object().agent_manager().member().cover_detouring() ||

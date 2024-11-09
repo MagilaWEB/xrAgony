@@ -1,18 +1,12 @@
 #pragma once
 
-class CRenderDeviceBase;
-
 class XRCORE_API xBench
 {
 protected:
 										xBench									(bool init);
 
 protected:
-	inline static CRenderDeviceBase*	device;
 	const float							m_start_time;
-
-public:
-	static void							setupDevice								(CRenderDeviceBase* d);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

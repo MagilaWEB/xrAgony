@@ -44,7 +44,7 @@ bool CStateChimeraThreatenAbstract::check_start_conditions()
 		return false;
 	if (object->hear_dangerous_sound)
 		return false;
-	if (m_last_time_threaten + THREATEN_DELAY > Device.dwTimeGlobal)
+	if (m_last_time_threaten + THREATEN_DELAY > ::IDevice->TimeGlobal_ms())
 		return false;
 
 	return true;
@@ -101,14 +101,14 @@ TEMPLATE_SPECIALIZATION
 void CStateChimeraThreatenAbstract::finalize()
 {
 	inherited::finalize();
-	m_last_time_threaten = Device.dwTimeGlobal;
+	m_last_time_threaten = ::IDevice->TimeGlobal_ms();
 }
 
 TEMPLATE_SPECIALIZATION
 void CStateChimeraThreatenAbstract::critical_finalize()
 {
 	inherited::critical_finalize();
-	m_last_time_threaten = Device.dwTimeGlobal;
+	m_last_time_threaten = ::IDevice->TimeGlobal_ms();
 }
 
 #undef TEMPLATE_SPECIALIZATION

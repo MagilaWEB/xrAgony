@@ -66,7 +66,7 @@ void CBaseAction::initialize()
 	if (m_use_log && xr_strlen(m_action_name))
 		debug_log(eActionStateInitialized);
 #endif
-	m_start_level_time = Device.dwTimeGlobal;
+	m_start_level_time = ::IDevice->TimeGlobal_ms();
 	m_first_time = true;
 }
 
@@ -92,7 +92,7 @@ void CBaseAction::finalize()
 }
 
 TEMPLATE_SPECIALIZATION
-bool CBaseAction::completed() const { return (m_start_level_time + m_inertia_time <= Device.dwTimeGlobal); }
+bool CBaseAction::completed() const { return (m_start_level_time + m_inertia_time <= ::IDevice->TimeGlobal_ms()); }
 TEMPLATE_SPECIALIZATION
 IC u32 CBaseAction::start_level_time() const { return (m_start_level_time); }
 TEMPLATE_SPECIALIZATION
@@ -107,27 +107,27 @@ IC void CBaseAction::debug_log(const EActionStates state_state) const
 	{
 	case eActionStateConstructed:
 	{
-		Msg("[%6d] action %s is constructed", Device.dwTimeGlobal, m_action_name);
+		Msg("[%6d] action %s is constructed", ::IDevice->TimeGlobal_ms(), m_action_name);
 		break;
 	}
 	case eActionStateSetup:
 	{
-		Msg("[%6d] action %s is setup", Device.dwTimeGlobal, m_action_name);
+		Msg("[%6d] action %s is setup", ::IDevice->TimeGlobal_ms(), m_action_name);
 		break;
 	}
 	case eActionStateInitialized:
 	{
-		Msg("[%6d] action %s is initialized", Device.dwTimeGlobal, m_action_name);
+		Msg("[%6d] action %s is initialized", ::IDevice->TimeGlobal_ms(), m_action_name);
 		break;
 	}
 	case eActionStateExecuted:
 	{
-		Msg("[%6d] action %s is executed", Device.dwTimeGlobal, m_action_name);
+		Msg("[%6d] action %s is executed", ::IDevice->TimeGlobal_ms(), m_action_name);
 		break;
 	}
 	case eActionStateFinalized:
 	{
-		Msg("[%6d] action %s is finalized", Device.dwTimeGlobal, m_action_name);
+		Msg("[%6d] action %s is finalized", ::IDevice->TimeGlobal_ms(), m_action_name);
 		break;
 	}
 	default: NODEFAULT;

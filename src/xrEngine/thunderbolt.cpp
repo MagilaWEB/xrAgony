@@ -224,11 +224,11 @@ void CEffect_Thunderbolt::Bolt(shared_str id, float period, float lt)
 
 	if (next_v < environment.p_second_prop)
 	{
-		next_lightning_time = Device.fTimeGlobal + lt + EPS_L;
+		next_lightning_time = IDevice->TimeGlobal_sec() + lt + EPS_L;
 	}
 	else
 	{
-		next_lightning_time = Device.fTimeGlobal + period + Random.randF(-period * 0.3f, period * 0.3f);
+		next_lightning_time = IDevice->TimeGlobal_sec() + period + Random.randF(-period * 0.3f, period * 0.3f);
 		current->snd.play_no_feedback(0, 0, dist / 300.f, &pos, 0, 0, &Fvector2().set(dist / 2, dist * 2.f));
 	}
 
@@ -241,9 +241,9 @@ void CEffect_Thunderbolt::OnFrame(shared_str id, float period, float duration)
 	if (bEnabled != enabled)
 	{
 		bEnabled = enabled;
-		next_lightning_time = Device.fTimeGlobal + period + Random.randF(-period * 0.5f, period * 0.5f);
+		next_lightning_time = IDevice->TimeGlobal_sec() + period + Random.randF(-period * 0.5f, period * 0.5f);
 	}
-	else if (bEnabled && (Device.fTimeGlobal > next_lightning_time))
+	else if (bEnabled && (IDevice->TimeGlobal_sec() > next_lightning_time))
 	{
 		if (state == stIdle && !!(id.size()))
 			Bolt(id, period, duration);
@@ -252,7 +252,7 @@ void CEffect_Thunderbolt::OnFrame(shared_str id, float period, float duration)
 	{
 		if (current_time > life_time)
 			state = stIdle;
-		current_time += Device.fTimeDelta;
+		current_time += ::IDevice->TimeDelta_sec();
 		Fvector fClr;
 		int frame;
 		u32 uClr = current->color_anim->CalculateRGB(current_time / life_time, frame);

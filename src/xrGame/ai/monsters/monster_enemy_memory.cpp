@@ -64,7 +64,7 @@ void CMonsterEnemyMemory::update()
 		SoundElem sound;
 		bool dangerous;
 		monster->SoundMemory.GetSound(sound, dangerous);
-		if (dangerous && Device.dwTimeGlobal < sound.time + 2000)
+		if (dangerous && ::IDevice->TimeGlobal_ms() < sound.time + 2000)
 		{
 			if (CEntityAlive const* enemy = smart_cast<CEntityAlive const*>(sound.who))
 			{
@@ -129,7 +129,7 @@ void CMonsterEnemyMemory::add_enemy(const CEntityAlive* enemy)
 	SMonsterEnemy enemy_info;
 	enemy_info.position = enemy->Position();
 	enemy_info.vertex = enemy->ai_location().level_vertex_id();
-	enemy_info.time = Device.dwTimeGlobal;
+	enemy_info.time = ::IDevice->TimeGlobal_ms();
 	enemy_info.danger = 0.f;
 
 	// XXX: review
@@ -170,7 +170,7 @@ void CMonsterEnemyMemory::add_enemy(const CEntityAlive* enemy, const Fvector& po
 
 void CMonsterEnemyMemory::remove_non_actual()
 {
-	TTime cur_time = Device.dwTimeGlobal;
+	TTime cur_time = ::IDevice->TimeGlobal_ms();
 
 	// удалить 'старых' врагов и тех, расстояние до которых > 30м и др.
 	for (ENEMIES_MAP_IT it = m_objects.begin(), nit; it != m_objects.end(); it = nit)

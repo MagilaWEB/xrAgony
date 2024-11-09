@@ -279,7 +279,7 @@ void dx103DFluidObstacles::RenderPhysicsElement(
 	//  Convert speed
 	fVelocityScale /= 30.0f * 2.0f;
 
-	// fVelocityScale *= Device.fTimeDelta;
+	// fVelocityScale *= ::IDevice->TimeDelta_sec();
 
 	//  Emphasize velocity influence on the fog
 	// fVelocityScale *= 10;
@@ -363,7 +363,7 @@ timestep)
 
 	fVelocityScale = 1/timestep;
 
-	fVelocityScale *= Device.fTimeDelta;
+	fVelocityScale *= ::IDevice->TimeDelta_sec();
 
 	AngularVelocity.mul( fVelocityScale );
 	TranslationVelocity.mul( fVelocityScale );

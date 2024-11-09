@@ -91,9 +91,9 @@ struct FTreeVisual_setup
 
 	void calculate()
 	{
-		dwFrame = Device.dwFrame;
+		dwFrame = ::IDevice->getFrame();
 
-		const float tm_rot = PI_MUL_2 * Device.fTimeGlobal / ps_r__Tree_w_rot;
+		const float tm_rot = PI_MUL_2 * IDevice->TimeDelta_sec() / ps_r__Tree_w_rot;
 
 		// Calc wind-vector3, scale
 
@@ -108,7 +108,7 @@ struct FTreeVisual_setup
 
 		// setup constants
 		wave.set(
-			ps_r__Tree_Wave.x, ps_r__Tree_Wave.y, ps_r__Tree_Wave.z, Device.fTimeGlobal * ps_r__Tree_w_speed); // wave
+			ps_r__Tree_Wave.x, ps_r__Tree_Wave.y, ps_r__Tree_Wave.z, IDevice->TimeDelta_sec() * ps_r__Tree_w_speed); // wave
 		wave.div(PI_MUL_2);
 	}
 };
@@ -116,7 +116,7 @@ struct FTreeVisual_setup
 void FTreeVisual::Render(float /*LOD*/)
 {
 	static FTreeVisual_setup tvs;
-	if (tvs.dwFrame != Device.dwFrame)
+	if (tvs.dwFrame != ::IDevice->getFrame())
 		tvs.calculate();
 	// setup constants
 	Fmatrix xform_v;

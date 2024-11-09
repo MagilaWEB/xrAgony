@@ -80,7 +80,7 @@ bool CStateGroupSquadMoveToRadiusExAbstract::check_completion()
 {
 	if (data.action.time_out != 0)
 	{
-		if (this->time_state_started + data.action.time_out < Device.dwTimeGlobal)
+		if (this->time_state_started + data.action.time_out < ::IDevice->TimeGlobal_ms())
 			return true;
 	}
 	if (this->object->Position().distance_to_xz(this->object->EnemyMan.get_enemy()->Position()) < data.completion_dist - 2.f)
@@ -146,7 +146,7 @@ bool CStateGroupSquadMoveToRadiusAbstract::check_completion()
 {
 	if (data.action.time_out != 0)
 	{
-		if (this->time_state_started + data.action.time_out < Device.dwTimeGlobal)
+		if (this->time_state_started + data.action.time_out < ::IDevice->TimeGlobal_ms())
 			return true;
 	}
 

@@ -844,7 +844,7 @@ void CActor::UpdateCL()
 	if (Level().CurrentControlEntity() == this)
 		//------------------------------------------------
 	{
-		g_cl_CheckControls(mstate_wishful, NET_SavedAccel, NET_Jump, Device.fTimeDelta);
+		g_cl_CheckControls(mstate_wishful, NET_SavedAccel, NET_Jump, ::IDevice->TimeDelta_sec());
 		{
 			/*
 			if (mstate_real & mcJump)
@@ -904,11 +904,11 @@ void CActor::UpdateCL()
 			//			NET_SavedAccel = NET_Last.p_accel;
 			//			mstate_real = mstate_wishful = NET_Last.mstate;
 
-			g_sv_Orientate(mstate_real, Device.fTimeDelta);
-			g_Orientate(mstate_real, Device.fTimeDelta);
-			g_Physics(NET_SavedAccel, NET_Jump, Device.fTimeDelta);
+			g_sv_Orientate(mstate_real, ::IDevice->TimeDelta_sec());
+			g_Orientate(mstate_real, ::IDevice->TimeDelta_sec());
+			g_Physics(NET_SavedAccel, NET_Jump, ::IDevice->TimeDelta_sec());
 			if (!m_bInInterpolation)
-				g_cl_ValidateMState(Device.fTimeDelta, mstate_wishful);
+				g_cl_ValidateMState(::IDevice->TimeDelta_sec(), mstate_wishful);
 			g_SetAnimation(mstate_real);
 
 			set_state_box(NET_Last.mstate);

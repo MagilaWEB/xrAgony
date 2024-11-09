@@ -45,7 +45,7 @@ bool CStateMonsterHittedHideAbstract::check_completion()
 	if (dist < GOOD_DISTANCE_IN_COVER)
 		return false;
 	// +hide more than 3 sec
-	if (this->time_state_started + MIN_HIDE_TIME > Device.dwTimeGlobal)
+	if (this->time_state_started + MIN_HIDE_TIME > ::IDevice->TimeGlobal_ms())
 		return false;
 
 	return true;

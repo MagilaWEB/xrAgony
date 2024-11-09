@@ -227,7 +227,7 @@ void CHUDTarget::Render()
 					}
 				}
 
-				fuzzyShowInfo += SHOW_INFO_SPEED * Device.fTimeDelta;
+				fuzzyShowInfo += SHOW_INFO_SPEED * ::IDevice->TimeDelta_sec();
 			}
 			else if (l_pI && our_inv_owner && PP.RQ.range < 2.0f * 2.0f)
 			{
@@ -236,12 +236,12 @@ void CHUDTarget::Render()
 					F->SetColor(subst_alpha(C, u8(iFloor(255.f * (fuzzyShowInfo - 0.5f) * 2.f))));
 					F->OutNext("%s", l_pI->NameItem());
 				}
-				fuzzyShowInfo += SHOW_INFO_SPEED * Device.fTimeDelta;
+				fuzzyShowInfo += SHOW_INFO_SPEED * ::IDevice->TimeDelta_sec();
 			}
 		}
 		else
 		{
-			fuzzyShowInfo -= HIDE_INFO_SPEED * Device.fTimeDelta;
+			fuzzyShowInfo -= HIDE_INFO_SPEED * ::IDevice->TimeDelta_sec();
 		}
 		clamp(fuzzyShowInfo, 0.f, 1.f);
 	}

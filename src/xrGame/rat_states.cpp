@@ -439,7 +439,7 @@ void rat_state_eat_corpse::finalize() { object().set_firing(); }
 // rat_state_no_way
 ////////////////////////////////////////////////////////////////////////////
 
-void rat_state_no_way::initialize() { object().time_old_attack = Device.dwTimeGlobal; }
+void rat_state_no_way::initialize() { object().time_old_attack = ::IDevice->TimeGlobal_ms(); }
 void rat_state_no_way::execute()
 {
 	if (!object().get_alife())

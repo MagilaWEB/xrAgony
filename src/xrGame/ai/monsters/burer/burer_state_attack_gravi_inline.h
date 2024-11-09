@@ -104,7 +104,7 @@ void CStateBurerAttackGravi<Object>::ExecuteGraviStart()
 	float const time = this->object->anim().get_animation_length(eAnimGraviFire, 0);
 	m_anim_end_tick = current_time() + TTime(time * 1000);
 	m_action = ACTION_GRAVI_CONTINUE;
-	m_time_gravi_started = Device.dwTimeGlobal;
+	m_time_gravi_started = ::IDevice->TimeGlobal_ms();
 	this->object->StartGraviPrepare();
 }
 
@@ -118,7 +118,7 @@ void CStateBurerAttackGravi<Object>::ExecuteGraviContinue()
 	clamp(time_to_hold, 0.f, 1.f);
 	time_to_hold *= float(this->object->m_gravi.time_to_hold);
 
-	if (m_time_gravi_started + u32(time_to_hold) < Device.dwTimeGlobal)
+	if (m_time_gravi_started + u32(time_to_hold) < ::IDevice->TimeGlobal_ms())
 	{
 		m_action = ACTION_GRAVI_FIRE;
 	}

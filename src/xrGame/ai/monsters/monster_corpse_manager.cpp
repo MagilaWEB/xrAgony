@@ -41,7 +41,7 @@ void CMonsterCorpseManager::force_corpse(const CEntityAlive* corpse)
 	this->corpse = corpse;
 	position = corpse->Position();
 	vertex = corpse->ai_location().level_vertex_id();
-	time_last_seen = Device.dwTimeGlobal;
+	time_last_seen = ::IDevice->TimeGlobal_ms();
 
 	forced = true;
 }

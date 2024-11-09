@@ -11,14 +11,14 @@ void Touch::feel_touch_deny(IGameObject* O, /*DWORD*/ unsigned long T)
 {
 	DenyTouch D;
 	D.O = O;
-	D.Expire = Device.dwTimeGlobal + T;
+	D.Expire = ::IDevice->TimeGlobal_ms() + T;
 	feel_touch_disable.push_back(D);
 }
 
 void Touch::feel_touch_update(Fvector& C, float R)
 {
 	// Check if denied objects expire in time
-	DWORD dwT = Device.dwTimeGlobal;
+	DWORD dwT = ::IDevice->TimeGlobal_ms();
 	for (u32 dit = 0; dit < feel_touch_disable.size(); dit++)
 	{
 		if (feel_touch_disable[dit].Expire < dwT)

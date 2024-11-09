@@ -84,7 +84,7 @@ public:
 	SBullet();
 	~SBullet();
 
-	bool CanBeRenderedNow() const { return (Device.dwFrame > init_frame_num); }
+	bool CanBeRenderedNow() const { return (::IDevice->getFrame() > init_frame_num); }
 	void Init(const Fvector& position, const Fvector& direction, float start_speed, float power,
 		float impulse, u16 sender_id, u16 sendersweapon_id, ALife::EHitType e_hit_type, float maximum_distance,
 		const CCartridge& cartridge, float const air_resistance_factor, bool SendHit, int iShotNum = 0);

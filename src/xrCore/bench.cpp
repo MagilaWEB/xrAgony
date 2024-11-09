@@ -1,19 +1,14 @@
 #include "stdafx.h"
 #include "bench.h"
-#include "../xrengine/device.h"
+#include "..\xrEngine\Device.h"
 
-xBench::xBench(bool init) : m_start_time((init) ? device->GetTimerGlobal()->GetElapsed_sec() : -1.f)
+xBench::xBench(bool init) : m_start_time((init) ? ::IDevice->TimerAsync_sec() : -1.f)
 {
-}
-
-void xBench::setupDevice(CRenderDeviceBase* d)
-{
-	device = d;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-aBench::aBench(measures* data) : xBench(device->isGameProcess()), m_data(data)
+aBench::aBench(measures* data) : xBench(::IDevice->isGameProcess()), m_data(data)
 {
 }
 
@@ -21,11 +16,11 @@ aBench::~aBench()
 {
 	if (m_start_time >= 0.f)
 	{
-		m_data->sum_time				+= device->GetTimerGlobal()->GetElapsed_sec() - m_start_time;
+		m_data->sum_time				+= ::IDevice->TimerAsync_sec() - m_start_time;
 		++m_data->cnt;
-		if (m_data->last_frame != device->dwFrame)
+		if (m_data->last_frame != ::IDevice->getFrame())
 		{
-			m_data->last_frame			= device->dwFrame;
+			m_data->last_frame			= ::IDevice->getFrame();
 			++m_data->frames;
 		}
 	}
@@ -63,6 +58,6 @@ iBench::iBench(LPCSTR tag) : xBench(true), m_tag(tag)
 
 iBench::~iBench()
 {
-	float result						= device->GetTimerGlobal()->GetElapsed_sec() - m_start_time;
+	float result						= ::IDevice->TimerAsync_sec() - m_start_time;
 	Msg									("--benchmark [%s] result [%.3f]", m_tag.c_str(), result * 1000.f);
 }

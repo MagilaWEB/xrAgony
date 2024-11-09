@@ -185,7 +185,7 @@ void dx103DFluidVolume::Render(float /*LOD*/) // LOD - Level Of Detail  [0.0f - 
 
 	//	FluidManager.Update( m_FluidData, 1.0f/30.0f);
 
-	// float fTimeStep = Device.fTimeDelta*30*2.0f;
+	// float fTimeStep = ::IDevice->TimeDelta_sec()*30*2.0f;
 	const float fTimeStep = 2.0f;
 
 	// FluidManager.Update( m_FluidData, 2.0f);

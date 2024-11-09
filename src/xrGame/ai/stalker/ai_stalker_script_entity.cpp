@@ -64,7 +64,7 @@ bool CAI_Stalker::bfAssignMovement(CScriptEntityAction* tpEntityAction)
 	movement().set_movement_type(l_tMovementAction.m_tMovementType);
 	movement().set_mental_state(l_tAnimationAction.m_tMentalState);
 	sight().setup(l_tWatchAction.m_tWatchType, &l_tWatchAction.m_tWatchVector);
-	movement().update(Device.dwTimeDelta);
+	movement().update(IDevice->TimeDelta_ms());
 	sight().update();
 
 	return (true);
@@ -330,7 +330,7 @@ bool CAI_Stalker::bfAssignAnimation(CScriptEntityAction* tpEntityAction)
 	{
 #ifdef _DEBUG
 //		Msg				("%6d Assigning animation :
-//%s",Device.dwTimeGlobal,*tpEntityAction->m_tAnimationAction.m_caAnimationToPlay);
+//%s",::IDevice->TimeGlobal_ms(),*tpEntityAction->m_tAnimationAction.m_caAnimationToPlay);
 #endif
 		animation().torso().reset();
 		animation().legs().reset();

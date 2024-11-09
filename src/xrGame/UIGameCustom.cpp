@@ -122,7 +122,7 @@ StaticDrawableWrapper* CUIGameCustom::AddCustomStatic(const char* id, bool singl
 	xmlInit.InitStatic(*MsgConfig, id, 0, sss->m_static);
 	float ttl = MsgConfig->ReadAttribFlt(id, 0, "ttl", -1.0f);
 	if (ttl > 0.0f)
-		sss->m_endTime = Device.fTimeGlobal + ttl;
+		sss->m_endTime = IDevice->TimeGlobal_sec() + ttl;
 	return sss;
 }
 
@@ -299,7 +299,7 @@ bool StaticDrawableWrapper::IsActual() const
 {
 	if (m_endTime < 0)
 		return true;
-	return Device.fTimeGlobal < m_endTime;
+	return IDevice->TimeGlobal_sec() < m_endTime;
 }
 
 void StaticDrawableWrapper::SetText(const char* text)

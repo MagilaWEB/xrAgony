@@ -112,7 +112,7 @@ void CGrenade::State(u32 state, u32 old_state)
 			if (Local())
 			{
 #ifdef MASTER
-				Msg("Destroying local grenade[%d][%d]", ID(), Device.dwFrame);
+				Msg("Destroying local grenade[%d][%d]", ID(), ::IDevice->getFrame());
 #endif // #ifdef MASTER
 				DestroyObject();
 			}
@@ -148,7 +148,7 @@ void CGrenade::SendHiddenItem()
 {
 	if (GetState() == eThrow)
 	{
-		//		Msg("MotionMarks !!![%d][%d]", ID(), Device.dwFrame);
+		//		Msg("MotionMarks !!![%d][%d]", ID(), ::IDevice->getFrame());
 		Throw();
 	}
 	CActor* pActor = smart_cast<CActor*>(m_pInventory->GetOwner());
@@ -228,7 +228,7 @@ void CGrenade::PutNextToSlot()
 		this->u_EventSend(P);
 	}
 	else
-		Msg("! PutNextToSlot : m_pInventory = nullptr [%d][%d]", ID(), Device.dwFrame);
+		Msg("! PutNextToSlot : m_pInventory = nullptr [%d][%d]", ID(), ::IDevice->getFrame());
 
 	if (smart_cast<CInventoryOwner*>(H_Parent()) && m_pInventory)
 	{

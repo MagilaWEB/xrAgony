@@ -138,6 +138,7 @@
     <ClInclude Include="GameFont.h" />
     <ClInclude Include="GameMtlLib.h" />
     <ClInclude Include="ICollidable.h" />
+    <ClInclude Include="IDevice.hpp" />
     <ClInclude Include="IGameFont.hpp" />
     <ClInclude Include="IGame_Level.h" />
     <ClInclude Include="IGame_ObjectPool.h" />
@@ -331,6 +332,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common.props" />
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -76,7 +76,7 @@ IC void CMemoryObject<T>::fill(const T* game_object, const T* self, const squad_
 	m_game_time = Level().GetGameTime();
 #endif
 #ifdef USE_LEVEL_TIME
-	m_level_time = Device.dwTimeGlobal;
+	m_level_time = ::IDevice->TimeGlobal_ms();
 #endif
 	m_object = game_object;
 	m_object_params.fill(game_object);

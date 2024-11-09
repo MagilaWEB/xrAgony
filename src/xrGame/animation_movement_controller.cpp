@@ -105,15 +105,15 @@ void animation_movement_controller::GetInitalPositionBlenSpeed()
 	Fmatrix m1;
 	// m_pKinematicsC->Bone_GetAnimPos( m1, root, u8(-1), true );
 	animation_root_position(m1);
-	m_control_blend->timeCurrent += Device.fTimeDelta;
+	m_control_blend->timeCurrent += ::IDevice->TimeDelta_sec();
 	clamp(m_control_blend->timeCurrent, 0.f, m_control_blend->timeTotal);
 	Fmatrix m0;
 	// m_pKinematicsC->Bone_GetAnimPos( m0, root, u8(-1), true );
 	animation_root_position(m0);
 	float l, a;
 	get_diff_value(m0, m1, l, a);
-	blend_linear_speed = l / Device.fTimeDelta;
-	blend_angular_speed = a / Device.fTimeDelta;
+	blend_linear_speed = l / ::IDevice->TimeDelta_sec();
+	blend_angular_speed = a / ::IDevice->TimeDelta_sec();
 	m_control_blend->timeCurrent = sv_blend_time;
 }
 
@@ -145,11 +145,11 @@ void animation_movement_controller::InitalPositionBlending(const Fmatrix& to)
 #endif
 	/*
 		Fmatrix res = to;
-		blend_linear_speed  += blend_linear_accel *Device.fTimeDelta ;
-		blend_angular_speed += blend_angular_accel *Device.fTimeDelta ;
+		blend_linear_speed  += blend_linear_accel *::IDevice->TimeDelta_sec() ;
+		blend_angular_speed += blend_angular_accel *::IDevice->TimeDelta_sec() ;
 
-		inital_position_blending = !clamp_change( res, m_pObjXForm, blend_linear_speed*Device.fTimeDelta,
-		blend_angular_speed*Device.fTimeDelta, 0.00001, 0.000001 );
+		inital_position_blending = !clamp_change( res, m_pObjXForm, blend_linear_speed*::IDevice->TimeDelta_sec(),
+		blend_angular_speed*::IDevice->TimeDelta_sec(), 0.00001, 0.000001 );
 		m_pObjXForm.set( res );
 	*/
 	if (!m_poses_blending.target_reached(m_control_blend->timeCurrent))
@@ -401,8 +401,8 @@ float change_pos_delta = 0.02f;
 //	Fsphere		sphere; b.getsphere( sphere.P, sphere.R );
 //	float sq_diff = Fvector().sub( m_pObjXForm.c,m_update_vis_pos).magnitude();
 //
-//	float change_pos_sq_delta = change_pos_delta * change_pos_delta * (( Device.fTimeDelta/0.01f )*(
-// Device.fTimeDelta/0.01f ));
+//	float change_pos_sq_delta = change_pos_delta * change_pos_delta * (( ::IDevice->TimeDelta_sec()/0.01f )*(
+// ::IDevice->TimeDelta_sec()/0.01f ));
 //
 //	if(  pos_sq_delta > change_pos_sq_delta || sphere.P.square_magnitude() + change_pos_sq_delta + pos_sq_delta >
 // sphere.R*sphere.R )

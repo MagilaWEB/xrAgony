@@ -300,9 +300,9 @@ void CAI_Crow::Die(IGameObject* who)
 
 void CAI_Crow::UpdateWorkload(float fdt)
 {
-	if (o_workload_frame == Device.dwFrame)
+	if (o_workload_frame == ::IDevice->getFrame())
 		return;
-	o_workload_frame = Device.dwFrame;
+	o_workload_frame = ::IDevice->getFrame();
 	switch (st_current)
 	{
 	case eFlyIdle:
@@ -325,9 +325,9 @@ void CAI_Crow::UpdateCL()
 }
 void CAI_Crow::renderable_Render()
 {
-	UpdateWorkload(Device.fTimeDelta * (Device.dwFrame - o_workload_frame));
+	UpdateWorkload(::IDevice->TimeDelta_sec() * (::IDevice->getFrame() - o_workload_frame));
 	inherited::renderable_Render();
-	o_workload_rframe = Device.dwFrame;
+	o_workload_rframe = ::IDevice->getFrame();
 }
 
 //collide::rq_result GetPickResult(Fvector pos, Fvector dir, float range, CObject* ignore);
@@ -403,7 +403,7 @@ void CAI_Crow::shedule_Update(u32 DT)
 	m_Sounds.m_idle.SetPosition(Position());
 
 	// work
-	if (o_workload_rframe >= (Device.dwFrame - 2))
+	if (o_workload_rframe >= (::IDevice->getFrame() - 2))
 		;
 	else
 		UpdateWorkload(fDT);

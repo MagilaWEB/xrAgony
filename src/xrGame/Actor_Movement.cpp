@@ -622,7 +622,7 @@ bool isActorAccelerated(u32 mstate, bool ZoomMode)
 bool CActor::CanAccelerate()
 {
 	bool can_accel = !conditions().IsLimping() && !character_physics_support()->movement()->PHCapture() &&
-		(m_time_lock_accel < Device.dwTimeGlobal);
+		(m_time_lock_accel < ::IDevice->TimeGlobal_ms());
 
 	return can_accel;
 }

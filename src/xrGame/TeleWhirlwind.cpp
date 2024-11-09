@@ -100,7 +100,7 @@ bool CTeleWhirlwindObject::init(CTelekinesis* tele, CPhysicsShellHolder* obj, fl
 }
 void CTeleWhirlwindObject::raise_update()
 {
-	// u32 time=Device.dwTimeGlobal;
+	// u32 time=::IDevice->TimeGlobal_ms();
 	//	if (time_raise_started + 100000 < time) release();
 }
 

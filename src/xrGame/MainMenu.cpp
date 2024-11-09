@@ -132,8 +132,8 @@ void CMainMenu::Activate(bool bActivate)
 		return;
 	if (m_Flags.test(flGameSaveScreenshot))
 		return;
-	if ((m_screenshotFrame == Device.dwFrame) || (m_screenshotFrame == Device.dwFrame - 1) ||
-		(m_screenshotFrame == Device.dwFrame + 1))
+	if ((m_screenshotFrame == ::IDevice->getFrame()) || (m_screenshotFrame == ::IDevice->getFrame() - 1) ||
+		(m_screenshotFrame == ::IDevice->getFrame() + 1))
 		return;
 
 	bool b_is_single = IsGameTypeSingle();
@@ -366,7 +366,7 @@ void CMainMenu::OnFrame()
 	CDialogHolder::OnFrame();
 
 	// screenshot stuff
-	if (m_Flags.test(flGameSaveScreenshot) && Device.dwFrame > m_screenshotFrame)
+	if (m_Flags.test(flGameSaveScreenshot) && ::IDevice->getFrame() > m_screenshotFrame)
 	{
 		m_Flags.set(flGameSaveScreenshot, FALSE);
 		::Render->Screenshot(IRender::SM_FOR_GAMESAVE, m_screenshot_name);
@@ -410,7 +410,7 @@ void CMainMenu::Screenshot(IRender::ScreenshotMode mode, LPCSTR name)
 			Device.seqFrame.Add(g_pGameLevel);
 			Device.seqRender.Add(g_pGameLevel);
 		};
-		m_screenshotFrame = Device.dwFrame + 1;
+		m_screenshotFrame = ::IDevice->getFrame() + 1;
 		m_Flags.set(flRestoreConsole, Console->bVisible);
 		Console->Hide();
 	}

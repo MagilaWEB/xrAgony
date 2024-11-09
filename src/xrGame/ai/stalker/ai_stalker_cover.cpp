@@ -52,11 +52,11 @@ void CAI_Stalker::on_best_cover_changed(const CCoverPoint* new_cover, const CCov
 #if 0
 	if (new_cover) {
 		if (!new_cover->m_is_smart_cover)
-			Msg							("[%6d][%s], now it is cover", Device.dwTimeGlobal, cName().c_str());
+			Msg							("[%6d][%s], now it is cover", ::IDevice->TimeGlobal_ms(), cName().c_str());
 		else
 			Msg							(
 				"[%6d][%s], now it is smart cover %s",
-				Device.dwTimeGlobal,
+				::IDevice->TimeGlobal_ms(),
 				cName().c_str(),
 				static_cast<smart_cover::cover const *>(new_cover)->object().cName().c_str()
 			);
@@ -133,7 +133,7 @@ void CAI_Stalker::compute_enemy_distances(float& minimum_enemy_distance, float& 
 const CCoverPoint* CAI_Stalker::find_best_cover(const Fvector& position_to_cover_from)
 {
 #ifdef _DEBUG
-	//	Msg									("* [%6d][%s] search for new cover performed",Device.dwTimeGlobal,*cName());
+	//	Msg									("* [%6d][%s] search for new cover performed",::IDevice->TimeGlobal_ms(),*cName());
 #endif
 #ifdef _DEBUG
 	++g_near_cover_search_count;
@@ -240,7 +240,7 @@ void CAI_Stalker::update_best_cover_actuality(const Fvector& position_to_cover_f
 	{
 		m_best_cover_actual = false;
 #if 0 // def _DEBUG
-		Msg								("* [%6d][%s] enemy too close",Device.dwTimeGlobal,*cName());
+		Msg								("* [%6d][%s] enemy too close",::IDevice->TimeGlobal_ms(),*cName());
 #endif
 		return;
 	}
@@ -250,14 +250,14 @@ void CAI_Stalker::update_best_cover_actuality(const Fvector& position_to_cover_f
 	{
 		m_best_cover_actual = false;
 #if 0 // def _DEBUG
-		Msg								("* [%6d][%s] cover became too bad",Device.dwTimeGlobal,*cName());
+		Msg								("* [%6d][%s] cover became too bad",::IDevice->TimeGlobal_ms(),*cName());
 #endif
 		return;
 	}
 
 	//	if (cover_value >= 1.5f*m_best_cover_value) {
 	//		m_best_cover_actual				= false;
-	//		Msg								("* [%6d][%s] cover became too bad2",Device.dwTimeGlobal,*cName());
+	//		Msg								("* [%6d][%s] cover became too bad2",::IDevice->TimeGlobal_ms(),*cName());
 	//		return;
 	//	}
 
@@ -271,7 +271,7 @@ void CAI_Stalker::update_best_cover_actuality(const Fvector& position_to_cover_f
 	m_best_cover_can_try_advance = false;
 
 #ifdef _DEBUG
-//	Msg									("* [%6d][%s] advance search performed",Device.dwTimeGlobal,*cName());
+//	Msg									("* [%6d][%s] advance search performed",::IDevice->TimeGlobal_ms(),*cName());
 #endif
 #ifdef _DEBUG
 	++g_advance_search_count;
@@ -330,7 +330,7 @@ void CAI_Stalker::on_restrictions_change()
 	inherited::on_restrictions_change();
 	m_best_cover_actual = false;
 #ifdef _DEBUG
-	Msg("* [%6d][%s] on_restrictions_change", Device.dwTimeGlobal, *cName());
+	Msg("* [%6d][%s] on_restrictions_change", ::IDevice->TimeGlobal_ms(), *cName());
 #endif
 }
 
@@ -340,7 +340,7 @@ void CAI_Stalker::on_enemy_change(const CEntityAlive* enemy)
 	m_item_actuality = false;
 	m_best_cover_actual = false;
 #ifdef _DEBUG
-//	Msg									("* [%6d][%s] on_enemy_change",Device.dwTimeGlobal,*cName());
+//	Msg									("* [%6d][%s] on_enemy_change",::IDevice->TimeGlobal_ms(),*cName());
 #endif
 }
 
@@ -352,7 +352,7 @@ void CAI_Stalker::on_danger_location_add(const CDangerLocation& location)
 	if (m_best_cover->position().distance_to_sqr(location.position()) <= _sqr(location.m_radius))
 	{
 #ifdef _DEBUG
-//		Msg								("* [%6d][%s] on_danger_add",Device.dwTimeGlobal,*cName());
+//		Msg								("* [%6d][%s] on_danger_add",::IDevice->TimeGlobal_ms(),*cName());
 #endif
 		m_best_cover_actual = false;
 	}
@@ -365,7 +365,7 @@ void CAI_Stalker::on_danger_location_remove(const CDangerLocation& location)
 		if (Position().distance_to_sqr(location.position()) <= _sqr(location.m_radius))
 		{
 #ifdef _DEBUG
-//			Msg							("* [%6d][%s] on_danger_remove",Device.dwTimeGlobal,*cName());
+//			Msg							("* [%6d][%s] on_danger_remove",::IDevice->TimeGlobal_ms(),*cName());
 #endif
 			m_best_cover_actual = false;
 		}
@@ -376,7 +376,7 @@ void CAI_Stalker::on_danger_location_remove(const CDangerLocation& location)
 	if (m_best_cover->position().distance_to_sqr(location.position()) <= _sqr(location.m_radius))
 	{
 #ifdef _DEBUG
-//		Msg								("* [%6d][%s] on_danger_remove",Device.dwTimeGlobal,*cName());
+//		Msg								("* [%6d][%s] on_danger_remove",::IDevice->TimeGlobal_ms(),*cName());
 #endif
 		m_best_cover_actual = false;
 	}
@@ -385,7 +385,7 @@ void CAI_Stalker::on_danger_location_remove(const CDangerLocation& location)
 void CAI_Stalker::on_cover_blocked(const CCoverPoint* cover)
 {
 #ifdef _DEBUG
-//	Msg									("* [%6d][%s] cover is blocked",Device.dwTimeGlobal,*cName());
+//	Msg									("* [%6d][%s] cover is blocked",::IDevice->TimeGlobal_ms(),*cName());
 #endif
 	m_best_cover_actual = false;
 }

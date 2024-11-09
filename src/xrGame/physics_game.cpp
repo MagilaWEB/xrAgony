@@ -74,7 +74,7 @@ public:
 		: CPHParticlesPlayCall(contact, invert_n, psn), b_called(false)
 	{
 		static const u32 time_to_call_remove = 3000;
-		remove_time = Device.dwTimeGlobal + time_to_call_remove;
+		remove_time = ::IDevice->TimeGlobal_ms() + time_to_call_remove;
 	}
 	const Fvector& position() const { return cast_fv(c.pos); }
 private:
@@ -86,7 +86,7 @@ private:
 		b_called = true;
 		CPHParticlesPlayCall::run();
 	}
-	virtual bool obsolete() const { return Device.dwTimeGlobal > remove_time; }
+	virtual bool obsolete() const { return ::IDevice->TimeGlobal_ms() > remove_time; }
 };
 
 class CPHLiquidParticlesCondition : public CPHCondition, public CPHReqComparerV

@@ -335,7 +335,7 @@ void CWallmarksEngine::AddSkeletonWallmark(intrusive_ptr<CSkeletonWallmark> wm)
 		// no similar - register _new_
 		slot->skeleton_items.push_back(wm);
 #ifdef DEBUG
-		wm->used_in_render = Device.dwFrame;
+		wm->used_in_render = ::IDevice->getFrame();
 #endif
 		lock.Leave();
 	}
@@ -418,11 +418,11 @@ void CWallmarksEngine::Render()
 					}
 					static_wm_render(W, w_verts);
 				}
-				W->ttl -= 0.1f * Device.fTimeDelta; // visible wallmarks fade much slower
+				W->ttl -= 0.1f * ::IDevice->TimeDelta_sec(); // visible wallmarks fade much slower
 			}
 			else
 			{
-				W->ttl -= Device.fTimeDelta;
+				W->ttl -= ::IDevice->TimeDelta_sec();
 			}
 			if (W->ttl <= EPS)
 			{
@@ -447,11 +447,11 @@ void CWallmarksEngine::Render()
 			}
 
 #ifdef DEBUG
-			if (W->used_in_render != Device.dwFrame)
+			if (W->used_in_render != ::IDevice->getFrame())
 			{
 				Log("W->used_in_render", W->used_in_render);
-				Log("Device.dwFrame", Device.dwFrame);
-				VERIFY(W->used_in_render == Device.dwFrame);
+				Log("::IDevice->getFrame()", ::IDevice->getFrame());
+				VERIFY(W->used_in_render == ::IDevice->getFrame());
 			}
 #endif
 

@@ -265,7 +265,7 @@ void CTexture::Apply(u32 dwStage)
 
 void CTexture::apply_theora(u32 dwStage)
 {
-	if (pTheora->Update(m_play_time != 0xFFFFFFFF ? m_play_time : Device.dwTimeContinual))
+	if (pTheora->Update(m_play_time != 0xFFFFFFFF ? m_play_time : ::IDevice->TimeContinual()))
 	{
 		D3D_RESOURCE_DIMENSION type;
 		pSurface->GetType(&type);
@@ -321,7 +321,7 @@ void CTexture::apply_seq(u32 dwStage)
 {
 	xrCriticalSection::raii mt{ Lock };
 	// SEQ
-	u32 frame = Device.dwTimeContinual / seqMSPF; // Device.dwTimeGlobal
+	u32 frame = ::IDevice->TimeContinual() / seqMSPF; // ::IDevice->TimeGlobal_ms()
 	u32 frame_data = seqDATA.size();
 	if (flags.bSeqCycles.load())
 	{
@@ -389,7 +389,7 @@ void CTexture::Load()
 		else
 		{
 			flags.MemoryUsage.store(pTheora->Width(true) * pTheora->Height(true) * 4);
-			pTheora->Play(TRUE, Device.dwTimeContinual);
+			pTheora->Play(TRUE, ::IDevice->TimeContinual());
 
 			// Now create texture
 			ID3DTexture2D* pTexture = 0;
@@ -643,7 +643,7 @@ D3D_USAGE CTexture::GetUsage()
 void CTexture::video_Play(BOOL looped, u32 _time)
 {
 	if (pTheora)
-		pTheora->Play(looped, (_time != 0xFFFFFFFF) ? (m_play_time = _time) : Device.dwTimeContinual);
+		pTheora->Play(looped, (_time != 0xFFFFFFFF) ? (m_play_time = _time) : ::IDevice->TimeContinual());
 }
 
 void CTexture::video_Pause(BOOL state)

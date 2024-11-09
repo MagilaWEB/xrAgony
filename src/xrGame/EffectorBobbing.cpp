@@ -40,18 +40,18 @@ void CEffectorBobbing::SetState(u32 mstate, bool limping, bool ZoomMode)
 
 BOOL CEffectorBobbing::ProcessCam(SCamEffectorInfo& info)
 {
-	fTime += Device.fTimeDelta;
+	fTime += ::IDevice->TimeDelta_sec();
 	if (dwMState & ACTOR_DEFS::mcAnyMove)
 	{
 		if (fReminderFactor < 1.f)
-			fReminderFactor += SPEED_REMINDER * Device.fTimeDelta;
+			fReminderFactor += SPEED_REMINDER * ::IDevice->TimeDelta_sec();
 		else
 			fReminderFactor = 1.f;
 	}
 	else
 	{
 		if (fReminderFactor > 0.f)
-			fReminderFactor -= SPEED_REMINDER * Device.fTimeDelta;
+			fReminderFactor -= SPEED_REMINDER * ::IDevice->TimeDelta_sec();
 		else
 			fReminderFactor = 0.f;
 	}

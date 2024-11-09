@@ -62,7 +62,7 @@ public:
 	void register_to_process()
 	{
 		m_object->m_wait_for_distributed_computation = true;
-		if (Device.dwTimeGlobal < m_last_fail_time + time_to_wait_after_fail)
+		if (::IDevice->TimeGlobal_ms() < m_last_fail_time + time_to_wait_after_fail)
 			return;
 
 		Device.add_parallel(this, &CLevelPathBuilder::process);
@@ -76,7 +76,7 @@ public:
 		if (m_object->level_path().failed())
 		{
 			if (m_use_delay_after_fail)
-				m_last_fail_time = Device.dwTimeGlobal;
+				m_last_fail_time = ::IDevice->TimeGlobal_ms();
 
 			m_object->m_path_state = CMovementManager::ePathStateBuildLevelPath;
 			return;
@@ -99,7 +99,7 @@ public:
 
 	void process()
 	{
-		if (Device.dwTimeGlobal < m_last_fail_time + time_to_wait_after_fail)
+		if (::IDevice->TimeGlobal_ms() < m_last_fail_time + time_to_wait_after_fail)
 			return;
 
 		m_object->build_level_path();

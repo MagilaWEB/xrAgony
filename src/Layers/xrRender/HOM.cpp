@@ -138,7 +138,7 @@ public:
 	ICF bool operator()(const CDB::RESULT& _1) const
 	{
 		occTri& T = m_pTris[_1.id];
-		return T.skip > Device.dwFrame;
+		return T.skip > ::IDevice->getFrame();
 	}
 };
 
@@ -170,7 +170,7 @@ void CHOM::Render_DB(CFrustum& base)
 	CFrustum clip;
 	clip.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_NEAR);
 	sPoly src, dst;
-	u32 _frame = Device.dwFrame;
+	u32 _frame = ::IDevice->getFrame();
 	stats.FrustumTriangleCount = xrc.r_count();
 	stats.VisibleTriangleCount = 0;
 
@@ -309,7 +309,7 @@ BOOL CHOM::visible(Fbox2& B, float depth)
 
 BOOL CHOM::visible(vis_data& vis)
 {
-	if (Device.dwFrame < vis.hom_frame)
+	if (::IDevice->getFrame() < vis.hom_frame)
 		return TRUE; // not at this time :)
 	if (!bEnabled)
 		return TRUE; // return - everything visible
@@ -319,7 +319,7 @@ BOOL CHOM::visible(vis_data& vis)
 	// false;
 	// 1. The object was visible, but we must to re-check it		- test		| frame-new, tested-???, hom_res = true;
 	// 2. New object slides into view								- delay test| frame-old, tested-old, hom_res = ???;
-	u32 frame_current = Device.dwFrame;
+	u32 frame_current = ::IDevice->getFrame();
 	// u32	frame_prev		= frame_current-1;
 
 	BOOL result = _visible(vis.box, m_xform_01);

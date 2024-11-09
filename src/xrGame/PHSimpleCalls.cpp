@@ -21,7 +21,7 @@ void CPHCallOnStepCondition::set_time_interval(float time) { set_steps_interval(
 void CPHCallOnStepCondition::set_time_interval(u32 time) { set_time_interval(float(time) / 1000.f); }
 void CPHCallOnStepCondition::set_global_time(float time)
 {
-	float time_interval = Device.fTimeGlobal - time;
+	float time_interval = IDevice->TimeGlobal_sec() - time;
 	if (time_interval < 0.f)
 		set_step(physics_world()->StepsNum());
 	set_time_interval(time_interval);

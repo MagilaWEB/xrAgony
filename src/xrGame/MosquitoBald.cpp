@@ -72,10 +72,10 @@ void CMosquitoBald::Affect(SZoneObjectInfo* O)
 
 void CMosquitoBald::UpdateSecondaryHit()
 {
-	if (m_dwAffectFrameNum == Device.dwFrame)
+	if (m_dwAffectFrameNum == ::IDevice->getFrame())
 		return;
 
-	m_dwAffectFrameNum = Device.dwFrame;
+	m_dwAffectFrameNum = ::IDevice->getFrame();
 	if (Device.dwPrecacheFrame)
 		return;
 

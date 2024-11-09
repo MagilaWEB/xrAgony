@@ -36,10 +36,10 @@ IC stalker_movement_manager_smart_cover& CAI_Stalker::movement() const
 
 IC bool CAI_Stalker::frame_check(u32& frame)
 {
-	if (Device.dwFrame == frame)
+	if (::IDevice->getFrame() == frame)
 		return (false);
 
-	frame = Device.dwFrame;
+	frame = ::IDevice->getFrame();
 	return (true);
 }
 

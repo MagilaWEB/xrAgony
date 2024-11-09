@@ -364,7 +364,7 @@ void CGameObject::OnEvent(NET_Packet& P, u16 type)
 		if (H_Parent())
 		{
 			Msg("! ERROR (GameObject): GE_DESTROY arrived to object[%d][%s], that has parent[%d][%s], frame[%d]", ID(),
-				cNameSect().c_str(), H_Parent()->ID(), H_Parent()->cName().c_str(), Device.dwFrame);
+				cNameSect().c_str(), H_Parent()->ID(), H_Parent()->cName().c_str(), ::IDevice->getFrame());
 
 			// This object will be destroy on call function <H_Parent::Destroy>
 			// or it will be call <H_Parent::Reject>  ==>  H_Parent = nullptr
@@ -388,7 +388,7 @@ BOOL CGameObject::net_Spawn(CSE_Abstract* DC)
 {
 	VERIFY(!m_spawned);
 	m_spawned = true;
-	m_spawn_time = Device.dwFrame;
+	m_spawn_time = ::IDevice->getFrame();
 	m_ai_obstacle = new ai_obstacle(this);
 
 	CSE_Abstract* E = (CSE_Abstract*)DC;
@@ -823,7 +823,7 @@ void CGameObject::spatial_update(float eps_P, float eps_R)
 		// Empty
 		bUpdate = TRUE;
 		PositionStack.push_back(GameObjectSavedPosition());
-		PositionStack.back().dwTime = Device.dwTimeGlobal;
+		PositionStack.back().dwTime = ::IDevice->TimeGlobal_ms();
 		PositionStack.back().vPosition = Position();
 	}
 	else
@@ -831,7 +831,7 @@ void CGameObject::spatial_update(float eps_P, float eps_R)
 		if (PositionStack.back().vPosition.similar(Position(), eps_P))
 		{
 			// Just update time
-			PositionStack.back().dwTime = Device.dwTimeGlobal;
+			PositionStack.back().dwTime = ::IDevice->TimeGlobal_ms();
 		}
 		else
 		{
@@ -847,7 +847,7 @@ void CGameObject::spatial_update(float eps_P, float eps_R)
 				PositionStack[1] = PositionStack[2];
 				PositionStack[2] = PositionStack[3];
 			}
-			PositionStack.back().dwTime = Device.dwTimeGlobal;
+			PositionStack.back().dwTime = ::IDevice->TimeGlobal_ms();
 			PositionStack.back().vPosition = Position();
 		}
 	}
@@ -975,10 +975,10 @@ void CGameObject::setDestroy(BOOL _destroy)
 		g_pGameLevel->Objects.register_object_to_destroy(this);
 #ifdef DEBUG
 		if (debug_destroy)
-			Msg("cl setDestroy [%d][%d]", ID(), Device.dwFrame);
+			Msg("cl setDestroy [%d][%d]", ID(), ::IDevice->getFrame());
 #endif
 #ifdef MP_LOGGING
-		Msg("cl setDestroy [%d][%d]", ID(), Device.dwFrame);
+		Msg("cl setDestroy [%d][%d]", ID(), ::IDevice->getFrame());
 #endif //#ifdef MP_LOGGING
 	}
 #ifdef DEBUG
@@ -1020,7 +1020,7 @@ void CGameObject::renderable_Render()
 
 	::Render->set_Transform(&XFORM());
 	::Render->add_Visual(Visual());
-	Visual()->getVisData().hom_frame = Device.dwFrame;
+	Visual()->getVisData().hom_frame = ::IDevice->getFrame();
 }
 
 GameObjectSavedPosition CGameObject::ps_Element(u32 ID) const
@@ -1119,7 +1119,7 @@ void CGameObject::shedule_Update(u32 dt)
 	if (NeedToDestroyObject())
 	{
 #ifdef MASTER
-		Msg("--NeedToDestroyObject for [%d][%d]", ID(), Device.dwFrame);
+		Msg("--NeedToDestroyObject for [%d][%d]", ID(), ::IDevice->getFrame());
 #endif // #ifdef MASTER
 		DestroyObject();
 	}
@@ -1290,9 +1290,9 @@ void CGameObject::UpdateCL()
 	// consistency check
 #ifdef DEBUG
 	VERIFY2(_valid(renderable.xform), *cName());
-	if (Device.dwFrame == dbg_update_cl)
+	if (::IDevice->getFrame() == dbg_update_cl)
 		xrDebug::Fatal(DEBUG_INFO, "'UpdateCL' called twice per frame for %s", *cName());
-	dbg_update_cl = Device.dwFrame;
+	dbg_update_cl = ::IDevice->getFrame();
 	if (Parent && spatial.node_ptr)
 		xrDebug::Fatal(DEBUG_INFO, "Object %s has parent but is still registered inside spatial DB", *cName());
 	if (!CForm && (spatial.type & STYPE_COLLIDEABLE))
@@ -1450,7 +1450,7 @@ void CGameObject::set_nonscript_usable(bool usable) { m_bNonscriptUsable = usabl
 
 bool CGameObject::queryUpdateCL()
 {
-	if (Device.dwFrame == dwFrame_UpdateCL || Parent)
+	if (::IDevice->getFrame() == dwFrame_UpdateCL || Parent)
 		return							false;
 
 	if (b_visibility_status_next != b_visibility_status)
@@ -1460,7 +1460,7 @@ bool CGameObject::queryUpdateCL()
 	}
 	b_visibility_status_next			= eNonVisible;
 
-	return								(alwaysUpdateCL() || m_next_update_time < Device.fTimeGlobal);
+	return								(alwaysUpdateCL() || m_next_update_time < IDevice->TimeGlobal_sec());
 }
 
 void CGameObject::on_distance_update(float new_dist)
@@ -1499,12 +1499,12 @@ void CGameObject::update()
 {
 	if (!Parent)
 	{
-		dwFrame_UpdateCL = Device.dwFrame;
-		fDeltaTime = Device.fTimeGlobal - m_last_update_time_f;
-		m_last_update_time_f = Device.fTimeGlobal;
+		dwFrame_UpdateCL = ::IDevice->getFrame();
+		fDeltaTime = IDevice->TimeGlobal_sec() - m_last_update_time_f;
+		m_last_update_time_f = IDevice->TimeGlobal_sec();
 
-		dwDeltaTime = Device.dwTimeGlobal - m_last_update_time_dw;
-		m_last_update_time_dw = Device.dwTimeGlobal;
+		dwDeltaTime = ::IDevice->TimeGlobal_ms() - m_last_update_time_dw;
+		m_last_update_time_dw = ::IDevice->TimeGlobal_ms();
 
 		calc_next_update_time();
 

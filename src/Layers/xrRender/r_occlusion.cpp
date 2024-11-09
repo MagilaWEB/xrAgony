@@ -3,7 +3,7 @@
 
 #include "QueryHelper.h"
 
-R_occlusion::R_occlusion() : enabled(!strstr(Core.Params, "-no_occq")), last_frame(Device.dwFrame) {}
+R_occlusion::R_occlusion() : enabled(!strstr(Core.Params, "-no_occq")), last_frame(::IDevice->getFrame()) {}
 
 R_occlusion::~R_occlusion()
 {
@@ -33,7 +33,7 @@ void R_occlusion::cleanup_lost()
 	for (u32 ID = 0; ID < used.size(); ID++)
 	{
 		_Q& q = used[ID];
-		if (q.Q && q.ttl && q.ttl < Device.dwFrame)
+		if (q.Q && q.ttl && q.ttl < ::IDevice->getFrame())
 		{
 			occq_free(ID);
 			//cnt++;
@@ -53,10 +53,10 @@ u32 R_occlusion::occq_begin(u32& ID)
 		return 0;
 	}
 
-	if (last_frame != Device.dwFrame)
+	if (last_frame != ::IDevice->getFrame())
 	{
 		cleanup_lost();
-		last_frame = Device.dwFrame;
+		last_frame = ::IDevice->getFrame();
 	}
 
 	RImplementation.BasicStats.OcclusionQueries++;
@@ -68,7 +68,7 @@ u32 R_occlusion::occq_begin(u32& ID)
 
 		if (FAILED(CreateQuery(q.Q.GetAddressOf(), D3DQUERYTYPE_OCCLUSION)))
 		{
-			if (Device.dwFrame % 100 == 0)
+			if (::IDevice->getFrame() % 100 == 0)
 				Msg("RENDER [Warning]: Too many occlusion queries were issued: %u !!!", used.size());
 
 			ID = iInvalidHandle;
@@ -85,7 +85,7 @@ u32 R_occlusion::occq_begin(u32& ID)
 		pool.pop_back();
 	}
 
-	used[ID].ttl = Device.dwFrame + 1;
+	used[ID].ttl = ::IDevice->getFrame() + 1;
 	CHK_DX(BeginQuery(used[ID].Q.Get()));
 	return used[ID].order;
 }
@@ -96,7 +96,7 @@ void R_occlusion::occq_end(u32& ID)
 		return;
 
 	CHK_DX(EndQuery(used[ID].Q.Get()));
-	used[ID].ttl = Device.dwFrame + 1;
+	used[ID].ttl = ::IDevice->getFrame() + 1;
 }
 
 R_occlusion::occq_result R_occlusion::occq_get(u32& ID)

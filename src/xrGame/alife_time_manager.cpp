@@ -21,13 +21,13 @@ void CALifeTimeManager::init(LPCSTR section)
 	m_time_factor = pSettings->r_float(section, "time_factor");
 	m_normal_time_factor = pSettings->r_float(section, "normal_time_factor");
 	m_game_time = m_start_game_time;
-	m_start_time = Device.dwTimeGlobal;
+	m_start_time = ::IDevice->TimeGlobal_ms();
 }
 
 void CALifeTimeManager::save(IWriter& memory_stream)
 {
 	m_game_time = game_time();
-	m_start_time = Device.dwTimeGlobal;
+	m_start_time = ::IDevice->TimeGlobal_ms();
 	memory_stream.open_chunk(GAME_TIME_CHUNK_DATA);
 	memory_stream.w(&m_game_time, sizeof(m_game_time));
 	memory_stream.w_float(m_time_factor);
@@ -41,5 +41,5 @@ void CALifeTimeManager::load(IReader& file_stream)
 	file_stream.r(&m_game_time, sizeof(m_game_time));
 	m_time_factor = file_stream.r_float();
 	m_normal_time_factor = file_stream.r_float();
-	m_start_time = Device.dwTimeGlobal;
+	m_start_time = ::IDevice->TimeGlobal_ms();
 };

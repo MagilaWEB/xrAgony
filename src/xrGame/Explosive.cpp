@@ -342,7 +342,7 @@ void CExplosive::Explode()
 		DBG_DrawPoint(pos, 0.3f, color_xrgb(255, 0, 0));
 	}
 #endif
-	//	Msg("---------CExplosive Explode [%d] frame[%d]",cast_game_object()->ID(), Device.dwFrame);
+	//	Msg("---------CExplosive Explode [%d] frame[%d]",cast_game_object()->ID(), ::IDevice->getFrame());
 	OnBeforeExplosion();
 	//играем звук взрыва
 #ifdef LAYERED_SND_SHOOT
@@ -493,7 +493,7 @@ void CExplosive::UpdateCL()
 
 		StopLight();
 
-		//		Msg("---------CExplosive OnAfterExplosion [%d] frame[%d]",cast_game_object()->ID(), Device.dwFrame);
+		//		Msg("---------CExplosive OnAfterExplosion [%d] frame[%d]",cast_game_object()->ID(), ::IDevice->getFrame());
 	}
 	else
 	{
@@ -547,7 +547,7 @@ void CExplosive::OnBeforeExplosion()
 	{
 		HideExplosive();
 		//	Msg("---------CExplosive OnBeforeExplosion setVisible(false) [%d] frame[%d]",cast_game_object()->ID(),
-		// Device.dwFrame);
+		// ::IDevice->getFrame());
 	}
 }
 void CExplosive::HideExplosive()

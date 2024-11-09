@@ -126,7 +126,7 @@ void moving_objects::fill_nearest_moving(moving_object* object)
 	float radius = (max_linear_velocity + linear_velocity) * time_to_check;
 	m_tree->nearest(object->position(), radius, m_nearest_moving);
 #if 0
-	Msg							("%6d nearest moving[%d] object[%s]", Device.dwFrame, m_nearest_moving.size(),object->object().cName().c_str());
+	Msg							("%6d nearest moving[%d] object[%s]", ::IDevice->getFrame(), m_nearest_moving.size(),object->object().cName().c_str());
 	{
 		NEAREST_MOVING::const_iterator	I = m_nearest_moving.begin();
 		NEAREST_MOVING::const_iterator	E = m_nearest_moving.end();
@@ -141,7 +141,7 @@ void moving_objects::fill_nearest_moving(moving_object* object)
 
 	struct already_computed
 	{
-		static IC bool predicate(moving_object* const& object) { return (object->action_frame() == Device.dwFrame); }
+		static IC bool predicate(moving_object* const& object) { return (object->action_frame() == ::IDevice->getFrame()); }
 	};
 
 	m_nearest_moving.erase(
@@ -496,7 +496,7 @@ void moving_objects::query_action_dynamic(moving_object* object)
 	if (psAI_Flags.test(aiObstaclesAvoidingStatic))
 		return;
 
-	if (object->action_frame() == Device.dwFrame)
+	if (object->action_frame() == ::IDevice->getFrame())
 		return;
 
 	m_visited_emitters.resize(0);
@@ -525,7 +525,7 @@ void moving_objects::query_action_dynamic(moving_object* object)
 	}
 
 #if 0 // def DEBUG
-	Msg							("%6d end of iteration", Device.dwFrame);
+	Msg							("%6d end of iteration", ::IDevice->getFrame());
 #endif // DEBUG
 
 	if (!m_collisions.empty())
@@ -538,7 +538,7 @@ void moving_objects::query_action_dynamic(moving_object* object)
 
 #if 0 // def DEBUG
 	{
-		Msg							("Frame[%d], collisions[%d]",Device.dwFrame, m_visited_emitters.size());
+		Msg							("Frame[%d], collisions[%d]",::IDevice->getFrame(), m_visited_emitters.size());
 		NEAREST_MOVING::iterator	I = m_visited_emitters.begin();
 		NEAREST_MOVING::iterator	E = m_visited_emitters.end();
 		for ( ; I != E; ++I)

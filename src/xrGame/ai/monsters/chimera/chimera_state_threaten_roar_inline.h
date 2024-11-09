@@ -21,7 +21,7 @@ void CStateChimeraThreatenRoarAbstract::execute()
 TEMPLATE_SPECIALIZATION
 bool CStateChimeraThreatenRoarAbstract::check_completion()
 {
-	if (time_state_started + STATE_TIME_OUT < Device.dwTimeGlobal)
+	if (time_state_started + STATE_TIME_OUT < ::IDevice->TimeGlobal_ms())
 		return true;
 	return false;
 }

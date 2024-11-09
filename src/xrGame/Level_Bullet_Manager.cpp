@@ -44,7 +44,7 @@ void SBullet::Init(const Fvector& position, const Fvector& direction, float star
 
 	start_position = position;
 	start_velocity.mul(direction, starting_speed);
-	born_time = Device.dwTimeGlobal;
+	born_time = ::IDevice->TimeGlobal_ms();
 	life_time = 0.f;
 
 	VERIFY(direction.magnitude() > 0.f);
@@ -82,7 +82,7 @@ void SBullet::Init(const Fvector& position, const Fvector& direction, float star
 	flags.magnetic_beam = !!cartridge.m_flags.test(CCartridge::cfMagneticBeam);
 	//	flags.skipped_frame		= 0;
 
-	init_frame_num = Device.dwFrame;
+	init_frame_num = ::IDevice->getFrame();
 
 	targetID = 0;
 	density_mode = 0;
@@ -196,7 +196,7 @@ void CBulletManager::AddBullet(const Fvector& position, const Fvector& direction
 	SBullet& bullet = m_Bullets.back();
 	bullet.Init(position, direction, starting_speed, power, /*power_critical,*/ impulse, sender_id, sendersweapon_id,
 		e_hit_type, maximum_distance, cartridge, air_resistance_factor, SendHit, iShotNum);
-	//	bullet.frame_num			= Device.dwFrame;
+	//	bullet.frame_num			= ::IDevice->getFrame();
 	bullet.flags.aim_bullet = AimBullet;
 
 }
@@ -205,7 +205,7 @@ void CBulletManager::UpdateWorkload()
 {
 	rq_storage.r_clear();
 
-	u32 const time_delta = Device.dwTimeDelta;
+	u32 const time_delta = IDevice->TimeDelta_ms();
 	if (!time_delta)
 		return;
 
@@ -481,7 +481,7 @@ static void update_bullet_parabolic(
 
 	//	VERIFY						(data.collide_time <= data.high_time);
 	//	VERIFY						(data.collide_time >= bullet.life_time);
-	//	VERIFY						(data.collide_time <= bullet.life_time + Device.fTimeGlobal);
+	//	VERIFY						(data.collide_time <= bullet.life_time + IDevice->TimeGlobal_sec());
 	clamp(data.collide_time, bullet.life_time, data.high_time);
 
 	data.collide_position =
@@ -514,7 +514,7 @@ static void update_bullet_gravitation(SBullet& bullet, bullet_test_callback_data
 
 		//		VERIFY					(data.collide_time <= data.high_time);
 		//		VERIFY					(data.collide_time >= bullet.life_time);
-		//		VERIFY					(data.collide_time <= bullet.life_time + Device.fTimeGlobal);
+		//		VERIFY					(data.collide_time <= bullet.life_time + IDevice->TimeGlobal_sec());
 		clamp(data.collide_time, bullet.life_time, data.high_time);
 	}
 	else
@@ -529,7 +529,7 @@ static void update_bullet_gravitation(SBullet& bullet, bullet_test_callback_data
 
 		//		VERIFY					(data.collide_time <= data.high_time);
 		//		VERIFY					(data.collide_time >= bullet.life_time);
-		//		VERIFY					(data.collide_time <= bullet.life_time + Device.fTimeGlobal);
+		//		VERIFY					(data.collide_time <= bullet.life_time + IDevice->TimeGlobal_sec());
 		clamp(data.collide_time, bullet.life_time, data.high_time);
 	}
 

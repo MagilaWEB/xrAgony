@@ -91,7 +91,7 @@ void dxRender_Visual::Copy(dxRender_Visual* pFrom)
 
 float dxRender_Visual::get_distance_to_camera_base(Fmatrix* transform_matrix)
 {
-	if (m_next_distance_update_time < Device.fTimeGlobal)
+	if (m_next_distance_update_time < IDevice->TimeGlobal_sec())
 	{
 		if (transform_matrix)
 		{
@@ -102,7 +102,7 @@ float dxRender_Visual::get_distance_to_camera_base(Fmatrix* transform_matrix)
 		else
 			m_distance = Device.vCameraPosition.distance_to_sqr(getVisData().sphere.P);
 
-		m_next_distance_update_time = Device.fTimeGlobal + distance_update_period;
+		m_next_distance_update_time = IDevice->TimeGlobal_sec() + distance_update_period;
 
 		if (!callback_check_dist.empty())
 		{

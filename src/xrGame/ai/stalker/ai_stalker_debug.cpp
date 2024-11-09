@@ -427,7 +427,7 @@ void CAI_Stalker::debug_text()
 		DBG_OutText("%s%s%stype	  : %s", indent, indent, indent, danger_type(memory().danger().selected()->type()));
 		DBG_OutText("%s%s%stime	  : %.3f (%.3f)", indent, indent, indent,
 			float(memory().danger().selected()->time()) / 1000.f,
-			float(Device.dwTimeGlobal - memory().danger().selected()->time()) / 1000.f);
+			float(::IDevice->TimeGlobal_ms() - memory().danger().selected()->time()) / 1000.f);
 		DBG_OutText("%s%s%sinitiator : %s", indent, indent, indent, *memory().danger().selected()->object()->cName());
 		if (g_Alive() && memory().danger().selected()->object())
 			DBG_OutText("%s%s%svisible	: %s", indent, indent, indent,
@@ -820,7 +820,7 @@ void CAI_Stalker::debug_text()
 		xr_vector<CSoundPlayer::CSoundSingle>::const_iterator E = sound().playing_sounds().end();
 		for (; I != E; ++I)
 			DBG_OutText("%s%s%s[%s]%s", indent, indent, indent,
-				(Device.dwTimeGlobal < (*I).m_start_time) ? "not yet started" :
+				(::IDevice->TimeGlobal_ms() < (*I).m_start_time) ? "not yet started" :
 															((*I).m_sound->_feedback() ? "playing" : "already played"),
 				(*I).m_sound->_handle() ? (*I).m_sound->_handle()->file_name() : "no source");
 	}

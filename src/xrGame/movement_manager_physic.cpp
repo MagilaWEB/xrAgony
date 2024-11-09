@@ -55,7 +55,7 @@ void dump_collision_hit(CPHMovementControl* movement_control)
 	VERIFY(smart_cast<CPhysicsShellHolder*>(iobj));
 	CPhysicsShellHolder* obj = static_cast<CPhysicsShellHolder*>(iobj);
 	Msg("ai unit: %s hited by collision; power: %f, spawn frame %d, current frame %d ", obj->cName().c_str(),
-		movement_control->gcontact_HealthLost, obj->spawn_time(), Device.dwFrame);
+		movement_control->gcontact_HealthLost, obj->spawn_time(), ::IDevice->getFrame());
 	// CPhysicsShellHolder* object
 	// =static_cast<CPhysicsShellHolder*>(Level().Objects.net_Find(m_collision_damage_info.m_obj_id));
 	// const ICollisionDamageInfo * di=movement_control->CollisionDamageInfo();
@@ -224,7 +224,7 @@ void CMovementManager::move_along_path(CPHMovementControl* movement_control, Fve
 		// проверка на хит
 		apply_collision_hit(movement_control);
 		//		Msg				("[%6d][%s] no move,
-		// curr_tp=%d",Device.dwFrame,*object().cName(),detail().m_current_travel_point);
+		// curr_tp=%d",::IDevice->getFrame(),*object().cName(),detail().m_current_travel_point);
 		return;
 	}
 
@@ -272,10 +272,10 @@ void CMovementManager::move_along_path(CPHMovementControl* movement_control, Fve
 			detail().m_current_travel_point = detail().path().size() - 1;
 		m_speed = 0.f;
 		// Msg				("[%6d][%s] strange exit,
-		// curr_tp=%d",Device.dwFrame,*object().cName(),detail().m_current_travel_point);
+		// curr_tp=%d",::IDevice->getFrame(),*object().cName(),detail().m_current_travel_point);
 		return;
 	}
-	//	Msg					("[%6d][%s] curr_tp=%d",Device.dwFrame,*object().cName(),detail().m_current_travel_point);
+	//	Msg					("[%6d][%s] curr_tp=%d",::IDevice->getFrame(),*object().cName(),detail().m_current_travel_point);
 
 	// Физика устанавливает новую позицию
 	// получить физ. объекты в радиусе

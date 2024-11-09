@@ -103,7 +103,7 @@ bool CLevel::net_start_client4()
 
 		// Send physics to single or multithreaded mode
 
-		create_physics_world(&ObjectSpace, &Objects, &Device);
+		create_physics_world(&ObjectSpace, &Objects);
 
 		R_ASSERT(physics_world());
 

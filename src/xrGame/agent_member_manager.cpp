@@ -99,7 +99,7 @@ void CAgentMemberManager::register_in_combat(const CAI_Stalker* object)
 #if 0 // def DEBUG
 	Msg							(
 		"%6d registering stalker %s in combat: 0x%08x -> 0x%08x",
-		Device.dwTimeGlobal,
+		::IDevice->TimeGlobal_ms(),
 		*object->cName(),
 		m_combat_mask,
 		m_combat_mask | mask(object)
@@ -121,7 +121,7 @@ void CAgentMemberManager::unregister_in_combat(const CAI_Stalker* object)
 #if 0 // def DEBUG
 	Msg							(
 		"%6d UNregistering stalker %s in combat: 0x%08x -> 0x%08x",
-		Device.dwTimeGlobal,
+		::IDevice->TimeGlobal_ms(),
 		*object->cName(),
 		m_combat_mask,
 		(m_combat_mask & (squad_mask_type(-1) ^ mask(object)))
@@ -234,7 +234,7 @@ CMemberOrder* CAgentMemberManager::get_member(const ALife::_OBJECT_ID& object_id
 
 bool CAgentMemberManager::can_throw_grenade(const Fvector& location) const
 {
-	if (Device.dwTimeGlobal <= m_last_throw_time + m_throw_time_interval)
+	if (::IDevice->TimeGlobal_ms() <= m_last_throw_time + m_throw_time_interval)
 		return (false);
 
 	typedef CAgentMemberManager::MEMBER_STORAGE MEMBER_STORAGE;
@@ -257,4 +257,4 @@ bool CAgentMemberManager::can_throw_grenade(const Fvector& location) const
 	return (true);
 }
 
-void CAgentMemberManager::on_throw_completed() { m_last_throw_time = Device.dwTimeGlobal; }
+void CAgentMemberManager::on_throw_completed() { m_last_throw_time = ::IDevice->TimeGlobal_ms(); }

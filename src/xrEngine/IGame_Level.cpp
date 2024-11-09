@@ -130,7 +130,7 @@ void IGame_Level::OnRender()
 	TAL_ID rtID = TAL_MakeID(1, Core.dwFrame, 0);
 	TAL_CreateID(rtID);
 	TAL_BeginNamedVirtualTaskWithID("GameRenderFrame", rtID);
-	TAL_Parami("Frame#", Device.dwFrame);
+	TAL_Parami("Frame#", ::IDevice->getFrame());
 	TAL_EndVirtualTask();
 #endif // _GPA_ENABLED
 
@@ -149,8 +149,8 @@ void IGame_Level::OnRender()
 
 void IGame_Level::OnFrame()
 {
-	// Log ("- level:on-frame: ",u32(Device.dwFrame));
-	// if (_abs(Device.fTimeDelta)<EPS_S) return;
+	// Log ("- level:on-frame: ",u32(::IDevice->getFrame()));
+	// if (_abs(::IDevice->TimeDelta_sec())<EPS_S) return;
 
 	// Update all objects
 	VERIFY(bReady);
@@ -158,9 +158,9 @@ void IGame_Level::OnFrame()
 	g_hud->OnFrame();
 
 	// Ambience
-	if (Sounds_Random.size() && (Device.dwTimeGlobal > Sounds_Random_dwNextTime))
+	if (Sounds_Random.size() && (::IDevice->TimeGlobal_ms() > Sounds_Random_dwNextTime))
 	{
-		Sounds_Random_dwNextTime = Device.dwTimeGlobal + ::Random.randI(10000, 20000);
+		Sounds_Random_dwNextTime = ::IDevice->TimeGlobal_ms() + ::Random.randI(10000, 20000);
 		Fvector pos;
 		pos.random_dir().normalize().mul(::Random.randF(30, 100)).add(Device.vCameraPosition);
 		int id = ::Random.randI(Sounds_Random.size());

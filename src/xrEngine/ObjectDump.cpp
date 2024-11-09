@@ -68,7 +68,7 @@ ENGINE_API std::string dbg_object_props_dump_string(const IGameObject* obj)
 		" "
 		"net_ID :%d, bActiveCounter :%d, bEnabled :%s, bVisible :%s, bDestroy :%s, \n "
 		"net_Local %s, net_Ready :%s, net_SV_Update :%s, bPreDestroy : %s \n "
-		"dbg_update_cl: %d, dwFrame_UpdateCL: %d, Device.dwFrame :%d, Device.dwTimeGlobal: %d \n";
+		"dbg_update_cl: %d, dwFrame_UpdateCL: %d, ::IDevice->getFrame() :%d, ::IDevice->TimeGlobal_ms(): %d \n";
 	auto enabled = get_string(bool(!!props.bEnabled)).c_str();
 	auto visible = get_string(bool(!!props.bVisible)).c_str();
 	auto destroy = get_string(bool(!!props.bDestroy)).c_str();
@@ -79,8 +79,8 @@ ENGINE_API std::string dbg_object_props_dump_string(const IGameObject* obj)
 	auto updateFrameDbg = obj->GetDbgUpdateFrame();
 	auto updateFrame = obj->GetUpdateFrame();
 	return make_string(format, props.net_ID, props.bActiveCounter, enabled, visible, destroy, netLocal, netReady,
-		netSvUpdate, preDestroy, updateFrameDbg, updateFrame, Device.dwFrame,
-		Device.dwTimeGlobal);
+		netSvUpdate, preDestroy, updateFrameDbg, updateFrame, ::IDevice->getFrame(),
+		::IDevice->TimeGlobal_ms());
 }
 ENGINE_API std::string dbg_object_full_dump_string(const IGameObject* obj)
 {

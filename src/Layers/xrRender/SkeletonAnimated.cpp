@@ -514,9 +514,9 @@ void CKinematicsAnimated::LL_UpdateTracks(float dt, bool b_force, bool leave_ble
 		for (; I != E; I++)
 		{
 			CBlend& B = *(*I);
-			if (!b_force && B.dwFrame == Device.dwFrame)
+			if (!b_force && B.dwFrame == ::IDevice->getFrame())
 				continue;
-			B.dwFrame = Device.dwFrame;
+			B.dwFrame = ::IDevice->getFrame();
 			if (B.update(dt, B.Callback) && !leave_blends)
 			{
 				DestroyCycle(B);
@@ -589,20 +589,20 @@ void CKinematicsAnimated::LL_UpdateFxTracks(float dt)
 void CKinematicsAnimated::UpdateTracks()
 {
 	_DBG_SINGLE_USE_MARKER;
-	if (Update_LastTime == Device.dwTimeGlobal)
+	if (Update_LastTime == ::IDevice->TimeGlobal_ms())
 		return;
-	u32 DT = Device.dwTimeGlobal - Update_LastTime;
+	u32 DT = ::IDevice->TimeGlobal_ms() - Update_LastTime;
 	if (DT > 66)
 		DT = 66;
 	float dt = float(DT) / 1000.f;
 
 	if (GetUpdateTracksCalback())
 	{
-		if ((*GetUpdateTracksCalback())(float(Device.dwTimeGlobal - Update_LastTime) / 1000.f, *this))
-			Update_LastTime = Device.dwTimeGlobal;
+		if ((*GetUpdateTracksCalback())(float(::IDevice->TimeGlobal_ms() - Update_LastTime) / 1000.f, *this))
+			Update_LastTime = ::IDevice->TimeGlobal_ms();
 		return;
 	}
-	Update_LastTime = Device.dwTimeGlobal;
+	Update_LastTime = ::IDevice->TimeGlobal_ms();
 	LL_UpdateTracks(dt, false, false);
 }
 
