@@ -88,7 +88,7 @@ void CPlanner::update()
 	}
 #endif
 
-	THROW(!this->solution().empty());
+	VERIFY(!this->solution().empty());
 
 	if (this->solution().empty())
 		return;
