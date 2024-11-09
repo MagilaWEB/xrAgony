@@ -261,7 +261,7 @@ void CDetailManager::cache_Decompress(Slot* S)
 					"sand"			// песок? На некоторых локациях песок является травой...
 				};
 #else
-				constexpr xr_string list_material[6]{
+				constexpr xr_string list_material[]{
 					"default",		// Неопределённый базовый материал.
 					"grass",		// трава
 					"dirt",			// грязь
@@ -271,13 +271,11 @@ void CDetailManager::cache_Decompress(Slot* S)
 				};
 #endif
 
-				constexpr size_t list_material_size = sizeof(list_material) / sizeof(xr_string);
-
 				bool ignore = true;
 
-				for (u32 it = 0; it < list_material_size; it++)
+				for (auto& name : list_material)
 				{
-					if (name_material.find(list_material[it]) != xr_string::npos)
+					if (name_material.find(name) != xr_string::npos)
 					{
 						ignore = false;
 						break;
