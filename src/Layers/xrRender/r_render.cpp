@@ -237,6 +237,7 @@ void CRender::render_main(bool deffered)
 					set_Object(renderable);
 					renderable->renderable_Render();
 					set_Object(nullptr);
+					break;
 				}
 				else if (spatial_data.type & STYPE_PARTICLE && !deffered)
 				{
@@ -244,6 +245,7 @@ void CRender::render_main(bool deffered)
 					set_Object(renderable);
 					renderable->renderable_Render();
 					set_Object(nullptr);
+					break;
 				}
 			}
 			else if (PortalTraverser.i_marker == sector->r_marker)
@@ -268,6 +270,7 @@ void CRender::render_main(bool deffered)
 						set_Object(renderable);
 						renderable->renderable_Render();
 						set_Object(nullptr);
+						break;
 					}
 					else if (spatial_data.type & STYPE_PARTICLE && !deffered)
 					{
@@ -275,6 +278,7 @@ void CRender::render_main(bool deffered)
 						set_Object(renderable);
 						renderable->renderable_Render();
 						set_Object(nullptr);
+						break;
 					}
 				}
 			}
