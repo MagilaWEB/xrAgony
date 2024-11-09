@@ -5,7 +5,6 @@
 class IKinematics;
 class IKinematicsAnimated;
 class IParticleCustom;
-class IRenderable;
 struct vis_data;
 
 class IRenderVisual
