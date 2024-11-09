@@ -214,12 +214,9 @@ void CRender::render_main(bool deffered)
 			if (!renderable)
 				continue;
 
-			float dist = renderable->getDistanceToCamera();
-			//dist /= spatial_data.sphere.R;
-			if (ps_r__render_distance_sqr && dist > ps_r__render_distance_sqr)
-				continue;
+			extern bool VisibleToRender(IRenderVisual* pVisual, bool isStatic, bool sm, Fmatrix& transform_matrix, bool ignore_optimize = false);
 
-			if (dist >= _sqr(g_pGamePersistent->Environment().CurrentEnv->fog_distance))
+			if(!VisibleToRender(renderable->GetRenderData().visual, false, false, renderable->GetRenderData().xform))
 				continue;
 
 			if (dont_test_sectors)

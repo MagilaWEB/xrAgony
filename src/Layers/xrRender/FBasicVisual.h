@@ -1,5 +1,3 @@
-#ifndef FBasicVisualH
-#define FBasicVisualH
 #pragma once
 
 #include "xrEngine/vis_common.h"
@@ -46,8 +44,8 @@ private:
 // The class itself
 class ECORE_API dxRender_Visual : public IRenderVisual
 {
-public:
 #ifdef DEBUG
+public:
 	shared_str dbg_name;
 	virtual shared_str getDebugName() { return dbg_name; }
 #endif
@@ -56,8 +54,10 @@ public:
 	u32 Type; // visual's type
 	vis_data vis; // visibility-data
 	ref_shader shader; // pipe state, shared
-	
-	bool bIgnoreOpt;
+
+	dxRender_Visual();
+	virtual ~dxRender_Visual();
+
 	virtual void Render(float /*LOD*/) {} // LOD - Level Of Detail  [0..1], Ignored
 	virtual void Load(const char* N, IReader* data, u32 dwFlags);
 	virtual void Release(); // Shared memory release
@@ -69,10 +69,19 @@ public:
 	//	virtual	CKinematicsAnimated*dcast_PKinematicsAnimated	()				{ return 0;	}
 	//	virtual IParticleCustom*	dcast_ParticleCustom		()				{ return 0;	}
 
-	virtual vis_data& getVisData() { return vis; }
-	virtual u32 getType() { return Type; }
-	dxRender_Visual();
-	virtual ~dxRender_Visual();
-};
+	vis_data& getVisData() override { return vis; };
+	u32 getType() override { return Type; };
 
-#endif // !FBasicVisualH
+	
+	fastdelegate::FastDelegate<void(float dist)>& get_callback_dist()
+	{
+		return callback_check_dist;
+	};
+
+	float get_distance_to_camera_base(Fmatrix* transform_matrix = nullptr) override;
+	float getDistanceToCamera(Fmatrix* transform_matrix = nullptr) override;
+private:
+	fastdelegate::FastDelegate<void(float dist)> callback_check_dist;
+	float m_distance = 0.f;
+	float m_next_distance_update_time = 0.f;
+};

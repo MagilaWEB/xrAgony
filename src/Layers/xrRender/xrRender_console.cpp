@@ -851,9 +851,9 @@ void xrRender_initconsole()
 	CMD4(CCC_Integer, "r__details_opt_intensity", &ps_r__details_opt_intensity, 0, 10);
 
 	// Geometry optimization
-	CMD4(CCC_Integer, "r__optimize_static_geom", &opt_static, 0, 4);
-	CMD4(CCC_Integer, "r__optimize_dynamic_geom", &opt_dynamic, 0, 4);
-	CMD4(CCC_Integer, "r__optimize_shadow_geom", &opt_shadow, 0, 4);
+	CMD4(CCC_Integer, "r__optimize_static_geom", &opt_static, 0, 16);
+	CMD4(CCC_Integer, "r__optimize_dynamic_geom", &opt_dynamic, 0, 16);
+	CMD4(CCC_Integer, "r__optimize_shadow_geom", &opt_shadow, 0, 16);
 
 	//  Allow real-time fog config reload
 #ifdef DEBUG

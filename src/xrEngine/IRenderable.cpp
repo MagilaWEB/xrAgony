@@ -2,8 +2,6 @@
 #include "xrCDB/ISpatial.h"
 #include "IRenderable.h"
 
-constexpr float distance_update_period = 1.f;
-
 // XXX: rename this file to RenderableBase.cpp
 RenderableBase::RenderableBase()
 {
@@ -32,25 +30,4 @@ IRender_ObjectSpecific* RenderableBase::renderable_ROS()
 	if (0 == renderable.pROS && renderable.pROS_Allowed)
 		renderable.pROS = ::Render->ros_create(this);
 	return renderable.pROS;
-}
-
-float RenderableBase::calc_distance_to_camera() const
-{
-	return								Device.vCameraPosition.distance_to_sqr(renderable.xform.c);
-}
-
-float RenderableBase::get_distance_to_camera_base()
-{
-	if (m_next_distance_update_time < Device.fTimeGlobal)
-	{
-		m_distance						= calc_distance_to_camera();
-		m_next_distance_update_time		= Device.fTimeGlobal + distance_update_period;
-		on_distance_update				();
-	}
-	return								m_distance;
-}
-
-float RenderableBase::getDistanceToCamera()
-{
-	return								get_distance_to_camera_base() * Device.iZoomSqr;
 }

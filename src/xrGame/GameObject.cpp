@@ -7,7 +7,6 @@
 #include "CustomMonster.h"
 #include "physicobject.h"
 #include "HangingLamp.h"
-#include "xrPhysics/PhysicsShell.h"
 #include "game_sv_single.h"
 #include "xrAICore/Navigation/level_graph.h"
 #include "ph_shell_interface.h"
@@ -30,16 +29,10 @@
 #include "magic_box3.h"
 #include "animation_movement_controller.h"
 #include "xrEngine/xr_collide_form.h"
-#include "script_game_object.h"
-#include "xrScriptEngine/script_callback_ex.h"
 #include "game_object_space.h"
 #include "doors_door.h"
 #include "doors.h"
 
-#pragma warning(push)
-#pragma warning(disable : 4995)
-#include <intrin.h>
-#pragma warning(pop)
 
 #pragma intrinsic(_InterlockedCompareExchange)
 
@@ -257,6 +250,13 @@ void CGameObject::net_Destroy()
 	if (psAI_Flags.test(aiDestroy))
 		Msg("Destroying client object [%d][%s][%x]", ID(), *cName(), this);
 #endif
+
+	if (Visual())
+	{
+		auto& callback_dist = Visual()->get_callback_dist();
+		if (!callback_dist.empty())
+			callback_dist.clear();
+	}
 
 	VERIFY(m_spawned);
 	if (m_anim_mov_ctrl)
@@ -1463,14 +1463,18 @@ bool CGameObject::queryUpdateCL()
 	return								(alwaysUpdateCL() || m_next_update_time < Device.fTimeGlobal);
 }
 
-void CGameObject::on_distance_update()
+void CGameObject::on_distance_update(float new_dist)
 {
 	calc_next_update_time				();
 }
 
 void CGameObject::calc_next_update_time()
 {
-	float dist							= get_distance_to_camera_base();
+	float dist = 0.f;
+	
+	if (Visual())
+		dist = Visual()->get_distance_to_camera_base(&XFORM());
+
 	switch (b_visibility_status)
 	{
 	case eNonVisible:
@@ -1503,6 +1507,13 @@ void CGameObject::update()
 		m_last_update_time_dw = Device.dwTimeGlobal;
 
 		calc_next_update_time();
+
+		if (Visual())
+		{
+			auto& callback_dist = Visual()->get_callback_dist();
+			if (callback_dist.empty())
+				callback_dist.bind(this, &CGameObject::on_distance_update);
+		}
 	}
 
 	UpdateCL();

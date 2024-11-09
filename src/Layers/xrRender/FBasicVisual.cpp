@@ -12,6 +12,8 @@
 #include "FBasicVisual.h"
 #include "xrCore/FMesh.hpp"
 
+constexpr float distance_update_period = 1.f;
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -85,4 +87,33 @@ void dxRender_Visual::Copy(dxRender_Visual* pFrom)
 #ifdef DEBUG
 	PCOPY(dbg_name);
 #endif
+}
+
+float dxRender_Visual::get_distance_to_camera_base(Fmatrix* transform_matrix)
+{
+	if (m_next_distance_update_time < Device.fTimeGlobal)
+	{
+		if (transform_matrix)
+		{
+			Fvector pos;
+			transform_matrix->transform_tiny(pos, getVisData().sphere.P);
+			m_distance = Device.vCameraPosition.distance_to_sqr(pos);
+		}
+		else
+			m_distance = Device.vCameraPosition.distance_to_sqr(getVisData().sphere.P);
+
+		m_next_distance_update_time = Device.fTimeGlobal + distance_update_period;
+
+		if (!callback_check_dist.empty())
+		{
+			callback_check_dist(m_distance);
+			callback_check_dist.clear();
+		}
+	}
+	return m_distance;
+}
+
+float dxRender_Visual::getDistanceToCamera(Fmatrix* transform_matrix)
+{
+	return get_distance_to_camera_base(transform_matrix) * Device.iZoomSqr;
 }

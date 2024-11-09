@@ -493,8 +493,9 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 				{
 					if (auto renderable = spatial->dcast_Renderable())
 					{
-						float dist = renderable->getDistanceToCamera();
-						if (ps_r__render_distance_sqr && dist > ps_r__render_distance_sqr)
+						extern bool VisibleToRender(IRenderVisual * pVisual, bool isStatic, bool sm, Fmatrix & transform_matrix, bool ignore_optimize = false);
+
+						if (!VisibleToRender(renderable->GetRenderData().visual, false, true, renderable->GetRenderData().xform))
 							return;
 
 						for (CFrustum& frustum : sector->r_frustums)
@@ -502,16 +503,13 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 							set_Frustum(&frustum);
 							if (View->testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R))
 							{
-								if (dist <= 5000.f)
+								if (CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
 								{
-									if (CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
-									{
-										if (spatial->GetSpatialData().type & STYPE_RENDERABLESHADOW)
-											pKin->CalculateBones(TRUE);
-										else if ((spatial->GetSpatialData().type & STYPE_RENDERABLE) &&
-											!ViewSave.testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R))
-											pKin->CalculateBones(TRUE);
-									}
+									if (spatial->GetSpatialData().type & STYPE_RENDERABLESHADOW)
+										pKin->CalculateBones(TRUE);
+									else if ((spatial->GetSpatialData().type & STYPE_RENDERABLE) &&
+										!ViewSave.testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R))
+										pKin->CalculateBones(TRUE);
 								}
 
 								renderable->renderable_Render();

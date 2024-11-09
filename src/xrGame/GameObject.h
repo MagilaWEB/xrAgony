@@ -390,10 +390,9 @@ private:
 
 	void								calc_next_update_time();
 
-	void								on_distance_update() override;
-
 protected:
 	void								UpdateCL() override;
+	void								on_distance_update(float new_dist) override;
 
 public:
 	static void							loadStaticData();

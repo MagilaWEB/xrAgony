@@ -5,6 +5,7 @@
 class IKinematics;
 class IKinematicsAnimated;
 class IParticleCustom;
+class IRenderable;
 struct vis_data;
 
 class IRenderVisual
@@ -22,6 +23,10 @@ public:
 	virtual IKinematics* dcast_PKinematics() { return nullptr; }
 	virtual IKinematicsAnimated* dcast_PKinematicsAnimated() { return nullptr; }
 	virtual IParticleCustom* dcast_ParticleCustom() { return nullptr; }
+
+	virtual fastdelegate::FastDelegate<void(float dist)>& get_callback_dist() = 0;
+	virtual float get_distance_to_camera_base(Fmatrix* transform_matrix = nullptr) = 0;
+	virtual float getDistanceToCamera(Fmatrix* transform_matrix = nullptr) = 0;
 };
 
 #endif //	RenderVisual_included
