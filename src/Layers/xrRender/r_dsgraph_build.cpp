@@ -390,8 +390,9 @@ void CRender::add_leafs_Dynamic(dxRender_Visual* pVisual, bool bIgnoreOpt)
 	{
 	case MT_PARTICLE_GROUP:
 	{
+		auto& items = reinterpret_cast<PS::CParticleGroup*>(pVisual)->items;
 		// Add all children, doesn't perform any tests
-		for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
+		for (PS::CParticleGroup::SItem& I : items)
 		{
 			if (I._effect)
 				add_leafs_Dynamic(I._effect, bIgnoreOpt);
@@ -469,8 +470,9 @@ void CRender::add_leafs_Static(dxRender_Visual* pVisual)
 	{
 	case MT_PARTICLE_GROUP:
 	{
+		auto& items = reinterpret_cast<PS::CParticleGroup*>(pVisual)->items;
 		// Add all children, doesn't perform any tests
-		for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
+		for (PS::CParticleGroup::SItem& I : items)
 		{
 			if (I._effect)
 				add_leafs_Dynamic(I._effect);
@@ -564,10 +566,11 @@ BOOL CRender::add_Dynamic(dxRender_Visual* pVisual, u32 planes)
 	{
 	case MT_PARTICLE_GROUP:
 	{
+		auto& items = reinterpret_cast<PS::CParticleGroup*>(pVisual)->items;
 		// Add all children, doesn't perform any tests
 		if (fcvPartial == VIS)
 		{
-			for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
+			for (PS::CParticleGroup::SItem& I : items)
 			{
 				if (I._effect)
 					add_Dynamic(I._effect, planes);
@@ -580,7 +583,7 @@ BOOL CRender::add_Dynamic(dxRender_Visual* pVisual, u32 planes)
 		}
 		else
 		{
-			for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
+			for (PS::CParticleGroup::SItem& I : items)
 			{
 				if (I._effect)
 					add_leafs_Dynamic(I._effect);
@@ -596,11 +599,13 @@ BOOL CRender::add_Dynamic(dxRender_Visual* pVisual, u32 planes)
 	case MT_HIERRARHY:
 	{
 		// Add all children
+		auto& children = reinterpret_cast<FHierrarhyVisual*>(pVisual)->children;
+
 		if (fcvPartial == VIS)
-			for (dxRender_Visual* I : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
+			for (dxRender_Visual* I : children)
 				add_Dynamic(I, planes);
 		else
-			for (dxRender_Visual* I : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
+			for (dxRender_Visual* I : children)
 				add_leafs_Dynamic(I);
 	}
 	break;
@@ -624,9 +629,10 @@ BOOL CRender::add_Dynamic(dxRender_Visual* pVisual, u32 planes)
 			add_leafs_Dynamic(pV->m_lod);
 		else
 		{
+			auto& children = reinterpret_cast<FHierrarhyVisual*>(pVisual)->children;
 			//pV->CalculateBones(TRUE);
 			//pV->CalculateWallmarks(); //. bug?
-			for (dxRender_Visual* I : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
+			for (dxRender_Visual* I : children)
 				add_leafs_Dynamic(I);
 		}
 	}
@@ -661,10 +667,11 @@ void CRender::add_Static(dxRender_Visual* pVisual, u32 planes)
 	{
 	case MT_PARTICLE_GROUP:
 	{
+		auto & items = reinterpret_cast<PS::CParticleGroup*>(pVisual)->items;
 		// Add all children, doesn't perform any tests
 		if (fcvPartial == VIS)
 		{
-			for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
+			for (PS::CParticleGroup::SItem& I : items)
 			{
 				if (I._effect)
 					add_Dynamic(I._effect, planes);
@@ -677,7 +684,7 @@ void CRender::add_Static(dxRender_Visual* pVisual, u32 planes)
 		}
 		else
 		{
-			for (PS::CParticleGroup::SItem& I : reinterpret_cast<PS::CParticleGroup*>(pVisual)->items)
+			for (PS::CParticleGroup::SItem& I : items)
 			{
 				if (I._effect)
 					add_leafs_Dynamic(I._effect);
@@ -693,11 +700,13 @@ void CRender::add_Static(dxRender_Visual* pVisual, u32 planes)
 	case MT_HIERRARHY:
 	{
 		// Add all children
+		auto& children = reinterpret_cast<FHierrarhyVisual*>(pVisual)->children;
+
 		if (VIS == fcvPartial)
-			for (dxRender_Visual* childRenderable : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
+			for (dxRender_Visual* childRenderable : children)
 				add_Static(childRenderable, planes);
 		else
-			for (dxRender_Visual* childRenderable : reinterpret_cast<FHierrarhyVisual*>(pVisual)->children)
+			for (dxRender_Visual* childRenderable : children)
 				add_leafs_Static(childRenderable);
 	}
 	break;
