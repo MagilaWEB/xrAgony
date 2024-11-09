@@ -504,15 +504,10 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 							if (View->testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R))
 							{
 								if (CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
-								{
-									if (spatial->GetSpatialData().type & STYPE_RENDERABLESHADOW)
-										pKin->CalculateBones(TRUE);
-									else if ((spatial->GetSpatialData().type & STYPE_RENDERABLE) &&
-										!ViewSave.testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R))
-										pKin->CalculateBones(TRUE);
-								}
+									pKin->CalculateBones(TRUE);
 
 								renderable->renderable_Render();
+								break;
 							}
 						}
 					}
