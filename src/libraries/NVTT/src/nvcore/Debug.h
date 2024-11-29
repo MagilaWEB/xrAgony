@@ -16,10 +16,7 @@
 
 #undef assert	// avoid conflicts with assert method.
 
-#define nvNoAssert(exp) \
-	do { \
-		(void)sizeof(exp); \
-	} while(0)
+#define nvNoAssert(exp)
 
 #if NV_NO_ASSERT
 
