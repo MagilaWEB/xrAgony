@@ -139,14 +139,14 @@ void CHUDManager::RenderUI()
 
 	m_pHUDTarget->Render();
 
-	if (Device.Paused() && bShowPauseString)
+	if (::IDevice->cast()->Paused() && bShowPauseString)
 	{
 		CGameFont* pFont = UI().Font().pFontGraffiti50Russian;
 		pFont->SetColor(0x80FF0000);
 		LPCSTR _str = StringTable().translate("st_game_paused").c_str();
 
 		Fvector2 _pos;
-		_pos.set(Device.UI_BASE_WIDTH / 2.0f, Device.UI_BASE_HEIGHT / 2.0f);
+		_pos.set(::IDevice->cast()->UI_BASE_WIDTH / 2.0f, ::IDevice->cast()->UI_BASE_HEIGHT / 2.0f);
 		UI().ClientToScreenScaled(_pos);
 		pFont->SetAligment(CGameFont::alCenter);
 		pFont->Out(_pos.x, _pos.y, _str);
@@ -213,7 +213,7 @@ void CHUDManager::OnDisconnected()
 {
 	b_online = false;
 	if (pUIGame)
-		Device.seqFrame.Remove(pUIGame);
+		::IDevice->cast()->seqFrame.Remove(pUIGame);
 }
 
 void CHUDManager::OnConnected()
@@ -222,7 +222,7 @@ void CHUDManager::OnConnected()
 		return;
 	b_online = true;
 	if (pUIGame)
-		Device.seqFrame.Add(pUIGame, REG_PRIORITY_LOW - 1000);
+		::IDevice->cast()->seqFrame.Add(pUIGame, REG_PRIORITY_LOW - 1000);
 }
 
 void CHUDManager::net_Relcase(IGameObject* obj)

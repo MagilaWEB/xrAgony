@@ -137,7 +137,7 @@ void UILoadingScreen::ChangeVisibility(bool state)
 
 		sound->music_Update();
 
-		Device.seqRender.Add(this, 0);
+		::IDevice->cast()->seqRender.Add(this, 0);
 
 		m_is_visibility = true;
 		mt_load.Init([this]() { b_Load(); });
@@ -147,7 +147,7 @@ void UILoadingScreen::ChangeVisibility(bool state)
 	else
 	{
 		mt_load.Stop();
-		Device.seqRender.Remove(this);
+		::IDevice->cast()->seqRender.Remove(this);
 
 		levelName->Show(false);
 		levelName->TextItemControl()->SetText("");

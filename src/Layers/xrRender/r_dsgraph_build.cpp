@@ -25,12 +25,12 @@ float r_ssaHZBvsTEX;
 ICF float CalcSSA(float& distSQ, Fvector& C, dxRender_Visual* V)
 {
 	float R = V->vis.sphere.R + 0;
-	distSQ = Device.vCameraPosition.distance_to_sqr(C) + EPS;
+	distSQ = ::IDevice->cast()->vCameraPosition.distance_to_sqr(C) + EPS;
 	return R / distSQ;
 }
 ICF float CalcSSA(float& distSQ, Fvector& C, float R)
 {
-	distSQ = Device.vCameraPosition.distance_to_sqr(C) + EPS;
+	distSQ = ::IDevice->cast()->vCameraPosition.distance_to_sqr(C) + EPS;
 	return R / distSQ;
 }
 
@@ -834,8 +834,8 @@ void D3DXRenderBase::Reset(HWND hWnd, u32& dwWidth, u32& dwHeight, float& fWidth
 	dwWidth = HW.m_ChainDesc.BufferDesc.Width;
 	dwHeight = HW.m_ChainDesc.BufferDesc.Height;
 
-	Device.aspect_ratio = (Device.UI_BASE_WIDTH / Device.UI_BASE_HEIGHT) / (float(dwWidth) / float(dwHeight));
-	Device.screen_magnitude = ((float(dwWidth) / Device.UI_BASE_WIDTH) + (float(dwHeight) / Device.UI_BASE_HEIGHT)) / 2;
+	::IDevice->cast()->aspect_ratio = (::IDevice->cast()->UI_BASE_WIDTH / ::IDevice->cast()->UI_BASE_HEIGHT) / (float(dwWidth) / float(dwHeight));
+	::IDevice->cast()->screen_magnitude = ((float(dwWidth) / ::IDevice->cast()->UI_BASE_WIDTH) + (float(dwHeight) / ::IDevice->cast()->UI_BASE_HEIGHT)) / 2;
 	fWidth_2 = float(dwWidth / 2);
 	fHeight_2 = float(dwHeight / 2);
 	Resources->reset_end();
@@ -871,8 +871,8 @@ void D3DXRenderBase::Create(HWND hWnd, u32& dwWidth, u32& dwHeight, float& fWidt
 	HW.CreateDevice(hWnd, move_window);
 	dwWidth = HW.m_ChainDesc.BufferDesc.Width;
 	dwHeight = HW.m_ChainDesc.BufferDesc.Height;
-	Device.aspect_ratio = (Device.UI_BASE_WIDTH / Device.UI_BASE_HEIGHT) / (float(dwWidth) / float(dwHeight));
-	Device.screen_magnitude = ((float(dwWidth) / Device.UI_BASE_WIDTH) + (float(dwHeight) / Device.UI_BASE_HEIGHT)) / 2;
+	::IDevice->cast()->aspect_ratio = (::IDevice->cast()->UI_BASE_WIDTH / ::IDevice->cast()->UI_BASE_HEIGHT) / (float(dwWidth) / float(dwHeight));
+	::IDevice->cast()->screen_magnitude = ((float(dwWidth) / ::IDevice->cast()->UI_BASE_WIDTH) + (float(dwHeight) / ::IDevice->cast()->UI_BASE_HEIGHT)) / 2;
 	fWidth_2 = float(dwWidth / 2);
 	fHeight_2 = float(dwHeight / 2);
 	Resources = new CResourceManager();
@@ -952,7 +952,7 @@ void D3DXRenderBase::End()
 
 	RCache.OnFrameEnd();
 
-	if (Device.m_ScopeVP.IsSVPRender())
+	if (::IDevice->cast()->m_ScopeVP.IsSVPRender())
 		return;
 
 	DoAsyncScreenshot();
@@ -989,7 +989,7 @@ void D3DXRenderBase::OnAssetsChanged()
 void D3DXRenderBase::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 {
 	BasicStats.FrameEnd();
-	auto renderTotal = Device.GetStats().RenderTotal.GetResult_ms();
+	auto renderTotal = ::IDevice->cast()->GetStats().RenderTotal.GetResult_ms();
 #define PPP(a) (100.f * float(a) / renderTotal)
 	font.OutNext("*** RENDER:	%2.5fms", renderTotal);
 	font.OutNext("Calc:			%2.5fms, %2.1f%%", BasicStats.Culling.GetResult_ms(), PPP(BasicStats.Culling.GetResult_ms()));

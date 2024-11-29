@@ -400,7 +400,7 @@ void CUIActorMenu::InfoCurItem(CUICellItem* cell_item)
 
 	//	m_ItemInfo->InitItem	( current_item, compare_item );
 	float dx_pos = GetWndRect().left;
-	fit_in_rect(m_ItemInfo, Frect().set(0.0f, 0.0f, Device.UI_BASE_WIDTH - dx_pos, Device.UI_BASE_HEIGHT), 10.0f, dx_pos);
+	fit_in_rect(m_ItemInfo, Frect().set(0.0f, 0.0f, ::IDevice->cast()->UI_BASE_WIDTH - dx_pos, ::IDevice->cast()->UI_BASE_HEIGHT), 10.0f, dx_pos);
 }
 
 void CUIActorMenu::UpdateItemsPlace()

@@ -38,7 +38,7 @@ void CRender::render_rain()
 	static const float source_offset = 10000.f;
 	RainLight.direction.set(0.0f, -1.0f, 0.0f);
 	RainLight.position.set(
-		Device.vCameraPosition.x, Device.vCameraPosition.y + source_offset, Device.vCameraPosition.z);
+		::IDevice->cast()->vCameraPosition.x, ::IDevice->cast()->vCameraPosition.y + source_offset, ::IDevice->cast()->vCameraPosition.z);
 
 	float fBoundingSphereRadius = 0;
 
@@ -47,8 +47,8 @@ void CRender::render_rain()
 	{
 		//
 		const float fRainFar = ps_r3_dyn_wet_surf_far;
-		ex_project.build_projection(deg2rad(Device.fFOV /* *Device.fASPECT*/), Device.fASPECT, VIEWPORT_NEAR, fRainFar);
-		ex_full.mul(ex_project, Device.mView);
+		ex_project.build_projection(deg2rad(::IDevice->cast()->fFOV /* *::IDevice->cast()->fASPECT*/), ::IDevice->cast()->fASPECT, VIEWPORT_NEAR, fRainFar);
+		ex_full.mul(ex_project, ::IDevice->cast()->mView);
 		ex_full_inverse.invert_44(ex_full);
 
 		//	Calculate view frustum were we can see dynamic rain radius
@@ -56,14 +56,14 @@ void CRender::render_rain()
 			//	b^2 = 2RH, B - side enge of the pyramid, h = height
 			//	R = b^2/(2*H)
 			const float H = fRainFar;
-			const float a = tanf(deg2rad(Device.fFOV) / 2);
-			const float c = tanf(deg2rad(Device.fFOV * Device.fASPECT) / 2);
+			const float a = tanf(deg2rad(::IDevice->cast()->fFOV) / 2);
+			const float c = tanf(deg2rad(::IDevice->cast()->fFOV * ::IDevice->cast()->fASPECT) / 2);
 			const float b_2 = H * H * (1.0f + a * a + c * c);
 			fBoundingSphereRadius = b_2 / (2.0f * H);
 		}
 	}
 
-	// Device.vCameraDirection
+	// ::IDevice->cast()->vCameraDirection
 
 	// Compute volume(s) - something like a frustum for infinite directional light
 	// Also compute virtual light position and sector it is inside
@@ -120,9 +120,9 @@ void CRender::render_rain()
 		cull_sector = largest_sector;
 
 		// COP - 100 km away
-		cull_COP.mad(Device.vCameraPosition, RainLight.direction, -tweak_rain_COP_initial_offs);
-		cull_COP.x += fBoundingSphereRadius * Device.vCameraDirection.x;
-		cull_COP.z += fBoundingSphereRadius * Device.vCameraDirection.z;
+		cull_COP.mad(::IDevice->cast()->vCameraPosition, RainLight.direction, -tweak_rain_COP_initial_offs);
+		cull_COP.x += fBoundingSphereRadius * ::IDevice->cast()->vCameraDirection.x;
+		cull_COP.z += fBoundingSphereRadius * ::IDevice->cast()->vCameraDirection.z;
 
 		// Create frustum for query
 		cull_frustum._clear();
@@ -166,7 +166,7 @@ void CRender::render_rain()
 		//	Offset RainLight position to center rain shadowmap
 		Fvector3 vRectOffset;
 		vRectOffset.set(
-			fBoundingSphereRadius * Device.vCameraDirection.x, 0, fBoundingSphereRadius * Device.vCameraDirection.z);
+			fBoundingSphereRadius * ::IDevice->cast()->vCameraDirection.x, 0, fBoundingSphereRadius * ::IDevice->cast()->vCameraDirection.z);
 		bb.vMin.x = -fBoundingSphereRadius + vRectOffset.x;
 		bb.vMax.x = fBoundingSphereRadius + vRectOffset.x;
 		bb.vMin.y = -fBoundingSphereRadius + vRectOffset.z;
@@ -261,8 +261,8 @@ void CRender::render_rain()
 
 	// Restore XForms
 	RCache.set_xform_world(Fidentity);
-	RCache.set_xform_view(Device.mView);
-	RCache.set_xform_project(Device.mProject);
+	RCache.set_xform_view(::IDevice->cast()->mView);
+	RCache.set_xform_project(::IDevice->cast()->mProject);
 
 	// Accumulate
 	Target->phase_rain();

@@ -124,8 +124,8 @@ void CRenderTarget::u_stencil_optimize(eStencilOptimizeMode eSOM)
 	VERIFY(RImplementation.o.nvstencil);
 	// RCache.set_ColorWriteEnable	(FALSE);
 	u32 Offset;
-	float _w = float(Device.dwWidth);
-	float _h = float(Device.dwHeight);
+	float _w = float(::IDevice->cast()->dwWidth);
+	float _h = float(::IDevice->cast()->dwHeight);
 	u32 C = color_rgba(255, 255, 255, 255);
 	float eps = 0;
 	float _dw = 0.5f;
@@ -156,8 +156,8 @@ void CRenderTarget::u_stencil_optimize(eStencilOptimizeMode eSOM)
 // 2D texgen (texture adjustment matrix)
 void CRenderTarget::u_compute_texgen_screen(Fmatrix& m_Texgen)
 {
-	// float	_w						= float(Device.dwWidth);
-	// float	_h						= float(Device.dwHeight);
+	// float	_w						= float(::IDevice->cast()->dwWidth);
+	// float	_h						= float(::IDevice->cast()->dwHeight);
 	// float	o_w						= (.5f / _w);
 	// float	o_h						= (.5f / _h);
 	Fmatrix m_TexelAdjust = {0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
@@ -176,8 +176,8 @@ void CRenderTarget::u_compute_texgen_jitter(Fmatrix& m_Texgen_J)
 	m_Texgen_J.mul(m_TexelAdjust, RCache.xforms.m_wvp);
 
 	// rescale - tile it
-	float scale_X = float(Device.dwWidth) / float(TEX_jitter);
-	float scale_Y = float(Device.dwHeight) / float(TEX_jitter);
+	float scale_X = float(::IDevice->cast()->dwWidth) / float(TEX_jitter);
+	float scale_Y = float(::IDevice->cast()->dwHeight) / float(TEX_jitter);
 	// float	offset			= (.5f / float(TEX_jitter));
 	m_TexelAdjust.scale(scale_X, scale_Y, 1.f);
 	// m_TexelAdjust.translate_over(offset,	offset,	0	);
@@ -380,7 +380,7 @@ CRenderTarget::CRenderTarget()
 
 	//	NORMAL
 	{
-		u32 w = Device.dwWidth, h = Device.dwHeight;
+		u32 w = ::IDevice->cast()->dwWidth, h = ::IDevice->cast()->dwHeight;
 		rt_Position.create(r2_RT_P, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 		SET_DEBUG_NAME(rt_Position._get()->pRT, "rt_Position");
 
@@ -651,7 +651,7 @@ CRenderTarget::CRenderTarget()
 			FLOAT ColorRGBA[4] = {127.0f / 255.0f, 127.0f / 255.0f, 127.0f / 255.0f, 127.0f / 255.0f};
 			HW.pContext->ClearRenderTargetView(rt_LUM_pool[it]->pRT, ColorRGBA);
 		}
-		u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, nullptr, nullptr, HW.pBaseZB);
+		u_setrt(::IDevice->cast()->dwWidth, ::IDevice->cast()->dwHeight, HW.pBaseRT, nullptr, nullptr, HW.pBaseZB);
 	}
 
 	// HBAO
@@ -661,13 +661,13 @@ CRenderTarget::CRenderTarget()
 		u32 h = 0;
 		if (RImplementation.o.ssao_half_data)
 		{
-			w = Device.dwWidth / 2;
-			h = Device.dwHeight / 2;
+			w = ::IDevice->cast()->dwWidth / 2;
+			h = ::IDevice->cast()->dwHeight / 2;
 		}
 		else
 		{
-			w = Device.dwWidth;
-			h = Device.dwHeight;
+			w = ::IDevice->cast()->dwWidth;
+			h = ::IDevice->cast()->dwHeight;
 		}
 
 		D3DFORMAT fmt = HW.Caps.id_vendor == 0x10DE ? D3DFMT_R32F : D3DFMT_R16F;
@@ -681,7 +681,7 @@ CRenderTarget::CRenderTarget()
 	const bool ssao_hdao_ultra = RImplementation.o.ssao_hdao && RImplementation.o.ssao_ultra;
 	if (ssao_blur_on || ssao_hdao_ultra)
 	{
-		const auto w = Device.dwWidth, h = Device.dwHeight;
+		const auto w = ::IDevice->cast()->dwWidth, h = ::IDevice->cast()->dwHeight;
 
 		if (ssao_hdao_ultra)
 		{
@@ -741,8 +741,8 @@ CRenderTarget::CRenderTarget()
 		// Testure for async sreenshots
 		{
 			D3D_TEXTURE2D_DESC desc;
-			desc.Width = Device.dwWidth;
-			desc.Height = Device.dwHeight;
+			desc.Width = ::IDevice->cast()->dwWidth;
+			desc.Height = ::IDevice->cast()->dwHeight;
 			desc.MipLevels = 1;
 			desc.ArraySize = 1;
 			desc.SampleDesc.Count = 1;
@@ -1015,8 +1015,8 @@ CRenderTarget::CRenderTarget()
 	g_menu.create(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
 
 	//
-	dwWidth = Device.dwWidth;
-	dwHeight = Device.dwHeight;
+	dwWidth = ::IDevice->cast()->dwWidth;
+	dwHeight = ::IDevice->cast()->dwHeight;
 }
 
 CRenderTarget::~CRenderTarget()
@@ -1125,8 +1125,8 @@ void CRenderTarget::reset_light_marker(bool bResetStencil)
 	if (bResetStencil)
 	{
 		u32 Offset;
-		float _w = float(Device.dwWidth);
-		float _h = float(Device.dwHeight);
+		float _w = float(::IDevice->cast()->dwWidth);
+		float _h = float(::IDevice->cast()->dwHeight);
 		u32 C = color_rgba(255, 255, 255, 255);
 		float eps = 0;
 		float _dw = 0.5f;

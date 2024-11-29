@@ -90,8 +90,8 @@ void CHUDTarget::CursorOnFrame()
 {
 	Fvector p1, dir;
 
-	p1 = Device.vCameraPosition;
-	dir = Device.vCameraDirection;
+	p1 = ::IDevice->cast()->vCameraPosition;
+	dir = ::IDevice->cast()->vCameraDirection;
 
 	// Render cursor
 	if (Level().CurrentEntity())
@@ -129,8 +129,8 @@ void CHUDTarget::Render()
 	if (!E)
 		return;
 
-	Fvector p1 = Device.vCameraPosition;
-	Fvector dir = Device.vCameraDirection;
+	Fvector p1 = ::IDevice->cast()->vCameraPosition;
+	Fvector dir = ::IDevice->cast()->vCameraDirection;
 
 	// Render cursor
 	u32 C = C_DEFAULT;
@@ -138,12 +138,12 @@ void CHUDTarget::Render()
 	Fvector		p2;
 	p2.mad(p1, dir, PP.RQ.range);
 	Fvector4	pt;
-	Device.mFullTransform.transform(pt, p2);
+	::IDevice->cast()->mFullTransform.transform(pt, p2);
 	pt.y = -pt.y;
 	float di_size = C_SIZE / powf(pt.w, .2f);
 
 	Fvector2	scr_size2;
-	scr_size2.set(float(Device.dwWidth), float(Device.dwHeight));
+	scr_size2.set(float(::IDevice->cast()->dwWidth), float(::IDevice->cast()->dwHeight));
 	float size_x2 = scr_size2.x * di_size;
 	float size_y2 = scr_size2.y * di_size;
 
@@ -177,13 +177,13 @@ void CHUDTarget::Render()
 			result = weapon->get_LastFP();
 			result.add(Fvector(weapon->get_LastFD()).mul(dist));
 
-			Device.mFullTransform.transform(v_res, result);
+			::IDevice->cast()->mFullTransform.transform(v_res, result);
 
 			if (v_res.z < 0 || v_res.w < 0)	return;
 			if (v_res.x < -1.f || v_res.x > 1.f || v_res.y < -1.f || v_res.y>1.f) return;
 
-			cx = (1.f + v_res.x) / 2.f * (Device.dwWidth);
-			cy = (1.f - v_res.y) / 2.f * (Device.dwHeight);
+			cx = (1.f + v_res.x) / 2.f * (::IDevice->cast()->dwWidth);
+			cy = (1.f - v_res.y) / 2.f * (::IDevice->cast()->dwHeight);
 			F->OutSet(cx, cy + 5);
 		}
 	}
@@ -263,7 +263,7 @@ void CHUDTarget::Render()
 		::UIRender->StartPrimitive(6, IUIRender::ptTriList, UI().m_currentPointType);
 
 		Fvector2 scr_size;
-		scr_size.set(float(Device.dwWidth), float(Device.dwHeight));
+		scr_size.set(float(::IDevice->cast()->dwWidth), float(::IDevice->cast()->dwHeight));
 		float size_x = scr_size.x * di_size;
 		float size_y = scr_size.y * di_size;
 

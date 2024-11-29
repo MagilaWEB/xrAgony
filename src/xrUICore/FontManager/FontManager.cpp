@@ -5,21 +5,21 @@
 
 CFontManager::CFontManager()
 {
-	//Device.seqDeviceReset.Add(this, REG_PRIORITY_HIGH);
+	//::IDevice->cast()->seqDeviceReset.Add(this, REG_PRIORITY_HIGH);
 
 	InitializeFonts();
-	Device.seqRender.Add(this, 0);
+	::IDevice->cast()->seqRender.Add(this, 0);
 }
 
 CFontManager::~CFontManager()
 {
-	Device.seqRender.Remove(this);
+	::IDevice->cast()->seqRender.Remove(this);
 
 	for (auto& [FontName, FontObj] : pFonts)
 		xr_delete(FontObj);
 
 	pFonts.clear();
-	//Device.seqDeviceReset.Remove(this);
+	//::IDevice->cast()->seqDeviceReset.Remove(this);
 }
 
 void CFontManager::InitializeFonts()
@@ -136,7 +136,7 @@ CFontManager::DATA_FONT CFontManager::GetData() const
 
 void CFontManager::OnRender()
 {
-	if (Device.m_ScopeVP.IsSVPRender())
+	if (::IDevice->cast()->m_ScopeVP.IsSVPRender())
 		return;
 
 	for (auto & iter : pFonts)

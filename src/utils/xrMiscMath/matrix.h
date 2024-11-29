@@ -411,7 +411,7 @@ struct _matrix
 		Tvector vRight;
 		vRight.crossproduct(vUp, vView);
 
-		// Start building the Device.mView. The first three rows contains the basis
+		// Start building the ::IDevice->cast()->mView. The first three rows contains the basis
 		// vectors used to rotate the view to point at the lookat point
 		_11 = vRight.x;
 		_12 = vUp.x;
@@ -448,7 +448,7 @@ struct _matrix
 		Tvector vRight;
 		vRight.crossproduct(vUp, vView);
 
-		// Start building the Device.mView. The first three rows contains the basis
+		// Start building the ::IDevice->cast()->mView. The first three rows contains the basis
 		// vectors used to rotate the view to point at the lookat point
 		_11 = vRight.x;
 		_12 = vUp.x;

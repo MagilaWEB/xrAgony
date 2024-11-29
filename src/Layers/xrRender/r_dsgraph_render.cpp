@@ -301,7 +301,7 @@ struct hud_transform_helper
 
 	hud_transform_helper()
 	{
-		mProject.build_projection(deg2rad(Device.fFOV * .75f  /* *Device.fASPECT*/), Device.fASPECT,
+		mProject.build_projection(deg2rad(::IDevice->cast()->fFOV * .75f  /* *::IDevice->cast()->fASPECT*/), ::IDevice->cast()->fASPECT,
 			VIEWPORT_NEAR_HUD, g_pGamePersistent->Environment().CurrentEnv->far_plane);
 		RCache.set_xform_project(mProject);
 
@@ -312,7 +312,7 @@ struct hud_transform_helper
 	{
 		RImplementation.rmNormal();
 		// Restore projection
-		RCache.set_xform_project(Device.mProject);
+		RCache.set_xform_project(::IDevice->cast()->mProject);
 	}
 
 private:
@@ -439,8 +439,8 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	RImplementation.marker++; // !!! critical here
 
 	// Save and build new frustum, disable HOM
-	CFrustum ViewSave = Device.ViewFromMatrix;
-	View = &(Device.ViewFromMatrix = *_frustum);
+	CFrustum ViewSave = ::IDevice->cast()->ViewFromMatrix;
+	View = &(::IDevice->cast()->ViewFromMatrix = *_frustum);
 
 	if (_precise_portals && RImplementation.rmPortals)
 	{
@@ -458,7 +458,7 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	}
 
 	// Traverse sector/portal structure
-	PortalTraverser.traverse(_sector, Device.ViewFromMatrix, _cop, mCombined, 0);
+	PortalTraverser.traverse(_sector, ::IDevice->cast()->ViewFromMatrix, _cop, mCombined, 0);
 
 	// Determine visibility for static geometry hierrarhy
 	for (u32 s_it = 0; s_it < PortalTraverser.r_sectors.size(); s_it++)
@@ -482,7 +482,7 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 			lstRenderables,
 			ISpatial_DB::O_ORDERED,
 			STYPE_RENDERABLE + STYPE_RENDERABLESHADOW,
-			Device.ViewFromMatrix
+			::IDevice->cast()->ViewFromMatrix
 		);
 
 		auto renderable_spatial = [this, ViewSave](ISpatial* spatial) -> void
@@ -530,7 +530,7 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	}
 
 	// Restore
-	Device.ViewFromMatrix = ViewSave;
+	::IDevice->cast()->ViewFromMatrix = ViewSave;
 	View = nullptr;
 }
 

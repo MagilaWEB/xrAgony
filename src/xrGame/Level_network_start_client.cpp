@@ -119,9 +119,9 @@ bool CLevel::net_start_client4()
 		// Send network to single or multithreaded mode
 		// *note: release version always has "mt_*" enabled
 		extern pureFrame* g_pNetProcessor;
-		Device.seqFrameMT.Remove(g_pNetProcessor);
-		Device.seqFrame.Remove(g_pNetProcessor);
-		Device.seqFrameMT.Add(g_pNetProcessor, REG_PRIORITY_HIGH + 2);
+		::IDevice->cast()->seqFrameMT.Remove(g_pNetProcessor);
+		::IDevice->cast()->seqFrame.Remove(g_pNetProcessor);
+		::IDevice->cast()->seqFrameMT.Add(g_pNetProcessor, REG_PRIORITY_HIGH + 2);
 	}
 	return true;
 }
@@ -162,7 +162,7 @@ bool CLevel::net_start_client6()
 		if (game)
 			game->OnConnected();
 
-		Device.PreCache(60, true, true);
+		::IDevice->cast()->PreCache(60, true, true);
 		net_start_result_total = TRUE;
 	}
 	else

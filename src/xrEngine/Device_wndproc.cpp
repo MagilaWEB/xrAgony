@@ -84,7 +84,7 @@ bool CRenderDevice::on_message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT result{ 0 };
-	if (Device.on_message(hWnd, uMsg, wParam, lParam, result))
+	if (::IDevice->cast()->on_message(hWnd, uMsg, wParam, lParam, result))
 		return (result);
 
 	return (DefWindowProc(hWnd, uMsg, wParam, lParam));

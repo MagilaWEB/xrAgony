@@ -49,7 +49,7 @@ void CSheduler::Destroy()
 void CSheduler::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 {
 	stats.FrameEnd();
-	const float percentage = 100.f * stats.Update.GetResult_ms() / Device.GetStats().EngineTotal.GetResult_ms();
+	const float percentage = 100.f * stats.Update.GetResult_ms() / ::IDevice->cast()->GetStats().EngineTotal.GetResult_ms();
 	font.OutNext("Scheduler:");
 	font.OutNext("- update:	 %2.5fms, %2.1f%%", stats.Update.GetResult_ms(), percentage);
 	font.OutNext("- load:		%2.5fms", stats.Load);
@@ -389,7 +389,7 @@ void CSheduler::ProcessStep()
 		if (i % 3 != 3 - 1)
 			continue;
 
-		if (Device.dwPrecacheFrame == 0 && CPU::QPC() > cycles_limit)
+		if (::IDevice->cast()->dwPrecacheFrame == 0 && CPU::QPC() > cycles_limit)
 		{
 			// we have maxed out the load - increase heap
 			psShedulerTarget += psShedulerReaction * 3;
@@ -410,7 +410,7 @@ void CSheduler::ProcessStep()
 
 void CSheduler::Update()
 {
-	if (Device.Paused())
+	if (::IDevice->cast()->Paused())
 		return;
 	LIMIT_UPDATE_FPS(CShedulerFPS, 30)
 	// Initialize

@@ -57,7 +57,7 @@ void CLevel::IR_OnMouseWheel(int direction)
 	if (CurrentGameUI()->IR_UIOnMouseWheel(direction))
 		return;
 
-	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
+	if (::IDevice->cast()->Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;
 
 	if (CURRENT_ENTITY())
@@ -88,7 +88,7 @@ void CLevel::IR_OnMouseMove(int dx, int dy)
 	if (CurrentGameUI()->IR_UIOnMouseMove(dx, dy))
 		return;
 
-	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
+	if (::IDevice->cast()->Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;
 
 	if (CURRENT_ENTITY())
@@ -111,7 +111,7 @@ extern float g_separate_radius;
 
 void CLevel::IR_OnKeyboardPress(int key)
 {
-	if (Device.dwPrecacheFrame)
+	if (::IDevice->cast()->dwPrecacheFrame)
 		return;
 
 	if (pInput->iGetAsyncKeyState(DIK_RALT))
@@ -133,9 +133,9 @@ void CLevel::IR_OnKeyboardPress(int key)
 		if (!g_block_pause && IsGameTypeSingle())
 		{
 			if (psActorFlags.test(AF_NO_CLIP))
-				Device.Pause(!Device.Paused(), TRUE, TRUE, "li_pause_key_no_clip");
+				::IDevice->cast()->Pause(!::IDevice->cast()->Paused(), TRUE, TRUE, "li_pause_key_no_clip");
 			else
-				Device.Pause(!Device.Paused(), TRUE, TRUE, "li_pause_key");
+				::IDevice->cast()->Pause(!::IDevice->cast()->Paused(), TRUE, TRUE, "li_pause_key");
 		}
 		return;
 	}
@@ -181,7 +181,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 	if (b_ui_exist && CurrentGameUI()->IR_UIOnKeyboardPress(key))
 		return;
 
-	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
+	if (::IDevice->cast()->Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;
 
 	if (game && game->OnKeyboardPress(get_binded_action(key)))
@@ -505,7 +505,7 @@ void CLevel::IR_OnKeyboardRelease(int key)
 	if (game && game->OnKeyboardRelease(get_binded_action(key)))
 		return;
 
-	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
+	if (::IDevice->cast()->Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;
 
 	if (CURRENT_ENTITY())
@@ -560,7 +560,7 @@ void CLevel::IR_OnKeyboardHold(int key)
 	if (CurrentGameUI() && CurrentGameUI()->IR_UIOnKeyboardHold(key))
 		return;
 
-	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
+	if (::IDevice->cast()->Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;
 
 	if (CURRENT_ENTITY())

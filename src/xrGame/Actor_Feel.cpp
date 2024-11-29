@@ -127,11 +127,11 @@ void CActor::PickupModeUpdate()
 	feel_touch_update(Position(), m_fPickupInfoRadius);
 
 	CFrustum frustum;
-	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
+	frustum.CreateFromMatrix(::IDevice->cast()->mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
 
 	for (xr_vector<IGameObject*>::iterator it = feel_touch.begin(); it != feel_touch.end(); it++)
 	{
-		if (CanPickItem(frustum, Device.vCameraPosition, *it))
+		if (CanPickItem(frustum, ::IDevice->cast()->vCameraPosition, *it))
 			PickupInfoDraw(*it);
 	}
 }
@@ -146,7 +146,7 @@ void CActor::PickupModeUpdate_COD()
 	}
 
 	CFrustum frustum;
-	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
+	frustum.CreateFromMatrix(::IDevice->cast()->mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
 
 	ISpatialResult.resize(0);
 	g_SpatialSpace->q_frustum(ISpatialResult, 0, STYPE_COLLIDEABLE, frustum);
@@ -198,8 +198,8 @@ void CActor::PickupModeUpdate_COD()
 	if (pNearestItem)
 	{
 		CFrustum frustum;
-		frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
-		if (!CanPickItem(frustum, Device.vCameraPosition, &pNearestItem->object()))
+		frustum.CreateFromMatrix(::IDevice->cast()->mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
+		if (!CanPickItem(frustum, ::IDevice->cast()->vCameraPosition, &pNearestItem->object()))
 			pNearestItem = nullptr;
 	}
 	if (pNearestItem && pNearestItem->cast_game_object())
@@ -288,7 +288,7 @@ void CActor::PickupInfoDraw(IGameObject* object)
 		return;
 
 	Fmatrix res;
-	res.mul(Device.mFullTransform, object->XFORM());
+	res.mul(::IDevice->cast()->mFullTransform, object->XFORM());
 	Fvector4 v_res;
 	Fvector shift;
 
@@ -302,8 +302,8 @@ void CActor::PickupInfoDraw(IGameObject* object)
 	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y < -1.f || v_res.y > 1.f)
 		return;
 
-	float x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
-	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
+	float x = (1.f + v_res.x) / 2.f * (::IDevice->cast()->dwWidth);
+	float y = (1.f - v_res.y) / 2.f * (::IDevice->cast()->dwHeight);
 
 	UI().Font().pFontLetterica16Russian->SetAligment(CGameFont::alCenter);
 	UI().Font().pFontLetterica16Russian->SetColor(PICKUP_INFO_COLOR);

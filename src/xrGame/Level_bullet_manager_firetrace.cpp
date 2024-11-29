@@ -163,7 +163,7 @@ BOOL CBulletManager::test_callback(const collide::ray_defs& rd, IGameObject* obj
 //	result.range;	// range from start to element
 //	result.element;	// if (O) "num tri" else "num bone"
 //	params;			// user defined abstract data
-//	Device.Statistic.TEST0.End();
+//	::IDevice->cast()->Statistic.TEST0.End();
 // return TRUE-продолжить трассировку / FALSE-закончить трассировку
 
 void CBulletManager::FireShotmark(SBullet* bullet, const Fvector& vDir, const Fvector& vEnd, collide::rq_result& R,

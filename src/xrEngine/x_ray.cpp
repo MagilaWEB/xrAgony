@@ -35,13 +35,13 @@ LPCSTR _GetFontTexName(LPCSTR section)
 	int idx = def_idx;
 
 #if 0
-	u32 w = Device.dwWidth;
+	u32 w = ::IDevice->cast()->dwWidth;
 
 	if (w <= 800) idx = 0;
 	else if (w <= 1280)idx = 1;
 	else idx = 2;
 #else
-	u32 h = Device.dwHeight;
+	u32 h = ::IDevice->cast()->dwHeight;
 
 	if (h <= 600)
 		idx = 0;
@@ -82,7 +82,7 @@ CApplication::CApplication()
 	pFontSystem = nullptr;
 
 	// Register us
-	Device.seqFrame.Add(this, REG_PRIORITY_HIGH + 1000);
+	::IDevice->cast()->seqFrame.Add(this, REG_PRIORITY_HIGH + 1000);
 
 	Console->Show();
 
@@ -98,7 +98,7 @@ CApplication::~CApplication()
 	// font
 	xr_delete(pFontSystem);
 
-	Device.seqFrame.Remove(this);
+	::IDevice->cast()->seqFrame.Remove(this);
 
 	DestroyLoadingScreen();
 
@@ -117,7 +117,7 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 	{
 
 		g_SASH.EndBenchmark();
-		Device.EventMessage(WM_QUIT, NULL, NULL);
+		::IDevice->cast()->EventMessage(WM_QUIT, NULL, NULL);
 
 		for (u32 i = 0; i < Levels.size(); i++)
 		{
@@ -137,7 +137,7 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 		Console->Hide();
 		//! this line is commented by Dima
 		//! because I don't see any reason to reset device here
-		//! Device.Reset (false);
+		//! ::IDevice->cast()->Reset (false);
 		//-----------------------------------------------------------
 		g_pGamePersistent->PreStart(op_server);
 		//-----------------------------------------------------------

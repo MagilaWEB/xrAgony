@@ -144,7 +144,7 @@ CGamePersistent::CGamePersistent(void)
 		R_ASSERT2(fname[0], "Missing filename for 'demomode'");
 		Msg("- playing in demo mode '%s'", fname);
 		pDemoFile = FS.r_open(fname);
-		Device.seqFrame.Add(this);
+		::IDevice->cast()->seqFrame.Add(this);
 		eDemoStart = Engine.Event.Handler_Attach("GAME:demo", this);
 		uTime2Change = 0;
 	}
@@ -163,7 +163,7 @@ CGamePersistent::~CGamePersistent(void)
 {
 	mt_identify_room.Stop();
 	FS.r_close(pDemoFile);
-	Device.seqFrame.Remove(this);
+	::IDevice->cast()->seqFrame.Remove(this);
 	Engine.Event.Handler_Detach(eDemoStart, this);
 	Engine.Event.Handler_Detach(eQuickLoad, this);
 }
@@ -309,7 +309,7 @@ void CGamePersistent::identify_room()
 	constexpr u32 number_rays_h = 40;
 	constexpr s32 number_rays_p = 7;
 
-	if (g_pGameLevel && Level().CurrentViewEntity() && !Device.Paused())
+	if (g_pGameLevel && Level().CurrentViewEntity() && !::IDevice->cast()->Paused())
 	{
 		collide::rq_result RQ;
 		Fvector pos = Actor()->cam_FirstEye()->Position();
@@ -399,7 +399,7 @@ void CGamePersistent::WeathersUpdate()
 						pos.x = _cos(angle);
 						pos.y = 0;
 						pos.z = _sin(angle);
-						pos.normalize().mul(ch.get_rnd_sound_dist()).add(Device.vCameraPosition);
+						pos.normalize().mul(ch.get_rnd_sound_dist()).add(::IDevice->cast()->vCameraPosition);
 						pos.y += 10.f;
 						snd.play_at_pos(nullptr, pos);
 
@@ -451,7 +451,7 @@ void CGamePersistent::WeathersUpdate()
 
 					ambient_particles = CParticlesObject::Create(eff->particles.c_str(), FALSE, false);
 					Fvector pos;
-					pos.add(Device.vCameraPosition, eff->offset);
+					pos.add(::IDevice->cast()->vCameraPosition, eff->offset);
 					ambient_particles->play_at_pos(pos);
 
 					if (eff->sound._handle())
@@ -552,7 +552,7 @@ bool allow_intro()
 
 void CGamePersistent::start_logo_intro()
 {
-	if (Device.dwPrecacheFrame == 0)
+	if (::IDevice->cast()->dwPrecacheFrame == 0)
 	{
 		m_intro_event.bind(this, &CGamePersistent::update_logo_intro);
 		if (0 == xr_strlen(m_game_params.m_game_or_spawn) && nullptr == g_pGameLevel)
@@ -605,7 +605,7 @@ void CGamePersistent::update_game_loaded()
 	xr_delete(m_intro);
 	Msg("intro_delete ::update_game_loaded");
 	start_game_intro();
-	Device.Pause(FALSE, TRUE, TRUE, "object_synchronization");
+	::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "object_synchronization");
 }
 
 void CGamePersistent::start_game_intro()
@@ -652,7 +652,7 @@ void CGamePersistent::OnFrame()
 	}
 	else if (pApp->IsLoaded() && pApp->IsNewGame() && !state_is_new_game)
 	{
-		Device.Pause(FALSE, TRUE, TRUE, "object_synchronization");
+		::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "object_synchronization");
 		state_is_new_game = true;
 		pApp->CheckMaxLoad();
 	}
@@ -679,10 +679,10 @@ void CGamePersistent::OnFrame()
 	if (!m_intro && m_intro_event.empty() && pApp->IsLoaded())
 		load_screen_renderer.stop();
 
-	if (!Device.isLevelReady())
+	if (!::IDevice->cast()->isLevelReady())
 		return;
 
-	if (Device.Paused())
+	if (::IDevice->cast()->Paused())
 	{
 #ifdef MASTER
 		if (Level().CurrentViewEntity() && IsGameTypeSingle())
@@ -752,12 +752,12 @@ void CGamePersistent::OnFrame()
 	}
 	__super::OnFrame();
 
-	if (!Device.IsLoadingProsses())
+	if (!::IDevice->cast()->IsLoadingProsses())
 	{
-		//Device.add_parallel(&Engine.Sheduler, &CSheduler::Update);
+		//::IDevice->cast()->add_parallel(&Engine.Sheduler, &CSheduler::Update);
 		Engine.Sheduler.Update();
 		// update weathers ambient
-		if (Device.ActiveMain())
+		if (::IDevice->cast()->ActiveMain())
 			mt_identify_room.Stop();
 		else
 		{
@@ -871,12 +871,12 @@ static BOOL bEntryFlag = TRUE;
 void CGamePersistent::OnAppActivate()
 {
 	bool bIsMP = (g_pGameLevel && Level().game && GameID() != eGameIDSingle);
-	bIsMP &= !Device.Paused();
+	bIsMP &= !::IDevice->cast()->Paused();
 
 	if (!bIsMP)
-		Device.Pause(FALSE, !bRestorePause, TRUE, "CGP::OnAppActivate");
+		::IDevice->cast()->Pause(FALSE, !bRestorePause, TRUE, "CGP::OnAppActivate");
 	else
-		Device.Pause(FALSE, TRUE, TRUE, "CGP::OnAppActivate MP");
+		::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "CGP::OnAppActivate MP");
 
 	bEntryFlag = TRUE;
 }
@@ -892,12 +892,12 @@ void CGamePersistent::OnAppDeactivate()
 
 	if (!bIsMP)
 	{
-		bRestorePause = Device.Paused();
-		Device.Pause(TRUE, TRUE, TRUE, "CGP::OnAppDeactivate");
+		bRestorePause = ::IDevice->cast()->Paused();
+		::IDevice->cast()->Pause(TRUE, TRUE, TRUE, "CGP::OnAppDeactivate");
 	}
 	else
 	{
-		Device.Pause(TRUE, FALSE, TRUE, "CGP::OnAppDeactivate MP");
+		::IDevice->cast()->Pause(TRUE, FALSE, TRUE, "CGP::OnAppDeactivate MP");
 	}
 	bEntryFlag = FALSE;
 }

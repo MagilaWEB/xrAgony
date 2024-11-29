@@ -36,7 +36,7 @@ IC void CDebugRenderer::draw_aabb(const Fvector& center, const float& half_radiu
 	Fvector half_radius;
 	half_radius.set(half_radius_x, half_radius_y, half_radius_z);
 
-	Fmatrix matrix = Device.mInvView;
+	Fmatrix matrix = ::IDevice->cast()->mInvView;
 	matrix.translate_over(center);
 
 	draw_obb(matrix, half_radius, color);

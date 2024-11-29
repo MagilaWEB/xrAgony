@@ -908,7 +908,7 @@ void CWeapon::UpdateCL()
 bool CWeapon::need_renderable() { return !(IsZoomed() && ZoomTexture() && !IsRotatingToZoom()); }
 void CWeapon::renderable_Render()
 {
-	if (Device.m_ScopeVP.IsSVPRender() && m_zoom_params.m_fZoomRotationFactor > 0.05f)
+	if (::IDevice->cast()->m_ScopeVP.IsSVPRender() && m_zoom_params.m_fZoomRotationFactor > 0.05f)
 		return;
 
 	UpdateXForm();
@@ -1748,14 +1748,14 @@ void CWeapon::UpdateHudAdditonal(Fmatrix& trans)
 		clamp(m_zoom_params.m_fZoomRotationFactor, 0.f, 1.f);
 	}
 
-	if (Device.m_ScopeVP.IsSVPActive())
+	if (::IDevice->cast()->m_ScopeVP.IsSVPActive())
 	{
-		Device.m_ScopeVP.m_vDirection.set(Device.vCameraDirection);
+		::IDevice->cast()->m_ScopeVP.m_vDirection.set(::IDevice->cast()->vCameraDirection);
 
 		Fmatrix Cam;
-		Cam.i.set(Device.vCameraRight);
-		Cam.j.set(Device.vCameraTop);
-		Cam.k.set(Device.vCameraDirection);
+		Cam.i.set(::IDevice->cast()->vCameraRight);
+		Cam.j.set(::IDevice->cast()->vCameraTop);
+		Cam.k.set(::IDevice->cast()->vCameraDirection);
 
 		Fvector cam_mHPB;
 		Cam.getHPB(cam_mHPB);
@@ -1771,9 +1771,9 @@ void CWeapon::UpdateHudAdditonal(Fmatrix& trans)
 			cam_mHPB.z + (hud_mHPB.z - cam_mHPB.z)
 		);
 
-		Device.m_ScopeVP.m_vPosition.set(Device.vCameraPosition);
-		Device.m_ScopeVP.m_vNormal.set(Cam.j);
-		Device.m_ScopeVP.m_vRight.set(Cam.i);
+		::IDevice->cast()->m_ScopeVP.m_vPosition.set(::IDevice->cast()->vCameraPosition);
+		::IDevice->cast()->m_ScopeVP.m_vNormal.set(Cam.j);
+		::IDevice->cast()->m_ScopeVP.m_vRight.set(Cam.i);
 	}
 }
 

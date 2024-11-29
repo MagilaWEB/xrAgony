@@ -66,7 +66,7 @@ CALifeUpdateManager::CALifeUpdateManager(xrServer* server, LPCSTR section)
 CALifeUpdateManager::~CALifeUpdateManager()
 {
 	shedule_unregister();
-	Device.remove_parallel(this, &CALifeUpdateManager::update);
+	::IDevice->cast()->remove_parallel(this, &CALifeUpdateManager::update);
 }
 
 float CALifeUpdateManager::shedule_Scale()
@@ -81,7 +81,7 @@ void CALifeUpdateManager::update_switch()
 	init_ef_storage();
 
 	START_PROFILE("ALife/switch");
-	graph().level().update(CSwitchPredicate(this), Device.dwPrecacheFrame > 0);
+	graph().level().update(CSwitchPredicate(this), ::IDevice->cast()->dwPrecacheFrame > 0);
 	STOP_PROFILE
 }
 
@@ -110,7 +110,7 @@ void CALifeUpdateManager::shedule_Update(u32 dt)
 
 	if (!m_first_time)
 	{
-		Device.add_parallel(this, &CALifeUpdateManager::update);
+		::IDevice->cast()->add_parallel(this, &CALifeUpdateManager::update);
 		return;
 	}
 

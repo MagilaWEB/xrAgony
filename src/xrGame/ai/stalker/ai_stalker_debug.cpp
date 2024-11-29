@@ -66,7 +66,7 @@ void try_change_current_entity()
 	g_debug_actor = actor;
 
 	CFrustum frustum;
-	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
+	frustum.CreateFromMatrix(::IDevice->cast()->mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
 
 	typedef xr_vector<ISpatial*> OBJECTS;
 	OBJECTS ISpatialResult;
@@ -964,7 +964,7 @@ void CAI_Stalker::dbg_draw_vision()
 	shift.set(0.f, 2.5f, 0.f);
 
 	Fmatrix res;
-	res.mul(Device.mFullTransform, XFORM());
+	res.mul(::IDevice->cast()->mFullTransform, XFORM());
 
 	Fvector4 v_res;
 
@@ -976,8 +976,8 @@ void CAI_Stalker::dbg_draw_vision()
 	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y < -1.f || v_res.y > 1.f)
 		return;
 
-	float x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
-	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
+	float x = (1.f + v_res.x) / 2.f * (::IDevice->cast()->dwWidth);
+	float y = (1.f - v_res.y) / 2.f * (::IDevice->cast()->dwHeight);
 
 	CNotYetVisibleObject* object =
 		memory().visual().not_yet_visible_object(smart_cast<CGameObject*>(Level().CurrentEntity()));

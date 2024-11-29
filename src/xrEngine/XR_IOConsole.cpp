@@ -80,7 +80,7 @@ CConsole::CConsole()
 	m_cmd_history_max = cmd_history_max;
 	m_disable_tips = false;
 	Register_callbacks();
-	Device.seqResolutionChanged.Add(this);
+	::IDevice->cast()->seqResolutionChanged.Add(this);
 }
 
 void CConsole::Initialize()
@@ -106,7 +106,7 @@ CConsole::~CConsole()
 	xr_delete(m_hShader_back);
 	xr_delete(m_editor);
 	Destroy();
-	Device.seqResolutionChanged.Remove(this);
+	::IDevice->cast()->seqResolutionChanged.Remove(this);
 }
 
 void CConsole::Destroy()
@@ -135,7 +135,7 @@ void CConsole::OnFrame()
 void CConsole::OutFont(LPCSTR text, float& pos_y)
 {
 	float str_length = pFont->SizeOf_(text);
-	float scr_width = 1.98f * Device.fWidth_2;
+	float scr_width = 1.98f * ::IDevice->cast()->fWidth_2;
 	if (str_length > scr_width) // 1024.0f
 	{
 		int sz = 0;
@@ -182,17 +182,17 @@ void CConsole::OnRender()
 		pFont2 = new CGameFont("font_console_2", CGameFont::fsDeviceIndependent);
 	}
 
-	m_line_height = pFont->GetHeight() / Device.fHeight_2;
+	m_line_height = pFont->GetHeight() / ::IDevice->cast()->fHeight_2;
 
 	DrawBackgrounds();
 
-	float dwMaxY = float(Device.dwHeight) * (.5f + m_line_height);
+	float dwMaxY = float(::IDevice->cast()->dwHeight) * (.5f + m_line_height);
 
 	float ypos = m_line_height * 1.1f;
-	float scr_x = 1.0f / Device.fWidth_2;
+	float scr_x = 1.0f / ::IDevice->cast()->fWidth_2;
 
 	//---------------------------------------------------------------------------------
-	float scr_width = 1.9f * Device.fWidth_2;
+	float scr_width = 1.9f * ::IDevice->cast()->fWidth_2;
 	float ioc_d = pFont->SizeOf_(ioc_prompt);
 	float d1 = pFont->SizeOf_("_");
 
@@ -288,7 +288,7 @@ void CConsole::OnRender()
 void CConsole::DrawBackgrounds()
 {
 	Frect r;
-	r.set(0.0f, 0.0f, float(Device.dwWidth), float(Device.dwHeight) * (.5f + m_line_height));
+	r.set(0.0f, 0.0f, float(::IDevice->cast()->dwWidth), float(::IDevice->cast()->dwHeight) * (.5f + m_line_height));
 
 	::UIRender->SetShader(**m_hShader_back);
 	// 6 = back, 12 = tips, (VIEW_TIPS_COUNT+1)*6 = highlight_words, 12 = scroll
@@ -321,8 +321,8 @@ void CConsole::DrawBackgrounds()
 	pr.x1 = ioc_w + cur_cmd_w;
 	pr.x2 = pr.x1 + list_w;
 
-	pr.y1 = Device.UI_BASE_HEIGHT * (0.5f + m_line_height);
-	pr.y1 *= float(Device.dwHeight) / Device.UI_BASE_HEIGHT;
+	pr.y1 = ::IDevice->cast()->UI_BASE_HEIGHT * (0.5f + m_line_height);
+	pr.y1 *= float(::IDevice->cast()->dwHeight) / ::IDevice->cast()->UI_BASE_HEIGHT;
 
 	pr.y2 = pr.y1 + tips_h;
 
@@ -532,8 +532,8 @@ void CConsole::Show()
 	update_tips();
 
 	m_editor->IR_Capture();
-	Device.seqRender.Add(this, 1);
-	Device.seqFrame.Add(this);
+	::IDevice->cast()->seqRender.Add(this, 1);
+	::IDevice->cast()->seqFrame.Add(this);
 }
 
 extern CInput* pInput;
@@ -555,8 +555,8 @@ void CConsole::Hide()
 	reset_selected_tip();
 	update_tips();
 
-	Device.seqFrame.Remove(this);
-	Device.seqRender.Remove(this);
+	::IDevice->cast()->seqFrame.Remove(this);
+	::IDevice->cast()->seqRender.Remove(this);
 	m_editor->IR_Release();
 }
 

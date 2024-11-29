@@ -109,7 +109,7 @@ bool CUIActorMenu::SetInfoCurUpgrade(Upgrade_type* upgrade_type, CInventoryItem*
 		return false;
 	}
 
-	fit_in_rect(m_upgrade_info, Frect().set(0.0f, 0.0f, Device.UI_BASE_WIDTH, Device.UI_BASE_HEIGHT), 0.0f, GetWndRect().left);
+	fit_in_rect(m_upgrade_info, Frect().set(0.0f, 0.0f, ::IDevice->cast()->UI_BASE_WIDTH, ::IDevice->cast()->UI_BASE_HEIGHT), 0.0f, GetWndRect().left);
 	return res;
 }
 

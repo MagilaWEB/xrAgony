@@ -32,7 +32,7 @@ void CHUDCrosshair::SetDispersion(float disp)
 {
 	Fvector4 r;
 	Fvector R = {VIEWPORT_NEAR * _sin(disp), 0.f, VIEWPORT_NEAR};
-	Device.mProject.transform(r, R);
+	::IDevice->cast()->mProject.transform(r, R);
 
 	Fvector2 scr_size;
 	scr_size.set(float(::Render->getTarget()->get_width()), float(::Render->getTarget()->get_height()));
@@ -45,7 +45,7 @@ void CHUDCrosshair::SetFirstBulletDispertion(float fbdisp)
 {
 	Fvector4 r;
 	Fvector R = {VIEWPORT_NEAR * _sin(fbdisp), 0.f, VIEWPORT_NEAR};
-	Device.mProject.transform(r, R);
+	::IDevice->cast()->mProject.transform(r, R);
 
 	Fvector2 scr_size;
 	scr_size.set(float(::Render->getTarget()->get_width()), float(::Render->getTarget()->get_height()));
@@ -109,7 +109,7 @@ void CHUDCrosshair::OnRender()
 	Fvector result;
 	Fvector4 v_res;
 	float x, y;
-	scr_size.set(float(Device.dwWidth), float(Device.dwHeight));
+	scr_size.set(float(::IDevice->cast()->dwWidth), float(::IDevice->cast()->dwHeight));
 
 	center.set(scr_size.x / 2.0f, scr_size.y / 2.0f);
 
@@ -130,13 +130,13 @@ void CHUDCrosshair::OnRender()
 			result = weapon->get_LastFP();
 			result.add(Fvector(weapon->get_LastFD()).mul(dist));
 
-			Device.mFullTransform.transform(v_res, result);
+			::IDevice->cast()->mFullTransform.transform(v_res, result);
 
 			if (v_res.z < 0 || v_res.w < 0)	return;
 			if (v_res.x < -1.f || v_res.x > 1.f || v_res.y < -1.f || v_res.y>1.f) return;
 
-			x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
-			y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
+			x = (1.f + v_res.x) / 2.f * (::IDevice->cast()->dwWidth);
+			y = (1.f - v_res.y) / 2.f * (::IDevice->cast()->dwHeight);
 
 			center.set(x, y);
 		}

@@ -728,8 +728,8 @@ void CAI_Stalker::net_Destroy()
 	CInventoryOwner::net_Destroy();
 	m_pPhysics_support->in_NetDestroy();
 
-	Device.remove_parallel2(this, &CAI_Stalker::update_object_handler);
-	Device.remove_parallel2(this, &CAI_Stalker::Exec_Visibility);
+	::IDevice->cast()->remove_parallel2(this, &CAI_Stalker::update_object_handler);
+	::IDevice->cast()->remove_parallel2(this, &CAI_Stalker::Exec_Visibility);
 
 	xr_delete(m_ce_close);
 	xr_delete(m_ce_far);
@@ -908,7 +908,7 @@ void CAI_Stalker::UpdateCL()
 	if (g_Alive())
 	{
 		if (CObjectHandler::planner().initialized())
-			Device.add_parallel2(this, &CAI_Stalker::update_object_handler);
+			::IDevice->cast()->add_parallel2(this, &CAI_Stalker::update_object_handler);
 		else
 			update_object_handler();
 
@@ -977,7 +977,7 @@ void CAI_Stalker::shedule_Update(u32 DT)
 
 
 	if (!CObjectHandler::planner().initialized())
-		Device.add_parallel2(this, &CAI_Stalker::update_object_handler);
+		::IDevice->cast()->add_parallel2(this, &CAI_Stalker::update_object_handler);
 
 	//	if (Position().distance_to(Level().CurrentEntity()->Position()) <= 50.f)
 	//		Msg				("[%6d][SH][%s]",::IDevice->TimeGlobal_ms(),*cName());
@@ -1006,7 +1006,7 @@ void CAI_Stalker::shedule_Update(u32 DT)
 #if 0 // def DEBUG
 		memory().visual().check_visibles();
 #endif
-		Device.add_parallel2(this, &CCustomMonster::Exec_Visibility);
+		::IDevice->cast()->add_parallel2(this, &CCustomMonster::Exec_Visibility);
 
 		START_PROFILE("stalker/schedule_update/memory")
 
@@ -1185,7 +1185,7 @@ void CAI_Stalker::Think()
 
 void CAI_Stalker::SelectAnimation(const Fvector& view, const Fvector& move, float speed)
 {
-	if (!Device.Paused())
+	if (!::IDevice->cast()->Paused())
 		animation().update();
 }
 

@@ -77,11 +77,11 @@ void CUISequenceVideoItem::Load(CUIXml* xml, int idx)
 		Frect texture_coords = m_wnd->GetUIStaticItem().GetTextureRect();
 
 		bool is_16_9 = UI().is_widescreen();
-		float kw_image = Device.UI_BASE_WIDTH / texture_coords.width();
+		float kw_image = ::IDevice->cast()->UI_BASE_WIDTH / texture_coords.width();
 
 		Fvector2 wnd_size;
 
-		wnd_size.x = Device.UI_BASE_WIDTH;
+		wnd_size.x = ::IDevice->cast()->UI_BASE_WIDTH;
 		wnd_size.y = texture_coords.height() * kw_image;
 		if (is_16_9)
 			wnd_size.y *= 1.2f;
@@ -169,19 +169,19 @@ void CUISequenceVideoItem::OnRender()
 void CUISequenceVideoItem::Start()
 {
 	inherited::Start();
-	m_flags.set(etiStoredPauseState, Device.Paused());
+	m_flags.set(etiStoredPauseState, ::IDevice->cast()->Paused());
 
 	if (m_flags.test(etiNeedPauseOn) && !m_flags.test(etiStoredPauseState))
 	{
-		Device.Pause(TRUE, TRUE, TRUE, "videoitem_start");
+		::IDevice->cast()->Pause(TRUE, TRUE, TRUE, "videoitem_start");
 		bShowPauseString = FALSE;
 	}
 
 	if (m_flags.test(etiNeedPauseOff) && m_flags.test(etiStoredPauseState))
-		Device.Pause(FALSE, TRUE, TRUE, "videoitem_start");
+		::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "videoitem_start");
 
 	if (m_flags.test(etiNeedPauseSound))
-		Device.Pause(TRUE, FALSE, TRUE, "videoitem_start");
+		::IDevice->cast()->Pause(TRUE, FALSE, TRUE, "videoitem_start");
 
 	m_flags.set(etiPlaying, TRUE);
 	m_flags.set(etiNeedStart, TRUE);
@@ -216,13 +216,13 @@ bool CUISequenceVideoItem::Stop(bool bForce)
 	m_texture->ResetTexture();
 
 	if (m_flags.test(etiNeedPauseOn) && !m_flags.test(etiStoredPauseState))
-		Device.Pause(FALSE, TRUE, TRUE, "videoitem_stop");
+		::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "videoitem_stop");
 
 	if (m_flags.test(etiNeedPauseOff) && m_flags.test(etiStoredPauseState))
-		Device.Pause(TRUE, TRUE, TRUE, "videoitem_stop");
+		::IDevice->cast()->Pause(TRUE, TRUE, TRUE, "videoitem_stop");
 
 	if (m_flags.test(etiNeedPauseSound))
-		Device.Pause(FALSE, FALSE, TRUE, "videoitem_stop");
+		::IDevice->cast()->Pause(FALSE, FALSE, TRUE, "videoitem_stop");
 
 	inherited::Stop();
 	return true;

@@ -56,12 +56,12 @@ void IInputReceiver::IR_GetMousePosReal(HWND hwnd, Ivector2& p)
 	if (hwnd)
 		ScreenToClient(hwnd, (LPPOINT)&p);
 }
-void IInputReceiver::IR_GetMousePosReal(Ivector2& p) { IR_GetMousePosReal(Device.m_hWnd, p); }
+void IInputReceiver::IR_GetMousePosReal(Ivector2& p) { IR_GetMousePosReal(::IDevice->cast()->m_hWnd, p); }
 void IInputReceiver::IR_GetMousePosIndependent(Fvector2& f)
 {
 	Ivector2 p;
 	IR_GetMousePosReal(p);
-	f.set(2.f * float(p.x) / float(Device.dwWidth) - 1.f, 2.f * float(p.y) / float(Device.dwHeight) - 1.f);
+	f.set(2.f * float(p.x) / float(::IDevice->cast()->dwWidth) - 1.f, 2.f * float(p.y) / float(::IDevice->cast()->dwHeight) - 1.f);
 }
 void IInputReceiver::IR_GetMousePosIndependentCrop(Fvector2& f)
 {

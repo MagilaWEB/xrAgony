@@ -65,7 +65,7 @@ public:
 		if (::IDevice->TimeGlobal_ms() < m_last_fail_time + time_to_wait_after_fail)
 			return;
 
-		Device.add_parallel(this, &CLevelPathBuilder::process);
+		::IDevice->cast()->add_parallel(this, &CLevelPathBuilder::process);
 	}
 
 	void process_impl()
@@ -110,6 +110,6 @@ public:
 		if (m_object->m_wait_for_distributed_computation)
 			m_object->m_wait_for_distributed_computation = false;
 
-		Device.remove_parallel(this, &CLevelPathBuilder::process);
+		::IDevice->cast()->remove_parallel(this, &CLevelPathBuilder::process);
 	}
 };

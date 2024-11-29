@@ -57,10 +57,10 @@ void tune_remap(const Ivector& in_values, Ivector& out_values)
 void calc_cam_diff_pos(Fmatrix item_transform, Fvector diff, Fvector& res)
 {
 	Fmatrix cam_m;
-	cam_m.i.set(Device.vCameraRight);
-	cam_m.j.set(Device.vCameraTop);
-	cam_m.k.set(Device.vCameraDirection);
-	cam_m.c.set(Device.vCameraPosition);
+	cam_m.i.set(::IDevice->cast()->vCameraRight);
+	cam_m.j.set(::IDevice->cast()->vCameraTop);
+	cam_m.k.set(::IDevice->cast()->vCameraDirection);
+	cam_m.c.set(::IDevice->cast()->vCameraPosition);
 
 	Fvector res1;
 	cam_m.transform_dir(res1, diff);
@@ -73,10 +73,10 @@ void calc_cam_diff_pos(Fmatrix item_transform, Fvector diff, Fvector& res)
 void calc_cam_diff_rot(Fmatrix item_transform, Fvector diff, Fvector& res)
 {
 	Fmatrix cam_m;
-	cam_m.i.set(Device.vCameraRight);
-	cam_m.j.set(Device.vCameraTop);
-	cam_m.k.set(Device.vCameraDirection);
-	cam_m.c.set(Device.vCameraPosition);
+	cam_m.i.set(::IDevice->cast()->vCameraRight);
+	cam_m.j.set(::IDevice->cast()->vCameraTop);
+	cam_m.k.set(::IDevice->cast()->vCameraDirection);
+	cam_m.c.set(::IDevice->cast()->vCameraPosition);
 
 	Fmatrix R;
 	R.identity();
@@ -226,8 +226,8 @@ void attachable_hud_item::debug_draw_firedeps()
 
 	if (hud_adj_mode)
 	{
-		Fvector cam_pos = Device.vCameraPosition;
-		Fvector cam_dir_m = Device.vCameraDirection;
+		Fvector cam_pos = ::IDevice->cast()->vCameraPosition;
+		Fvector cam_dir_m = ::IDevice->cast()->vCameraDirection;
 		cam_pos.add(cam_dir_m);
 
 		render.draw_aabb(cam_pos, 0.002f, 0.002f, 0.002f, color_xrgb(0, 255, 0));

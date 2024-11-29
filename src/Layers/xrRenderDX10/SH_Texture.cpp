@@ -126,7 +126,7 @@ void CTexture::apply_load(u32 dwStage)
 {
 	task_apply_louding.run([this, dwStage]
 	{
-		while (!Device.b_is_Ready.load())
+		while (!::IDevice->cast()->b_is_Ready.load())
 			std::this_thread::yield();
 
 		if (!flags.bLoaded.load())

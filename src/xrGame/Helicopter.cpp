@@ -265,7 +265,7 @@ BOOL CHelicopter::net_Spawn(CSE_Abstract* DC)
 	if (pUserData->section_exist("destroyed"))
 		CPHDestroyable::Load(pUserData, "destroyed");
 #ifdef DEBUG
-	Device.seqRender.Add(this, REG_PRIORITY_LOW - 1);
+	::IDevice->cast()->seqRender.Add(this, REG_PRIORITY_LOW - 1);
 #endif
 
 	return TRUE;
@@ -293,7 +293,7 @@ void CHelicopter::net_Destroy()
 		xr_delete(m_pPhysicsShell);
 	}
 #ifdef DEBUG
-	Device.seqRender.Remove(this);
+	::IDevice->cast()->seqRender.Remove(this);
 #endif
 }
 
@@ -469,7 +469,7 @@ void CHelicopter::UpdateCL()
 
 	if (OwnerActor() && OwnerActor()->IsMyCamera())
 	{
-		cam_Update(::IDevice->TimeDelta_sec(), Device.gFOV);
+		cam_Update(::IDevice->TimeDelta_sec(), ::IDevice->cast()->gFOV);
 		OwnerActor()->Cameras().UpdateFromCamera(Camera());
 		if (eacFirstEye == active_camera->tag && !Level().Cameras().GetCamEffector(cefDemo))
 			OwnerActor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
@@ -644,7 +644,7 @@ void CHelicopter::OnMouseMove(int dx, int dy)
 	if (Remote())					return;
 
 	CCameraBase* C = active_camera;
-	float scale = (C->f_fov / Device.gFOV) * psMouseSens * psMouseSensScale / 50.f;
+	float scale = (C->f_fov / ::IDevice->cast()->gFOV) * psMouseSens * psMouseSensScale / 50.f;
 	if (dx) {
 		float d = float(dx)*scale;
 		C->Move((d<0) ? kLEFT : kRIGHT, _abs(d));

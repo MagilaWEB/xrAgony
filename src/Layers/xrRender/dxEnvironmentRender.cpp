@@ -216,7 +216,7 @@ void dxEnvironmentRender::RenderSky(CEnvironment& env)
 	// draw sky box
 	Fmatrix mSky;
 	mSky.rotateY(env.CurrentEnv->sky_rotation);
-	mSky.translate_over(Device.vCameraPosition);
+	mSky.translate_over(::IDevice->cast()->vCameraPosition);
 
 	u32 i_offset, v_offset;
 	u32 C = color_rgba(iFloor(env.CurrentEnv->sky_color.x * 255.f), iFloor(env.CurrentEnv->sky_color.y * 255.f),
@@ -262,7 +262,7 @@ void dxEnvironmentRender::RenderClouds(CEnvironment& env)
 	mScale.scale(10, 0.4f, 10);
 	mXFORM.rotateY(env.CurrentEnv->sky_rotation);
 	mXFORM.mulB_43(mScale);
-	mXFORM.translate_over(Device.vCameraPosition);
+	mXFORM.translate_over(::IDevice->cast()->vCameraPosition);
 
 	Fvector wd0, wd1;
 	Fvector4 wind_dir;

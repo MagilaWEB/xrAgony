@@ -1395,7 +1395,7 @@ void CPHMovementControl::UpdateObjectBox(CPHCharacter* ach)
 	if (plane_dist > EPS_S)
 		poses_dir.mul(1.f / plane_dist);
 	Fvector2 plane_cam;
-	plane_cam.set(Device.vCameraDirection.x, Device.vCameraDirection.z);
+	plane_cam.set(::IDevice->cast()->vCameraDirection.x, ::IDevice->cast()->vCameraDirection.z);
 	plane_cam.normalize_safe();
 	Fvector2 plane_i;
 	plane_i.set(pObject->XFORM().i.x, pObject->XFORM().i.z);

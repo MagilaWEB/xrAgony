@@ -69,14 +69,14 @@ void dxRainRender::Render(CEffect_Rain& owner)
 	Fplane src_plane;
 	Fvector norm = {0.f, -1.f, 0.f};
 	Fvector upper;
-	upper.set(Device.vCameraPosition.x, Device.vCameraPosition.y + source_offset, Device.vCameraPosition.z);
+	upper.set(::IDevice->cast()->vCameraPosition.x, ::IDevice->cast()->vCameraPosition.y + source_offset, ::IDevice->cast()->vCameraPosition.z);
 	src_plane.build(upper, norm);
 
 	// perform update
 	u32 vOffset;
 	FVF::LIT* verts = (FVF::LIT*)RCache.Vertex.Lock(desired_items * 4, hGeom_Rain->vb_stride, vOffset);
 	FVF::LIT* start = verts;
-	const Fvector& vEye = Device.vCameraPosition;
+	const Fvector& vEye = ::IDevice->cast()->vCameraPosition;
 	for (u32 I = 0; I < owner.items.size(); I++)
 	{
 		// physics and time control
@@ -98,7 +98,7 @@ void dxRainRender::Render(CEffect_Rain& owner)
 		if (wlen > b_radius_wrap_sqr)
 		{
 			wlen = _sqrt(wlen);
-			//.			Device.Statistic->TEST3.Begin();
+			//.			::IDevice->cast()->Statistic->TEST3.Begin();
 			if ((one.P.y - vEye.y) < sink_offset)
 			{
 				// need born
@@ -140,7 +140,7 @@ void dxRainRender::Render(CEffect_Rain& owner)
 					//					Log("4");
 				}
 			}
-			//.			Device.Statistic->TEST3.End();
+			//.			::IDevice->cast()->Statistic->TEST3.End();
 		}
 		// Build line
 		Fvector& pos_head = one.P;
@@ -155,7 +155,7 @@ void dxRainRender::Render(CEffect_Rain& owner)
 		sC.mul(.5f);
 		sR = sC.magnitude();
 		sC.add(pos_trail);
-		if (!Device.ViewFromMatrix.testSphere_dirty(sC, sR))
+		if (!::IDevice->cast()->ViewFromMatrix.testSphere_dirty(sC, sR))
 			continue;
 
 		static Fvector2 UV[2][4] = {{{0, 1}, {0, 0}, {1, 1}, {1, 0}}, {{1, 0}, {1, 1}, {0, 0}, {0, 1}}};
@@ -229,7 +229,7 @@ void dxRainRender::Render(CEffect_Rain& owner)
 			}
 
 			// Render
-			if (Device.ViewFromMatrix.testSphere_dirty(P->bounds.P, P->bounds.R))
+			if (::IDevice->cast()->ViewFromMatrix.testSphere_dirty(P->bounds.P, P->bounds.R))
 			{
 				// Build matrix
 				float scale = P->time / particles_time;

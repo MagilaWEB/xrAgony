@@ -55,7 +55,7 @@ void SBinocVisibleObj::create_default(u32 color)
 	m_rt.SetTextureColor(clr);
 	m_rb.SetTextureColor(clr);
 
-	cur_rect.set(0, 0, Device.UI_BASE_WIDTH, Device.UI_BASE_HEIGHT);
+	cur_rect.set(0, 0, ::IDevice->cast()->UI_BASE_WIDTH, ::IDevice->cast()->UI_BASE_HEIGHT);
 
 	m_flags.zero();
 }
@@ -84,7 +84,7 @@ struct check_pred
 			return;
 		Fvector opos = Fvector(object_->Position());
 
-		if (0 > opos.sub(apos).dotproduct(Device.vCameraDirection))
+		if (0 > opos.sub(apos).dotproduct(::IDevice->cast()->vCameraDirection))
 			_it->m_flags.set(flVisObjNotValid, TRUE);
 	};
 };
@@ -99,7 +99,7 @@ void SBinocVisibleObj::Update()
 	Fbox b = m_object->Visual()->getVisData().box;
 
 	Fmatrix xform;
-	xform.mul(Device.mFullTransform, m_object->XFORM());
+	xform.mul(::IDevice->cast()->mFullTransform, m_object->XFORM());
 	Fvector2 mn = {flt_max, flt_max}, mx = {flt_min, flt_min};
 
 	for (u32 k = 0; k < 8; ++k)
@@ -124,10 +124,10 @@ void SBinocVisibleObj::Update()
 		return;
 
 	std::swap(mn.y, mx.y);
-	mn.x = (1.f + mn.x) / 2.f * Device.UI_BASE_WIDTH;
-	mx.x = (1.f + mx.x) / 2.f * Device.UI_BASE_WIDTH;
-	mn.y = (1.f - mn.y) / 2.f * Device.UI_BASE_HEIGHT;
-	mx.y = (1.f - mx.y) / 2.f * Device.UI_BASE_HEIGHT;
+	mn.x = (1.f + mn.x) / 2.f * ::IDevice->cast()->UI_BASE_WIDTH;
+	mx.x = (1.f + mx.x) / 2.f * ::IDevice->cast()->UI_BASE_WIDTH;
+	mn.y = (1.f - mn.y) / 2.f * ::IDevice->cast()->UI_BASE_HEIGHT;
+	mx.y = (1.f - mx.y) / 2.f * ::IDevice->cast()->UI_BASE_HEIGHT;
 
 	if (mx.x - mn.x < RECT_SIZE)
 		mx.x = mn.x + RECT_SIZE;
@@ -233,7 +233,7 @@ void CBinocularsVision::Update()
 		if (!EA || !EA->g_Alive()) continue;
 		
 		Fvector opos = Fvector(object_->Position());
-		if (0 > opos.sub(Actor()->Position()).dotproduct(Device.vCameraDirection)) continue;
+		if (0 > opos.sub(Actor()->Position()).dotproduct(::IDevice->cast()->vCameraDirection)) continue;
 
 		FindVisObjByObject f(object_);
 		VIS_OBJECTS_IT found;

@@ -203,7 +203,7 @@ void CDetailManager::hw_Render(VisiblesType type)
 
 void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave, const Fvector4& wind, u32 var_id, u32 lod_id, const vis_list v_list)
 {
-	//Device.Statistic->RenderDUMP_DT_Count = 0;
+	//::IDevice->cast()->Statistic->RenderDUMP_DT_Count = 0;
 	static shared_str strConsts("consts");
 	static shared_str strWave("wave");
 	static shared_str strDir2D("dir2D");
@@ -239,7 +239,7 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 			RCache.set_c(strConsts, consts);
 			RCache.set_c(strWave, wave);
 			RCache.set_c(strDir2D, wind);
-			RCache.set_c(strXForm, Device.mFullTransform);
+			RCache.set_c(strXForm, ::IDevice->cast()->mFullTransform);
 
 			//	Map constants to memory directly
 			constexpr size_t size_vector4 = sizeof(Fvector4) * 4;
@@ -258,7 +258,7 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 				if (++dwBatch == hw_BatchSize)
 				{
 					// flush
-					//Device.Statistic->RenderDUMP_DT_Count += dwBatch;
+					//::IDevice->cast()->Statistic->RenderDUMP_DT_Count += dwBatch;
 					size_t dwCNT_verts = dwBatch * Object.number_vertices;
 					size_t dwCNT_prims = (dwBatch * Object.number_indices) / 3;
 					RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);
@@ -272,7 +272,7 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 			// flush if nessecary
 			if (dwBatch)
 			{
-				//Device.Statistic->RenderDUMP_DT_Count += dwBatch;
+				//::IDevice->cast()->Statistic->RenderDUMP_DT_Count += dwBatch;
 				size_t dwCNT_verts = dwBatch * Object.number_vertices;
 				size_t dwCNT_prims = (dwBatch * Object.number_indices) / 3;
 				RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, dwCNT_verts, iOffset, dwCNT_prims);

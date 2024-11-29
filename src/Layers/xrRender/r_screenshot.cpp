@@ -19,14 +19,14 @@ IC u32 convert(float c)
 
 IC void MouseRayFromPoint(Fvector& direction, int x, int y, Fmatrix& m_CamMat)
 {
-	int halfwidth = Device.dwWidth / 2;
-	int halfheight = Device.dwHeight / 2;
+	int halfwidth = ::IDevice->cast()->dwWidth / 2;
+	int halfheight = ::IDevice->cast()->dwHeight / 2;
 
 	Ivector2 point2;
 	point2.set(x - halfwidth, halfheight - y);
 
 	float size_y = VIEWPORT_NEAR * tanf(deg2rad(60.f) * 0.5f);
-	float size_x = size_y / (Device.fHeight_2 / Device.fWidth_2);
+	float size_x = size_y / (::IDevice->cast()->fHeight_2 / ::IDevice->cast()->fWidth_2);
 
 	float r_pt = float(point2.x) * size_x / (float)halfwidth;
 	float u_pt = float(point2.y) * size_y / (float)halfheight;
@@ -141,7 +141,7 @@ void CRender::Screenshot(ScreenshotMode mode, LPCSTR name) {
 		// Swap r and b, but don't kill alpha
 		{
 			u32* pPixel = (u32*)MappedData.pData;
-			u32* pEnd = pPixel + (Device.dwWidth * Device.dwHeight);
+			u32* pEnd = pPixel + (::IDevice->cast()->dwWidth * ::IDevice->cast()->dwHeight);
 
 			for (; pPixel != pEnd; pPixel++)
 			{
@@ -150,13 +150,13 @@ void CRender::Screenshot(ScreenshotMode mode, LPCSTR name) {
 			}
 		}
 		// save
-		u32* data = (u32*)xr_malloc(Device.dwHeight * Device.dwHeight * 4);
-		imf_Process(data, Device.dwHeight, Device.dwHeight, (u32*)MappedData.pData, Device.dwWidth, Device.dwHeight, imf_lanczos3);
+		u32* data = (u32*)xr_malloc(::IDevice->cast()->dwHeight * ::IDevice->cast()->dwHeight * 4);
+		imf_Process(data, ::IDevice->cast()->dwHeight, ::IDevice->cast()->dwHeight, (u32*)MappedData.pData, ::IDevice->cast()->dwWidth, ::IDevice->cast()->dwHeight, imf_lanczos3);
 		HW.pContext->Unmap(pTex, 0);
 
 		if (IWriter* fs = FS.w_open("$screenshots$", buf))
 		{
-			XRay::Media::Image img{ Device.dwHeight, Device.dwHeight, data, ImageFormat::RGBA8 };
+			XRay::Media::Image img{ ::IDevice->cast()->dwHeight, ::IDevice->cast()->dwHeight, data, ImageFormat::RGBA8 };
 			img.SaveTGA(*fs, true);
 			FS.w_close(fs);
 		}
@@ -188,7 +188,7 @@ void CRender::ScreenshotAsyncEnd(CMemoryWriter& memory_writer)
 
 	{
 		u32* pPixel = (u32*)MappedData.pData;
-		u32* pEnd = pPixel + (Device.dwWidth * Device.dwHeight);
+		u32* pEnd = pPixel + (::IDevice->cast()->dwWidth * ::IDevice->cast()->dwHeight);
 
 		// Kill alpha and swap r and b.
 		for (; pPixel != pEnd; pPixel++)
@@ -197,9 +197,9 @@ void CRender::ScreenshotAsyncEnd(CMemoryWriter& memory_writer)
 			*pPixel = color_xrgb(color_get_B(p), color_get_G(p), color_get_R(p));
 		}
 
-		memory_writer.w(&Device.dwWidth, sizeof(Device.dwWidth));
-		memory_writer.w(&Device.dwHeight, sizeof(Device.dwHeight));
-		memory_writer.w(MappedData.pData, (Device.dwWidth * Device.dwHeight) * 4);
+		memory_writer.w(&::IDevice->cast()->dwWidth, sizeof(::IDevice->cast()->dwWidth));
+		memory_writer.w(&::IDevice->cast()->dwHeight, sizeof(::IDevice->cast()->dwHeight));
+		memory_writer.w(MappedData.pData, (::IDevice->cast()->dwWidth * ::IDevice->cast()->dwHeight) * 4);
 	}
 
 	HW.pContext->Unmap(pTex, 0);

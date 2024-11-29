@@ -501,7 +501,7 @@ void xrSASH::TryInitEngine(bool bNoRun)
 
 	if (bNoRun)
 	{
-		Device.Create();
+		::IDevice->cast()->Create();
 		ISoundManager::_initDevice();
 	}
 }

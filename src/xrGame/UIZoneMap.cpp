@@ -50,16 +50,16 @@ void CUIZoneMap::Init()
 	{
 		float k = UI().get_current_kx();
 
-		sz.y *= Device.UI_BASE_HEIGHT * k;
+		sz.y *= ::IDevice->cast()->UI_BASE_HEIGHT * k;
 		sz.x = sz.y / k;
 
 		m_clipFrame.SetWndSize(sz);
 
 		Fvector2 p = m_clipFrame.GetWndPos();
-		p.mul(Device.UI_BASE_HEIGHT);
+		p.mul(::IDevice->cast()->UI_BASE_HEIGHT);
 		m_clipFrame.SetWndPos(p);
 
-		m_background.SetHeight(m_background.GetHeight() * Device.UI_BASE_HEIGHT);
+		m_background.SetHeight(m_background.GetHeight() * ::IDevice->cast()->UI_BASE_HEIGHT);
 		m_background.SetWidth(m_background.GetHeight() * k);
 	}
 
@@ -126,9 +126,9 @@ void CUIZoneMap::Update()
 		m_Counter_text.SetText(text_str);
 	}
 
-	UpdateRadar(Device.vCameraPosition);
+	UpdateRadar(::IDevice->cast()->vCameraPosition);
 	float h, p;
-	Device.vCameraDirection.getHP(h, p);
+	::IDevice->cast()->vCameraDirection.getHP(h, p);
 	SetHeading(-h);
 
 	m_clock_wnd->TextItemControl()->SetText(

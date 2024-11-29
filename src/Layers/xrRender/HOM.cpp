@@ -23,14 +23,14 @@ CHOM::CHOM() : xrc("HOM")
 	m_pModel = nullptr;
 	m_pTris = nullptr;
 #ifdef DEBUG
-	Device.seqRender.Add(this, REG_PRIORITY_LOW - 1000);
+	::IDevice->cast()->seqRender.Add(this, REG_PRIORITY_LOW - 1000);
 #endif
 }
 
 CHOM::~CHOM()
 {
 #ifdef DEBUG
-	Device.seqRender.Remove(this);
+	::IDevice->cast()->seqRender.Remove(this);
 #endif
 }
 
@@ -150,8 +150,8 @@ void CHOM::Render_DB(CFrustum& base)
 		view_dim / 2.f + 0 + 0, view_dim / 2.f + 0 + 0, 0.0f, 1.0f };
 	Fmatrix m_viewport_01 = { 1.f / 2.f, 0.0f, 0.0f, 0.0f, 0.0f, -1.f / 2.f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 		1.f / 2.f + 0 + 0, 1.f / 2.f + 0 + 0, 0.0f, 1.0f };
-	m_xform.mul(m_viewport, Device.mFullTransform);
-	m_xform_01.mul(m_viewport_01, Device.mFullTransform);
+	m_xform.mul(m_viewport, ::IDevice->cast()->mFullTransform);
+	m_xform_01.mul(m_viewport_01, ::IDevice->cast()->mFullTransform);
 
 	// Query DB
 	xrc.frustum_query(0, m_pModel, base);
@@ -162,13 +162,13 @@ void CHOM::Render_DB(CFrustum& base)
 	auto it = xrc.r_get()->begin();
 	auto end = xrc.r_get()->end();
 
-	Fvector COP = Device.vCameraPosition;
+	Fvector COP = ::IDevice->cast()->vCameraPosition;
 	end = std::remove_if(it, end, pred_fb(m_pTris));
 	std::sort(it, end, pred_fb(m_pTris, COP));
 
 	// Build frustum with near plane only
 	CFrustum clip;
-	clip.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_NEAR);
+	clip.CreateFromMatrix(::IDevice->cast()->mFullTransform, FRUSTUM_P_NEAR);
 	sPoly src, dst;
 	u32 _frame = ::IDevice->getFrame();
 	stats.FrustumTriangleCount = xrc.r_count();
@@ -295,7 +295,7 @@ BOOL CHOM::visible(Fbox3& B)
 {
 	if (!bEnabled)
 		return TRUE;
-	if (B.contains(Device.vCameraPosition))
+	if (B.contains(::IDevice->cast()->vCameraPosition))
 		return TRUE;
 	return _visible(B, m_xform_01);
 }
@@ -399,10 +399,10 @@ void CHOM::OnRender()
 			}
 			RCache.set_xform_world(Fidentity);
 			// draw solid
-			Device.SetNearer(TRUE);
+			::IDevice->cast()->SetNearer(TRUE);
 			RCache.set_Shader(RImplementation.m_SelectionShader);
 			RCache.dbg_Draw(D3DPT_TRIANGLELIST, &*poly.begin(), poly.size() / 3);
-			Device.SetNearer(FALSE);
+			::IDevice->cast()->SetNearer(FALSE);
 			// draw wire
 			if (bDebug)
 			{
@@ -410,7 +410,7 @@ void CHOM::OnRender()
 			}
 			else
 			{
-				Device.SetNearer(TRUE);
+				::IDevice->cast()->SetNearer(TRUE);
 			}
 			RCache.set_Shader(RImplementation.m_SelectionShader);
 			RCache.dbg_Draw(D3DPT_LINELIST, &*line.begin(), line.size() / 2);
@@ -420,7 +420,7 @@ void CHOM::OnRender()
 			}
 			else
 			{
-				Device.SetNearer(FALSE);
+				::IDevice->cast()->SetNearer(FALSE);
 			}
 		}
 	}

@@ -5,7 +5,7 @@ void CRenderTarget::phase_scene_prepare()
 {
 	PIX_EVENT(phase_scene_prepare);
 	// Clear depth & stencil
-	// u_setrt	( Device.dwWidth,Device.dwHeight,HW.pBaseRT,nullptr,nullptr,HW.pBaseZB );
+	// u_setrt	( ::IDevice->cast()->dwWidth,::IDevice->cast()->dwHeight,HW.pBaseRT,nullptr,nullptr,HW.pBaseZB );
 	// CHK_DX	( HW.pDevice->Clear	( 0L, nullptr, D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0x0, 1.0f, 0L) );
 	//	Igor: soft particles
 
@@ -21,9 +21,9 @@ void CRenderTarget::phase_scene_prepare()
 	{
 		//	TODO: DX10: Check if we need to set RT here.
 		if (!RImplementation.o.dx10_msaa)
-			u_setrt(Device.dwWidth, Device.dwHeight, rt_Position->pRT, nullptr, nullptr, HW.pBaseZB);
+			u_setrt(::IDevice->cast()->dwWidth, ::IDevice->cast()->dwHeight, rt_Position->pRT, nullptr, nullptr, HW.pBaseZB);
 		else
-			u_setrt(Device.dwWidth, Device.dwHeight, rt_Position->pRT, nullptr, nullptr, rt_MSAADepth->pZRT);
+			u_setrt(::IDevice->cast()->dwWidth, ::IDevice->cast()->dwHeight, rt_Position->pRT, nullptr, nullptr, rt_MSAADepth->pZRT);
 
 		// CHK_DX	( HW.pDevice->Clear	( 0L, nullptr, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0x0, 1.0f, 0L) );
 		FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -45,13 +45,13 @@ void CRenderTarget::phase_scene_prepare()
 		//	TODO: DX10: Check if we need to set RT here.
 		if (!RImplementation.o.dx10_msaa)
 		{
-			u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, nullptr, nullptr, HW.pBaseZB);
+			u_setrt(::IDevice->cast()->dwWidth, ::IDevice->cast()->dwHeight, HW.pBaseRT, nullptr, nullptr, HW.pBaseZB);
 			// CHK_DX	( HW.pDevice->Clear	( 0L, nullptr, D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0x0, 1.0f, 0L) );
 			HW.pContext->ClearDepthStencilView(HW.pBaseZB, D3D_CLEAR_DEPTH | D3D_CLEAR_STENCIL, 1.0f, 0);
 		}
 		else
 		{
-			u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, nullptr, nullptr, rt_MSAADepth->pZRT);
+			u_setrt(::IDevice->cast()->dwWidth, ::IDevice->cast()->dwHeight, HW.pBaseRT, nullptr, nullptr, rt_MSAADepth->pZRT);
 			// CHK_DX	( HW.pDevice->Clear	( 0L, nullptr, D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0x0, 1.0f, 0L) );
 			HW.pContext->ClearDepthStencilView(rt_MSAADepth->pZRT, D3D_CLEAR_DEPTH | D3D_CLEAR_STENCIL, 1.0f, 0);
 		}
@@ -129,8 +129,8 @@ void CRenderTarget::phase_scene_end()
 	// common calc for quad-rendering
 	u32 Offset;
 	u32 C = color_rgba(255, 255, 255, 255);
-	float _w = float(Device.dwWidth);
-	float _h = float(Device.dwHeight);
+	float _w = float(::IDevice->cast()->dwWidth);
+	float _h = float(::IDevice->cast()->dwHeight);
 	Fvector2 p0, p1;
 	p0.set(.5f / _w, .5f / _h);
 	p1.set((_w + .5f) / _w, (_h + .5f) / _h);

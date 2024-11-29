@@ -29,16 +29,16 @@ void setup_lm_screenshot_matrices()
 
 	// build camera matrix
 	Fbox bb = curr_lm_fbox;
-	bb.getcenter(Device.vCameraPosition);
+	bb.getcenter(::IDevice->cast()->vCameraPosition);
 
-	Device.vCameraDirection.set(0.f, -1.f, 0.f);
-	Device.vCameraTop.set(0.f, 0.f, 1.f);
-	Device.vCameraRight.set(1.f, 0.f, 0.f);
-	Device.mView.build_camera_dir(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
+	::IDevice->cast()->vCameraDirection.set(0.f, -1.f, 0.f);
+	::IDevice->cast()->vCameraTop.set(0.f, 0.f, 1.f);
+	::IDevice->cast()->vCameraRight.set(1.f, 0.f, 0.f);
+	::IDevice->cast()->mView.build_camera_dir(::IDevice->cast()->vCameraPosition, ::IDevice->cast()->vCameraDirection, ::IDevice->cast()->vCameraTop);
 
-	bb.xform(Device.mView);
+	bb.xform(::IDevice->cast()->mView);
 	// build project matrix
-	Device.mProject.build_projection_ortho(bb.vMax.x - bb.vMin.x, bb.vMax.y - bb.vMin.y, bb.vMin.z, bb.vMax.z);
+	::IDevice->cast()->mProject.build_projection_ortho(bb.vMax.x - bb.vMin.x, bb.vMax.y - bb.vMin.y, bb.vMin.z, bb.vMax.z);
 }
 
 Fbox get_level_screenshot_bound()
@@ -75,7 +75,7 @@ CDemoRecord::CDemoRecord(const char* name, float life_time) : CEffectorCam(cefDe
 	{
 		g_position.set_position = false;
 		IR_Capture(); // capture input
-		m_Camera.invert(Device.mView);
+		m_Camera.invert(::IDevice->cast()->mView);
 
 		// parse yaw
 		Fvector& dir = m_Camera.k;
@@ -128,7 +128,7 @@ CDemoRecord::~CDemoRecord()
 	}
 	g_bDisableRedText = stored_red_text;
 
-	Device.seqRender.Remove(this);
+	::IDevice->cast()->seqRender.Remove(this);
 }
 
 // +X, -X, +Y, -Y, +Z, -Z
@@ -200,7 +200,7 @@ void CDemoRecord::MakeLevelMapProcess()
 		s_hud_flag.assign(psHUD_Flags);
 		psDeviceFlags.zero();
 		psDeviceFlags.set(rsClearBB | rsDrawStatic, TRUE);
-		Device.Reset();
+		::IDevice->cast()->Reset();
 	}
 	break;
 
@@ -233,7 +233,7 @@ void CDemoRecord::MakeLevelMapProcess()
 			psHUD_Flags.assign(s_hud_flag);
 
 			psDeviceFlags = s_dev_flags;
-			Device.Reset();
+			::IDevice->cast()->Reset();
 			m_bMakeLevelMap = FALSE;
 			m_iLMScreenshotFragment = -1;
 		}
@@ -437,13 +437,13 @@ void CDemoRecord::IR_OnKeyboardPress(int dik)
  //-Alundaio
 
 	if (dik == DIK_PAUSE)
-		Device.Pause(!Device.Paused(), TRUE, TRUE, "demo_record");
+		::IDevice->cast()->Pause(!::IDevice->cast()->Paused(), TRUE, TRUE, "demo_record");
 }
 
 static void update_whith_timescale(Fvector& v, const Fvector& v_delta)
 {
-	VERIFY(!fis_zero(Device.time_factor()));
-	float scale = 1.f / Device.time_factor();
+	VERIFY(!fis_zero(::IDevice->cast()->time_factor()));
+	float scale = 1.f / ::IDevice->cast()->time_factor();
 	v.mad(v, v_delta, scale);
 }
 

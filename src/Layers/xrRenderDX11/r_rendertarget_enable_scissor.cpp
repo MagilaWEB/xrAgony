@@ -18,7 +18,7 @@ void CRenderTarget::enable_dbt_bounds(light* L)
 		return;
 
 	u32 mask = 0xffffffff;
-	EFC_Visible vis = Device.ViewFromMatrix.testSphere(L->spatial.sphere.P, L->spatial.sphere.R * 1.01f, mask);
+	EFC_Visible vis = ::IDevice->cast()->ViewFromMatrix.testSphere(L->spatial.sphere.P, L->spatial.sphere.R * 1.01f, mask);
 	if (vis != fcvFully)
 		return;
 
@@ -34,7 +34,7 @@ void CRenderTarget::enable_dbt_bounds(light* L)
 	{
 		Fvector pt;
 		BB.getpoint(i, pt);
-		Device.mFullTransform.transform(pt);
+		::IDevice->cast()->mFullTransform.transform(pt);
 		bbp.modify(pt);
 	}
 	u_DBT_enable(bbp.vMin.z, bbp.vMax.z);
@@ -73,7 +73,7 @@ bool CRenderTarget::enable_scissor(light* L) // true if intersects near plane
 	// Near plane intersection
 	BOOL near_intersect = FALSE;
 	{
-		Fmatrix& M = Device.mFullTransform;
+		Fmatrix& M = ::IDevice->cast()->mFullTransform;
 		Fvector4 plane;
 		plane.x = -(M._14 + M._13);
 		plane.y = -(M._24 + M._23);
@@ -105,11 +105,11 @@ bool CRenderTarget::enable_scissor(light* L) // true if intersects near plane
 	CSector*	S	= (CSector*)L->spatial.sector;
 	_scissor	bb	= S->r_scissor_merged;
 	Irect		R;
-	R.x1		= clampr	(iFloor	(bb.min.x*Device.dwWidth),	int(0),int(Device.dwWidth));
-	R.x2		= clampr	(iCeil	(bb.max.x*Device.dwWidth),	int(0),int(Device.dwWidth));
-	R.y1		= clampr	(iFloor	(bb.min.y*Device.dwHeight),	int(0),int(Device.dwHeight));
-	R.y2		= clampr	(iCeil	(bb.max.y*Device.dwHeight),	int(0),int(Device.dwHeight));
-	if	( (Device.dwWidth==u32(R.right - R.left)) && (Device.dwHeight==u32(R.bottom-R.top)) )
+	R.x1		= clampr	(iFloor	(bb.min.x*::IDevice->cast()->dwWidth),	int(0),int(::IDevice->cast()->dwWidth));
+	R.x2		= clampr	(iCeil	(bb.max.x*::IDevice->cast()->dwWidth),	int(0),int(::IDevice->cast()->dwWidth));
+	R.y1		= clampr	(iFloor	(bb.min.y*::IDevice->cast()->dwHeight),	int(0),int(::IDevice->cast()->dwHeight));
+	R.y2		= clampr	(iCeil	(bb.max.y*::IDevice->cast()->dwHeight),	int(0),int(::IDevice->cast()->dwHeight));
+	if	( (::IDevice->cast()->dwWidth==u32(R.right - R.left)) && (::IDevice->cast()->dwHeight==u32(R.bottom-R.top)) )
 	{
 		// full-screen -> do nothing
 	} else {
@@ -132,7 +132,7 @@ bool CRenderTarget::enable_scissor(light* L) // true if intersects near plane
 
 		// 3. convert it into world space
 		Fvector3	s_points			[4];
-		Fmatrix&	iVP					= Device.mInvFullTransform;
+		Fmatrix&	iVP					= ::IDevice->cast()->mInvFullTransform;
 		iVP.transform	(s_points[0],s_points_pp[0]);
 		iVP.transform	(s_points[1],s_points_pp[1]);
 		iVP.transform	(s_points[2],s_points_pp[2]);

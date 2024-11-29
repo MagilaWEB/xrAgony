@@ -191,7 +191,7 @@ void CDetailManager::cache_Update(int v_x, int v_z, Fvector& view)
 void CDetailManager::spawn_Slots(Fvector& view)
 {
 	// Task performer
-	if (!Device.ActiveMain())
+	if (!::IDevice->cast()->ActiveMain())
 	{
 		cache_task.sort([view](Slot* slot, Slot* slot_2)
 		{

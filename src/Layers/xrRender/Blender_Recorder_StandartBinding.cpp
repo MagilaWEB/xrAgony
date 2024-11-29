@@ -102,7 +102,7 @@ class cl_fog_plane : public R_constant_setup
 		{
 			// Plane
 			Fvector4 plane;
-			Fmatrix& M = Device.mFullTransform;
+			Fmatrix& M = ::IDevice->cast()->mFullTransform;
 			plane.x = -(M._14 + M._13);
 			plane.y = -(M._24 + M._23);
 			plane.z = -(M._34 + M._33);
@@ -174,7 +174,7 @@ class cl_eye_P : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
 	{
-		Fvector& V = Device.vCameraPosition;
+		Fvector& V = ::IDevice->cast()->vCameraPosition;
 		RCache.set_c(C, V.x, V.y, V.z, 1);
 	}
 };
@@ -185,7 +185,7 @@ class cl_eye_D : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
 	{
-		Fvector& V = Device.vCameraDirection;
+		Fvector& V = ::IDevice->cast()->vCameraDirection;
 		RCache.set_c(C, V.x, V.y, V.z, 0);
 	}
 };
@@ -196,7 +196,7 @@ class cl_eye_N : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
 	{
-		Fvector& V = Device.vCameraTop;
+		Fvector& V = ::IDevice->cast()->vCameraTop;
 		RCache.set_c(C, V.x, V.y, V.z, 0);
 	}
 };
@@ -244,7 +244,7 @@ class cl_sun0_dir_e : public R_constant_setup
 		{
 			Fvector D;
 			CEnvDescriptor& desc = *g_pGamePersistent->Environment().CurrentEnv;
-			Device.mView.transform_dir(D, desc.sun_dir);
+			::IDevice->cast()->mView.transform_dir(D, desc.sun_dir);
 			D.normalize();
 			result.set(D.x, D.y, D.z, 0);
 		}
@@ -290,8 +290,8 @@ static class cl_screen_res : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
 	{
-		RCache.set_c(C, (float)Device.dwWidth, (float)Device.dwHeight, 1.0f / (float)Device.dwWidth,
-			1.0f / (float)Device.dwHeight);
+		RCache.set_c(C, (float)::IDevice->cast()->dwWidth, (float)::IDevice->cast()->dwHeight, 1.0f / (float)::IDevice->cast()->dwWidth,
+			1.0f / (float)::IDevice->cast()->dwHeight);
 	}
 } binder_screen_res;
 

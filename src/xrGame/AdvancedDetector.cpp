@@ -57,10 +57,10 @@ void CAdvancedDetector::UpdateAf()
 
 	// direction
 	Fvector dir_to_artefact;
-	dir_to_artefact.sub(pCurrentAf->Position(), Device.vCameraPosition);
+	dir_to_artefact.sub(pCurrentAf->Position(), ::IDevice->cast()->vCameraPosition);
 	dir_to_artefact.normalize();
 	float _ang_af = dir_to_artefact.getH();
-	float _ang_cam = Device.vCameraDirection.getH();
+	float _ang_cam = ::IDevice->cast()->vCameraDirection.getH();
 
 	float _diff = angle_difference_signed(_ang_af, _ang_cam);
 

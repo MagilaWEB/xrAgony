@@ -63,7 +63,7 @@ void CParticlesObject::Init(LPCSTR p_name, IRender_Sector* S, BOOL bAutoRemove)
 //----------------------------------------------------
 CParticlesObject::~CParticlesObject()
 {
-	Device.remove_parallel2(this, &CParticlesObject::PerformAllTheWork);
+	::IDevice->cast()->remove_parallel2(this, &CParticlesObject::PerformAllTheWork);
 	xrCriticalSection::raii mt{ po_lock };
 
 	//	we do not need this since CPS_Instance does it
@@ -113,7 +113,7 @@ void CParticlesObject::Play(bool bHudMode)
 		V->SetHudMode(bHudMode);
 
 	V->Play();
-	u32 dt = 1000 / Device.FPS;
+	u32 dt = 1000 / ::IDevice->cast()->FPS;
 	clamp<u32>(dt, 1, 32);
 	dwLastTime = ::IDevice->TimeGlobal_ms() - dt;
 	m_bStopping = false;
@@ -127,7 +127,7 @@ void CParticlesObject::play_at_pos(const Fvector& pos, BOOL xform)
 	Fmatrix m; m.translate(pos);
 	V->UpdateParent(m, zero_vel, xform);
 	V->Play();
-	u32 dt = 1000 / Device.FPS;
+	u32 dt = 1000 / ::IDevice->cast()->FPS;
 	clamp<u32>(dt, 1, 32);
 	dwLastTime = ::IDevice->TimeGlobal_ms() - dt;
 	m_bStopping = false;
@@ -150,7 +150,7 @@ void CParticlesObject::shedule_Update(u32 _dt)
 	if (m_bDead)
 		return;
 
-	Device.add_parallel2(this, &CParticlesObject::PerformAllTheWork);
+	::IDevice->cast()->add_parallel2(this, &CParticlesObject::PerformAllTheWork);
 }
 
 void CParticlesObject::PerformAllTheWork()
@@ -195,7 +195,7 @@ Fvector& CParticlesObject::Position()
 
 float CParticlesObject::shedule_Scale()
 {
-	return Device.vCameraPosition.distance_to(Position()) / 200.f;
+	return ::IDevice->cast()->vCameraPosition.distance_to(Position()) / 200.f;
 }
 
 void CParticlesObject::renderable_Render()

@@ -318,7 +318,7 @@ void game_sv_Single::restart_simulator(LPCSTR saved_game_name)
 
 	pApp->LoadBegin();
 	m_alife_simulator = new CALifeSimulator(&server(), &options);
-	Device.PreCache(60, true, true);
+	::IDevice->cast()->PreCache(60, true, true);
 	switch_Phase(GAME_PHASE_INPROGRESS);
 	Msg("alife simulator restarted");
 }

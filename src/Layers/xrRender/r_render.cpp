@@ -16,10 +16,10 @@
 IC void dbg_light_renderer(light* L, u32 color = color_rgba(0, 255, 100, 255), int sectors = 0)
 {
 	Fvector4		v_res;
-	Device.mFullTransform.transform(v_res, L->position);
+	::IDevice->cast()->mFullTransform.transform(v_res, L->position);
 
-	float x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
-	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
+	float x = (1.f + v_res.x) / 2.f * (::IDevice->cast()->dwWidth);
+	float y = (1.f - v_res.y) / 2.f * (::IDevice->cast()->dwHeight);
 
 	if (v_res.z < 0 || v_res.w < 0)
 		return;
@@ -66,14 +66,14 @@ void CRender::render_main(bool deffered)
 				lstRenderables,
 				ISpatial_DB::O_ORDERED,
 				STYPE_RENDERABLE + STYPE_RENDERABLESHADOW + STYPE_PARTICLE + STYPE_LIGHTSOURCE,
-				Device.ViewFromMatrix
+				::IDevice->cast()->ViewFromMatrix
 			);
 
 			// (almost) Exact sorting order (front-to-back)
 	/*		if (!lstRenderables.empty())
 				lstRenderables.sort([](ISpatial* _1, ISpatial* _2) {
-					float d1 = _1->GetSpatialData().sphere.P.distance_to_sqr(Device.vCameraPosition);
-					float d2 = _2->GetSpatialData().sphere.P.distance_to_sqr(Device.vCameraPosition);
+					float d1 = _1->GetSpatialData().sphere.P.distance_to_sqr(::IDevice->cast()->vCameraPosition);
+					float d2 = _2->GetSpatialData().sphere.P.distance_to_sqr(::IDevice->cast()->vCameraPosition);
 					return d1 < d2;
 				});*/
 
@@ -114,9 +114,9 @@ void CRender::render_main(bool deffered)
 			PortalTraverser.traverse
 			(
 				pLastSector,
-				Device.ViewFromMatrix,
-				Device.vCameraPosition,
-				Device.mFullTransform,
+				::IDevice->cast()->ViewFromMatrix,
+				::IDevice->cast()->vCameraPosition,
+				::IDevice->cast()->mFullTransform,
 				CPortalTraverser::VQ_HOM + CPortalTraverser::VQ_SSA + CPortalTraverser::VQ_FADE
 				//. disabled scissoring (HW.Caps.bScissor?CPortalTraverser::VQ_SCISSOR:0)	// generate scissoring info
 			);
@@ -128,7 +128,7 @@ void CRender::render_main(bool deffered)
 			if (dont_test_sectors)
 			{
 				CSector* sector = reinterpret_cast<CSector*>(Sectors[0]);
-				set_Frustum(&Device.ViewFromMatrix);
+				set_Frustum(&::IDevice->cast()->ViewFromMatrix);
 				add_Geometry(sector->root());
 			}
 			else
@@ -205,8 +205,8 @@ void CRender::render_main(bool deffered)
 			auto CalcSSADynamic = [&](const Fvector& C, float R) -> float
 			{
 				Fvector4 v_res1, v_res2;
-				Device.mFullTransform.transform(v_res1, C);
-				Device.mFullTransform.transform(v_res2, Fvector(C).mad(Device.vCameraRight, R));
+				::IDevice->cast()->mFullTransform.transform(v_res1, C);
+				::IDevice->cast()->mFullTransform.transform(v_res2, Fvector(C).mad(::IDevice->cast()->vCameraRight, R));
 				return v_res1.sub(v_res2).magnitude();
 			};
 
@@ -301,7 +301,7 @@ void CRender::Render()
 
 	if (!(g_pGameLevel && g_hud))
 	{
-		Target->u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, nullptr, nullptr, HW.pBaseZB);
+		Target->u_setrt(::IDevice->cast()->dwWidth, ::IDevice->cast()->dwHeight, HW.pBaseRT, nullptr, nullptr, HW.pBaseZB);
 		return;
 	}
 
@@ -320,7 +320,7 @@ void CRender::Render()
 	// HOM
 	View = 0;
 	HOM.Enable();
-	HOM.Render(Device.ViewFromMatrix);
+	HOM.Render(::IDevice->cast()->ViewFromMatrix);
 
 	//******* Z-prefill calc - DEFERRER RENDERER
 	Target->phase_scene_prepare();
@@ -451,8 +451,8 @@ void CRender::Render()
 		PIX_EVENT(DEFER_SELF_ILLUM);
 		Target->phase_accumulator();
 		// Render emissive geometry, stencil - write 0x0 at pixel pos
-		RCache.set_xform_project(Device.mProject);
-		RCache.set_xform_view(Device.mView);
+		RCache.set_xform_project(::IDevice->cast()->mProject);
+		RCache.set_xform_view(::IDevice->cast()->mView);
 		// Stencil - write 0x1 at pixel pos -
 		if (!RImplementation.o.dx10_msaa)
 			RCache.set_Stencil(
@@ -517,7 +517,7 @@ void CRender::render_forward()
 // После рендера мира и пост-эффектов --#SM+#-- +SecondVP+
 void CRender::AfterWorldRender()
 {
-	if (Device.m_ScopeVP.IsSVPRender())
+	if (::IDevice->cast()->m_ScopeVP.IsSVPRender())
 	{
 		ID3DResource* res;
 		HW.pBaseRT->GetResource(&res);

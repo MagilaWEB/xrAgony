@@ -66,7 +66,7 @@ CDemoPlay::CDemoPlay(const char* name, float ms, u32 cycles, float life_time)
 		Log("~ Total key-frames: ", m_count);
 	}
 	stat_started = FALSE;
-	Device.PreCache(50, true, false);
+	::IDevice->cast()->PreCache(50, true, false);
 }
 
 CDemoPlay::~CDemoPlay()
@@ -222,7 +222,7 @@ void spline1(float t, Fvector* p, Fvector* ret)
 BOOL CDemoPlay::ProcessCam(SCamEffectorInfo& info)
 {
 	// skeep a few frames before counting
-	if (Device.dwPrecacheFrame)
+	if (::IDevice->cast()->dwPrecacheFrame)
 		return TRUE;
 
 	if (stat_started)
@@ -315,11 +315,11 @@ BOOL CDemoPlay::ProcessCam(SCamEffectorInfo& info)
 			v[3].x = m4->m[i][0];
 			v[3].y = m4->m[i][1];
 			v[3].z = m4->m[i][2];
-			spline1(t, &(v[0]), (Fvector*)&(Device.mView.m[i][0]));
+			spline1(t, &(v[0]), (Fvector*)&(::IDevice->cast()->mView.m[i][0]));
 		}
 
 		Fmatrix mInvCamera;
-		mInvCamera.invert(Device.mView);
+		mInvCamera.invert(::IDevice->cast()->mView);
 		info.n.set(mInvCamera._21, mInvCamera._22, mInvCamera._23);
 		info.d.set(mInvCamera._31, mInvCamera._32, mInvCamera._33);
 		info.p.set(mInvCamera._41, mInvCamera._42, mInvCamera._43);

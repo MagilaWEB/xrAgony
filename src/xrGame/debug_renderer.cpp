@@ -123,10 +123,10 @@ void CDebugRenderer::draw_ellipse(const Fmatrix& matrix, const u32& color)
 void CDebugRenderer::draw_position_ui(const Fvector& pos, const size_t& color)
 {
 	Fvector4 v_res;
-	Device.mFullTransform.transform(v_res, pos);
+	::IDevice->cast()->mFullTransform.transform(v_res, pos);
 
-	float x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
-	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
+	float x = (1.f + v_res.x) / 2.f * (::IDevice->cast()->dwWidth);
+	float y = (1.f - v_res.y) / 2.f * (::IDevice->cast()->dwHeight);
 
 	if (v_res.z < 0 || v_res.w < 0)
 		return;

@@ -714,7 +714,7 @@ void CEnvironment::load()
 		create_mixer();
 
 	m_pRender->OnLoad();
-	// tonemap = Device.Resources->_CreateTexture("$user$tonemap"); //. hack
+	// tonemap = ::IDevice->cast()->Resources->_CreateTexture("$user$tonemap"); //. hack
 	if (!eff_Rain)
 		eff_Rain = new CEffect_Rain();
 	if (!eff_LensFlare)

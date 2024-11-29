@@ -229,8 +229,8 @@ void CUIComboBox::Update()
 
 		/*if (m_list_frame.IsShown())
 		{
-			Device.seqRender.Remove(this);
-			Device.seqRender.Add(this, 3);
+			::IDevice->cast()->seqRender.Remove(this);
+			::IDevice->cast()->seqRender.Add(this, 3);
 		}*/
 	}
 }
@@ -296,7 +296,7 @@ void CUIComboBox::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 //		if (m_list_frame.IsShown())
 //		{
 //			m_list_frame.Draw();
-//			Device.seqRender.Remove(this);
+//			::IDevice->cast()->seqRender.Remove(this);
 //		}
 //	}
 //}

@@ -106,7 +106,7 @@ R_occlusion::occq_result R_occlusion::occq_get(u32& ID)
 
 	occq_result fragments = 0;
 	
-//	Device.Statistic->RenderDUMP_Wait.Begin();
+//	::IDevice->cast()->Statistic->RenderDUMP_Wait.Begin();
 	//VERIFY2(ID < used.size(), make_string("_Pos = %d, size() = %d", ID, used.size()));
 
 	// здесь нужно дождаться результата, т.к. отладка показывает, что

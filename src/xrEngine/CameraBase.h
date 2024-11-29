@@ -121,7 +121,7 @@ IC void tviewport_size(float _viewport_near, const T& cam_info, float& h_w, floa
 {
 	h_h = _viewport_near * tan(deg2rad(cam_info.Fov()) / 2.f);
 	VERIFY2(_valid(h_h), make_string("invalide viewporrt params fov: %f ", cam_info.Fov()));
-	float aspect = static_cast<CRenderDevice*>(::IDevice)->fASPECT; // cam_info.Aspect();
+	float aspect = ::IDevice->cast()->fASPECT; // cam_info.Aspect();
 	VERIFY(aspect > EPS);
 	h_w = h_h / aspect;
 }
@@ -129,7 +129,7 @@ IC void tviewport_size(float _viewport_near, const T& cam_info, float& h_w, floa
 template <typename T>
 IC void viewport_size(float _viewport_near, const T& cam_info, float& h_w, float& h_h)
 {
-	tviewport_size<T>(Device, _viewport_near, cam_info, h_w, h_h);
+	tviewport_size<T>(_viewport_near, cam_info, h_w, h_h);
 }
 
 #endif // !defined(AFX_CAMERABASE_H__B11F8AE1_1213_11D4_B4E3_4854E82A090D__INCLUDED_)

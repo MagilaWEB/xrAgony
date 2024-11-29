@@ -59,7 +59,7 @@ float g_cl_lvInterp = 0.1f;
 u32 lvInterpSteps = 0;
 
 CLevel::CLevel()
-	: IPureClient(Device.GetTimerGlobal())
+	: IPureClient(::IDevice->cast()->GetTimerGlobal())
 #ifdef CONFIG_PROFILE_LOCKS
 	,
 	DemoCS(MUTEX_PROFILE_ID(DemoCS))
@@ -329,23 +329,23 @@ void CLevel::OnFrame()
 	ClientReceive();
 	stats.ClientRecv.End();
 
-	if (!Device.IsLoadingProsses())
+	if (!::IDevice->cast()->IsLoadingProsses())
 		ProcessGameEvents();
 	
 	if (m_bNeed_CrPr)
 		make_NetCorrectionPrediction();
 
-	Device.add_parallel2(m_map_manager, &CMapManager::Update);
+	::IDevice->cast()->add_parallel2(m_map_manager, &CMapManager::Update);
 
-	if (IsGameTypeSingle() && Device.dwPrecacheFrame == 0)
+	if (IsGameTypeSingle() && ::IDevice->cast()->dwPrecacheFrame == 0)
 	{
-		Device.add_parallel(m_game_task_manager, &CGameTaskManager::UpdateTasks);
+		::IDevice->cast()->add_parallel(m_game_task_manager, &CGameTaskManager::UpdateTasks);
 		//GameTaskManager().UpdateTasks();
 	}
 	// Inherited update
 	inherited::OnFrame();
 
-	if(!Device.IsLoadingProsses())
+	if(!::IDevice->cast()->IsLoadingProsses())
 	{
 		g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
 
@@ -357,10 +357,10 @@ void CLevel::OnFrame()
 	BulletManager().CommitRenderSet();
 	stats.BulletManagerCommit.End();
 
-	if (!Device.IsLoadingProsses())
+	if (!::IDevice->cast()->IsLoadingProsses())
 	{
 		// update static sounds
-		Device.add_parallel(m_level_sound_manager, &CLevelSoundManager::Update);
+		::IDevice->cast()->add_parallel(m_level_sound_manager, &CLevelSoundManager::Update);
 	}
 
 	if (pStatGraphR)
@@ -390,7 +390,7 @@ void CLevel::OnRender()
 	if (!game)
 		return;
 
-	if (!Device.m_ScopeVP.IsSVPRender())
+	if (!::IDevice->cast()->m_ScopeVP.IsSVPRender())
 	{
 		Game().OnRender();
 		HUD().RenderUI();
@@ -447,7 +447,7 @@ void CLevel::OnRender()
 				CGameObject* pGO = smart_cast<CGameObject*>(_O);
 				if (pGO && pGO != Level().CurrentViewEntity() && !pGO->H_Parent())
 				{
-					if (pGO->Position().distance_to_sqr(Device.vCameraPosition) < 400.0f)
+					if (pGO->Position().distance_to_sqr(::IDevice->cast()->vCameraPosition) < 400.0f)
 					{
 						pGO->dbg_DrawSkeleton();
 					}

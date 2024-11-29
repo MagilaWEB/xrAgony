@@ -667,12 +667,12 @@ struct EnumCallbackType {};
 //RENDER
 void VidReset()
 {
-	Device.Reset();
+	::IDevice->cast()->Reset();
 }
 
 bool IsVidReset()
 {
-	return Device.IsReset();
+	return ::IDevice->cast()->IsReset();
 }
 
 // clang-format off

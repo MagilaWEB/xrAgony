@@ -264,7 +264,7 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 			if (MS.empty)
 				continue;
 			u32 mask = 0xff;
-			EFC_Visible res = Device.ViewFromMatrix.testSAABB(MS.vis.sphere.P, MS.vis.sphere.R, MS.vis.box.data(), mask);
+			EFC_Visible res = ::IDevice->cast()->ViewFromMatrix.testSAABB(MS.vis.sphere.P, MS.vis.sphere.R, MS.vis.box.data(), mask);
 			if (res == fcvNone)
 				continue;	// invisible-view frustum
 
@@ -278,7 +278,7 @@ void CDetailManager::UpdateVisibleM(Fvector	EYE)
 					continue;
 
 				if (res == fcvPartial)
-					if (Device.ViewFromMatrix.testSAABB(S->vis.sphere.P, S->vis.sphere.R, S->vis.box.data(), mask) == fcvNone)
+					if (::IDevice->cast()->ViewFromMatrix.testSAABB(S->vis.sphere.P, S->vis.sphere.R, S->vis.box.data(), mask) == fcvNone)
 						continue;	// invisible-view frustum
 
 				if (!RImplementation.HOM.visible(S->vis))
@@ -452,12 +452,12 @@ void CDetailManager::Frame()
 	if (!RImplementation.Details) return;	// possibly deleted
 	if (!dtFS) return;
 	if (!psDeviceFlags.is(rsDetails)) return;
-	if (Device.ActiveMain()) return;
+	if (::IDevice->cast()->ActiveMain()) return;
 
 	LIMIT_UPDATE_FPS(DetailManagerFPS, 30)
 
 	RImplementation.BasicStats.DetailCache.Begin();
-	Fvector EYE = Device.vCameraPositionSaved;
+	Fvector EYE = ::IDevice->cast()->vCameraPositionSaved;
 
 	int s_x = iFloor(EYE.x / dm_slot_size + .5f);
 	int s_z = iFloor(EYE.z / dm_slot_size + .5f);
@@ -478,7 +478,7 @@ void CDetailManager::Render(VisiblesType type)
 	if (!RImplementation.Details) return;	// possibly deleted
 	if (!dtFS) return;
 	if (!psDeviceFlags.is(rsDetails)) return;
-	if (Device.ActiveMain()) return;
+	if (::IDevice->cast()->ActiveMain()) return;
 
 	{
 		FastLock::raii mt{ MT };

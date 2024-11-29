@@ -16,7 +16,7 @@
 UIHint::UIHint()
 {
 	m_visible = false;
-	m_rect.set(0.0f, 0.0f, Device.UI_BASE_WIDTH, Device.UI_BASE_HEIGHT);
+	m_rect.set(0.0f, 0.0f, ::IDevice->cast()->UI_BASE_WIDTH, ::IDevice->cast()->UI_BASE_HEIGHT);
 }
 
 void UIHint::init_from_xml(CUIXml& xml, LPCSTR path)

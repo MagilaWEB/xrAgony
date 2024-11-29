@@ -232,7 +232,7 @@ void CArtefact::shedule_Update(u32 dt)
 		Fvector center;
 		Center(center);
 		BOOL rendering = (::IDevice->getFrame() == o_render_frame);
-		float cam_distance = Device.vCameraPosition.distance_to(center) - Radius();
+		float cam_distance = ::IDevice->cast()->vCameraPosition.distance_to(center) - Radius();
 		if (rendering || (cam_distance < FASTMODE_DISTANCE))
 			o_switch_2_fast();
 		else
@@ -584,7 +584,7 @@ void SArtefactDetectorsSupport::UpdateOnFrame()
 	if (!m_parent->getVisible() && m_switchVisTime + dwDt < ::IDevice->TimeGlobal_ms())
 	{
 		m_switchVisTime = ::IDevice->TimeGlobal_ms();
-		if (m_parent->Position().distance_to(Device.vCameraPosition) > 40.0f)
+		if (m_parent->Position().distance_to(::IDevice->cast()->vCameraPosition) > 40.0f)
 			Blink();
 	}
 }

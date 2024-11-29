@@ -175,7 +175,7 @@ void CLight_DB::add_light(light* L)
 	if (L->flags.bStatic)		//&& !ps_r2_ls_flags.test(R2FLAG_R1LIGHTS)
 		return;
 
-	if (Device.vCameraPosition.distance_to_sqr(L->spatial.sphere.P) > _sqr(g_pGamePersistent->Environment().CurrentEnv->fog_distance))
+	if (::IDevice->cast()->vCameraPosition.distance_to_sqr(L->spatial.sphere.P) > _sqr(g_pGamePersistent->Environment().CurrentEnv->fog_distance))
 		return;
 
 	L->Export(package);
@@ -212,7 +212,7 @@ void CLight_DB::Update()
 		//VERIFY2(E.sun_dir.y < 0, "Invalid sun direction settings in evironment-config");
 		Fvector OD, OP, AD, AP;
 		OD.set(E.sun_dir).normalize();
-		OP.mad(Device.vCameraPosition, OD, -500.f);
+		OP.mad(::IDevice->cast()->vCameraPosition, OD, -500.f);
 		AD.set(0, -.75f, 0).add(E.sun_dir);
 
 		// for some reason E.sun_dir can point-up
@@ -223,7 +223,7 @@ void CLight_DB::Update()
 			counter++;
 		}
 		AD.normalize();
-		AP.mad(Device.vCameraPosition, AD, -500.f);
+		AP.mad(::IDevice->cast()->vCameraPosition, AD, -500.f);
 		sun_original->set_rotation(OD, _sun_original->right);
 		sun_original->set_position(OP);
 		sun_original->set_color(E.sun_color.x, E.sun_color.y, E.sun_color.z);

@@ -199,12 +199,12 @@ void CInventoryItem::UpdateCL()
 	{
 		if (dbg_net_Draw_Flags.test(dbg_draw_invitem))
 		{
-			Device.seqRender.Remove(this);
-			Device.seqRender.Add(this);
+			::IDevice->cast()->seqRender.Remove(this);
+			::IDevice->cast()->seqRender.Add(this);
 		}
 		else
 		{
-			Device.seqRender.Remove(this);
+			::IDevice->cast()->seqRender.Remove(this);
 		}
 	}
 

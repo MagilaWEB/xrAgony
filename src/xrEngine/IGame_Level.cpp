@@ -23,13 +23,13 @@ IGame_Level::IGame_Level()
 	bReady = false;
 	pCurrentEntity = nullptr;
 	pCurrentViewEntity = nullptr;
-	Device.DumpResourcesMemoryUsage();
+	::IDevice->cast()->DumpResourcesMemoryUsage();
 }
 
 IGame_Level::~IGame_Level()
 {
 	if (strstr(Core.Params, "-nes_texture_storing"))
-		// Device.Resources->StoreNecessaryTextures();
+		// ::IDevice->cast()->Resources->StoreNecessaryTextures();
 		::Render->ResourcesStoreNecessaryTextures();
 	xr_delete(pLevel);
 
@@ -37,13 +37,13 @@ IGame_Level::~IGame_Level()
 	::Render->level_Unload();
 	xr_delete(m_pCameras);
 	// Unregister
-	Device.seqRender.Remove(this);
-	Device.seqFrame.Remove(this);
+	::IDevice->cast()->seqRender.Remove(this);
+	::IDevice->cast()->seqFrame.Remove(this);
 	CCameraManager::ResetPP();
 	///////////////////////////////////////////
 	::Sound->set_geometry_occ(nullptr);
 	::Sound->set_handler(nullptr);
-	Device.DumpResourcesMemoryUsage();
+	::IDevice->cast()->DumpResourcesMemoryUsage();
 
 	u32 m_base = 0, c_base = 0, m_lmaps = 0, c_lmaps = 0;
 	if (::Render)
@@ -118,9 +118,9 @@ bool IGame_Level::Load(u32 dwNum)
 	bReady = true;
 
 	IR_Capture();
-	Device.seqRender.Add(this);
+	::IDevice->cast()->seqRender.Add(this);
 
-	Device.seqFrame.Add(this);
+	::IDevice->cast()->seqFrame.Add(this);
 	return true;
 }
 
@@ -162,7 +162,7 @@ void IGame_Level::OnFrame()
 	{
 		Sounds_Random_dwNextTime = ::IDevice->TimeGlobal_ms() + ::Random.randI(10000, 20000);
 		Fvector pos;
-		pos.random_dir().normalize().mul(::Random.randF(30, 100)).add(Device.vCameraPosition);
+		pos.random_dir().normalize().mul(::Random.randF(30, 100)).add(::IDevice->cast()->vCameraPosition);
 		int id = ::Random.randI(Sounds_Random.size());
 		if (Sounds_Random_Enabled)
 		{
@@ -295,7 +295,7 @@ void IGame_Level::SoundEvent_Dispatch()
 		{
 			D.dest->feel_sound_new(D.source->g_object, D.source->g_type, D.source->g_userdata,
 
-				D.source->feedback->is_2D() ? Device.vCameraPosition : D.source->feedback->get_params()->position,
+				D.source->feedback->is_2D() ? ::IDevice->cast()->vCameraPosition : D.source->feedback->get_params()->position,
 				D.power);
 		}
 		snd_Events.pop_back();

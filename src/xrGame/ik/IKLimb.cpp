@@ -41,7 +41,7 @@ const IVektor gpos_vector = { 1, 0, 0 };
 
 // const float		ik_timedelta_eps = EPS;
 
-IC bool null_frame() { return !!Device.Paused(); }
+IC bool null_frame() { return !!::IDevice->cast()->Paused(); }
 IC const Fmatrix& cvm(const Matrix& IM) { return *((Fmatrix*)(&IM)); }
 string256 ik_bones[4] = { "bip01_l_thigh,bip01_l_calf,bip01_l_foot,bip01_l_toe0",
 	"bip01_r_thigh,bip01_r_calf,bip01_r_foot,bip01_r_toe0",

@@ -499,7 +499,7 @@ static void DBG_DrawTarckObj();
 static u32 previous_frame = u32(-1);
 void DBG_RenderUpdate()
 {
-	if (Device.Paused() || ::IDevice->getFrame() == previous_frame || !(::IDevice->TimeDelta_sec() > EPS_S))
+	if (::IDevice->cast()->Paused() || ::IDevice->getFrame() == previous_frame || !(::IDevice->TimeDelta_sec() > EPS_S))
 		return;
 	draw_frame = !draw_frame;
 	clear_vector(dbg_draw_simple);

@@ -194,9 +194,9 @@ void CLevelSoundManager::Unload()
 
 void CLevelSoundManager::Update()
 {
-	if (Device.Paused())
+	if (::IDevice->cast()->Paused())
 		return;
-	if (Device.dwPrecacheFrame != 0)
+	if (::IDevice->cast()->dwPrecacheFrame != 0)
 		return;
 	// static sounds
 	u32 game_time = Level().GetGameDayTimeMS();

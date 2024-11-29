@@ -269,7 +269,7 @@ CRT* CResourceManager::_CreateRT(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 Sam
 		CRT* RT = new CRT();
 		RT->dwFlags |= xr_resource_flagged::RF_REGISTERED;
 		m_rtargets.emplace(RT->set_name(Name), RT);
-		if (Device.b_is_Ready.load())
+		if (::IDevice->cast()->b_is_Ready.load())
 			RT->create(Name, w, h, f, SampleCount, useUAV);
 		return RT;
 	}
@@ -302,7 +302,7 @@ CRTC*	CResourceManager::_CreateRTC		(LPCSTR Name, u32 size,	D3DFORMAT f)
 		CRTC *RT				=	new CRTC();
 		RT->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
 		m_rtargets_c.insert		(std::make_pair(RT->set_name(Name),RT));
-		if (Device.b_is_Ready)	RT->create	(Name,size,f);
+		if (::IDevice->cast()->b_is_Ready)	RT->create	(Name,size,f);
 		return					RT;
 	}
 }
@@ -402,7 +402,7 @@ CTexture* CResourceManager::_CreateTexture(LPCSTR _Name)
 
 	task_louding_textures.run([this, Name]
 	{
-		while (!Device.b_is_Ready.load())
+		while (!::IDevice->cast()->b_is_Ready.load())
 			std::this_thread::yield();
 
 		size_t it{ 0 };
@@ -933,7 +933,7 @@ void CResourceManager::Delete(const Shader* S)
 
 //void CResourceManager::DeferredUpload()
 //{
-//	if (!Device.b_is_Ready.load() || Device.IsReset())
+//	if (!::IDevice->cast()->b_is_Ready.load() || ::IDevice->cast()->IsReset())
 //		return;
 //	
 //	//static tbb::task_group parallel;
@@ -968,7 +968,7 @@ void CResourceManager::Delete(const Shader* S)
 //
 //void CResourceManager::DeferredUnload()
 //{
-//	if (!Device.b_is_Ready.load() || Device.IsReset())
+//	if (!::IDevice->cast()->b_is_Ready.load() || ::IDevice->cast()->IsReset())
 //		return;
 //
 //	CHECK_TIME("Resource Manager DeferredUnload",

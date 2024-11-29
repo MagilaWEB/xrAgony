@@ -442,10 +442,10 @@ void CController::UpdateCL()
 			CurrentGameUI()->RemoveCustomStatic("controller_fx2");
 			StaticDrawableWrapper* s = CurrentGameUI()->AddCustomStatic("controller_fx", true);
 
-			float x1 = Device.dwWidth / 2 - ((Device.dwWidth / 2) * percent);
-			float y1 = Device.dwHeight / 2 - ((Device.dwHeight / 2) * percent);
-			float x2 = Device.dwWidth / 2 + ((Device.dwWidth / 2) * percent);
-			float y2 = Device.dwHeight / 2 + ((Device.dwHeight / 2) * percent);
+			float x1 = ::IDevice->cast()->dwWidth / 2 - ((::IDevice->cast()->dwWidth / 2) * percent);
+			float y1 = ::IDevice->cast()->dwHeight / 2 - ((::IDevice->cast()->dwHeight / 2) * percent);
+			float x2 = ::IDevice->cast()->dwWidth / 2 + ((::IDevice->cast()->dwWidth / 2) * percent);
+			float y2 = ::IDevice->cast()->dwHeight / 2 + ((::IDevice->cast()->dwHeight / 2) * percent);
 
 			s->wnd()->SetWndRect(Frect().set(x1, y1, x2 - x1, y2 - y1));
 		}
@@ -454,10 +454,10 @@ void CController::UpdateCL()
 			CurrentGameUI()->RemoveCustomStatic("controller_fx");
 			StaticDrawableWrapper* s = CurrentGameUI()->AddCustomStatic("controller_fx2", true);
 
-			float x1 = Device.dwWidth / 2 - ((Device.dwWidth / 2) * percent2);
-			float y1 = Device.dwHeight / 2 - ((Device.dwHeight / 2) * percent2);
-			float x2 = Device.dwWidth / 2 + ((Device.dwWidth / 2) * percent2);
-			float y2 = Device.dwHeight / 2 + ((Device.dwHeight / 2) * percent2);
+			float x1 = ::IDevice->cast()->dwWidth / 2 - ((::IDevice->cast()->dwWidth / 2) * percent2);
+			float y1 = ::IDevice->cast()->dwHeight / 2 - ((::IDevice->cast()->dwHeight / 2) * percent2);
+			float x2 = ::IDevice->cast()->dwWidth / 2 + ((::IDevice->cast()->dwWidth / 2) * percent2);
+			float y2 = ::IDevice->cast()->dwHeight / 2 + ((::IDevice->cast()->dwHeight / 2) * percent2);
 
 			s->wnd()->SetWndRect(Frect().set(x1, y1, x2 - x1, y2 - y1));
 		}

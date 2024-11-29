@@ -137,7 +137,7 @@ void CTextConsole::Initialize()
 {
 	inherited::Initialize();
 
-	m_pMainWnd = &Device.m_hWnd;
+	m_pMainWnd = &::IDevice->cast()->m_hWnd;
 	m_dwLastUpdateTime = ::IDevice->TimeGlobal_ms();
 	m_last_time = ::IDevice->TimeGlobal_ms();
 

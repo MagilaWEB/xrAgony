@@ -40,7 +40,7 @@ public:
 	void register_to_process()
 	{
 		m_object->m_wait_for_distributed_computation = true;
-		Device.add_parallel(this, &CDetailPathBuilder::process);
+		::IDevice->cast()->add_parallel(this, &CDetailPathBuilder::process);
 	}
 
 	void process_impl(bool separate_computing = true)
@@ -64,6 +64,6 @@ public:
 		if (m_object->m_wait_for_distributed_computation)
 			m_object->m_wait_for_distributed_computation = false;
 
-		Device.remove_parallel(this, &CDetailPathBuilder::process);
+		::IDevice->cast()->remove_parallel(this, &CDetailPathBuilder::process);
 	}
 };

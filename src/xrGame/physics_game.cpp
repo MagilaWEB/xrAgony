@@ -222,7 +222,7 @@ void TContactShotMark(CDB::TRI* T, dContactGeom* c)
 	if (!ContactShotMarkGetEffectPars(c, data, vel_cret, b_invert_normal))
 		return;
 	Fvector to_camera;
-	to_camera.sub(cast_fv(c->pos), Device.vCameraPosition);
+	to_camera.sub(cast_fv(c->pos), ::IDevice->cast()->vCameraPosition);
 	float square_cam_dist = to_camera.square_magnitude();
 	if (data)
 	{

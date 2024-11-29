@@ -189,7 +189,7 @@ void LevelGraphDebugRender::DrawStalkers(int vid)
 	font.SetColor(color_xrgb(255, 255, 0));
 	bool showText = true;
 	Fvector4 temp;
-	Device.mFullTransform.transform(temp, pos);
+	::IDevice->cast()->mFullTransform.transform(temp, pos);
 	font.OutSetI(temp.x, -temp.y);
 	font.SetSize(20 / _sqrt(temp.w));
 	if (temp.z < 0 || temp.w < 0 || _abs(temp.x) > 1 || _abs(temp.y) > 1)
@@ -260,7 +260,7 @@ void LevelGraphDebugRender::DrawStalkers(int vid)
 		direction.add(pos1);
 		render.draw_aabb(direction, radius, radius, radius, color);
 		Fvector4 temp;
-		Device.mFullTransform.transform(temp, direction);
+		::IDevice->cast()->mFullTransform.transform(temp, direction);
 		if (temp.z < 0 || temp.w < 0 || _abs(temp.x) > 1 || _abs(temp.y) > 1)
 			continue;
 		font.SetSize(20 / _sqrt(temp.w));
@@ -284,7 +284,7 @@ void LevelGraphDebugRender::DrawObjects(int vid)
 		position = ConvertPosition(vertex.game_point());
 	font.SetColor(color_xrgb(255, 255, 0));
 	Fvector4 temp;
-	Device.mFullTransform.transform(temp, position);
+	::IDevice->cast()->mFullTransform.transform(temp, position);
 	font.OutSetI(temp.x, -temp.y);
 	font.SetSize(20 / _sqrt(temp.w));
 	bool showText = true;
@@ -356,7 +356,7 @@ void LevelGraphDebugRender::DrawObjects(int vid)
 		direction.add(pos1);
 		render.draw_aabb(direction, radius, radius, radius, color);
 		Fvector4 temp;
-		Device.mFullTransform.transform(temp, direction);
+		::IDevice->cast()->mFullTransform.transform(temp, direction);
 		if (temp.z < 0 || temp.w < 0 || _abs(temp.x) > 1 || _abs(temp.y) > 1)
 			continue;
 		font.SetSize(20 / _sqrt(temp.w));
@@ -426,7 +426,7 @@ void LevelGraphDebugRender::DrawGameGraph()
 		T.set(t1);
 		//T.y+= 1.5f;
 		T.y += 1.5f / 10.f;
-		Device.mFullTransform.transform(S, T);
+		::IDevice->cast()->mFullTransform.transform(S, T);
 		//out of screen
 		if (S.z < 0 || S.w < 0)
 			continue;
@@ -474,7 +474,7 @@ void LevelGraphDebugRender::DrawGameGraph()
 				T.set(t1);
 				//T.y+= 1.5f;
 				T.y += 1.5f;
-				Device.mFullTransform.transform(S, T);
+				::IDevice->cast()->mFullTransform.transform(S, T);
 				//out of screen
 				if (S.z < 0 || S.w < 0)
 					continue;
@@ -600,8 +600,8 @@ void LevelGraphDebugRender::DrawNodes()
 	// render
 	::DRender->SetShader(debugShader);
 	font->SetColor(color_rgba(255, 255, 255, 255));
-	Fvector minPos = Device.vCameraPosition;
-	Fvector maxPos = Device.vCameraPosition;
+	Fvector minPos = ::IDevice->cast()->vCameraPosition;
+	Fvector maxPos = ::IDevice->cast()->vCameraPosition;
 	minPos.sub(30.0f);
 	maxPos.add(30.0f);
 	CLevelGraph::const_vertex_iterator it, end;
@@ -628,10 +628,10 @@ void LevelGraphDebugRender::DrawNodes()
 	{
 		Fvector vertexPos = levelGraph->vertex_position(*it);
 		u32 Nid = levelGraph->vertex_id(it);
-		if (Device.vCameraPosition.distance_to(vertexPos) > 30)
+		if (::IDevice->cast()->vCameraPosition.distance_to(vertexPos) > 30)
 			continue;
 		float sr = levelGraph->header().cell_size();
-		if (Device.ViewFromMatrix.testSphere_dirty(vertexPos, sr))
+		if (::IDevice->cast()->ViewFromMatrix.testSphere_dirty(vertexPos, sr))
 		{
 			u32 colorC = color_xrgb(0, 0, 255);
 			u32 colorT = color_xrgb(255, 255, 255);
@@ -682,7 +682,7 @@ void LevelGraphDebugRender::DrawNodes()
 				Fvector offsetPos = vertexPos;
 				offsetPos.y += 0.3f;
 				Fvector4 tsmPos;
-				Device.mFullTransform.transform(tsmPos, offsetPos);
+				::IDevice->cast()->mFullTransform.transform(tsmPos, offsetPos);
 				if (tsmPos.z < 0 || tsmPos.w < 0 || _abs(tsmPos.x) > 1 || _abs(tsmPos.y) > 1)
 					continue;
 				font->SetSize(14 / _sqrt(_abs(tsmPos.w)));
@@ -736,7 +736,7 @@ void LevelGraphDebugRender::DrawCovers()
 	const float halfSize = cellSize / 2;
 	auto& nearest = coverPointCache;
 	nearest.reserve(1000);
-	ai().cover_manager().covers().nearest(Device.vCameraPosition, 5.0f, nearest);
+	ai().cover_manager().covers().nearest(::IDevice->cast()->vCameraPosition, 5.0f, nearest);
 	for (auto coverPoint : nearest)
 	{
 		// high cover

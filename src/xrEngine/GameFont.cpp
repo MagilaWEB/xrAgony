@@ -315,7 +315,7 @@ void CGameFont::OnRender()
 void CGameFont::MasterOut(bool bCheckDevice, bool bUseCoords, bool bScaleCoords, bool bUseSkip, float _x, float _y,
 	float _skip, pcstr fmt, va_list p)
 {
-	if (bCheckDevice && (!Device.b_is_Active.load()))
+	if (bCheckDevice && (!::IDevice->cast()->b_is_Active.load()))
 		return;
 
 	String rs;
@@ -388,7 +388,7 @@ float CGameFont::SizeOf_(pcstr s)
 float CGameFont::SizeCoof() const
 {
 	extern float r_font_scale;
-	return ((float)Size / Data.Size) * Device.screen_magnitude * r_font_scale;
+	return ((float)Size / Data.Size) * ::IDevice->cast()->screen_magnitude * r_font_scale;
 }
 
 void CGameFont::SetSize(u16 S)

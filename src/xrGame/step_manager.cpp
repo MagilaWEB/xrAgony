@@ -161,7 +161,7 @@ void CStepManager::update(bool b_hud_view)
 	if (!m_blend)
 		return;
 
-	float dist_sqr = m_object->Position().distance_to_sqr(Device.vCameraPosition);
+	float dist_sqr = m_object->Position().distance_to_sqr(::IDevice->cast()->vCameraPosition);
 	bool b_play = dist_sqr < 400.0f; // 20m
 
 	// получить параметры шага

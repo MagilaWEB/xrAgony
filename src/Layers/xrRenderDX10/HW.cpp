@@ -17,8 +17,8 @@ CHW HW;
 
 CHW::CHW()
 {
-	Device.seqAppActivate.Add(this);
-	Device.seqAppDeactivate.Add(this);
+	::IDevice->cast()->seqAppActivate.Add(this);
+	::IDevice->cast()->seqAppDeactivate.Add(this);
 
 	DEVMODE dmi{};
 	EnumDisplaySettings(nullptr, ENUM_CURRENT_SETTINGS, &dmi);
@@ -28,8 +28,8 @@ CHW::CHW()
 
 CHW::~CHW()
 {
-	Device.seqAppActivate.Remove(this);
-	Device.seqAppDeactivate.Remove(this);
+	::IDevice->cast()->seqAppActivate.Remove(this);
+	::IDevice->cast()->seqAppDeactivate.Remove(this);
 }
 
 void CHW::OnAppActivate()

@@ -167,6 +167,9 @@ private:
 	void _SetupStates();
 
 public:
+
+	CRenderDevice* cast() override { return this; }
+
 	u16 FPS = 30;
 
 	u32 dwPrecacheTotal;
@@ -359,7 +362,6 @@ public:
 	bool 								isGameProcess							() const override;
 };
 
-extern ENGINE_API CRenderDevice Device;
 extern ENGINE_API bool g_bBenchmark;
 
 extern ENGINE_API xr_list<fastdelegate::FastDelegate<bool()>> g_loading_events;

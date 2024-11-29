@@ -94,7 +94,7 @@ void CUIMMShniaga::InitShniaga(CUIXml& xml_doc, LPCSTR path)
 	strconcat(sizeof(_path), _path, path, ":shniaga:magnifire:y_offset");
 	m_offset = xml_doc.ReadFlt(_path, 0, 0);
 
-	if (!Device.isLevelReady())
+	if (!::IDevice->cast()->isLevelReady())
 	{
 		if (!*g_last_saved_game || !CSavedGameWrapper::valid_saved_game(g_last_saved_game))
 			CreateList(m_buttons, xml_doc, "menu_main");

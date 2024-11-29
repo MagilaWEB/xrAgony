@@ -320,15 +320,15 @@ CUIDragItem::CUIDragItem(CUICellItem* parent)
 	m_back_list = nullptr;
 	m_pParent = parent;
 	AttachChild(&m_static);
-	Device.seqRender.Add(this, REG_PRIORITY_LOW - 5000);
-	Device.seqFrame.Add(this, REG_PRIORITY_LOW - 5000);
+	::IDevice->cast()->seqRender.Add(this, REG_PRIORITY_LOW - 5000);
+	::IDevice->cast()->seqFrame.Add(this, REG_PRIORITY_LOW - 5000);
 	VERIFY(m_pParent->GetMessageTarget());
 }
 
 CUIDragItem::~CUIDragItem()
 {
-	Device.seqRender.Remove(this);
-	Device.seqFrame.Remove(this);
+	::IDevice->cast()->seqRender.Remove(this);
+	::IDevice->cast()->seqFrame.Remove(this);
 	delete_data(m_custom_draw);
 }
 

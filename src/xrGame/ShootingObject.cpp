@@ -278,7 +278,7 @@ void CShootingObject::OnShellDrop(const Fvector& play_pos, const Fvector& parent
 {
 	if (!m_sShellParticles)
 		return;
-	if (Device.vCameraPosition.distance_to_sqr(play_pos) > 2 * 2)
+	if (::IDevice->cast()->vCameraPosition.distance_to_sqr(play_pos) > 2 * 2)
 		return;
 
 	CParticlesObject* pShellParticles = CParticlesObject::Create(*m_sShellParticles, TRUE);

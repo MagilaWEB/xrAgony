@@ -82,8 +82,8 @@ void CRenderTarget::phase_bloom()
 
 	// Transfer into Bloom1
 	{
-		float _w = float(Device.dwWidth);
-		float _h = float(Device.dwHeight);
+		float _w = float(::IDevice->cast()->dwWidth);
+		float _h = float(::IDevice->cast()->dwHeight);
 		float _2w = _w / 2;
 		float tw = BLOOM_size_X;
 		float _2h = _h / 2;
@@ -349,7 +349,7 @@ void CRenderTarget::phase_bloom()
 
 			// Perform filtering
 			Fvector4 w0, w1;
-			float kernel = ps_r2_ls_bloom_kernel_g * float(Device.dwHeight) / float(Device.dwWidth);
+			float kernel = ps_r2_ls_bloom_kernel_g * float(::IDevice->cast()->dwHeight) / float(::IDevice->cast()->dwWidth);
 			CalcGauss_wave(w0, w1, kernel, kernel / 3.f, ps_r2_ls_bloom_kernel_scale);
 			u_setrt(rt_Bloom_1, nullptr, nullptr, nullptr); // No need for ZBuffer at all
 			RCache.set_Element(s_bloom->E[2]);

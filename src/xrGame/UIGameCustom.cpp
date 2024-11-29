@@ -77,7 +77,7 @@ void CUIGameCustom::OnFrame()
 
 void CUIGameCustom::Render()
 {
-	if (Device.m_ScopeVP.IsSVPRender())
+	if (::IDevice->cast()->m_ScopeVP.IsSVPRender())
 		return;
 
 	for (StaticDrawableWrapper* item : CustomStatics)

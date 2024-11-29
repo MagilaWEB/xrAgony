@@ -44,7 +44,7 @@ CHitMarker::~CHitMarker()
 void CHitMarker::Render()
 {
 	float h1, p1;
-	Device.vCameraDirection.getHP(h1, p1);
+	::IDevice->cast()->vCameraDirection.getHP(h1, p1);
 
 	while (m_HitMarks.size() && !m_HitMarks.front()->IsActive())
 	{
@@ -189,7 +189,7 @@ SGrenadeMark::SGrenadeMark(const ui_shader& sh, CGrenade* grn)
 	m_UIStaticItem->SetShader(sh);
 	float xs = 640.0f;
 	float ys = 640.0f;
-	m_UIStaticItem->SetPos((Device.UI_BASE_WIDTH - xs) * 0.5f, (Device.UI_BASE_HEIGHT - ys) * 0.5f);
+	m_UIStaticItem->SetPos((::IDevice->cast()->UI_BASE_WIDTH - xs) * 0.5f, (::IDevice->cast()->UI_BASE_HEIGHT - ys) * 0.5f);
 	m_UIStaticItem->SetSize(Fvector2().set(xs, ys));
 }
 

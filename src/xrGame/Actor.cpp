@@ -152,7 +152,7 @@ CActor::CActor() : CEntityAlive(), current_ik_cam_shift(0)
 	m_holderID = u16(-1);
 
 #ifdef DEBUG
-	Device.seqRender.Add(this, REG_PRIORITY_LOW);
+	::IDevice->cast()->seqRender.Add(this, REG_PRIORITY_LOW);
 #endif
 
 	//разрешить использование пояса в inventory
@@ -210,7 +210,7 @@ CActor::~CActor()
 	xr_delete(m_memory);
 	xr_delete(game_news_registry);
 #ifdef DEBUG
-	Device.seqRender.Remove(this);
+	::IDevice->cast()->seqRender.Remove(this);
 #endif
 	// xr_delete(Weapons);
 	for (int i = 0; i < eacMaxCam; ++i)
@@ -829,8 +829,8 @@ float CActor::currentFOV()
 	if (psHUD_Flags.is(HUD_WEAPON | HUD_WEAPON_RT | HUD_WEAPON_RT2) && eacFirstEye == cam_active)
 		if (auto wpn = smart_cast<CWeapon*>(inventory().ActiveItem()))
 			if (float zoom_factor = wpn->GetZoomFactor())
-				return					(fMore(zoom_factor, 1.f)) ? rad2degHalf(atanf(Device.gAimFOVTan / zoom_factor)) : Device.gAimFOV;
-	return								Device.gFOV;
+				return					(fMore(zoom_factor, 1.f)) ? rad2degHalf(atanf(::IDevice->cast()->gAimFOVTan / zoom_factor)) : ::IDevice->cast()->gAimFOV;
+	return								::IDevice->cast()->gFOV;
 }
 
 static bool bLook_cam_fp_zoom = false;
@@ -1062,7 +1062,7 @@ void CActor::UpdateCL()
 			g_pGamePersistent->m_pGShaderConstants->hud_params.set(0.f, 0.f, 0.f, 0.f); //--#SM+#--
 
 			// Отключаем второй вьюпорт [Turn off SecondVP]
-			Device.m_ScopeVP.SetSVPActive(false);
+			::IDevice->cast()->m_ScopeVP.SetSVPActive(false);
 		}
 	}
 
@@ -1409,8 +1409,8 @@ void CActor::RenderIndicator(Fvector dpos, float r1, float r2, const ui_shader& 
 
 	Fvector pos = M.c;
 	pos.add(dpos);
-	const Fvector& T = Device.vCameraTop;
-	const Fvector& R = Device.vCameraRight;
+	const Fvector& T = ::IDevice->cast()->vCameraTop;
+	const Fvector& R = ::IDevice->cast()->vCameraRight;
 	Fvector Vr, Vt;
 	Vr.x = R.x * r1;
 	Vr.y = R.y * r1;
@@ -1462,12 +1462,12 @@ void CActor::RenderText(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	Fvector v0, v1;
 	v0.set(M.c);
 	v1.set(M.c);
-	Fvector T = Device.vCameraTop;
+	Fvector T = ::IDevice->cast()->vCameraTop;
 	v1.add(T);
 
 	Fvector v0r, v1r;
-	Device.mFullTransform.transform(v0r, v0);
-	Device.mFullTransform.transform(v1r, v1);
+	::IDevice->cast()->mFullTransform.transform(v0r, v0);
+	::IDevice->cast()->mFullTransform.transform(v1r, v1);
 	float size = v1r.distance_to(v0r);
 	CGameFont* pFont = UI().Font().pFontArial14;
 	if (!pFont)
@@ -1486,15 +1486,15 @@ void CActor::RenderText(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	M.c.y += dpos.y;
 
 	Fvector4 v_res;
-	Device.mFullTransform.transform(v_res, M.c);
+	::IDevice->cast()->mFullTransform.transform(v_res, M.c);
 
 	if (v_res.z < 0 || v_res.w < 0)
 		return;
 	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y < -1.f || v_res.y > 1.f)
 		return;
 
-	float x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
-	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
+	float x = (1.f + v_res.x) / 2.f * (::IDevice->cast()->dwWidth);
+	float y = (1.f - v_res.y) / 2.f * (::IDevice->cast()->dwHeight);
 
 	pFont->SetAligment(CGameFont::alCenter);
 	pFont->SetColor(color);
@@ -2122,7 +2122,7 @@ bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 		if (object && (!object->EnterLocked() || bForce))
 		{
 			Fvector center;	Center(center);
-			if ((bForce || object->Use(Device.vCameraPosition, Device.vCameraDirection, center)) && object->attach_Actor(this))
+			if ((bForce || object->Use(::IDevice->cast()->vCameraPosition, ::IDevice->cast()->vCameraDirection, center)) && object->attach_Actor(this))
 			{
 				inventory().SetActiveSlot(NO_ACTIVE_SLOT);
 				SetWeaponHideState(INV_STATE_BLOCK_ALL, true);

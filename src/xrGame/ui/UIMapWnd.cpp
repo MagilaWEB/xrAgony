@@ -755,7 +755,7 @@ void CUIMapWnd::ShowHint(bool extra)
 	Frect vis_rect;
 	if (extra)
 	{
-		vis_rect.set(Frect().set(0.0f, 0.0f, Device.UI_BASE_WIDTH, Device.UI_BASE_HEIGHT));
+		vis_rect.set(Frect().set(0.0f, 0.0f, ::IDevice->cast()->UI_BASE_WIDTH, ::IDevice->cast()->UI_BASE_HEIGHT));
 	}
 	else
 	{

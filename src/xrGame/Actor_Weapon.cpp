@@ -85,10 +85,10 @@ void CActor::g_fireParams(const CHudItem* pHudItem, Fvector& fire_pos, Fvector& 
 			fire_pos = weapon->get_LastFP();
 			fire_dir = weapon->get_LastFD();
 
-			if (Device.m_ScopeVP.IsSVPActive())
+			if (::IDevice->cast()->m_ScopeVP.IsSVPActive())
 			{
-				fire_pos = Device.m_ScopeVP.m_vPosition;
-				fire_dir = Device.m_ScopeVP.m_vDirection;
+				fire_pos = ::IDevice->cast()->m_ScopeVP.m_vPosition;
+				fire_dir = ::IDevice->cast()->m_ScopeVP.m_vDirection;
 			}
 			else if (cam_active == eacFirstEye)
 				if (weapon->IsZoomed() && !weapon->IsRotatingToZoom())

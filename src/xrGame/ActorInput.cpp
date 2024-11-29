@@ -350,7 +350,7 @@ void CActor::IR_OnMouseMove(int dx, int dy)
 	float LookFactor = GetLookFactor();
 
 	CCameraBase* C = cameras[cam_active];
-	float scale = (C->f_fov / Device.gFOV) * psMouseSens * psMouseSensScale / 50.f / LookFactor;
+	float scale = (C->f_fov / ::IDevice->cast()->gFOV) * psMouseSens * psMouseSensScale / 50.f / LookFactor;
 	if (dx)
 	{
 		float d = float(dx) * scale;
@@ -702,7 +702,7 @@ void CActor::SwitchTorch()
 
 void CActor::NoClipFly(int cmd)
 {
-	Fvector cur_pos{ Device.vCameraDirectionSaved }; // = Position();
+	Fvector cur_pos{ ::IDevice->cast()->vCameraDirectionSaved }; // = Position();
 	Fvector m_pos_x{};
 	float scale = ::IDevice->TimeDelta_sec() * 4;
 	if (pInput->iGetAsyncKeyState(DIK_LSHIFT))

@@ -79,18 +79,18 @@ CInput::CInput(BOOL bExclusive, int deviceForInit)
 	xrDebug::SetDialogHandler(on_error_dialog);
 
 #ifdef ENGINE_BUILD
-	Device.seqAppActivate.Add(this);
-	Device.seqAppDeactivate.Add(this, REG_PRIORITY_HIGH);
-	Device.seqFrame.Add(this, REG_PRIORITY_LOW);
+	::IDevice->cast()->seqAppActivate.Add(this);
+	::IDevice->cast()->seqAppDeactivate.Add(this, REG_PRIORITY_HIGH);
+	::IDevice->cast()->seqFrame.Add(this, REG_PRIORITY_LOW);
 #endif
 }
 
 CInput::~CInput(void)
 {
 #ifdef ENGINE_BUILD
-	Device.seqFrame.Remove(this);
-	Device.seqAppDeactivate.Remove(this);
-	Device.seqAppActivate.Remove(this);
+	::IDevice->cast()->seqFrame.Remove(this);
+	::IDevice->cast()->seqAppDeactivate.Remove(this);
+	::IDevice->cast()->seqAppActivate.Remove(this);
 #endif
 	//_______________________
 
@@ -129,7 +129,7 @@ HRESULT CInput::CreateInputDevice(
 
 	// Set the cooperativity level to let DirectInput know how this device
 	// should interact with the system and with other DirectInput applications.
-	HRESULT _hr = (*device)->SetCooperativeLevel(Device.m_hWnd, dwFlags);
+	HRESULT _hr = (*device)->SetCooperativeLevel(::IDevice->cast()->m_hWnd, dwFlags);
 	if (FAILED(_hr) && (_hr == E_NOTIMPL))
 		Msg("! INPUT: Can't set coop level. Emulation???");
 	else
@@ -230,7 +230,7 @@ void CInput::KeyUpdate()
 		return;
 
 #ifndef _EDITOR
-	if (Device.dwPrecacheFrame == 0)
+	if (::IDevice->cast()->dwPrecacheFrame == 0)
 #endif
 	{
 		for (u32 i = 0; i < dwElements; i++)
@@ -331,13 +331,13 @@ void CInput::ClipCursor(bool clip)
 {
 	if (clip)
 	{
-		if (!Device.IsQUIT())
+		if (!::IDevice->cast()->IsQUIT())
 			SetMouseAcquire(TRUE);
 
-		if (Device.m_hWnd)
+		if (::IDevice->cast()->m_hWnd)
 		{
 			RECT rect;
-			GetClientRect(Device.m_hWnd, &rect);
+			GetClientRect(::IDevice->cast()->m_hWnd, &rect);
 
 			POINT ul;
 			ul.x = rect.left;
@@ -347,8 +347,8 @@ void CInput::ClipCursor(bool clip)
 			lr.x = rect.right;
 			lr.y = rect.bottom;
 
-			MapWindowPoints(Device.m_hWnd, nullptr, &ul, 1);
-			MapWindowPoints(Device.m_hWnd, nullptr, &lr, 1);
+			MapWindowPoints(::IDevice->cast()->m_hWnd, nullptr, &ul, 1);
+			MapWindowPoints(::IDevice->cast()->m_hWnd, nullptr, &lr, 1);
 
 			rect.left = ul.x;
 			rect.top = ul.y;
@@ -361,7 +361,7 @@ void CInput::ClipCursor(bool clip)
 	}
 	else
 	{
-		if (!Device.IsQUIT())
+		if (!::IDevice->cast()->IsQUIT())
 			SetMouseAcquire(FALSE);
 
 		::ClipCursor(nullptr);
@@ -400,7 +400,7 @@ void CInput::MouseUpdate()
 	};
 
 #ifndef _EDITOR
-	if (Device.dwPrecacheFrame)
+	if (::IDevice->cast()->dwPrecacheFrame)
 		return;
 #endif
 	BOOL mouse_prev[COUNT_MOUSE_BUTTONS];
@@ -655,7 +655,7 @@ void CInput::OnAppDeactivate(void)
 
 void CInput::OnFrame(void)
 {
-	if(!Device.IsLoadingProsses())
+	if(!::IDevice->cast()->IsLoadingProsses())
 	{
 		stats.FrameStart();
 		stats.FrameTime.Begin();
@@ -685,10 +685,10 @@ void CInput::unacquire()
 
 void CInput::acquire(const bool& exclusive)
 {
-	pKeyboard->SetCooperativeLevel(Device.m_hWnd, (exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND);
+	pKeyboard->SetCooperativeLevel(::IDevice->cast()->m_hWnd, (exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND);
 	pKeyboard->Acquire();
 
-	pMouse->SetCooperativeLevel(Device.m_hWnd,(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY);
+	pMouse->SetCooperativeLevel(::IDevice->cast()->m_hWnd,(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY);
 	pMouse->Acquire();
 }
 

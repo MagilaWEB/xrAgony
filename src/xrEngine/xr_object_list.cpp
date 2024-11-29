@@ -28,7 +28,7 @@ ENGINE_API BOOL debug_destroy = TRUE;
 void CObjectList::DumpStatistics(IGameFont& font, IPerformanceAlert* alert)
 {
 	stats.FrameEnd();
-	const float engineTotal = Device.GetStats().EngineTotal.GetResult_ms();
+	const float engineTotal = ::IDevice->cast()->GetStats().EngineTotal.GetResult_ms();
 	const float percentage = 100.0f * stats.Update.GetResult_ms() / engineTotal;
 	font.OutNext("Objects UpdateCL:%2.5fms, %2.1f%%", stats.Update.GetResult_ms(), percentage);
 	//font.OutNext("- crow:		%d", stats.Crows);
@@ -117,7 +117,7 @@ void CObjectList::Update()
 		stats.FrameStart();
 	}
 
-	if (!Device.Paused() && ::IDevice->TimeDelta_sec() > EPS_S)
+	if (!::IDevice->cast()->Paused() && ::IDevice->TimeDelta_sec() > EPS_S)
 	{
 		stats.Updated = 0;
 		stats.Update.Begin();

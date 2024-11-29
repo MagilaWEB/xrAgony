@@ -133,11 +133,11 @@ private:
 public:
 	RDebugRender()
 	{
-		// Device.seqRender.Add		(this);
-		Device.seqRender.Add(this, REG_PRIORITY_LOW - 100);
+		// ::IDevice->cast()->seqRender.Add		(this);
+		::IDevice->cast()->seqRender.Add(this, REG_PRIORITY_LOW - 100);
 	}
 
-	virtual ~RDebugRender() { Device.seqRender.Remove(this); }
+	virtual ~RDebugRender() { ::IDevice->cast()->seqRender.Remove(this); }
 	void OnRender()
 	{
 		m_line_indices = _line_indices;

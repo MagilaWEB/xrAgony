@@ -326,7 +326,7 @@ void CCustomMonster::shedule_Update(u32 DT)
 	// *** general stuff
 	if (g_Alive())
 	{
-		Device.add_parallel2(this, &CCustomMonster::Exec_Visibility);
+		::IDevice->cast()->add_parallel2(this, &CCustomMonster::Exec_Visibility);
 
 		memory().update(dt);
 	}
@@ -444,7 +444,7 @@ void CCustomMonster::UpdateCL()
 	}
 	*/
 
-	Device.add_parallel(this, &CCustomMonster::update_sound_player);
+	::IDevice->cast()->add_parallel(this, &CCustomMonster::update_sound_player);
 
 	START_PROFILE("CustomMonster/client_update/network extrapolation")
 		if (NET.empty())
@@ -785,8 +785,8 @@ void CCustomMonster::net_Destroy()
 	sound().unload();
 	movement().net_Destroy();
 
-	Device.remove_parallel(this, &CCustomMonster::update_sound_player);
-	Device.remove_parallel2(this, &CCustomMonster::Exec_Visibility);
+	::IDevice->cast()->remove_parallel(this, &CCustomMonster::update_sound_player);
+	::IDevice->cast()->remove_parallel2(this, &CCustomMonster::Exec_Visibility);
 
 #ifdef DEBUG
 	DBG().on_destroy_object(this);

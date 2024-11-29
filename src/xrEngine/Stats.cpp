@@ -73,12 +73,12 @@ CStats::CStats()
 {
 	statsFont = nullptr;
 	fMem_calls = 0;
-	Device.seqRender.Add(this, REG_PRIORITY_LOW - 1000);
+	::IDevice->cast()->seqRender.Add(this, REG_PRIORITY_LOW - 1000);
 }
 
 CStats::~CStats()
 {
-	Device.seqRender.Remove(this);
+	::IDevice->cast()->seqRender.Remove(this);
 	xr_delete(statsFont);
 }
 
@@ -108,14 +108,14 @@ void CStats::Show()
 	//Memory.stat_calls = 0;
 
 	auto& font = *statsFont;
-	auto engineTotal = Device.GetStats().EngineTotal.GetResult_ms();
+	auto engineTotal = ::IDevice->cast()->GetStats().EngineTotal.GetResult_ms();
 	PerformanceAlert alertInstance(font.GetHeight(), { 300, 300 });
 	auto alertPtr = g_bDisableRedText ? nullptr : &alertInstance;
 	if (vtune.enabled())
 	{
 		//float sz = font.GetHeight();
 		font.SetColor(0xFFFF0000);
-		font.OutSet(Device.dwWidth / 2.0f + (font.SizeOf_("--= tune =--") / 2.0f), Device.dwHeight / 2.0f);
+		font.OutSet(::IDevice->cast()->dwWidth / 2.0f + (font.SizeOf_("--= tune =--") / 2.0f), ::IDevice->cast()->dwHeight / 2.0f);
 		font.OutNext("--= tune =--");
 	//	font.SetHeight(sz);
 	}
@@ -127,7 +127,7 @@ void CStats::Show()
 #if defined(FS_DEBUG)
 		font.OutNext("Mapped:		%d", g_file_mapped_memory);
 #endif
-		Device.DumpStatistics(font, alertPtr);
+		::IDevice->cast()->DumpStatistics(font, alertPtr);
 		//font.OutNext("Memory:		%2.2f", fMem_calls);
 		if (g_pGameLevel)
 			g_pGameLevel->DumpStatistics(font, alertPtr);
@@ -161,7 +161,7 @@ void CStats::Show()
 	{
 		float refHeight = font.GetHeight();
 		font.SetColor(0xffffffff);
-		font.Out(10, 600, "CAMERA POSITION:  [%3.2f,%3.2f,%3.2f]", VPUSH(Device.vCameraPosition));
+		font.Out(10, 600, "CAMERA POSITION:  [%3.2f,%3.2f,%3.2f]", VPUSH(::IDevice->cast()->vCameraPosition));
 		font.SetHeight(refHeight);
 	}
 #ifdef DEBUG
@@ -177,7 +177,7 @@ void CStats::Show()
 
 	if (psDeviceFlags.test(rsShowFPS))
 	{
-		const u32 fps = Device.FPS;
+		const u32 fps = ::IDevice->cast()->FPS;
 		if (fps >= 121)
 			fpsFont->SetColor(color_rgba(255, 0, 255, 255));
 		else if (fps >= 60)
@@ -188,7 +188,7 @@ void CStats::Show()
 			fpsFont->SetColor(color_rgba(255, 51, 51, 255));
 
 		
-		fpsFont->Out(float(Device.dwWidth - 2), 2, "%3d", fps);
+		fpsFont->Out(float(::IDevice->cast()->dwWidth - 2), 2, "%3d", fps);
 		fpsFont->OnRender();
 	}
 }

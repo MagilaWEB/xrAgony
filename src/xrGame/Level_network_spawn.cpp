@@ -40,7 +40,7 @@ void CLevel::cl_Process_Spawn(NET_Packet& P)
 	};
 
 
-	if (Device.IsLoadingScreen())
+	if (::IDevice->cast()->IsLoadingScreen())
 		game_spawn_list.push_back(E);
 	else
 	{
@@ -191,7 +191,7 @@ void CLevel::ProcessGameSpawns()
 		if (!load_play_start)
 		{
 			load_play_start = true;
-			Device.Pause(TRUE, TRUE, TRUE, "object_synchronization");
+			::IDevice->cast()->Pause(TRUE, TRUE, TRUE, "object_synchronization");
 			pApp->SetLoadStageTitle("st_loading_object_synchronization");
 			object_synchronization_size = game_spawn_list.size();
 		}

@@ -173,7 +173,7 @@ void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N
 	float fFAR_Dest, u32 flags)
 {
 #ifdef DEBUG
-	if (!Device.Paused())
+	if (!::IDevice->cast()->Paused())
 	{
 		VERIFY(dbg_upd_frame != ::IDevice->getFrame()); // already updated !!!
 		dbg_upd_frame = ::IDevice->getFrame();
@@ -201,7 +201,7 @@ void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N
 	m_cam_info.r.crossproduct(m_cam_info.n, m_cam_info.d);
 	m_cam_info.n.crossproduct(m_cam_info.d, m_cam_info.r);
 
-	float aspect = Device.fHeight_2 / Device.fWidth_2;
+	float aspect = ::IDevice->cast()->fHeight_2 / ::IDevice->cast()->fWidth_2;
 	float src = 10 * ::IDevice->TimeDelta_sec();
 	clamp(src, 0.f, 1.f);
 	float dst = 1 - src;
@@ -317,34 +317,34 @@ void CCameraManager::ApplyDevice(float _viewport_near)
 {
 	// Device params
 	float zoom;
-	if (Device.m_ScopeVP.IsSVPRender())
+	if (::IDevice->cast()->m_ScopeVP.IsSVPRender())
 	{
-		Device.mView.build_camera_dir(Device.m_ScopeVP.m_vPosition, Device.m_ScopeVP.m_vDirection, Device.m_ScopeVP.m_vNormal);
-		Device.vCameraPosition.set(Device.m_ScopeVP.m_vPosition);
-		Device.vCameraDirection.set(Device.m_ScopeVP.m_vDirection);
-		Device.vCameraTop.set(Device.m_ScopeVP.m_vNormal);
-		Device.vCameraRight.set(Device.m_ScopeVP.m_vRight);
+		::IDevice->cast()->mView.build_camera_dir(::IDevice->cast()->m_ScopeVP.m_vPosition, ::IDevice->cast()->m_ScopeVP.m_vDirection, ::IDevice->cast()->m_ScopeVP.m_vNormal);
+		::IDevice->cast()->vCameraPosition.set(::IDevice->cast()->m_ScopeVP.m_vPosition);
+		::IDevice->cast()->vCameraDirection.set(::IDevice->cast()->m_ScopeVP.m_vDirection);
+		::IDevice->cast()->vCameraTop.set(::IDevice->cast()->m_ScopeVP.m_vNormal);
+		::IDevice->cast()->vCameraRight.set(::IDevice->cast()->m_ScopeVP.m_vRight);
 
-		Device.fFOV = Device.m_ScopeVP.getFOV();
-		Device.iZoomSqr = Device.m_ScopeVP.getIZoomSqr();
+		::IDevice->cast()->fFOV = ::IDevice->cast()->m_ScopeVP.getFOV();
+		::IDevice->cast()->iZoomSqr = ::IDevice->cast()->m_ScopeVP.getIZoomSqr();
 	}
 	else
 	{
-		Device.mView.build_camera_dir(m_cam_info.p, m_cam_info.d, m_cam_info.n);
+		::IDevice->cast()->mView.build_camera_dir(m_cam_info.p, m_cam_info.d, m_cam_info.n);
 
-		Device.vCameraPosition.set(m_cam_info.p);
-		Device.vCameraDirection.set(m_cam_info.d);
-		Device.vCameraTop.set(m_cam_info.n);
-		Device.vCameraRight.set(m_cam_info.r);
+		::IDevice->cast()->vCameraPosition.set(m_cam_info.p);
+		::IDevice->cast()->vCameraDirection.set(m_cam_info.d);
+		::IDevice->cast()->vCameraTop.set(m_cam_info.n);
+		::IDevice->cast()->vCameraRight.set(m_cam_info.r);
 
-		Device.fFOV = m_cam_info.fFov;
-		zoom = (Device.fFOV == Device.gAimFOV) ? 1.f : tanf(Device.gAimFOVTan) / tanf(deg2radHalf(Device.fFOV));
-		Device.iZoomSqr = _sqr(1.f / zoom);
+		::IDevice->cast()->fFOV = m_cam_info.fFov;
+		zoom = (::IDevice->cast()->fFOV == ::IDevice->cast()->gAimFOV) ? 1.f : tanf(::IDevice->cast()->gAimFOVTan) / tanf(deg2radHalf(::IDevice->cast()->fFOV));
+		::IDevice->cast()->iZoomSqr = _sqr(1.f / zoom);
 	}
 
 	// projection
-	Device.fASPECT = m_cam_info.fAspect;
-	Device.mProject.build_projection(deg2rad(Device.fFOV), m_cam_info.fAspect, _viewport_near * zoom, m_cam_info.fFar);
+	::IDevice->cast()->fASPECT = m_cam_info.fAspect;
+	::IDevice->cast()->mProject.build_projection(deg2rad(::IDevice->cast()->fFOV), m_cam_info.fAspect, _viewport_near * zoom, m_cam_info.fFar);
 
 	if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu->IsActive())
 		ResetPP();
@@ -397,7 +397,7 @@ void CCameraManager::Dump()
 	Fmatrix mInvCamera;
 	Fvector _R, _U, _T, _P;
 
-	mInvCamera.invert(Device.mView);
+	mInvCamera.invert(::IDevice->cast()->mView);
 	_R.set(mInvCamera._11, mInvCamera._12, mInvCamera._13);
 	_U.set(mInvCamera._21, mInvCamera._22, mInvCamera._23);
 	_T.set(mInvCamera._31, mInvCamera._32, mInvCamera._33);

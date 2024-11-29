@@ -78,7 +78,7 @@ void FLOD::Render(float /*LOD*/)
 {
 	/*
 	Fvector				Ldir;
-	Ldir.sub			(vis.sphere.P,Device.vCameraPosition);
+	Ldir.sub			(vis.sphere.P,::IDevice->cast()->vCameraPosition);
 	Ldir.normalize		();
 
 	int					best_id		= 0;

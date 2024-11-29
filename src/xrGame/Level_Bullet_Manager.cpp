@@ -852,7 +852,7 @@ void CBulletManager::Render()
 			length = m_fTracerLengthMax;
 
 		float width = m_fTracerWidth;
-		float dist2segSqr = SqrDistancePointToSegment(Device.vCameraPosition, bullet->bullet_pos, tracer);
+		float dist2segSqr = SqrDistancePointToSegment(::IDevice->cast()->vCameraPosition, bullet->bullet_pos, tracer);
 		//---------------------------------------------
 		float MaxDistSqr = 1.0f;
 		float MinDistSqr = 0.09f;
@@ -863,9 +863,9 @@ void CBulletManager::Render()
 
 			width *= _sqrt(dist2segSqr / MaxDistSqr);
 		}
-		if (Device.vCameraPosition.distance_to_sqr(bullet->bullet_pos) < (length * length))
+		if (::IDevice->cast()->vCameraPosition.distance_to_sqr(bullet->bullet_pos) < (length * length))
 		{
-			length = Device.vCameraPosition.distance_to(bullet->bullet_pos) - 0.3f;
+			length = ::IDevice->cast()->vCameraPosition.distance_to(bullet->bullet_pos) - 0.3f;
 		}
 
 		Fvector center;
@@ -889,7 +889,7 @@ void CBulletManager::Render()
 void CBulletManager::CommitRenderSet() // @ the end of frame
 {
 	m_BulletsRendered = m_Bullets;
-	Device.add_parallel2(this, &CBulletManager::UpdateWorkload);
+	::IDevice->cast()->add_parallel2(this, &CBulletManager::UpdateWorkload);
 }
 
 void CBulletManager::CommitEvents() // @ the start of frame

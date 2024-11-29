@@ -97,10 +97,10 @@ float dxRender_Visual::get_distance_to_camera_base(Fmatrix* transform_matrix)
 		{
 			Fvector pos;
 			transform_matrix->transform_tiny(pos, getVisData().sphere.P);
-			m_distance = Device.vCameraPosition.distance_to_sqr(pos);
+			m_distance = ::IDevice->cast()->vCameraPosition.distance_to_sqr(pos);
 		}
 		else
-			m_distance = Device.vCameraPosition.distance_to_sqr(getVisData().sphere.P);
+			m_distance = ::IDevice->cast()->vCameraPosition.distance_to_sqr(getVisData().sphere.P);
 
 		m_next_distance_update_time = IDevice->TimeGlobal_sec() + distance_update_period;
 
@@ -115,5 +115,5 @@ float dxRender_Visual::get_distance_to_camera_base(Fmatrix* transform_matrix)
 
 float dxRender_Visual::getDistanceToCamera(Fmatrix* transform_matrix)
 {
-	return get_distance_to_camera_base(transform_matrix) * Device.iZoomSqr;
+	return get_distance_to_camera_base(transform_matrix) * ::IDevice->cast()->iZoomSqr;
 }

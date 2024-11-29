@@ -107,7 +107,7 @@ void CUISequencer::Start(LPCSTR tutor_name)
 		return;
 	
 	VERIFY(m_sequencer_items.size() == 0);
-	Device.seqFrame.Add(this, REG_PRIORITY_LOW - 10000);
+	::IDevice->cast()->seqFrame.Add(this, REG_PRIORITY_LOW - 10000);
 
 	m_name = tutor_name;
 	m_UIWindow = new CUIWindow();
@@ -168,7 +168,7 @@ void CUISequencer::Start(LPCSTR tutor_name)
 		pItem->Load(&uiXml, i);
 	}
 
-	Device.seqRender.Add(this, render_prio /*-2*/);
+	::IDevice->cast()->seqRender.Add(this, render_prio /*-2*/);
 
 	CUISequenceItem* pCurrItem = GetNextItem();
 	R_ASSERT3(pCurrItem, "no item(s) to start", tutor_name);
@@ -177,16 +177,16 @@ void CUISequencer::Start(LPCSTR tutor_name)
 	IR_Capture();
 
 	m_flags.set(etsActive, TRUE);
-	m_flags.set(etsStoredPauseState, Device.Paused());
+	m_flags.set(etsStoredPauseState, ::IDevice->cast()->Paused());
 
 	if (m_flags.test(etsNeedPauseOn) && !m_flags.test(etsStoredPauseState))
 	{
-		Device.Pause(TRUE, TRUE, TRUE, "tutorial_start");
+		::IDevice->cast()->Pause(TRUE, TRUE, TRUE, "tutorial_start");
 		bShowPauseString = FALSE;
 	}
 
 	if (m_flags.test(etsNeedPauseOff) && m_flags.test(etsStoredPauseState))
-		Device.Pause(FALSE, TRUE, FALSE, "tutorial_start");
+		::IDevice->cast()->Pause(FALSE, TRUE, FALSE, "tutorial_start");
 
 	if (m_global_sound._handle())
 		m_global_sound.play(nullptr, sm_2D);
@@ -237,8 +237,8 @@ void CUISequencer::Destroy()
 		CallFunction(m_stop_lua_function);
 
 	m_global_sound.stop();
-	Device.seqFrame.Remove(this);
-	Device.seqRender.Remove(this);
+	::IDevice->cast()->seqFrame.Remove(this);
+	::IDevice->cast()->seqRender.Remove(this);
 	delete_data(m_sequencer_items);
 	delete_data(m_UIWindow);
 	IR_Release();
@@ -275,17 +275,17 @@ void CUISequencer::Stop()
 	}
 	{
 		if (m_flags.test(etsNeedPauseOn) && !m_flags.test(etsStoredPauseState))
-			Device.Pause(FALSE, TRUE, TRUE, "tutorial_stop");
+			::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "tutorial_stop");
 
 		if (m_flags.test(etsNeedPauseOff) && m_flags.test(etsStoredPauseState))
-			Device.Pause(TRUE, TRUE, FALSE, "tutorial_stop");
+			::IDevice->cast()->Pause(TRUE, TRUE, FALSE, "tutorial_stop");
 	}
 	Destroy();
 }
 
 void CUISequencer::OnFrame()
 {
-	if (!Device.b_is_Active.load())
+	if (!::IDevice->cast()->b_is_Active.load())
 		return;
 	if (!IsActive())
 		return;

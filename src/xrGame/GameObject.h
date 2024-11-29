@@ -115,7 +115,7 @@ public:
 	void setID(u16 _ID) override { Props.net_ID = _ID; }
 	BOOL GetTmpPreDestroy() const override { return Props.bPreDestroy; }
 	void SetTmpPreDestroy(BOOL b) override { Props.bPreDestroy = b; }
-	float shedule_Scale() override { return Device.vCameraPosition.distance_to(Position()) / 200.f; }
+	float shedule_Scale() override { return ::IDevice->cast()->vCameraPosition.distance_to(Position()) / 200.f; }
 	bool shedule_Needed() override;
 	void shedule_Update(u32 dt) override;
 	// Parentness

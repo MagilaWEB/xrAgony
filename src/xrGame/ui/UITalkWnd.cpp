@@ -36,7 +36,7 @@ CUITalkWnd::CUITalkWnd()
 CUITalkWnd::~CUITalkWnd() {}
 void CUITalkWnd::InitTalkWnd()
 {
-	inherited::SetWndRect(Frect().set(0, 0, Device.UI_BASE_WIDTH, Device.UI_BASE_HEIGHT));
+	inherited::SetWndRect(Frect().set(0, 0, ::IDevice->cast()->UI_BASE_WIDTH, ::IDevice->cast()->UI_BASE_HEIGHT));
 
 	UITalkDialogWnd = new CUITalkDialogWnd();
 	UITalkDialogWnd->SetAutoDelete(true);

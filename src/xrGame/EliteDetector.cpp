@@ -146,9 +146,9 @@ void CUIArtefactDetectorElite::Draw()
 
 	Fmatrix M, Mc;
 	float h, p;
-	Device.vCameraDirection.getHP(h, p);
+	::IDevice->cast()->vCameraDirection.getHP(h, p);
 	Mc.setHPB(h, 0, 0);
-	Mc.c.set(Device.vCameraPosition);
+	Mc.c.set(::IDevice->cast()->vCameraPosition);
 	M.invert(Mc);
 
 	UI().ScreenFrustumLIT().CreateFromRect(Frect().set(rp.x, rp.y, wrk_sz.x, wrk_sz.y));

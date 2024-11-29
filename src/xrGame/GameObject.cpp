@@ -1016,7 +1016,7 @@ Fvector CGameObject::get_last_local_point_on_mesh(Fvector const& local_point, u1
 
 void CGameObject::renderable_Render()
 {
-	b_visibility_status_next = (Device.m_ScopeVP.IsSVPRender()) ? eSecondViewport : eMainViewport;
+	b_visibility_status_next = (::IDevice->cast()->m_ScopeVP.IsSVPRender()) ? eSecondViewport : eMainViewport;
 
 	::Render->set_Transform(&XFORM());
 	::Render->add_Visual(Visual());
@@ -1481,10 +1481,10 @@ void CGameObject::calc_next_update_time()
 		dist							*= s_update_radius_invisible_k;
 		break;
 	case eMainViewport:
-		dist							*= Device.iZoomSqr;
+		dist							*= ::IDevice->cast()->iZoomSqr;
 		break;
 	case eSecondViewport:
-		dist							*= Device.m_ScopeVP.getIZoomSqr();
+		dist							*= ::IDevice->cast()->m_ScopeVP.getIZoomSqr();
 		break;
 	}
 

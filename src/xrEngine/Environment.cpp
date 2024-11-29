@@ -62,8 +62,8 @@ CEnvironment::CEnvironment()
 	PerlinNoise1D->SetOctaves(2);
 	PerlinNoise1D->SetAmplitude(0.66666f);
 
-	// tsky0 = Device.Resources->_CreateTexture("$user$sky0");
-	// tsky1 = Device.Resources->_CreateTexture("$user$sky1");
+	// tsky0 = ::IDevice->cast()->Resources->_CreateTexture("$user$sky0");
+	// tsky1 = ::IDevice->cast()->Resources->_CreateTexture("$user$sky1");
 
 	string_path file_name;
 	m_ambients_config =
@@ -409,7 +409,7 @@ void CEnvironment::lerp(float& current_weight)
 	EM.hemi_color.set(0, 0, 0);
 	EM.use_flags.zero();
 
-	Fvector view = Device.vCameraPosition;
+	Fvector view = ::IDevice->cast()->vCameraPosition;
 	float mpower = 0;
 	for (auto& mit : Modifiers)
 		mpower += EM.sum(mit, view);

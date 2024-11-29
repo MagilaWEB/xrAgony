@@ -18,7 +18,6 @@
 
 using namespace std;
 
-ENGINE_API CRenderDevice Device;
 ENGINE_API CLoadScreenRenderer load_screen_renderer;
 ENGINE_API xr_list<fastdelegate::FastDelegate<bool()>> g_loading_events;
 ENGINE_API BOOL g_bRendering = FALSE;
@@ -189,9 +188,9 @@ void CRenderDevice::CalcFrameStats()
 
 void CRenderDevice::OnFrame()
 {
-	::Sound->update(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
+	::Sound->update(::IDevice->cast()->vCameraPosition, ::IDevice->cast()->vCameraDirection, ::IDevice->cast()->vCameraTop);
 
-	if (Device.Paused() == FALSE && g_loading_events.empty())
+	if (::IDevice->cast()->Paused() == FALSE && g_loading_events.empty())
 	{
 		if (isLevelReady())
 		{
@@ -561,8 +560,8 @@ void CRenderDevice::RemoveSeqFrame(pureFrame* f)
 	seqFrame.Remove(f);
 }
 
-CRenderDevice* get_device() { return &Device; }
-u32 script_time_global() { return Device.TimeGlobal_ms(); }
+CRenderDevice* get_device() { return ::IDevice->cast(); }
+u32 script_time_global() { return ::IDevice->cast()->TimeGlobal_ms(); }
 SCRIPT_EXPORT(Device, (),
 	{
 		module(luaState)
@@ -576,7 +575,7 @@ SCRIPT_EXPORT(Device, (),
 CLoadScreenRenderer::CLoadScreenRenderer() : b_registered(false), b_need_user_input(false) {}
 void CLoadScreenRenderer::start(bool b_user_input)
 {
-	Device.seqRender.Add(this, 0);
+	::IDevice->cast()->seqRender.Add(this, 0);
 	b_registered = true;
 	b_need_user_input = b_user_input;
 }
@@ -589,7 +588,7 @@ void CLoadScreenRenderer::stop()
 	if (pApp->LoadScreen())
 		pApp->LoadScreen()->ChangeVisibility(false);
 
-	Device.seqRender.Remove(this);
+	::IDevice->cast()->seqRender.Remove(this);
 
 	b_registered = false;
 	b_need_user_input = false;

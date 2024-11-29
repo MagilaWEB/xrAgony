@@ -1,7 +1,10 @@
 #pragma once
 struct RenderDeviceStatictics;
+class CRenderDevice;
+
 struct IRenderDevice
 {
+	virtual CRenderDevice* cast() = 0;
 	// Device frame increment.
 	virtual void incrementFrame() = 0;
 

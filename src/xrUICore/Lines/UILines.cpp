@@ -30,7 +30,7 @@ CUILines::CUILines()
 	uFlags.set(flColoringMode, TRUE);
 	uFlags.set(flCutWordsMode, FALSE);
 	uFlags.set(flRecognizeNewLine, TRUE);
-	//Device.seqDeviceReset.Add(this, REG_PRIORITY_HIGH);
+	//::IDevice->cast()->seqDeviceReset.Add(this, REG_PRIORITY_HIGH);
 }
 
 void CUILines::SetTextComplexMode(bool mode)

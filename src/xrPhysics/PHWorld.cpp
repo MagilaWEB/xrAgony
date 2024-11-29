@@ -243,9 +243,9 @@ void CPHWorld::OnFrame()
 	// Msg									("------------- physics: %d / %d",u32(::IDevice->getFrame()),u32(m_steps_num));
 	//просчитать полет пуль
 	/*
-	Device.Statistic->TEST0.Begin		();
+	::IDevice->cast()->Statistic->TEST0.Begin		();
 	Level().BulletManager().Update		();
-	Device.Statistic->TEST0.End			();
+	::IDevice->cast()->Statistic->TEST0.End			();
 	*/
 #ifdef DEBUG
 	// DBG_DrawFrameStart();

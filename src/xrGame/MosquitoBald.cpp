@@ -76,7 +76,7 @@ void CMosquitoBald::UpdateSecondaryHit()
 		return;
 
 	m_dwAffectFrameNum = ::IDevice->getFrame();
-	if (Device.dwPrecacheFrame)
+	if (::IDevice->cast()->dwPrecacheFrame)
 		return;
 
 	for (auto it = m_ObjectInfoMap.begin(); m_ObjectInfoMap.end() != it; ++it)

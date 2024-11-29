@@ -45,7 +45,7 @@ CMainMenu::CMainMenu()
 	m_startDialog = nullptr;
 	m_screenshotFrame = u32(-1);
 	g_pGamePersistent->m_pMainMenu = this;
-	if (Device.b_is_Ready.load())
+	if (::IDevice->cast()->b_is_Ready.load())
 		OnDeviceCreate();
 	ReadTextureInfo();
 	CUIXmlInit::InitColorDefs();
@@ -60,8 +60,8 @@ CMainMenu::CMainMenu()
 	g_btnHint = new CUIButtonHint();
 	g_statHint = new CUIButtonHint();
 
-	Device.seqFrame.Add(this, REG_PRIORITY_LOW - 1000);
-	Device.seqDeviceReset.Add(this, REG_PRIORITY_HIGH);
+	::IDevice->cast()->seqFrame.Add(this, REG_PRIORITY_LOW - 1000);
+	::IDevice->cast()->seqDeviceReset.Add(this, REG_PRIORITY_HIGH);
 	mLanguageChanged = false;
 
 	// ...command line for auto start
@@ -82,8 +82,8 @@ CMainMenu::CMainMenu()
 
 CMainMenu::~CMainMenu()
 {
-	Device.seqFrame.Remove(this);
-	Device.seqDeviceReset.Remove(this);
+	::IDevice->cast()->seqFrame.Remove(this);
+	::IDevice->cast()->seqDeviceReset.Remove(this);
 	xr_delete(g_btnHint);
 	xr_delete(g_statHint);
 	xr_delete(m_startDialog);
@@ -141,7 +141,7 @@ void CMainMenu::Activate(bool bActivate)
 	if (bActivate)
 	{
 		b_shniaganeed_pp = true;
-		Device.Pause(TRUE, FALSE, TRUE, "mm_activate1");
+		::IDevice->cast()->Pause(TRUE, FALSE, TRUE, "mm_activate1");
 		m_Flags.set(flActive | flNeedChangeCapture, TRUE);
 
 		m_Flags.set(flRestoreCursor, GetUICursor().IsVisible());
@@ -152,7 +152,7 @@ void CMainMenu::Activate(bool bActivate)
 		m_Flags.set(flRestoreConsole, Console->bVisible);
 
 		if (b_is_single)
-			m_Flags.set(flRestorePause, Device.Paused());
+			m_Flags.set(flRestorePause, ::IDevice->cast()->Paused());
 
 		Console->Hide();
 
@@ -161,18 +161,18 @@ void CMainMenu::Activate(bool bActivate)
 			m_Flags.set(flRestorePauseStr, bShowPauseString);
 			bShowPauseString = FALSE;
 			if (!m_Flags.test(flRestorePause))
-				Device.Pause(TRUE, TRUE, FALSE, "mm_activate2");
+				::IDevice->cast()->Pause(TRUE, TRUE, FALSE, "mm_activate2");
 		}
 
 		if (g_pGameLevel)
 		{
 			if (b_is_single)
-				Device.seqFrame.Remove(g_pGameLevel);
+				::IDevice->cast()->seqFrame.Remove(g_pGameLevel);
 
-			Device.seqRender.Remove(g_pGameLevel);
+			::IDevice->cast()->seqRender.Remove(g_pGameLevel);
 			CCameraManager::ResetPP();
 		};
-		Device.seqRender.Add(this, 4); // 1-console 2-cursor 3-tutorial
+		::IDevice->cast()->seqRender.Add(this, 4); // 1-console 2-cursor 3-tutorial
 
 		Console->Execute("stat_memory");
 	}
@@ -181,7 +181,7 @@ void CMainMenu::Activate(bool bActivate)
 		m_Flags.set(flActive, FALSE);
 		m_Flags.set(flNeedChangeCapture, TRUE);
 
-		Device.seqRender.Remove(this);
+		::IDevice->cast()->seqRender.Remove(this);
 
 		if (Console->bVisible)
 			Console->Hide();
@@ -199,9 +199,9 @@ void CMainMenu::Activate(bool bActivate)
 		if (g_pGameLevel)
 		{
 			if (b_is_single)
-				Device.seqFrame.Add(g_pGameLevel);
+				::IDevice->cast()->seqFrame.Add(g_pGameLevel);
 
-			Device.seqRender.Add(g_pGameLevel);
+			::IDevice->cast()->seqRender.Add(g_pGameLevel);
 		};
 
 		if (m_Flags.test(flRestoreConsole))
@@ -210,7 +210,7 @@ void CMainMenu::Activate(bool bActivate)
 		if (b_is_single)
 		{
 			if (!m_Flags.test(flRestorePause))
-				Device.Pause(FALSE, TRUE, FALSE, "mm_deactivate1");
+				::IDevice->cast()->Pause(FALSE, TRUE, FALSE, "mm_deactivate1");
 
 			bShowPauseString = m_Flags.test(flRestorePauseStr);
 		}
@@ -218,7 +218,7 @@ void CMainMenu::Activate(bool bActivate)
 		if (m_Flags.test(flRestoreCursor))
 			GetUICursor().Show();
 
-		Device.Pause(FALSE, TRUE, TRUE, "mm_deactivate2");
+		::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "mm_deactivate2");
 
 		if (m_Flags.test(flNeedVidRestart))
 		{
@@ -248,7 +248,7 @@ bool CMainMenu::ReloadUI()
 	m_startDialog->m_bWorkInPause = true;
 	m_startDialog->ShowDialog(true);
 
-	m_activatedScreenRatio = (float)Device.dwWidth / (float)Device.dwHeight > (Device.UI_BASE_WIDTH / Device.UI_BASE_HEIGHT + 0.01f);
+	m_activatedScreenRatio = (float)::IDevice->cast()->dwWidth / (float)::IDevice->cast()->dwHeight > (::IDevice->cast()->UI_BASE_WIDTH / ::IDevice->cast()->UI_BASE_HEIGHT + 0.01f);
 	return true;
 }
 
@@ -373,8 +373,8 @@ void CMainMenu::OnFrame()
 
 		if (g_pGameLevel && m_Flags.test(flActive))
 		{
-			Device.seqFrame.Remove(g_pGameLevel);
-			Device.seqRender.Remove(g_pGameLevel);
+			::IDevice->cast()->seqFrame.Remove(g_pGameLevel);
+			::IDevice->cast()->seqRender.Remove(g_pGameLevel);
 		};
 
 		if (m_Flags.test(flRestoreConsole))
@@ -384,7 +384,7 @@ void CMainMenu::OnFrame()
 	if (IsActive())
 	{
 		CheckForErrorDlg();
-		bool b_is_16_9 = (float)Device.dwWidth / (float)Device.dwHeight > (Device.UI_BASE_WIDTH / Device.UI_BASE_HEIGHT + 0.01f);
+		bool b_is_16_9 = (float)::IDevice->cast()->dwWidth / (float)::IDevice->cast()->dwHeight > (::IDevice->cast()->UI_BASE_WIDTH / ::IDevice->cast()->UI_BASE_HEIGHT + 0.01f);
 		if (b_is_16_9 != m_activatedScreenRatio || mLanguageChanged)
 		{
 			mLanguageChanged = false;
@@ -407,8 +407,8 @@ void CMainMenu::Screenshot(IRender::ScreenshotMode mode, LPCSTR name)
 		xr_strcpy(m_screenshot_name, name);
 		if (g_pGameLevel && m_Flags.test(flActive))
 		{
-			Device.seqFrame.Add(g_pGameLevel);
-			Device.seqRender.Add(g_pGameLevel);
+			::IDevice->cast()->seqFrame.Add(g_pGameLevel);
+			::IDevice->cast()->seqRender.Add(g_pGameLevel);
 		};
 		m_screenshotFrame = ::IDevice->getFrame() + 1;
 		m_Flags.set(flRestoreConsole, Console->bVisible);

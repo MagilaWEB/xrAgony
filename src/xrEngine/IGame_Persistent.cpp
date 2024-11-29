@@ -29,11 +29,11 @@ bool IGame_Persistent::MainMenuActiveOrLevelNotExist()
 
 IGame_Persistent::IGame_Persistent()
 {
-	Device.seqAppStart.Add(this);
-	Device.seqAppEnd.Add(this);
-	Device.seqFrame.Add(this, REG_PRIORITY_HIGH + 1);
-	Device.seqAppActivate.Add(this);
-	Device.seqAppDeactivate.Add(this);
+	::IDevice->cast()->seqAppStart.Add(this);
+	::IDevice->cast()->seqAppEnd.Add(this);
+	::IDevice->cast()->seqFrame.Add(this, REG_PRIORITY_HIGH + 1);
+	::IDevice->cast()->seqAppActivate.Add(this);
+	::IDevice->cast()->seqAppDeactivate.Add(this);
 
 	m_pMainMenu = nullptr;
 
@@ -44,11 +44,11 @@ IGame_Persistent::IGame_Persistent()
 
 IGame_Persistent::~IGame_Persistent()
 {
-	Device.seqFrame.Remove(this);
-	Device.seqAppStart.Remove(this);
-	Device.seqAppEnd.Remove(this);
-	Device.seqAppActivate.Remove(this);
-	Device.seqAppDeactivate.Remove(this);
+	::IDevice->cast()->seqFrame.Remove(this);
+	::IDevice->cast()->seqAppStart.Remove(this);
+	::IDevice->cast()->seqAppEnd.Remove(this);
+	::IDevice->cast()->seqAppActivate.Remove(this);
+	::IDevice->cast()->seqAppDeactivate.Remove(this);
 #ifndef _EDITOR
 	xr_delete(pEnvironment);
 #endif
@@ -164,7 +164,7 @@ void IGame_Persistent::OnGameEnd()
 void IGame_Persistent::OnFrame()
 {
 #ifndef _EDITOR
-	if (!Device.Paused() || Device.dwPrecacheFrame)
+	if (!::IDevice->cast()->Paused() || ::IDevice->cast()->dwPrecacheFrame)
 		Environment().OnFrame();
 
 	stats.Starting = ps_needtoplay.size();

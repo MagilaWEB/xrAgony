@@ -655,8 +655,8 @@ public:
 		/*	 moved to level_network_messages.cpp
 				CSavedGameWrapper			wrapper(args);
 				if (wrapper.level_id() == ai().level_graph().level_id()) {
-					if (Device.Paused())
-						Device.Pause		(FALSE, TRUE, TRUE, "CCC_ALifeLoadFrom");
+					if (::IDevice->cast()->Paused())
+						::IDevice->cast()->Pause		(FALSE, TRUE, TRUE, "CCC_ALifeLoadFrom");
 
 					Level().remove_objects	();
 
@@ -673,8 +673,8 @@ public:
 
 		Console->Execute("stat_memory");
 
-		 if (Device.Paused())
-			Device.Pause(FALSE, TRUE, TRUE, "CCC_ALifeLoadFrom");
+		 if (::IDevice->cast()->Paused())
+			::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "CCC_ALifeLoadFrom");
 
 		NET_Packet net_packet;
 		net_packet.w_begin(M_LOAD_GAME);
@@ -1258,13 +1258,13 @@ public:
 	{
 		float time_factor = (float)atof(args);
 		clamp(time_factor, EPS, 1000.f);
-		Device.time_factor(time_factor);
+		::IDevice->cast()->time_factor(time_factor);
 		if (physics_world())
 			physics_world()->SetStep(time_factor / ph_console::ph_frequency);
 	}
 	virtual void Status(TStatus& S)
 	{
-		xr_sprintf(S, sizeof(S), "%f", Device.time_factor());
+		xr_sprintf(S, sizeof(S), "%f", ::IDevice->cast()->time_factor());
 	}
 	virtual void Info(TInfo& I)
 	{
@@ -1273,7 +1273,7 @@ public:
 	virtual void fill_tips(vecTips& tips, u32 mode)
 	{
 		TStatus str;
-		xr_sprintf(str, sizeof(str), "%3.3f  (current)  [0.001 - 1000.0]", Device.time_factor());
+		xr_sprintf(str, sizeof(str), "%3.3f  (current)  [0.001 - 1000.0]", ::IDevice->cast()->time_factor());
 		tips.push_back(str);
 		IConsole_Command::fill_tips(tips, mode);
 	}
@@ -1781,7 +1781,7 @@ public:
 
 		collide::rq_result RQ;
 		//RayPick(начало луча, направление, максимальная дистанция, тип коллизии, тип столкновения, игнорируемый объект)
-		BOOL HasPick = Level().ObjectSpace.RayPick(Device.vCameraPosition, Device.vCameraDirection, 1000.0f, collide::rqtBoth, RQ, Level().CurrentControlEntity());
+		BOOL HasPick = Level().ObjectSpace.RayPick(::IDevice->cast()->vCameraPosition, ::IDevice->cast()->vCameraDirection, 1000.0f, collide::rqtBoth, RQ, Level().CurrentControlEntity());
 		if (HasPick)
 		{
 			Fvector normal;
@@ -1791,8 +1791,8 @@ public:
 
 
 			Fvector result;
-			result = Device.vCameraPosition; //начальна¤ позиция
-			result.add(Fvector(Device.vCameraDirection).mul(RQ.range)); //умножаем диреккцию столкновения на дистанцию до столкновения добавл¤ем в вектор начальной позиции
+			result = ::IDevice->cast()->vCameraPosition; //начальна¤ позиция
+			result.add(Fvector(::IDevice->cast()->vCameraDirection).mul(RQ.range)); //умножаем диреккцию столкновения на дистанцию до столкновения добавл¤ем в вектор начальной позиции
 
 			Fmatrix matrix;
 			matrix.identity();
@@ -1945,7 +1945,7 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "hud_crosshair_dist", &psHUD_Flags, HUD_CROSSHAIR_DIST);
 
 	//CMD4(CCC_Float, "hud_fov", &psHUD_FOV, 0.1f, 1.0f);
-	CMD4(CCC_Float, "g_fov", &Device.gFOV, 1.0f, 120.0f);
+	CMD4(CCC_Float, "g_fov", &::IDevice->cast()->gFOV, 1.0f, 120.0f);
 	class CCC_AimFOV : public CCC_Float
 	{
 	public:
@@ -1953,10 +1953,10 @@ void CCC_RegisterCommands()
 		void Execute(LPCSTR args) override
 		{
 			__super::Execute(args);
-			Device.gAimFOVTan = tanf(deg2radHalf(Device.gAimFOV));
+			::IDevice->cast()->gAimFOVTan = tanf(deg2radHalf(::IDevice->cast()->gAimFOV));
 		}
 	};
-	CMD4(CCC_AimFOV, "g_aim_fov", &Device.gAimFOV, 1.f, 120.0f);
+	CMD4(CCC_AimFOV, "g_aim_fov", &::IDevice->cast()->gAimFOV, 1.f, 120.0f);
 	CMD4(CCC_Integer, "g_use_aim_inertion", &g_use_aim_inertion, 0, 1);
 
 	// Demo

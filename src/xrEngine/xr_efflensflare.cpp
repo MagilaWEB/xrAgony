@@ -326,10 +326,10 @@ void CLensFlare::OnFrame(shared_str id)
 	matEffCamPos.identity();
 	// Calculate our position and direction
 
-	matEffCamPos.i.set(Device.vCameraRight);
-	matEffCamPos.j.set(Device.vCameraTop);
-	matEffCamPos.k.set(Device.vCameraDirection);
-	vecPos.set(Device.vCameraPosition);
+	matEffCamPos.i.set(::IDevice->cast()->vCameraRight);
+	matEffCamPos.j.set(::IDevice->cast()->vCameraTop);
+	matEffCamPos.k.set(::IDevice->cast()->vCameraDirection);
+	vecPos.set(::IDevice->cast()->vCameraPosition);
 
 	vecDir.set(0.0f, 0.0f, 1.0f);
 	matEffCamPos.transform_dir(vecDir);
@@ -371,7 +371,7 @@ void CLensFlare::OnFrame(shared_str id)
 
 #ifdef _EDITOR
 	float dist = UI->ZFar();
-	if (Tools->RayPick(Device.m_Camera.GetPosition(), vSunDir, dist))
+	if (Tools->RayPick(::IDevice->cast()->m_Camera.GetPosition(), vSunDir, dist))
 		fBlend = fBlend - BLEND_DEC_SPEED * ::IDevice->TimeDelta_sec();
 	else
 		fBlend = fBlend + BLEND_INC_SPEED * ::IDevice->TimeDelta_sec();
@@ -391,7 +391,7 @@ void CLensFlare::OnFrame(shared_str id)
 
 	IGameObject* o_main = g_pGameLevel->CurrentViewEntity();
 	R_ASSERT(_valid(vSunDir));
-	STranspParam TP(&m_ray_cache[0], Device.vCameraPosition, vSunDir, 1000.f, EPS_L);
+	STranspParam TP(&m_ray_cache[0], ::IDevice->cast()->vCameraPosition, vSunDir, 1000.f, EPS_L);
 
 	R_ASSERT(_valid(TP.P));
 	R_ASSERT(_valid(TP.D));
@@ -440,7 +440,7 @@ void CLensFlare::OnFrame(shared_str id)
 
 /*
 IGameObject* o_main = g_pGameLevel->CurrentViewEntity();
-STranspParam TP (&m_ray_cache,Device.vCameraPosition,vSunDir,1000.f,EPS_L);
+STranspParam TP (&m_ray_cache,::IDevice->cast()->vCameraPosition,vSunDir,1000.f,EPS_L);
 collide::ray_defs RD (TP.P,TP.D,TP.f,CDB::OPT_CULL,collide::rqtBoth);
 if (m_ray_cache.result&&m_ray_cache.similar(TP.P,TP.D,TP.f)){
 // similar with previous query == 0
@@ -461,7 +461,7 @@ blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,::IDevice->TimeDelta_sec());
 */
 /*
  IGameObject* o_main = g_pGameLevel->CurrentViewEntity();
- STranspParam TP (this,Device.vCameraPosition,vSunDir,1000.f,EPS_L);
+ STranspParam TP (this,::IDevice->cast()->vCameraPosition,vSunDir,1000.f,EPS_L);
  collide::ray_defs RD (TP.P,TP.D,TP.f,CDB::OPT_CULL,collide::rqtBoth);
  if (m_ray_cache.result&&m_ray_cache.similar(TP.P,TP.D,TP.f)){
  // similar with previous query == 0
@@ -486,7 +486,7 @@ blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,::IDevice->TimeDelta_sec());
 	if (m_Current->m_Flags.is(CLensFlareDescriptor::flGradient))
 	{
 		Fvector scr_pos;
-		Device.mFullTransform.transform(scr_pos, vecLight);
+		::IDevice->cast()->mFullTransform.transform(scr_pos, vecLight);
 		float kx = 1, ky = 1;
 		float sun_blend = 0.5f;
 		float sun_max = 2.5f;

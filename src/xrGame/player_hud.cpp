@@ -171,16 +171,16 @@ void attachable_hud_item::update_hud_additional(Fmatrix& trans)
 //void transform_to_hud(Fvector& pos)
 //{
 //	Fmatrix hud_p;
-//	hud_p.build_projection(deg2rad(Device.fFOV * .75f),
-//		Device.fASPECT,
+//	hud_p.build_projection(deg2rad(::IDevice->cast()->fFOV * .75f),
+//		::IDevice->cast()->fASPECT,
 //		VIEWPORT_NEAR_HUD,
 //		g_pGamePersistent->Environment().CurrentEnv->far_plane);
 //
-//	Device.mView.transform_tiny(pos);
+//	::IDevice->cast()->mView.transform_tiny(pos);
 //	hud_p.transform_tiny(pos);
 //
-//	Device.mProject.transform_tiny(pos);
-//	Device.mInvView.transform_tiny(pos);
+//	::IDevice->cast()->mProject.transform_tiny(pos);
+//	::IDevice->cast()->mInvView.transform_tiny(pos);
 //}
 
 void attachable_hud_item::setup_firedeps(firedeps& fd, bool is_particles)
@@ -201,7 +201,7 @@ void attachable_hud_item::setup_firedeps(firedeps& fd, bool is_particles)
 		VERIFY(_valid(fd.vLastFD));
 		VERIFY(_valid(fd.vLastFD));
 		
-		correction_dir.sub(fd.vLastFD, Device.vCameraDirection);
+		correction_dir.sub(fd.vLastFD, ::IDevice->cast()->vCameraDirection);
 		correction_dir.mul(.5f);
 		correction_pos.mul(correction_dir, .33f);
 

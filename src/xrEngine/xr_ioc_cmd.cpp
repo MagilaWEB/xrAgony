@@ -126,8 +126,8 @@ public:
 	CCC_TexturesStat(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
 	virtual void Execute(LPCSTR args)
 	{
-		Device.DumpResourcesMemoryUsage();
-		// Device.Resources->_DumpMemoryUsage();
+		::IDevice->cast()->DumpResourcesMemoryUsage();
+		// ::IDevice->cast()->Resources->_DumpMemoryUsage();
 		// TODO: move this console commant into renderer
 		// VERIFY(0);
 	}
@@ -382,8 +382,8 @@ public:
 	CCC_VID_Reset(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
 	virtual void Execute(LPCSTR args)
 	{
-		if (Device.b_is_Ready.load())
-			Device.Reset();
+		if (::IDevice->cast()->b_is_Ready.load())
+			::IDevice->cast()->Reset();
 	}
 };
 class CCC_VidMode : public CCC_Token
@@ -495,7 +495,7 @@ class CCC_DR_TakePoint : public IConsole_Command
 public:
 CCC_DR_TakePoint(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
 virtual void Execute(LPCSTR args) {
-Fvector CamPos = Device.vCameraPosition;
+Fvector CamPos = ::IDevice->cast()->vCameraPosition;
 
 if (g_DR_LM_Min.x > CamPos.x) g_DR_LM_Min.x = CamPos.x;
 if (g_DR_LM_Min.z > CamPos.z) g_DR_LM_Min.z = CamPos.z;
