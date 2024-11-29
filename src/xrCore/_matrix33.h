@@ -148,7 +148,7 @@ public:
 	{
 		int i;
 		float tresh, theta, tau, t, sm, s, h, g, c;
-		int nrot;
+		//int nrot;
 		Tvector b;
 		Tvector z;
 		_matrix33 v;
@@ -160,7 +160,7 @@ public:
 		d.set(a.m[0][0], a.m[1][1], a.m[2][2]);
 		z.set(0, 0, 0);
 
-		nrot = 0;
+		//nrot = 0;
 
 		for (i = 0; i < 50; i++)
 		{
@@ -207,7 +207,7 @@ public:
 					ROT(v, 0, 0, 0, 1);
 					ROT(v, 1, 0, 1, 1);
 					ROT(v, 2, 0, 2, 1);
-					nrot++;
+					//nrot++;
 				}
 			}
 			{
@@ -239,7 +239,7 @@ public:
 					ROT(v, 0, 0, 0, 2);
 					ROT(v, 1, 0, 1, 2);
 					ROT(v, 2, 0, 2, 2);
-					nrot++;
+					//nrot++;
 				}
 			}
 			{
@@ -271,7 +271,7 @@ public:
 					ROT(v, 0, 1, 0, 2);
 					ROT(v, 1, 1, 1, 2);
 					ROT(v, 2, 1, 2, 2);
-					nrot++;
+					//nrot++;
 				}
 			}
 			b.add(z);
