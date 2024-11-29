@@ -29,7 +29,7 @@
 #include <nvimage/Filter.h>
 #include <nvimage/FloatImage.h>
 #include <nvimage/Image.h>
-
+#include <limits>
 using namespace nv;
 
 
@@ -45,7 +45,7 @@ static float processPixel(const FloatImage * img, uint x, uint y)
 	float fx0 = (float) x / w;
 	float fy0 = (float) y / h;
 
-	float best_ratio = INFINITY;
+	constexpr float best_ratio = std::numeric_limits<float>::infinity();
 	uint best_x = w;
 	uint best_y = h;
 	
