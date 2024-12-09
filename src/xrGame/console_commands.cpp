@@ -655,7 +655,7 @@ public:
 		/*	 moved to level_network_messages.cpp
 				CSavedGameWrapper			wrapper(args);
 				if (wrapper.level_id() == ai().level_graph().level_id()) {
-					if (::IDevice->cast()->Paused())
+					if (::IDevice->Paused())
 						::IDevice->cast()->Pause		(FALSE, TRUE, TRUE, "CCC_ALifeLoadFrom");
 
 					Level().remove_objects	();
@@ -673,8 +673,8 @@ public:
 
 		Console->Execute("stat_memory");
 
-		 if (::IDevice->cast()->Paused())
-			::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "CCC_ALifeLoadFrom");
+		 if (::IDevice->Paused())
+			::IDevice->Pause(false, true, true, "CCC_ALifeLoadFrom");
 
 		NET_Packet net_packet;
 		net_packet.w_begin(M_LOAD_GAME);

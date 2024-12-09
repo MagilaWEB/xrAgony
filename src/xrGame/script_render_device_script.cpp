@@ -12,8 +12,8 @@
 
 using namespace luabind;
 
-bool is_device_paused(CRenderDevice* d) { return !!::IDevice->cast()->Paused(); }
-void set_device_paused(CRenderDevice* d, bool b) { ::IDevice->cast()->Pause(b, TRUE, FALSE, "set_device_paused_script"); }
+bool is_device_paused(CRenderDevice* d) { return !!::IDevice->Paused(); }
+void set_device_paused(CRenderDevice* d, bool b) { ::IDevice->Pause(b, true, false, "set_device_paused_script"); }
 bool is_app_ready() { return pApp->IsLoaded(); }
 
 SCRIPT_EXPORT(CRenderDevice, (), {

@@ -164,7 +164,7 @@ void IGame_Persistent::OnGameEnd()
 void IGame_Persistent::OnFrame()
 {
 #ifndef _EDITOR
-	if (!::IDevice->cast()->Paused() || ::IDevice->cast()->dwPrecacheFrame)
+	if (!::IDevice->Paused() || ::IDevice->cast()->dwPrecacheFrame)
 		Environment().OnFrame();
 
 	stats.Starting = ps_needtoplay.size();

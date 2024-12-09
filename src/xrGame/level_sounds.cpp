@@ -194,7 +194,7 @@ void CLevelSoundManager::Unload()
 
 void CLevelSoundManager::Update()
 {
-	if (::IDevice->cast()->Paused())
+	if (::IDevice->Paused())
 		return;
 	if (::IDevice->cast()->dwPrecacheFrame != 0)
 		return;

@@ -190,7 +190,7 @@ void CRenderDevice::OnFrame()
 {
 	::Sound->update(::IDevice->cast()->vCameraPosition, ::IDevice->cast()->vCameraDirection, ::IDevice->cast()->vCameraTop);
 
-	if (::IDevice->cast()->Paused() == FALSE && g_loading_events.empty())
+	if (::IDevice->Paused() == false && g_loading_events.empty())
 	{
 		if (isLevelReady())
 		{
@@ -275,7 +275,7 @@ void CRenderDevice::d_SVPRender()
 
 void CRenderDevice::GlobalUpdate()
 {
-	xrCriticalSection::raii mt{ ResetRender };
+	xrCriticalSection::raii mt{ m_ResetRender };
 	if ((!RunFunctionPointer()) && (!b_restart))
 	{
 		ProcessPriority();
@@ -449,7 +449,7 @@ void CRenderDevice::FrameMove()
 
 ENGINE_API BOOL bShowPauseString = TRUE;
 
-void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
+void CRenderDevice::Pause(bool bOn, bool bTimer, bool bSound, bool reason)
 {
 	static int snd_emitters_ = -1;
 	if (g_bBenchmark)
@@ -560,7 +560,7 @@ void CRenderDevice::RemoveSeqFrame(pureFrame* f)
 	seqFrame.Remove(f);
 }
 
-CRenderDevice* get_device() { return ::IDevice->cast(); }
+CRenderDevice* get_device() { return **IDevice; }
 u32 script_time_global() { return ::IDevice->cast()->TimeGlobal_ms(); }
 SCRIPT_EXPORT(Device, (),
 	{
@@ -657,7 +657,7 @@ bool CRenderDevice::isLevelReady() const
 	return g_pGameLevel && g_pGameLevel->bReady;
 }
 
-bool CRenderDevice::isGameProcess() const
+bool CRenderDevice::IsGameProcess() const
 {
 	return isLevelReady() && !IsLoadingScreen() && !Paused();
 }

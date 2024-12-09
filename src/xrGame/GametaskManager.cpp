@@ -155,7 +155,7 @@ void CGameTaskManager::SetTaskState(const shared_str& id, ETaskState state)
 
 void CGameTaskManager::UpdateTasks()
 {
-	if (::IDevice->cast()->Paused())
+	if (::IDevice->Paused())
 		return;
 
 	Level().MapManager().DisableAllPointers();

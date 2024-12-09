@@ -33,12 +33,12 @@ struct RenderDeviceStatictics final
 class ENGINE_API CRenderDevice final : public IRenderDevice
 {
 	// Engine flow-control
-	size_t dwFrame			{ 0 };
-	float m_time_delta_sec	{ 0.f };
-	float m_time_global_sec	{ 0.f };
-	size_t m_time_delta_ms	{ 0 };
-	size_t m_time_global_ms	{ 0 };
-	size_t dwTimeContinual	{ 0 };
+	size_t dwFrame{ 0 };
+	float m_time_delta_sec{ 0.f };
+	float m_time_global_sec{ 0.f };
+	size_t m_time_delta_ms{ 0 };
+	size_t m_time_global_ms{ 0 };
+	size_t dwTimeContinual{ 0 };
 
 public:
 	constexpr static float UI_BASE_WIDTH = 1024.f;
@@ -112,12 +112,12 @@ public:
 
 	struct ENGINE_API CScopeVP final
 	{
-		bool m_bIsActive		{ false };	// Флаг активации рендера во второй вьюпорт
-		bool m_bStartRender		{ false };	// Флаг начала рендеринга.
-		float m_zoom			= 1.f;
-		float m_izoom_sqr		= 1.f;
-		float m_fov				= 1.f;
-		
+		bool m_bIsActive{ false };	// Флаг активации рендера во второй вьюпорт
+		bool m_bStartRender{ false };	// Флаг начала рендеринга.
+		float m_zoom = 1.f;
+		float m_izoom_sqr = 1.f;
+		float m_fov = 1.f;
+
 	public:
 		Fvector		m_vPosition;
 		Fvector		m_vDirection;
@@ -167,9 +167,6 @@ private:
 	void _SetupStates();
 
 public:
-
-	CRenderDevice* cast() override { return this; }
-
 	u16 FPS = 30;
 
 	u32 dwPrecacheTotal;
@@ -207,7 +204,6 @@ public:
 
 	CRenderDevice() : m_dwWindowStyle(0), fWidth_2(0), fHeight_2(0)
 	{
-		::IDevice = this;
 		m_hWnd = nullptr;
 		b_is_Active.store(false);
 		b_is_Ready.store(false);
@@ -222,15 +218,18 @@ public:
 		Statistic = nullptr;
 	}
 
-	void Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason);
-	bool Paused() const;
+	void Pause(bool bOn, bool bTimer, bool bSound, bool reason) override;
+	bool Paused() const override;
+
+	CRenderDevice* operator*() override { return std::move(this); }
+	CRenderDevice* cast() override { return std::move(this); }
 
 private:
 	//Threding
-	xrThread mt_global_update		{ "GlobalUpdate", true };
-	xrThread mt_frame				{ "Frame", true, true };
-	xrThread mt_frame2				{ "Frame2", true, true };
-	xrCriticalSection				ResetRender;
+	xrThread mt_global_update{ "GlobalUpdate", true };
+	xrThread mt_frame{ "Frame", true, true };
+	xrThread mt_frame2{ "Frame2", true, true };
+	xrCriticalSection m_ResetRender;
 
 public:
 	// Scene control
@@ -342,7 +341,7 @@ private:
 	void d_Render();
 	void d_SVPRender();
 	void GlobalUpdate();
-	
+
 	void message_loop();
 
 	ICF const bool RunFunctionPointer()
@@ -358,8 +357,8 @@ private:
 	}
 
 public:
-	bool								isLevelReady							() const;
-	bool 								isGameProcess							() const override;
+	bool								isLevelReady() const;
+	bool 								IsGameProcess() const override;
 };
 
 extern ENGINE_API bool g_bBenchmark;

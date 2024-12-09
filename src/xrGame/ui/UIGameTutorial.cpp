@@ -66,10 +66,7 @@ bool CUISequenceItem::AllowKey(int dik)
 {
 	xr_vector<int>::iterator it =
 		std::find(m_disabled_actions.begin(), m_disabled_actions.end(), get_binded_action(dik));
-	if (it == m_disabled_actions.end())
-		return true;
-	else
-		return false;
+	return it == m_disabled_actions.end();
 }
 
 void CUISequenceItem::Update()
@@ -176,17 +173,17 @@ void CUISequencer::Start(LPCSTR tutor_name)
 	m_pStoredInputReceiver = pInput->CurrentIR();
 	IR_Capture();
 
-	m_flags.set(etsActive, TRUE);
-	m_flags.set(etsStoredPauseState, ::IDevice->cast()->Paused());
+	m_flags.set(etsActive, true);
+	m_flags.set(etsStoredPauseState, ::IDevice->Paused());
 
 	if (m_flags.test(etsNeedPauseOn) && !m_flags.test(etsStoredPauseState))
 	{
-		::IDevice->cast()->Pause(TRUE, TRUE, TRUE, "tutorial_start");
+		::IDevice->Pause(true, true, true, "tutorial_start");
 		bShowPauseString = FALSE;
 	}
 
 	if (m_flags.test(etsNeedPauseOff) && m_flags.test(etsStoredPauseState))
-		::IDevice->cast()->Pause(FALSE, TRUE, FALSE, "tutorial_start");
+		::IDevice->Pause(false, true, false, "tutorial_start");
 
 	if (m_global_sound._handle())
 		m_global_sound.play(nullptr, sm_2D);
@@ -275,10 +272,10 @@ void CUISequencer::Stop()
 	}
 	{
 		if (m_flags.test(etsNeedPauseOn) && !m_flags.test(etsStoredPauseState))
-			::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "tutorial_stop");
+			::IDevice->Pause(false, true, true, "tutorial_stop");
 
 		if (m_flags.test(etsNeedPauseOff) && m_flags.test(etsStoredPauseState))
-			::IDevice->cast()->Pause(TRUE, TRUE, FALSE, "tutorial_stop");
+			::IDevice->Pause(true, true, false, "tutorial_stop");
 	}
 	Destroy();
 }

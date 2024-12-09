@@ -139,7 +139,7 @@ void CHUDManager::RenderUI()
 
 	m_pHUDTarget->Render();
 
-	if (::IDevice->cast()->Paused() && bShowPauseString)
+	if (::IDevice->Paused() && bShowPauseString)
 	{
 		CGameFont* pFont = UI().Font().pFontGraffiti50Russian;
 		pFont->SetColor(0x80FF0000);

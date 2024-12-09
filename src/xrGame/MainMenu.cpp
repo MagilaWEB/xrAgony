@@ -141,8 +141,8 @@ void CMainMenu::Activate(bool bActivate)
 	if (bActivate)
 	{
 		b_shniaganeed_pp = true;
-		::IDevice->cast()->Pause(TRUE, FALSE, TRUE, "mm_activate1");
-		m_Flags.set(flActive | flNeedChangeCapture, TRUE);
+		::IDevice->Pause(true, false, true, "mm_activate1");
+		m_Flags.set(flActive | flNeedChangeCapture, true);
 
 		m_Flags.set(flRestoreCursor, GetUICursor().IsVisible());
 
@@ -152,7 +152,7 @@ void CMainMenu::Activate(bool bActivate)
 		m_Flags.set(flRestoreConsole, Console->bVisible);
 
 		if (b_is_single)
-			m_Flags.set(flRestorePause, ::IDevice->cast()->Paused());
+			m_Flags.set(flRestorePause, ::IDevice->Paused());
 
 		Console->Hide();
 
@@ -161,7 +161,7 @@ void CMainMenu::Activate(bool bActivate)
 			m_Flags.set(flRestorePauseStr, bShowPauseString);
 			bShowPauseString = FALSE;
 			if (!m_Flags.test(flRestorePause))
-				::IDevice->cast()->Pause(TRUE, TRUE, FALSE, "mm_activate2");
+				::IDevice->Pause(true, true, false, "mm_activate2");
 		}
 
 		if (g_pGameLevel)
@@ -178,8 +178,8 @@ void CMainMenu::Activate(bool bActivate)
 	}
 	else
 	{
-		m_Flags.set(flActive, FALSE);
-		m_Flags.set(flNeedChangeCapture, TRUE);
+		m_Flags.set(flActive, false);
+		m_Flags.set(flNeedChangeCapture, true);
 
 		::IDevice->cast()->seqRender.Remove(this);
 
@@ -210,7 +210,7 @@ void CMainMenu::Activate(bool bActivate)
 		if (b_is_single)
 		{
 			if (!m_Flags.test(flRestorePause))
-				::IDevice->cast()->Pause(FALSE, TRUE, FALSE, "mm_deactivate1");
+				::IDevice->Pause(false, true, false, "mm_deactivate1");
 
 			bShowPauseString = m_Flags.test(flRestorePauseStr);
 		}
@@ -218,11 +218,11 @@ void CMainMenu::Activate(bool bActivate)
 		if (m_Flags.test(flRestoreCursor))
 			GetUICursor().Show();
 
-		::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "mm_deactivate2");
+		::IDevice->Pause(false, true, true, "mm_deactivate2");
 
 		if (m_Flags.test(flNeedVidRestart))
 		{
-			m_Flags.set(flNeedVidRestart, FALSE);
+			m_Flags.set(flNeedVidRestart, false);
 			Console->Execute("vid_restart");
 		}
 	}

@@ -169,26 +169,26 @@ void CUISequenceVideoItem::OnRender()
 void CUISequenceVideoItem::Start()
 {
 	inherited::Start();
-	m_flags.set(etiStoredPauseState, ::IDevice->cast()->Paused());
+	m_flags.set(etiStoredPauseState, ::IDevice->Paused());
 
 	if (m_flags.test(etiNeedPauseOn) && !m_flags.test(etiStoredPauseState))
 	{
-		::IDevice->cast()->Pause(TRUE, TRUE, TRUE, "videoitem_start");
+		::IDevice->Pause(true, true, true, "videoitem_start");
 		bShowPauseString = FALSE;
 	}
 
 	if (m_flags.test(etiNeedPauseOff) && m_flags.test(etiStoredPauseState))
-		::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "videoitem_start");
+		::IDevice->Pause(false, true, true, "videoitem_start");
 
 	if (m_flags.test(etiNeedPauseSound))
-		::IDevice->cast()->Pause(TRUE, FALSE, TRUE, "videoitem_start");
+		::IDevice->Pause(true, false, true, "videoitem_start");
 
-	m_flags.set(etiPlaying, TRUE);
-	m_flags.set(etiNeedStart, TRUE);
+	m_flags.set(etiPlaying, true);
+	m_flags.set(etiNeedStart, true);
 
 	m_sync_time = 0;
 	m_time_start = ::IDevice->TimeContinual() + iFloor(m_delay * 1000.f);
-	m_flags.set(etiDelayed, TRUE);
+	m_flags.set(etiDelayed, true);
 
 	if (m_flags.test(etiBackVisible))
 	{
@@ -206,7 +206,7 @@ bool CUISequenceVideoItem::Stop(bool bForce)
 	if (!m_flags.test(etiCanBeStopped) && !bForce && IsPlaying())
 		return false;
 
-	m_flags.set(etiPlaying, FALSE);
+	m_flags.set(etiPlaying, false);
 
 	m_wnd->Show(false);
 	if (::IDevice->TimeContinual() >= m_time_start && m_wnd->GetParent() == m_owner->MainWnd())
@@ -216,13 +216,13 @@ bool CUISequenceVideoItem::Stop(bool bForce)
 	m_texture->ResetTexture();
 
 	if (m_flags.test(etiNeedPauseOn) && !m_flags.test(etiStoredPauseState))
-		::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "videoitem_stop");
+		::IDevice->Pause(false, true, true, "videoitem_stop");
 
 	if (m_flags.test(etiNeedPauseOff) && m_flags.test(etiStoredPauseState))
-		::IDevice->cast()->Pause(TRUE, TRUE, TRUE, "videoitem_stop");
+		::IDevice->Pause(true, true, true, "videoitem_stop");
 
 	if (m_flags.test(etiNeedPauseSound))
-		::IDevice->cast()->Pause(FALSE, FALSE, TRUE, "videoitem_stop");
+		::IDevice->Pause(false, false, true, "videoitem_stop");
 
 	inherited::Stop();
 	return true;

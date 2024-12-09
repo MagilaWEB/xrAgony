@@ -203,7 +203,7 @@ struct _NetworkProcessor : public pureFrame
 {
 	virtual void OnFrame()
 	{
-		if (g_pGameLevel && !::IDevice->cast()->Paused())
+		if (g_pGameLevel && !::IDevice->Paused())
 			g_pGameLevel->net_Update();
 	}
 } NET_processor;

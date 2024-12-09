@@ -410,7 +410,7 @@ void CSheduler::ProcessStep()
 
 void CSheduler::Update()
 {
-	if (::IDevice->cast()->Paused())
+	if (::IDevice->Paused())
 		return;
 	LIMIT_UPDATE_FPS(CShedulerFPS, 30)
 	// Initialize

@@ -173,7 +173,7 @@ void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N
 	float fFAR_Dest, u32 flags)
 {
 #ifdef DEBUG
-	if (!::IDevice->cast()->Paused())
+	if (!::IDevice->Paused())
 	{
 		VERIFY(dbg_upd_frame != ::IDevice->getFrame()); // already updated !!!
 		dbg_upd_frame = ::IDevice->getFrame();

@@ -4,7 +4,6 @@ class CRenderDevice;
 
 struct IRenderDevice
 {
-	virtual CRenderDevice* cast() = 0;
 	// Device frame increment.
 	virtual void incrementFrame() = 0;
 
@@ -39,6 +38,21 @@ struct IRenderDevice
 	// Get the Renderdevice statistics object.
 	virtual const RenderDeviceStatictics& GetStats() const = 0;
 
-	virtual bool isGameProcess() const = 0;
+	// Setting a pause or removal pause in the gameplay.
+	virtual void Pause(bool bOn, bool bTimer, bool bSound, bool reason) = 0;
+
+	// Get the pause status in the gameplay.
+	virtual bool Paused() const = 0;
+
+	// At the time of the call in game time or not.
+	virtual bool IsGameProcess() const = 0;
+
+	// An object of global time.
 	virtual CTimer_paused* GetTimerGlobal() = 0;
+
+	// Operator* cast from IRenderdevice to CRenderdevice.
+	virtual CRenderDevice* operator*() = 0;
+
+	// Function cast from IRenderdevice to CRenderdevice.
+	virtual CRenderDevice* cast() = 0;
 };

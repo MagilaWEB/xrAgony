@@ -117,7 +117,7 @@ void CObjectList::Update()
 		stats.FrameStart();
 	}
 
-	if (!::IDevice->cast()->Paused() && ::IDevice->TimeDelta_sec() > EPS_S)
+	if (!::IDevice->Paused() && ::IDevice->TimeDelta_sec() > EPS_S)
 	{
 		stats.Updated = 0;
 		stats.Update.Begin();

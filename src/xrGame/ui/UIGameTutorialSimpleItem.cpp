@@ -223,19 +223,19 @@ void CUISequenceSimpleItem::Start()
 {
 	m_time_start = -3.0f;
 	inherited::Start();
-	m_flags.set(etiStoredPauseState, ::IDevice->cast()->Paused());
+	m_flags.set(etiStoredPauseState, ::IDevice->Paused());
 
 	if (m_flags.test(etiNeedPauseOn) && !m_flags.test(etiStoredPauseState))
 	{
-		::IDevice->cast()->Pause(TRUE, TRUE, FALSE, "simpleitem_start");
+		::IDevice->Pause(true, true, false, "simpleitem_start");
 		bShowPauseString = FALSE;
 	}
 
 	if (m_flags.test(etiNeedPauseOff) && m_flags.test(etiStoredPauseState))
-		::IDevice->cast()->Pause(FALSE, TRUE, FALSE, "simpleitem_start");
+		::IDevice->Pause(false, true, false, "simpleitem_start");
 
 	if (m_flags.test(etiNeedPauseSound))
-		::IDevice->cast()->Pause(TRUE, FALSE, TRUE, "simpleitem_start");
+		::IDevice->Pause(true, false, true, "simpleitem_start");
 
 	if (m_desired_cursor_pos.x && m_desired_cursor_pos.y)
 		GetUICursor().SetUICursorPosition(m_desired_cursor_pos);
@@ -293,13 +293,13 @@ bool CUISequenceSimpleItem::Stop(bool bForce)
 	m_sound.stop();
 
 	if (m_flags.test(etiNeedPauseOn) && !m_flags.test(etiStoredPauseState))
-		::IDevice->cast()->Pause(FALSE, TRUE, FALSE, "simpleitem_stop");
+		::IDevice->Pause(false, true, false, "simpleitem_stop");
 
 	if (m_flags.test(etiNeedPauseOff) && m_flags.test(etiStoredPauseState))
-		::IDevice->cast()->Pause(TRUE, TRUE, FALSE, "simpleitem_stop");
+		::IDevice->Pause(true, true, false, "simpleitem_stop");
 
 	if (m_flags.test(etiNeedPauseSound))
-		::IDevice->cast()->Pause(FALSE, FALSE, TRUE, "simpleitem_stop");
+		::IDevice->Pause(false, false, true, "simpleitem_stop");
 
 	if (g_pGameLevel)
 	{

@@ -437,7 +437,7 @@ void CDemoRecord::IR_OnKeyboardPress(int dik)
  //-Alundaio
 
 	if (dik == DIK_PAUSE)
-		::IDevice->cast()->Pause(!::IDevice->cast()->Paused(), TRUE, TRUE, "demo_record");
+		::IDevice->Pause(!::IDevice->Paused(), true, true, "demo_record");
 }
 
 static void update_whith_timescale(Fvector& v, const Fvector& v_delta)

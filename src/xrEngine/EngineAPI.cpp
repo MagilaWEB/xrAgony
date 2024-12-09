@@ -145,6 +145,8 @@ void CEngineAPI::Destroy(void)
 	pDestroy = nullptr;
 	Engine.Event._destroy();
 	XRC.r_clear_compact();
+	hRender->Close();
+	xr_delete(IDevice);
 	Log("Engine Destroy!");
 }
 

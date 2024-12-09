@@ -61,7 +61,7 @@ void CUIGameSP::OnFrame()
 {
 	inherited::OnFrame();
 
-	if (::IDevice->cast()->Paused())
+	if (::IDevice->Paused())
 		return;
 
 	if (m_game_objective)
@@ -88,7 +88,7 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 {
 	if (inherited::IR_UIOnKeyboardPress(dik))
 		return true;
-	if (::IDevice->cast()->Paused())
+	if (::IDevice->Paused())
 		return false;
 
 #if defined(MASTER) || defined(DEBUG)
@@ -303,13 +303,13 @@ void CChangeLevelWnd::Show(bool status)
 		m_messageBox->SetText(m_message_str.c_str());
 
 		g_block_pause = true;
-		::IDevice->cast()->Pause(TRUE, TRUE, TRUE, "CChangeLevelWnd_show");
+		::IDevice->Pause(true, true, true, "CChangeLevelWnd_show");
 		bShowPauseString = FALSE;
 	}
 	else
 	{
 		g_block_pause = false;
-		::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "CChangeLevelWnd_hide");
+		::IDevice->Pause(false, true, true, "CChangeLevelWnd_hide");
 	}
 }
 
@@ -317,6 +317,6 @@ void CChangeLevelWnd::Show(bool status)
 void CChangeLevelWnd::Hide()
 {
 	g_block_pause = false;
-	::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "CChangeLevelWnd_hide");
+	::IDevice->Pause(false, true, true, "CChangeLevelWnd_hide");
 }
 //morrey 

@@ -309,7 +309,7 @@ void CGamePersistent::identify_room()
 	constexpr u32 number_rays_h = 40;
 	constexpr s32 number_rays_p = 7;
 
-	if (g_pGameLevel && Level().CurrentViewEntity() && !::IDevice->cast()->Paused())
+	if (g_pGameLevel && Level().CurrentViewEntity() && !::IDevice->Paused())
 	{
 		collide::rq_result RQ;
 		Fvector pos = Actor()->cam_FirstEye()->Position();
@@ -605,7 +605,7 @@ void CGamePersistent::update_game_loaded()
 	xr_delete(m_intro);
 	Msg("intro_delete ::update_game_loaded");
 	start_game_intro();
-	::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "object_synchronization");
+	::IDevice->Pause(false, true, true, "object_synchronization");
 }
 
 void CGamePersistent::start_game_intro()
@@ -652,7 +652,7 @@ void CGamePersistent::OnFrame()
 	}
 	else if (pApp->IsLoaded() && pApp->IsNewGame() && !state_is_new_game)
 	{
-		::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "object_synchronization");
+		::IDevice->Pause(false, true, true, "object_synchronization");
 		state_is_new_game = true;
 		pApp->CheckMaxLoad();
 	}
@@ -682,7 +682,7 @@ void CGamePersistent::OnFrame()
 	if (!::IDevice->cast()->isLevelReady())
 		return;
 
-	if (::IDevice->cast()->Paused())
+	if (::IDevice->Paused())
 	{
 #ifdef MASTER
 		if (Level().CurrentViewEntity() && IsGameTypeSingle())
@@ -865,20 +865,20 @@ float CGamePersistent::MtlTransparent(u32 mtl_idx)
 {
 	return GMLib.GetMaterialByIdx((u16)mtl_idx)->fVisTransparencyFactor;
 }
-static BOOL bRestorePause = FALSE;
-static BOOL bEntryFlag = TRUE;
+static bool bRestorePause = false;
+static bool bEntryFlag = true;
 
 void CGamePersistent::OnAppActivate()
 {
 	bool bIsMP = (g_pGameLevel && Level().game && GameID() != eGameIDSingle);
-	bIsMP &= !::IDevice->cast()->Paused();
+	bIsMP &= !::IDevice->Paused();
 
 	if (!bIsMP)
-		::IDevice->cast()->Pause(FALSE, !bRestorePause, TRUE, "CGP::OnAppActivate");
+		::IDevice->Pause(false, !bRestorePause, true, "CGP::OnAppActivate");
 	else
-		::IDevice->cast()->Pause(FALSE, TRUE, TRUE, "CGP::OnAppActivate MP");
+		::IDevice->Pause(false, true, true, "CGP::OnAppActivate MP");
 
-	bEntryFlag = TRUE;
+	bEntryFlag = true;
 }
 
 void CGamePersistent::OnAppDeactivate()
@@ -888,18 +888,18 @@ void CGamePersistent::OnAppDeactivate()
 
 	bool bIsMP = (g_pGameLevel && Level().game && GameID() != eGameIDSingle);
 
-	bRestorePause = FALSE;
+	bRestorePause = false;
 
 	if (!bIsMP)
 	{
-		bRestorePause = ::IDevice->cast()->Paused();
-		::IDevice->cast()->Pause(TRUE, TRUE, TRUE, "CGP::OnAppDeactivate");
+		bRestorePause = ::IDevice->Paused();
+		::IDevice->Pause(true, true, true, "CGP::OnAppDeactivate");
 	}
 	else
 	{
-		::IDevice->cast()->Pause(TRUE, FALSE, TRUE, "CGP::OnAppDeactivate MP");
+		::IDevice->Pause(true, false, true, "CGP::OnAppDeactivate MP");
 	}
-	bEntryFlag = FALSE;
+	bEntryFlag = false;
 }
 
 extern void draw_wnds_rects();

@@ -49,7 +49,7 @@ bool CRenderDevice::IsReset() const
 
 void CRenderDevice::ResetStart()
 {
-	xrCriticalSection::raii mt{ ResetRender };
+	xrCriticalSection::raii mt{ m_ResetRender };
 	const auto dwWidth_before = dwWidth;
 	const auto dwHeight_before = dwHeight;
 	//pInput->ClipCursor(false);

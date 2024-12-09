@@ -27,14 +27,12 @@ ENGINE_API string512 g_sLaunchOnExit_params;
 ENGINE_API string512 g_sLaunchOnExit_app;
 ENGINE_API string_path g_sLaunchWorkingFolder;
 
-CRenderDevice* MainDevice;
-
 ENGINE_API void InitEngine()
 {
 	Engine.Initialize();
-	if(!MainDevice)
-		MainDevice = new CRenderDevice;
-	MainDevice->Initialize();
+	if(!::IDevice)
+		::IDevice = new CRenderDevice;
+	::IDevice->cast()->Initialize();
 }
 
 ENGINE_API void InitSettings()
@@ -92,7 +90,7 @@ ENGINE_API void destroyConsole()
 
 ENGINE_API void destroyEngine()
 {
-	MainDevice->Destroy();
+	::IDevice->cast()->Destroy();
 	Engine.Destroy();
 }
 
@@ -108,7 +106,7 @@ ENGINE_API void Startup()
 	ISoundManager::_initDevice();
 	
 	// Initialize APP
-	MainDevice->Create();
+	::IDevice->cast()->Create();
 	LALib.OnCreate();
 	pApp = new CApplication();
 	g_pGamePersistent = Engine.External.pCreateGamePersisten();
@@ -117,7 +115,7 @@ ENGINE_API void Startup()
 	g_SpatialSpacePhysic = new ISpatial_DB("Spatial phys");
 
 	// Main cycle
-	MainDevice->Run();
+	::IDevice->cast()->Run();
 
 	xrDebug::DeinitializeSymbolEngine();
 
@@ -291,9 +289,7 @@ int APIENTRY WinMain(HINSTANCE inst, HINSTANCE prevInst, char* commandLine, int 
 
 		auto result = RunApplication();
 
-		xr_delete(MainDevice);
 		Core._destroy();
-
 		return result;
 	};
 	// BugTrap can't handle stack overflow exception, so handle it here

@@ -8,7 +8,7 @@ xBench::xBench(bool init) : m_start_time((init) ? ::IDevice->TimerAsync_sec() : 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-aBench::aBench(measures* data) : xBench(::IDevice->isGameProcess()), m_data(data)
+aBench::aBench(measures* data) : xBench(::IDevice->IsGameProcess()), m_data(data)
 {
 }
 
