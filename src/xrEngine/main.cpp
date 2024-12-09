@@ -224,7 +224,6 @@ ENGINE_API int RunApplication()
 	InitInput();
 	ISoundManager::_create();
 	InitConsole();
-	Engine.External.CreateRendererList();
 
 	if (CheckBenchmark())
 		return 0;

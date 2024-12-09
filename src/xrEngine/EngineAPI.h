@@ -37,16 +37,16 @@ public:
 
 // Class creation/destroying interface
 extern "C" {
-using Factory_Create = DLL_API IFactoryObject* __cdecl(CLASS_ID CLS_ID);
-using Factory_Destroy = DLL_API void __cdecl(IFactoryObject* O);
-using CreateGamePersistent = DLL_API IGame_Persistent* __cdecl();
-using DestroyGamePersistent = DLL_API void __cdecl(IGame_Persistent*& O);
+	using Factory_Create = DLL_API IFactoryObject* __cdecl(CLASS_ID CLS_ID);
+	using Factory_Destroy = DLL_API void __cdecl(IFactoryObject* O);
+	using CreateGamePersistent = DLL_API IGame_Persistent* __cdecl();
+	using DestroyGamePersistent = DLL_API void __cdecl(IGame_Persistent*& O);
 };
 
 // Tuning interface
 extern "C" {
-using VTPause = void __cdecl(void);
-using VTResume = void __cdecl(void);
+	using VTPause = void __cdecl(void);
+	using VTResume = void __cdecl(void);
 };
 
 class ENGINE_API CEngineAPI
@@ -59,7 +59,7 @@ class ENGINE_API CEngineAPI
 	XRay::Module hRender;
 	//xr_vector<XRay::Module> m_renderers;
 
-	SetupEnv m_setupSelectedRenderer;
+	SetupEnv m_setupSelectedRenderer{ nullptr };
 
 public:
 	BENCH_SEC_SCRAMBLEMEMBER1
@@ -73,17 +73,10 @@ public:
 	VTPause* tune_pause;
 	VTResume* tune_resume;
 	void Initialize();
-	//void CloseUnusedLibraries();
-
-	void InitializeRenderers();
-	//void SelectRenderer();
-
 	void Destroy();
 
-	void CreateRendererList();
-
 	CEngineAPI();
-	~CEngineAPI();
+	~CEngineAPI() = default;
 };
 
 ENGINE_API bool is_enough_address_space_available();

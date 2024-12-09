@@ -4,15 +4,8 @@
 #include "xrCore/ModuleLookup.hpp"
 #include "xrCore/xr_token.h"
 
-//extern xr_vector<xr_token> vid_quality_token;
-
 constexpr pcstr CHECK_FUNCTION = "CheckRendererSupport";
 constexpr pcstr SETUP_FUNCTION = "SetupEnv";
-
-//constexpr pcstr RENDERER_DX9Basic = "renderer_DX9Basic";
-//constexpr pcstr RENDERER_DX9Normal = "renderer_DX9Normal";
-//constexpr pcstr RENDERER_DX9Enhanced = "renderer_DX9Enhanced";
-//constexpr pcstr RENDERER_dx11 = "renderer_DX11";
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -30,11 +23,6 @@ CEngineAPI::CEngineAPI()
 	tune_pause = dummy;
 	tune_resume = dummy;
 }
-
-CEngineAPI::~CEngineAPI() {
-	//vid_quality_token.clear();
-}
-
 bool is_enough_address_space_available()
 {
 	SYSTEM_INFO system_info;
@@ -42,61 +30,15 @@ bool is_enough_address_space_available()
 	return (*(u32*)&system_info.lpMaximumApplicationAddress) > 0x90000000;
 }
 
-//void CEngineAPI::SelectRenderer()
-//{
-	//::CurrentRenderer = -1;
-
-	//const auto select = [&](int index, u32 selected,  u32 fallback = 0)
-	//{
-	//	if (psDeviceFlags.test(selected))
-	//	{
-	//		if (m_renderers[index]->IsLoaded())
-	//		{
-	//			::CurrentRenderer = index;
-	//			m_setupSelectedRenderer = (SetupEnv)m_renderers[index]->GetProcAddress(SETUP_FUNCTION);
-	//		}
-	//		else // Selected is unavailable
-	//		{
-	//			psDeviceFlags.set(selected, false);
-	//			if (fallback > 0) // try to use another
-	//				psDeviceFlags.set(fallback, true);
-	//		}
-	//	}
-	//};
-
-	//select(1, rsDX11, rsDX9);
-	//select(0, rsDX9);
-//}
-
-void CEngineAPI::InitializeRenderers()
+void CEngineAPI::Initialize(void)
 {
-	//SelectRenderer();
-
-	//if (m_setupSelectedRenderer == nullptr && vid_quality_token[0].id != -1)
-	//{
-	//	// if engine failed to load renderer
-	//	// but there is at least one available
-	//	// then try again
-	//	string32 buf;
-	//	xr_sprintf(buf, "renderer %s", vid_quality_token[0].name);
-	//	Console->Execute(buf);
-
-	//	// Second attempt
-	//	SelectRenderer();
-	//}
+	hRender = XRay::LoadModule("xrRenderDX");
 
 	m_setupSelectedRenderer = (SetupEnv)hRender->GetProcAddress(SETUP_FUNCTION);
 
 	// ask current renderer to setup GEnv
 	R_ASSERT2(m_setupSelectedRenderer, "Can't setup renderer");
 	m_setupSelectedRenderer();
-
-	//Log("Selected renderer:", Console->GetString("renderer"));
-}
-
-void CEngineAPI::Initialize(void)
-{
-	InitializeRenderers();
 
 	hGame = XRay::LoadModule("xrGame");
 	R_ASSERT2(hGame->IsLoaded(), "Game DLL raised exception during loading or there is no game DLL at all");
@@ -132,9 +74,6 @@ void CEngineAPI::Initialize(void)
 
 		tune_enabled = true;
 	}
-
-	// Close only AFTER other libraries are loaded!!
-	//CloseUnusedLibraries();
 }
 
 void CEngineAPI::Destroy(void)
@@ -148,56 +87,4 @@ void CEngineAPI::Destroy(void)
 	hRender->Close();
 	xr_delete(IDevice);
 	Log("Engine Destroy!");
-}
-
-//void CEngineAPI::CloseUnusedLibraries()
-//{
-	// Now unload unused renderers
-	/*for (u32 it = 0; it < m_renderers.size(); it++)
-		if (::CurrentRenderer != it)
-			m_renderers[it]->Close();*/
-//}
-
-void CEngineAPI::CreateRendererList()
-{
-	/*if (!vid_quality_token.empty())
-		return;*/
-
-	hRender = XRay::LoadModule("xrRenderDX");
-
-	//m_renderers.push_back(XRay::LoadModule("xrRenderDX9"));
-	//m_renderers.push_back(XRay::LoadModule("xrRenderDX11"));
-
-	//auto& modes = vid_quality_token;
-
-	//const auto checkRenderer = [&](int index, pcstr mode, int r_index)
-	//{
-	//	if (m_renderers[index]->IsLoaded())
-	//	{
-	//		// Load SupportCheck, SetupEnv and GetModeName functions from DLL
-	//		const auto checkSupport = (SupportCheck)m_renderers[index]->GetProcAddress(CHECK_FUNCTION);
-
-	//		// Test availability
-	//		if (checkSupport && checkSupport())
-	//			modes.emplace_back(mode, r_index);
-	//		else // Close the handle if test is failed
-	//			m_renderers[index]->Close();
-	//	}
-	//};
-
-	//checkRenderer(0, RENDERER_DX9Basic, 0);
-
-	//if (m_renderers[0]->IsLoaded())
-	//	modes.emplace_back(RENDERER_DX9Normal, 1);
-
-	//checkRenderer(0, RENDERER_DX9Enhanced, 2);
-
-	//checkRenderer(1, RENDERER_dx11, 3);
-
-	//modes.emplace_back(xr_token(nullptr, -1));
-
-	//Msg("Available render modes[%d]:", modes.size());
-	//for (const auto& mode : modes)
-	//	if (mode.name)
-	//		Log(mode.name);
 }
