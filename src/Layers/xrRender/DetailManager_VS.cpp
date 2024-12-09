@@ -226,7 +226,7 @@ void CDetailManager::hw_Render_dump(const Fvector4& consts, const Fvector4& wave
 	for (size_t O = 0; O < objects.size(); O++)
 	{
 		CDetail& Object = *objects[O];
-		concurrent_vector <SlotItem*> vis = v_list[O];
+		xr_c_vector <SlotItem*> vis = v_list[O];
 
 		if (!vis.empty())
 		{

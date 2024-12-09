@@ -57,6 +57,7 @@
 #include "_std_extensions.h"
 #include "xrCommon/xr_smart_pointers.h"
 #include "xrCommon/xr_vector.h"
+#include "xrCommon/xr_c_vector.h"
 #include "xrCommon/xr_set.h"
 #include "xrsharedmem.h"
 #include "xrstring.h"

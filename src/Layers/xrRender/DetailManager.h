@@ -6,9 +6,6 @@
 #include "xrCore/xrPool.h"
 #include "DetailFormat.h"
 #include "DetailModel.h"
-#include "concurrent_vector.h"
-
-using namespace ::concurrency;
 
 const int 		dm_cache1_count = 4;
 const int		dm_max_objects = 64;
@@ -78,7 +75,7 @@ private:
 	struct SlotPart
 	{
 		u32								id;					// ID модельки
-		concurrent_vector<SlotItem*>	items;				// список кустиков
+		xr_c_vector<SlotItem*>	items;				// список кустиков
 		//SlotItemVec					r_items[3];			// список кустиков for render
 	};
 
@@ -121,7 +118,7 @@ private:
 		}
 	};
 
-	typedef	concurrent_vector<concurrent_vector <SlotItem* > >	vis_list;
+	typedef	xr_c_vector<xr_c_vector <SlotItem* > >	vis_list;
 	typedef	svector<CDetail*, dm_max_objects>	DetailVec;
 	typedef	DetailVec::iterator					DetailIt;
 	typedef	poolSS<SlotItem, 512>				PSS;
