@@ -32,7 +32,7 @@ namespace XRay
 
 	void ModuleHandle::Close()
 	{
-		if (dontUnload || (!IsLoaded()) || (!handle))
+		if (dontUnload || handle == nullptr)
 			return;
 
 		bool closed = false;
