@@ -3,7 +3,6 @@
 #include "xrCore/_fbox.h"
 
 #if (_M_IX86_FP > 0) && (__AVX__ == 0) && USE_CODE_SSE
-#include <xmmintrin.h>
 #define ___SSE___ 1
 #endif
 
@@ -205,9 +204,8 @@ struct alignas(16) walker
 	u32 mask;
 	float range;
 	float range2;
-	ISpatial_DB* space;
 
-	walker(ISpatial_DB* _space, u32 _mask, const Fvector& _start, const Fvector& _dir, float _range)
+	walker(u32 _mask, const Fvector& _start, const Fvector& _dir, float _range)
 	{
 		mask = _mask;
 		ray.pos.set(_start);
@@ -226,7 +224,6 @@ struct alignas(16) walker
 #endif
 		range = _range;
 		range2 = _range * _range;
-		space = _space;
 	}
 
 #if !___SSE___
@@ -262,7 +259,7 @@ struct alignas(16) walker
 	}
 #endif
 
-	void walk(ISpatial_NODE* N, Fvector& n_C, float n_R)
+	void walk(xr_vector<ISpatial*>& q_result, ISpatial_NODE* N, Fvector& n_C, float n_R)
 	{
 		// Actual ray/aabb test
 #if ___SSE___
@@ -303,7 +300,7 @@ struct alignas(16) walker
 					}
 					range2 = range * range;
 				}
-				space->q_result->push_back(S);
+				q_result.push_back(S);
 				if (b_first)
 					return;
 			}
@@ -317,8 +314,8 @@ struct alignas(16) walker
 				continue;
 			Fvector c_C;
 			c_C.mad(n_C, c_spatial_offset[octant], c_R);
-			walk(N->children[octant], c_C, c_R);
-			if (b_first && !space->q_result->empty())
+			walk(q_result, N->children[octant], c_C, c_R);
+			if (b_first && !q_result.empty())
 				return;
 		}
 	}
@@ -327,35 +324,33 @@ struct alignas(16) walker
 void ISpatial_DB::q_ray(
 	xr_vector<ISpatial*>& R, u32 _o, u32 _mask_and, const Fvector& _start, const Fvector& _dir, float _range)
 {
-	xrCriticalSection::raii mt{ pcs };
 	Stats.Query.Begin();
-	q_result = &R;
-	q_result->resize(0);
+	R.clear();
 
 	if (_o & O_ONLYFIRST)
 	{
 		if (_o & O_ONLYNEAREST)
 		{
-			walker<true, true> W{ this, _mask_and, _start, _dir, _range };
-			W.walk(m_root, m_center, m_bounds);
+			walker<true, true> W{ _mask_and, _start, _dir, _range };
+			W.walk(R, m_root, m_center, m_bounds);
 		}
 		else
 		{
-			walker<true, false> W{ this, _mask_and, _start, _dir, _range };
-			W.walk(m_root, m_center, m_bounds);
+			walker<true, false> W{ _mask_and, _start, _dir, _range };
+			W.walk(R, m_root, m_center, m_bounds);
 		}
 	}
 	else
 	{
 		if (_o & O_ONLYNEAREST)
 		{
-			walker<false, true> W{ this, _mask_and, _start, _dir, _range };
-			W.walk(m_root, m_center, m_bounds);
+			walker<false, true> W{ _mask_and, _start, _dir, _range };
+			W.walk(R, m_root, m_center, m_bounds);
 		}
 		else
 		{
-			walker<false, false> W{ this, _mask_and, _start, _dir, _range };
-			W.walk(m_root, m_center, m_bounds);
+			walker<false, false> W{ _mask_and, _start, _dir, _range };
+			W.walk(R, m_root, m_center, m_bounds);
 		}
 	}
 	Stats.Query.End();

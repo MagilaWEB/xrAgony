@@ -205,7 +205,6 @@ public:
 	};
 
 private:
-	IC static xrCriticalSection pcs;
 
 	poolSS<ISpatial_NODE, 128> allocator;
 
@@ -217,7 +216,6 @@ public:
 	ISpatial_NODE* m_root;
 	Fvector m_center;
 	float m_bounds;
-	xr_vector<ISpatial*>* q_result;
 	SpatialDBStatistics Stats;
 
 private:

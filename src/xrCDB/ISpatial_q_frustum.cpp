@@ -9,15 +9,13 @@ struct walker
 {
 	u32 mask;
 	CFrustum* F;
-	ISpatial_DB* space;
 
-	walker(ISpatial_DB* _space, u32 _mask, const CFrustum* _F)
+	walker(u32 _mask, const CFrustum* _F)
 	{
 		mask = _mask;
 		F = (CFrustum*)_F;
-		space = _space;
 	}
-	void walk(ISpatial_NODE* N, Fvector& n_C, float n_R, u32 fmask)
+	void walk(xr_vector<ISpatial*>& q_result, ISpatial_NODE* N, Fvector& n_C, float n_R, u32 fmask)
 	{
 		// box
 		float n_vR = 2 * n_R;
@@ -39,7 +37,7 @@ struct walker
 			if (fcvNone == F->testSphere(sC, sR, tmask))
 				continue;
 
-			space->q_result->push_back(S);
+			q_result.push_back(S);
 		}
 
 		// recurse
@@ -50,18 +48,16 @@ struct walker
 				continue;
 			Fvector c_C;
 			c_C.mad(n_C, c_spatial_offset[octant], c_R);
-			walk(N->children[octant], c_C, c_R, fmask);
+			walk(q_result, N->children[octant], c_C, c_R, fmask);
 		}
 	}
 };
 
 void ISpatial_DB::q_frustum(xr_vector<ISpatial*>& R, u32 _o, u32 _mask, const CFrustum& _frustum)
 {
-	xrCriticalSection::raii mt{ pcs };
 	Stats.Query.Begin();
-	q_result = &R;
-	q_result->resize(0);
-	walker W(this, _mask, &_frustum);
-	W.walk(m_root, m_center, m_bounds, _frustum.getMask());
+	R.clear();
+	walker W(_mask, &_frustum);
+	W.walk(R, m_root, m_center, m_bounds, _frustum.getMask());
 	Stats.Query.End();
 }

@@ -150,7 +150,7 @@ void ISpatial_NODE::_remove(ISpatial* S)
 
 //////////////////////////////////////////////////////////////////////////
 
-ISpatial_DB::ISpatial_DB(const char* name) : rt_insert_object(nullptr), m_root(nullptr), m_bounds(0), q_result(nullptr)
+ISpatial_DB::ISpatial_DB(const char* name) : rt_insert_object(nullptr), m_root(nullptr), m_bounds(0)
 {
 	xr_strcpy(Name, name);
 }
@@ -261,7 +261,6 @@ void ISpatial_DB::_insert(ISpatial_NODE* N, Fvector& n_C, float n_R)
 
 void ISpatial_DB::insert(ISpatial* S)
 {
-	xrCriticalSection::raii mt{ pcs };
 #ifdef DEBUG
 	Stats.Insert.Begin();
 
@@ -338,7 +337,6 @@ void ISpatial_DB::_remove(ISpatial_NODE* N, ISpatial_NODE* N_sub)
 
 void ISpatial_DB::remove(ISpatial* S)
 {
-	xrCriticalSection::raii mt{ pcs };
 #ifdef DEBUG
 	Stats.Remove.Begin();
 #endif
@@ -359,7 +357,6 @@ void ISpatial_DB::update(u32 /*nodes = 8 */)
 #ifdef DEBUG
 	if (0 == m_root)
 		return;
-	xrCriticalSection::raii mt{ pcs };
 	VERIFY(verify());
 #endif
 }
