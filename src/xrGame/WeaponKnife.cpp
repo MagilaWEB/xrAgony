@@ -754,7 +754,6 @@ bool CWeaponKnife::SelectBestHitVictim(
 	m_dbg_data.m_spheres.emplace_back(fendpos_dest, m_splash_radius);
 #endif
 
-	m_spartial_query_res.clear();
 	g_SpatialSpace->q_sphere(m_spartial_query_res, 0, STYPE_COLLIDEABLE, fendpos_dest, m_splash_radius);
 
 	if ((m_eHitType == m_eHitType_2) && (!m_spartial_query_res.empty()))

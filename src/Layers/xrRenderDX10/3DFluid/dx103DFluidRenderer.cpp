@@ -559,8 +559,6 @@ void dx103DFluidRenderer::DrawBox()
 
 void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData& FluidData, FogLighting& LightData)
 {
-	m_lstRenderables.resize(0);
-
 	LightData.Reset();
 
 	const dx103DFluidData::Settings& VolumeSettings = FluidData.GetSettings();

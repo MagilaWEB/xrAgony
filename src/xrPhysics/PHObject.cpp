@@ -133,14 +133,13 @@ void CPHObject::Collide()
 		CollideStatic(dSpacedGeom(), this);
 	m_flags.set(st_dirty, FALSE);
 }
+
 void CPHObject::CollideDynamics()
 {
 	g_SpatialSpacePhysic->q_box(ph_world->r_spatial, 0, STYPE_PHYSIC, spatial.sphere.P, AABB);
-	qResultVec& result = ph_world->r_spatial;
-	auto i = result.begin(), e = result.end();
-	for (; i != e; ++i)
+	for (auto spatial : ph_world->r_spatial)
 	{
-		CPHObject* obj2 = smart_cast<CPHObject*>(*i);
+		CPHObject* obj2 = smart_cast<CPHObject*>(spatial);
 		VERIFY(obj2);
 		if (obj2 == this || !obj2->m_flags.test(st_dirty))
 			continue;
@@ -148,18 +147,17 @@ void CPHObject::CollideDynamics()
 			NearCallback(this, obj2, dSpacedGeom(), obj2->dSpacedGeom());
 	}
 }
+
 void CPHObject::reinit_single()
 {
 	IslandReinit();
-	qResultVec& result = ph_world->r_spatial;
-	auto i = result.begin(), e = result.end();
-	for (; i != e; ++i)
+	for (auto spatial : ph_world->r_spatial)
 	{
-		CPHObject* obj = smart_cast<CPHObject*>(*i);
+		CPHObject* obj = smart_cast<CPHObject*>(spatial);
 		VERIFY(obj);
 		obj->IslandReinit();
 	}
-	result.resize(0);
+	ph_world->r_spatial.clear();
 	dJointGroupEmpty(ContactGroup);
 	ContactFeedBacks.empty();
 	ContactEffectors.empty();
@@ -171,6 +169,7 @@ void CPHObject::step_prediction(float time)
 	// perform normal step by time as local as possible for this object then return world to
 	// the pervious state
 }
+
 bool CPHObject::step_single(dReal step)
 {
 	CollideDynamics();

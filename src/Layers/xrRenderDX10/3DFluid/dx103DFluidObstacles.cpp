@@ -169,7 +169,6 @@ void dx103DFluidObstacles::ProcessStaticObstacles(const dx103DFluidData& FluidDa
 void dx103DFluidObstacles::ProcessDynamicObstacles(
 	const dx103DFluidData& FluidData, const Fmatrix& WorldToFluid, float timestep)
 {
-	m_lstRenderables.resize(0);
 	m_lstShells.resize(0);
 	m_lstElements.resize(0);
 

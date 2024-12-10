@@ -148,7 +148,6 @@ void CActor::PickupModeUpdate_COD()
 	CFrustum frustum;
 	frustum.CreateFromMatrix(::IDevice->cast()->mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
 
-	ISpatialResult.resize(0);
 	g_SpatialSpace->q_frustum(ISpatialResult, 0, STYPE_COLLIDEABLE, frustum);
 
 	float maxlen = 1000.0f;
