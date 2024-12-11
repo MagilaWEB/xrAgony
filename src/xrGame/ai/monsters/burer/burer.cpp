@@ -362,7 +362,6 @@ void CBurer::UpdateGraviObject()
 	ps->Play(false);
 
 	// hit objects
-	m_nearest.clear();
 	Level().ObjectSpace.GetNearest(m_nearest, m_gravi_object.cur_pos, m_gravi.radius, nullptr);
 	// xr_vector<IGameObject*> &m_nearest = Level().ObjectSpace.q_nearest;
 

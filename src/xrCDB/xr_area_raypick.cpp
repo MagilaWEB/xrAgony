@@ -15,7 +15,6 @@ bool bDebug() { return !!(*cdb_bDebug); }
 using namespace collide;
 IC static thread_local xrXRC xrc;
 IC static thread_local collide::rq_results r_temp;
-IC static thread_local xr_vector<ISpatial*> r_spatial;
 
 //--------------------------------------------------------------------------------
 // RayTest - Occluded/No
@@ -24,7 +23,6 @@ BOOL CObjectSpace::RayTest(const Fvector& start, const Fvector& dir, float range
 	collide::ray_cache* cache, IGameObject* ignore_object)
 {
 	BOOL _ret = _RayTest(start, dir, range, tgt, cache, ignore_object);
-	r_spatial.clear();
 	return _ret;
 }
 BOOL CObjectSpace::_RayTest(const Fvector& start, const Fvector& dir, float range, collide::rq_target tgt,
@@ -39,23 +37,28 @@ BOOL CObjectSpace::_RayTest(const Fvector& start, const Fvector& dir, float rang
 	{
 		u32 d_flags =
 			STYPE_COLLIDEABLE | ((tgt & rqtObstacle) ? STYPE_OBSTACLE : 0) | ((tgt & rqtShape) ? STYPE_SHAPE : 0);
-		// traverse object database
-		g_SpatialSpace->q_ray(r_spatial, 0, d_flags, start, dir, range);
+
+		bool ray_test_stop{ false };
 		// Determine visibility for dynamic part of scene
-		for (u32 o_it = 0; o_it < r_spatial.size(); o_it++)
+		g_SpatialSpace->q_ray_it([&](ISpatial* spatial, bool& stoped) -> void
 		{
-			ISpatial* spatial = r_spatial[o_it];
 			IGameObject* collidable = spatial->dcast_GameObject();
 			if (collidable && (collidable != ignore_object))
 			{
 				ECollisionFormType tp = collidable->GetCForm()->Type();
-				if ((tgt & (rqtObject | rqtObstacle)) && (tp == cftObject) &&
-					collidable->GetCForm()->_RayQuery(Q, r_temp))
-					return TRUE;
+				if ((tgt & (rqtObject | rqtObstacle)) && (tp == cftObject) && collidable->GetCForm()->_RayQuery(Q, r_temp))
+				{
+					stoped = ray_test_stop = true;
+					return;
+				}
+
 				if ((tgt & rqtShape) && (tp == cftShape) && collidable->GetCForm()->_RayQuery(Q, r_temp))
-					return TRUE;
+					stoped = ray_test_stop = true;
 			}
-		}
+		}, 0, d_flags, start, dir, range);
+		
+		if (ray_test_stop)
+			return TRUE;
 	}
 	// static test
 	if (tgt & rqtStatic)
@@ -113,7 +116,6 @@ BOOL CObjectSpace::RayPick(
 	const Fvector& start, const Fvector& dir, float range, rq_target tgt, rq_result& R, IGameObject* ignore_object)
 {
 	BOOL _res = _RayPick(start, dir, range, tgt, R, ignore_object);
-	r_spatial.clear();
 	return _res;
 }
 BOOL CObjectSpace::_RayPick(
@@ -135,19 +137,17 @@ BOOL CObjectSpace::_RayPick(
 	if (tgt & rqtDyn)
 	{
 		collide::ray_defs Q(start, dir, R.range, CDB::OPT_ONLYNEAREST | CDB::OPT_CULL, tgt);
-		// traverse object database
+		
 		u32 d_flags =
 			STYPE_COLLIDEABLE | ((tgt & rqtObstacle) ? STYPE_OBSTACLE : 0) | ((tgt & rqtShape) ? STYPE_SHAPE : 0);
-		g_SpatialSpace->q_ray(r_spatial, 0, d_flags, start, dir, range);
 		// Determine visibility for dynamic part of scene
-		for (u32 o_it = 0; o_it < r_spatial.size(); o_it++)
+		g_SpatialSpace->q_ray_it([&](ISpatial* spatial, bool& stoped) -> void
 		{
-			ISpatial* spatial = r_spatial[o_it];
 			IGameObject* collidable = spatial->dcast_GameObject();
 			if (0 == collidable)
-				continue;
+				return;
 			if (collidable == ignore_object)
-				continue;
+				return;
 			ECollisionFormType tp = collidable->GetCForm()->Type();
 			if (((tgt & (rqtObject | rqtObstacle)) && (tp == cftObject)) || ((tgt & rqtShape) && (tp == cftShape)))
 			{
@@ -169,7 +169,7 @@ BOOL CObjectSpace::_RayPick(
 				}
 #endif
 			}
-		}
+		}, 0, d_flags, start, dir, range);
 	}
 	return (R.element >= 0);
 }
@@ -181,7 +181,6 @@ BOOL CObjectSpace::RayQuery(collide::rq_results& dest, const collide::ray_defs& 
 	LPVOID user_data, collide::test_callback tb, IGameObject* ignore_object)
 {
 	BOOL _res = _RayQuery2(dest, R, CB, user_data, tb, ignore_object);
-	r_spatial.resize(0);
 	return (_res);
 }
 BOOL CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_defs& R, collide::rq_callback CB,
@@ -208,15 +207,14 @@ BOOL CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_de
 	// Test dynamic
 	if (R.tgt & d_mask)
 	{
-		// Traverse object database
-		g_SpatialSpace->q_ray(r_spatial, 0, d_flags, R.start, R.dir, R.range);
-		for (u32 o_it = 0; o_it < r_spatial.size(); o_it++)
+		// Determine visibility for dynamic part of scene
+		g_SpatialSpace->q_ray_it([&](ISpatial* spatial, bool& stoped) -> void
 		{
-			IGameObject* collidable = r_spatial[o_it]->dcast_GameObject();
+			IGameObject* collidable = spatial->dcast_GameObject();
 			if (0 == collidable)
-				continue;
+				return;
 			if (collidable == ignore_object)
-				continue;
+				return;
 			ICollisionForm* cform = collidable->GetCForm();
 			ECollisionFormType tp = cform->Type();
 			if (((R.tgt & (rqtObject | rqtObstacle)) && (tp == cftObject)) || ((R.tgt & rqtShape) && (tp == cftShape)))
@@ -224,17 +222,17 @@ BOOL CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_de
 				try
 				{
 					if (tb && !tb(R, collidable, user_data))
-						continue;
+						return;
 				}
 				catch (...)
 				{
 					VERIFY(false)
-					continue;
+						return;
 				}
 
 				cform->_RayQuery(R, r_temp);
 			}
-		}
+		}, 0, d_flags, R.start, R.dir, R.range);
 	}
 	if (r_temp.r_count())
 	{
@@ -297,22 +295,21 @@ BOOL CObjectSpace::_RayQuery3(collide::rq_results& r_dest, const collide::ray_de
 		// test dynamic
 		if (R.tgt & d_mask)
 		{
-			// Traverse object database
-			g_SpatialSpace->q_ray(r_spatial, 0, d_flags, d_rd.start, d_rd.dir, d_rd.range);
-			for (u32 o_it = 0; o_it < r_spatial.size(); o_it++)
+			// Determine visibility for dynamic part of scene
+			g_SpatialSpace->q_ray_it([&](ISpatial* spatial, bool& stoped) -> void
 			{
-				IGameObject* collidable = r_spatial[o_it]->dcast_GameObject();
+				IGameObject* collidable = spatial->dcast_GameObject();
 				if (0 == collidable)
-					continue;
+					return;
 				if (collidable == ignore_object)
-					continue;
+					return;
 				ICollisionForm* cform = collidable->GetCForm();
 				ECollisionFormType tp = cform->Type();
 				if (((R.tgt & (rqtObject | rqtObstacle)) && (tp == cftObject)) ||
 					((R.tgt & rqtShape) && (tp == cftShape)))
 				{
 					if (tb && !tb(d_rd, collidable, user_data))
-						continue;
+						return;
 					u32 r_cnt = r_temp.r_count();
 					cform->_RayQuery(d_rd, r_temp);
 					for (int k = r_cnt; k < r_temp.r_count(); k++)
@@ -321,7 +318,7 @@ BOOL CObjectSpace::_RayQuery3(collide::rq_results& r_dest, const collide::ray_de
 						d_res.range += d_range;
 					}
 				}
-			}
+			}, 0, d_flags, d_rd.start, d_rd.dir, d_rd.range);
 		}
 		// set dynamic ray def
 		d_rd.start = s_rd.start;
@@ -404,22 +401,20 @@ BOOL CObjectSpace::_RayQuery(collide::rq_results& r_dest, const collide::ray_def
 			if (d_rd.range > EPS)
 			{
 				// Traverse object database
-				g_SpatialSpace->q_ray(r_spatial, 0, d_flags, d_rd.start, d_rd.dir, d_rd.range);
-				// Determine visibility for dynamic part of scene
-				for (u32 o_it = 0; o_it < r_spatial.size(); o_it++)
+				g_SpatialSpace->q_ray_it([&](ISpatial* spatial, bool& stoped) -> void
 				{
-					IGameObject* collidable = r_spatial[o_it]->dcast_GameObject();
+					IGameObject* collidable = spatial->dcast_GameObject();
 					if (0 == collidable)
-						continue;
+						return;
 					if (collidable == ignore_object)
-						continue;
+						return;
 					ICollisionForm* cform = collidable->GetCForm();
 					ECollisionFormType tp = cform->Type();
 					if (((R.tgt & (rqtObject | rqtObstacle)) && (tp == cftObject)) ||
 						((R.tgt & rqtShape) && (tp == cftShape)))
 					{
 						if (tb && !tb(d_rd, collidable, user_data))
-							continue;
+							return;
 						cform->_RayQuery(d_rd, r_temp);
 					}
 #ifdef DEBUG
@@ -428,7 +423,7 @@ BOOL CObjectSpace::_RayQuery(collide::rq_results& r_dest, const collide::ray_def
 						xrDebug::Fatal(DEBUG_INFO, "Invalid RayQuery dynamic range: %f (%f). /#2/",
 							r_temp.r_begin()->range, d_rd.range);
 #endif
-				}
+				}, 0, d_flags, d_rd.start, d_rd.dir, d_rd.range);
 			}
 			if (r_temp.r_count())
 			{
@@ -499,11 +494,6 @@ BOOL CObjectSpace::RayQuery(collide::rq_results& r_dest, ICollisionForm* target,
 }
 
 //----------------------------------------------------------------------
-IC int CObjectSpace::GetNearest(
-	xr_vector<IGameObject*>& q_nearest, const Fvector& point, float range, IGameObject* ignore_object)
-{
-	return (GetNearest(r_spatial, q_nearest, point, range, ignore_object));
-}
 
 bool CObjectSpace::BoxQuery(Fvector const& box_center, Fvector const& box_z_axis, Fvector const& box_y_axis,
 	Fvector const& box_sizes, xr_vector<Fvector>* out_tris)

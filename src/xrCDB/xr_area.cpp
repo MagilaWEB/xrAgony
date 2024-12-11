@@ -32,35 +32,28 @@ CObjectSpace::~CObjectSpace()
 //----------------------------------------------------------------------
 
 //----------------------------------------------------------------------
-int CObjectSpace::GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<IGameObject*>& q_nearest, const Fvector& point,
+int CObjectSpace::GetNearest(xr_vector<IGameObject*>& q_nearest, const Fvector& point,
 	float range, IGameObject* ignore_object)
 {
 	// Query objects
-	q_nearest.resize(0);
+	q_nearest.clear();
 	Fsphere Q;
 	Q.set(point, range);
 	Fvector B;
 	B.set(range, range, range);
-	g_SpatialSpace->q_box(q_spatial, 0, STYPE_COLLIDEABLE, point, B);
-
-	// Iterate
-	for (size_t i = 0; i < q_spatial.size(); i++)
+	g_SpatialSpace->q_box_it([&](ISpatial* spatial) -> void
 	{
-		ISpatial* spatial = q_spatial[i];
-		if (!spatial)
-			continue;
-
 		IGameObject* O = spatial->dcast_GameObject();
 		if (!O)
-			continue;
+			return;
 
 		if (O == ignore_object)
-			continue;
+			return;
 
-		Fsphere mS = {O->GetSpatialData().sphere.P, O->GetSpatialData().sphere.R};
+		Fsphere mS = { O->GetSpatialData().sphere.P, O->GetSpatialData().sphere.R };
 		if (Q.intersect(mS))
 			q_nearest.push_back(O);
-	}
+	}, 0, STYPE_COLLIDEABLE, point, B);
 	return q_nearest.size();
 }
 

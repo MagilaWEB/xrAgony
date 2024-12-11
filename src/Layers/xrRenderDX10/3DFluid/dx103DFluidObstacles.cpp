@@ -169,9 +169,6 @@ void dx103DFluidObstacles::ProcessStaticObstacles(const dx103DFluidData& FluidDa
 void dx103DFluidObstacles::ProcessDynamicObstacles(
 	const dx103DFluidData& FluidData, const Fmatrix& WorldToFluid, float timestep)
 {
-	m_lstShells.resize(0);
-	m_lstElements.resize(0);
-
 	Fbox box;
 	box.vMin = Fvector3().set(-0.5f, -0.5f, -0.5f);
 	box.vMax = Fvector3().set(0.5f, 0.5f, 0.5f);
@@ -181,63 +178,49 @@ void dx103DFluidObstacles::ProcessDynamicObstacles(
 	box.getcenter(center);
 	box.getradius(size);
 
-	// Traverse object database
-	g_SpatialSpace->q_box(m_lstRenderables,
-		0, // ISpatial_DB::O_ORDERED,
-		STYPE_RENDERABLE, center, size);
-
 	// Determine visibility for dynamic part of scene
-	for (ISpatial* spatial : m_lstRenderables)
+	bool is_posses = false;
+	g_SpatialSpace->q_box_it([&](ISpatial* spatial) -> void
 	{
 		//  Can use to optimize invisible dynamic objects if necessary
-		// CSector* sector	  = (CSector*)spatial->spatial.sector;
-		// if	(0==sector)									 continue;	// disassociated from S/P structure
-		// if	(PortalTraverser.i_marker != sector->r_marker)  continue;	// inactive (untouched) sector
+		CSector* sector = (CSector*)spatial;
+		if	(0==sector)
+			return;	// disassociated from S/P structure
+		if	(PortalTraverser.i_marker != sector->r_marker)
+			return;	// inactive (untouched) sector
 
 		// renderable
 		// IRenderable* renderable	  = spatial->dcast_Renderable ();
 		// if (0==renderable)				continue;
 		IGameObject* pObject = spatial->dcast_GameObject();
 		if (!pObject)
-			continue;
+			return;
 
 		const IObjectPhysicsCollision* pCollision = pObject->physics_collision();
 		if (!pCollision)
-			continue;
+			return;
 
 		const IPhysicsShell* pShell = pCollision->physics_shell();
 		const IPhysicsElement* pElement = pCollision->physics_character();
+
+		if ((!is_posses) && (pShell || pElement))
+		{
+			is_posses = true;
+			RCache.set_Element(m_ObstacleTechnique[OS_DynamicOOBB]);
+
+			Fmatrix FluidToWorld;
+			FluidToWorld.invert(WorldToFluid);
+
+			RCache.set_c(strWorldToLocal, WorldToFluid);
+			RCache.set_c(strLocalToWorld, FluidToWorld);
+		}
+
 		if (pShell)
-		{
-			//  Push shell here
-			m_lstShells.push_back(pShell);
-		}
+			RenderPhysicsShell(pShell, WorldToFluid, timestep);
 		else if (pElement)
-		{
-			m_lstElements.push_back(pElement);
-		}
-	}
+			RenderPhysicsElement(*pElement, WorldToFluid, timestep);
 
-	if (!(m_lstShells.size() || m_lstElements.size()))
-		return;
-
-	RCache.set_Element(m_ObstacleTechnique[OS_DynamicOOBB]);
-
-	Fmatrix FluidToWorld;
-	FluidToWorld.invert(WorldToFluid);
-
-	RCache.set_c(strWorldToLocal, WorldToFluid);
-	RCache.set_c(strLocalToWorld, FluidToWorld);
-
-	for (const IPhysicsShell* shell : m_lstShells)
-	{
-		RenderPhysicsShell(shell, WorldToFluid, timestep);
-	}
-
-	for (const IPhysicsElement* element: m_lstElements)
-	{
-		RenderPhysicsElement(*element, WorldToFluid, timestep);
-	}
+	},	0, /* ISpatial_DB::O_ORDERED, */ STYPE_RENDERABLE, center, size);
 }
 
 //  TODO: DX10: Do it using instancing.

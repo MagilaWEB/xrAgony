@@ -471,7 +471,6 @@ void CStateBurerAttackTele<Object>::HandleGrenades()
 		return;
 	}
 
-	m_nearest.resize(0);
 	Level().ObjectSpace.GetNearest(m_nearest, this->object->Position(), this->object->m_tele_find_radius, nullptr);
 
 	for (u32 i = 0; i < m_nearest.size(); ++i)

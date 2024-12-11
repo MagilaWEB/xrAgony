@@ -1,5 +1,3 @@
-#ifndef dx103DFluidObstacles_included
-#define dx103DFluidObstacles_included
 #pragma once
 
 class dx103DFluidGrid;
@@ -45,12 +43,4 @@ private:
 	ref_selement m_ObstacleTechnique[OS_NumShaders];
 
 	dx103DFluidGrid* m_pGrid;
-
-	//	Cache vectors to avoid memory reallocations
-	//	TODO: DX10: Reserve memory on object creation
-	xr_vector<ISpatial*> m_lstRenderables;
-	xr_vector<const IPhysicsShell*> m_lstShells;
-	xr_vector<const IPhysicsElement*> m_lstElements;
 };
-
-#endif //	dx103DFluidObstacles_included

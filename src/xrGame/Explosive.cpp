@@ -384,8 +384,6 @@ void CExplosive::Explode()
 	bool SendHits = false;
 	if (OnServer())
 		SendHits = true;
-	else
-		SendHits = false;
 
 	for (int i = 0; i < m_iFragsNum; ++i)
 	{
@@ -413,19 +411,14 @@ void CExplosive::Explode()
 	//взрывная волна
 	////////////////////////////////
 	//---------------------------------------------------------------------
-	xr_vector<ISpatial*> ISpatialResult;
-	g_SpatialSpace->q_sphere(ISpatialResult, 0, STYPE_COLLIDEABLE, pos, m_fBlastRadius);
-
 	m_blasted_objects.clear();
-	for (u32 o_it = 0; o_it < ISpatialResult.size(); o_it++)
-	{
-		ISpatial* spatial = ISpatialResult[o_it];
-		//		feel_touch_new(spatial->dcast_GameObject());
 
+	g_SpatialSpace->q_sphere_it([&](ISpatial* spatial)
+	{
 		CPhysicsShellHolder* pGameObject = smart_cast<CPhysicsShellHolder*>(spatial->dcast_GameObject());
 		if (pGameObject && cast_game_object()->ID() != pGameObject->ID())
 			m_blasted_objects.push_back(pGameObject);
-	}
+	}, 0, STYPE_COLLIDEABLE, pos, m_fBlastRadius);
 
 	GetExplosionBox(m_vExplodeSize);
 	START_PROFILE("explosive/activate explosion box")

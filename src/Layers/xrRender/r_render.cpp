@@ -87,8 +87,7 @@ void CRender::render_main(bool deffered)
 					uID_LTRACK = uLastLTRACK % lstRenderables.size();
 
 				// update light-vis for current entity / actor
-				IGameObject* O = g_pGameLevel->CurrentViewEntity();
-				if (O)
+				if (IGameObject* O = g_pGameLevel->CurrentViewEntity())
 					if (CROS_impl* R = reinterpret_cast<CROS_impl*>(O->ROS()))
 						R->update(O);
 

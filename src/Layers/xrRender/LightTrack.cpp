@@ -429,16 +429,14 @@ void CROS_impl::prepare_lights(Fvector& position, IRenderable* O)
 		// Select nearest lights
 		Fvector bb_size = { radius, radius, radius };
 
-		g_SpatialSpace->q_box(RImplementation.lstSpatial, 0, STYPE_LIGHTSOURCEHEMI, position, bb_size);
-
-		for (ISpatial* spatial : RImplementation.lstSpatial)
+		g_SpatialSpace->q_box_it([&](ISpatial* spatial) -> void
 		{
 			light* source = (light*)(spatial->dcast_Light());
 			VERIFY(source); // sanity check
 			float R = radius + source->range;
 			if (position.distance_to(source->position) < R && source->flags.bStatic)
 				add(source);
-		}
+		}, 0, STYPE_LIGHTSOURCEHEMI, position, bb_size);
 
 		// Trace visibility
 		lights.clear();

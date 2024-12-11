@@ -66,8 +66,6 @@ public:
 
 	int GetNearest(xr_vector<IGameObject*>& q_nearest, ICollisionForm* obj, float range);
 	int GetNearest(xr_vector<IGameObject*>& q_nearest, const Fvector& point, float range, IGameObject* ignore_object);
-	int GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<IGameObject*>& q_nearest, const Fvector& point,
-		float range, IGameObject* ignore_object);
 
 	CDB::TRI* GetStaticTris() { return Static.get_tris(); }
 	Fvector* GetStaticVerts() { return Static.get_verts(); }

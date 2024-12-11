@@ -39,9 +39,6 @@ public:
 	typedef std::pair<float, COLLISION_ACTION> COLLISION_TIME;
 	typedef xr_vector<COLLISION_TIME> COLLISIONS;
 
-private:
-	typedef xr_vector<ISpatial*> Spatials;
-
 public:
 	typedef obstacles_query query;
 	typedef obstacles_query::AREA AREA;
@@ -56,7 +53,6 @@ private:
 	NEAREST_MOVING m_visited_emitters;
 	COLLISIONS m_collisions;
 	COLLISIONS m_previous_collisions;
-	Spatials m_spatial_objects;
 
 #ifdef DEBUG
 private:

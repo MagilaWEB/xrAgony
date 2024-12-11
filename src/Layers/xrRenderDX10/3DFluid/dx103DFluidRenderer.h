@@ -103,10 +103,6 @@ private:
 
 	ref_geom m_GeomQuadVertex;
 	ID3DVertexBuffer* m_pQuadVertexBuffer;
-
-	//	Cache vectors to avoid memory reallocations
-	//	TODO: DX10: Reserve memory on object creation
-	xr_vector<ISpatial*> m_lstRenderables;
 };
 
 #endif //	dx103DFluidRenderer_included

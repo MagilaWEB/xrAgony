@@ -722,7 +722,6 @@ public:
 private:
 	collide::rq_results RQR;
 	BOOL CanPickItem(const CFrustum& frustum, const Fvector& from, IGameObject* item);
-	xr_vector<ISpatial*> ISpatialResult;
 
 private:
 	CLocationManager* m_location_manager;

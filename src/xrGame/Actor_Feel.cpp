@@ -148,51 +148,51 @@ void CActor::PickupModeUpdate_COD()
 	CFrustum frustum;
 	frustum.CreateFromMatrix(::IDevice->cast()->mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
 
-	g_SpatialSpace->q_frustum(ISpatialResult, 0, STYPE_COLLIDEABLE, frustum);
-
 	float maxlen = 1000.0f;
 	CInventoryItem* pNearestItem = nullptr;
 
-	for (u32 o_it = 0; o_it < ISpatialResult.size(); o_it++)
+	g_SpatialSpace->q_frustum_it([&](ISpatial* spatial) -> void
 	{
-		ISpatial* spatial = ISpatialResult[o_it];
 		CInventoryItem* pIItem = smart_cast<CInventoryItem*>(spatial->dcast_GameObject());
 
 		if (0 == pIItem)
-			continue;
+			return;
+
 		if (pIItem->object().H_Parent() != nullptr)
-			continue;
+			return;
+
 		if (!pIItem->CanTake())
-			continue;
+			return;
+
 		if (smart_cast<CExplosiveRocket*>(&pIItem->object()))
-			continue;
+			return;
 
 		CGrenade* pGrenade = smart_cast<CGrenade*>(spatial->dcast_GameObject());
 		if (pGrenade && !pGrenade->Useful())
-			continue;
+			return;
 
 		CMissile* pMissile = smart_cast<CMissile*>(spatial->dcast_GameObject());
 		if (pMissile && !pMissile->Useful())
-			continue;
+			return;
 
 		Fvector A;
 		pIItem->object().Center(A);
 		if (A.distance_to_sqr(Position()) > 4)
-			continue;
+			return;
 
 		Fvector B, tmp;
 		tmp.sub(A, cam_Active()->vPosition);
 		B.mad(cam_Active()->vPosition, cam_Active()->vDirection, tmp.dotproduct(cam_Active()->vDirection));
 		float len = B.distance_to_sqr(A);
 		if (len > 1)
-			continue;
+			return;
 
 		if (maxlen > len && !pIItem->object().getDestroy())
 		{
 			maxlen = len;
 			pNearestItem = pIItem;
 		};
-	}
+	}, 0, STYPE_COLLIDEABLE, frustum);
 
 	if (pNearestItem)
 	{
@@ -201,11 +201,13 @@ void CActor::PickupModeUpdate_COD()
 		if (!CanPickItem(frustum, ::IDevice->cast()->vCameraPosition, &pNearestItem->object()))
 			pNearestItem = nullptr;
 	}
+
 	if (pNearestItem && pNearestItem->cast_game_object())
 	{
 		if (Level().m_feel_deny.is_object_denied(pNearestItem->cast_game_object()))
 			pNearestItem = nullptr;
 	}
+
 	if (pNearestItem && pNearestItem->cast_game_object())
 	{
 		if (!pNearestItem->cast_game_object()->getVisible())
@@ -242,25 +244,21 @@ void CActor::Check_for_AutoPickUp()
 	Fbox APU_Box;
 	APU_Box.set(Fvector().sub(bc, m_AutoPickUp_AABB), Fvector().add(bc, m_AutoPickUp_AABB));
 
-	xr_vector<ISpatial*> ISpatialResult;
-	g_SpatialSpace->q_box(ISpatialResult, 0, STYPE_COLLIDEABLE, bc, m_AutoPickUp_AABB);
-
 	// Determine visibility for dynamic part of scene
-	for (u32 o_it = 0; o_it < ISpatialResult.size(); o_it++)
+	g_SpatialSpace->q_box_it([&](ISpatial* spatial) -> void
 	{
-		ISpatial* spatial = ISpatialResult[o_it];
 		CInventoryItem* pIItem = smart_cast<CInventoryItem*>(spatial->dcast_GameObject());
 
 		if (0 == pIItem)
-			continue;
+			return;
 		if (!pIItem->CanTake())
-			continue;
+			return;
 		if (Level().m_feel_deny.is_object_denied(spatial->dcast_GameObject()))
-			continue;
+			return;
 
 		CGrenade* pGrenade = smart_cast<CGrenade*>(pIItem);
 		if (pGrenade)
-			continue;
+			return;
 
 		if (APU_Box.Pick(pIItem->object().Position(), pIItem->object().Position()))
 		{
@@ -269,13 +267,13 @@ void CActor::Check_for_AutoPickUp()
 				if (pIItem->BaseSlot() == INV_SLOT_2 || pIItem->BaseSlot() == INV_SLOT_3)
 				{
 					if (inventory().ItemFromSlot(pIItem->BaseSlot()))
-						continue;
+						return;
 				}
 			}
 
 			Game().SendPickUpEvent(ID(), pIItem->object().ID());
 		}
-	}
+	}, 0, STYPE_COLLIDEABLE, bc, m_AutoPickUp_AABB);
 }
 
 void CActor::PickupInfoDraw(IGameObject* object)
@@ -326,7 +324,6 @@ void CActor::Feel_Grenade_Update(float rad)
 	Fvector pos_actor;
 	Center(pos_actor);
 
-	q_nearest.resize(0);
 	g_pGameLevel->ObjectSpace.GetNearest(q_nearest, pos_actor, rad, nullptr);
 
 	xr_vector<IGameObject*>::iterator it_b = q_nearest.begin();

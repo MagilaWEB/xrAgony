@@ -5,7 +5,7 @@
 
 extern Fvector c_spatial_offset[8];
 
-struct walker
+struct alignas(16) walker
 {
 	u32 mask;
 	CFrustum* F;
@@ -15,7 +15,8 @@ struct walker
 		mask = _mask;
 		F = (CFrustum*)_F;
 	}
-	void walk(xr_vector<ISpatial*>& q_result, ISpatial_NODE* N, Fvector& n_C, float n_R, u32 fmask)
+	template <typename TResult>
+	void walk(TResult& q_result, ISpatial_NODE* N, Fvector& n_C, float n_R, u32 fmask)
 	{
 		// box
 		float n_vR = 2 * n_R;
@@ -25,9 +26,8 @@ struct walker
 			return;
 
 		// test items
-		for (auto& it : N->items)
+		for (auto& S : N->items)
 		{
-			ISpatial* S = it;
 			if (0 == (S->GetSpatialData().type & mask))
 				continue;
 
@@ -37,7 +37,10 @@ struct walker
 			if (fcvNone == F->testSphere(sC, sR, tmask))
 				continue;
 
-			q_result.push_back(S);
+			if constexpr (std::is_same_v<TResult, std::function<void(ISpatial*)>>)
+				q_result(S);
+			else
+				q_result.push_back(S);
 		}
 
 		// recurse
@@ -60,4 +63,10 @@ void ISpatial_DB::q_frustum(xr_vector<ISpatial*>& R, u32 _o, u32 _mask, const CF
 	walker W(_mask, &_frustum);
 	W.walk(R, m_root, m_center, m_bounds, _frustum.getMask());
 	Stats.Query.End();
+}
+
+void ISpatial_DB::q_frustum_it(std::function<void(ISpatial*)> q_func, u32 _o, u32 _mask, const CFrustum& _frustum)
+{
+	walker W(_mask, &_frustum);
+	W.walk(q_func, m_root, m_center, m_bounds, _frustum.getMask());
 }

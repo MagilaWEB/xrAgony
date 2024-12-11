@@ -476,15 +476,6 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	{
 		set_Object(nullptr);
 
-		// Traverse object database
-		g_SpatialSpace->q_frustum
-		(
-			lstRenderables,
-			ISpatial_DB::O_ORDERED,
-			STYPE_RENDERABLE + STYPE_RENDERABLESHADOW,
-			::IDevice->cast()->ViewFromMatrix
-		);
-
 		auto renderable_spatial = [this, ViewSave](ISpatial* spatial) -> void
 		{
 			if (CSector* sector = reinterpret_cast<CSector*>(spatial->GetSpatialData().sector))// disassociated from S/P structure
@@ -516,8 +507,13 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 		};
 
 		// Determine visibility for dynamic part of scene
-		for (ISpatial* spatial : lstRenderables)
-			renderable_spatial(spatial);
+		g_SpatialSpace->q_frustum_it
+		(
+			renderable_spatial,
+			ISpatial_DB::O_ORDERED,
+			STYPE_RENDERABLE + STYPE_RENDERABLESHADOW,
+			::IDevice->cast()->ViewFromMatrix
+		);
 
 		if (g_pGameLevel && (phase == RImplementation.PHASE_SMAP) && ps_actor_shadow_flags.test(RFLAG_ACTOR_SHADOW))
 		{

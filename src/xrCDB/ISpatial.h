@@ -263,9 +263,15 @@ public:
 	// query
 	void q_ray(
 		xr_vector<ISpatial*>& R, u32 _o, u32 _mask_and, const Fvector& _start, const Fvector& _dir, float _range);
+	void q_ray_it(
+		std::function<void(ISpatial*, bool&)> func, u32 _o, u32 _mask_and, const Fvector& _start, const Fvector& _dir, float _range);
 	void q_box(xr_vector<ISpatial*>& R, u32 _o, u32 _mask_or, const Fvector& _center, const Fvector& _size);
+	void q_box_it(std::function<void(ISpatial*)> q_func, u32 _o, u32 _mask, const Fvector& _center, const Fvector& _size);
 	void q_sphere(xr_vector<ISpatial*>& R, u32 _o, u32 _mask_or, const Fvector& _center, const float _radius);
+	void q_sphere_it(std::function<void(ISpatial*)> q_func, u32 _o, u32 _mask, const Fvector& _center, const float _radius);
 	void q_frustum(xr_vector<ISpatial*>& R, u32 _o, u32 _mask_or, const CFrustum& _frustum);
+	void q_frustum_it(std::function<void(ISpatial*)> q_func, u32 _o, u32 _mask, const CFrustum& _frustum);
+	
 };
 
 XRCDB_API extern ISpatial_DB* g_SpatialSpace;

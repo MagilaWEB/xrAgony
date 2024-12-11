@@ -64,7 +64,6 @@ public:
 	xr_vector<R_dsgraph::mapMatrixTextures::value_type*> matTexturesTemp;
 	xr_vector<int> lstLODgroups;
 	xr_vector<ISpatial*> lstRenderables;
-	xr_vector<ISpatial*> lstSpatial;
 	xr_vector<dxRender_Visual*> lstVisuals;
 	xr_vector<R_dsgraph::_LodItem> lstLODs;
 
@@ -125,7 +124,6 @@ public:
 
 		lstLODgroups.clear();
 		lstRenderables.clear();
-		lstSpatial.clear();
 		lstVisuals.clear();
 
 		for (int i = 0; i < SHADER_PASSES_MAX; ++i)

@@ -581,25 +581,21 @@ void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData& FluidData, Fo
 	box.getradius(size);
 
 	// Traverse object database
-	g_SpatialSpace->q_box(m_lstRenderables,
-		0, // ISpatial_DB::O_ORDERED,
-		STYPE_LIGHTSOURCE, center, size);
-
 	// Determine visibility for dynamic part of scene
-	for (ISpatial* spatial : m_lstRenderables)
+	g_SpatialSpace->q_box_it([&](ISpatial* spatial)->void
 	{
 		// Light
 		light* pLight = (light*)spatial->dcast_Light();
 		VERIFY(pLight);
 
 		if (pLight->flags.bStatic)
-			continue;
+			return;
 
 		float d = pLight->position.distance_to(Transform.c);
 
 		float R = pLight->range + _max(size.x, _max(size.y, size.z));
 		if (d >= R)
-			continue;
+			return;
 
 		Fvector3 LightIntencity;
 
@@ -616,7 +612,7 @@ void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData& FluidData, Fo
 		LightIntencity.mul(a);
 
 		LightData.m_vLightIntencity.add(LightIntencity);
-	}
+	},	0, /*ISpatial_DB::O_ORDERED,*/  STYPE_LIGHTSOURCE, center, size);
 
 	// LightData.m_vLightIntencity.set( 1.0f, 0.5f, 0.0f);
 	// LightData.m_vLightIntencity.set( 1.0f, 1.0f, 1.0f);

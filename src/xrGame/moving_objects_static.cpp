@@ -125,8 +125,7 @@ public:
 
 void moving_objects::fill_nearest_list(const Fvector& position, const float& radius, moving_object* object)
 {
-	Level().ObjectSpace.GetNearest(
-		m_spatial_objects, m_nearest_static, position, radius, const_cast<CEntityAlive*>(&object->object()));
+	Level().ObjectSpace.GetNearest(m_nearest_static, position, radius, const_cast<CEntityAlive*>(&object->object()));
 
 	m_nearest_static.erase(std::remove_if(m_nearest_static.begin(), m_nearest_static.end(), ignore_predicate(object)),
 		m_nearest_static.end());

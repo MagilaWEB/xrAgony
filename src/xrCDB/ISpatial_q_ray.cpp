@@ -204,6 +204,8 @@ struct alignas(16) walker
 	u32 mask;
 	float range;
 	float range2;
+	bool is_send_funcion{ false };
+	bool stoped{ false };
 
 	walker(u32 _mask, const Fvector& _start, const Fvector& _dir, float _range)
 	{
@@ -259,7 +261,8 @@ struct alignas(16) walker
 	}
 #endif
 
-	void walk(xr_vector<ISpatial*>& q_result, ISpatial_NODE* N, Fvector& n_C, float n_R)
+	template <typename TResult>
+	void walk(TResult& q_result, ISpatial_NODE* N, Fvector& n_C, float n_R)
 	{
 		// Actual ray/aabb test
 #if ___SSE___
@@ -300,7 +303,19 @@ struct alignas(16) walker
 					}
 					range2 = range * range;
 				}
-				q_result.push_back(S);
+
+				if constexpr (std::is_same_v<TResult, std::function<void(ISpatial*, bool&)>>)
+				{
+					q_result(S, stoped);
+					if (is_send_funcion == false)
+						is_send_funcion = true;
+
+					if (stoped)
+						break;
+				}
+				else
+					q_result.push_back(S);
+
 				if (b_first)
 					return;
 			}
@@ -315,8 +330,17 @@ struct alignas(16) walker
 			Fvector c_C;
 			c_C.mad(n_C, c_spatial_offset[octant], c_R);
 			walk(q_result, N->children[octant], c_C, c_R);
-			if (b_first && !q_result.empty())
-				return;
+
+			if constexpr (std::is_same_v<TResult, std::function<void(ISpatial*, bool&)>>)
+			{
+				if (b_first && is_send_funcion)
+					break;
+			}
+			else
+			{
+				if (b_first && !q_result.empty())
+					break;
+			}
 		}
 	}
 };
@@ -354,4 +378,36 @@ void ISpatial_DB::q_ray(
 		}
 	}
 	Stats.Query.End();
+}
+
+void ISpatial_DB::q_ray_it(
+	std::function<void(ISpatial*, bool&)> func, u32 _o, u32 _mask_and, const Fvector& _start, const Fvector& _dir, float _range)
+{
+
+	if (_o & O_ONLYFIRST)
+	{
+		if (_o & O_ONLYNEAREST)
+		{
+			walker<true, true> W{ _mask_and, _start, _dir, _range };
+			W.walk(func, m_root, m_center, m_bounds);
+		}
+		else
+		{
+			walker<true, false> W{ _mask_and, _start, _dir, _range };
+			W.walk(func, m_root, m_center, m_bounds);
+		}
+	}
+	else
+	{
+		if (_o & O_ONLYNEAREST)
+		{
+			walker<false, true> W{ _mask_and, _start, _dir, _range };
+			W.walk(func, m_root, m_center, m_bounds);
+		}
+		else
+		{
+			walker<false, false> W{ _mask_and, _start, _dir, _range };
+			W.walk(func, m_root, m_center, m_bounds);
+		}
+	}
 }
