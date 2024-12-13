@@ -30,8 +30,9 @@ ENGINE_API string_path g_sLaunchWorkingFolder;
 ENGINE_API void InitEngine()
 {
 	Engine.Initialize();
+	static CRenderDevice Device;
 	if(!::IDevice)
-		::IDevice = new CRenderDevice;
+		::IDevice = &Device;
 	::IDevice->cast()->Initialize();
 }
 
