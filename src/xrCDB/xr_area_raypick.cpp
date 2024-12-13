@@ -219,7 +219,9 @@ BOOL CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_de
 			ECollisionFormType tp = cform->Type();
 			if (((R.tgt & (rqtObject | rqtObstacle)) && (tp == cftObject)) || ((R.tgt & rqtShape) && (tp == cftShape)))
 			{
-				try
+				if (tb && !tb(R, collidable, user_data))
+					return;
+				/*try
 				{
 					if (tb && !tb(R, collidable, user_data))
 						return;
@@ -228,7 +230,7 @@ BOOL CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_de
 				{
 					VERIFY(false)
 						return;
-				}
+				}*/
 
 				cform->_RayQuery(R, r_temp);
 			}

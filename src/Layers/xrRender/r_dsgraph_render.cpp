@@ -478,23 +478,31 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 
 		auto renderable_spatial = [this, ViewSave](ISpatial* spatial) -> void
 		{
-			if (CSector* sector = reinterpret_cast<CSector*>(spatial->GetSpatialData().sector))// disassociated from S/P structure
+			SpatialData& spatial_data = spatial->GetSpatialData();
+			if ((spatial_data.type & STYPE_LIGHTSOURCE) || (spatial_data.type & STYPE_PARTICLE))
+				return;
+
+			if (CSector* sector = reinterpret_cast<CSector*>(spatial_data.sector))// disassociated from S/P structure
 			{
 				if (PortalTraverser.i_marker == sector->r_marker)
 				{
 					if (auto renderable = spatial->dcast_Renderable())
 					{
+						RenderData& render_data = renderable->GetRenderData();
 						extern bool VisibleToRender(IRenderVisual * pVisual, bool isStatic, bool sm, Fmatrix & transform_matrix, bool ignore_optimize = false);
 
-						if (!VisibleToRender(renderable->GetRenderData().visual, false, true, renderable->GetRenderData().xform))
+						if (!VisibleToRender(render_data.visual, false, true, render_data.xform))
 							return;
 
 						for (CFrustum& frustum : sector->r_frustums)
 						{
 							set_Frustum(&frustum);
-							if (View->testSphere_dirty(spatial->GetSpatialData().sphere.P, spatial->GetSpatialData().sphere.R))
+							
+							u32 mask = 0xff;
+							if (View->testSAABB(spatial_data.sphere.P, spatial_data.sphere.R,
+								render_data.visual->getVisData().box.data(), mask) != fcvFully)
 							{
-								if (CKinematics* pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
+								if (CKinematics* pKin = reinterpret_cast<CKinematics*>(render_data.visual))
 									pKin->CalculateBones(TRUE);
 
 								renderable->renderable_Render();
@@ -507,13 +515,8 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 		};
 
 		// Determine visibility for dynamic part of scene
-		g_SpatialSpace->q_frustum_it
-		(
-			renderable_spatial,
-			ISpatial_DB::O_ORDERED,
-			STYPE_RENDERABLE + STYPE_RENDERABLESHADOW,
-			::IDevice->cast()->ViewFromMatrix
-		);
+		for (ISpatial* spatial : lstRenderables)
+			renderable_spatial(spatial);
 
 		if (g_pGameLevel && (phase == RImplementation.PHASE_SMAP) && ps_actor_shadow_flags.test(RFLAG_ACTOR_SHADOW))
 		{
@@ -528,56 +531,4 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	// Restore
 	::IDevice->cast()->ViewFromMatrix = ViewSave;
 	View = nullptr;
-}
-
-#include "FLOD.h"
-void D3DXRenderBase::r_dsgraph_render_R1_box(IRender_Sector* S, Fbox& BB, int sh)
-{
-	PIX_EVENT(r_dsgraph_render_R1_box);
-
-	lstVisuals.clear();
-	lstVisuals.push_back(std::move(reinterpret_cast<CSector*>(S)->root()));
-
-	for (dxRender_Visual*& visual: lstVisuals)
-	{
-		switch (visual->Type)
-		{
-		case MT_HIERRARHY: {
-			for (dxRender_Visual*& Vis : reinterpret_cast<FHierrarhyVisual*>(visual)->children)
-				if (BB.intersect(Vis->vis.box))
-					lstVisuals.push_back(std::move(Vis));
-		}
-		break;
-		case MT_SKELETON_ANIM:
-		case MT_SKELETON_RIGID: {
-			auto pV = reinterpret_cast<CKinematics*>(visual);
-			pV->CalculateBones(TRUE);
-
-			for (dxRender_Visual*& Vis : pV->children)
-				if (BB.intersect(Vis->vis.box))
-					lstVisuals.push_back(std::move(Vis));
-		}
-		break;
-		case MT_LOD:{
-			for (dxRender_Visual*& Vis : reinterpret_cast<FLOD*>(visual)->children)
-				if (BB.intersect(Vis->vis.box))
-					lstVisuals.push_back(std::move(Vis));
-		}
-		break;
-		default:
-		{
-			// Renderable visual
-			ShaderElement* E = visual->shader->E[sh]._get();
-			if (E && !(E->flags.bDistort))
-			{
-				for (u32 pass = 0; pass < E->passes.size(); pass++)
-				{
-					RCache.set_Element(E, pass);
-					visual->Render(-1.f);
-				}
-			}
-		}
-		break;
-		}
-	}
 }

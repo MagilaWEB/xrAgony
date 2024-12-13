@@ -649,20 +649,22 @@ BOOL CRender::add_Dynamic(dxRender_Visual* pVisual, u32 planes)
 
 void CRender::add_Static(dxRender_Visual* pVisual, u32 planes)
 {
-	if (!VisibleToRender(pVisual, true, phase == PHASE_SMAP, *val_pTransform))
-		return;
 	// Check frustum visibility and calculate distance to visual's center
 	EFC_Visible VIS;
 	vis_data& vis = pVisual->vis;
-	VIS = View->testSAABB(vis.sphere.P, vis.sphere.R, vis.box.data(), planes);
-	if (VIS == fcvNone)
+	if ((VIS = View->testSAABB(vis.sphere.P, vis.sphere.R,vis.box.data(), planes)) == fcvNone)
+		return;
+
+	if (VIS == fcv_forcedword)
 		return;
 
 	if (!HOM.visible(vis))
 		return;
 
-	// If we get here visual is visible or partially visible
+	if (!VisibleToRender(pVisual, true, phase == PHASE_SMAP, *val_pTransform))
+		return;
 
+	// If we get here visual is visible or partially visible
 	switch (pVisual->Type)
 	{
 	case MT_PARTICLE_GROUP:

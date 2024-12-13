@@ -768,8 +768,7 @@ bool CWeaponKnife::SelectBestHitVictim(
 	else
 	{
 		victim_filter tmp_filter(tmp_parent->ID(), fendpos_dest, spartial_prefetch_radius);
-		m_spartial_query_res.erase(std::remove_if(m_spartial_query_res.begin(), m_spartial_query_res.end(), tmp_filter),
-			m_spartial_query_res.end());
+		std::erase_if(m_spartial_query_res, tmp_filter);
 	}
 	return !m_spartial_query_res.empty();
 }

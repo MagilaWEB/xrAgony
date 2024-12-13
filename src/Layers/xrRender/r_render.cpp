@@ -201,14 +201,6 @@ void CRender::render_main(bool deffered)
 				continue;
 			}
 
-			auto CalcSSADynamic = [&](const Fvector& C, float R) -> float
-			{
-				Fvector4 v_res1, v_res2;
-				::IDevice->cast()->mFullTransform.transform(v_res1, C);
-				::IDevice->cast()->mFullTransform.transform(v_res2, Fvector(C).mad(::IDevice->cast()->vCameraRight, R));
-				return v_res1.sub(v_res2).magnitude();
-			};
-
 			auto renderable = spatial->dcast_Renderable();
 			if (!renderable)
 				continue;
@@ -222,14 +214,11 @@ void CRender::render_main(bool deffered)
 			{
 				if (spatial_data.type & STYPE_RENDERABLE && psDeviceFlags.test(rsDrawDynamic))
 				{
-					if (CalcSSADynamic(spatial_data.sphere.P, spatial_data.sphere.R) > .002f && deffered)
+					if (auto pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
 					{
-						if (auto pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
-						{
-							pKin->CalculateBones(TRUE);
-							pKin->CalculateWallmarks();
-							//dbg_text_renderer(spatial->spatial.sphere.P);
-						}
+						pKin->CalculateBones(TRUE);
+						pKin->CalculateWallmarks();
+						//dbg_text_renderer(spatial->spatial.sphere.P);
 					}
 
 					// Rendering
@@ -254,13 +243,10 @@ void CRender::render_main(bool deffered)
 
 					if (spatial_data.type & STYPE_RENDERABLE && psDeviceFlags.test(rsDrawDynamic))
 					{
-						if (CalcSSADynamic(spatial_data.sphere.P, spatial_data.sphere.R) > .002f && deffered)
+						if (auto pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
 						{
-							if (auto pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
-							{
-								pKin->CalculateBones(TRUE);
-								pKin->CalculateWallmarks();
-							}
+							pKin->CalculateBones(TRUE);
+							pKin->CalculateWallmarks();
 						}
 
 						// Rendering
