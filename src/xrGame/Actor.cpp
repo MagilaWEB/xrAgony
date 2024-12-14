@@ -2047,6 +2047,7 @@ void CActor::SwitchNightVision(bool vision_on, bool use_sounds, bool send_event)
 }
 
 #include "../xrphysics/actorcameracollision.h"
+#include "CustomDetector.h"
 bool CActor::use_HolderEx(CHolderCustom* object, bool bForce)
 {
 	if (m_holder)
@@ -2201,12 +2202,30 @@ void CActor::on_requested_spawn(IGameObject* object)
 
 void CActor::update()
 {
-	if (auto active_item = inventory().ActiveItem())
+	auto active_item = inventory().ActiveItem();
+
+	auto update_item = [this, &active_item]() -> void
 	{
 		active_item->object().fSetDeltaT(fDeltaT());
 		active_item->object().dwSetDeltaT(dwDeltaT());
 		active_item->object().update();
-	}
+	};
+
+	if (active_item)
+		update_item();
+
+	active_item = inventory().ItemFromSlot(DETECTOR_SLOT);
+
+	if (CCustomDetector* detector = smart_cast<CCustomDetector*>(active_item))
+		update_item();
+
+	if (CFlashlight* light = smart_cast<CFlashlight*>(active_item))
+		update_item();
+
+	active_item = inventory().ItemFromSlot(TORCH_SLOT);
+
+	if (CTorch* light = smart_cast<CTorch*>(active_item))
+		update_item();
 
 	__super::update();
 }
