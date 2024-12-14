@@ -132,7 +132,7 @@ protected:
 	//.	Lock		m_Lock				;
 
 	BulletVec m_Bullets; // working set, locked
-	BulletVec m_BulletsRendered; // copy for rendering
+	FastLock LockBullets;
 	xr_vector<_event> m_Events;
 
 #ifdef DEBUG

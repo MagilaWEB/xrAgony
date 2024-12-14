@@ -106,6 +106,7 @@ CBulletManager::CBulletManager()
 
 CBulletManager::~CBulletManager()
 {
+	FastLock::raii mt{ LockBullets };
 	m_Bullets.clear();
 	m_WhineSounds.clear();
 	m_Events.clear();
@@ -188,7 +189,7 @@ void CBulletManager::AddBullet(const Fvector& position, const Fvector& direction
 #ifdef DEBUG
 	VERIFY(m_thread_id == xrThread::get_main_id());
 #endif
-
+	FastLock::raii mt{ LockBullets };
 	VERIFY(u16(-1) != cartridge.bullet_material_idx);
 	//	u32 CurID					= Level().CurrentControlEntity()->ID();
 	//	u32 OwnerID					= sender_id;
@@ -205,12 +206,12 @@ void CBulletManager::UpdateWorkload()
 {
 	rq_storage.r_clear();
 
-	u32 const time_delta = IDevice->TimeDelta_ms();
+	u32 const time_delta = ::IDevice->TimeDelta_ms();
 	if (!time_delta)
 		return;
 
 	collide::rq_result dummy;
-
+	FastLock::raii mt{ LockBullets };
 	// this is because of ugly nature of removing bullets
 	// when index in vector passed through the tgt_material field
 	// and we can remove them only in case when we iterate bullets
@@ -820,15 +821,15 @@ void CBulletManager::Render()
 	}
 #endif
 
-	if (m_BulletsRendered.empty())
+	if (m_Bullets.empty())
 		return;
 
 	// u32	vOffset			=	0	;
-	u32 bullet_num = m_BulletsRendered.size();
+	u32 bullet_num = m_Bullets.size();
 
 	::UIRender->StartPrimitive((u32)bullet_num * 12, IUIRender::ptTriList, IUIRender::pttLIT);
 
-	for (auto it = m_BulletsRendered.begin(); it != m_BulletsRendered.end(); it++)
+	for (auto it = m_Bullets.begin(); it != m_Bullets.end(); it++)
 	{
 		SBullet* bullet = &(*it);
 		if (!bullet->flags.allow_tracer)
@@ -888,8 +889,8 @@ void CBulletManager::Render()
 
 void CBulletManager::CommitRenderSet() // @ the end of frame
 {
-	m_BulletsRendered = m_Bullets;
 	::IDevice->cast()->add_parallel2(this, &CBulletManager::UpdateWorkload);
+	//UpdateWorkload();
 }
 
 void CBulletManager::CommitEvents() // @ the start of frame
@@ -912,7 +913,7 @@ void CBulletManager::CommitEvents() // @ the start of frame
 		break;
 		case EVENT_REMOVE:
 		{
-			
+			FastLock::raii mt{ LockBullets };
 			m_Bullets[E.tgt_material] = m_Bullets.back();
 			m_Bullets.pop_back();
 		}
