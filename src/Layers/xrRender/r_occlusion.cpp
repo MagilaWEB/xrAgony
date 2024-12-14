@@ -116,11 +116,7 @@ R_occlusion::occq_result R_occlusion::occq_get(u32& ID)
 		HRESULT hr = GetData(used[ID].Q.Get(), &fragments, sizeof(fragments));
 		if (hr == S_OK)
 			break;
-		else if(hr == S_FALSE)
-		{
-			fragments = (occq_result)-1; //0xffffffff;
-			break;
-		}else if (hr == D3DERR_DEVICELOST)
+		else if (hr == D3DERR_DEVICELOST)
 		{
 			fragments = 0xffffffff;
 			break;
