@@ -24,7 +24,7 @@ IRender_Mesh::~IRender_Mesh()
 
 dxRender_Visual::dxRender_Visual()
 {
-	m_random_period_dist_update_time = ::Random.randI(300, 900);
+	m_random_period_dist_update_time = ::Random.randI(200, 700);
 	Type = 0;
 	shader = nullptr;
 	vis.clear();

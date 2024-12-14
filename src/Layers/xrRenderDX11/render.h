@@ -201,7 +201,7 @@ private:
 
 	BOOL add_Dynamic(dxRender_Visual* pVisual, u32 planes); // normal processing
 	void add_Static(dxRender_Visual* pVisual, u32 planes);
-	void add_leafs_Dynamic(dxRender_Visual* pVisual, bool bIgnoreOpt = true); // if detected node's full visibility
+	void add_leafs_Dynamic(dxRender_Visual* pVisual); // if detected node's full visibility
 	void add_leafs_Static(dxRender_Visual* pVisual); // if detected node's full visibility
 
 public:
@@ -263,91 +263,91 @@ public:
 
 public:
 	// feature level
-	virtual GenerationLevel get_generation() { return IRender::GENERATION_R2; }
-	virtual bool is_sun_static() { return o.sunstatic; }
-	virtual DWORD get_dx_level() { return HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1 ? 0x000A0001 : 0x000A0000; }
+	GenerationLevel get_generation() override { return IRender::GENERATION_R2; }
+	bool is_sun_static() override { return o.sunstatic; }
+	DWORD get_dx_level() override { return HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1 ? 0x000A0001 : 0x000A0000; }
 	// Loading / Unloading
-	virtual void create();
-	virtual void destroy();
-	virtual void reset_begin();
-	virtual void reset_end();
+	void create() override;
+	void destroy() override;
+	void reset_begin() override;
+	void reset_end() override;
 
-	virtual void level_Load(IReader*);
-	virtual void level_Unload();
+	void level_Load(IReader*) override;
+	void level_Unload() override;
 
 	ID3DBaseTexture* texture_load(LPCSTR fname, u32& msize);
-	virtual HRESULT shader_compile(LPCSTR name, IReader* fs, LPCSTR pFunctionName, LPCSTR pTarget, DWORD Flags,
-		void*& result);
+	HRESULT shader_compile(LPCSTR name, IReader* fs, LPCSTR pFunctionName, LPCSTR pTarget, DWORD Flags,
+		void*& result) override;
 
 	// Information
-	virtual void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert) override;
-	virtual ref_shader getShader(int id);
-	virtual IRender_Sector* getSector(int id);
-	virtual IRenderVisual* getVisual(int id);
-	virtual IRender_Sector* detectSector(const Fvector& P);
-	virtual IRender_Target* getTarget();
+	void DumpStatistics(class IGameFont& font, class IPerformanceAlert* alert) override;
+	ref_shader getShader(int id);
+	IRender_Sector* getSector(int id) override;
+	IRenderVisual* getVisual(int id) override;
+	IRender_Sector* detectSector(const Fvector& P) override;
+	IRender_Target* getTarget() override;
 
 	// Main
-	virtual void flush();
-	virtual void set_Object(IRenderable* O);
-	virtual void add_Occluder(Fbox2& bb_screenspace); // mask screen region as oclluded
-	virtual void add_Visual(IRenderVisual* V, bool ignore_opt = false); // add visual leaf	(no culling performed at all)
-	virtual void add_Geometry(IRenderVisual* V); // add visual(s)	(all culling performed)
+	void flush() override;
+	void set_Object(IRenderable* O) override;
+	void add_Occluder(Fbox2& bb_screenspace) override; // mask screen region as oclluded
+	void add_Visual(IRenderVisual* V) override; // add visual leaf	(no culling performed at all)
+	void add_Geometry(IRenderVisual* V) override; // add visual(s)	(all culling performed)
 
 	// wallmarks
-	virtual void add_StaticWallmark(ref_shader& S, const Fvector& P, float s, CDB::TRI* T, Fvector* V);
-	virtual void add_StaticWallmark(IWallMarkArray* pArray, const Fvector& P, float s, CDB::TRI* T, Fvector* V);
-	virtual void add_StaticWallmark(const wm_shader& S, const Fvector& P, float s, CDB::TRI* T, Fvector* V);
-	virtual void clear_static_wallmarks();
-	virtual void add_SkeletonWallmark(intrusive_ptr<CSkeletonWallmark> wm);
-	virtual void add_SkeletonWallmark(
+	void add_StaticWallmark(ref_shader& S, const Fvector& P, float s, CDB::TRI* T, Fvector* V);
+	void add_StaticWallmark(IWallMarkArray* pArray, const Fvector& P, float s, CDB::TRI* T, Fvector* V) override;
+	void add_StaticWallmark(const wm_shader& S, const Fvector& P, float s, CDB::TRI* T, Fvector* V) override;
+	void clear_static_wallmarks() override;
+	void add_SkeletonWallmark(intrusive_ptr<CSkeletonWallmark> wm);
+	void add_SkeletonWallmark(
 		const Fmatrix* xf, CKinematics* obj, ref_shader& sh, const Fvector& start, const Fvector& dir, float size);
-	virtual void add_SkeletonWallmark(const Fmatrix* xf, IKinematics* obj, IWallMarkArray* pArray, const Fvector& start,
-		const Fvector& dir, float size);
+	void add_SkeletonWallmark(const Fmatrix* xf, IKinematics* obj, IWallMarkArray* pArray, const Fvector& start,
+		const Fvector& dir, float size) override;
 
 	//
-	virtual IBlender* blender_create(CLASS_ID cls);
-	virtual void blender_destroy(IBlender*&);
+	IBlender* blender_create(CLASS_ID cls);
+	void blender_destroy(IBlender*&);
 
 	//
-	virtual IRender_ObjectSpecific* ros_create(IRenderable* parent);
-	virtual void ros_destroy(IRender_ObjectSpecific*&);
+	IRender_ObjectSpecific* ros_create(IRenderable* parent) override;
+	void ros_destroy(IRender_ObjectSpecific*&) override;
 
 	// Lighting
-	virtual IRender_Light* light_create();
-	virtual IRender_Glow* glow_create();
+	IRender_Light* light_create() override;
+	IRender_Glow* glow_create() override;
 
 	// Models
-	virtual IRenderVisual* model_CreateParticles(LPCSTR name);
-	virtual IRender_DetailModel* model_CreateDM(IReader* F);
-	virtual IRenderVisual* model_Create(LPCSTR name, IReader* data = 0);
-	virtual IRenderVisual* model_CreateChild(LPCSTR name, IReader* data);
-	virtual IRenderVisual* model_Duplicate(IRenderVisual* V);
-	virtual void model_Delete(IRenderVisual*& V, BOOL bDiscard);
-	virtual void model_Delete(IRender_DetailModel*& F);
-	virtual void model_Logging(BOOL bEnable) { Models->Logging(bEnable); }
-	virtual void models_Prefetch();
-	virtual void models_Clear(BOOL b_complete);
+	IRenderVisual* model_CreateParticles(LPCSTR name) override;
+	IRender_DetailModel* model_CreateDM(IReader* F);
+	IRenderVisual* model_Create(LPCSTR name, IReader* data = 0) override;
+	IRenderVisual* model_CreateChild(LPCSTR name, IReader* data) override;
+	IRenderVisual* model_Duplicate(IRenderVisual* V) override;
+	void model_Delete(IRenderVisual*& V, BOOL bDiscard) override;
+	void model_Delete(IRender_DetailModel*& F);
+	void model_Logging(BOOL bEnable) override { Models->Logging(bEnable); }
+	void models_Prefetch() override;
+	void models_Clear(BOOL b_complete) override;
 
 	// Occlusion culling
-	virtual BOOL occ_visible(vis_data& V);
-	virtual BOOL occ_visible(Fbox& B);
-	virtual BOOL occ_visible(sPoly& P);
+	BOOL occ_visible(vis_data& V) override;
+	BOOL occ_visible(Fbox& B) override;
+	BOOL occ_visible(sPoly& P) override;
 
 	// Main
-	virtual void Calculate();
-	virtual void Render();
-	virtual void Screenshot(ScreenshotMode mode = SM_NORMAL, LPCSTR name = 0);
-	virtual void ScreenshotAsyncBegin();
-	virtual void ScreenshotAsyncEnd(CMemoryWriter& memory_writer);
-	virtual void OnFrame();
+	void Calculate() override;
+	void Render() override;
+	void Screenshot(ScreenshotMode mode = SM_NORMAL, LPCSTR name = 0) override;
+	void ScreenshotAsyncBegin() override;
+	void ScreenshotAsyncEnd(CMemoryWriter& memory_writer) override;
+	void OnFrame() override;
 
 	void AfterWorldRender() override;  //--#SM+#-- +SecondVP+ Вызывается после рендера мира и перед UI
 
 	// Render mode
-	virtual void rmNear();
-	virtual void rmFar();
-	virtual void rmNormal();
+	void rmNear() override;
+	void rmFar() override;
+	void rmNormal() override;
 
 	u32 active_phase() override { return phase; }
 

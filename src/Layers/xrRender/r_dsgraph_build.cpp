@@ -342,36 +342,37 @@ void D3DXRenderBase::r_dsgraph_insert_static(dxRender_Visual* pVisual)
 		val_recorder->push_back(pVisual->vis.box);
 }
 
-IC bool VisibleToRender(IRenderVisual* pVisual, bool isStatic, bool sm, Fmatrix& transform_matrix, bool ignore_optimize = false)
+constexpr float ps_r__render_distance = 144400.f;
+IC bool VisibleToRender(IRenderVisual* pVisual, bool isStatic, bool phase_smap, Fmatrix& transform_matrix)
 {
-	if (ignore_optimize)
+	if(opt_static == 0 && opt_dynamic == 0 && opt_shadow == 0)
 		return true;
 
-	if(opt_static == 0 && opt_dynamic == 0 && opt_shadow == 0 || ps_r__render_distance_sqr == 0.f)
-		return true;
+	float sphere_radius_sqr = isStatic || phase_smap ? _sqr(pVisual->getVisData().sphere.R) : pVisual->getVisData().sphere.R;
 
-	float sphere_radius_sqr = isStatic || sm ? _sqr(pVisual->getVisData().sphere.R) : pVisual->getVisData().sphere.R;
-
-	if (isStatic)
-		pVisual->update_distance_to_camera();
-	else
+	if (!phase_smap)
 	{
-		// dynamic geometry position needs to be transformed by transform matrix, to get world coordinates, dont forget ;)
-		pVisual->update_distance_to_camera(&transform_matrix);
+		if (isStatic)
+			pVisual->update_distance_to_camera();
+		else
+		{
+			// dynamic geometry position needs to be transformed by transform matrix, to get world coordinates, dont forget ;)
+			pVisual->update_distance_to_camera(&transform_matrix);
+		}
 	}
 
 	float adjusted_dist = pVisual->getDistanceToCamera();
-	if (sm) // Highest cut off for shadow map
+	if (phase_smap) // Highest cut off for shadow map
 		adjusted_dist /= sphere_radius_sqr / _sqr(opt_shadow);
 	else if (isStatic)
 		adjusted_dist /= sphere_radius_sqr / _sqr<float>(opt_static / 4.f);
-	else if(!isStatic)
+	else
 		adjusted_dist /= sphere_radius_sqr / _sqr<float>(opt_dynamic / 4.f);
 
-	if (adjusted_dist >= _sqr(g_pGamePersistent->Environment().CurrentEnv->fog_distance))
+	if (adjusted_dist > ps_r__render_distance)
 		return false;
 
-	if (adjusted_dist > 0.f && adjusted_dist > ps_r__render_distance_sqr)
+	if (adjusted_dist >= _sqr(g_pGamePersistent->Environment().CurrentEnv->fog_distance))
 		return false;
 
 	return true;
@@ -380,7 +381,7 @@ IC bool VisibleToRender(IRenderVisual* pVisual, bool isStatic, bool sm, Fmatrix&
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void CRender::add_leafs_Dynamic(dxRender_Visual* pVisual, bool bIgnoreOpt)
+void CRender::add_leafs_Dynamic(dxRender_Visual* pVisual)
 {
 	if (!pVisual)
 		return;
@@ -394,13 +395,13 @@ void CRender::add_leafs_Dynamic(dxRender_Visual* pVisual, bool bIgnoreOpt)
 		for (PS::CParticleGroup::SItem& I : items)
 		{
 			if (I._effect)
-				add_leafs_Dynamic(I._effect, bIgnoreOpt);
+				add_leafs_Dynamic(I._effect);
 
 			for (dxRender_Visual* pit : I._children_related)
-				add_leafs_Dynamic(pit, bIgnoreOpt);
+				add_leafs_Dynamic(pit);
 
 			for (dxRender_Visual* pit : I._children_free)
-				add_leafs_Dynamic(pit, bIgnoreOpt);
+				add_leafs_Dynamic(pit);
 		}
 	}
 	return;
@@ -431,7 +432,7 @@ void CRender::add_leafs_Dynamic(dxRender_Visual* pVisual, bool bIgnoreOpt)
 		}
 
 		if (use_lod)
-			add_leafs_Dynamic(pV->m_lod, bIgnoreOpt);
+			add_leafs_Dynamic(pV->m_lod);
 		else
 		{
 			//pV->CalculateBones(TRUE);

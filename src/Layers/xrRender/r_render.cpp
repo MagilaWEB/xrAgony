@@ -188,7 +188,7 @@ void CRender::render_main(bool deffered)
 
 			RenderData& render_data = renderable->GetRenderData();
 
-			extern bool VisibleToRender(IRenderVisual* pVisual, bool isStatic, bool sm, Fmatrix& transform_matrix, bool ignore_optimize = false);
+			extern bool VisibleToRender(IRenderVisual* pVisual, bool isStatic, bool phase_smap, Fmatrix& transform_matrix);
 
 			if(!VisibleToRender(render_data.visual, false, false, render_data.xform))
 				continue;

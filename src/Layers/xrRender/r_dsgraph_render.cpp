@@ -490,7 +490,7 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 				if (auto renderable = spatial->dcast_Renderable())
 				{
 					RenderData& render_data = renderable->GetRenderData();
-					extern bool VisibleToRender(IRenderVisual * pVisual, bool isStatic, bool sm, Fmatrix & transform_matrix, bool ignore_optimize = false);
+					extern bool VisibleToRender(IRenderVisual * pVisual, bool isStatic, bool phase_smap, Fmatrix & transform_matrix);
 
 					if (!VisibleToRender(render_data.visual, false, true, render_data.xform))
 						return;

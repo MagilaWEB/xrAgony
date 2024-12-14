@@ -191,9 +191,9 @@ float ps_r3_dyn_wet_surf_near = 10.f; // 10.0f
 float ps_r3_dyn_wet_surf_far = 30.f; // 30.0f
 int ps_r3_dyn_wet_surf_sm_res = 256; // 256
 
-int opt_static = 0;
-int opt_dynamic = 0;
-int opt_shadow = 1;
+int opt_static = 8;
+int opt_dynamic = 8;
+int opt_shadow = 8;
 
 // AVO: detail draw radius
 Flags32		ps_common_flags = { 0 };// r1-only
@@ -652,9 +652,6 @@ public:
 };
 #endif // DEBUG
 
-float		ps_r__render_distance = 250.f;
-float		ps_r__render_distance_sqr = 62500.f;
-
 //-----------------------------------------------------------------------
 void xrRender_initconsole()
 {
@@ -867,19 +864,5 @@ void xrRender_initconsole()
 	CMD1(CCC_memory_stats, "render_memory_stats");
 
 	// CMD3(CCC_Mask, "r2_sun_ignore_portals", &ps_r2_ls_flags, R2FLAG_SUN_IGNORE_PORTALS);
-
-	class CCC_RenderDistance : public CCC_Float
-	{
-	public:
-		CCC_RenderDistance(LPCSTR N, float* V, float _min, float _max) : CCC_Float(N, V, _min, _max) {}
-
-		void Execute(LPCSTR args) override
-		{
-			__super::Execute(args);
-			ps_r__render_distance_sqr = _sqr(ps_r__render_distance);
-		}
-	};
-	
-	CMD4(CCC_RenderDistance, "r__render_distance", &ps_r__render_distance, 0.f, 3000.f);
 }
 #endif
