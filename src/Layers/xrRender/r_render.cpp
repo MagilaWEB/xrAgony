@@ -301,7 +301,6 @@ void CRender::Render()
 	// HOM
 	View = 0;
 	HOM.Enable();
-	HOM.Render(::IDevice->cast()->ViewFromMatrix);
 
 	//******* Z-prefill calc - DEFERRER RENDERER
 	Target->phase_scene_prepare();

@@ -111,10 +111,15 @@ void CHOM::Load()
 	bEnabled = TRUE;
 	S->close();
 	FS.r_close(fs);
+
+	mt_hom.Init([this]() {
+		Frame();
+	}, xrThread::sParalelFrame);
 }
 
 void CHOM::Unload()
 {
+	mt_hom.Stop();
 	xr_delete(m_pModel);
 	xr_free(m_pTris);
 	bEnabled = FALSE;
@@ -175,10 +180,10 @@ void CHOM::Render_DB(CFrustum& base)
 	stats.VisibleTriangleCount = 0;
 
 	// Perfrom selection, sorting, culling
-	for (auto& it : *xrc.r_get())
+	for (CDB::RESULT& result : *xrc.r_get())
 	{
 		// Control skipping
-		occTri& T = m_pTris[it.id];
+		occTri& T = m_pTris[result.id];
 		u32 next = _frame + ::Random.randI(3, 10);
 
 		// Test for good occluder - should be improved :)
@@ -189,7 +194,7 @@ void CHOM::Render_DB(CFrustum& base)
 		}
 
 		// Access to triangle vertices
-		CDB::TRI& t = m_pModel->get_tris()[it.id];
+		CDB::TRI& t = m_pModel->get_tris()[result.id];
 		Fvector* v = m_pModel->get_verts();
 		src.clear();
 		dst.clear();
@@ -214,22 +219,20 @@ void CHOM::Render_DB(CFrustum& base)
 			m_xform.transform(T.raster[2], (*P)[v2 + 1]);
 			pixels += Raster.rasterize(&T);
 		}
+
 		if (0 == pixels)
-		{
 			T.skip = next;
-			continue;
-		}
 	}
 }
 
-void CHOM::Render(CFrustum& base)
+void CHOM::Frame()
 {
 	if (!bEnabled)
 		return;
 
 	stats.Total.Begin();
 	Raster.clear();
-	Render_DB(base);
+	Render_DB(::IDevice->cast()->ViewFromMatrix);
 	Raster.propagade();
 	stats.Total.End();
 }

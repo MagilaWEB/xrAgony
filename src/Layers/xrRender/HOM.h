@@ -37,6 +37,7 @@ private:
 	BOOL bEnabled;
 	Fmatrix m_xform;
 	Fmatrix m_xform_01;
+	xrThread mt_hom{ "HOM FRAME", true, true };
 
 	HOMStatistics stats;
 
@@ -45,7 +46,7 @@ private:
 public:
 	void Load();
 	void Unload();
-	void Render(CFrustum& base);
+	void Frame();
 	//void Render_ZB();
 	//	void					Debug		();
 
