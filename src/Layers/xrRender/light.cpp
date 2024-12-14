@@ -36,7 +36,6 @@ light::light(void) : SpatialBase(g_SpatialSpace)
 	vis.query_order = 0;
 	vis.visible = true;
 	vis.pending = false;
-	m_sectors = {};
 }
 
 light::~light()
@@ -49,8 +48,6 @@ light::~light()
 
 	if (vis.pending)
 		RImplementation.occq_free(vis.query_id);
-
-	m_sectors.clear();
 }
 
 void light::set_texture(LPCSTR name)
@@ -178,31 +175,6 @@ void light::set_rotation(const Fvector& D, const Fvector& R)
 		spatial_move();
 }
 
-void light::get_sectors()
-{
-	if (0 == spatial.sector)
-		spatial_updatesector();
-
-	CSector* sector = (CSector*)spatial.sector;
-	if (0 == sector) return;
-
-	if (flags.type == IRender_Light::SPOT)
-	{
-		if (X.S.combine.has_inited())
-			RImplementation.LR.compute_xf_spot(this);
-
-		CFrustum temp;
-		temp.CreateFromMatrix(X.S.combine, FRUSTUM_P_ALL);
-
-		m_sectors = RImplementation.detectSectors_frustum(sector, &temp);
-	}
-	else
-	if (flags.type == IRender_Light::POINT)
-	{
-		m_sectors = RImplementation.detectSectors_sphere(sector, position, Fvector().set(range, range, range));
-	}
-}
-
 void light::spatial_move()
 {
 	switch (flags.type)
@@ -247,8 +219,6 @@ void light::spatial_move()
 	SpatialBase::spatial_move();
 
 	svis.invalidate();
-	if (RImplementation.Sectors.size() > 1)
-		get_sectors();
 }
 
 vis_data& light::get_homdata()
@@ -433,8 +403,8 @@ extern float r_ssaGLOD_start, r_ssaGLOD_end;
 extern float ps_r2_slight_fade;
 float light::get_LOD()
 {
-	float distSQ = ::IDevice->cast()->vCameraPosition.distance_to_sqr(spatial.sphere.P) + EPS;
-	float ssa = ps_r2_slight_fade * spatial.sphere.R / distSQ;
-	float lod = _sqrt(clampr((ssa - r_ssaGLOD_end) / (r_ssaGLOD_start - r_ssaGLOD_end), 0.f, 1.f));
+	const float distSQ = ::IDevice->cast()->vCameraPosition.distance_to_sqr(spatial.sphere.P) + EPS;
+	const float ssa = ps_r2_slight_fade * spatial.sphere.R / distSQ;
+	const float lod = _sqrt(clampr((ssa - r_ssaGLOD_end) / (r_ssaGLOD_start - r_ssaGLOD_end), 0.f, 1.f));
 	return lod;
 }

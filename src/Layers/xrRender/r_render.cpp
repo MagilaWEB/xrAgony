@@ -147,16 +147,16 @@ void CRender::render_main(bool deffered)
 		// Traverse frustums
 		for (ISpatial* spatial : lstRenderables)
 		{
-			if (0 == spatial)
-				continue;
-
 			spatial->spatial_updatesector();
 
 			SpatialData& spatial_data = spatial->GetSpatialData();
 
 			CSector* sector = reinterpret_cast<CSector*>(spatial_data.sector);
 
-			if (0 == sector)
+			if (!sector)
+				continue;
+
+			if (PortalTraverser.i_marker != sector->r_marker)
 				continue;
 
 			static Fbox sp_box;
@@ -178,25 +178,7 @@ void CRender::render_main(bool deffered)
 			{
 				// lightsource
 				if (light* L = reinterpret_cast<light*>(spatial->dcast_Light()))
-				{
-					if (L->get_LOD() > EPS_L)
-					{
-						if (dont_test_sectors)
-							Lights.add_light(L);
-						else
-						{
-							for (auto& sector : L->m_sectors)
-							{
-								CSector* sector_ = reinterpret_cast<CSector*>(sector);
-								if (PortalTraverser.i_marker == sector_->r_marker)
-								{
-									Lights.add_light(L);
-									break;
-								}
-							}
-						}
-					}
-				}
+					Lights.add_light(L);
 				continue;
 			}
 
@@ -204,16 +186,18 @@ void CRender::render_main(bool deffered)
 			if (!renderable)
 				continue;
 
+			RenderData& render_data = renderable->GetRenderData();
+
 			extern bool VisibleToRender(IRenderVisual* pVisual, bool isStatic, bool sm, Fmatrix& transform_matrix, bool ignore_optimize = false);
 
-			if(!VisibleToRender(renderable->GetRenderData().visual, false, false, renderable->GetRenderData().xform))
+			if(!VisibleToRender(render_data.visual, false, false, render_data.xform))
 				continue;
 
 			if (dont_test_sectors)
 			{
 				if (spatial_data.type & STYPE_RENDERABLE && psDeviceFlags.test(rsDrawDynamic))
 				{
-					if (auto pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
+					if (auto pKin = reinterpret_cast<CKinematics*>(render_data.visual))
 					{
 						pKin->CalculateBones(TRUE);
 						pKin->CalculateWallmarks();
@@ -233,7 +217,7 @@ void CRender::render_main(bool deffered)
 					set_Object(nullptr);
 				}
 			}
-			else if (PortalTraverser.i_marker == sector->r_marker)
+			else
 			{
 				for (auto& view : sector->r_frustums)
 				{
@@ -242,7 +226,7 @@ void CRender::render_main(bool deffered)
 
 					if (spatial_data.type & STYPE_RENDERABLE && psDeviceFlags.test(rsDrawDynamic))
 					{
-						if (auto pKin = reinterpret_cast<CKinematics*>(renderable->GetRenderData().visual))
+						if (auto pKin = reinterpret_cast<CKinematics*>(render_data.visual))
 						{
 							pKin->CalculateBones(TRUE);
 							pKin->CalculateWallmarks();
@@ -346,7 +330,6 @@ void CRender::Render()
 
 	//******* Occlusion testing of volume-limited light-sources
 	Target->phase_occq();
-	LP_normal.clear();
 
 	if (RImplementation.o.dx10_msaa)
 		RCache.set_ZB(RImplementation.Target->rt_MSAADepth->pZRT);
@@ -363,12 +346,8 @@ void CRender::Render()
 		Stats.l_total = Stats.l_shadowed + Stats.l_unshadowed;
 
 		// perform tests
-		LP_normal.v_point = LP.v_point;
-		LP_normal.v_shadowed = LP.v_shadowed;
-		LP_normal.v_spot = LP.v_spot;
-		LP_normal.vis_prepare();
+		Lights.package.vis_prepare();
 	}
-	LP_normal.sort();
 
 	if (g_pGameLevel && psDeviceFlags.test(rsDrawDynamic))
 		g_hud->Render_Last();// HUD
@@ -451,8 +430,8 @@ void CRender::Render()
 		PIX_EVENT(DEFER_LIGHT_NO_OCCQ);
 		Target->phase_accumulator();
 		HOM.Disable();
-		LP_normal.vis_update();
-		render_lights(LP_normal);
+		Lights.package.vis_update();
+		render_lights(Lights.package);
 	}
 
 	// Lighting, dependant on OCCQ

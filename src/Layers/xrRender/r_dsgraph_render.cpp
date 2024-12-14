@@ -484,30 +484,30 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 
 			if (CSector* sector = reinterpret_cast<CSector*>(spatial_data.sector))// disassociated from S/P structure
 			{
-				if (PortalTraverser.i_marker == sector->r_marker)
+				if (PortalTraverser.i_marker != sector->r_marker)
+					return;
+
+				if (auto renderable = spatial->dcast_Renderable())
 				{
-					if (auto renderable = spatial->dcast_Renderable())
+					RenderData& render_data = renderable->GetRenderData();
+					extern bool VisibleToRender(IRenderVisual * pVisual, bool isStatic, bool sm, Fmatrix & transform_matrix, bool ignore_optimize = false);
+
+					if (!VisibleToRender(render_data.visual, false, true, render_data.xform))
+						return;
+
+					for (CFrustum& frustum : sector->r_frustums)
 					{
-						RenderData& render_data = renderable->GetRenderData();
-						extern bool VisibleToRender(IRenderVisual * pVisual, bool isStatic, bool sm, Fmatrix & transform_matrix, bool ignore_optimize = false);
+						set_Frustum(&frustum);
 
-						if (!VisibleToRender(render_data.visual, false, true, render_data.xform))
-							return;
-
-						for (CFrustum& frustum : sector->r_frustums)
+						u32 mask = 0xff;
+						if (View->testSAABB(spatial_data.sphere.P, spatial_data.sphere.R,
+							render_data.visual->getVisData().box.data(), mask) != fcvFully)
 						{
-							set_Frustum(&frustum);
-							
-							u32 mask = 0xff;
-							if (View->testSAABB(spatial_data.sphere.P, spatial_data.sphere.R,
-								render_data.visual->getVisData().box.data(), mask) != fcvFully)
-							{
-								if (CKinematics* pKin = reinterpret_cast<CKinematics*>(render_data.visual))
-									pKin->CalculateBones(TRUE);
+							if (CKinematics* pKin = reinterpret_cast<CKinematics*>(render_data.visual))
+								pKin->CalculateBones(TRUE);
 
-								renderable->renderable_Render();
-								break;
-							}
+							renderable->renderable_Render();
+							break;
 						}
 					}
 				}

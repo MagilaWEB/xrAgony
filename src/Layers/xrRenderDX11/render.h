@@ -176,7 +176,6 @@ public:
 	CLight_DB Lights;
 	CLight_Compute_XFORM_and_VIS LR;
 	SMAP_Allocator LP_smap_pool;
-	light_Package LP_normal;
 	//light_Package LP_pending;
 
 	xr_vector<Fbox3> main_coarse_structure;
@@ -226,8 +225,6 @@ public:
 	IRender_Sector* getSectorActive();
 	IRenderVisual* model_CreatePE(LPCSTR name);
 	IRender_Sector* detectSector(const Fvector& P, Fvector& D);
-	xr_vector<IRender_Sector*> detectSectors_sphere(CSector* sector, const Fvector& b_center, const Fvector& b_dim);
-	xr_vector<IRender_Sector*> detectSectors_frustum(CSector* sector, CFrustum* _frustum);
 	int translateSector(IRender_Sector* pSector);
 
 	// HW-occlusion culling

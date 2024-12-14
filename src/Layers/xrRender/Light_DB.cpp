@@ -175,7 +175,8 @@ void CLight_DB::add_light(light* L)
 	if (L->flags.bStatic)		//&& !ps_r2_ls_flags.test(R2FLAG_R1LIGHTS)
 		return;
 
-	L->Export(package);
+	if(L->get_LOD() > EPS_L)
+		L->Export(package);
 }
 
 void CLight_DB::Update()

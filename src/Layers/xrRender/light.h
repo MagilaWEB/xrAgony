@@ -37,8 +37,6 @@ public:
 	float m_volumetric_intensity;
 	float m_volumetric_distance;
 
-	xr_vector<IRender_Sector*> m_sectors{};
-
 #if defined(RENDER)
 	float falloff; // precalc to make light equal to zero at light range
 	float attenuation0; // Constant attenuation
@@ -101,7 +99,6 @@ public:
 #endif
 
 public:
-	virtual void get_sectors();
 	virtual void set_type(LT type) { flags.type = type; }
 	virtual void set_active(bool b);
 	virtual bool get_active() { return flags.bActive; }

@@ -63,12 +63,14 @@ void light::vis_update()
 		return;
 	}
 
+	size_t frame = ::IDevice->TimeGlobal_ms();
+	if (frame < vis.frame2test)
+		return;
+
 	u64 fragments = RImplementation.occq_get(vis.query_id);
-	// Log					("",fragments);
-	vis.visible = (fragments > cullfragments);
 	vis.pending = false;
-	if (vis.visible)
-		vis.frame2test = ::IDevice->TimeGlobal_ms() + 200;
+	if (vis.visible = (fragments > cullfragments))
+		vis.frame2test = frame + 200;
 	else
-		vis.frame2test = ::IDevice->TimeGlobal_ms() + 40;
+		vis.frame2test = frame + 40;
 }

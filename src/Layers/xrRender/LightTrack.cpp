@@ -160,7 +160,9 @@ void CROS_impl::update(IRenderable* O)
 	dwFrame = ::IDevice->getFrame();
 	if (nullptr == O)
 		return;
-	if (nullptr == O->GetRenderData().visual)
+
+	RenderData& render_data = O->GetRenderData();
+	if (nullptr == render_data.visual)
 		return;
 	VERIFY(dynamic_cast<CROS_impl*>(O->renderable_ROS()));
 	// float	dt			=	::IDevice->TimeDelta_sec();
@@ -168,9 +170,9 @@ void CROS_impl::update(IRenderable* O)
 	IGameObject* _object = dynamic_cast<IGameObject*>(O);
 
 	// select sample, randomize position inside object
-	vis_data& vis = O->GetRenderData().visual->getVisData();
+	vis_data& vis = render_data.visual->getVisData();
 	Fvector position;
-	O->GetRenderData().xform.transform_tiny(position, vis.sphere.P);
+	render_data.xform.transform_tiny(position, vis.sphere.P);
 	position.y += .3f * vis.sphere.R;
 	Fvector direction;
 	direction.random_dir();
@@ -281,7 +283,9 @@ void CROS_impl::smart_update(IRenderable* O)
 {
 	if (!O)
 		return;
-	if (0 == O->GetRenderData().visual)
+
+	RenderData& render_data = O->GetRenderData();
+	if (nullptr == render_data.visual)
 		return;
 
 	--ticks_to_update;
@@ -289,8 +293,8 @@ void CROS_impl::smart_update(IRenderable* O)
 	//	Acquire current position
 	Fvector position;
 	VERIFY(dynamic_cast<CROS_impl*>(O->renderable_ROS()));
-	vis_data& vis = O->GetRenderData().visual->getVisData();
-	O->GetRenderData().xform.transform_tiny(position, vis.sphere.P);
+	vis_data& vis = render_data.visual->getVisData();
+	render_data.xform.transform_tiny(position, vis.sphere.P);
 
 	if (ticks_to_update <= 0)
 	{
