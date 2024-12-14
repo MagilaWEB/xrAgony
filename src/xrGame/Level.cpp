@@ -337,9 +337,9 @@ void CLevel::OnFrame()
 
 	::IDevice->cast()->add_parallel2(m_map_manager, &CMapManager::Update);
 
-	if (IsGameTypeSingle() && ::IDevice->cast()->dwPrecacheFrame == 0)
+	if (IsGameTypeSingle() && ::IDevice->IsGameProcess())
 	{
-		::IDevice->cast()->add_parallel(m_game_task_manager, &CGameTaskManager::UpdateTasks);
+		::IDevice->cast()->add_parallel(&GameTaskManager(), &CGameTaskManager::UpdateTasks);
 		//GameTaskManager().UpdateTasks();
 	}
 	// Inherited update
