@@ -55,19 +55,4 @@ void CRender::Calculate()
 
 	//
 	Lights.Update();
-
-	// Check if we touch some light even trough portal
-	g_SpatialSpace->q_sphere_it([&](ISpatial* spatial) -> void
-	{
-		spatial->spatial_updatesector();
-		CSector* sector = reinterpret_cast<CSector*>(spatial->GetSpatialData().sector);
-		if (0 == sector)
-			return; // disassociated from S/P structure
-
-		VERIFY(spatial->GetSpatialData().type & STYPE_LIGHTSOURCE);
-		// lightsource
-		light* L = reinterpret_cast<light*>(spatial->dcast_Light());
-		VERIFY(L);
-		Lights.add_light(L);
-	}, 0, STYPE_LIGHTSOURCE, ::IDevice->cast()->vCameraPosition, EPS_L);
 }

@@ -181,14 +181,13 @@ void CRender::render_main(bool deffered)
 				{
 					if (L->get_LOD() > EPS_L)
 					{
-
 						if (dont_test_sectors)
 							Lights.add_light(L);
 						else
 						{
-							for (u32 s_it = 0; s_it < L->m_sectors.size(); s_it++)
+							for (auto& sector : L->m_sectors)
 							{
-								CSector* sector_ = reinterpret_cast<CSector*>(L->m_sectors[s_it]);
+								CSector* sector_ = reinterpret_cast<CSector*>(sector);
 								if (PortalTraverser.i_marker == sector_->r_marker)
 								{
 									Lights.add_light(L);
