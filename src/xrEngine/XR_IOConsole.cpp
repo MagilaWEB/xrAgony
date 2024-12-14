@@ -80,7 +80,6 @@ CConsole::CConsole()
 	m_cmd_history_max = cmd_history_max;
 	m_disable_tips = false;
 	Register_callbacks();
-	::IDevice->cast()->seqResolutionChanged.Add(this);
 }
 
 void CConsole::Initialize()
@@ -106,7 +105,6 @@ CConsole::~CConsole()
 	xr_delete(m_hShader_back);
 	xr_delete(m_editor);
 	Destroy();
-	::IDevice->cast()->seqResolutionChanged.Remove(this);
 }
 
 void CConsole::Destroy()
@@ -161,12 +159,6 @@ void CConsole::OutFont(LPCSTR text, float& pos_y)
 	}
 	else
 		pFont->OutI(-1.0f, pos_y, "%s", text);
-}
-
-void CConsole::OnScreenResolutionChanged()
-{
-	xr_delete(pFont);
-	xr_delete(pFont2);
 }
 
 void CConsole::OnRender()

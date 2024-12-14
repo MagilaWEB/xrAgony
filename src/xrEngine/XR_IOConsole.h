@@ -50,7 +50,7 @@ struct TipString
 	IC bool operator==(shared_str const& tips_text) { return (text == tips_text); }
 };
 
-class ENGINE_API CConsole : public pureRender, public pureFrame, public pureScreenResolutionChanged
+class ENGINE_API CConsole : public pureRender, public pureFrame
 {
 public:
 	struct str_pred
@@ -128,7 +128,6 @@ public:
 
 	virtual void OnRender();
 	virtual void OnFrame();
-	virtual void OnScreenResolutionChanged();
 	string64 ConfigFile;
 	bool bVisible{};
 	vecCMD Commands;
