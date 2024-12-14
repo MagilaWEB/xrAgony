@@ -78,10 +78,12 @@ public:
 		return callback_check_dist;
 	};
 
-	float get_distance_to_camera_base(Fmatrix* transform_matrix = nullptr) override;
-	float getDistanceToCamera(Fmatrix* transform_matrix = nullptr) override;
+	void update_distance_to_camera(Fmatrix* transform_matrix = nullptr) override;
+	float get_distance_to_camera_base() const override;
+	float getDistanceToCamera() const override;
 private:
 	fastdelegate::FastDelegate<void(float dist)> callback_check_dist;
-	float m_distance = 0.f;
-	float m_next_distance_update_time = 0.f;
+	float m_distance{ 0.f };
+	size_t m_next_distance_update_time{ 0 };
+	size_t m_random_period_dist_update_time{ 0 };
 };

@@ -1473,7 +1473,7 @@ void CGameObject::calc_next_update_time()
 	float dist = 0.f;
 	
 	if (Visual())
-		dist = Visual()->get_distance_to_camera_base(&XFORM());
+		dist = Visual()->get_distance_to_camera_base();
 
 	switch (b_visibility_status)
 	{

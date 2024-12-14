@@ -352,16 +352,15 @@ IC bool VisibleToRender(IRenderVisual* pVisual, bool isStatic, bool sm, Fmatrix&
 
 	float sphere_radius_sqr = isStatic || sm ? _sqr(pVisual->getVisData().sphere.R) : pVisual->getVisData().sphere.R;
 
-	float adjusted_dist = 0;
-
 	if (isStatic)
-		adjusted_dist = pVisual->getDistanceToCamera();
+		pVisual->update_distance_to_camera();
 	else
 	{
 		// dynamic geometry position needs to be transformed by transform matrix, to get world coordinates, dont forget ;)
-		adjusted_dist = pVisual->getDistanceToCamera(&transform_matrix);
+		pVisual->update_distance_to_camera(&transform_matrix);
 	}
 
+	float adjusted_dist = pVisual->getDistanceToCamera();
 	if (sm) // Highest cut off for shadow map
 		adjusted_dist /= sphere_radius_sqr / _sqr(opt_shadow);
 	else if (isStatic)

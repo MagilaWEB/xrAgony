@@ -12,8 +12,6 @@
 #include "FBasicVisual.h"
 #include "xrCore/FMesh.hpp"
 
-constexpr float distance_update_period = 1.f;
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -26,6 +24,7 @@ IRender_Mesh::~IRender_Mesh()
 
 dxRender_Visual::dxRender_Visual()
 {
+	m_random_period_dist_update_time = ::Random.randI(300, 900);
 	Type = 0;
 	shader = nullptr;
 	vis.clear();
@@ -89,9 +88,9 @@ void dxRender_Visual::Copy(dxRender_Visual* pFrom)
 #endif
 }
 
-float dxRender_Visual::get_distance_to_camera_base(Fmatrix* transform_matrix)
+void dxRender_Visual::update_distance_to_camera(Fmatrix* transform_matrix)
 {
-	if (m_next_distance_update_time < IDevice->TimeGlobal_sec())
+	if (m_next_distance_update_time < ::IDevice->TimeGlobal_ms())
 	{
 		if (transform_matrix)
 		{
@@ -102,7 +101,7 @@ float dxRender_Visual::get_distance_to_camera_base(Fmatrix* transform_matrix)
 		else
 			m_distance = ::IDevice->cast()->vCameraPosition.distance_to_sqr(getVisData().sphere.P);
 
-		m_next_distance_update_time = IDevice->TimeGlobal_sec() + distance_update_period;
+		m_next_distance_update_time = ::IDevice->TimeGlobal_ms() + m_random_period_dist_update_time;
 
 		if (!callback_check_dist.empty())
 		{
@@ -110,10 +109,14 @@ float dxRender_Visual::get_distance_to_camera_base(Fmatrix* transform_matrix)
 			callback_check_dist.clear();
 		}
 	}
+}
+
+float dxRender_Visual::get_distance_to_camera_base() const
+{
 	return m_distance;
 }
 
-float dxRender_Visual::getDistanceToCamera(Fmatrix* transform_matrix)
+float dxRender_Visual::getDistanceToCamera() const
 {
-	return get_distance_to_camera_base(transform_matrix) * ::IDevice->cast()->iZoomSqr;
+	return get_distance_to_camera_base() * ::IDevice->cast()->iZoomSqr;
 }
