@@ -30,7 +30,9 @@ private:
 
 		void FrameEnd() { Total.FrameEnd(); }
 	};
+	size_t m_frame{ 0 };
 
+	FastLock Lock;
 	xrXRC xrc;
 	CDB::MODEL* m_pModel;
 	occTri* m_pTris;

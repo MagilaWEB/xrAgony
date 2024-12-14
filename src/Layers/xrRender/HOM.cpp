@@ -230,6 +230,12 @@ void CHOM::Frame()
 	if (!bEnabled)
 		return;
 
+	if (m_frame == ::IDevice->getFrame())
+		return;
+
+	m_frame = ::IDevice->getFrame();
+
+	FastLock::raii mt{ Lock };
 	stats.Total.Begin();
 	Raster.clear();
 	Render_DB(::IDevice->cast()->ViewFromMatrix);
