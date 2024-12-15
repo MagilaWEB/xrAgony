@@ -61,13 +61,16 @@ void CRender::render_main(bool deffered)
 		//!!!
 		{
 			// Traverse object database
-			g_SpatialSpace->q_frustum
-			(
-				lstRenderables,
-				ISpatial_DB::O_ORDERED,
-				STYPE_RENDERABLE + STYPE_RENDERABLESHADOW + STYPE_PARTICLE + STYPE_LIGHTSOURCE,
-				::IDevice->cast()->ViewFromMatrix
-			);
+			if (deffered)
+			{
+				g_SpatialSpace->q_frustum
+				(
+					lstRenderables,
+					ISpatial_DB::O_ORDERED,
+					STYPE_RENDERABLE + STYPE_RENDERABLESHADOW + STYPE_PARTICLE + STYPE_LIGHTSOURCE,
+					::IDevice->cast()->ViewFromMatrix
+				);
+			}
 
 			// (almost) Exact sorting order (front-to-back)
 	/*		if (!lstRenderables.empty())
@@ -156,9 +159,6 @@ void CRender::render_main(bool deffered)
 			if (!sector)
 				continue;
 
-			if (PortalTraverser.i_marker != sector->r_marker)
-				continue;
-
 			static Fbox sp_box;
 			sp_box.setb
 			(
@@ -174,13 +174,23 @@ void CRender::render_main(bool deffered)
 			if (!HOM.visible(sp_box))
 				continue;
 
-			if ((spatial_data.type & STYPE_LIGHTSOURCE) && deffered)
+			if (deffered && (spatial_data.type & STYPE_LIGHTSOURCE))
 			{
 				// lightsource
-				if (light* L = reinterpret_cast<light*>(spatial->dcast_Light()))
-					Lights.add_light(L);
+				if (PortalTraverser.i_marker == sector->r_marker)
+				{
+					if (light* L = reinterpret_cast<light*>(spatial->dcast_Light()))
+						Lights.add_light(L);
+				}
+				else if (light* L = reinterpret_cast<light*>(spatial->dcast_Light()))
+					if (L->position.distance_to_sqr(::IDevice->cast()->vCameraPosition) < (10 + _sqr(L->range)))
+						Lights.add_light(L);
+
 				continue;
 			}
+
+			if (PortalTraverser.i_marker != sector->r_marker)
+				continue;
 
 			auto renderable = spatial->dcast_Renderable();
 			if (!renderable)
@@ -195,7 +205,7 @@ void CRender::render_main(bool deffered)
 
 			if (dont_test_sectors)
 			{
-				if (spatial_data.type & STYPE_RENDERABLE && psDeviceFlags.test(rsDrawDynamic))
+				if (deffered && spatial_data.type & STYPE_RENDERABLE && psDeviceFlags.test(rsDrawDynamic))
 				{
 					if (auto pKin = reinterpret_cast<CKinematics*>(render_data.visual))
 					{
@@ -209,7 +219,7 @@ void CRender::render_main(bool deffered)
 					renderable->renderable_Render();
 					set_Object(nullptr);
 				}
-				else if (spatial_data.type & STYPE_PARTICLE && !deffered)
+				else if ((!deffered) && spatial_data.type & STYPE_PARTICLE)
 				{
 					// Rendering
 					set_Object(renderable);
@@ -224,7 +234,7 @@ void CRender::render_main(bool deffered)
 					if (!view.testSphere_dirty(spatial_data.sphere.P, spatial_data.sphere.R))
 						continue;
 
-					if (spatial_data.type & STYPE_RENDERABLE && psDeviceFlags.test(rsDrawDynamic))
+					if (deffered && spatial_data.type & STYPE_RENDERABLE && psDeviceFlags.test(rsDrawDynamic))
 					{
 						if (auto pKin = reinterpret_cast<CKinematics*>(render_data.visual))
 						{
@@ -237,7 +247,7 @@ void CRender::render_main(bool deffered)
 						renderable->renderable_Render();
 						set_Object(nullptr);
 					}
-					else if (spatial_data.type & STYPE_PARTICLE && !deffered)
+					else if ((!deffered) && spatial_data.type & STYPE_PARTICLE)
 					{
 						// Rendering
 						set_Object(renderable);
