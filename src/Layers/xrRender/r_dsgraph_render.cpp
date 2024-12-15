@@ -461,9 +461,9 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	PortalTraverser.traverse(_sector, ::IDevice->cast()->ViewFromMatrix, _cop, mCombined, 0);
 
 	// Determine visibility for static geometry hierrarhy
-	for (u32 s_it = 0; s_it < PortalTraverser.r_sectors.size(); s_it++)
+	for (IRender_Sector* i_sector : PortalTraverser.r_sectors)
 	{
-		CSector* sector = reinterpret_cast<CSector*>(PortalTraverser.r_sectors[s_it]);
+		CSector* sector = reinterpret_cast<CSector*>(i_sector);
 		dxRender_Visual* root = sector->root();
 		for (CFrustum& frustum : sector->r_frustums)
 		{
@@ -476,7 +476,7 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 	{
 		set_Object(nullptr);
 
-		auto renderable_spatial = [this, ViewSave](ISpatial* spatial) -> void
+		auto renderable_spatial = [this](ISpatial* spatial) -> void
 		{
 			SpatialData& spatial_data = spatial->GetSpatialData();
 			if ((spatial_data.type & STYPE_LIGHTSOURCE) || (spatial_data.type & STYPE_PARTICLE))
@@ -484,7 +484,9 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 
 			if (CSector* sector = reinterpret_cast<CSector*>(spatial_data.sector))// disassociated from S/P structure
 			{
-				if (PortalTraverser.i_marker != sector->r_marker)
+				const bool send_render = spatial_data.sphere.P.distance_to_sqr(::IDevice->cast()->vCameraPosition) < (10 + _sqr(spatial_data.sphere.R));
+
+				if (PortalTraverser.i_marker != sector->r_marker && !send_render)
 					return;
 
 				if (auto renderable = spatial->dcast_Renderable())
@@ -499,15 +501,18 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 					{
 						set_Frustum(&frustum);
 
-						u32 mask = 0xff;
-						if (View->testSAABB(spatial_data.sphere.P, spatial_data.sphere.R,
-							render_data.visual->getVisData().box.data(), mask) != fcvFully)
+						if (View->testSphere_dirty(spatial_data.sphere.P, spatial_data.sphere.R) != fcvNone)
 						{
-							if (CKinematics* pKin = reinterpret_cast<CKinematics*>(render_data.visual))
-								pKin->CalculateBones(TRUE);
+							u32 mask = 0xff;
+							if (send_render || View->testSAABB(spatial_data.sphere.P, spatial_data.sphere.R,
+								render_data.visual->getVisData().box.data(), mask) != fcvFully)
+							{
+								if (CKinematics* pKin = reinterpret_cast<CKinematics*>(render_data.visual))
+									pKin->CalculateBones(TRUE);
 
-							renderable->renderable_Render();
-							break;
+								renderable->renderable_Render();
+								break;
+							}
 						}
 					}
 				}
