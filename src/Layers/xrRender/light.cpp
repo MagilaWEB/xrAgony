@@ -403,6 +403,8 @@ extern float r_ssaGLOD_start, r_ssaGLOD_end;
 extern float ps_r2_slight_fade;
 float light::get_LOD()
 {
+	if (!flags.bShadow)
+		return 1;
 	const float distSQ = ::IDevice->cast()->vCameraPosition.distance_to_sqr(spatial.sphere.P) + EPS;
 	const float ssa = ps_r2_slight_fade * spatial.sphere.R / distSQ;
 	const float lod = _sqrt(clampr((ssa - r_ssaGLOD_end) / (r_ssaGLOD_start - r_ssaGLOD_end), 0.f, 1.f));

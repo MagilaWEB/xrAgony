@@ -99,4 +99,25 @@ void CRender::render_lights(light_Package& LP)
 		//		switch-to-accumulator
 		Target->phase_accumulator();
 	}
+
+	// Point lighting (unshadowed, if left)
+	if (!LP.v_point.empty())
+	{
+		for(light* L2 : LP.v_point)
+			if (L2->vis.visible)
+				Target->accum_point(L2);
+	}
+
+	// Spot lighting (unshadowed, if left)
+	if (!LP.v_spot.empty())
+	{
+		for (light* L2 : LP.v_spot)
+		{
+			if (L2->vis.visible)
+			{
+				LR.compute_xf_spot(L2);
+				Target->accum_spot(L2);
+			}
+		}
+	}
 }

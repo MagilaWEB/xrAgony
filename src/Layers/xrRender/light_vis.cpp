@@ -64,8 +64,6 @@ void light::vis_update()
 	}
 
 	size_t frame = ::IDevice->TimeGlobal_ms();
-	if (frame < vis.frame2test)
-		return;
 
 	u64 fragments = RImplementation.occq_get(vis.query_id);
 	vis.pending = false;

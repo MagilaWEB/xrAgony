@@ -171,7 +171,7 @@ void CLight_DB::add_light(light* L)
 		return;
 	L->frame_render = ::IDevice->getFrame();
 	if (RImplementation.o.noshadows)
-		L->flags.bShadow = FALSE;
+		L->flags.bShadow = false;
 	if (L->flags.bStatic)		//&& !ps_r2_ls_flags.test(R2FLAG_R1LIGHTS)
 		return;
 

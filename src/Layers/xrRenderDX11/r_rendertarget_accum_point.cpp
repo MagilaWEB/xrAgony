@@ -17,7 +17,6 @@ void CRenderTarget::accum_point(light* L)
 	Fvector L_pos;
 	float L_spec;
 	// float		L_R					= L->range;
-	float L_R = L->range * .95f;
 	Fvector L_clr;
 	L_clr.set(L->color.r, L->color.g, L->color.b);
 	L_spec = u_diffuse2s(L_clr);
@@ -100,7 +99,7 @@ void CRenderTarget::accum_point(light* L)
 		RCache.set_Element(shader->E[_id]);
 
 		// Constants
-		RCache.set_c("Ldynamic_pos", L_pos.x, L_pos.y, L_pos.z, 1 / (L_R * L_R));
+		RCache.set_c("Ldynamic_pos", L_pos.x, L_pos.y, L_pos.z, L->range);
 		RCache.set_c("Ldynamic_color", L_clr.x, L_clr.y, L_clr.z, L_spec);
 		RCache.set_c("m_texgen", m_Texgen);
 

@@ -396,7 +396,7 @@ void CRenderTarget::accum_volumetric(light* L)
 	iNumSlises = _max(10, iNumSlises);
 	//	Adjust slice intensity
 	fQuality = ((float)iNumSlises) / VOLUMETRIC_SLICES;
-	Fvector L_dir, L_clr, L_pos;
+	Fvector L_clr, L_pos;
 	float L_spec;
 	L_clr.set(L->color.r, L->color.g, L->color.b);
 	L_clr.mul(L->m_volumetric_intensity);
@@ -405,26 +405,9 @@ void CRenderTarget::accum_volumetric(light* L)
 	L_clr.mul(L->get_LOD());
 	L_spec = u_diffuse2s(L_clr);
 	::IDevice->cast()->mView.transform_tiny(L_pos, L->position);
-	::IDevice->cast()->mView.transform_dir(L_dir, L->direction);
-	L_dir.normalize();
 
 	// Draw volume with projective texgen
 	{
-		/*
-		// Select shader
-		u32		_id					= 0;
-		if (L->flags.bShadow)		{
-			bool	bFullSize			= (L->X.S.size == RImplementation.o.smapsize);
-			if (L->X.S.transluent)	_id	= SE_L_TRANSLUENT;
-			else if		(bFullSize)	_id	= SE_L_FULLSIZE;
-			else					_id	= SE_L_NORMAL;
-		} else {
-			_id						= SE_L_UNSHADOWED;
-			m_Shadow				= m_Lmap;
-		}
-		RCache.set_Element			(shader->E[ _id ]	);
-		*/
-
 		RCache.set_Element(shader->E[0]);
 
 		// Constants
