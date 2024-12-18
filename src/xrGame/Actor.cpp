@@ -1093,6 +1093,8 @@ void CActor::UpdateCL()
 
 	m_bPickupMode = false;
 	m_bInfoDraw = false;
+
+	inventory().UpdateItems();
 }
 
 void CActor::set_state_box(u32 mstate)
@@ -2198,34 +2200,4 @@ void CActor::on_requested_spawn(IGameObject* object)
 	Fvector xyz;
 	object->XFORM().getXYZi(xyz);
 	r_torso.yaw = xyz.y;
-}
-
-void CActor::update()
-{
-	auto active_item = inventory().ActiveItem();
-
-	auto update_item = [this, &active_item]() -> void
-	{
-		active_item->object().fSetDeltaT(fDeltaT());
-		active_item->object().dwSetDeltaT(dwDeltaT());
-		active_item->object().update();
-	};
-
-	if (active_item)
-		update_item();
-
-	active_item = inventory().ItemFromSlot(DETECTOR_SLOT);
-
-	if (CCustomDetector* detector = smart_cast<CCustomDetector*>(active_item))
-		update_item();
-
-	if (CFlashlight* light = smart_cast<CFlashlight*>(active_item))
-		update_item();
-
-	active_item = inventory().ItemFromSlot(TORCH_SLOT);
-
-	if (CTorch* light = smart_cast<CTorch*>(active_item))
-		update_item();
-
-	__super::update();
 }

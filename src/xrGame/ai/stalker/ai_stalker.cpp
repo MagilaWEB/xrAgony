@@ -963,6 +963,8 @@ void CAI_Stalker::UpdateCL()
 #endif
 	STOP_PROFILE
 		STOP_PROFILE
+
+		inventory().UpdateItems();
 }
 
 void CAI_Stalker::PHHit(SHit& H) { m_pPhysics_support->in_Hit(H, false); }
@@ -1416,15 +1418,3 @@ void CAI_Stalker::ChangeVisual(shared_str NewVisual)
 	Visual()->dcast_PKinematics()->CalculateBones_Invalidate();
 	Visual()->dcast_PKinematics()->CalculateBones(TRUE);
 };
-
-void CAI_Stalker::update()
-{
-	if (auto active_item = inventory().ActiveItem())
-	{
-		active_item->object().fSetDeltaT(fDeltaT());
-		active_item->object().dwSetDeltaT(dwDeltaT());
-		active_item->object().update();
-	}
-
-	inherited::update();
-}

@@ -22,6 +22,8 @@
 #include "static_cast_checked.hpp"
 #include "player_hud.h"
 #include "Grenade.h"
+#include "CustomDetector.h"
+#include "Flashlight.h"
 
 using namespace InventoryUtilities;
 
@@ -790,6 +792,35 @@ void CInventory::Update()
 		ActiveItem()->ActivateItem();
 
 	UpdateDropTasks();
+}
+
+void CInventory::UpdateItems()
+{
+	CGameObject* pObject_owner = smart_cast<CGameObject*>(m_pOwner);
+	auto active_item = ActiveItem();
+
+	auto update_item = [&]() -> void
+	{
+		active_item->object().fSetDeltaT(pObject_owner->fDeltaT());
+		active_item->object().dwSetDeltaT(pObject_owner->dwDeltaT());
+		active_item->object().UpdateCL();
+	};
+
+	if (active_item)
+		update_item();
+
+	active_item = ItemFromSlot(DETECTOR_SLOT);
+
+	if (CCustomDetector* detector = smart_cast<CCustomDetector*>(active_item))
+		update_item();
+
+	if (CFlashlight* light = smart_cast<CFlashlight*>(active_item))
+		update_item();
+
+	active_item = ItemFromSlot(TORCH_SLOT);
+
+	if (CTorch* light = smart_cast<CTorch*>(active_item))
+		update_item();
 }
 
 void CInventory::UpdateDropTasks()

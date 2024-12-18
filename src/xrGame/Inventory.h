@@ -61,6 +61,7 @@ public:
 	bool Action(u16 cmd, u32 flags);
 	void ActiveWeapon(u16 slot);
 	void Update();
+	void UpdateItems();
 	// Ищет на поясе аналогичный IItem
 	PIItem Same(const PIItem pIItem, bool bSearchRuck) const;
 	// Ищет на поясе IItem для указанного слота

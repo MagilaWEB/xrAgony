@@ -281,6 +281,8 @@ void CAI_Trader::UpdateCL()
 	inherited::UpdateCL();
 	sound().update(::IDevice->TimeDelta_sec());
 
+	inventory().UpdateItems();
+
 	if (!GetScriptControl() && !bfScriptAnimation())
 		animation().update_frame();
 }
