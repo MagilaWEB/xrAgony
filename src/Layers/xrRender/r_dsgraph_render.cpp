@@ -478,6 +478,9 @@ void D3DXRenderBase::r_dsgraph_render_subspace(IRender_Sector* _sector, CFrustum
 
 		auto renderable_spatial = [this](ISpatial* spatial) -> void
 		{
+			if (!spatial)
+				return;
+
 			SpatialData& spatial_data = spatial->GetSpatialData();
 			if ((spatial_data.type & STYPE_LIGHTSOURCE) || (spatial_data.type & STYPE_PARTICLE))
 				return;

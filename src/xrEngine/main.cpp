@@ -257,8 +257,7 @@ static int StackoverflowFilter(const int exceptionCode)
 	return EXCEPTION_CONTINUE_SEARCH;
 }
 
-int APIENTRY WinMain(HINSTANCE inst, HINSTANCE prevInst, char* commandLine, int cmdShow)
-{
+int APIENTRY WinMain(HINSTANCE inst, HINSTANCE prevInst, char* commandLine, int cmdShow){
 	int result = 0;
 
 	auto entry_point = [commandLine]()

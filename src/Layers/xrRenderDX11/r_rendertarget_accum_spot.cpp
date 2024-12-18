@@ -120,14 +120,8 @@ void CRenderTarget::accum_spot(light* L)
 	}
 
 	// Common constants
-	Fvector L_dir, L_clr, L_pos;
-	float L_spec;
-	L_clr.set(L->color.r, L->color.g, L->color.b);
-	L_clr.mul(L->get_LOD());
-	L_spec = u_diffuse2s(L_clr);
+	Fvector L_pos;
 	::IDevice->cast()->mView.transform_tiny(L_pos, L->position);
-	::IDevice->cast()->mView.transform_dir(L_dir, L->direction);
-	L_dir.normalize();
 
 	// Draw volume with projective texgen
 	{
@@ -153,10 +147,8 @@ void CRenderTarget::accum_spot(light* L)
 		RCache.set_CullMode(CULL_CW); // back
 
 		// Constants
-		float att_R = L->range * .95f;
-		float att_factor = 1.f / (att_R * att_R);
-		RCache.set_c("Ldynamic_pos", L_pos.x, L_pos.y, L_pos.z, att_factor);
-		RCache.set_c("Ldynamic_color", L_clr.x, L_clr.y, L_clr.z, L_spec);
+		RCache.set_c("Ldynamic_pos", L_pos.x, L_pos.y, L_pos.z, L->range);
+		RCache.set_c("Ldynamic_color", L->color.r, L->color.g, L->color.b, 0.f);
 		RCache.set_c("m_texgen", m_Texgen);
 		RCache.set_c("m_texgen_J", m_Texgen_J);
 		RCache.set_c("m_shadow", m_Shadow);
@@ -436,8 +428,7 @@ void CRenderTarget::accum_volumetric(light* L)
 		RCache.set_Element(shader->E[0]);
 
 		// Constants
-		float att_R = L->m_volumetric_distance * L->range * .95f;
-		float att_factor = 1.f / (att_R * att_R);
+		const float att_factor = L->m_volumetric_distance * L->range;
 		RCache.set_c("Ldynamic_pos", L_pos.x, L_pos.y, L_pos.z, att_factor);
 		RCache.set_c("Ldynamic_color", L_clr.x, L_clr.y, L_clr.z, L_spec);
 		RCache.set_c("m_texgen", m_Texgen);

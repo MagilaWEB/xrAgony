@@ -74,20 +74,10 @@ void CRenderTarget::phase_scene_begin()
 		pZB = rt_MSAADepth->pZRT;
 
 	// Targets, use accumulator for temporary storage
-	if (!RImplementation.o.dx10_gbuffer_opt)
-	{
-		if (RImplementation.o.albedo_wo)
-			u_setrt(rt_Position, rt_Normal, rt_Accumulator, pZB);
-		else
-			u_setrt(rt_Position, rt_Normal, rt_Color, pZB);
-	}
+	if (RImplementation.o.albedo_wo)
+		u_setrt(rt_Position, rt_Normal, rt_Accumulator, pZB);
 	else
-	{
-		if (RImplementation.o.albedo_wo)
-			u_setrt(rt_Position, rt_Accumulator, pZB);
-		else
-			u_setrt(rt_Position, rt_Color, pZB);
-	}
+		u_setrt(rt_Position, rt_Normal, rt_Color, pZB);
 
 	// Stencil - write 0x1 at pixel pos
 	RCache.set_Stencil(

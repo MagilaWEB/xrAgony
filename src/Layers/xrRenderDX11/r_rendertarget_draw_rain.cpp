@@ -300,24 +300,13 @@ void CRenderTarget::draw_rain(light& RainSetup)
 		RCache.set_c("m_shadow", m_shadow);
 		RCache.set_c("m_sunmask", m_clouds_shadow);
 
-		if (!RImplementation.o.dx10_gbuffer_opt)
-		{
-			//	Do this in blender!
+		//	Do this in blender!
 			// StateManager.SetColorWriteEnable( D3Dxx_COLOR_WRITE_ENABLE_RED | D3Dxx_COLOR_WRITE_ENABLE_GREEN |
 			// D3Dxx_COLOR_WRITE_ENABLE_BLUE );
-			if (!RImplementation.o.dx10_msaa)
-				u_setrt(rt_Normal, nullptr, nullptr, HW.pBaseZB);
-			else
-				u_setrt(rt_Normal, nullptr, nullptr, rt_MSAADepth->pZRT);
-		}
+		if (!RImplementation.o.dx10_msaa)
+			u_setrt(rt_Normal, nullptr, nullptr, HW.pBaseZB);
 		else
-		{
-			// StateManager.SetColorWriteEnable( D3Dxx_COLOR_WRITE_ENABLE_RED | D3Dxx_COLOR_WRITE_ENABLE_GREEN );
-			if (!RImplementation.o.dx10_msaa)
-				u_setrt(rt_Position, nullptr, nullptr, HW.pBaseZB);
-			else
-				u_setrt(rt_Position, nullptr, nullptr, rt_MSAADepth->pZRT);
-		}
+			u_setrt(rt_Normal, nullptr, nullptr, rt_MSAADepth->pZRT);
 
 		if (!RImplementation.o.dx10_msaa)
 		{
