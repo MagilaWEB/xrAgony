@@ -37,8 +37,11 @@ void CRenderDevice::Run()
 
 	mt_global_update.Init([this]() { GlobalUpdate(); });
 
-	mt_frame.Init([this]() { OnFrame(); }, xrThread::sParalelRender);
-	mt_frame2.Init([this]() { OnFrame2(); }, xrThread::sParalelRender);
+	mt_frame.Init([this]{ OnFrame(); }, xrThread::sParalelRender);
+	mt_frame2.Init([this]{ OnFrame2(); }, xrThread::sParalelRender);
+	mt_sounds.Init([]{ 
+		::Sound->update(::IDevice->cast()->vCameraPosition, ::IDevice->cast()->vCameraDirection, ::IDevice->cast()->vCameraTop);
+	}, xrThread::sParalelFrame);
 	
 	// Message cycle
 	::Render->ClearTarget();
@@ -188,8 +191,6 @@ void CRenderDevice::CalcFrameStats()
 
 void CRenderDevice::OnFrame()
 {
-	::Sound->update(::IDevice->cast()->vCameraPosition, ::IDevice->cast()->vCameraDirection, ::IDevice->cast()->vCameraTop);
-
 	if (::IDevice->Paused() == false && g_loading_events.empty())
 	{
 		if (isLevelReady())

@@ -24,7 +24,6 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 	if (0 == bReady)
 		return;
 	Stats.Update.Begin();
-	isLocked = true;
 	Timer.time_factor(psSoundTimeFactor); //--#SM+#--
 	float new_tm = Timer.GetElapsed_sec();
 	fTimer_Delta = new_tm - fTimer_Value;
@@ -55,22 +54,25 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 
 	// Update emitters
 	// Msg("! update: emitters");
-	std::erase_if(s_emitters, [&](CSoundRender_Emitter*& pEmitter) {
-		if (pEmitter->marker != s_emitters_u)
+	xr_list<CSoundRender_Emitter*> send_update;
+	for (auto& emitter : s_emitters)
+	{
+		if (emitter->marker != s_emitters_u)
 		{
-			pEmitter->update(dt_sec);
-			pEmitter->marker = s_emitters_u;
+			emitter->update(dt_sec);
+			emitter->marker = s_emitters_u;
 		}
 
-		if (!pEmitter->isPlaying())
-		{
-			// Stopped
-			xr_delete(pEmitter);
-			return true;
-		}
+		if (emitter->isPlaying())
+			send_update.push_back(emitter);
+		else
+			xr_delete(emitter);
+	}
 
-		return false;
-	});
+	s_emitters.clear();
+
+	for (auto& emitter : send_update)
+		s_emitters.push_back(emitter);
 
 	// Get currently rendering emitters
 	// Msg("! update: targets");
@@ -138,7 +140,6 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 	// Events
 	update_events();
 
-	isLocked = false;
 	Stats.Update.End();
 }
 

@@ -45,7 +45,6 @@ CSoundRender_Core::CSoundRender_Core()
 	e_target.set_identity();
 	bListenerMoved = false;
 	bReady = false;
-	isLocked = false;
 	fTimer_Value = Timer.GetElapsed_sec();
 	fTimer_Delta = 0.0f;
 	m_iPauseCounter = 1;
@@ -107,14 +106,13 @@ void CSoundRender_Core::_clear()
 
 	// remove sources
 	for (auto& kv : s_sources)
-	{
 		xr_delete(kv.second);
-	}
+
 	s_sources.clear();
 
 	// remove emitters
-	for (u32 eit = 0; eit < s_emitters.size(); eit++)
-		xr_delete(s_emitters[eit]);
+	for (auto& emitter : s_emitters)
+		xr_delete(emitter);
 	s_emitters.clear();
 
 	g_target_temp_data.clear();
@@ -122,8 +120,8 @@ void CSoundRender_Core::_clear()
 
 void CSoundRender_Core::stop_emitters()
 {
-	for (u32 eit = 0; eit < s_emitters.size(); eit++)
-		s_emitters[eit]->stop(false);
+	for (auto & emitter : s_emitters)
+		emitter->stop(false);
 }
 
 int CSoundRender_Core::pause_emitters(bool val)
@@ -133,10 +131,8 @@ int CSoundRender_Core::pause_emitters(bool val)
 	VERIFY(m_iPauseCounter >= 0);
 
 	if (m_iPauseCounter >= 0)
-	{
-		for (u32 it = 0; it < s_emitters.size(); it++)
-			((CSoundRender_Emitter*)s_emitters[it])->pause(val, val ? m_iPauseCounter : m_iPauseCounter + 1);
-	}
+		for (auto& emitter : s_emitters)
+			((CSoundRender_Emitter*)emitter)->pause(val, val ? m_iPauseCounter : m_iPauseCounter + 1);
 
 	return m_iPauseCounter;
 }
@@ -579,15 +575,10 @@ void CSoundRender_Core::i_eax_commit_setting()
 void CSoundRender_Core::object_relcase(IGameObject* obj)
 {
 	if (obj)
-	{
-		for (u32 eit = 0; eit < s_emitters.size(); eit++)
-		{
-			if (s_emitters[eit])
-				if (s_emitters[eit]->owner_data)
-					if (obj == s_emitters[eit]->owner_data->g_object)
-						s_emitters[eit]->owner_data->g_object = 0;
-		}
-	}
+		for (auto& emitter : s_emitters)
+			if (emitter->owner_data)
+				if (obj == emitter->owner_data->g_object)
+					emitter->owner_data->g_object = 0;
 }
 
 void CSoundRender_Core::set_user_env(CSound_environment* E)
@@ -615,8 +606,9 @@ void CSoundRender_Core::refresh_env_library()
 }
 void CSoundRender_Core::refresh_sources()
 {
-	for (u32 eit = 0; eit < s_emitters.size(); eit++)
-		s_emitters[eit]->stop(false);
+	for (auto& emitter : s_emitters)
+		emitter->stop(false);
+
 	for (const auto& kv : s_sources)
 	{
 		CSoundRender_Source* s = kv.second;

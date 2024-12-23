@@ -18,9 +18,6 @@ protected:
 		void FrameEnd() { Update.FrameEnd(); }
 	};
 
-private:
-	volatile bool isLocked;
-
 protected:
 	void _create_data(ref_sound_data& S, pcstr fName, esound_type sound_type, int game_type) override;
 	void _destroy_data(ref_sound_data& S) override;
@@ -58,7 +55,7 @@ protected:
 
 	// Containers
 	xr_unordered_map<xr_string, CSoundRender_Source*> s_sources;
-	xr_vector<CSoundRender_Emitter*> s_emitters;
+	xr_c_vector<CSoundRender_Emitter*> s_emitters;
 	u32 s_emitters_u; // emitter update marker
 	xr_vector<CSoundRender_Target*> s_targets;
 	xr_vector<CSoundRender_Target*> s_targets_defer;
@@ -141,7 +138,6 @@ public:
 	void i_stop(CSoundRender_Emitter* E);
 	void i_rewind(CSoundRender_Emitter* E);
 	bool i_allow_play(CSoundRender_Emitter* E);
-	bool i_locked() override { return isLocked; }
 	void object_relcase(IGameObject* obj) override;
 
 	float get_occlusion_to(const Fvector& hear_pt, const Fvector& snd_pt, float dispersion = 0.2f) override;

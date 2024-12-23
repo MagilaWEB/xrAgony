@@ -229,6 +229,7 @@ private:
 	xrThread mt_global_update{ "GlobalUpdate", true };
 	xrThread mt_frame{ "Frame", true, true };
 	xrThread mt_frame2{ "Frame2", true, true };
+	xrThread mt_sounds{ "Sounds", true, true };
 	xrCriticalSection m_ResetRender;
 
 public:

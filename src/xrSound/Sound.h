@@ -172,7 +172,6 @@ public:
 	virtual void SetIgnorePaused(ref_sound& S, bool b_ignore_p) = 0;
 
 	virtual void _restart() = 0;
-	virtual bool i_locked() = 0;
 
 	virtual void create(ref_sound& S, pcstr fName, esound_type sound_type, int game_type) = 0;
 	virtual void attach_tail(ref_sound& S, pcstr fName) = 0;
@@ -241,8 +240,6 @@ public:
 	virtual ~ref_sound_data() { ::Sound->_destroy_data(*this); }
 	float get_length_sec() const { return fTimeTotal; }
 };
-
-inline void VerSndUnlocked() { VERIFY(!::Sound->i_locked()); }
 /*! \class ref_sound
 \brief Sound source + control
 
@@ -262,17 +259,16 @@ struct ref_sound
 
 	void create(pcstr name, esound_type sound_type, int game_type)
 	{
-		VerSndUnlocked(); ::Sound->create(*this, name, sound_type, game_type);
+		::Sound->create(*this, name, sound_type, game_type);
 	}
 
 	void SetIgnorePaused(bool b_ignore)
 	{
-		VerSndUnlocked(); ::Sound->SetIgnorePaused(*this, b_ignore);
+		::Sound->SetIgnorePaused(*this, b_ignore);
 	}
 
 	bool GetIgnorePaused()
 	{
-		VerSndUnlocked();
 		if (_feedback())
 			return _feedback()->GetIgnorePaused();
 
@@ -281,61 +277,58 @@ struct ref_sound
 
 	void attach_tail(pcstr name)
 	{
-		VerSndUnlocked(); ::Sound->attach_tail(*this, name);
+		::Sound->attach_tail(*this, name);
 	}
 
 	void clone(const ref_sound& from, esound_type sound_type, int game_type)
 	{
-		VerSndUnlocked(); ::Sound->clone(*this, from, sound_type, game_type);
+		::Sound->clone(*this, from, sound_type, game_type);
 	}
 
 	void destroy()
 	{
-		VerSndUnlocked(); ::Sound->destroy(*this);
+		::Sound->destroy(*this);
 	}
 
 	void play(IGameObject* O, u32 flags = 0, float delay = 0.f)
 	{
-		VerSndUnlocked(); ::Sound->play(*this, O, flags, delay);
+		::Sound->play(*this, O, flags, delay);
 	}
 
 	void play_at_pos(IGameObject* O, const Fvector& pos, u32 flags = 0, float delay = 0.f)
 	{
-		VerSndUnlocked(); ::Sound->play_at_pos(*this, O, pos, flags, delay);
+		::Sound->play_at_pos(*this, O, pos, flags, delay);
 	}
 
 	void play_no_feedback(IGameObject* O, u32 flags = 0, float delay = 0.f, Fvector* pos = nullptr, float* vol = nullptr, float* freq = nullptr, Fvector2* range = nullptr)
 	{
-		VerSndUnlocked(); ::Sound->play_no_feedback(*this, O, flags, delay, pos, vol, freq, range);
+		::Sound->play_no_feedback(*this, O, flags, delay, pos, vol, freq, range);
 	}
 
 	bool isPlaying()
 	{
-		VerSndUnlocked();
 		if (_feedback())
 			return _feedback()->isPlaying();
 
 		return false;
 	}
 
-	void stop() { VerSndUnlocked(); if (_feedback()) _feedback()->stop(false); }
-	void stop_deferred() { VerSndUnlocked(); if (_feedback()) _feedback()->stop(true); }
+	void stop() { if (_feedback()) _feedback()->stop(false); }
+	void stop_deferred() { if (_feedback()) _feedback()->stop(true); }
 
-	void set_position(const Fvector& pos) { VerSndUnlocked(); if (_feedback()) _feedback()->set_position(pos); }
-	void set_frequency(float freq) { VerSndUnlocked(); if (_feedback()) _feedback()->set_frequency(freq); }
-	void set_range(float min, float max) { VerSndUnlocked(); if (_feedback()) _feedback()->set_range(min, max); }
-	void set_volume(float vol) { VerSndUnlocked(); if (_feedback()) _feedback()->set_volume(vol); }
-	void set_priority(float p) { VerSndUnlocked(); if (_feedback()) _feedback()->set_priority(p); }
+	void set_position(const Fvector& pos) { if (_feedback()) _feedback()->set_position(pos); }
+	void set_frequency(float freq) { if (_feedback()) _feedback()->set_frequency(freq); }
+	void set_range(float min, float max) { if (_feedback()) _feedback()->set_range(min, max); }
+	void set_volume(float vol) { if (_feedback()) _feedback()->set_volume(vol); }
+	void set_priority(float p) { if (_feedback()) _feedback()->set_priority(p); }
 
 	const CSound_params* get_params()
 	{
-		VerSndUnlocked();
 		return _feedback() ? _feedback()->get_params() : 0;
 	}
 
 	void set_params(CSound_params* p)
 	{
-		VerSndUnlocked();
 		CSound_emitter* const feedback = _feedback();
 		if (feedback)
 		{
