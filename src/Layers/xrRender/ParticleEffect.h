@@ -87,9 +87,6 @@ public:
 };
 void OnEffectParticleBirth(void* owner, u32 param, PAPI::Particle& m, u32 idx);
 void OnEffectParticleDead(void* owner, u32 param, PAPI::Particle& m, u32 idx);
-
-extern const u32 uDT_STEP;
-extern const float fDT_STEP;
 }
 //---------------------------------------------------------------------------
 #endif
