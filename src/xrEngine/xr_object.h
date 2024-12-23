@@ -99,8 +99,6 @@ public:
 
 	virtual ~IGameObject() = 0;
 #ifdef DEBUG
-	virtual u32 GetDbgUpdateFrame() const = 0;
-	virtual void SetDbgUpdateFrame(u32 value) = 0;
 	virtual void DBGGetProps(GameObjectProperties& p) const = 0;
 #endif
 

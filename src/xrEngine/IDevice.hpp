@@ -39,7 +39,7 @@ struct IRenderDevice
 	virtual const RenderDeviceStatictics& GetStats() const = 0;
 
 	// Setting a pause or removal pause in the gameplay.
-	virtual void Pause(bool bOn, bool bTimer, bool bSound, bool reason) = 0;
+	virtual void Pause(bool bOn, bool bTimer, bool bSound, pcstr reason) = 0;
 
 	// Get the pause status in the gameplay.
 	virtual bool Paused() const = 0;

@@ -39,7 +39,7 @@ void CRenderDevice::Run()
 
 	mt_frame.Init([this]() { OnFrame(); }, xrThread::sParalelRender);
 	mt_frame2.Init([this]() { OnFrame2(); }, xrThread::sParalelRender);
-
+	
 	// Message cycle
 	::Render->ClearTarget();
 	splash::hide();
@@ -448,8 +448,7 @@ void CRenderDevice::FrameMove()
 }
 
 ENGINE_API BOOL bShowPauseString = TRUE;
-
-void CRenderDevice::Pause(bool bOn, bool bTimer, bool bSound, bool reason)
+void CRenderDevice::Pause(bool bOn, bool bTimer, bool bSound, pcstr reason)
 {
 	static int snd_emitters_ = -1;
 	if (g_bBenchmark)

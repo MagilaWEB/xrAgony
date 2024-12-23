@@ -1,7 +1,6 @@
 #pragma once
 #ifndef _INCDEF_NETUTILS_H_
 #define _INCDEF_NETUTILS_H_
-#include <string.h>
 #include "xrCore/_types.h"
 #include "client_id.h"
 #include "xrCommon/xr_string.h"

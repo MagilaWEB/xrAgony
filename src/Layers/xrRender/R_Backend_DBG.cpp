@@ -27,7 +27,7 @@ void CBackend::dbg_DIP(D3DPRIMITIVETYPE pt, ref_geom geom, u32 baseV, u32 startV
 
 #if defined(MASTER) || defined(DEBUG)
 
-void CBackend::dbg_Draw(D3DPRIMITIVETYPE T, FVF::L* pVerts, int vcnt, u16* pIdx, int pcnt)
+void CBackend::dbg_Draw(D3DPRIMITIVETYPE T, FVF::L* pVerts, size_t vcnt, u16* pIdx, int pcnt)
 {
 	u32 vBase;
 	{
@@ -54,7 +54,7 @@ void CBackend::dbg_Draw(D3DPRIMITIVETYPE T, FVF::L* pVerts, int vcnt, u16* pIdx,
 	set_Stencil(FALSE);
 	Render(T, vBase, 0, vcnt, iBase, pcnt);
 }
-void CBackend::dbg_Draw(D3DPRIMITIVETYPE T, FVF::L* pVerts, int pcnt)
+void CBackend::dbg_Draw(D3DPRIMITIVETYPE T, FVF::L* pVerts, size_t pcnt)
 {
 	u32 vBase;
 	{

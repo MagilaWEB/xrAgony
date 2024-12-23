@@ -104,8 +104,6 @@ public:
 	virtual ~CGameObject();
 	// XXX: review
 #ifdef DEBUG
-	u32 GetDbgUpdateFrame() const override { return dbg_update_cl; }
-	void SetDbgUpdateFrame(u32 value) override { dbg_update_cl = value; }
 	void DBGGetProps(GameObjectProperties& p) const override { p = Props; }
 #endif
 	// Network

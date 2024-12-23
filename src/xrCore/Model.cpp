@@ -4,7 +4,6 @@
  *  1999-2001																*
  *  Contents: PPMII model description and encoding/decoding routines		*
  ****************************************************************************/
-#include <string.h>
 #include "PPMd.h"
 #pragma hdrstop
 #include "Coder.hpp"

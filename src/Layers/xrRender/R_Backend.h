@@ -456,8 +456,8 @@ public:
 	IC void dbg_SetSS(u32 sampler, D3DSAMPLERSTATETYPE type, u32 value) { VERIFY(!"Not implemented"); }
 
 #if defined(MASTER) || defined(DEBUG)
-	void dbg_Draw(D3DPRIMITIVETYPE T, FVF::L* pVerts, int vcnt, u16* pIdx, int pcnt);
-	void dbg_Draw(D3DPRIMITIVETYPE T, FVF::L* pVerts, int pcnt);
+	void dbg_Draw(D3DPRIMITIVETYPE T, FVF::L* pVerts, size_t vcnt, u16* pIdx, int pcnt);
+	void dbg_Draw(D3DPRIMITIVETYPE T, FVF::L* pVerts, size_t pcnt);
 
 	void dbg_DrawAABB(Fvector& T, float sx, float sy, float sz, u32 C)
 	{

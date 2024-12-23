@@ -708,12 +708,10 @@ void CGamePersistent::OnFrame()
 #ifdef DEBUG
 					if (psActorFlags.test(AF_NO_CLIP))
 					{
-						Actor()->SetDbgUpdateFrame(0);
 						IDevice->TimeDelta_ms() = 0;
 						::IDevice->TimeDelta_sec() = 0.01f;
 						Actor()->UpdateCL();
 						Actor()->shedule_Update(0);
-						Actor()->SetDbgUpdateFrame(0);
 
 						CSE_Abstract* e = Level().Server->ID_to_entity(Actor()->ID());
 						VERIFY(e);

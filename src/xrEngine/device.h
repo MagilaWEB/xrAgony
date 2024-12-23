@@ -218,7 +218,7 @@ public:
 		Statistic = nullptr;
 	}
 
-	void Pause(bool bOn, bool bTimer, bool bSound, bool reason) override;
+	void Pause(bool bOn, bool bTimer, bool bSound, pcstr reason) override;
 	bool Paused() const override;
 
 	CRenderDevice* operator*() override { return std::move(this); }

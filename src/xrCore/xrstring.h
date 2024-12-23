@@ -1,23 +1,12 @@
 #pragma once
 
 #include <cstdio>
-#include <locale>
 
 #include "_types.h"
 #include "xrCommon/inlining_macros.h"
 #include "xrMemory.h"
 
-#define BREAK_AT_STRCMP
-#ifndef DEBUG
-#undef BREAK_AT_STRCMP
-#endif
-#ifdef _EDITOR
-#undef BREAK_AT_STRCMP
-#endif
-
-#ifndef BREAK_AT_STRCMP
-#include <string.h>
-#endif
+#include <cstring>
 
 #pragma pack(push, 4)
 #pragma warning(push)
@@ -220,6 +209,11 @@ IC bool operator>(shared_str const& a, shared_str const& b) { return a._get() > 
 // externally visible standard functionality
 IC void swap(shared_str& lhs, shared_str& rhs) { lhs.swap(rhs); }
 IC u32 xr_strlen(const shared_str& a) noexcept { return a.size(); }
+
+ICF int xr_strcmp(const char* S1, const char* S2)
+{
+	return strcmp(S1, S2);
+}
 IC int xr_strcmp(const shared_str& a, const char* b) noexcept { return xr_strcmp(*a, b); }
 IC int xr_strcmp(const char* a, const shared_str& b) noexcept { return xr_strcmp(a, *b); }
 IC int xr_strcmp(const shared_str& a, const shared_str& b) noexcept
