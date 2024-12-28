@@ -11,8 +11,8 @@ void light::vis_prepare()
 	//		. camera inside light volume	= visible,	shedule for 'small' interval
 	//		. perform testing				= ???,		pending
 
-	size_t frame = ::IDevice->TimeGlobal_ms();
-	if (frame < vis.frame2test)
+	size_t ms = ::IDevice->TimeGlobal_ms();
+	if (ms < vis.ms_test)
 		return;
 
 	const float a0 = deg2rad(::IDevice->cast()->fFOV * ::IDevice->cast()->fASPECT / 2.f);
@@ -29,7 +29,7 @@ void light::vis_prepare()
 	{ // small error
 		vis.visible = true;
 		vis.pending = false;
-		vis.frame2test = frame + 60;
+		vis.ms_test = ms + 60;
 		return;
 	}
 
@@ -63,12 +63,14 @@ void light::vis_update()
 		return;
 	}
 
-	size_t frame = ::IDevice->TimeGlobal_ms();
+	size_t ms = ::IDevice->TimeGlobal_ms();
+	if (vis.ms_test > ms)
+		return;
 
 	u64 fragments = RImplementation.occq_get(vis.query_id);
 	vis.pending = false;
 	if (vis.visible = (fragments > cullfragments))
-		vis.frame2test = frame + 200;
+		vis.ms_test = ms + 200;
 	else
-		vis.frame2test = frame + 40;
+		vis.ms_test = ms + 40;
 }

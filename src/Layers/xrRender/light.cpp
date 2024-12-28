@@ -31,7 +31,7 @@ light::light(void) : SpatialBase(g_SpatialSpace)
 	ZeroMemory(omnipart, sizeof(omnipart));
 	s_spot = nullptr;
 	s_point = nullptr;
-	vis.frame2test = 0; // xffffffff;
+	vis.ms_test = 0; // xffffffff;
 	vis.query_id = 0;
 	vis.query_order = 0;
 	vis.visible = true;

@@ -24,7 +24,7 @@ IC HRESULT CreateQuery(ID3DQuery** ppQuery, D3DQUERYTYPE Type)
 IC HRESULT GetData(ID3DQuery* pQuery, void* pData, UINT DataSize)
 {
 	//	Use D3Dxx_ASYNC_GETDATA_DONOTFLUSH for prevent flushing
-	return HW.pContext->GetData(pQuery, pData, DataSize, 0);
+	return HW.pContext->GetData(pQuery, pData, DataSize, D3D11_ASYNC_GETDATA_DONOTFLUSH);
 }
 
 IC HRESULT BeginQuery(ID3DQuery* pQuery)
