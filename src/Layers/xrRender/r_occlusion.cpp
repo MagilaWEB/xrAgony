@@ -104,16 +104,15 @@ R_occlusion::occq_result R_occlusion::occq_get(u32& ID)
 	if (!enabled || ID == iInvalidHandle || !used[ID].Q)
 		return 0xffffffff;
 
-	occq_result fragments = 0;
-	
 //	::IDevice->cast()->Statistic->RenderDUMP_Wait.Begin();
 	//VERIFY2(ID < used.size(), make_string("_Pos = %d, size() = %d", ID, used.size()));
 
 	// здесь нужно дождаться результата, т.к. отладка показывает, что
 	// очень редко когда он готов немедленно
-	do
+	occq_result fragments = NULL;
+	HRESULT hr = FALSE;
+	while ((hr = GetData(used[ID].Q.Get(), &fragments, sizeof(fragments))) == FALSE)
 	{
-		HRESULT hr = GetData(used[ID].Q.Get(), &fragments, sizeof(fragments));
 		if (hr == S_OK)
 			break;
 		else if (hr == D3DERR_DEVICELOST)
@@ -121,7 +120,7 @@ R_occlusion::occq_result R_occlusion::occq_get(u32& ID)
 			fragments = 0xffffffff;
 			break;
 		}
-	} while (true);
+	}
 
 	if (fragments == 0)
 		RImplementation.BasicStats.OcclusionCulled++;

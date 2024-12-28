@@ -124,15 +124,12 @@ void CObjectList::Update()
 		stats.Active = objects_active.size();
 		stats.Total = objects_active.size() + objects_sleeping.size();
 
-		if(!objects_active.empty())
+		for (auto i_game_object : objects_active)
 		{
-			for (auto i_game_object : objects_active)
+			if (i_game_object->queryUpdateCL())
 			{
-				if (i_game_object->queryUpdateCL())
-				{
-					stats.Updated++;
-					i_game_object->update();
-				}
+				stats.Updated++;
+				i_game_object->update();
 			}
 		}
 

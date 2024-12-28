@@ -1,5 +1,5 @@
-#ifndef _FACE_SMOTH_FLAGS_H_
-#define _FACE_SMOTH_FLAGS_H_
+#pragma once
+
 enum
 {
 	backface_flag = 1 << 3
@@ -54,5 +54,3 @@ IC bool do_connect_faces_by_faces_edge_flags(u32 start_face_flags, u32 test_face
 		is_soft_edge(test_face_flags, test_common_edge_idx); //!( test.sm_group  & (1<<test_common_face) );
 	return start_edge_smooth && test_edge_smooth;
 }
-
-#endif

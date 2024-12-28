@@ -1,4 +1,10 @@
 #pragma once
+
+#if _DEBUG
+#undef _ITERATOR_DEBUG_LEVEL
+#define _ITERATOR_DEBUG_LEVEL 0
+#endif
+
 #include <vector>
 #include <tbb.h>
 #include <xrCommon\inlining_macros.h>
