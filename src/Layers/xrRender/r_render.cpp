@@ -314,7 +314,7 @@ void CRender::Render()
 
 	RImplementation.BasicStats.Culling.End();
 
-	const BOOL split_the_scene_to_minimize_wait = ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE);
+	const bool split_the_scene_to_minimize_wait = ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE);
 
 	//******* Main render :: PART-0	-- first
 	if (!split_the_scene_to_minimize_wait)
