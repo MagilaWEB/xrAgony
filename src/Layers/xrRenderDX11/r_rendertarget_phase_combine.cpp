@@ -95,26 +95,19 @@ void CRenderTarget::phase_combine()
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
-	BOOL split_the_scene_to_minimize_wait = FALSE;
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))
-		split_the_scene_to_minimize_wait = TRUE;
-
 	// draw skybox
-	if (1)
-	{
-		//	Moved to shader!
-		// RCache.set_ColorWriteEnable					();
-		//	Moved to shader!
-		// RCache.set_Z(FALSE);
-		g_pGamePersistent->Environment().RenderSky();
+	//	Moved to shader!
+	// RCache.set_ColorWriteEnable					();
+	//	Moved to shader!
+	// RCache.set_Z(FALSE);
+	g_pGamePersistent->Environment().RenderSky();
 
-		//	Igor: Render clouds before compine without Z-test
-		//	to avoid siluets. HOwever, it's a bit slower process.
-		g_pGamePersistent->Environment().RenderClouds();
+	//	Igor: Render clouds before compine without Z-test
+	//	to avoid siluets. HOwever, it's a bit slower process.
+	g_pGamePersistent->Environment().RenderClouds();
 
-		//	Moved to shader!
-		// RCache.set_Z(TRUE);
-	}
+	//	Moved to shader!
+	// RCache.set_Z(TRUE);
 
 	//
 	// if (RImplementation.o.bug)	{

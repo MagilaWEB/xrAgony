@@ -314,29 +314,12 @@ void CRender::Render()
 
 	RImplementation.BasicStats.Culling.End();
 
-	const bool split_the_scene_to_minimize_wait = ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE);
-
 	//******* Main render :: PART-0	-- first
-	if (!split_the_scene_to_minimize_wait)
-	{
-		// level, DO NOT SPLIT
-		PIX_EVENT_TEXT(L"Deferred Part0: No Split");
-		Target->phase_scene_begin();
-		r_dsgraph_render_hud();
-		r_dsgraph_render_graph(0);
-		r_dsgraph_render_lods(true, true);
-		if (Details)
-			Details->Render();
-		Target->phase_scene_end();
-	}
-	else
-	{
-		// level, SPLIT
-		PIX_EVENT_TEXT(L"Deferred Part0: Split");
-		Target->phase_scene_begin();
-		r_dsgraph_render_graph(0);
-		Target->disable_aniso();
-	}
+	// level, SPLIT
+	PIX_EVENT_TEXT(L"Deferred Part0: Split");
+	Target->phase_scene_begin();
+	r_dsgraph_render_graph(0);
+	Target->disable_aniso();
 
 	//******* Occlusion testing of volume-limited light-sources
 	Target->phase_occq();
@@ -363,18 +346,17 @@ void CRender::Render()
 		g_hud->Render_Last();// HUD
 
 	//******* Main render :: PART-1 (second)
-	if (split_the_scene_to_minimize_wait)
-	{
-		PIX_EVENT(DEFER_PART1_SPLIT);
+	PIX_EVENT(DEFER_PART1_SPLIT);
 
-		// level
-		Target->phase_scene_begin();
-		r_dsgraph_render_hud();
-		r_dsgraph_render_lods(true, true);
-		if (Details)
-			Details->Render();
-		Target->phase_scene_end();
-	}
+	// level
+	Target->phase_scene_begin();
+	r_dsgraph_render_hud();
+	r_dsgraph_render_lods(true, true);
+
+	if (Details)
+		Details->Render();
+
+	Target->phase_scene_end();
 
 	if (g_hud && g_hud->RenderActiveItemUIQuery())
 	{
