@@ -58,6 +58,7 @@ CSoundRender_Emitter::~CSoundRender_Emitter()
 //////////////////////////////////////////////////////////////////////
 void CSoundRender_Emitter::Event_ReleaseOwner()
 {
+	xrCriticalSection::raii mt{ SoundRender->Lock };
 	if (!owner_data)
 		return;
 	std::erase_if(SoundRender->s_events, [&](auto _event) {
@@ -83,7 +84,7 @@ void CSoundRender_Emitter::Event_Propagade()
 	float range = std::min(p_source.max_ai_distance, clip);
 	if (range < 0.1f)
 		return;
-
+	xrCriticalSection::raii mt{ SoundRender->Lock };
 	// Inform objects
 	SoundRender->s_events.emplace_back(owner_data, range);
 }

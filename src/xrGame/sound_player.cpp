@@ -29,6 +29,10 @@ CSoundPlayer::CSoundPlayer(IGameObject* object)
 CSoundPlayer::~CSoundPlayer() { clear(); }
 void CSoundPlayer::clear()
 {
+	xrCriticalSection::raii mt{ SoundsLock };
+
+	IDevice->cast()->remove_sounds_parallel(this, &CSoundPlayer::update_playing_sounds);
+
 	m_sounds.clear();
 
 	xr_vector<CSoundSingle>::iterator I = m_playing_sounds.begin();
@@ -51,6 +55,8 @@ void CSoundPlayer::reload(LPCSTR section)
 
 void CSoundPlayer::unload()
 {
+	xrCriticalSection::raii mt{ SoundsLock };
+	IDevice->cast()->remove_sounds_parallel(this, &CSoundPlayer::update_playing_sounds);
 	remove_active_sounds(u32(-1));
 	VERIFY(m_playing_sounds.empty());
 }
@@ -118,19 +124,28 @@ void CSoundPlayer::update(float time_delta)
 {
 	START_PROFILE("Sound Player")
 	remove_inappropriate_sounds(m_sound_mask);
-	update_playing_sounds();
+	IDevice->cast()->add_sounds_parallel(this, &CSoundPlayer::update_playing_sounds);
 	STOP_PROFILE
 }
 
 void CSoundPlayer::remove_inappropriate_sounds(u32 sound_mask)
 {
-	m_playing_sounds.erase(
-		std::remove_if(m_playing_sounds.begin(), m_playing_sounds.end(), CInappropriateSoundPredicate(sound_mask)),
-		m_playing_sounds.end());
+	IDevice->cast()->remove_sounds_parallel(this, &CSoundPlayer::update_playing_sounds);
+	xrCriticalSection::raii mt{ SoundsLock };
+	std::erase_if(m_playing_sounds, [sound_mask](CSoundSingle& sound) -> bool
+	{
+		VERIFY(sound.m_sound);
+		bool result = (sound.m_synchro_mask & sound_mask) ||
+			(!sound.m_sound->_feedback() && (sound.m_stop_time <= ::IDevice->TimeGlobal_ms()));
+		if (result)
+			sound.destroy();
+		return (result);
+	});
 }
 
 void CSoundPlayer::update_playing_sounds()
 {
+	xrCriticalSection::raii mt{ SoundsLock };
 	xr_vector<CSoundSingle>::iterator I = m_playing_sounds.begin();
 	xr_vector<CSoundSingle>::iterator E = m_playing_sounds.end();
 	for (; I != E; ++I)
@@ -142,8 +157,9 @@ void CSoundPlayer::update_playing_sounds()
 	}
 }
 
-bool CSoundPlayer::need_bone_data() const
+bool CSoundPlayer::need_bone_data()
 {
+	xrCriticalSection::raii mt{ SoundsLock };
 	xr_vector<CSoundSingle>::const_iterator I = m_playing_sounds.begin();
 	xr_vector<CSoundSingle>::const_iterator E = m_playing_sounds.end();
 	for (; I != E; ++I)
@@ -159,6 +175,7 @@ bool CSoundPlayer::need_bone_data() const
 void CSoundPlayer::play(
 	u32 internal_type, u32 max_start_time, u32 min_start_time, u32 max_stop_time, u32 min_stop_time, u32 id)
 {
+	xrCriticalSection::raii mt{ SoundsLock };
 	if (!check_sound_legacy(internal_type))
 		return;
 
@@ -173,9 +190,8 @@ void CSoundPlayer::play(
 #endif
 		return;
 	}
-
+	
 	remove_inappropriate_sounds(sound.m_synchro_mask);
-
 	CSoundSingle sound_single;
 	(CSoundParams&)sound_single = (CSoundParams&)sound;
 	sound_single.m_bone_id = smart_cast<IKinematics*>(m_object->Visual())->LL_BoneID(sound.m_bone_name);

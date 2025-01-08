@@ -39,9 +39,7 @@ void CRenderDevice::Run()
 
 	mt_frame.Init([this]{ OnFrame(); }, xrThread::sParalelRender);
 	mt_frame2.Init([this]{ OnFrame2(); }, xrThread::sParalelRender);
-	mt_sounds.Init([]{ 
-		::Sound->update(::IDevice->cast()->vCameraPosition, ::IDevice->cast()->vCameraDirection, ::IDevice->cast()->vCameraTop);
-	}, xrThread::sParalelFrame);
+	mt_sounds.Init([this]{ OnSounds(); }, xrThread::sParalelRender);
 	
 	// Message cycle
 	::Render->ClearTarget();
@@ -220,6 +218,17 @@ void CRenderDevice::OnFrame2()
 			seqParallel2.pop_front();
 		}
 	}
+}
+
+void CRenderDevice::OnSounds()
+{
+	while (!seqSoundsParallel.empty())
+	{
+		seqSoundsParallel.front()();
+		seqSoundsParallel.pop_front();
+	}
+
+	::Sound->update(::IDevice->cast()->vCameraPosition, ::IDevice->cast()->vCameraDirection, ::IDevice->cast()->vCameraTop);
 }
 
 void CRenderDevice::d_Render()

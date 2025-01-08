@@ -444,7 +444,7 @@ void CCustomMonster::UpdateCL()
 	}
 	*/
 
-	::IDevice->cast()->add_parallel(this, &CCustomMonster::update_sound_player);
+	::IDevice->cast()->add_sounds_parallel(this, &CCustomMonster::update_sound_player);
 
 	START_PROFILE("CustomMonster/client_update/network extrapolation")
 		if (NET.empty())
@@ -785,7 +785,7 @@ void CCustomMonster::net_Destroy()
 	sound().unload();
 	movement().net_Destroy();
 
-	::IDevice->cast()->remove_parallel(this, &CCustomMonster::update_sound_player);
+	::IDevice->cast()->remove_sounds_parallel(this, &CCustomMonster::update_sound_player);
 	::IDevice->cast()->remove_parallel2(this, &CCustomMonster::Exec_Visibility);
 
 #ifdef DEBUG

@@ -58,6 +58,7 @@ class ENGINE_API IGame_Level :	public IInputReceiver,
 								public IEventReceiver
 {
 protected:
+	FastLock SoundLock;
 	// Network interface
 	IGameObject* pCurrentEntity;
 	IGameObject* pCurrentViewEntity;

@@ -90,27 +90,12 @@ public:
 		IC bool started() const { return (m_started); }
 	};
 
-	struct CInappropriateSoundPredicate
-	{
-		u32 m_sound_mask;
-
-		CInappropriateSoundPredicate(u32 sound_mask) : m_sound_mask(sound_mask) {}
-		bool operator()(CSoundSingle& sound)
-		{
-			VERIFY(sound.m_sound);
-			bool result = (sound.m_synchro_mask & m_sound_mask) ||
-				(!sound.m_sound->_feedback() && (sound.m_stop_time <= ::IDevice->TimeGlobal_ms()));
-			if (result)
-				sound.destroy();
-			return (result);
-		}
-	};
-
 public:
 	typedef std::pair<CSoundCollectionParamsFull, CSoundCollection*> SOUND_COLLECTION;
 	typedef AssociativeVector<u32, SOUND_COLLECTION> SOUND_COLLECTIONS;
 
 private:
+	xrCriticalSection SoundsLock;
 	SOUND_COLLECTIONS m_sounds;
 	xr_vector<CSoundSingle> m_playing_sounds;
 	u32 m_sound_mask;
@@ -139,7 +124,7 @@ public:
 	IC void remove_active_sounds(u32 sound_mask);
 	IC const xr_vector<CSoundSingle>& playing_sounds() const;
 	IC u32 active_sound_count(bool only_playing = false) const;
-	bool need_bone_data() const;
+	bool need_bone_data() ;
 	IC const SOUND_COLLECTIONS& objects() const;
 	IC bool active_sound_type(u32 synchro_mask) const;
 	IC void sound_prefix(const shared_str& sound_prefix);

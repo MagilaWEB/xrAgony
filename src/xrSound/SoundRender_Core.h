@@ -29,6 +29,7 @@ protected:
 	SoundStatistics Stats;
 
 public:
+	xrCriticalSection Lock;
 	using event = std::pair<ref_sound_data_ptr, float>;
 	xr_vector<event> s_events;
 
@@ -57,7 +58,7 @@ protected:
 	xr_unordered_map<xr_string, CSoundRender_Source*> s_sources;
 	xr_c_vector<CSoundRender_Emitter*> s_emitters;
 	u32 s_emitters_u; // emitter update marker
-	xr_vector<CSoundRender_Target*> s_targets;
+	xr_c_vector<CSoundRender_Target*> s_targets;
 	xr_vector<CSoundRender_Target*> s_targets_defer;
 	u32 s_targets_pu; // parameters update
 	SoundEnvironment_LIB* s_environment;

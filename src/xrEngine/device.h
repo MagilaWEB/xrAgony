@@ -195,6 +195,7 @@ public:
 	MessageRegistry<pureDeviceReset>		seqDeviceReset;
 	xr_list<fastdelegate::FastDelegate<>>	seqParallel;
 	xr_list<fastdelegate::FastDelegate<>>	seqParallel2;
+	xr_list<fastdelegate::FastDelegate<>>	seqSoundsParallel;
 	xr_list<fastdelegate::FastDelegate<>>	segParallelLoad;
 	xr_list<std::function<void()>>			functionPointer;
 
@@ -283,7 +284,7 @@ public:
 	template<class  PAR, class PAR_X>
 	ICF void remove_parallel(PAR* pr_1, fastdelegate::FastDelegate<void()>::Parameters(PAR_X::* pr_2)())
 	{
-		seqParallel.erase(std::remove(seqParallel.begin(), seqParallel.end(), fastdelegate::FastDelegate<void()>(pr_1, pr_2)), seqParallel.end());
+		std::erase(seqParallel, fastdelegate::FastDelegate<void()>(pr_1, pr_2));
 	}
 
 	//Parallel execution in conjunction with the render.
@@ -296,9 +297,23 @@ public:
 	}
 
 	template<class  PAR, class PAR_X>
+	ICF void add_sounds_parallel(PAR* pr_1, fastdelegate::FastDelegate<void()>::Parameters(PAR_X::* pr_2)())
+	{
+		const fastdelegate::FastDelegate<void()>& _delegate = fastdelegate::FastDelegate<void()>(pr_1, pr_2);
+		if (!seqSoundsParallel.contain(_delegate))
+			seqSoundsParallel.push_back(_delegate);
+	}
+
+	template<class  PAR, class PAR_X>
 	ICF void remove_parallel2(PAR* pr_1, fastdelegate::FastDelegate<void()>::Parameters(PAR_X::* pr_2)())
 	{
-		seqParallel2.erase(std::remove(seqParallel2.begin(), seqParallel2.end(), fastdelegate::FastDelegate<void()>(pr_1, pr_2)), seqParallel2.end());
+		std::erase(seqParallel2, fastdelegate::FastDelegate<void()>(pr_1, pr_2));
+	}
+
+	template<class  PAR, class PAR_X>
+	ICF void remove_sounds_parallel(PAR* pr_1, fastdelegate::FastDelegate<void()>::Parameters(PAR_X::* pr_2)())
+	{
+		std::erase(seqSoundsParallel, fastdelegate::FastDelegate<void()>(pr_1, pr_2));
 	}
 
 	ICF void removes_parallel()
@@ -339,6 +354,7 @@ private:
 	void CalcFrameStats();
 	void OnFrame();
 	void OnFrame2();
+	void OnSounds();
 	void d_Render();
 	void d_SVPRender();
 	void GlobalUpdate();

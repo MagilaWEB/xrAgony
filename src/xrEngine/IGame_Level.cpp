@@ -274,6 +274,7 @@ void IGame_Level::SoundEvent_Register(ref_sound_data_ptr S, float range)
 			Power *= occ;
 			if (Power > EPS_S)
 			{
+				FastLock::raii mt{ SoundLock };
 				_esound_delegate D = { L, S, Power };
 				snd_Events.push_back(D);
 			}
@@ -283,6 +284,7 @@ void IGame_Level::SoundEvent_Register(ref_sound_data_ptr S, float range)
 
 void IGame_Level::SoundEvent_Dispatch()
 {
+	FastLock::raii mt{ SoundLock };
 	while (!snd_Events.empty())
 	{
 		_esound_delegate& D = snd_Events.back();
@@ -301,13 +303,9 @@ void IGame_Level::SoundEvent_Dispatch()
 // Lain: added
 void IGame_Level::SoundEvent_OnDestDestroy(Feel::Sound* obj)
 {
-	struct rem_pred
+	FastLock::raii mt{ SoundLock };
+	std::erase_if(snd_Events, [obj](const _esound_delegate& d)
 	{
-		rem_pred(Feel::Sound* obj) : m_obj(obj) {}
-		bool operator()(const _esound_delegate& d) { return d.dest == m_obj; }
-	private:
-		Feel::Sound* m_obj;
-	};
-
-	snd_Events.erase(std::remove_if(snd_Events.begin(), snd_Events.end(), rem_pred(obj)), snd_Events.end());
+		return d.dest == obj;
+	});
 }

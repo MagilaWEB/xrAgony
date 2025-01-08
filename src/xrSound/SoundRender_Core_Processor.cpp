@@ -146,12 +146,13 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 static u32 g_saved_event_count = 0;
 void CSoundRender_Core::update_events()
 {
+	xrCriticalSection::raii mr{ Lock };
 	g_saved_event_count = s_events.size();
 
 	for (event& E : s_events)
 		Handler(E.first, E.second);
 
-	s_events.resize(0);
+	s_events.clear();
 }
 
 void CSoundRender_Core::statistic(CSound_stats* dest, CSound_stats_ext* ext)

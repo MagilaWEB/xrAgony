@@ -29,7 +29,10 @@ void CLevel::remove_objects()
 {
 	bReady = false;
 	Server->SLS_Clear();
-	snd_Events.clear();
+	{
+		FastLock::raii mt{ SoundLock };
+		snd_Events.clear();
+	}
 	::IDevice->incrementFrame();
 	ClientReceive();
 	ProcessGameEvents();
