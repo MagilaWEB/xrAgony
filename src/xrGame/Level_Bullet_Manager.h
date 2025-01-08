@@ -133,7 +133,7 @@ protected:
 
 	BulletVec m_Bullets; // working set, locked
 	FastLock LockBullets;
-	xr_vector<_event> m_Events;
+	xr_c_vector<_event> m_Events;
 
 #ifdef DEBUG
 	u32 m_thread_id;
