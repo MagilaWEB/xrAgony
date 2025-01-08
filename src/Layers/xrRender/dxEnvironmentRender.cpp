@@ -62,15 +62,7 @@ void dxEnvDescriptorRender::Copy(IEnvDescriptorRender& _in)
 
 void dxEnvDescriptorMixerRender::Copy(IEnvDescriptorMixerRender& _in)
 {
-	dxEnvDescriptorMixerRender* other = (dxEnvDescriptorMixerRender*)&_in;
-	clouds_r_textures.assign(other->clouds_r_textures.begin(), other->clouds_r_textures.end());
-	clouds_r_textures.dwReference.store(clouds_r_textures.dwReference.load() + 1);
-
-	sky_r_textures.assign(other->sky_r_textures.begin(), other->sky_r_textures.end());
-	sky_r_textures.dwReference.store(clouds_r_textures.dwReference.load() + 1);
-
-	sky_r_textures_env.assign(other->sky_r_textures_env.begin(), other->sky_r_textures_env.end());
-	sky_r_textures_env.dwReference.store(clouds_r_textures.dwReference.load() + 1);
+	*this = *(dxEnvDescriptorMixerRender*)&_in;
 }
 
 void dxEnvironmentRender::Copy(IEnvironmentRender& _in)

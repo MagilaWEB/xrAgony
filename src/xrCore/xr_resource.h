@@ -1,18 +1,23 @@
 #pragma once
-#ifndef xr_resourceH
-#define xr_resourceH
 #include "xrstring.h"
 
 // resource itself, the base class for all derived resources
 struct XRCORE_API xr_resource
 {
-	enum
-	{
-		RF_REGISTERED = 1 << 0
-	};
+	xr_resource() = default;
+	virtual ~xr_resource() = default;
 
-	std::atomic_uint dwReference{ 0 };
-	xr_resource() {};
+	xr_resource(xr_resource const& other)
+	{
+		*this = other;
+	}
+	xr_resource& operator =(xr_resource const& other)
+	{
+		ref_count.exchange(other.ref_count);
+		return *this;
+	}
+
+	std::atomic_uint ref_count{ 0 };
 };
 
 struct XRCORE_API xr_resource_flagged : public xr_resource
@@ -22,26 +27,23 @@ struct XRCORE_API xr_resource_flagged : public xr_resource
 		RF_REGISTERED = 1 << 0
 	};
 
-	u32 dwFlags;
-	xr_resource_flagged() : dwFlags(0) {}
+	u32 dwFlags{ 0 };
 };
 
 struct XRCORE_API xr_resource_named : public xr_resource_flagged
 {
-	shared_str cName;
+	shared_str cName{ 0 };
 
 	const char* set_name(const char* name)
 	{
 		cName = name;
 		return *cName;
 	}
-	xr_resource_named() : cName(0) {}
-	~xr_resource_named() {}
 };
 
 // resptr_BASE
-template <typename T>
-struct resptr_base
+template <class T>
+class resptr_base
 {
 protected:
 	T* p_;
@@ -52,14 +54,14 @@ protected:
 	{
 		if (0 == p_)
 			return;
-		p_->dwReference.store(p_->dwReference.load() + 1);
+		++p_->ref_count;
 	}
 	void _dec()
 	{
 		if (0 == p_)
 			return;
-		p_->dwReference.store(p_->dwReference.load() - 1);
-		if (0 == p_->dwReference.load())
+		--p_->ref_count;
+		if (0 == p_->ref_count)
 			xr_delete(p_);
 	}
 
@@ -67,7 +69,7 @@ public:
 	ICF void _set(T* rhs)
 	{
 		if (0 != rhs)
-			rhs->dwReference++;
+			++rhs->ref_count;
 		_dec();
 		p_ = rhs;
 	}
@@ -114,7 +116,7 @@ public:
 	T& operator*() const { return *C::p_; }
 	T* operator->() const { return C::p_; }
 	// unspecified bool type
-	typedef T* (resptr_core::*unspecified_bool_type)() const;
+	typedef T* (resptr_core::* unspecified_bool_type)() const;
 	operator unspecified_bool_type() const { return C::p_ == 0 ? 0 : &resptr_core::_get; }
 	bool operator!() const { return C::p_ == 0; }
 	// fast swapping
@@ -198,5 +200,3 @@ resptr_core<T, D> dynamic_pointer_cast(resptr_core<U, D> const& p)
 {
 	return dynamic_cast<T*>(p.get());
 }
-
-#endif // xr_resourceH

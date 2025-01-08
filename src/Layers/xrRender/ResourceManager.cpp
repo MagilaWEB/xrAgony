@@ -471,7 +471,7 @@ CMatrix* CResourceManager::_CreateMatrix(LPCSTR Name)
 	{
 		CMatrix* M = new CMatrix();
 		M->dwFlags |= xr_resource_flagged::RF_REGISTERED;
-		M->dwReference.store(1);
+		M->ref_count = 1;
 		m_matrices.emplace(M->set_name(Name), M);
 		return M;
 	}
@@ -505,7 +505,7 @@ CConstant* CResourceManager::_CreateConstant(LPCSTR Name)
 	{
 		CConstant* C = new CConstant();
 		C->dwFlags |= xr_resource_flagged::RF_REGISTERED;
-		C->dwReference.store(1);
+		C->ref_count = 1;
 		m_constants.emplace(C->set_name(Name), C);
 		return C;
 	}
@@ -1013,7 +1013,7 @@ void CResourceManager::_DumpMemoryUsage()
 		{
 			u32 m = I->second->flags.MemoryUsage.load();
 			shared_str n = I->second->cName;
-			mtex.insert(std::make_pair(m, std::make_pair(I->second->dwReference.load(), n)));
+			mtex.insert(std::make_pair(m, std::make_pair(I->second->ref_count.load(), n)));
 		}
 	}
 
