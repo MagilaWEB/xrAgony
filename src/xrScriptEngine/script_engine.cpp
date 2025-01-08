@@ -1094,7 +1094,7 @@ bool CScriptEngine::load_file(const char* scriptName, const char* namespaceName)
 
 bool CScriptEngine::process_file_if_exists(LPCSTR file_name, bool warn_if_not_exist)
 {
-	if (!*file_name)
+	if (!file_name  || !*file_name)
 		return false;
 
 	if (!m_reload_modules && namespace_loaded(file_name))
