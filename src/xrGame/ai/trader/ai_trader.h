@@ -47,6 +47,8 @@ public:
 	virtual void net_Import(NET_Packet& P);
 	virtual void net_Destroy();
 
+
+
 	virtual void save(NET_Packet& output_packet);
 	virtual void load(IReader& input_packet);
 	virtual BOOL net_SaveRelevant() { return inherited::net_SaveRelevant(); }
@@ -55,6 +57,7 @@ public:
 	virtual void HitSignal(float /**P/**/, Fvector& /**local_dir/**/, IGameObject* /**who/**/, s16 /**element/**/){};
 	virtual void HitImpulse(float /**P/**/, Fvector& /**vWorldDir/**/, Fvector& /**vLocalDir/**/){};
 	virtual void Hit(SHit* pHDS) { inherited::Hit(pHDS); }
+	virtual void update_sound_player();
 	virtual void UpdateCL();
 
 	virtual void g_fireParams(const CHudItem* pHudItem, Fvector& P, Fvector& D);
