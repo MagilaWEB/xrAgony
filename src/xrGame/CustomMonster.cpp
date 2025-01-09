@@ -409,13 +409,6 @@ void CCustomMonster::net_update::lerp(CCustomMonster::net_update& A, CCustomMons
 	fHealth = A.fHealth * (1.f - f) + B.fHealth * f;
 }
 
-void CCustomMonster::update_sound_player()
-{
-	START_PROFILE("CustomMonster/client_update/sound_player")
-		sound().update(fDeltaT());
-	STOP_PROFILE
-}
-
 void CCustomMonster::UpdateCL()
 {
 	START_PROFILE("CustomMonster/client_update")
@@ -425,7 +418,7 @@ void CCustomMonster::UpdateCL()
 #endif
 
 	START_PROFILE("CustomMonster/client_update/inherited")
-		inherited::UpdateCL();
+	inherited::UpdateCL();
 	STOP_PROFILE
 
 #ifdef DEBUG
@@ -444,14 +437,16 @@ void CCustomMonster::UpdateCL()
 	}
 	*/
 
-	::IDevice->cast()->add_sounds_parallel(this, &CCustomMonster::update_sound_player);
+	START_PROFILE("CustomMonster/client_update/sound_player")
+	sound().update();
+	STOP_PROFILE
 
 	START_PROFILE("CustomMonster/client_update/network extrapolation")
-		if (NET.empty())
-		{
-			update_animation_movement_controller();
-			return;
-		}
+	if (NET.empty())
+	{
+		update_animation_movement_controller();
+		return;
+	}
 
 	m_dwCurrentTime = ::IDevice->TimeGlobal_ms();
 
@@ -785,7 +780,6 @@ void CCustomMonster::net_Destroy()
 	sound().unload();
 	movement().net_Destroy();
 
-	::IDevice->cast()->remove_sounds_parallel(this, &CCustomMonster::update_sound_player);
 	::IDevice->cast()->remove_parallel2(this, &CCustomMonster::Exec_Visibility);
 
 #ifdef DEBUG

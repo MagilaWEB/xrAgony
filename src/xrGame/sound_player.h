@@ -119,7 +119,7 @@ public:
 	void clear();
 	void play(u32 internal_type, u32 max_start_time = 0, u32 min_start_time = 0, u32 max_stop_time = 0,
 		u32 min_stop_time = 0, u32 id = u32(-1));
-	void update(float time_delta);
+	void update();
 	IC void set_sound_mask(u32 sound_mask);
 	IC void remove_active_sounds(u32 sound_mask);
 	IC const xr_vector<CSoundSingle>& playing_sounds() const;

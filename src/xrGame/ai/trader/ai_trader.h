@@ -57,7 +57,6 @@ public:
 	virtual void HitSignal(float /**P/**/, Fvector& /**local_dir/**/, IGameObject* /**who/**/, s16 /**element/**/){};
 	virtual void HitImpulse(float /**P/**/, Fvector& /**vWorldDir/**/, Fvector& /**vLocalDir/**/){};
 	virtual void Hit(SHit* pHDS) { inherited::Hit(pHDS); }
-	virtual void update_sound_player();
 	virtual void UpdateCL();
 
 	virtual void g_fireParams(const CHudItem* pHudItem, Fvector& P, Fvector& D);

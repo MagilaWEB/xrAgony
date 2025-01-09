@@ -272,22 +272,16 @@ void CAI_Trader::Think() {}
 void CAI_Trader::Die(IGameObject* who) { inherited::Die(who); }
 void CAI_Trader::net_Destroy()
 {
-	IDevice->cast()->remove_sounds_parallel(this, &CAI_Trader::update_sound_player);
 	inherited::net_Destroy();
 	CScriptEntity::net_Destroy();
-}
-
-void CAI_Trader::update_sound_player()
-{
-	START_PROFILE("CAI_Trader/client_update/sound_player")
-	sound().update(fDeltaT());
-	STOP_PROFILE
 }
 
 void CAI_Trader::UpdateCL()
 {
 	inherited::UpdateCL();
-	IDevice->cast()->add_sounds_parallel(this, &CAI_Trader::update_sound_player);
+	START_PROFILE("CAI_Trader/client_update/sound_player")
+	sound().update();
+	STOP_PROFILE
 
 	inventory().UpdateItems();
 

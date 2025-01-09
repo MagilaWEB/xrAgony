@@ -35,10 +35,8 @@ void CSoundPlayer::clear()
 
 	m_sounds.clear();
 
-	xr_vector<CSoundSingle>::iterator I = m_playing_sounds.begin();
-	xr_vector<CSoundSingle>::iterator E = m_playing_sounds.end();
-	for (; I != E; ++I)
-		(*I).destroy();
+	for (auto& sound : m_playing_sounds)
+		sound.destroy();
 
 	m_playing_sounds.clear();
 
@@ -111,16 +109,14 @@ bool CSoundPlayer::check_sound_legacy(u32 internal_type) const
 	if (sound.m_synchro_mask & m_sound_mask)
 		return (false);
 
-	xr_vector<CSoundSingle>::const_iterator I = m_playing_sounds.begin();
-	xr_vector<CSoundSingle>::const_iterator E = m_playing_sounds.end();
-	for (; I != E; ++I)
-		if ((*I).m_synchro_mask & sound.m_synchro_mask)
-			if ((*I).m_priority <= sound.m_priority)
+	for (auto& _sound : m_playing_sounds)
+		if (_sound.m_synchro_mask & sound.m_synchro_mask)
+			if (_sound.m_priority <= sound.m_priority)
 				return (false);
 	return (true);
 }
 
-void CSoundPlayer::update(float time_delta)
+void CSoundPlayer::update()
 {
 	START_PROFILE("Sound Player")
 	remove_inappropriate_sounds(m_sound_mask);
@@ -146,27 +142,23 @@ void CSoundPlayer::remove_inappropriate_sounds(u32 sound_mask)
 void CSoundPlayer::update_playing_sounds()
 {
 	xrCriticalSection::raii mt{ SoundsLock };
-	xr_vector<CSoundSingle>::iterator I = m_playing_sounds.begin();
-	xr_vector<CSoundSingle>::iterator E = m_playing_sounds.end();
-	for (; I != E; ++I)
+	for (auto & sound : m_playing_sounds)
 	{
-		if ((*I).m_sound->_feedback())
-			(*I).m_sound->_feedback()->set_position(compute_sound_point(*I));
-		else if (!(*I).started() && (::IDevice->TimeGlobal_ms() >= (*I).m_start_time))
-			(*I).play_at_pos(m_object, compute_sound_point(*I));
+		if (sound.m_sound->_feedback())
+			sound.m_sound->_feedback()->set_position(compute_sound_point(sound));
+		else if (!sound.started() && (::IDevice->TimeGlobal_ms() >= sound.m_start_time))
+			sound.play_at_pos(m_object, compute_sound_point(sound));
 	}
 }
 
 bool CSoundPlayer::need_bone_data()
 {
 	xrCriticalSection::raii mt{ SoundsLock };
-	xr_vector<CSoundSingle>::const_iterator I = m_playing_sounds.begin();
-	xr_vector<CSoundSingle>::const_iterator E = m_playing_sounds.end();
-	for (; I != E; ++I)
+	for (auto& sound : m_playing_sounds)
 	{
-		if ((*I).m_sound->_feedback())
+		if (sound.m_sound->_feedback())
 			return (true);
-		else if (!(*I).started() && (::IDevice->TimeGlobal_ms() >= (*I).m_start_time))
+		else if (!sound.started() && (::IDevice->TimeGlobal_ms() >= sound.m_start_time))
 			return (true);
 	}
 	return (false);
@@ -236,10 +228,11 @@ void CSoundPlayer::play(
 
 	sound_single.m_stop_time =
 		sound_single.m_start_time + iFloor(sound_single.m_sound->get_length_sec() * 1000.0f) + random_time;
-	m_playing_sounds.push_back(sound_single);
 
-	if (::IDevice->TimeGlobal_ms() >= m_playing_sounds.back().m_start_time)
-		m_playing_sounds.back().play_at_pos(m_object, compute_sound_point(m_playing_sounds.back()));
+	if (::IDevice->TimeGlobal_ms() >= sound_single.m_start_time)
+		sound_single.play_at_pos(m_object, compute_sound_point(sound_single));
+
+	m_playing_sounds.push_back(sound_single);
 }
 
 IC Fvector CSoundPlayer::compute_sound_point(const CSoundSingle& sound)
