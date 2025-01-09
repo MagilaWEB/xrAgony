@@ -5,7 +5,6 @@
 struct XRCORE_API xr_resource
 {
 	xr_resource() = default;
-	virtual ~xr_resource() = default;
 
 	xr_resource(xr_resource const& other)
 	{
@@ -13,7 +12,7 @@ struct XRCORE_API xr_resource
 	}
 	xr_resource& operator =(xr_resource const& other)
 	{
-		ref_count.exchange(other.ref_count);
+		ref_count.exchange(other.ref_count, std::memory_order_relaxed);
 		return *this;
 	}
 

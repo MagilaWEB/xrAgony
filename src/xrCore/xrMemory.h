@@ -60,10 +60,9 @@ extern XRCORE_API xrMemory Memory;
 IC void xr_delete(auto && ptr)
 {
 	if (ptr)
-	{
 		delete ptr;
-		ptr = nullptr;
-	}
+
+	ptr = nullptr;
 }
 
 // generic "C"-like allocations/deallocations

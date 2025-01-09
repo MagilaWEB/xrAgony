@@ -56,7 +56,7 @@ XRCORE_API extern str_container* g_pStringContainer;
 //////////////////////////////////////////////////////////////////////////
 class shared_str
 {
-	str_value* p_{};
+	str_value* p_{ nullptr };
 
 protected:
 	// ref-counting
@@ -100,7 +100,7 @@ public:
 
 public:
 	// construction
-	shared_str() { p_ = nullptr; }
+	shared_str() = default;
 	shared_str(pcstr rhs)
 	{
 		p_ = nullptr;
@@ -129,39 +129,30 @@ public:
 		_set(rhs);
 		return *this;
 	}
-	shared_str& operator=(shared_str&& rhs) noexcept
-	{
-		p_ = rhs.p_;
-		rhs.p_ = nullptr;
-		return *this;
-	}
-	shared_str& operator=(nullptr_t) noexcept
-	{
-		_set(nullptr);
-		return *this;
-	}
 	// XXX tamlin: Remove operator*(). It may be convenient, but it's dangerous. Use
 	[[nodiscard]]
-	pcstr operator*() const { return p_ ? p_->value : nullptr; }
+	pcstr operator*() const { return p_ ? p_->value : 0; }
 
 	[[nodiscard]]
 	bool operator!() const { return p_ == nullptr; }
 
 	[[nodiscard]]
 	char operator[](size_t id) { return p_->value[id]; }
+
 	[[nodiscard]]
 	char operator[](size_t id) const { return p_->value[id]; }
 
 	[[nodiscard]]
-	pcstr c_str() const { return p_ ? p_->value : nullptr; }
+	pcstr c_str() const { return p_ ? p_->value : 0; }
 
 	// misc func
 	[[nodiscard]]
 	size_t size() const
 	{
-		if (p_)
-			return p_->dwLength;	
-		return 0;
+		if (nullptr == p_)
+			return 0;
+
+		return p_->dwLength;
 	}
 
 	[[nodiscard]]
