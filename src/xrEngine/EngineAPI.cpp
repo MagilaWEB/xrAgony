@@ -32,6 +32,35 @@ bool is_enough_address_space_available()
 
 void CEngineAPI::Initialize(void)
 {
+	constexpr string_path dll_dxvk[]
+	{
+		"d3d11.dll",
+		"dxgi.dll"
+	};
+
+	if (strstr(Core.Params, "-dxvk"))
+	{
+		for (auto fsname : dll_dxvk)
+		{
+			string_path fsname_from = "";
+			string_path fsname_to = "";
+
+			xr_sprintf(fsname_from, "DXVK\\%s", fsname);
+			xr_sprintf(fsname_to, "bin\\%s", fsname);
+			if (!CLocatorAPI::fileWinApi::FileExists(fsname_to))
+				CLocatorAPI::fileWinApi::copy_file(fsname_from, fsname_to);
+		}
+	}
+	else
+	{
+		for (auto fsname : dll_dxvk)
+		{
+			string_path _fsname = "";
+			xr_sprintf(_fsname, "bin\\%s", fsname);
+			CLocatorAPI::fileWinApi::remove_file(_fsname);
+		}
+	}
+
 	hRender = XRay::LoadModule("xrRenderDX");
 
 	m_setupSelectedRenderer = (SetupEnv)hRender->GetProcAddress(SETUP_FUNCTION);

@@ -14,7 +14,6 @@
 #include "xr_ioc_cmd.h"
 #include "xrCDB/ISpatial.h"
 #include "xrSASH.h"
-
 #ifdef MASTER
 #define NO_MULTI_INSTANCES
 #endif
@@ -257,7 +256,8 @@ static int StackoverflowFilter(const int exceptionCode)
 	return EXCEPTION_CONTINUE_SEARCH;
 }
 
-int APIENTRY WinMain(HINSTANCE inst, HINSTANCE prevInst, char* commandLine, int cmdShow){
+int APIENTRY WinMain(HINSTANCE inst, HINSTANCE prevInst, char* commandLine, int cmdShow)
+{
 	int result = 0;
 
 	auto entry_point = [commandLine]()

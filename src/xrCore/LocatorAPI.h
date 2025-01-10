@@ -147,6 +147,18 @@ public:
 				DeleteFile(path);
 		}
 
+		static void copy_file(const string_path path_from, const string_path path_to)
+		{
+			if (FileExists(path_from))
+				CopyFile(path_from, path_to, FALSE);
+		}
+
+		static void move_file(const string_path path_from, const string_path path_to)
+		{
+			if (FileExists(path_from))
+				MoveFile(path_from, path_to);
+		}
+
 		static void remove_directory(const string_path dir)
 		{
 			raiiA data(dir);
