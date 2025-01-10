@@ -83,7 +83,7 @@ void DeleteFiles(const string& fileName)
 	//filesystem::remove(fileName);
 }
 
-int main(int argc, char* argv[])
+int APIENTRY WinMain(HINSTANCE inst, HINSTANCE prevInst, char* commandLine, int cmdShow)
 {
 	string pathToExe = "bin\\xrEngine.exe";
 	setlocale(LC_ALL, "Russian");
@@ -98,10 +98,7 @@ int main(int argc, char* argv[])
 	ZeroMemory(&pi, sizeof(pi));
 
 	// combine the rest of the arguments into a single string
-	string command_line = "";
-	for (int i = 0; i < argc; i++)
-		command_line += string(argv[i]) + ' ';
-
+	string command_line = commandLine;
 	// Command line from the file.
 	string command_line_file = readFile("launch_command.dat");
 	if (command_line_file != "")
