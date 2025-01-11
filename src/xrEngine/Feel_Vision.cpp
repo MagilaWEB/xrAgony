@@ -49,15 +49,13 @@ void Vision::o_new(IGameObject* O)
 	I.cp_LP = O->get_new_local_point_on_mesh(I.bone_id);
 	I.cp_LAST = O->get_last_local_point_on_mesh(I.cp_LP, I.bone_id);
 }
+
 void Vision::o_delete(IGameObject* O)
 {
-	xr_vector<feel_visible_Item>::iterator I = feel_visible.begin(), TE = feel_visible.end();
-	for (; I != TE; I++)
-		if (I->O == O)
-		{
-			feel_visible.erase(I);
-			return;
-		}
+	std::erase_if(feel_visible, [O](feel_visible_Item& visible_Item)
+	{
+		return visible_Item.O == O;
+	});
 }
 
 void Vision::feel_vision_clear()
@@ -70,23 +68,13 @@ void Vision::feel_vision_clear()
 
 void Vision::feel_vision_relcase(IGameObject* object)
 {
-	xr_vector<IGameObject*>::iterator Io;
-	Io = std::find(seen.begin(), seen.end(), object);
-	if (Io != seen.end())
-		seen.erase(Io);
-	Io = std::find(query.begin(), query.end(), object);
-	if (Io != query.end())
-		query.erase(Io);
-	Io = std::find(diff.begin(), diff.end(), object);
-	if (Io != diff.end())
-		diff.erase(Io);
-	xr_vector<feel_visible_Item>::iterator Ii = feel_visible.begin(), IiE = feel_visible.end();
-	for (; Ii != IiE; ++Ii)
-		if (Ii->O == object)
-		{
-			feel_visible.erase(Ii);
-			break;
-		}
+	std::erase(seen, object);
+	std::erase(query, object);
+	std::erase(diff, object);
+	std::erase_if(feel_visible, [object](feel_visible_Item& visible_Item)
+	{
+		return visible_Item.O == object;
+	});
 }
 
 void Vision::feel_vision_query(Fmatrix& mFull, Fvector& P)
@@ -120,8 +108,7 @@ void Vision::feel_vision_update(IGameObject* parent, Fvector& P, float dt, float
 	// B-A = objects, that become visible
 	if (!seen.empty())
 	{
-		xr_vector<IGameObject*>::iterator E = std::remove(seen.begin(), seen.end(), parent);
-		seen.resize(E - seen.begin());
+		std::erase(seen, parent);
 
 		{
 			diff.resize(_max(seen.size(), query.size()));
@@ -148,6 +135,7 @@ void Vision::feel_vision_update(IGameObject* parent, Fvector& P, float dt, float
 	query = seen;
 	o_trace(P, dt, vis_threshold);
 }
+
 void Vision::o_trace(Fvector& P, float dt, float vis_threshold)
 {
 	RQR.r_clear();
