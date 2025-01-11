@@ -86,7 +86,6 @@ void DeleteFiles(const string& fileName)
 int APIENTRY WinMain(HINSTANCE inst, HINSTANCE prevInst, char* commandLine, int cmdShow)
 {
 	string pathToExe = "bin\\xrEngine.exe";
-	setlocale(LC_ALL, "Russian");
 
 	// additional information
 	STARTUPINFOA si;
