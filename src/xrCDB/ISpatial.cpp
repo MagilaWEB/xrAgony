@@ -145,6 +145,7 @@ void ISpatial_NODE::_remove(ISpatial* S)
 	xr_vector<ISpatial*>::iterator it = std::find(items.begin(), items.end(), S);
 	VERIFY(it != items.end());
 	items.erase(it);
+	::Render->RemoveRenderabl(S);
 	S->GetSpatialData().space->Stats.ObjectCount--;
 }
 

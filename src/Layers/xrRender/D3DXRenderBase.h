@@ -151,6 +151,13 @@ public:
 		pmask_wmark = _wm;
 	}
 
+	void RemoveRenderabl(ISpatial* S) override
+	{
+		auto it_renderabl = lstRenderables.find(S);
+		if (it_renderabl != lstRenderables.end())
+			lstRenderables.erase(it_renderabl);
+	}
+
 	void r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector& Center);
 	void r_dsgraph_insert_static(dxRender_Visual* pVisual);
 	// render primitives

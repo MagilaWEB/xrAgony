@@ -21,6 +21,7 @@ template <class T> class _box2; typedef _box2<float> Fbox2;
 struct Fcolor;
 class IReader;
 class CMemoryWriter;
+class ISpatial;
 
 #ifndef _EDITOR
 extern const float fLightSmoothFactor;
@@ -362,6 +363,8 @@ public:
 	virtual void Render() = 0;
 
 	virtual void AfterWorldRender() = 0; //--#SM+#-- После рендеринга мира (до UI)
+
+	virtual void RemoveRenderabl(ISpatial* S) = 0;
 
 	virtual void Screenshot(ScreenshotMode mode = SM_NORMAL, LPCSTR name = 0) = 0;
 	virtual void ScreenshotAsyncBegin() = 0;

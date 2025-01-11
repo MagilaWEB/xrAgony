@@ -134,13 +134,12 @@ void CSector::traverse(CFrustum& F, _scissor& R_scissor)
 
 	// Search visible portals and go through them
 	sPoly S, D;
-	for (u32 I = 0; I < m_portals.size(); I++)
+	for (CPortal* PORTAL : m_portals)
 	{
-		if (m_portals[I]->marker == PortalTraverser.i_marker)
+		if (PORTAL->marker == PortalTraverser.i_marker)
 			continue;
 
-		CPortal* PORTAL = m_portals[I];
-		CSector* pSector;
+		CSector* pSector = nullptr;
 
 		// Select sector (allow intersecting portals to be finely classified)
 		if (PORTAL->bDualRender)

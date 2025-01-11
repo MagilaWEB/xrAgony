@@ -63,13 +63,17 @@ void CRender::render_main(bool deffered)
 			// Traverse object database
 			if (deffered)
 			{
-				g_SpatialSpace->q_frustum
-				(
-					lstRenderables,
-					ISpatial_DB::O_ORDERED,
-					STYPE_RENDERABLE + STYPE_RENDERABLESHADOW + STYPE_PARTICLE + STYPE_LIGHTSOURCE,
-					::IDevice->cast()->ViewFromMatrix
-				);
+				size_t lock_fps = ::IDevice->cast()->FPS / 7;
+				clamp<size_t>(lock_fps, 2, 40);
+				LIMIT_UPDATE_FPS_CODE(TEST_Renderables, lock_fps, {
+					g_SpatialSpace->q_frustum
+					(
+						lstRenderables,
+						ISpatial_DB::O_ORDERED,
+						STYPE_RENDERABLE + STYPE_RENDERABLESHADOW + STYPE_PARTICLE + STYPE_LIGHTSOURCE,
+						::IDevice->cast()->ViewFromMatrix
+					);
+				})
 			}
 
 			// (almost) Exact sorting order (front-to-back)

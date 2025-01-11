@@ -27,7 +27,7 @@ void CPortalTraverser::traverse(IRender_Sector* start, CFrustum& F, Fvector& vBa
 	i_vBase = vBase;
 	i_mXFORM = mXFORM;
 	i_mXFORM_01.mul(m_viewport_01, mXFORM);
-	i_start = (CSector*)start;
+	i_start = reinterpret_cast<CSector*>(start);
 	r_sectors.clear();
 	_scissor scissor;
 	scissor.set(0, 0, 1, 1);
@@ -40,7 +40,7 @@ void CPortalTraverser::traverse(IRender_Sector* start, CFrustum& F, Fvector& vBa
 		// merge scissor info
 		for (u32 s = 0; s < r_sectors.size(); s++)
 		{
-			CSector* S = (CSector*)r_sectors[s];
+			CSector* S = reinterpret_cast<CSector*>(r_sectors[s]);
 			S->r_scissor_merged.invalidate();
 			S->r_scissor_merged.depth = flt_max;
 			for (u32 it = 0; it < S->r_scissors.size(); it++)
