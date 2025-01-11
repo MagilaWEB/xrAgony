@@ -79,19 +79,21 @@ void CParticlesObject::UpdateSpatial()
 		Fvector	P;	float	R;
 		renderable.xform.transform_tiny(P, vis.sphere.P);
 		R = vis.sphere.R;
-		if (0 == spatial.type) {
+		if (0 == spatial.type)
+		{
 			// First 'valid' update - register
 			spatial.type = STYPE_PARTICLE;
 			spatial.sphere.set(P, R);
+			xrCriticalSection::raii mt{ po_lock };
 			spatial_register();
 		}
-		else {
-			BOOL	bMove = FALSE;
-			if (!P.similar(spatial.sphere.P, EPS_L * 10.f))		bMove = TRUE;
-			if (!fsimilar(R, spatial.sphere.R, 0.15f))			bMove = TRUE;
-			if (bMove)
+		else
+		{
+			constexpr float E_EPS_L = EPS_L * 10.f;
+			if (!P.similar(spatial.sphere.P, E_EPS_L) || !fsimilar(R, spatial.sphere.R, 0.15f))
 			{
 				spatial.sphere.set(P, R);
+				xrCriticalSection::raii mt{ po_lock };
 				spatial_move();
 			}
 		}
