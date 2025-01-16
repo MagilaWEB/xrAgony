@@ -122,7 +122,7 @@ int APIENTRY WinMain(HINSTANCE inst, HINSTANCE prevInst, char* commandLine, int 
 		MB_DEFAULT_DESKTOP_ONLY
 	);
 
-	if (state == IDNO)
+	if (state != IDNO)
 		command_line.append(" -dxvk");
 
 	/*if (command_line.find("-launchingavx") != string::npos)
