@@ -99,7 +99,6 @@ void CRender::render_main(bool deffered)
 				// track lighting environment
 				if (lstRenderables.size())
 				{
-					uLastLTRACK++;
 					size_t uID_LTRACK = uLastLTRACK % lstRenderables.size();
 
 					// update light-vis for selected entity
