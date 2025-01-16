@@ -86,13 +86,10 @@ void CRender::render_main(bool deffered)
 
 			// Determine visibility for dynamic part of scene
 			set_Object(nullptr);
-			u32 uID_LTRACK = 0xffffffff;
+			
 			if (phase == PHASE_NORMAL)
 			{
 				uLastLTRACK++;
-				if (lstRenderables.size())
-					uID_LTRACK = uLastLTRACK % lstRenderables.size();
-
 				// update light-vis for current entity / actor
 				if (IGameObject* O = g_pGameLevel->CurrentViewEntity())
 					if (CROS_impl* R = reinterpret_cast<CROS_impl*>(O->ROS()))
@@ -103,7 +100,7 @@ void CRender::render_main(bool deffered)
 				if (lstRenderables.size())
 				{
 					uLastLTRACK++;
-					uID_LTRACK = uLastLTRACK % lstRenderables.size();
+					size_t uID_LTRACK = uLastLTRACK % lstRenderables.size();
 
 					// update light-vis for selected entity
 					// track lighting environment
